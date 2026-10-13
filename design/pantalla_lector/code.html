@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-elevated": "#1B2230", "inverse-surface": "#e1e2eb", "surface-container-high": "#272a31", "on-background": "#e1e2eb", "on-tertiary-container": "#4c25ab", "on-surface": "#e1e2eb", "on-error-container": "#ffdad6", "on-primary-container": "#004f32", "on-secondary-container": "#432100", "primary-container": "#35c98a", "background": "#10131a", "status-error": "#F06A6A", "text-primary": "#F2F0EA", "secondary-container": "#d37b20", "error": "#ffb4ab", "primary-fixed-dim": "#51de9d", "secondary": "#ffb77a", "primary-fixed": "#71fcb8", "on-secondary-fixed": "#2e1500", "surface-dim": "#10131a", "surface-container-highest": "#32353c", "on-primary": "#003822", "surface-bright": "#363940", "surface-variant": "#32353c", "surface-container": "#1d2026", "on-tertiary-fixed-variant": "#4f28ae", "surface-tint": "#51de9d", "secondary-fixed": "#ffdcc2", "error-container": "#93000a", "on-surface-variant": "#bbcabf", "outline": "#86948a", "on-primary-fixed-variant": "#005234", "on-error": "#690005", "on-tertiary": "#370095", "on-tertiary-fixed": "#20005e", "tertiary-fixed": "#e8ddff", "surface": "#141923", "outline-variant": "#3d4a41", "tertiary-fixed-dim": "#cdbdff", "surface-container-lowest": "#0b0e14", "tertiary": "#d4c5ff", "inverse-on-surface": "#2e3037", "on-secondary-fixed-variant": "#6d3a00", "inverse-primary": "#006c46", "status-warning": "#F5C451", "status-positive": "#4DD599", "badge-bg": "#1C2E29", "primary": "#59e6a4", "surface-container-low": "#191c22", "on-primary-fixed": "#002112", "on-secondary": "#4c2700", "border": "#263147", "tertiary-container": "#baa4ff", "text-secondary": "#9BA5B5", "secondary-fixed-dim": "#ffb77a" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-lg": "1.5rem", "margin-desktop": "2rem", "margin": "1rem", "space-xxs": "0.25rem", "space-md": "1rem", "space-sm": "0.75rem", "gutter": "1rem", "gutter-mobile": "0.75rem", "margin-mobile": "1rem", "space-xs": "0.5rem", "margin-tablet": "1.5rem", "space-xl": "2rem", "space-2xl": "3rem", "gutter-desktop": "1.5rem" }, fontFamily: { "headline-md": ["Manrope"], "label-md": ["Inter"], "display-lg-mobile": ["Manrope"], "body-sm": ["Inter"], "title-lg": ["Manrope"], "body-lg": ["Inter"], "display-lg": ["Manrope"], "headline-sm": ["Manrope"], "headline-lg": ["Manrope"], "label-lg": ["Inter"], "body-md": ["Inter"], "label-sm": ["Inter"] }, fontSize: { "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }], "display-lg-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "title-lg": ["16px", { "lineHeight": "22px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }] } } } };</script><style>@layer base{html,body{width:100vw;min-height:100vh;margin:0;padding:0;}body{overscroll-behavior:none;background-color:#0b0e14;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-surface-container-lowest text-on-surface antialiased flex flex-col min-h-screen"><main class="flex-1 flex flex-col relative w-full bg-surface-container-lowest"><div class="flex flex-col w-full relative select-none">
+<!-- LIENZO DE LECTURA (CANVAS INMERSIVO ESTILO WEBTOON VERTICAL) -->
+<div class="relative w-full overflow-y-auto overflow-x-hidden bg-surface-container-lowest flex flex-col items-center" id="reader-viewport">
+<!-- VIÑETA 1: Clímax de acción y despertar de sombras -->
+<div class="relative w-full max-w-md aspect-[9/16] bg-surface flex flex-col justify-end overflow-hidden shadow-2xl">
+<img class="w-full h-full object-cover pointer-events-none" data-alt="Solo Leveling Ragnarok dynamic high-octane manhwa comic action scene. Intense shadow monarch aura bursting with neon cyan and dark purple spectral lightning. A young powerful hunter holding dual daggers surrounded by spectral shadow soldiers in a ruined dungeon abyss. Highly detailed vibrant Korean webtoon digital painting style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwApD9qHPfa5oB3IwBTJzIArJZG_M4G3EeWKSuX_BoFTAGYSAk9_1gP6tXMuCLdtJX2PYset6w1tQTUsFLrVWgEns2PqQs5LOnvWw2HLlvBL_BhsLIN9hcILNY1BuiJ1uI8cghrCAtWshU-p6Q21NLCzCaBTAyjCv5kUHNaq2cAMYhH22nI9ygWtyvl3K0scWSW2X48jej_3FZu5gbdA-ABo7SuNU1ZQDBBl2dfSV1"/>
+<!-- Gradiente sutil entre paneles para fluidez cinematográfica -->
+<div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-surface-container-lowest pointer-events-none"></div>
+</div>
+<!-- VIÑETA 2: Duelo épico e impacto místico -->
+<div class="relative w-full max-w-md aspect-[9/15] bg-surface flex flex-col justify-end overflow-hidden shadow-2xl -mt-6 z-[1]">
+<div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-t from-transparent to-surface-container-lowest pointer-events-none z-10"></div>
+<img class="w-full h-full object-cover pointer-events-none" data-alt="Intense close-up manhwa panel of monarch shadows unleashing an abyssal dragon breath. Vivid glowing emerald and bioluminescent teal particle effects swirling around sharp jagged dark armor plates. Cinematic perspective with high contrast black void background and dynamic speedlines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtw0ydFLMrLHLQ1KlnIhJuVZz1FydOwX8wViV3a3vZhJN1nJpY8nMkvwyPWF42W8nXCdD0bThjYkb93zL4ZAy9hsLQVz38kUeccB9u7Xl-Fmn2fAESPStRrynEx39BSXux2q07OwN8UkNBT4RO3eh2ACYqLnIk8Dm2zdiiG2Jz0tvJuQUWlLt75oh1G53Goehzn2OnsbrfVXXQodRi-LKAXK-ZunUHvVuOQ3jtgw9n"/>
+<div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-surface-container-lowest pointer-events-none"></div>
+</div>
+<!-- VIÑETA 3: Transición dramática y runas arcanas -->
+<div class="relative w-full max-w-md aspect-[9/16] bg-surface flex flex-col justify-end overflow-hidden shadow-2xl -mt-6 z-[2]">
+<div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-t from-transparent to-surface-container-lowest pointer-events-none z-10"></div>
+<img class="w-full h-full object-cover pointer-events-none" data-alt="Solo Leveling manhwa panel featuring a towering shadow knight with glowing turquoise visor eyes extending a hand toward the viewer. Ancient glowing system runes and floating dimensional glyphs floating in atmospheric dark midnight mist." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGO1glfxKgdeNb51zQuDCe2RucMpmkiUWa37b19P2NQYJS3ul8Mtleh-P77pVvlRVYrEHSwvv_SICpwEm8CxMPlMrH-_Ov0M0rusk3a1NVtAFGcAuGHcAEke5CYP4V4eg_Si7hINkMH0qlZGaFql_4xLN-O_yZ9Yk2M9tpeFQ7zC-JivXe7bvsGjAy8pO45W8CKzBRvHQtG5K02mHnOe32x1ktePCQvrUaChccYjH4"/>
+</div>
+<!-- Espaciador ergonómico al final del capítulo -->
+<div class="w-full max-w-md py-12 px-6 flex flex-col items-center justify-center text-center z-10 bg-surface-container-lowest"><span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-badge-bg text-primary mb-3"><span class="material-symbols-outlined text-headline-sm">check_circle</span></span><h3 class="font-headline-sm text-headline-sm text-text-primary">Fin del Capítulo 41</h3><p class="font-body-sm text-body-sm text-text-secondary mt-1 mb-6">El Eco de los Valles continuará en el próximo episodio...</p><button class="w-full py-3.5 px-6 rounded-lg bg-primary text-on-primary font-headline-sm text-body-lg font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg" onclick="nextChapter()"><span class="material-symbols-outlined text-title-lg">arrow_forward</span><span>Siguiente: Capítulo 42</span></button></div>
+<!-- ZONAS TÁCTILES INTUITIVAS PARA NAVEGACIÓN Y HUD (TAP) -->
+<div class="absolute inset-0 grid grid-cols-12 pointer-events-auto z-20">
+<!-- Toque Izquierda: Retroceder página -->
+<div class="col-span-3 cursor-w-resize" onclick="handleTapZone('prev')" title="Zona anterior"></div>
+<!-- Toque Centro: Toggle HUD -->
+<div class="col-span-6 cursor-pointer" onclick="toggleHUD()" title="Mostrar/Ocultar Menús"></div>
+<!-- Toque Derecha: Avanzar página -->
+<div class="col-span-3 cursor-e-resize" onclick="handleTapZone('next')" title="Zona siguiente"></div>
+</div>
+</div>
+<!-- HUD SUPERIOR DISCRETO (FLOTANTE TRANSLÚCIDO) -->
+<header class="fixed top-0 inset-x-0 z-40 transition-all duration-300 ease-out transform translate-y-0 bg-[#0b0e14]/90 backdrop-blur-md px-4 py-3 flex items-center justify-between shadow-xl" id="top-hud"><div class="flex items-center gap-2 min-w-0 flex-1"><button aria-label="Cerrar lector y volver a detalles" class="w-12 h-12 rounded-full flex items-center justify-center text-text-primary hover:bg-surface-elevated/80 active:scale-95 transition-all shrink-0" type="button"><span class="material-symbols-outlined text-headline-sm">arrow_back</span></button><div class="flex flex-col min-w-0"><h1 class="font-headline-sm text-body-lg font-bold text-text-primary truncate">El Eco de los Valles</h1><div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span><p class="font-label-sm text-label-sm text-text-secondary truncate">Capítulo 41</p></div></div></div><div class="flex items-center gap-1 shrink-0"><button aria-label="Seleccionar capítulo" class="h-10 px-3 rounded-full flex items-center gap-1 text-text-primary bg-surface-elevated hover:bg-surface-variant text-label-sm font-medium transition-colors" onclick="toggleSettingsDrawer()" type="button"><span class="material-symbols-outlined text-title-lg text-secondary">format_list_bulleted</span><span class="hidden sm:inline">Cap. 41</span><span class="material-symbols-outlined text-label-md">expand_more</span></button><button aria-label="Ajustes de lectura" class="w-12 h-12 rounded-full flex items-center justify-center text-text-primary hover:bg-surface-elevated active:scale-95 transition-all" onclick="toggleSettingsDrawer()" type="button"><span class="material-symbols-outlined text-headline-sm">tune</span></button></div></header>
+<!-- PILL FLOTANTE PERPETUO DE PÁGINA (SIEMPRE DISPONIBLE EN ESQUINA) -->
+<div class="fixed bottom-4 right-4 z-30 pointer-events-none transition-opacity duration-300 opacity-90" id="page-counter-pill"><div class="px-3 py-1.5 rounded-full bg-[#0b0e14]/85 backdrop-blur-md flex items-center gap-1.5 shadow-md"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm font-semibold tracking-wider text-text-primary"><span class="text-secondary" id="floating-current-page">12</span> / 38</span></div></div>
+<!-- HUD INFERIOR DISCRETO (DOCK DE NAVEGACIÓN Y PROGRESO) -->
+<footer class="fixed bottom-0 inset-x-0 z-40 transition-all duration-300 ease-out transform translate-y-0 bg-[#0b0e14]/95 backdrop-blur-md px-4 pt-3 pb-6 flex flex-col gap-3 shadow-2xl" id="bottom-hud"><div class="flex items-center gap-3 w-full"><button aria-label="Página anterior" class="w-12 h-12 rounded-full bg-surface-elevated flex items-center justify-center text-text-primary hover:bg-surface-variant active:scale-95 transition-all shrink-0" onclick="changePage(-1)" type="button"><span class="material-symbols-outlined text-headline-sm">chevron_left</span></button><div class="flex-1 flex flex-col gap-1"><div class="flex items-center justify-between font-label-sm text-label-sm"><span class="text-text-primary font-medium">Pág. <span class="text-secondary font-bold" id="hud-page-indicator">12</span> / 38</span><span class="text-secondary font-bold" id="hud-percentage">31%</span></div><div class="relative w-full flex items-center h-4"><input class="w-full h-1.5 bg-surface-elevated rounded-full appearance-none cursor-pointer accent-[#ffb77a]" id="reading-progress-slider" max="38" min="1" oninput="updateScrubber(this.value)" type="range" value="12"/></div></div><button aria-label="Página siguiente" class="w-12 h-12 rounded-full bg-surface-elevated flex items-center justify-center text-text-primary hover:bg-surface-variant active:scale-95 transition-all shrink-0" onclick="changePage(1)" type="button"><span class="material-symbols-outlined text-headline-sm">chevron_right</span></button></div><div class="flex items-center justify-between pt-1 gap-2"><div class="inline-flex p-1 rounded-full bg-surface-elevated"><button class="px-3.5 py-1.5 rounded-full font-label-sm text-label-sm font-semibold flex items-center gap-1.5 bg-badge-bg text-primary shadow-sm transition-colors" id="btn-mode-webtoon" onclick="setReadingMode('webtoon')" type="button"><span class="material-symbols-outlined text-body-sm">vertical_distribute</span><span>Vertical continuo</span></button><button class="px-3.5 py-1.5 rounded-full font-label-sm text-label-sm font-medium flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition-colors" id="btn-mode-paged" onclick="setReadingMode('paged')" type="button"><span class="material-symbols-outlined text-body-sm">menu_book</span><span>Paginado</span></button></div><button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary-container/20 text-secondary hover:bg-secondary-container/30 active:scale-95 transition-all font-label-sm text-label-sm font-semibold" onclick="nextChapter()" type="button"><span>Cap. 42</span><span class="material-symbols-outlined text-title-lg">navigate_next</span></button></div></footer>
+<!-- DRAWER FLOTANTE DE AJUSTES AVANZADOS (BOTTOM SHEET DISCRETO) -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none" id="settings-backdrop" onclick="toggleSettingsDrawer()"></div>
+<div class="fixed inset-x-0 bottom-0 z-50 transform translate-y-full transition-transform duration-300 ease-out bg-surface-elevated rounded-t-2xl px-5 pt-3 pb-8 max-w-lg mx-auto shadow-2xl flex flex-col gap-5" id="settings-drawer">
+<!-- Píldora de agarre -->
+<div class="w-10 h-1 bg-surface-variant rounded-full mx-auto"></div>
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-headline-sm">tune</span>
+<h2 class="font-headline-sm text-headline-sm text-text-primary">Ajustes del Lector</h2>
+</div>
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-text-secondary hover:text-text-primary bg-surface hover:bg-surface-variant" onclick="toggleSettingsDrawer()" type="button">
+<span class="material-symbols-outlined text-body-lg">close</span>
+</button>
+</div>
+<!-- Sección 1: Modo de Lectura -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Modo de Visualización</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="p-3 rounded-xl bg-badge-bg text-primary flex items-center gap-2.5 transition-all text-left" onclick="setReadingMode('webtoon')" type="button">
+<span class="material-symbols-outlined text-title-lg">flash_on</span>
+<div>
+<div class="font-label-lg text-label-lg font-semibold">Vertical continuo</div>
+<div class="font-label-sm text-label-sm opacity-80">Flujo continuo vertical</div>
+</div>
+</button>
+<button class="p-3 rounded-xl bg-surface text-text-secondary hover:text-text-primary flex items-center gap-2.5 transition-all text-left" onclick="setReadingMode('paged')" type="button">
+<span class="material-symbols-outlined text-title-lg">menu_book</span>
+<div>
+<div class="font-label-lg text-label-lg font-semibold">Cómic / Manga</div>
+<div class="font-label-sm text-label-sm opacity-70">Página por página</div>
+</div>
+</button>
+</div>
+</div>
+<!-- Sección 2: Dirección de Deslizamiento (Manga vs Cómic occidental) -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Dirección de Desplazamiento</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2.5 px-2 rounded-xl bg-surface text-text-secondary hover:text-text-primary flex flex-col items-center justify-center gap-1 transition-colors" id="dir-rtl" onclick="setReadingDirection('rtl')" type="button">
+<span class="material-symbols-outlined text-title-lg">keyboard_double_arrow_left</span>
+<span class="font-label-sm text-label-sm font-medium">D → I (Manga)</span>
+</button>
+<button class="py-2.5 px-2 rounded-xl bg-surface text-text-secondary hover:text-text-primary flex flex-col items-center justify-center gap-1 transition-colors" id="dir-ltr" onclick="setReadingDirection('ltr')" type="button">
+<span class="material-symbols-outlined text-title-lg">keyboard_double_arrow_right</span>
+<span class="font-label-sm text-label-sm font-medium">I → D (Cómic)</span>
+</button>
+<button class="py-2.5 px-2 rounded-xl bg-badge-bg text-primary flex flex-col items-center justify-center gap-1 transition-colors" id="dir-vert" onclick="setReadingDirection('vert')" type="button">
+<span class="material-symbols-outlined text-title-lg">keyboard_double_arrow_down</span>
+<span class="font-label-sm text-label-sm font-semibold">Vertical</span>
+</button>
+</div>
+</div>
+<!-- Sección 3: Orientación de Pantalla -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Ajuste de Lienzo</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2.5 px-3 rounded-xl bg-badge-bg text-primary flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-title-lg">stay_current_portrait</span>
+<span class="font-label-sm text-label-sm font-semibold">Vertical (1 Pág)</span>
+</button>
+<button class="py-2.5 px-3 rounded-xl bg-surface text-text-secondary hover:text-text-primary flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-title-lg">auto_stories</span>
+<span class="font-label-sm text-label-sm font-medium">Doble Página</span>
+</button>
+</div>
+</div>
+<!-- Guía de Zonas Táctiles -->
+<div class="p-3 rounded-xl bg-surface flex items-center justify-between text-text-secondary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-title-lg text-primary">touch_app</span>
+<span class="font-label-sm text-label-sm">Indicadores de toques de lectura</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-medium">Activo</span>
+</div>
+</div>
+<!-- SCRIPT DE MICRO-INTERACCIONES (HUD, NAVEGACIÓN Y AJUSTES) -->
+<script>
+    let hudVisible = true;
+    let isBookmarked = false;
+    let currentPage = 18;
+    const totalPages = 42;
+
+    function toggleHUD() {
+      hudVisible = !hudVisible;
+      const topHud = document.getElementById('top-hud');
+      const bottomHud = document.getElementById('bottom-hud');
+      const counterPill = document.getElementById('page-counter-pill');
+
+      if (hudVisible) {
+        topHud.classList.remove('-translate-y-full');
+        bottomHud.classList.remove('translate-y-full');
+        counterPill.classList.remove('opacity-40');
+        counterPill.classList.add('opacity-90');
+      } else {
+        topHud.classList.add('-translate-y-full');
+        bottomHud.classList.add('translate-y-full');
+        counterPill.classList.remove('opacity-90');
+        counterPill.classList.add('opacity-40');
+      }
+    }
+
+    function toggleBookmark() {
+      isBookmarked = !isBookmarked;
+      const icon = document.getElementById('bookmark-icon');
+      const btn = document.getElementById('bookmark-btn');
+      if (isBookmarked) {
+        icon.style.fontVariationSettings = "'FILL' 1";
+        btn.classList.add('text-secondary-fixed');
+        btn.classList.remove('text-text-secondary');
+      } else {
+        icon.style.fontVariationSettings = "'FILL' 0";
+        btn.classList.remove('text-secondary-fixed');
+        btn.classList.add('text-text-secondary');
+      }
+    }
+
+    function updateScrubber(val) {
+      currentPage = parseInt(val, 10);
+      const percent = Math.round((currentPage / totalPages) * 100);
+      document.getElementById('hud-page-indicator').textContent = currentPage;
+      document.getElementById('floating-current-page').textContent = currentPage;
+      document.getElementById('hud-percentage').textContent = percent + '%';
+    }
+
+    function changePage(delta) {
+      let next = currentPage + delta;
+      if (next < 1) next = 1;
+      if (next > totalPages) next = totalPages;
+      const slider = document.getElementById('reading-progress-slider');
+      slider.value = next;
+      updateScrubber(next);
+    }
+
+    function handleTapZone(zone) {
+      if (zone === 'prev') {
+        changePage(-1);
+      } else if (zone === 'next') {
+        changePage(1);
+      }
+    }
+
+    function toggleSettingsDrawer() {
+      const drawer = document.getElementById('settings-drawer');
+      const backdrop = document.getElementById('settings-backdrop');
+      const isOpen = !drawer.classList.contains('translate-y-full');
+
+      if (isOpen) {
+        drawer.classList.add('translate-y-full');
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+      } else {
+        drawer.classList.remove('translate-y-full');
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        backdrop.classList.add('opacity-100', 'pointer-events-auto');
+      }
+    }
+
+    function setReadingMode(mode) {
+      const btnWebtoon = document.getElementById('btn-mode-webtoon');
+      const btnPaged = document.getElementById('btn-mode-paged');
+
+      if (mode === 'webtoon') {
+        btnWebtoon.className = "px-3 py-1 rounded-full font-label-sm text-label-sm font-semibold flex items-center gap-1.5 bg-badge-bg text-primary shadow-sm transition-colors";
+        btnPaged.className = "px-3 py-1 rounded-full font-label-sm text-label-sm font-medium flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition-colors";
+      } else {
+        btnPaged.className = "px-3 py-1 rounded-full font-label-sm text-label-sm font-semibold flex items-center gap-1.5 bg-badge-bg text-primary shadow-sm transition-colors";
+        btnWebtoon.className = "px-3 py-1 rounded-full font-label-sm text-label-sm font-medium flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition-colors";
+      }
+    }
+
+    function setReadingDirection(dir) {
+      const dirs = ['rtl', 'ltr', 'vert'];
+      dirs.forEach(d => {
+        const el = document.getElementById('dir-' + d);
+        if (d === dir) {
+          el.className = "py-2.5 px-2 rounded-xl bg-badge-bg text-primary flex flex-col items-center justify-center gap-1 transition-colors";
+          el.querySelector('span:last-child').classList.add('font-semibold');
+          el.querySelector('span:last-child').classList.remove('font-medium');
+        } else {
+          el.className = "py-2.5 px-2 rounded-xl bg-surface text-text-secondary hover:text-text-primary flex flex-col items-center justify-center gap-1 transition-colors";
+          el.querySelector('span:last-child').classList.remove('font-semibold');
+          el.querySelector('span:last-child').classList.add('font-medium');
+        }
+      });
+    }
+
+    function nextChapter() {
+      // Feedback visual para salto de capítulo
+      const topHud = document.getElementById('top-hud');
+      topHud.classList.add('ring-2', 'ring-primary');
+      setTimeout(() => {
+        topHud.classList.remove('ring-2', 'ring-primary');
+      }, 400);
+    }
+  </script>
+</div></main></body></html>
