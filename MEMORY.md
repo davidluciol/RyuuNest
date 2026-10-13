@@ -12,9 +12,9 @@
 
 ## 1. Estado actual
 
-- **Fase:** antes de la Fase 0 (preparación y calibración). Aún no hay código.
-- **Hecho:** `IDEA.md`, `SPEC.md` (con diseño integrado), `DESIGN.md` (Dragon Night), `DESIGN_RULES.md`, 7 pantallas exportadas de Stitch en `design/`, `AGENTS.md` y este archivo.
-- **Siguiente paso:** Fase 0 del SPEC §16: monorepo, TypeScript estricto, CI, app de prueba en los 3 dispositivos, versiones fijadas, presupuesto de memoria medido, inventario de `design/`.
+- **Fase:** Fase 0 en curso (fundación). Del plan de la Parte 1: **T01–T02 hechos**; siguen T03–T05.
+- **Hecho:** documentación (`IDEA.md`, `SPEC.md`, `DESIGN.md`, `DESIGN_RULES.md`, 7 pantallas en `design/`, `AGENTS.md`, `MEMORY.md` en la raíz) y **monorepo** con `packages/core`, `module-sdk`, `test-site` y `ui-tokens`, más tooling (pnpm, TypeScript estricto, ESLint, Prettier, Vitest, CI) y prueba de humo en verde.
+- **Siguiente paso:** T03 (ADR-0001, CONTRIBUTING, ASSETS, DoD) y T04 (organizar `design/`); después Fase 6a (F01, `ui-tokens`).
 
 ## 2. Decisiones
 
@@ -52,6 +52,10 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 | P-28 | 2026-10-13 | Verificación visual: **galería compilada para web con Playwright + capturas de dispositivo** para AC-12 | Playwright no controla la app nativa |
 | P-29 | 2026-10-13 | La v1 trae **solo Dragon Night**, con tokens para más temas | Solo ese tema tiene las 7 pantallas |
 | P-30 | 2026-10-13 | Las **pantallas sin diseño** se deciden más adelante | Se componen con `DESIGN.md` y se marcan «sin diseño» mientras tanto |
+| P-31 | 2026-10-13 | `accent-alt` (violeta) **no se usa en la v1** | Confirmado por el humano |
+| P-32 | 2026-10-13 | Las preguntas técnicas del SPEC §17.2 (Android mínimo con Expo, formato declarativo completo, librerías de TV/listas) se resuelven **durante la Fase T32** | Acordado por el humano |
+| P-33 | 2026-10-13 | Repositorio **GitHub conectado** (`github.com/davidluciol/RyuuNest`) y primer commit subido | Resuelve en parte el nombre (falta organización/npm/dominio/`applicationId`) |
+| P-34 | 2026-10-13 | Tooling de la Fase 0: `typescript@6` (fijado), `eslint@10`, `prettier@3`, `typescript-eslint@8`, `vitest@5` | `typescript-eslint` todavía no soporta TS 7.0 nativo, así que TypeScript se fija a la 6 |
 
 ## 3. Recomendaciones hechas
 
@@ -64,11 +68,15 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 ## 4. Preguntas abiertas
 
 1. **Pantallas sin diseño:** se decide más adelante cuáles se generan en Stitch antes de la Fase 6b (primer uso, confirmación de instalación, hoja de filtros, estados vacíos y de error). Mientras, se componen con `DESIGN.md` y se marcan «sin diseño».
-2. `accent-alt` violeta (SPEC §17.2.9): regla provisional, no se usa en la v1; confirmar.
-3. Las preguntas técnicas de SPEC §17.2 aún sin resolver (Android mínimo con el SDK de Expo, formato declarativo completo, librerías de foco TV y de listas virtualizadas).
-4. Disponibilidad del nombre (repo, organización, npm, dominio y `applicationId`).
+2. **Nombre (resto):** el repo ya existe (`github.com/davidluciol/RyuuNest`); falta verificar organización, scope de npm, dominio y `applicationId` de Android.
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
+
+### 2026-10-13 · Inicio de implementación: T01–T02 (monorepo + tooling)
+- **Hecho:** monorepo pnpm con `packages/{core,module-sdk,test-site,ui-tokens}`, TypeScript estricto (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`), ESLint/Prettier, Vitest y CI de GitHub Actions. `pnpm lint | typecheck | test | build` en verde; prueba de humo en `core`.
+- **Decisiones:** P-34 (versiones del tooling; TypeScript fijado a la 6 porque `typescript-eslint` no soporta la 7.0).
+- **Preguntas nuevas / respondidas:** ninguna nueva; pendiente crear las tareas en `bd`.
+- **Siguiente paso:** T03 y T04; después F01 (`ui-tokens`).
 
 ### 2026-10-13 · Plan de las Partes 1 y 2 con `planning-and-task-breakdown`
 - **Hecho:** se leyó el nuevo `SPEC.md` (diseño integrado, `manhwa`, `page_total`, Fases 6a/6b) y se escribieron los planes en `tasks/plan.md` y `tasks/todo.md`: **Parte 1** (Back-end, 35 tareas, checkpoints A–J) y **Parte 2** (diseño/front-end, 28 tareas, checkpoints P-A a P-E).

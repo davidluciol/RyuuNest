@@ -11,6 +11,8 @@
 
 ## Task T01: Monorepo (pnpm) + TypeScript estricto
 
+**Estado:** ✅ hecho 2026-10-13.
+
 **Descripción.** Crear el esqueleto del monorepo `ryuunest/` con **workspaces de pnpm** (P-1),
 paquetes `@ryuunest/core`, `@ryuunest/module-sdk`, `@ryuunest/test-site` y
 `@ryuunest/ui-tokens` (este último vacío, solo placeholder hasta la Fase 6a), un
@@ -32,6 +34,8 @@ paquetes `@ryuunest/core`, `@ryuunest/module-sdk`, `@ryuunest/test-site` y
 **Tamaño:** M.
 
 ## Task T02: Tooling (lint/format/typecheck) + Vitest + CI
+
+**Estado:** ✅ hecho 2026-10-13.
 
 **Descripción.** Configurar ESLint + Prettier, **Vitest** (P-2) por paquete y un pipeline de
 CI (GitHub Actions) que ejecute lint, typecheck, tests y build. Fija los comandos de

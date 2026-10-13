@@ -1,0 +1,24 @@
+{
+  "name": "@ryuunest/module-sdk",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "SDK público de RyuuNest: tipos, validador de manifest, CLI y plantilla de módulos.",
+  "license": "GPL-3.0-only",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@ryuunest/test-site",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sitios falsos y fixtures reutilizables para las pruebas del contrato de módulos de RyuuNest.",
+  "license": "GPL-3.0-only",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "fixtures"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests"
+  }
+}

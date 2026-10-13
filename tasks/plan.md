@@ -168,8 +168,8 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 `tasks/todo.md`. Resumen por fase:
 
 ### Fase 0 — Fundación
-- [ ] T01 Monorepo (pnpm) + TS estricto
-- [ ] T02 Tooling (lint/format/typecheck) + Vitest + CI
+- [x] T01 Monorepo (pnpm) + TS estricto
+- [x] T02 Tooling (lint/format/typecheck) + Vitest + CI
 - [ ] T03 Documentación base: ADR-0001 + CONTRIBUTING + ASSETS.md + DoD
 - [ ] T04 Inventario y organización de `design/` (+ ubicación de MEMORY/AGENTS)
 - [ ] T05 Calibración de dispositivos y presupuesto de memoria
