@@ -11,5 +11,6 @@ export const CORE_VERSION = "0.0.0";
 
 export * from "./contract/errors.js";
 export * from "./contract/types.js";
+export * from "./ports/index.js";
 
-// TODO(T07): puertos Storage, Http, Archive, Clock, SecureLock.
+// TODO(T08): ModuleHost (permisos, tiempo límite, concurrencia, rate-limit).

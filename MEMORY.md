@@ -12,9 +12,9 @@
 
 ## 1. Estado actual
 
-- **Fase:** Fase 0 en curso (fundación) y Fase 1 arrancada. Del plan de la Parte 1: **T01–T04 hechos**; **T05 en curso** (app de calibración y ADR-0002 listos, faltan las mediciones en los 3 dispositivos); **T06 hecho**.
+- **Fase:** Fase 0 en curso (fundación) y Fase 1 en curso. Del plan de la Parte 1: **T01–T04 hechos**; **T05 en curso** (la app arranca en los 3 dispositivos; faltan los smokes de librerías y el `minSdk`); **T06 y T07 hechos**.
 - **Hecho:** documentación (`IDEA.md`, `SPEC.md`, `DESIGN.md`, `DESIGN_RULES.md`, 7 pantallas en `design/`, `AGENTS.md`, `MEMORY.md` en la raíz) y **monorepo** con `packages/core`, `module-sdk`, `test-site` y `ui-tokens`, más tooling (pnpm, TypeScript estricto, ESLint, Prettier, Vitest, CI) y prueba de humo en verde. Documentación base (T03: ADR-0001, `CONTRIBUTING.md`, `ASSETS.md`, DoD) y `design/` organizado (T04).
-- **Siguiente paso:** T07 (puertos y adaptadores falsos); cerrar T05 cuando haya mediciones.
+- **Siguiente paso:** T08 (`ModuleHost`: permisos, tiempo límite, concurrencia, rate-limit); cerrar T05 con los datos que faltan.
 
 ## 2. Decisiones
 
@@ -70,18 +70,19 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 
 1. **Pantallas sin diseño:** se decide más adelante cuáles se generan en Stitch antes de la Fase 6b (primer uso, confirmación de instalación, hoja de filtros, estados vacíos y de error). Mientras, se componen con `DESIGN.md` y se marcan «sin diseño».
 2. **Nombre (resto):** el repo ya existe (`github.com/davidluciol/RyuuNest`); falta verificar organización, scope de npm, dominio y `applicationId` de Android.
-3. **Context7 (clave):** el CLI `ctx7` devuelve «Invalid API key» (requiere clave `ctx7sk…`). Mientras no se configure (`npx ctx7@latest login` o `CONTEXT7_API_KEY`), la revisión de versiones y prácticas se hace contra el registro npm y búsqueda web, anotando la fuente.
-4. **T05 (calibración):** el humano ya registró arranque/memoria: POCO F6 Pro 4580 ms / 226 MB, Galaxy S25 Ultra 1940 ms / 140 MB, MiBox 4 5600 ms / 323 MB (fija el presupuesto del lector, SPEC §9). Faltan los smokes de librerías en dispositivo y confirmar el `minSdk` del SDK 57 (Android 9 / API 28).
-5. **Tipos de host provisionales:** el SPEC §6.5 nombra `HostRequestInit`, `HostResponse`, `HtmlDocument` y `HtmlElement` sin definirlos. T06 los dejó con una forma mínima provisional (marcada en el código); se cierran en T08 (`ModuleHost`). Confirmar.
+3. **Context7 (clave):** resuelto: ctx7 vuelve a funcionar (login guardado; el `.env` con la clave nueva no se usa). Las documentaciones de ctx7 van algo rezagadas respecto a las últimas versiones; sirve para guiar, y las versiones se comprueban contra el registro npm.
+4. **T05 (calibración):** el humano registró arranque/memoria y lo confirmó: POCO F6 Pro 4580 ms / 226 MB, Galaxy S25 Ultra 1940 ms / 140 MB, MiBox 4 5600 ms / 323 MB (fija el presupuesto del lector, SPEC §9). Faltan los smokes de librerías en dispositivo y confirmar el `minSdk` del SDK 57 (Android 9 / API 28).
+5. **Tipos de host:** confirmados por el humano (T06); se formalizan en T08 (`ModuleHost`).
 6. **Verificación con tipos en `core`:** `pnpm --filter @ryuunest/core typecheck` ahora usa `tsconfig.test.json` (cubre `src` y `tests`); el `build` sigue emitiendo solo `src`. Aplicar el mismo patrón al resto de paquetes cuando toque.
+7. **Puerto `Storage` (provisional):** T07 lo dejó como un contrato mínimo de clave–valor; el API completo sobre el esquema del SPEC §8.1 se cierra en T21. Si T21 necesita otro enfoque (relacional), se amplía el puerto (cambio aditivo).
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
 
-### 2026-10-13 · Fase 0 (T03, T04, T05) y Fase 1 (T06)
-- **Hecho:** T03: `docs/decisions/ADR-0001-stack-y-convenciones.md`, `CONTRIBUTING.md`, `ASSETS.md` y `docs/definition-of-done.md`. T04: `design/stitch/<pantalla>/` (7 pantallas), `design/themes/<tema>/` (4 temas), `DESIGN.md` y `DESIGN_RULES.md` movidos a la raíz; referencias de rutas actualizadas. T05 (en curso): app de calibración `apps/mobile` (`@ryuunest/mobile`, Expo SDK 57 + RN 0.86.3 + React 19.2.3) con smoke de `@noble/hashes`, `fflate` y `htmlparser2`; el bundle de Android compila (611 módulos). `docs/decisions/ADR-0002-versiones-y-presupuesto.md` en borrador, pendiente de mediciones. T06: tipos del contrato (`packages/core/src/contract/{types,errors}.ts`: `MediaKind` con `manhwa`, `Page`, `ImageRef`, `SeriesSummary`, `Release`, `Chapter`, `SeriesDetails`, `ChapterPages`, `ModuleManifest`, `ModuleApi`, `Host` y `ModuleError`/`ModuleErrorCode`) con tests propios (`tests/contract/*`) y `tsconfig.test.json` para verificar tipos. Línea base (`lint`, `typecheck`, `test`, `build`, `format:check`) en verde.
+### 2026-10-13 · Fase 0 (T03–T05) y Fase 1 (T06, T07)
+- **Hecho:** T03: `docs/decisions/ADR-0001-stack-y-convenciones.md`, `CONTRIBUTING.md`, `ASSETS.md` y `docs/definition-of-done.md`. T04: `design/stitch/<pantalla>/` (7 pantallas), `design/themes/<tema>/` (4 temas), `DESIGN.md` y `DESIGN_RULES.md` movidos a la raíz; referencias de rutas actualizadas. T05 (en curso): app de calibración `apps/mobile` (`@ryuunest/mobile`, Expo SDK 57 + RN 0.86.3 + React 19.2.3) con smoke de `@noble/hashes`, `fflate` y `htmlparser2`; el bundle de Android compila (611 módulos). `docs/decisions/ADR-0002-versiones-y-presupuesto.md` en borrador, pendiente de mediciones. T06: tipos del contrato (`packages/core/src/contract/{types,errors}.ts`: `MediaKind` con `manhwa`, `Page`, `ImageRef`, `SeriesSummary`, `Release`, `Chapter`, `SeriesDetails`, `ChapterPages`, `ModuleManifest`, `ModuleApi`, `Host` y `ModuleError`/`ModuleErrorCode`) con tests propios (`tests/contract/*`) y `tsconfig.test.json` para verificar tipos. T07: puertos (`Storage`, `Http`, `Archive`, `Clock`, `SecureLock`) con adaptadores falsos (`MemoryStorage`, `StubHttp`, `FakeArchive`, `FixedClock`, `NoopSecureLock`) y 11 tests en `core`. Línea base (`lint`, `typecheck`, `test`, `build`, `format:check`) en verde.
 - **Decisiones:** P-35 (IDs de decisión canónicos: los de `MEMORY.md` y el SPEC; los `P-n` locales de `tasks/plan.md` §3 quedan históricos). Versiones candidatas del SDK 57 en ADR-0002 (sin fijar hasta medir).
-- **Preguntas nuevas / respondidas:** ctx7 sigue rechazando la clave nueva del `.env` (`401 invalid_api_key`, pese al formato `ctx7sk-…`); se usa el registro npm + web. Tipos de host provisionales hasta T08. T05 pendiente de los 3 dispositivos físicos.
-- **Siguiente paso:** medir T05 en los 3 dispositivos y cerrar ADR-0002; después T07 (puertos y adaptadores falsos).
+- **Preguntas nuevas / respondidas:** ctx7 vuelve a funcionar (login guardado; documentación algo rezagada). Tipos de host confirmados por el humano. Puerto `Storage` provisional (se cierra en T21). T05 pendiente de los smokes de librerías y el `minSdk`.
+- **Siguiente paso:** T08 (`ModuleHost`); cerrar T05 con los datos que faltan.
 
 ### 2026-10-13 · Inicio de implementación: T01–T02 (monorepo + tooling)
 - **Hecho:** monorepo pnpm con `packages/{core,module-sdk,test-site,ui-tokens}`, TypeScript estricto (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`), ESLint/Prettier, Vitest y CI de GitHub Actions. `pnpm lint | typecheck | test | build` en verde; prueba de humo en `core`.

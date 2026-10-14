@@ -102,7 +102,7 @@ ubicación de `MEMORY.md` y `AGENTS.md`.
 
 ## Task T05: Calibración de dispositivos y presupuesto de memoria
 
-**Estado:** 🟡 en curso 2026-10-13 — app de calibración y ADR-0002 preparados; **faltan las mediciones en los 3 dispositivos físicos**.
+**Estado:** 🟡 en curso 2026-10-13 — la app arranca en los 3 dispositivos y las mediciones de arranque/memoria están en `ADR-0002`; faltan los smokes de librerías en dispositivo, el `minSdk` (Android 9 / API 28) y el tope de imágenes.
 
 **Descripción.** Aplicación Expo mínima de prueba (shell vacío) que arranque en POCO F6 Pro,
 Galaxy S25 Ultra y MiBox 4; medir arranque en frío y presupuesto de memoria; confirmar que el
@@ -110,7 +110,7 @@ SDK elegido admite Android 9 (API 28). Smokes de compatibilidad para `@noble/has
 y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1** (decisión del humano).
 
 **Criterios de aceptación:**
-- [ ] La app de prueba arranca en los 3 dispositivos.
+- [x] La app de prueba arranca en los 3 dispositivos.
 - [ ] `docs/decisions/ADR-0002-versiones-y-presupuesto.md` fija versiones de Expo/RN/RNTV y el
       tope de imágenes en memoria para la MiBox 4.
 - [ ] Se responde la pregunta abierta del SPEC §17.2 sobre Android 9.
@@ -164,18 +164,20 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 
 ## Task T07: Puertos + adaptadores falsos
 
+**Estado:** ✅ hecho 2026-10-13.
+
 **Descripción.** Definir las interfaces de los puertos `Storage`, `Http`, `Archive`, `Clock` y
 `SecureLock` (SPEC §5.3), e implementar adaptadores falsos para pruebas (`MemoryStorage`
 mínimo, `StubHttp`, `FakeArchive`, `FixedClock`, `NoopSecureLock`).
 
 **Criterios de aceptación:**
-- [ ] Cada puerto es una interfaz pura, sin dependencias de plataforma.
-- [ ] Existen adaptadores falsos usables en tests del core.
-- [ ] `SecureLock` es opcional (puede no estar disponible).
+- [x] Cada puerto es una interfaz pura, sin dependencias de plataforma.
+- [x] Existen adaptadores falsos usables en tests del core.
+- [x] `SecureLock` es opcional (puede no estar disponible).
 
 **Verificación:**
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: un test que inyecta los falsos y ejecuta una operación trivial.
+- [x] `pnpm --filter @ryuunest/core test`
+- [x] Manual: un test que inyecta los falsos y ejecuta una operación trivial.
 
 **Dependencias:** T06.
 **Archivos probables:** `packages/core/src/ports/*.ts`,
