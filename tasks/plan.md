@@ -178,7 +178,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [x] T02 Tooling (lint/format/typecheck) + Vitest + CI
 - [x] T03 Documentación base: ADR-0001 + CONTRIBUTING + ASSETS.md + DoD
 - [x] T04 Inventario y organización de `design/` (+ ubicación de MEMORY/AGENTS)
-- [ ] T05 Calibración de dispositivos y presupuesto de memoria
+- [ ] T05 Calibración de dispositivos y presupuesto de memoria (🟡 app y ADR-0002 preparados; faltan mediciones)
 
 ### ✅ Checkpoint A (tras T01–T05)
 - [ ] `pnpm install && pnpm -r typecheck && pnpm -r test && pnpm -r build` en verde

@@ -102,6 +102,8 @@ ubicación de `MEMORY.md` y `AGENTS.md`.
 
 ## Task T05: Calibración de dispositivos y presupuesto de memoria
 
+**Estado:** 🟡 en curso 2026-10-13 — app de calibración y ADR-0002 preparados; **faltan las mediciones en los 3 dispositivos físicos**.
+
 **Descripción.** Aplicación Expo mínima de prueba (shell vacío) que arranque en POCO F6 Pro,
 Galaxy S25 Ultra y MiBox 4; medir arranque en frío y presupuesto de memoria; confirmar que el
 SDK elegido admite Android 9 (API 28). Smokes de compatibilidad para `@noble/hashes`, `fflate`
@@ -115,8 +117,9 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 - [ ] Los tres paquetes JS puros corren en RN sin errores.
 
 **Verificación:**
+- [x] `pnpm --filter @ryuunest/mobile exec expo export --platform android` compila el bundle (611 módulos, sin errores).
 - [ ] Manual: arranque cronometrado y lectura de memoria en cada dispositivo.
-- [ ] `pnpm --filter ryuunest-mobile start` (o el comando Expo equivalente).
+- [ ] `pnpm --filter @ryuunest/mobile start` en los 3 dispositivos.
 
 **Dependencias:** Ninguna (transversal a T01–T02).
 **Archivos probables:** `apps/mobile/{package.json,app.json,App.tsx}`,

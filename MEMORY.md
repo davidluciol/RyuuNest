@@ -12,7 +12,7 @@
 
 ## 1. Estado actual
 
-- **Fase:** Fase 0 en curso (fundación). Del plan de la Parte 1: **T01–T04 hechos**; sigue T05.
+- **Fase:** Fase 0 en curso (fundación). Del plan de la Parte 1: **T01–T04 hechos**; **T05 en curso** (app de calibración y ADR-0002 listos, faltan las mediciones en los 3 dispositivos).
 - **Hecho:** documentación (`IDEA.md`, `SPEC.md`, `DESIGN.md`, `DESIGN_RULES.md`, 7 pantallas en `design/`, `AGENTS.md`, `MEMORY.md` en la raíz) y **monorepo** con `packages/core`, `module-sdk`, `test-site` y `ui-tokens`, más tooling (pnpm, TypeScript estricto, ESLint, Prettier, Vitest, CI) y prueba de humo en verde. Documentación base (T03: ADR-0001, `CONTRIBUTING.md`, `ASSETS.md`, DoD) y `design/` organizado (T04).
 - **Siguiente paso:** T05 (calibración de dispositivos y presupuesto de memoria; requiere los 3 dispositivos físicos); después Fase 1 (T06, tipos del contrato).
 
@@ -71,15 +71,15 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 1. **Pantallas sin diseño:** se decide más adelante cuáles se generan en Stitch antes de la Fase 6b (primer uso, confirmación de instalación, hoja de filtros, estados vacíos y de error). Mientras, se componen con `DESIGN.md` y se marcan «sin diseño».
 2. **Nombre (resto):** el repo ya existe (`github.com/davidluciol/RyuuNest`); falta verificar organización, scope de npm, dominio y `applicationId` de Android.
 3. **Context7 (clave):** el CLI `ctx7` devuelve «Invalid API key» (requiere clave `ctx7sk…`). Mientras no se configure (`npx ctx7@latest login` o `CONTEXT7_API_KEY`), la revisión de versiones y prácticas se hace contra el registro npm y búsqueda web, anotando la fuente.
-4. **T05 (calibración):** requiere los 3 dispositivos físicos (POCO F6 Pro, Galaxy S25 Ultra y MiBox 4); no se puede automatizar. Pendiente de decisión: ejecutarla con los dispositivos o saltarla por ahora.
+4. **T05 (calibración):** la app de calibración y `ADR-0002` ya están preparados; falta **medir en los 3 dispositivos físicos** (POCO F6 Pro, Galaxy S25 Ultra y MiBox 4) y confirmar el `minSdk` del SDK 57 (Android 9 / API 28).
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
 
-### 2026-10-13 · Fase 0: T03 (documentación base) y T04 (organización de `design/`)
-- **Hecho:** T03: `docs/decisions/ADR-0001-stack-y-convenciones.md`, `CONTRIBUTING.md`, `ASSETS.md` y `docs/definition-of-done.md`. T04: `design/stitch/<pantalla>/` (7 pantallas), `design/themes/<tema>/` (4 temas), `DESIGN.md` y `DESIGN_RULES.md` movidos a la raíz; referencias de rutas actualizadas. Línea base (`lint`, `typecheck`, `test`, `build`, `format:check`) en verde. Un commit por tarea.
-- **Decisiones:** P-35 (IDs de decisión canónicos: los de `MEMORY.md` y el SPEC; los `P-n` locales de `tasks/plan.md` §3 quedan históricos).
-- **Preguntas nuevas / respondidas:** ctx7 con clave inválida (se usa el registro npm + web); T05 pendiente de los dispositivos físicos.
-- **Siguiente paso:** T05 (calibración) con dispositivos, o arrancar la Fase 1 (T06) si se decide saltarla.
+### 2026-10-13 · Fase 0: T03, T04 y preparación de T05
+- **Hecho:** T03: `docs/decisions/ADR-0001-stack-y-convenciones.md`, `CONTRIBUTING.md`, `ASSETS.md` y `docs/definition-of-done.md`. T04: `design/stitch/<pantalla>/` (7 pantallas), `design/themes/<tema>/` (4 temas), `DESIGN.md` y `DESIGN_RULES.md` movidos a la raíz; referencias de rutas actualizadas. T05 (en curso): app de calibración `apps/mobile` (`@ryuunest/mobile`, Expo SDK 57 + RN 0.86.3 + React 19.2.3) con smoke de `@noble/hashes`, `fflate` y `htmlparser2`; el bundle de Android compila (611 módulos). `docs/decisions/ADR-0002-versiones-y-presupuesto.md` en borrador, pendiente de mediciones. Línea base (`lint`, `typecheck`, `test`, `build`, `format:check`) en verde.
+- **Decisiones:** P-35 (IDs de decisión canónicos: los de `MEMORY.md` y el SPEC; los `P-n` locales de `tasks/plan.md` §3 quedan históricos). Versiones candidatas del SDK 57 en ADR-0002 (sin fijar hasta medir).
+- **Preguntas nuevas / respondidas:** ctx7 con clave inválida (se usa el registro npm + web); T05 pendiente de los 3 dispositivos físicos.
+- **Siguiente paso:** medir T05 en los 3 dispositivos y cerrar ADR-0002; después arrancar la Fase 1 (T06, tipos del contrato).
 
 ### 2026-10-13 · Inicio de implementación: T01–T02 (monorepo + tooling)
 - **Hecho:** monorepo pnpm con `packages/{core,module-sdk,test-site,ui-tokens}`, TypeScript estricto (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`), ESLint/Prettier, Vitest y CI de GitHub Actions. `pnpm lint | typecheck | test | build` en verde; prueba de humo en `core`.
