@@ -1,7 +1,7 @@
 # Lista de tareas — RyuuNest Parte 1 (Back-end / Núcleo)
 
-> Detalle de `tasks/plan.md`. Orden de autoridad: `docs/SPEC.md` → `design/DESIGN_RULES.md`
-> → `design/DESIGN.md` → PNG/HTML de `design/` → `docs/IDEA.md`.
+> Detalle de `tasks/plan.md`. Orden de autoridad: `docs/SPEC.md` → `DESIGN_RULES.md`
+> → `DESIGN.md` → PNG/HTML de `design/` → `docs/IDEA.md`.
 > Convención de comandos (se fijan en T01/T02): `pnpm -r typecheck` · `pnpm -r test` ·
 > `pnpm -r build` · `pnpm lint` · focalizada: `pnpm --filter @ryuunest/core test`.
 > Estados: `[ ]` pendiente · `[x]` hecho · `[-]` descartado/bloqueado.
@@ -80,19 +80,21 @@ con `AGENTS.md` §8.
 
 ## Task T04: Inventario y organización de `design/`
 
+**Estado:** ✅ hecho 2026-10-13.
+
 **Descripción.** Ejecutar la reorganización de la Fase 0 (SPEC §11.2): mover las 7 carpetas de
 pantalla a `design/stitch/`, `DESIGN.md` y `DESIGN_RULES.md` a la raíz, los `DESIGN.md` de
 temas a `design/themes/`, y eliminar/archivar los documentos contradictorios. Confirmar la
 ubicación de `MEMORY.md` y `AGENTS.md`.
 
 **Criterios de aceptación:**
-- [ ] `design/stitch/<pantalla>/` contiene las 7 pantallas con `screen.png` y `code.html`.
-- [ ] `design/themes/` agrupa `dragon_night`, `ember_hearth`, `arcane_vault`, `moonlit_frost`.
-- [ ] `DESIGN.md` y `DESIGN_RULES.md` quedan en la raíz (según SPEC §5.1/§11.2).
-- [ ] Se verifica que los documentos eliminados (PRD, especificación visual) ya no están.
+- [x] `design/stitch/<pantalla>/` contiene las 7 pantallas con `screen.png` y `code.html`.
+- [x] `design/themes/` agrupa `dragon_night`, `ember_hearth`, `arcane_vault`, `moonlit_frost`.
+- [x] `DESIGN.md` y `DESIGN_RULES.md` quedan en la raíz (según SPEC §5.1/§11.2).
+- [x] Se verifica que los documentos eliminados (PRD, especificación visual) ya no están.
 
 **Verificación:**
-- [ ] Manual: recorrer `design/` y comparar con la tabla de SPEC §11.2.
+- [x] Manual: recorrer `design/` y comparar con la tabla de SPEC §11.2.
 
 **Dependencias:** T01.
 **Archivos probables:** `design/**` (movimientos), `AGENTS.md`, `docs/MEMORY.md`.
@@ -846,7 +848,7 @@ núcleo antes de fusionar.
 
 ## PARTE 2 — DISEÑO Y FRONT-END (Fases 6a, 6b, 7 y 8 del SPEC)
 
-> Planificada en esta sesión (P-14). Depende de la Parte 1. Lee `design/DESIGN_RULES.md`
+> Planificada en esta sesión (P-14). Depende de la Parte 1. Lee `DESIGN_RULES.md`
 > completo una vez por sesión y, por pantalla, `screen.png` y `code.html` (SPEC §11.4).
 > Orden de autoridad: SPEC → `DESIGN_RULES.md` → `DESIGN.md` → PNG → HTML → `IDEA.md`.
 

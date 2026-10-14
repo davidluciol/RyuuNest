@@ -542,7 +542,7 @@ La web ejecuta los módulos dentro de un **Web Worker sin DOM**, y toda su red p
 | `design/stitch/<pantalla>/screen.png` | Composición de cada pantalla | Referencia visual |
 | `design/stitch/<pantalla>/code.html` | Estructura, jerarquía y espaciados | Solo referencia; **no se copia ni se convierte tal cual** (11.3) |
 | `IDEA.md` (sección 14) | Intención creativa: guarida y dragón | Contexto |
-| `design/dragon_night/DESIGN.md` y los `DESIGN.md` de otros temas | Exportación cruda de Stitch y temas futuros | **No se usan para implementar** (colores autogenerados, 4 temas) |
+| `design/themes/dragon_night/DESIGN.md` y los `DESIGN.md` de otros temas | Exportación cruda de Stitch y temas futuros | **No se usan para implementar** (colores autogenerados, 4 temas) |
 
 **Reglas de conflicto**
 

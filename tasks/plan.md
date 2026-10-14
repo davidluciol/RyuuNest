@@ -1,7 +1,7 @@
 # Plan de Implementación: RyuuNest — Parte 1 (Back-end / Núcleo)
 
 > Documento de planificación. Estado: **borrador para revisión humana**.
-> Fuentes (orden de autoridad): `docs/SPEC.md` → `design/DESIGN_RULES.md` → `design/DESIGN.md`
+> Fuentes (orden de autoridad): `docs/SPEC.md` → `DESIGN_RULES.md` → `DESIGN.md`
 > → PNG de `design/` → HTML de `design/` → `docs/IDEA.md`. Contexto: `docs/SPEC_Legacy.md`,
 > `legacyModulos/*.py`, `AGENTS.md`, `docs/MEMORY.md`.
 > Fecha: 13 de octubre de 2026 · Licencia: GPL-3.0.
@@ -177,7 +177,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [x] T01 Monorepo (pnpm) + TS estricto
 - [x] T02 Tooling (lint/format/typecheck) + Vitest + CI
 - [x] T03 Documentación base: ADR-0001 + CONTRIBUTING + ASSETS.md + DoD
-- [ ] T04 Inventario y organización de `design/` (+ ubicación de MEMORY/AGENTS)
+- [x] T04 Inventario y organización de `design/` (+ ubicación de MEMORY/AGENTS)
 - [ ] T05 Calibración de dispositivos y presupuesto de memoria
 
 ### ✅ Checkpoint A (tras T01–T05)

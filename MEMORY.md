@@ -62,7 +62,7 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 
 | Fecha | Recomendación | Estado |
 |---|---|---|
-| 2026-10-13 | Mover las 7 carpetas de pantalla a `design/stitch/`; `DESIGN.md` y `DESIGN_RULES.md` a la raíz; los `DESIGN.md` de otros temas a `design/themes/` | En el plan (tarea T04) |
+| 2026-10-13 | Mover las 7 carpetas de pantalla a `design/stitch/`; `DESIGN.md` y `DESIGN_RULES.md` a la raíz; los `DESIGN.md` de otros temas a `design/themes/` | **Hecha** en T04 (2026-10-13) |
 | 2026-10-13 | Generar en Stitch las pantallas que faltan (primer uso, confirmación de instalación, hoja de filtros, estados vacíos y de error) antes de la Fase 6b | Pendiente de decisión |
 | 2026-10-13 | La v1 con solo Dragon Night, con tokens preparados para más temas | En el plan (P2-2); confirmado por P-29 |
 
