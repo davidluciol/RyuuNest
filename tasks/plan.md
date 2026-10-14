@@ -188,7 +188,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [ ] Revisión humana
 
 ### Fase 1 — Contrato y arnés
-- [ ] T06 Tipos del contrato + ModuleError (incluye `manhwa`)
+- [x] T06 Tipos del contrato + ModuleError (incluye `manhwa`)
 - [ ] T07 Puertos + adaptadores falsos
 - [ ] T08 ModuleHost
 - [ ] T09 Validadores de manifest e índice de repo

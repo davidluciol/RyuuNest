@@ -9,5 +9,7 @@
  */
 export const CORE_VERSION = "0.0.0";
 
-// TODO(T06): tipos del contrato (SPEC §6) + ModuleError.
+export * from "./contract/errors.js";
+export * from "./contract/types.js";
+
 // TODO(T07): puertos Storage, Http, Archive, Clock, SecureLock.

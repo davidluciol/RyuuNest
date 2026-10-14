@@ -139,20 +139,22 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 
 ## Task T06: Tipos del contrato + ModuleError
 
+**Estado:** ✅ hecho 2026-10-13.
+
 **Descripción.** Implementar en `packages/core` los tipos públicos del contrato (SPEC §6):
 `MediaKind` (**incluye `manhwa`**, D-13), `Page<T>`, `ImageRef`, `SeriesSummary`, `Release`,
 `Chapter`, `SeriesDetails`, `ChapterPages`, `ModuleManifest`, `ModuleApi`, `Host` y
 `ModuleError` con `ModuleErrorCode`. Ayudas para construir errores tipados.
 
 **Criterios de aceptación:**
-- [ ] Todos los tipos del SPEC §6.1–6.5 existen y compilan en estricto.
-- [ ] `MediaKind` admite `"manga" | "manhua" | "manhwa" | "comic"`.
-- [ ] `ModuleError` expone `code` y `details`; se puede instanciar por cada código.
-- [ ] No hay tipos `any` sin justificación documentada.
+- [x] Todos los tipos del SPEC §6.1–6.5 existen y compilan en estricto.
+- [x] `MediaKind` admite `"manga" | "manhua" | "manhwa" | "comic"`.
+- [x] `ModuleError` expone `code` y `details`; se puede instanciar por cada código.
+- [x] No hay tipos `any` sin justificación documentada.
 
 **Verificación:**
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: assert de compilación sobre cada interfaz clave.
+- [x] `pnpm --filter @ryuunest/core test`
+- [x] Manual: assert de compilación sobre cada interfaz clave (`contract.types.test-d.ts` vía `tsconfig.test.json`).
 
 **Dependencias:** T01.
 **Archivos probables:** `packages/core/src/contract/types.ts`,
