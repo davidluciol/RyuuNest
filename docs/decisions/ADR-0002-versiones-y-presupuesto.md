@@ -37,13 +37,14 @@ comprueba que las tres librerías JS puras del núcleo (`@noble/hashes`, `fflate
 ## Android mínimo (SPEC §17.2)
 
 - **Objetivo:** Android 9 (API 28), para cubrir la MiBox 4 (SPEC §14, D-9).
-- **A confirmar:** el `minSdkVersion` efectivo del SDK de Expo 57 (se configura con el
-  plugin `expo-build-properties`). Rellenar aquí el valor medido y la decisión final.
+- **Confirmado (2026-10-13):** el mínimo es Android 9 / API 28 y el SDK 57 lo admite
+  (verificado en la MiBox 4). Se recomienda API 29/30 para producción; esa nota se añadirá
+  al README tras la primera versión.
 
 | Pregunta | Respuesta | Fecha |
 | --- | --- | --- |
-| ¿El SDK 57 admite API 28? | _pendiente_ | |
-| `minSdkVersion` efectivo | _pendiente_ | |
+| ¿El SDK 57 admite API 28? | **Sí.** Confirmado por el humano en los 3 dispositivos (la MiBox 4 con Android 9 arranca). | 2026-10-13 |
+| `minSdkVersion` efectivo | **28** (Android 9). Se adopta como mínimo del proyecto (D-9). Recomendación de API 29/30 para producción: se añadirá al README tras la primera versión. | 2026-10-13 |
 
 ## Arranque en frío y memoria
 
