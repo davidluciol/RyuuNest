@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "@ryuunest/core": ["../core/src/index.ts"]
+    }
+  },
+  "include": ["src", "tests", "../core/src/globals.d.ts"]
+}

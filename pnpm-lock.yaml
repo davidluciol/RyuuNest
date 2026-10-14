@@ -225,7 +225,11 @@ importers:
         specifier: ^12.0.0
         version: 12.0.0
 
-  packages/module-sdk: {}
+  packages/module-sdk:
+    dependencies:
+      '@ryuunest/core':
+        specifier: workspace:*
+        version: link:../core
 
   packages/test-site: {}
 

@@ -113,7 +113,7 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 - [x] La app de prueba arranca en los 3 dispositivos.
 - [ ] `docs/decisions/ADR-0002-versiones-y-presupuesto.md` fija versiones de Expo/RN/RNTV y el
       tope de imágenes en memoria para la MiBox 4.
-- [ ] Se responde la pregunta abierta del SPEC §17.2 sobre Android 9.
+- [x] Se responde la pregunta abierta del SPEC §17.2 sobre Android 9 (mínimo API 28, confirmado en dispositivo).
 - [ ] Los tres paquetes JS puros corren en RN sin errores.
 
 **Verificación:**
@@ -209,18 +209,20 @@ dominio; `html()` con selectores CSS (P-5); `log()`; `settings`. Se apoya en `Ht
 
 ## Task T09: Validadores de manifest e índice de repo (SDK)
 
+**Estado:** ✅ hecho 2026-10-13.
+
 **Descripción.** En `packages/module-sdk`, validar el manifest (SPEC §6.1) y el `index.json`
 (SPEC §6.7): campos obligatorios, `id` `[a-z0-9-]`, `apiVersion === 1`, `runtime`, `kinds`
 (incluido `manhwa`), `permissions.domains`, `sha256`, etc. Devuelve errores descriptivos.
 
 **Criterios de aceptación:**
-- [ ] Un manifest válido pasa; cada campo inválido produce un error con ruta y motivo.
-- [ ] Un `index.json` con formato/versión incorrectos se rechaza.
-- [ ] Se valida `apiVersion` y `minAppVersion` contra la app.
+- [x] Un manifest válido pasa; cada campo inválido produce un error con ruta y motivo.
+- [x] Un `index.json` con formato/versión incorrectos se rechaza.
+- [x] Se valida `apiVersion` y `minAppVersion` contra la app (`options.appVersion`).
 
 **Verificación:**
-- [ ] `pnpm --filter @ryuunest/module-sdk test`
-- [ ] Manual: fixtures de manifests válidos e inválidos.
+- [x] `pnpm --filter @ryuunest/module-sdk test`
+- [x] Manual: fixtures de manifests válidos e inválidos (en `tests/manifest.test.ts` y `tests/repoIndex.test.ts`).
 
 **Dependencias:** T06, T01.
 **Archivos probables:** `packages/module-sdk/src/manifest.ts`,

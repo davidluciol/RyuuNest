@@ -191,7 +191,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [x] T06 Tipos del contrato + ModuleError (incluye `manhwa`)
 - [x] T07 Puertos + adaptadores falsos
 - [x] T08 ModuleHost
-- [ ] T09 Validadores de manifest e índice de repo
+- [x] T09 Validadores de manifest e índice de repo
 - [ ] T10 Paquete `test-site` + arnés de contrato
 - [ ] T11 CLI del SDK + plantilla
 
