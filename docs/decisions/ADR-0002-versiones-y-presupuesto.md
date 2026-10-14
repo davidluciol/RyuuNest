@@ -22,7 +22,7 @@ comprueba que las tres librerías JS puras del núcleo (`@noble/hashes`, `fflate
 ## Versiones candidatas (de `apps/mobile/package.json`)
 
 | Componente | Versión | Estado |
-|---|---|---|
+| --- | --- | --- |
 | Expo SDK | `~57.0.28` | Candidata (última) |
 | React Native | `0.86.3` | Candidata (la que fija el SDK 57) |
 | React | `19.2.3` | Candidata (la que fija el SDK 57) |
@@ -41,7 +41,7 @@ comprueba que las tres librerías JS puras del núcleo (`@noble/hashes`, `fflate
   plugin `expo-build-properties`). Rellenar aquí el valor medido y la decisión final.
 
 | Pregunta | Respuesta | Fecha |
-|---|---|---|
+| --- | --- | --- |
 | ¿El SDK 57 admite API 28? | _pendiente_ | |
 | `minSdkVersion` efectivo | _pendiente_ | |
 
@@ -51,10 +51,10 @@ Medir con `adb shell am start -W` (arranque) y el perfil de memoria del sistema,
 números que muestre la app. Rellenar una fila por dispositivo.
 
 | Dispositivo | Android | Arranque en frío (ms) | Memoria (MB) | Notas |
-|---|---|---|---|---|
-| POCO F6 Pro | 12–15 | _pendiente_ | _pendiente_ | Equipo principal |
-| Galaxy S25 Ultra | 12–15 | _pendiente_ | _pendiente_ | Equipo principal |
-| Xiaomi MiBox 4 | 9 (API 28) | _pendiente_ | _pendiente_ | Piso de rendimiento (2 GB) |
+| --- | --- | --- | --- | --- |
+| POCO F6 Pro | 12–15 | 4580ms | 226mb | Equipo principal |
+| Galaxy S25 Ultra | 12–15 | 1940ms | 140mb | Equipo principal |
+| Xiaomi MiBox 4 | 9 (API 28) | 5600ms | 323mb | Piso de rendimiento (2 GB) |
 
 **Tope de imágenes en memoria para la MiBox 4:** _pendiente_ (lo usará el lector, SPEC §9).
 
@@ -63,7 +63,7 @@ números que muestre la app. Rellenar una fila por dispositivo.
 La app de calibración ejecuta estas comprobaciones y muestra OK/FALLO por dispositivo:
 
 | Comprobación | POCO F6 Pro | Galaxy S25 Ultra | MiBox 4 |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `@noble/hashes` · sha256 | _pendiente_ | _pendiente_ | _pendiente_ |
 | `fflate` · gzip round-trip | _pendiente_ | _pendiente_ | _pendiente_ |
 | `htmlparser2` · parse | _pendiente_ | _pendiente_ | _pendiente_ |
