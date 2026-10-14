@@ -57,19 +57,21 @@ verificación del proyecto.
 
 ## Task T03: Documentación base (ADR, CONTRIBUTING, ASSETS, DoD)
 
+**Estado:** ✅ hecho 2026-10-13.
+
 **Descripción.** Crear la documentación de proceso: plantilla y primer ADR (ADR-0001 con las
 decisiones P-1…P-12 del plan), `CONTRIBUTING.md`, `ASSETS.md` (con la regla de licencias y el
 registro de Manrope, Inter y Lucide) y una Definición de Terminado (DoD) por tarea alineada
 con `AGENTS.md` §8.
 
 **Criterios de aceptación:**
-- [ ] `docs/decisions/ADR-0001-stack-y-convenciones.md` registra las decisiones P-1…P-12.
-- [ ] `CONTRIBUTING.md` explica ramas, commits y cómo correr las pruebas (español).
-- [ ] `ASSETS.md` declara que todo recurso de terceros registra su licencia (OFL/ISC…).
-- [ ] La DoD exige: criterios cumplidos, lint, tipos y pruebas en verde.
+- [x] `docs/decisions/ADR-0001-stack-y-convenciones.md` registra las decisiones P-1…P-12.
+- [x] `CONTRIBUTING.md` explica ramas, commits y cómo correr las pruebas (español).
+- [x] `ASSETS.md` declara que todo recurso de terceros registra su licencia (OFL/ISC…).
+- [x] La DoD exige: criterios cumplidos, lint, tipos y pruebas en verde.
 
 **Verificación:**
-- [ ] Manual: los cuatro documentos existen y son coherentes con `docs/SPEC.md` y `AGENTS.md`.
+- [x] Manual: los cuatro documentos existen y son coherentes con `docs/SPEC.md` y `AGENTS.md`.
 
 **Dependencias:** T01.
 **Archivos probables:** `docs/decisions/ADR-0001-stack-y-convenciones.md`,

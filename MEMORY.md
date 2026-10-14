@@ -56,6 +56,7 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 | P-32 | 2026-10-13 | Las preguntas técnicas del SPEC §17.2 (Android mínimo con Expo, formato declarativo completo, librerías de TV/listas) se resuelven **durante la Fase T32** | Acordado por el humano |
 | P-33 | 2026-10-13 | Repositorio **GitHub conectado** (`github.com/davidluciol/RyuuNest`) y primer commit subido | Resuelve en parte el nombre (falta organización/npm/dominio/`applicationId`) |
 | P-34 | 2026-10-13 | Tooling de la Fase 0: `typescript@6` (fijado), `eslint@10`, `prettier@3`, `typescript-eslint@8`, `vitest@5` | `typescript-eslint` todavía no soporta TS 7.0 nativo, así que TypeScript se fija a la 6 |
+| P-35 | 2026-10-13 | Los IDs de decisión **canónicos** son los de `MEMORY.md` §2 (`P-n`) y los del SPEC (`D-n`); los `P-n` locales de `tasks/plan.md` §3 quedan como históricos y **no se citan** | `plan.md` §3 y `MEMORY.md` §2 usaban `P-1…P-n` para decisiones distintas; se resuelve en `ADR-0001` |
 
 ## 3. Recomendaciones hechas
 

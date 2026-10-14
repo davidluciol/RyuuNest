@@ -66,6 +66,12 @@ progreso, respaldo, SDK/CLI y CI. Se ejecuta sin UI y se verifica con pruebas au
 Las decisiones D-1…D-13 de `SPEC.md` §5.4 se respetan sin cambios. Estas son las decisiones
 técnicas que el plan necesita y que el SPEC deja abiertas:
 
+> ⚠️ **Identificadores locales (P-35).** Los `P-n` de esta tabla son **propios de este plan** y
+> colisionan con los `P-n` (distintos) de `MEMORY.md` §2. La fuente canónica de decisiones es
+> `MEMORY.md` §2 (producto/proceso) y `docs/SPEC.md` §5.4 (`D-n`, arquitectura); estas decisiones
+> técnicas quedan registradas en `docs/decisions/ADR-0001-stack-y-convenciones.md`. **No citar los
+> `P-n` de esta sección.**
+
 | # | Decisión | Motivo | Alternativas |
 |---|---|---|---|
 | P-1 | Monorepo con **pnpm workspaces** | Rápido, enlaza paquetes del workspace sin publicar | npm workspaces, Turborepo |
@@ -170,7 +176,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 ### Fase 0 — Fundación
 - [x] T01 Monorepo (pnpm) + TS estricto
 - [x] T02 Tooling (lint/format/typecheck) + Vitest + CI
-- [ ] T03 Documentación base: ADR-0001 + CONTRIBUTING + ASSETS.md + DoD
+- [x] T03 Documentación base: ADR-0001 + CONTRIBUTING + ASSETS.md + DoD
 - [ ] T04 Inventario y organización de `design/` (+ ubicación de MEMORY/AGENTS)
 - [ ] T05 Calibración de dispositivos y presupuesto de memoria
 
