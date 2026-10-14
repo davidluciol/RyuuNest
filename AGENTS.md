@@ -9,6 +9,7 @@
 2. Lee de `SPEC.md` las secciones que toca tu tarea (el orden de autoridad está en su cabecera).
 3. Si tocas interfaz, lee `DESIGN_RULES.md` y `DESIGN.md`, y abre el `screen.png` y el `code.html` de la pantalla en `design/stitch/`.
 4. No uses documentos fuera de ese orden de autoridad para decidir nada.
+5. Manten el desarollo actuaizado cualquier herramienta, libreria o framework que uses para el proyecto. usando Context7 para obtener la documentacion mas actualizada. Si ctx7 no tiene la documentacion, busca en internet y anota en `MEMORY.md` la fuente.
 
 ## 1. Regla 1: ante la duda, pregunta al humano
 
