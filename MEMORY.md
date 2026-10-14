@@ -12,9 +12,9 @@
 
 ## 1. Estado actual
 
-- **Fase:** Fase 0 en curso (fundación) y Fase 1 en curso. Del plan de la Parte 1: **T01–T04 hechos**; **T05 en curso** (la app arranca en los 3 dispositivos; faltan los smokes de librerías y el `minSdk`); **T06 y T07 hechos**.
+- **Fase:** Fase 0 en curso (fundación) y Fase 1 en curso. Del plan de la Parte 1: **T01–T04 hechos**; **T05 en curso** (la app arranca en los 3 dispositivos; faltan los smokes de librerías y el `minSdk`); **T06, T07 y T08 hechos**.
 - **Hecho:** documentación (`IDEA.md`, `SPEC.md`, `DESIGN.md`, `DESIGN_RULES.md`, 7 pantallas en `design/`, `AGENTS.md`, `MEMORY.md` en la raíz) y **monorepo** con `packages/core`, `module-sdk`, `test-site` y `ui-tokens`, más tooling (pnpm, TypeScript estricto, ESLint, Prettier, Vitest, CI) y prueba de humo en verde. Documentación base (T03: ADR-0001, `CONTRIBUTING.md`, `ASSETS.md`, DoD) y `design/` organizado (T04).
-- **Siguiente paso:** T08 (`ModuleHost`: permisos, tiempo límite, concurrencia, rate-limit); cerrar T05 con los datos que faltan.
+- **Siguiente paso:** T09 (validadores de manifest e índice de repo, en `module-sdk`); cerrar T05 con los datos que faltan.
 
 ## 2. Decisiones
 
@@ -57,6 +57,7 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 | P-33 | 2026-10-13 | Repositorio **GitHub conectado** (`github.com/davidluciol/RyuuNest`) y primer commit subido | Resuelve en parte el nombre (falta organización/npm/dominio/`applicationId`) |
 | P-34 | 2026-10-13 | Tooling de la Fase 0: `typescript@6` (fijado), `eslint@10`, `prettier@3`, `typescript-eslint@8`, `vitest@5` | `typescript-eslint` todavía no soporta TS 7.0 nativo, así que TypeScript se fija a la 6 |
 | P-35 | 2026-10-13 | Los IDs de decisión **canónicos** son los de `MEMORY.md` §2 (`P-n`) y los del SPEC (`D-n`); los `P-n` locales de `tasks/plan.md` §3 quedan como históricos y **no se citan** | `plan.md` §3 y `MEMORY.md` §2 usaban `P-1…P-n` para decisiones distintas; se resuelve en `ADR-0001` |
+| P-36 | 2026-10-13 | Librerías del host (P-5) fijadas: `htmlparser2@12`, `css-select@7`, `domhandler@6` en `packages/core` | `host.html()` (selectores CSS) sin APIs de plataforma; son JS puro y corren en RN |
 
 ## 3. Recomendaciones hechas
 
@@ -75,13 +76,15 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 5. **Tipos de host:** confirmados por el humano (T06); se formalizan en T08 (`ModuleHost`).
 6. **Verificación con tipos en `core`:** `pnpm --filter @ryuunest/core typecheck` ahora usa `tsconfig.test.json` (cubre `src` y `tests`); el `build` sigue emitiendo solo `src`. Aplicar el mismo patrón al resto de paquetes cuando toque.
 7. **Puerto `Storage` (provisional):** T07 lo dejó como un contrato mínimo de clave–valor; el API completo sobre el esquema del SPEC §8.1 se cierra en T21. Si T21 necesita otro enfoque (relacional), se amplía el puerto (cambio aditivo).
+8. **Políticas del host (números):** el SPEC §6.5 no fija los valores; T08 usó por defecto 15 s de tiempo límite, 4 peticiones simultáneas y 250 ms de pausa. Son ajustables por módulo (`HOST_DEFAULTS`); revisar con las mediciones (T35).
+9. **Globales del núcleo:** `setTimeout`/`clearTimeout`/`URL` se declaran en `packages/core/src/globals.d.ts` para no añadir las libs `DOM` ni `@types/node` (el núcleo sigue sin APIs de plataforma). No se emite a `dist/`.
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
 
-### 2026-10-13 · Fase 0 (T03–T05) y Fase 1 (T06, T07)
-- **Hecho:** T03: `docs/decisions/ADR-0001-stack-y-convenciones.md`, `CONTRIBUTING.md`, `ASSETS.md` y `docs/definition-of-done.md`. T04: `design/stitch/<pantalla>/` (7 pantallas), `design/themes/<tema>/` (4 temas), `DESIGN.md` y `DESIGN_RULES.md` movidos a la raíz; referencias de rutas actualizadas. T05 (en curso): app de calibración `apps/mobile` (`@ryuunest/mobile`, Expo SDK 57 + RN 0.86.3 + React 19.2.3) con smoke de `@noble/hashes`, `fflate` y `htmlparser2`; el bundle de Android compila (611 módulos). `docs/decisions/ADR-0002-versiones-y-presupuesto.md` en borrador, pendiente de mediciones. T06: tipos del contrato (`packages/core/src/contract/{types,errors}.ts`: `MediaKind` con `manhwa`, `Page`, `ImageRef`, `SeriesSummary`, `Release`, `Chapter`, `SeriesDetails`, `ChapterPages`, `ModuleManifest`, `ModuleApi`, `Host` y `ModuleError`/`ModuleErrorCode`) con tests propios (`tests/contract/*`) y `tsconfig.test.json` para verificar tipos. T07: puertos (`Storage`, `Http`, `Archive`, `Clock`, `SecureLock`) con adaptadores falsos (`MemoryStorage`, `StubHttp`, `FakeArchive`, `FixedClock`, `NoopSecureLock`) y 11 tests en `core`. Línea base (`lint`, `typecheck`, `test`, `build`, `format:check`) en verde.
-- **Decisiones:** P-35 (IDs de decisión canónicos: los de `MEMORY.md` y el SPEC; los `P-n` locales de `tasks/plan.md` §3 quedan históricos). Versiones candidatas del SDK 57 en ADR-0002 (sin fijar hasta medir).
-- **Preguntas nuevas / respondidas:** ctx7 vuelve a funcionar (login guardado; documentación algo rezagada). Tipos de host confirmados por el humano. Puerto `Storage` provisional (se cierra en T21). T05 pendiente de los smokes de librerías y el `minSdk`.
+### 2026-10-13 · Fase 0 (T03–T05) y Fase 1 (T06, T07, T08)
+- **Hecho:** T03: `docs/decisions/ADR-0001-stack-y-convenciones.md`, `CONTRIBUTING.md`, `ASSETS.md` y `docs/definition-of-done.md`. T04: `design/stitch/<pantalla>/` (7 pantallas), `design/themes/<tema>/` (4 temas), `DESIGN.md` y `DESIGN_RULES.md` movidos a la raíz; referencias de rutas actualizadas. T05 (en curso): app de calibración `apps/mobile` (`@ryuunest/mobile`, Expo SDK 57 + RN 0.86.3 + React 19.2.3) con smoke de `@noble/hashes`, `fflate` y `htmlparser2`; el bundle de Android compila (611 módulos). `docs/decisions/ADR-0002-versiones-y-presupuesto.md` en borrador, pendiente de mediciones. T06: tipos del contrato (`packages/core/src/contract/{types,errors}.ts`: `MediaKind` con `manhwa`, `Page`, `ImageRef`, `SeriesSummary`, `Release`, `Chapter`, `SeriesDetails`, `ChapterPages`, `ModuleManifest`, `ModuleApi`, `Host` y `ModuleError`/`ModuleErrorCode`) con tests propios (`tests/contract/*`) y `tsconfig.test.json` para verificar tipos. T07: puertos (`Storage`, `Http`, `Archive`, `Clock`, `SecureLock`) con adaptadores falsos (`MemoryStorage`, `StubHttp`, `FakeArchive`, `FixedClock`, `NoopSecureLock`) y 11 tests en `core`. T08: `ModuleHost` (permisos por dominio, tiempo límite, concurrencia y pausa mínima) y `host.html()` con selectores CSS (`htmlparser2` + `css-select` + `domhandler`); 20 tests en `core`. Línea base (`lint`, `typecheck`, `test`, `build`, `format:check`) en verde.
+- **Decisiones:** P-35 (IDs de decisión canónicos: los de `MEMORY.md` y el SPEC; los `P-n` locales de `tasks/plan.md` §3 quedan históricos). P-36 (librerías del host: `htmlparser2@12`, `css-select@7`, `domhandler@6`). Versiones candidatas del SDK 57 en ADR-0002 (sin fijar hasta medir).
+- **Preguntas nuevas / respondidas:** ctx7 vuelve a funcionar (no indexa `css-select`; documentación algo rezagada). Tipos de host confirmados por el humano. Puerto `Storage` provisional (se cierra en T21). Políticas del host y `globals.d.ts` anotadas como preguntas. T05 pendiente de los smokes de librerías y el `minSdk`.
 - **Siguiente paso:** T08 (`ModuleHost`); cerrar T05 con los datos que faltan.
 
 ### 2026-10-13 · Inicio de implementación: T01–T02 (monorepo + tooling)

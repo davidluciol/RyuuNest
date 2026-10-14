@@ -186,19 +186,21 @@ mínimo, `StubHttp`, `FakeArchive`, `FixedClock`, `NoopSecureLock`).
 
 ## Task T08: ModuleHost (permisos, tiempo límite, concurrencia, rate-limit)
 
+**Estado:** ✅ hecho 2026-10-13.
+
 **Descripción.** Implementar `ModuleHost` (SPEC §6.5): `fetch` con permisos por dominio, tiempo
 límite por petición, máximo de peticiones simultáneas por módulo, pausa mínima al mismo
 dominio; `html()` con selectores CSS (P-5); `log()`; `settings`. Se apoya en `Http`/`Clock`.
 
 **Criterios de aceptación:**
-- [ ] Una URL fuera de `permissions.domains` se rechaza con `ModuleError`.
-- [ ] Una petición que excede el tiempo límite produce `TIMEOUT`.
-- [ ] El número de peticiones simultáneas y la pausa entre peticiones se respetan.
-- [ ] `host.html()` permite `select`/`find`/`attr`/`text` sobre HTML de ejemplo.
+- [x] Una URL fuera de `permissions.domains` se rechaza con `ModuleError`.
+- [x] Una petición que excede el tiempo límite produce `TIMEOUT`.
+- [x] El número de peticiones simultáneas y la pausa entre peticiones se respetan.
+- [x] `host.html()` permite `select`/`find`/`attr`/`text` sobre HTML de ejemplo.
 
 **Verificación:**
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: test con `StubHttp` lento y otro que cuenta concurrencia.
+- [x] `pnpm --filter @ryuunest/core test`
+- [x] Manual: test con un `Http` que nunca responde (tiempo límite) y otro que cuenta concurrencia.
 
 **Dependencias:** T07.
 **Archivos probables:** `packages/core/src/host/ModuleHost.ts`,

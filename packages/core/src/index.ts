@@ -11,6 +11,7 @@ export const CORE_VERSION = "0.0.0";
 
 export * from "./contract/errors.js";
 export * from "./contract/types.js";
+export * from "./host/ModuleHost.js";
 export * from "./ports/index.js";
 
-// TODO(T08): ModuleHost (permisos, tiempo límite, concurrencia, rate-limit).
+// TODO(T09): validadores de manifest e índice de repo (`module-sdk`).
