@@ -204,11 +204,11 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [x] T12 Repos + index.json
 - [x] T13 PackageInstaller
 - [x] T14 ModuleRegistry
-- [ ] T15 E2E de instalación desde fixture (**AC-2, AC-8**)
+- [x] T15 E2E de instalación desde fixture (**AC-2, AC-8**)
 
 ### ✅ Checkpoint C (tras T12–T15)
-- [ ] Un paquete con hash incorrecto se rechaza con mensaje claro
-- [ ] Nada se instala sin confirmación
+- [x] Un paquete con hash incorrecto se rechaza con mensaje claro
+- [x] Nada se instala sin confirmación
 - [ ] Revisión humana
 
 ### Fase 3 — Corte vertical 2: declarativo

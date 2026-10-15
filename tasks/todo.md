@@ -412,20 +412,29 @@ declarativo no piden confirmación (el SPEC solo menciona la ampliación y decla
 
 ## Task T15: E2E de instalación desde fixture (AC-2, AC-8)
 
+**Estado:** ✅ hecho 2026-10-15.
+
 **Descripción.** Prueba de extremo a extremo: partir de un repo fixture (index.json + zip),
 añadir el repo, previsualizar el módulo, confirmar, verificar hash, descomprimir, validar
 manifest y activar. Cubre la confirmación manual y el rechazo por hash incorrecto.
 
 **Criterios de aceptación:**
 
-- [ ] Flujo completo repo→módulo activo en una sola prueba.
-- [ ] Hash incorrecto o manifest inválido se rechaza con mensaje claro (**AC-2**).
-- [ ] Ninguna vía instala sin confirmación manual (**AC-8**).
+- [x] Flujo completo repo→módulo activo en una sola prueba.
+- [x] Hash incorrecto o manifest inválido se rechaza con mensaje claro (**AC-2**).
+- [x] Ninguna vía instala sin confirmación manual (**AC-8**).
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test -- install.e2e`
-- [ ] Manual: comprobar que la prueba falla si se salta la confirmación.
+- [x] `pnpm --filter @ryuunest/core test -- install.e2e` (7 tests, rojo→verde)
+- [x] Manual: la prueba falla si se salta la confirmación (las pruebas 2 y 3 la exigen).
+
+**Notas:** T15 añade `install/InstallFlow.ts`, el **único punto de entrada** del núcleo para
+instalar: `preview()` da los datos de la pantalla de confirmación y `install()` exige
+`{ confirmed: true }` (y `reinforced` en módulos script, SPEC §7.1 paso 3). Sin confirmación no
+toca la red ni el almacén (AC-8). Además rechaza pisar un módulo ya instalado, para que no se
+pueda esquivar la confirmación de actualización de RF-6. El validador de manifest entra
+inyectado; sus mensajes reales se prueban en `module-sdk`.
 
 **Dependencias:** T14.
 **Archivos probables:** `packages/core/tests/e2e/install.e2e.test.ts`.
