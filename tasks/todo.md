@@ -19,12 +19,14 @@ paquetes `@ryuunest/core`, `@ryuunest/module-sdk`, `@ryuunest/test-site` y
 `tsconfig.base.json` compartido y el comando raíz `build`.
 
 **Criterios de aceptación:**
+
 - [ ] `pnpm install` enlaza los paquetes del workspace sin publicar.
 - [ ] `tsconfig` base con `strict: true`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`.
 - [ ] El core no importa nada de `apps/*` ni de RN/DOM.
 - [ ] `pnpm -r build` compila los paquetes.
 
 **Verificación:**
+
 - [ ] `pnpm install && pnpm -r build`
 - [ ] Manual: los `package.json` tienen `"name": "@ryuunest/*"` y `"private": true`.
 
@@ -42,11 +44,13 @@ CI (GitHub Actions) que ejecute lint, typecheck, tests y build. Fija los comando
 verificación del proyecto.
 
 **Criterios de aceptación:**
+
 - [ ] `pnpm lint`, `pnpm -r typecheck`, `pnpm -r test` funcionan en local y en CI.
 - [ ] CI corre en cada push/PR y falla si algo no está en verde.
 - [ ] Un test de humo trivial pasa en `core`.
 
 **Verificación:**
+
 - [ ] `pnpm lint && pnpm -r typecheck && pnpm -r test`
 - [ ] Manual: revisar `.github/workflows/ci.yml`.
 
@@ -65,12 +69,14 @@ registro de Manrope, Inter y Lucide) y una Definición de Terminado (DoD) por ta
 con `AGENTS.md` §8.
 
 **Criterios de aceptación:**
+
 - [x] `docs/decisions/ADR-0001-stack-y-convenciones.md` registra las decisiones P-1…P-12.
 - [x] `CONTRIBUTING.md` explica ramas, commits y cómo correr las pruebas (español).
 - [x] `ASSETS.md` declara que todo recurso de terceros registra su licencia (OFL/ISC…).
 - [x] La DoD exige: criterios cumplidos, lint, tipos y pruebas en verde.
 
 **Verificación:**
+
 - [x] Manual: los cuatro documentos existen y son coherentes con `docs/SPEC.md` y `AGENTS.md`.
 
 **Dependencias:** T01.
@@ -88,12 +94,14 @@ temas a `design/themes/`, y eliminar/archivar los documentos contradictorios. Co
 ubicación de `MEMORY.md` y `AGENTS.md`.
 
 **Criterios de aceptación:**
+
 - [x] `design/stitch/<pantalla>/` contiene las 7 pantallas con `screen.png` y `code.html`.
 - [x] `design/themes/` agrupa `dragon_night`, `ember_hearth`, `arcane_vault`, `moonlit_frost`.
 - [x] `DESIGN.md` y `DESIGN_RULES.md` quedan en la raíz (según SPEC §5.1/§11.2).
 - [x] Se verifica que los documentos eliminados (PRD, especificación visual) ya no están.
 
 **Verificación:**
+
 - [x] Manual: recorrer `design/` y comparar con la tabla de SPEC §11.2.
 
 **Dependencias:** T01.
@@ -110,6 +118,7 @@ SDK elegido admite Android 9 (API 28). Smokes de compatibilidad para `@noble/has
 y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1** (decisión del humano).
 
 **Criterios de aceptación:**
+
 - [x] La app de prueba arranca en los 3 dispositivos.
 - [ ] `docs/decisions/ADR-0002-versiones-y-presupuesto.md` fija versiones de Expo/RN/RNTV y el
       tope de imágenes en memoria para la MiBox 4.
@@ -117,6 +126,7 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 - [ ] Los tres paquetes JS puros corren en RN sin errores.
 
 **Verificación:**
+
 - [x] `pnpm --filter @ryuunest/mobile exec expo export --platform android` compila el bundle (611 módulos, sin errores).
 - [ ] Manual: arranque cronometrado y lectura de memoria en cada dispositivo.
 - [ ] `pnpm --filter @ryuunest/mobile start` en los 3 dispositivos.
@@ -127,11 +137,12 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 **Tamaño:** M.
 
 ### 🚩 Checkpoint A (tras T01–T05)
-- [ ] `pnpm install && pnpm -r typecheck && pnpm -r test && pnpm -r build` en verde
-- [ ] CI activo y en verde
-- [ ] `design/` organizado según SPEC §11.2
-- [ ] Presupuesto de memoria documentado
-- [ ] Revisión humana
+
+- [X] `pnpm install && pnpm -r typecheck && pnpm -r test && pnpm -r build` en verde
+- [X] CI activo y en verde
+- [X] `design/` organizado según SPEC §11.2
+- [X] Presupuesto de memoria documentado
+- [X] Revisión humana
 
 ---
 
@@ -147,12 +158,14 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 `ModuleError` con `ModuleErrorCode`. Ayudas para construir errores tipados.
 
 **Criterios de aceptación:**
+
 - [x] Todos los tipos del SPEC §6.1–6.5 existen y compilan en estricto.
 - [x] `MediaKind` admite `"manga" | "manhua" | "manhwa" | "comic"`.
 - [x] `ModuleError` expone `code` y `details`; se puede instanciar por cada código.
 - [x] No hay tipos `any` sin justificación documentada.
 
 **Verificación:**
+
 - [x] `pnpm --filter @ryuunest/core test`
 - [x] Manual: assert de compilación sobre cada interfaz clave (`contract.types.test-d.ts` vía `tsconfig.test.json`).
 
@@ -171,11 +184,13 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 mínimo, `StubHttp`, `FakeArchive`, `FixedClock`, `NoopSecureLock`).
 
 **Criterios de aceptación:**
+
 - [x] Cada puerto es una interfaz pura, sin dependencias de plataforma.
 - [x] Existen adaptadores falsos usables en tests del core.
 - [x] `SecureLock` es opcional (puede no estar disponible).
 
 **Verificación:**
+
 - [x] `pnpm --filter @ryuunest/core test`
 - [x] Manual: un test que inyecta los falsos y ejecuta una operación trivial.
 
@@ -193,12 +208,14 @@ límite por petición, máximo de peticiones simultáneas por módulo, pausa mí
 dominio; `html()` con selectores CSS (P-5); `log()`; `settings`. Se apoya en `Http`/`Clock`.
 
 **Criterios de aceptación:**
+
 - [x] Una URL fuera de `permissions.domains` se rechaza con `ModuleError`.
 - [x] Una petición que excede el tiempo límite produce `TIMEOUT`.
 - [x] El número de peticiones simultáneas y la pausa entre peticiones se respetan.
 - [x] `host.html()` permite `select`/`find`/`attr`/`text` sobre HTML de ejemplo.
 
 **Verificación:**
+
 - [x] `pnpm --filter @ryuunest/core test`
 - [x] Manual: test con un `Http` que nunca responde (tiempo límite) y otro que cuenta concurrencia.
 
@@ -216,11 +233,13 @@ dominio; `html()` con selectores CSS (P-5); `log()`; `settings`. Se apoya en `Ht
 (incluido `manhwa`), `permissions.domains`, `sha256`, etc. Devuelve errores descriptivos.
 
 **Criterios de aceptación:**
+
 - [x] Un manifest válido pasa; cada campo inválido produce un error con ruta y motivo.
 - [x] Un `index.json` con formato/versión incorrectos se rechaza.
 - [x] Se valida `apiVersion` y `minAppVersion` contra la app (`options.appVersion`).
 
 **Verificación:**
+
 - [x] `pnpm --filter @ryuunest/module-sdk test`
 - [x] Manual: fixtures de manifests válidos e inválidos (en `tests/manifest.test.ts` y `tests/repoIndex.test.ts`).
 
@@ -238,12 +257,14 @@ cualquier `ModuleApi` contra las fixtures. Debe incluir ya la **segunda arquitec
 cursor) para T32.
 
 **Criterios de aceptación:**
+
 - [ ] El paquete exporta fixtures y un servidor/`StubHttp` de prueba reutilizable.
 - [ ] Cubre los 5 métodos del contrato, con al menos 2 `releases` en un capítulo.
 - [ ] Incluye dos arquitecturas: (a) HTML + paginación numérica; (b) JSON + paginación por cursor.
 - [ ] El arnés falla con mensaje claro si un módulo no implementa un método requerido.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/test-site test && pnpm --filter @ryuunest/core test`
 - [ ] Manual: ejecutar el arnés contra un módulo de ejemplo (aún no implementado → skip).
 
@@ -259,12 +280,14 @@ validarlo (`validate`), probarlo contra `test-site` (`test`) y empaquetarlo con 
 SHA-256 (`pack`). Incluye plantilla declarativa y de script.
 
 **Criterios de aceptación:**
+
 - [ ] `pack` genera un `.zip` y calcula su `sha256` y `size`.
 - [ ] `validate` usa T09 y devuelve código de salida distinto de cero si es inválido.
 - [ ] `test` ejecuta el arnés de T10 contra una plantilla.
 - [ ] La plantilla script usa solo `host.*` (sin acceso a red propio).
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/module-sdk test`
 - [ ] Manual: `node dist/cli.js create demo && ... validate/test/pack`.
 
@@ -275,6 +298,7 @@ SHA-256 (`pack`). Incluye plantilla declarativa y de script.
 **Tamaño:** M.
 
 ### 🚩 Checkpoint B (tras T06–T11)
+
 - [ ] `pnpm -r test && pnpm -r build` en verde
 - [ ] Un módulo de ejemplo se valida y se prueba contra `test-site`
 - [ ] Revisión humana
@@ -291,11 +315,13 @@ metadatos (nombre, tipo, idioma, NSFW, runtime, permisos). Eliminar un repo no d
 módulos (RF-8) pero marca que no recibirán actualizaciones.
 
 **Criterios de aceptación:**
+
 - [ ] Añadir un repo válido lo persiste y sus módulos quedan listables.
 - [ ] Una URL no-HTTPS o un `index.json` inválido se rechazan con mensaje claro.
 - [ ] Eliminar un repo conserva sus módulos y marca el aviso de "sin actualizaciones".
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: repos con `StubHttp` sirviendo un `index.json` de fixture.
 
@@ -312,12 +338,14 @@ zip-slip, límites de tamaño total y de número de archivos), validar el manife
 forma **atómica** (si algo falla, no queda nada a medias).
 
 **Criterios de aceptación:**
+
 - [ ] Hash incorrecto → rechazo con mensaje claro y sin dejar restos.
 - [ ] Rutas `../` en el zip → rechazo (zip-slip).
 - [ ] Se respetan los límites del SPEC §7.1: paquete ≤ 2 MB, descomprimido ≤ 5 MB, ≤ 50 archivos.
 - [ ] En fallo, el registro y el disco quedan igual que antes de iniciar.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: fixtures de zip correctos, con hash malo, con zip-slip y bomba de compresión.
 
@@ -333,12 +361,14 @@ actualizar; guardar el último error; en la actualización, volver a pedir confi
 amplían permisos o cambia de declarativo a script.
 
 **Criterios de aceptación:**
+
 - [ ] Activar/desactivar cambia el estado sin reinstalar.
 - [ ] Desinstalar elimina archivos y registro de forma consistente.
 - [ ] Una actualización que amplía permisos o cambia de runtime exige nueva confirmación.
 - [ ] `last_error` se guarda y se puede consultar por módulo.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: secuencia instalar→desactivar→actualizar→desinstalar.
 
@@ -354,11 +384,13 @@ añadir el repo, previsualizar el módulo, confirmar, verificar hash, descomprim
 manifest y activar. Cubre la confirmación manual y el rechazo por hash incorrecto.
 
 **Criterios de aceptación:**
+
 - [ ] Flujo completo repo→módulo activo en una sola prueba.
 - [ ] Hash incorrecto o manifest inválido se rechaza con mensaje claro (**AC-2**).
 - [ ] Ninguna vía instala sin confirmación manual (**AC-8**).
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test -- install.e2e`
 - [ ] Manual: comprobar que la prueba falla si se salta la confirmación.
 
@@ -367,6 +399,7 @@ manifest y activar. Cubre la confirmación manual y el rechazo por hash incorrec
 **Tamaño:** S.
 
 ### 🚩 Checkpoint C (tras T12–T15)
+
 - [ ] Paquete con hash incorrecto rechazado con mensaje claro
 - [ ] Nada se instala sin confirmación
 - [ ] Revisión humana
@@ -383,12 +416,14 @@ plantillas (`{baseUrl}`, `{query}`, `{page}`), listar con selectores, extraer ca
 `number`, `join`, `replace`). Implementa `ModuleApi` sobre `ModuleHost`.
 
 **Criterios de aceptación:**
+
 - [ ] `search`, `popular`, `latest` → `Page<SeriesSummary>` desde fixtures.
 - [ ] `details` y `pages` producen los tipos del contrato.
 - [ ] Cada transformación tiene prueba unitaria; `absoluteUrl` y `path` manejan URLs relativas.
 - [ ] `hasNext` se calcula según la configuración.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: módulo declarativo de ejemplo contra `test-site` (arquitectura HTML).
 
@@ -404,10 +439,12 @@ plantillas (`{baseUrl}`, `{query}`, `{page}`), listar con selectores, extraer ca
 apunta a las fixtures HTML, cubriendo los 5 métodos y comprobando `releases` múltiples.
 
 **Criterios de aceptación:**
+
 - [ ] El arnés pasa para el módulo declarativo de ejemplo.
 - [ ] Un selector roto produce `ModuleError` con `code` y `details.selector`.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test -- declarative.contract`
 - [ ] Manual: romper un selector en la fixture y ver el error tipado.
 
@@ -417,6 +454,7 @@ apunta a las fixtures HTML, cubriendo los 5 métodos y comprobando `releases` m�
 **Tamaño:** S.
 
 ### 🚩 Checkpoint D (tras T16–T17)
+
 - [ ] `popular`, `latest`, `search`, `details`, `pages` responden desde fixtures
 - [ ] Revisión humana
 
@@ -431,11 +469,13 @@ apunta a las fixtures HTML, cubriendo los 5 métodos y comprobando `releases` m�
 limitación conocida (D-5: sin aislamiento real en la v1).
 
 **Criterios de aceptación:**
+
 - [ ] Un módulo script de ejemplo se carga y devuelve un `ModuleApi` válido.
 - [ ] El módulo no puede llamar red fuera de `host.fetch` (documentado y verificado).
 - [ ] Los errores del módulo se convierten en `ModuleError` con código.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: módulo que llama a `host.fetch` a un dominio no permitido → error.
 
@@ -450,10 +490,12 @@ limitación conocida (D-5: sin aislamiento real en la v1).
 `host.html()` y `host.fetch` sobre las fixtures (incluida la arquitectura JSON de `test-site`).
 
 **Criterios de aceptación:**
+
 - [ ] El arnés pasa para el módulo script de ejemplo (mismo contrato que el declarativo).
 - [ ] `images` en `pages()` incluye `headers` (`Referer`, `User-Agent`) cuando el módulo los define.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test -- script.contract`
 - [ ] Manual: comparar la salida contra el runtime declarativo.
 
@@ -470,11 +512,13 @@ timeout, bloqueo, parseo) a `ModuleErrorCode` y garantiza que un módulo roto no
 (SPEC RNF-8).
 
 **Criterios de aceptación:**
+
 - [ ] `createModuleApi(manifest, entry)` devuelve la implementación correcta.
 - [ ] Cada fallo se mapea a un `ModuleErrorCode` del SPEC §6.4.
 - [ ] Un módulo que lanza excepciones no propaga fallos no controlados; expone `last_error`.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: módulo que lanza en `details()` → `ModuleError` contenido.
 
@@ -484,6 +528,7 @@ timeout, bloqueo, parseo) a `ModuleErrorCode` y garantiza que un módulo roto no
 **Tamaño:** S.
 
 ### 🚩 Checkpoint E (tras T18–T20)
+
 - [ ] Módulo script y declarativo pasan el mismo contrato
 - [ ] Errores mapeados a `ModuleErrorCode`
 - [ ] Revisión humana
@@ -500,12 +545,14 @@ completo (`repo`, `module`, `series`, `folder`, `favorite`, `progress`, `chapter
 `SqliteStorage` probado en Node.
 
 **Criterios de aceptación:**
+
 - [ ] El esquema coincide con el SPEC §8.1 (incluidos `title_norm`, `page_total` e índices).
 - [ ] Las migraciones son idempotentes y versionadas.
 - [ ] `MemoryStorage` y `SqliteStorage` pasan la misma suite de conformidad.
 - [ ] `PRAGMA foreign_keys` activo; `favorite.folder_id` usa `ON DELETE SET NULL`.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: aplicar migraciones dos veces sin error.
 
@@ -523,12 +570,14 @@ añadir/quitar favoritos (quitar un favorito no borra su progreso, RF-30) y CRUD
 (crear, renombrar, reordenar, borrar). Un favorito pertenece a **una** carpeta o a ninguna (D-12).
 
 **Criterios de aceptación:**
+
 - [ ] Alta/actualización de serie con normalización de título (minúsculas, sin acentos).
 - [ ] Un favorito se asigna a una carpeta o a ninguna; moverlo reemplaza la anterior.
 - [ ] Borrar carpeta deja sus favoritos sin carpeta (`ON DELETE SET NULL`).
 - [ ] Quitar un favorito conserva la fila de `progress`.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: secuencia crear carpeta→favoritear→mover→borrar carpeta.
 
@@ -546,6 +595,7 @@ orden por nombre, último leído y fecha de adición. Chips Todo · Leyendo · C
 «Completado», que es v2). Paginación por cursor y prueba de carga con 3000 series.
 
 **Criterios de aceptación:**
+
 - [ ] Todos los filtros y órdenes del SPEC funcionan y se combinan.
 - [ ] Con 3000 series sintéticas, filtrar/buscar responde < 300 ms en el entorno de CI.
 - [ ] Con el filtro NSFW apagado, las series NSFW no aparecen (**RF-35**, núcleo).
@@ -553,6 +603,7 @@ orden por nombre, último leído y fecha de adición. Chips Todo · Leyendo · C
 - [ ] Los resultados usan índices (se verifica con `EXPLAIN QUERY PLAN`).
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test -- library.perf`
 - [ ] Manual: revisar el plan de consulta de la búsqueda por título.
 
@@ -568,12 +619,14 @@ orden por nombre, último leído y fecha de adición. Chips Todo · Leyendo · C
 (vertical/paginado y dirección) y release/grupo preferido por serie (RF-16, RF-18).
 
 **Criterios de aceptación:**
+
 - [ ] Guardar/leer modo de lectura y release preferida por `(module_id, series_id)`.
 - [ ] El modo predeterminado según tipo se aplica cuando no hay preferencia (manhua y manhwa
       vertical, manga D→I, cómic I→D).
 - [ ] Actualizar una preferencia actualiza `updated_at`.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: comprobar el valor por defecto por cada tipo.
 
@@ -583,6 +636,7 @@ orden por nombre, último leído y fecha de adición. Chips Todo · Leyendo · C
 **Tamaño:** S.
 
 ### 🚩 Checkpoint F (tras T21–T24)
+
 - [ ] Filtro/búsqueda < 300 ms con 3000 series (entorno Node)
 - [ ] Un favorito pertenece a una carpeta o a ninguna
 - [ ] Revisión humana
@@ -600,12 +654,14 @@ página exacta. El debounce y "al salir" son de la UI (Parte 2); el núcleo expo
 `saveProgress` y `getProgress`.
 
 **Criterios de aceptación:**
+
 - [ ] Guardar y leer `(chapter_id, release_id, page_index, page_total)` por serie.
 - [ ] Cerrar y reabrir (simulado) devuelve la misma página.
 - [ ] `updated_at` se actualiza en cada escritura.
 - [ ] Escrituras concurrentes de la misma serie no corrompen el registro.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: test de escrituras concurrentes.
 
@@ -621,11 +677,13 @@ manualmente o al terminar el capítulo; consultar el estado por serie. (No calcu
 el contador de no leídos es v2, RF-42.)
 
 **Criterios de aceptación:**
+
 - [ ] Marcar/desmarcar un capítulo por `(module_id, series_id, chapter_id)`.
 - [ ] Al terminar el capítulo se marca automáticamente.
 - [ ] La consulta devuelve el conjunto de capítulos leídos de una serie.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: marcar, desmarcar y volver a marcar.
 
@@ -641,12 +699,14 @@ paginado, navegación anterior/siguiente, límites de capítulo, disparo del gua
 (con `page_total`) y de "capítulo terminado". Políticas de memoria documentadas (el render es Parte 2).
 
 **Criterios de aceptación:**
+
 - [ ] Cambiar de página dentro de un capítulo y saltar entre capítulos funciona en el estado.
 - [ ] Cambiar de modo de lectura actualiza la preferencia de la serie (T24).
 - [ ] Llegar a la última página señala "capítulo terminado" y ofrece el siguiente capítulo.
 - [ ] `page_index` respeta los límites (no negativo, no mayor que `page_total`).
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: recorrer un capítulo de 60 páginas en el estado.
 
@@ -656,6 +716,7 @@ paginado, navegación anterior/siguiente, límites de capítulo, disparo del gua
 **Tamaño:** M.
 
 ### 🚩 Checkpoint G (tras T25–T27)
+
 - [ ] Guardar y reabrir devuelve la página exacta (núcleo, sin UI)
 - [ ] `page_total` se guarda para el porcentaje y la barra (RF-41)
 - [ ] Revisión humana
@@ -671,12 +732,14 @@ carpetas, series, favoritos, progreso (con `pageTotal`), lecturas, preferencias 
 Sin secretos.
 
 **Criterios de aceptación:**
+
 - [ ] El JSON cumple el esquema del SPEC §8.3 (`format`, `version`, `createdAt`).
 - [ ] El progreso incluye `pageTotal`.
 - [ ] Incluye todos los repos y las filas de usuario con `updatedAt`.
 - [ ] No contiene secretos ni credenciales.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: validar la salida contra un esquema de fixture.
 
@@ -693,12 +756,14 @@ reemplazar. Los repos y módulos del respaldo **no se instalan solos**: se devue
 sugerencias para confirmar una por una (RF-38).
 
 **Criterios de aceptación:**
+
 - [ ] Un respaldo inválido o sobredimensionado se rechaza sin tocar los datos.
 - [ ] Modo fusión respeta el `updated_at` más reciente.
 - [ ] Modo reemplazo restaura el estado del respaldo.
 - [ ] Repos/módulos del respaldo se devuelven como sugerencias, sin instalar nada.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test`
 - [ ] Manual: fusionar dos respaldos con progreso en conflicto.
 
@@ -713,11 +778,13 @@ sugerencias para confirmar una por una (RF-38).
 progreso y repos; exportar; importar en una instalación limpia; comprobar que todo se reproduce.
 
 **Criterios de aceptación:**
+
 - [ ] Biblioteca, carpetas, progreso y repos se reproducen sin pérdidas (**AC-7**).
 - [ ] Los módulos/repos no se instalan automáticamente.
 - [ ] La fusión por `updated_at` se verifica en un caso con conflicto.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test -- backup.e2e`
 - [ ] Manual: inspeccionar el JSON intermedio.
 
@@ -726,6 +793,7 @@ progreso y repos; exportar; importar en una instalación limpia; comprobar que t
 **Tamaño:** S.
 
 ### 🚩 Checkpoint H (tras T28–T30)
+
 - [ ] Exportar e importar reproduce biblioteca, carpetas, progreso y repos sin pérdidas
 - [ ] Módulos/repos del respaldo no se instalan solos
 - [ ] Revisión humana
@@ -743,12 +811,14 @@ tipados, timeouts, sin estado compartido). Guardar fixtures del sitio en `test-s
 repo de módulos (P-8).
 
 **Criterios de aceptación:**
+
 - [ ] Los 5 métodos funcionan contra las fixtures del sitio.
 - [ ] Se corrigen los 8 defectos del Apéndice A.4.
 - [ ] `pages()` devuelve `Referer`/`User-Agent` en `headers` cuando el sitio lo exige.
 - [ ] No hay estado compartido entre llamadas.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test -- tmo`
 - [ ] Manual: ejecución real contra el sitio (fuera de CI) para confirmar.
 
@@ -766,6 +836,7 @@ escribir el ADR que congela la API 1.0 o lista los ajustes pendientes. El segund
 de publicar la 1.0.
 
 **Criterios de aceptación:**
+
 - [ ] El contrato pasa con las dos arquitecturas de `test-site`.
 - [ ] Se documentan los ajustes de API derivados de dos arquitecturas distintas.
 - [ ] `docs/decisions/ADR-000x-congelacion-api-1.0.md` marca la API como estable o enumera
@@ -773,6 +844,7 @@ de publicar la 1.0.
 - [ ] Se anota el resultado en `MEMORY.md` (preguntas abiertas del SPEC §17.2).
 
 **Verificación:**
+
 - [ ] `pnpm -r test`
 - [ ] Manual: revisar el ADR con el autor.
 
@@ -782,6 +854,7 @@ de publicar la 1.0.
 **Tamaño:** M.
 
 ### 🚩 Checkpoint I (tras T31–T32)
+
 - [ ] `logicTMO` busca, lista capítulos y entrega imágenes desde un sitio real
 - [ ] El contrato pasa con dos arquitecturas distintas
 - [ ] La API 1.0 se considera congelable
@@ -798,11 +871,13 @@ incorrecto, manifest malicioso, respaldo JSON malicioso/sobredimensionado y enla
 (`ryuunest://add-repo?url=…`) que **nunca** instalan solos.
 
 **Criterios de aceptación:**
+
 - [ ] Cada amenaza de la tabla §7.2 tiene al menos una prueba que falla si se quita la mitigación.
 - [ ] Un deep link solo abre la pantalla de confirmación, no instala (**AC-8**).
 - [ ] Los límites de tamaño/archivos se cubren con pruebas.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test -- security`
 - [ ] Manual: revisar la correspondencia amenaza↔prueba.
 
@@ -817,12 +892,14 @@ tiempo límite, errores contenidos, reintento manual, `last_error` visible y lí
 concurrencia/rate-limit del host.
 
 **Criterios de aceptación:**
+
 - [ ] Un módulo que cuelga provoca `TIMEOUT` sin bloquear el hilo del núcleo.
 - [ ] Un módulo que lanza excepciones queda contenido y registra `last_error`.
 - [ ] El reintento manual vuelve a intentar sin reiniciar la app.
 - [ ] El rate-limit por dominio se respeta bajo carga.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test -- resilience`
 - [ ] Manual: módulo que responde tras un fallo transitorio.
 
@@ -837,11 +914,13 @@ concurrencia/rate-limit del host.
 núcleo antes de fusionar.
 
 **Criterios de aceptación:**
+
 - [ ] El CI falla si baja la cobertura del contrato por debajo del umbral acordado.
 - [ ] Las pruebas de contrato de ambos runtimes corren en CI.
 - [ ] `pnpm -r test && pnpm -r typecheck && pnpm lint` es la puerta única de fusión (**AC-11**).
 
 **Verificación:**
+
 - [ ] `pnpm -r test && pnpm -r typecheck && pnpm lint`
 - [ ] Manual: PR de prueba que rompe el contrato y comprobar que el CI falla.
 
@@ -850,6 +929,7 @@ núcleo antes de fusionar.
 **Tamaño:** S.
 
 ### 🚩 Checkpoint J — Fin de la Parte 1 (tras T33–T35)
+
 - [ ] Toda la suite y el CI en verde
 - [ ] Cobertura del contrato completa
 - [ ] **DETENERSE: cambiar de modelo para planificar la Parte 2 (diseño / front-end)**
@@ -874,11 +954,13 @@ tipografía (Manrope/Inter con tamaños, pesos, interlineado y tracking), espaci
 4 px), radios y densidades. Incluir solo el tema Dragon Night, con estructura de temas.
 
 **Criterios de aceptación:**
+
 - [ ] Todos los tokens de SPEC §11.9 existen como tokens semánticos; los genéricos del front-matter no se usan.
 - [ ] Existe un mapa de tema Dragon Night y la estructura para añadir temas futuros.
 - [ ] Ningún componente consumirá valores literales (P2-4).
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/ui-tokens test && pnpm --filter @ryuunest/ui-tokens build`
 - [ ] Manual: comparar cada token con `DESIGN.md` y SPEC §11.9.
 
@@ -894,11 +976,13 @@ tipografía (Manrope/Inter con tamaños, pesos, interlineado y tracking), espaci
 `elevated`, texto oscuro sobre `accent`/`progress`). Falla si algún par no cumple AA.
 
 **Criterios de aceptación:**
+
 - [ ] Los tokens propios coinciden con `DESIGN.md`; si un genérico difiere, se ignora y se anota.
 - [ ] Todos los pares usados cumplen WCAG AA; los rellenos de `accent`/`progress` llevan texto `bg`.
 - [ ] La prueba corre en CI (**AC-13**).
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/ui-tokens test`
 - [ ] Manual: introducir un color que falle y comprobar que la prueba falla.
 
@@ -913,11 +997,13 @@ locales (OFL) e integrar **Lucide** (`lucide-react-native` en móvil/TV, `lucide
 Sin pesos sintéticos. Registrar en `ASSETS.md`.
 
 **Criterios de aceptación:**
+
 - [ ] Las fuentes cargan desde archivos locales; ningún CDN (RNF-5).
 - [ ] Un único conjunto de iconos SVG (Lucide); sin emojis ni glifos de texto (V4).
 - [ ] `ASSETS.md` registra Manrope, Inter y Lucide con su licencia.
 
 **Verificación:**
+
 - [ ] Manual: arrancar la galería y comprobar que no hay peticiones externas.
 - [ ] Playwright: cero peticiones a dominios externos.
 
@@ -933,11 +1019,13 @@ punto de corte (móvil < 600, tablet 600–1024, escritorio > 1024), portadas 2:
 1,25×. Base compartida por móvil, web y TV.
 
 **Criterios de aceptación:**
+
 - [ ] Un helper de densidad (compacta/cómoda/TV) expone espaciado, márgenes y escala tipográfica.
 - [ ] La escala TV aplica 1,25× a todos los tamaños (SPEC §11.9).
 - [ ] Márgenes correctos por punto de corte.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/ui-tokens test`
 - [ ] Manual: galería en 3 anchos (móvil, tablet, escritorio).
 
@@ -953,11 +1041,13 @@ estados (normal, presionado, foco, deshabilitado, cargando, error). Es la base d
 AC-13 y del trabajo por pantallas (Regla 3 y 5 de `AGENTS.md`).
 
 **Criterios de aceptación:**
+
 - [ ] La galería lista todos los componentes y sus estados.
 - [ ] Compila para web (base de la verificación con Playwright).
 - [ ] Sin valores literales; todo sale de `ui-tokens`.
 
 **Verificación:**
+
 - [ ] Playwright: abrir la galería y comprobar estados y cero peticiones externas.
 
 **Dependencias:** F01, F03, F04.
@@ -971,11 +1061,13 @@ primario/secundario/destructivo (SPEC §11.10), campo de texto y búsqueda, casi
 chip de filtro (36 px + `hitSlop`), insignia de tipo/estado (24 px, **neutra** según V1).
 
 **Criterios de aceptación:**
+
 - [ ] Un botón primario por pantalla; relleno `accent`/`progress` con texto `bg`.
 - [ ] Chips e insignias con `hitSlop` para llegar a 48 dp (RNF-7).
 - [ ] Todos los estados en la galería; animaciones solo `transform`/`opacity` (Regla 4).
 
 **Verificación:**
+
 - [ ] Playwright sobre la galería; comprobación de áreas táctiles y contraste.
 
 **Dependencias:** F05.
@@ -990,11 +1082,13 @@ porcentaje, completado atenuado con ✓), fila de ajustes, encabezado único (lo
 inferior de 5 destinos / riel, hojas y diálogos (esquinas superiores 24 px).
 
 **Criterios de aceptación:**
+
 - [ ] La fila de capítulo muestra máximo dos señales por estado (V8).
 - [ ] La cabecera y la barra inferior son las mismas en todas las pantallas (T1, V5).
 - [ ] Sin sombras; profundidad por niveles de superficie (RNF-12).
 
 **Verificación:**
+
 - [ ] Playwright sobre la galería; comprobación de estados de capítulo y barra de progreso.
 
 **Dependencias:** F06.
@@ -1008,11 +1102,13 @@ reintentar, ver detalle) y carga breve, con el dragón marcador de `assets/place
 acción siguiente (SPEC §11.12). Sin tarjetas-mascota (T4).
 
 **Criterios de aceptación:**
+
 - [ ] Cada estado lleva dragón (según §11.12/§11.5), título en Manrope y una acción.
 - [ ] El error de módulo incluye detalle técnico desplegable (módulo, URL, código, selector).
 - [ ] El dragón es un marcador local (sin obras reales ni texto).
 
 **Verificación:**
+
 - [ ] Playwright sobre la galería; revisar la lista de 20 s.
 
 **Dependencias:** F07.
@@ -1026,11 +1122,13 @@ acción siguiente (SPEC §11.12). Sin tarjetas-mascota (T4).
 radio o espacio en `apps/*` (SPEC §11.11, AC-13). Fuerza a usar tokens.
 
 **Criterios de aceptación:**
+
 - [ ] El lint falla ante un `#RRGGBB` o un `padding: 13` literal en `apps/*`.
 - [ ] La regla corre en CI junto al resto.
 - [ ] Excepciones documentadas (si las hay) con comentario.
 
 **Verificación:**
+
 - [ ] `pnpm lint`
 - [ ] Manual: introducir un literal y comprobar que falla.
 
@@ -1045,11 +1143,13 @@ cadenas de la interfaz; ninguna cadena literal en los componentes. Fechas y núm
 formato local (RNF-11).
 
 **Criterios de aceptación:**
+
 - [ ] Todas las cadenas visibles viven en el archivo de traducciones.
 - [ ] Existe la estructura para añadir inglés después.
 - [ ] Los componentes de la galería ya usan claves de traducción.
 
 **Verificación:**
+
 - [ ] `pnpm --filter @ryuunest/core test` (o paquete i18n) y revisión de la galería.
 
 **Dependencias:** F05.
@@ -1057,6 +1157,7 @@ formato local (RNF-11).
 **Tamaño:** S.
 
 ### 🚩 Checkpoint P-A (tras F01–F10)
+
 - [ ] `ui-tokens` coincide con `DESIGN.md`; contraste WCAG en verde (AC-13)
 - [ ] Galería revisada con todos los estados; fuentes e iconos locales (cero CDN)
 - [ ] Lint de diseño activo; cadenas externalizadas
@@ -1073,11 +1174,13 @@ formato local (RNF-11).
 (logo local, nombre, etiqueta de sección, búsqueda; sin campana ni avatar).
 
 **Criterios de aceptación:**
+
 - [ ] Una sola cabecera y una sola barra inferior, iguales en todas las pantallas (T1).
 - [ ] Etiquetas funcionales por destino; sin nombres temáticos como etiqueta de pantalla (11.7).
 - [ ] El destino activo se marca con `accent` (V1).
 
 **Verificación:**
+
 - [ ] Playwright: navegar entre los 5 destinos; comprobar cabecera y barra.
 - [ ] Manual: verificar en el POCO F6 Pro.
 
@@ -1092,11 +1195,13 @@ repositorio (campo + pegar del portapapeles + "Importar respaldo"), e instalar u
 terminar, "Ir a leer". Cubre el estado inicial sin módulos (RF-1, AC-1).
 
 **Criterios de aceptación:**
+
 - [ ] Guía hasta añadir un repo y activar un módulo; el estado vacío lleva a "Añadir repositorio".
 - [ ] Nada se instala sin confirmación (AC-8).
 - [ ] En TV, el paso 2 prioriza "Importar respaldo" (nota de SPEC §11.8).
 
 **Verificación:**
+
 - [ ] Playwright del flujo completo con `test-site`; AC-1.
 - [ ] Manual: primer uso en dispositivo.
 
@@ -1111,11 +1216,13 @@ terminar, "Ir a leer". Cubre el estado inicial sin módulos (RF-1, AC-1).
 módulos. Si no hay lectura en curso, "Empieza algo nuevo" → Descubrir.
 
 **Criterios de aceptación:**
+
 - [ ] La tarjeta "Continuar" es lo primero que atrae; el dragón no compite (SPEC §11.4/§11.12).
 - [ ] Máximo 4 secciones; sin "Novedades de Portales" ni contadores (RF-42).
 - [ ] El porcentaje/barra sale de `page_index / page_total` (RF-41).
 
 **Verificación:**
+
 - [ ] Playwright contra `inicio_guarida/screen.png` (móvil).
 - [ ] Manual en POCO F6 Pro.
 
@@ -1130,12 +1237,14 @@ visible, chips Todo · Leyendo · Carpetas, filtros por tipo/fuente/carpeta/NSFW
 nombre/último leído/fecha, cuadrícula virtualizada de tarjetas y gestión de carpetas.
 
 **Criterios de aceptación:**
+
 - [ ] Chips Todo · Leyendo · Carpetas (sin «Completado», v2).
 - [ ] Un solo acceso a carpetas por pantalla (V6); títulos a dos líneas sin "…" (T7).
 - [ ] Con NSFW apagado, no aparecen series NSFW (RF-35).
 - [ ] Los filtros muestran los cuatro tipos: manga, manhua, manhwa, cómic (P2-8).
 
 **Verificación:**
+
 - [ ] Playwright contra `biblioteca_tesoros/screen.png`.
 - [ ] Manual: 3000 series de ejemplo; desplazamiento fluido (AC-4 en dispositivo).
 
@@ -1150,11 +1259,13 @@ fuente, filas `popular` y `latest` si el módulo las ofrece, búsqueda con pagin
 de error de módulo con detalle desplegable (RF-11).
 
 **Criterios de aceptación:**
+
 - [ ] Se recuerda el último módulo; un módulo NSFW no aparece con el filtro apagado (RF-35).
 - [ ] Error de módulo con causa, código, reintentar y ver detalle (SPEC §11.5).
 - [ ] Sin orden/filtro por género (fuera de la v1).
 
 **Verificación:**
+
 - [ ] Playwright contra `descubrir_aventuras/screen.png` con `test-site`.
 - [ ] Manual: buscar y paginar.
 
@@ -1170,11 +1281,13 @@ error; confirmación normal y **reforzada** para script (mantener pulsado); prot
 instalación (RF-7).
 
 **Criterios de aceptación:**
+
 - [ ] La confirmación muestra permisos y hash; en script exige mantener pulsado.
 - [ ] RF-7: pide bloqueo del dispositivo si está activa (vía `SecureLock`).
 - [ ] Actualizar con ampliación de permisos vuelve a pedir confirmación (RF-6).
 
 **Verificación:**
+
 - [ ] Playwright contra `fuentes_portales/screen.png`.
 - [ ] Manual: instalar un módulo `script` y comprobar la confirmación reforzada.
 
@@ -1190,11 +1303,13 @@ alternativos, lista de capítulos con 3 estados (sin leer, en curso con porcenta
 orden y salto al último leído, selector de `release` y favorito con carpeta.
 
 **Criterios de aceptación:**
+
 - [ ] Fila de capítulo con máximo dos señales por estado (V8) y porcentaje desde `page_total`.
 - [ ] Favorito con un toque; carpeta desde el menú o al mantener pulsado (RF-17).
 - [ ] Release preferida recordada por serie (RF-16).
 
 **Verificación:**
+
 - [ ] Playwright contra `detalle_pantalla/screen.png`.
 - [ ] Manual: cambiar de release y de estado de capítulo.
 
@@ -1210,11 +1325,13 @@ título, selector de capítulo, modo) en barras `elevated` al 95 % con borde `bo
 de progreso con debounce y al salir, y tarjeta "Siguiente capítulo".
 
 **Criterios de aceptación:**
+
 - [ ] El modo se recuerda por serie (RF-18); el centro muestra/oculta controles (RF-19).
 - [ ] Se guarda `page_index` y `page_total`; reabrir lleva a la página exacta (RF-20).
 - [ ] Nada decorativo sobre el contenido (RF-22); sin animaciones en el lector (Regla 4).
 
 **Verificación:**
+
 - [ ] Playwright contra `pantalla_lector/screen.png` (controles visibles).
 - [ ] Manual: leer 60 páginas en la MiBox 4 sin OOM (AC-6).
 
@@ -1229,11 +1346,13 @@ encendida mientras se lee, reintento por imagen con detalle técnico, precarga d
 imágenes del siguiente capítulo, y cabeceras `Referer`/`User-Agent` en las imágenes.
 
 **Criterios de aceptación:**
+
 - [ ] Las imágenes se piden con las cabeceras del módulo (`ImageRef.headers`, RF-24).
 - [ ] Un fallo de imagen ofrece reintento individual; no se descarta el capítulo.
 - [ ] La precarga respeta el presupuesto de memoria de la Fase 0.
 
 **Verificación:**
+
 - [ ] Manual: romper una imagen y reintentar; medir memoria durante la precarga.
 - [ ] Playwright: zoom y controles.
 
@@ -1248,11 +1367,13 @@ instalación, modo de lectura predeterminado, gestión de caché, respaldo (expo
 "Acerca de y licencias". Se omiten perfil, sincronización, descargas y "Optimizar SQLite".
 
 **Criterios de aceptación:**
+
 - [ ] El interruptor NSFW está apagado por defecto (RF-34).
 - [ ] No hay «Modo OLED negro puro», «Zonas táctiles» ni «Precarga» como ajustes (SPEC §11.5).
 - [ ] El selector de tema no se muestra (solo Dragon Night).
 
 **Verificación:**
+
 - [ ] Playwright contra `ajustes_pantalla/screen.png`.
 - [ ] Manual: cambiar NSFW y comprobar Biblioteca/Descubrir.
 
@@ -1267,11 +1388,13 @@ importar con validación, elección fusión/reemplazo y lista de repos/módulos 
 confirmar uno por uno (nunca se instalan solos).
 
 **Criterios de aceptación:**
+
 - [ ] Exportar e importar reproducen biblioteca, carpetas, progreso y repos (AC-7, UI).
 - [ ] Los repos/módulos del respaldo se muestran como sugerencias, sin instalar automáticamente.
 - [ ] Un respaldo inválido se rechaza con mensaje claro.
 
 **Verificación:**
+
 - [ ] Playwright: exportar y reimportar en una instalación limpia.
 - [ ] Manual: compartir el archivo.
 
@@ -1280,6 +1403,7 @@ confirmar uno por uno (nunca se instalan solos).
 **Tamaño:** M.
 
 ### 🚩 Checkpoint P-B (tras F11–F21)
+
 - [ ] AC-1, AC-3 y AC-12 (móvil); AC-6 medido en la MiBox 4
 - [ ] Ningún valor literal; componentes en la galería; estados resueltos
 - [ ] Revisión humana
@@ -1295,11 +1419,13 @@ navegación espacial, anillo de foco de 2 px `accent` con separación de 2 px y 
 tipográfica 1,25×. Reutiliza los componentes de la galería.
 
 **Criterios de aceptación:**
+
 - [ ] Foco siempre visible (no solo color) en todos los elementos interactivos.
 - [ ] Escala 1,25× aplicada; márgenes seguros de TV.
 - [ ] Navegación completa con D-pad.
 
 **Verificación:**
+
 - [ ] Manual en la MiBox 4: recorrer los 5 destinos con el control remoto.
 - [ ] Playwright (web/TV emulado) para el foco con teclado.
 
@@ -1314,11 +1440,13 @@ página, izquierda/derecha cambian de página, OK muestra/oculta controles, Atr�
 visible en los controles.
 
 **Criterios de aceptación:**
+
 - [ ] Todas las acciones del lector funcionan solo con el control remoto (**AC-9**).
 - [ ] Los controles son grandes y el foco es visible.
 - [ ] Sin animaciones en el lector.
 
 **Verificación:**
+
 - [ ] Manual: leer un capítulo completo en la MiBox 4 con D-pad (AC-9, AC-6).
 
 **Dependencias:** F22, F18, F19.
@@ -1326,6 +1454,7 @@ visible en los controles.
 **Tamaño:** M.
 
 ### 🚩 Checkpoint P-C (tras F22–F23)
+
 - [ ] AC-9: todas las pantallas usables solo con el control remoto
 - [ ] Revisión humana
 
@@ -1339,11 +1468,13 @@ visible en los controles.
 densidad compacta: riel lateral de 240 px, rejilla de 8 columnas, márgenes de escritorio.
 
 **Criterios de aceptación:**
+
 - [ ] Reutiliza tokens y componentes; no reimplementa estilos.
 - [ ] Riel de 240 px y densidad compacta (SPEC §11.9).
 - [ ] Sin peticiones externas (RNF-5), fuentes locales.
 
 **Verificación:**
+
 - [ ] Playwright: ancho de escritorio y móvil; cero peticiones externas.
 
 **Dependencias:** Checkpoint P-C (o Checkpoint P-B para empezar), F04.
@@ -1356,11 +1487,13 @@ densidad compacta: riel lateral de 240 px, rejilla de 8 columnas, márgenes de e
 layout de escritorio (riel, rejilla). Ajustar los puntos de corte.
 
 **Criterios de aceptación:**
+
 - [ ] Las pantallas de la v1 funcionan en web con densidad compacta.
 - [ ] Misma terminología y una sola etiqueta por concepto (SPEC §11.7).
 - [ ] Estados de carga/vacío/error resueltos.
 
 **Verificación:**
+
 - [ ] Playwright: recorrer las pantallas web y comparar composición con los PNG.
 
 **Dependencias:** F24, Checkpoint P-B.
@@ -1374,11 +1507,13 @@ que el origen de la página es el de la app y que el dominio está autorizado, h
 responde `{ id, status, headers, body }`. Permisos opcionales por dominio.
 
 **Criterios de aceptación:**
+
 - [ ] Sin autorización de dominio no hay petición (SPEC §7.2).
 - [ ] Responde solo al origen de la app.
 - [ ] Cuerpo en texto o base64 según corresponda.
 
 **Verificación:**
+
 - [ ] Manual: cargar la extensión, autorizar un dominio y hacer una petición.
 - [ ] Pruebas del manifiesto/permisos de la extensión.
 
@@ -1392,11 +1527,13 @@ responde `{ id, status, headers, body }`. Permisos opcionales por dominio.
 los módulos en un Web Worker sin DOM (SPEC §10). El núcleo no cambia: solo se añade el adaptador.
 
 **Criterios de aceptación:**
+
 - [ ] Los módulos corren en un Web Worker sin DOM.
 - [ ] `Http` de la web pasa por la extensión; sin petición directa.
 - [ ] Se lee un capítulo desde el navegador (**AC-10**).
 
 **Verificación:**
+
 - [ ] Manual: con la extensión instalada, leer un capítulo desde la web.
 - [ ] Playwright: comprobar que las peticiones salen por la extensión.
 
@@ -1405,6 +1542,7 @@ los módulos en un Web Worker sin DOM (SPEC §10). El núcleo no cambia: solo se
 **Tamaño:** M.
 
 ### 🚩 Checkpoint P-D (tras F24–F27)
+
 - [ ] AC-10: se lee un capítulo desde el navegador con la extensión
 - [ ] Revisión humana
 
@@ -1420,11 +1558,13 @@ tokens, áreas táctiles, foco, cero peticiones externas), registrar diferencias
 captura en dispositivo para AC-12.
 
 **Criterios de aceptación:**
+
 - [ ] Cada pantalla de la v1 comparada con su `screen.png`; sin diferencias de color, tipografía, radio ni espaciado.
 - [ ] Diferencias registradas en `design/stitch/DIFFS.md`.
 - [ ] Comprobaciones automáticas del `AGENTS.md` §5 en verde.
 
 **Verificación:**
+
 - [ ] Playwright sobre la **galería compilada para web**; captura en el POCO F6 Pro y la MiBox 4 (P2-9).
 - [ ] Revisión humana de la lista de 20 s.
 
@@ -1433,6 +1573,7 @@ captura en dispositivo para AC-12.
 **Tamaño:** M.
 
 ### 🚩 Checkpoint P-E — Fin de la Parte 2
+
 - [ ] Todas las pantallas verificadas; diferencias registradas
 - [ ] AC-12 y AC-13 completos; galería revisada
 - [ ] Revisión humana y publicación de la primera versión
