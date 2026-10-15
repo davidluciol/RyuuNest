@@ -1,6 +1,6 @@
 # ADR-0002: Versiones y presupuesto de memoria (calibración de dispositivos)
 
-- **Estado:** borrador — smokes **OK en los 2 teléfonos** (2026-10-14); **MiBox 4 pospuesta** (Android TV de lado, `MEMORY.md` P-43, alcance solo evidencia); quedan fijar las versiones y medir el tope de imágenes en un teléfono (provisional hasta repetirlo en la MiBox)
+- **Estado:** versiones **fijadas** (2026-10-15); smokes **OK en los 2 teléfonos** (2026-10-14); **MiBox 4 pospuesta** (Android TV de lado, `MEMORY.md` P-43, alcance solo evidencia); **queda el tope de imágenes** (provisional hasta repetirlo en la MiBox, P-45)
 - **Fecha:** 2026-10-13
 - **Tarea:** T05 (Fase 0)
 - **Fuentes:** `docs/SPEC.md` §14 y §17.2; `tasks/todo.md` T05; registro npm (2026-10-13)
@@ -16,23 +16,24 @@ La app de calibración es un shell mínimo en `apps/mobile` (`@ryuunest/mobile`)
 comprueba que las tres librerías JS puras del núcleo (`@noble/hashes`, `fflate` y
 `htmlparser2`) corren en React Native.
 
-> **Este ADR no está cerrado.** Las versiones de abajo son **candidatas** y las tablas de
-> medición están vacías hasta que se ejecute la app en los tres dispositivos.
+> Las versiones de abajo quedaron **fijadas el 2026-10-15** (decisión del humano); la tabla
+> del tope de imágenes sigue pendiente de medir.
 
-## Versiones candidatas (de `apps/mobile/package.json`)
+## Versiones (fijadas 2026-10-15)
 
 | Componente | Versión | Estado |
 | --- | --- | --- |
-| Expo SDK | `~57.0.28` | Candidata (última) |
-| React Native | `0.86.3` | Candidata (la que fija el SDK 57) |
-| React | `19.2.3` | Candidata (la que fija el SDK 57) |
-| expo-status-bar | `~57.0.1` | Candidata |
-| TypeScript | `~6.0.3` | Fijada (ver ADR-0001 y `MEMORY.md` P-34) |
-| @noble/hashes | `^2.4.0` | Candidata |
-| fflate | `^0.8.3` | Candidata |
-| htmlparser2 | `^12.0.0` | Candidata |
-| better-sqlite3 (dev/test) | `^13.0.3` | Candidata (aún no instalada) |
-| react-native-tvos | `0.87.1-1` | **Pendiente de confirmar** contra el SDK 57 |
+| Expo SDK | `~57.0.28` | **Fijada** |
+| React Native | `0.86.3` | **Fijada** (la que fija el SDK 57) |
+| React | `19.2.3` | **Fijada** (la que fija el SDK 57) |
+| expo-status-bar | `~57.0.1` | **Fijada** |
+| TypeScript | `~6.0.3` | **Fijada** (ver ADR-0001 y `MEMORY.md` P-34) |
+| @noble/hashes | `^2.4.0` | **Fijada** (también dependencia de `@ryuunest/core` desde T13, P-47) |
+| fflate | `^0.8.3` | **Fijada** |
+| htmlparser2 | `^12.0.0` | **Fijada** |
+| @types/node (dev) | `^22.20.5` | **Fijada** (devDependency de `module-sdk`, P-42) |
+| better-sqlite3 (dev/test) | `^13.0.3` | Candidata (aún no instalada; entra en T21) |
+| react-native-tvos | `0.87.1-1` | **Pendiente de confirmar** contra el SDK 57 (T-TVP, pospuesta con P-43) |
 
 ## Android mínimo (SPEC §17.2)
 
@@ -100,8 +101,8 @@ La app de calibración ejecuta estas comprobaciones y muestra OK/FALLO por dispo
 
 ## Consecuencias
 
-- Al cerrar la calibración, estas versiones pasan a **fijadas** y se replican en los demás
-  paquetes cuando toque.
+- Las versiones quedaron **fijadas el 2026-10-15** y se replican en los demás paquetes cuando
+  toque (`react-native-tvos` sigue pendiente: T-TVP, pospuesta con P-43).
 - Si el SDK 57 exigiera un `minSdk` mayor que 28, se decide entre degradar el SDK o cambiar
   el equipo mínimo (afecta a D-9 y a la MiBox 4) — se registra como decisión nueva.
 - El presupuesto de memoria de la MiBox 4 condiciona las políticas del estado del lector

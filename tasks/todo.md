@@ -110,7 +110,7 @@ ubicación de `MEMORY.md` y `AGENTS.md`.
 
 ## Task T05: Calibración de dispositivos y presupuesto de memoria
 
-**Estado:** 🟡 casi listo 2026-10-14 — **smokes 3/3 OK en los 2 teléfonos** (Galaxy S25 Ultra con captura en `docs/capturasT05/Samsung_s25Ultra.jpeg`; POCO F5 Pro en mano). **Android TV (MiBox 4) queda de lado de momento** (P-43, alcance **solo evidencia**: sigue siendo el equipo mínimo). Se añadió el **panel del tope de imágenes** en `apps/mobile` (`src/ImageCapPanel.tsx`, con tests rojo→verde) para medirlo en un teléfono (P-45). Quedan: que el humano mida ese tope, fijar las versiones en el ADR y revalidar RNF-1 en release (las mediciones actuales son de desarrollo).
+**Estado:** 🟡 casi listo 2026-10-15 — **smokes 3/3 OK en los 2 teléfonos** (Galaxy S25 Ultra con captura en `docs/capturasT05/Samsung_s25Ultra.jpeg`; POCO F5 Pro en mano). **Versiones fijadas en `ADR-0002` (2026-10-15)**. **Android TV (MiBox 4) queda de lado de momento** (P-43, alcance **solo evidencia**: sigue siendo el equipo mínimo). Se añadió el **panel del tope de imágenes** en `apps/mobile` (`src/ImageCapPanel.tsx`, con tests rojo→verde) para medirlo en un teléfono (P-45). Quedan: que el humano **mida ese tope** y revalidar RNF-1 en release (las mediciones actuales son de desarrollo).
 
 **Descripción.** Aplicación Expo mínima de prueba (shell vacío) que arranque en POCO F5 Pro,
 Galaxy S25 Ultra y MiBox 4; medir arranque en frío y presupuesto de memoria; confirmar que el
