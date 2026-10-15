@@ -110,7 +110,7 @@ ubicación de `MEMORY.md` y `AGENTS.md`.
 
 ## Task T05: Calibración de dispositivos y presupuesto de memoria
 
-**Estado:** 🟡 casi listo 2026-10-14 — **smokes 3/3 OK en los 2 teléfonos** (Galaxy S25 Ultra con captura en `docs/capturasT05/Samsung_s25Ultra.jpeg`; POCO F5 Pro en mano). **Android TV (MiBox 4) queda de lado de momento** (P-43, alcance **solo evidencia**: sigue siendo el equipo mínimo). Quedan: fijar las versiones en el ADR, medir el tope de imágenes en un teléfono (decidido 2026-10-14; provisional hasta la MiBox) y verificar en release el RNF-1 (las mediciones actuales son de desarrollo).
+**Estado:** 🟡 casi listo 2026-10-14 — **smokes 3/3 OK en los 2 teléfonos** (Galaxy S25 Ultra con captura en `docs/capturasT05/Samsung_s25Ultra.jpeg`; POCO F5 Pro en mano). **Android TV (MiBox 4) queda de lado de momento** (P-43, alcance **solo evidencia**: sigue siendo el equipo mínimo). Se añadió el **panel del tope de imágenes** en `apps/mobile` (`src/ImageCapPanel.tsx`, con tests rojo→verde) para medirlo en un teléfono (P-45). Quedan: que el humano mida ese tope, fijar las versiones en el ADR y revalidar RNF-1 en release (las mediciones actuales son de desarrollo).
 
 **Descripción.** Aplicación Expo mínima de prueba (shell vacío) que arranque en POCO F5 Pro,
 Galaxy S25 Ultra y MiBox 4; medir arranque en frío y presupuesto de memoria; confirmar que el
@@ -119,17 +119,20 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 
 **Criterios de aceptación:**
 
-- [x] La app de prueba arranca en los 3 dispositivos.
+- [x] La app de prueba arranca en los 3 dispositivos. _(la MiBox quedó pospuesta: P-43)_
 - [ ] `docs/decisions/ADR-0002-versiones-y-presupuesto.md` fija versiones de Expo/RN/RNTV y el
-      tope de imágenes en memoria para la MiBox 4.
+      tope de imágenes en memoria (medido en un teléfono, **P-45**, provisional hasta la MiBox).
 - [x] Se responde la pregunta abierta del SPEC §17.2 sobre Android 9 (mínimo API 28, confirmado en dispositivo).
-- [ ] Los tres paquetes JS puros corren en RN sin errores.
+- [x] Los tres paquetes JS puros corren en RN sin errores (3/3 OK en Galaxy S25 Ultra y POCO F5 Pro; MiBox pendiente por P-43).
 
 **Verificación:**
 
-- [x] `pnpm --filter @ryuunest/mobile exec expo export --platform android` compila el bundle (611 módulos, sin errores).
-- [ ] Manual: arranque cronometrado y lectura de memoria en cada dispositivo.
-- [ ] `pnpm --filter @ryuunest/mobile start` en los 3 dispositivos.
+- [x] `pnpm --filter @ryuunest/mobile exec expo export --platform android` compila el bundle (614 módulos, sin errores; incluye `pagina-calibracion.png`).
+- [x] `pnpm --filter @ryuunest/mobile test` — 11 tests (presupuesto de imágenes y builder del PNG), rojo→verde.
+- [x] Manual: arranque cronometrado y lectura de memoria en los 3 dispositivos (números en `ADR-0002`; medidos **en desarrollo**, revalidar RNF-1 en release).
+- [x] `pnpm --filter @ryuunest/mobile start` en los 2 teléfonos (MiBox pendiente: P-43).
+- [ ] Manual: **medir el tope de imágenes** en un teléfono con el panel de `ImageCapPanel.tsx` y anotarlo en `ADR-0002`.
+- [ ] Fijar en `ADR-0002` las versiones de Expo/RN/RNTV (hoy candidatas).
 
 **Dependencias:** Ninguna (transversal a T01–T02).
 **Archivos probables:** `apps/mobile/{package.json,app.json,App.tsx}`,

@@ -62,6 +62,20 @@ Android TV de lado) con el panel de calibración de `apps/mobile`, y queda como 
 provisional**: se recalibra en la MiBox 4 cuando vuelva esa prueba. Lo usará el lector
 (SPEC §9).
 
+**Cómo se mide (panel de `apps/mobile`):**
+
+1. `pnpm --filter @ryuunest/mobile exec expo start --clear` y abrir la app en el teléfono.
+2. Bajar a «Tope de imágenes (T05)» y pulsar `+1` una vez: el panel sostiene N copias de
+   `apps/mobile/assets/pagina-calibracion.png` (1440×3200, generada con
+   `scripts/generate-pagina-calibracion.mjs`; el builder está en `src/calibrationPage.ts`).
+3. Tras cada incremento: `adb shell dumpsys meminfo <paquete> | grep TOTAL` y anotar el PSS.
+4. El **tope** es la mayor N estable: ni reinicio ni bloqueo de la app. Los bytes que ocupa
+   cada imagen decodificada calcula `src/imageBudget.ts` (`tests/imageBudget.test.ts`).
+
+| Dispositivo | PSS con N=1 | PSS con N=tope | Tope (N) | MB por imagen |
+| --- | --- | --- | --- | --- |
+| Galaxy S25 Ultra / POCO F5 Pro | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ |
+
 > ⚠ **Cuidado al leer esta tabla:** las mediciones se hicieron con la app **en desarrollo**
 > (Expo Go + Metro, ver la captura con el menú de Expo). RNF-1 (`< 3 s` en frío) apunta al
 > **APK compilado**, así que hay que revalidar en release antes de dar RNF-1 por cumplido.

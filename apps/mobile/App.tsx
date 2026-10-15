@@ -6,6 +6,8 @@ import { parseDocument } from "htmlparser2";
 import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
+import ImageCapPanel from "./src/ImageCapPanel";
+
 // T05: app de calibración. Shell mínimo para medir el arranque y la memoria y
 // comprobar que las tres librerías JS puras del núcleo corren en React Native.
 
@@ -45,18 +47,21 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Calibración RyuuNest (T05)</Text>
-      <Text style={styles.subtitle}>
-        Módulo cargado +{bootMs} ms · {passed}/{checks.length} comprobaciones
-      </Text>
-      <ScrollView contentContainerStyle={styles.list}>
-        {checks.map((item) => (
-          <Text key={item.name} style={styles.row}>
-            {item.ok ? "OK  " : "FALLO  "}
-            {item.name}
-            {item.ok ? "" : ` — ${item.detail}`}
-          </Text>
-        ))}
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.title}>Calibración RyuuNest (T05)</Text>
+        <Text style={styles.subtitle}>
+          Módulo cargado +{bootMs} ms · {passed}/{checks.length} comprobaciones
+        </Text>
+        <View style={styles.list}>
+          {checks.map((item) => (
+            <Text key={item.name} style={styles.row}>
+              {item.ok ? "OK  " : "FALLO  "}
+              {item.name}
+              {item.ok ? "" : ` — ${item.detail}`}
+            </Text>
+          ))}
+        </View>
+        <ImageCapPanel />
       </ScrollView>
       <StatusBar style="auto" />
     </View>
@@ -64,9 +69,10 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
+  container: { flex: 1 },
+  content: { padding: 24, alignItems: "center" },
   title: { fontSize: 20, fontWeight: "700", marginBottom: 8 },
   subtitle: { fontSize: 14, marginBottom: 16 },
-  list: { alignItems: "flex-start" },
+  list: { alignSelf: "stretch", alignItems: "flex-start" },
   row: { fontSize: 14, marginBottom: 6 },
 });
