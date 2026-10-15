@@ -227,9 +227,18 @@ importers:
 
   packages/module-sdk:
     dependencies:
+      '@noble/hashes':
+        specifier: ^2.4.0
+        version: 2.4.0
       '@ryuunest/core':
         specifier: workspace:*
         version: link:../core
+      '@ryuunest/test-site':
+        specifier: workspace:*
+        version: link:../test-site
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
 
   packages/test-site:
     dependencies:

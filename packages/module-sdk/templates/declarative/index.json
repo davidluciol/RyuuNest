@@ -1,0 +1,77 @@
+{
+  "popular": {
+    "url": "{baseUrl}/popular?page={page}",
+    "list": "ul.serie-list > li.serie-card",
+    "fields": {
+      "id": { "selector": "a.serie-link", "attr": "href", "transform": ["path"] },
+      "title": { "selector": "h3.serie-title", "transform": ["trim"] },
+      "cover": { "selector": "img.serie-cover", "attr": "src", "transform": ["absoluteUrl"] },
+      "kind": { "selector": "span.serie-kind", "transform": ["trim"] },
+      "hint": { "selector": "span.serie-hint", "transform": ["trim"] }
+    },
+    "hasNext": { "selector": "nav.pager a.next", "exists": true }
+  },
+  "latest": {
+    "url": "{baseUrl}/latest?page={page}",
+    "list": "ul.serie-list > li.serie-card",
+    "fields": {
+      "id": { "selector": "a.serie-link", "attr": "href", "transform": ["path"] },
+      "title": { "selector": "h3.serie-title", "transform": ["trim"] },
+      "cover": { "selector": "img.serie-cover", "attr": "src", "transform": ["absoluteUrl"] },
+      "kind": { "selector": "span.serie-kind", "transform": ["trim"] },
+      "hint": { "selector": "span.serie-hint", "transform": ["trim"] }
+    },
+    "hasNext": { "selector": "nav.pager a.next", "exists": true }
+  },
+  "search": {
+    "url": "{baseUrl}/search?q={query}&page={page}",
+    "list": "ul.serie-list > li.serie-card",
+    "fields": {
+      "id": { "selector": "a.serie-link", "attr": "href", "transform": ["path"] },
+      "title": { "selector": "h3.serie-title", "transform": ["trim"] },
+      "cover": { "selector": "img.serie-cover", "attr": "src", "transform": ["absoluteUrl"] },
+      "kind": { "selector": "span.serie-kind", "transform": ["trim"] },
+      "hint": { "selector": "span.serie-hint", "transform": ["trim"] }
+    },
+    "hasNext": { "selector": "nav.pager a.next", "exists": true }
+  },
+  "details": {
+    "url": "{baseUrl}/serie/{id}",
+    "fields": {
+      "title": { "selector": "h1.detalle-titulo", "transform": ["trim"] },
+      "cover": { "selector": "img.detalle-portada", "attr": "src", "transform": ["absoluteUrl"] },
+      "description": { "selector": "p.detalle-descripcion", "transform": ["trim"] },
+      "genres": {
+        "selector": "ul.detalle-generos > li.genero",
+        "all": true,
+        "transform": ["trim"]
+      },
+      "altTitles": {
+        "selector": "ul.detalle-titulos-alt > li.titulo-alt",
+        "all": true,
+        "transform": ["trim"]
+      },
+      "status": { "selector": "span.detalle-estado", "attr": "data-estado" }
+    },
+    "chapters": {
+      "list": "ul.capitulos > li.capitulo",
+      "fields": {
+        "id": { "attr": "data-chapter-id" },
+        "title": { "selector": "span.capitulo-titulo", "transform": ["trim"] },
+        "number": { "attr": "data-numero", "transform": ["number"] }
+      },
+      "releases": {
+        "list": "ul.releases > li.release",
+        "fields": {
+          "id": { "attr": "data-release-id" },
+          "group": { "selector": "span.release-grupo", "transform": ["trim"] },
+          "publishedAt": { "attr": "data-published-at" }
+        }
+      }
+    }
+  },
+  "pages": {
+    "url": "{baseUrl}/leer/{chapterId}/{releaseId}",
+    "images": { "selector": "div.lector > img.pagina", "attr": "src", "transform": ["absoluteUrl"] }
+  }
+}

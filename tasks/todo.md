@@ -277,21 +277,23 @@ cursor) para T32.
 
 ## Task T11: CLI del SDK + plantilla de módulo
 
+**Estado:** ✅ hecho 2026-10-14 (rehecha con TDD estricto, P-41).
+
 **Descripción.** CLI de `module-sdk` (SPEC §13): crear un módulo desde plantilla (`create`),
 validarlo (`validate`), probarlo contra `test-site` (`test`) y empaquetarlo con su hash
 SHA-256 (`pack`). Incluye plantilla declarativa y de script.
 
 **Criterios de aceptación:**
 
-- [ ] `pack` genera un `.zip` y calcula su `sha256` y `size`.
-- [ ] `validate` usa T09 y devuelve código de salida distinto de cero si es inválido.
-- [ ] `test` ejecuta el arnés de T10 contra una plantilla.
-- [ ] La plantilla script usa solo `host.*` (sin acceso a red propio).
+- [x] `pack` genera un `.zip` y calcula su `sha256` y `size`.
+- [x] `validate` usa T09 y devuelve código de salida distinto de cero si es inválido.
+- [x] `test` ejecuta el arnés de T10 contra una plantilla (la de script; la declarativa se omite hasta T16).
+- [x] La plantilla script usa solo `host.*` (sin acceso a red propio).
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/module-sdk test`
-- [ ] Manual: `node dist/cli.js create demo && ... validate/test/pack`.
+- [x] `pnpm --filter @ryuunest/module-sdk test` (26 tests nuevos; suite escrita antes que la implementación)
+- [x] Manual: `node dist/cli.js create demo --template script && validate demo && test demo && pack demo` (contrato OK y hash verificable); con la plantilla declarativa, `validate` OK y `test` avisa de que el runtime llega en T16.
 
 **Dependencias:** T09, T10.
 **Archivos probables:** `packages/module-sdk/src/cli.ts`,
@@ -301,8 +303,8 @@ SHA-256 (`pack`). Incluye plantilla declarativa y de script.
 
 ### 🚩 Checkpoint B (tras T06–T11)
 
-- [ ] `pnpm -r test && pnpm -r build` en verde
-- [ ] Un módulo de ejemplo se valida y se prueba contra `test-site`
+- [x] `pnpm -r test && pnpm -r build` en verde
+- [x] Un módulo de ejemplo se valida y se prueba contra `test-site`
 - [ ] Revisión humana
 
 ---

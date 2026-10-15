@@ -7,6 +7,9 @@
   "license": "GPL-3.0-only",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "ryuunest-module": "./dist/cli.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -14,10 +17,14 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "dependencies": {
-    "@ryuunest/core": "workspace:*"
+    "@noble/hashes": "^2.4.0",
+    "@ryuunest/core": "workspace:*",
+    "@ryuunest/test-site": "workspace:*",
+    "fflate": "^0.8.3"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

@@ -193,11 +193,11 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [x] T08 ModuleHost
 - [x] T09 Validadores de manifest e índice de repo
 - [x] T10 Paquete `test-site` + arnés de contrato
-- [ ] T11 CLI del SDK + plantilla
+- [x] T11 CLI del SDK + plantilla
 
 ### ✅ Checkpoint B (tras T06–T11)
-- [ ] `pnpm -r test` y `pnpm -r build` en verde
-- [ ] Un módulo de ejemplo se valida y se prueba contra `test-site`
+- [x] `pnpm -r test` y `pnpm -r build` en verde
+- [x] Un módulo de ejemplo se valida y se prueba contra `test-site`
 - [ ] Revisión humana
 
 ### Fase 2 — Corte vertical 1: instalación

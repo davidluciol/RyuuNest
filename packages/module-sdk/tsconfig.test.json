@@ -3,7 +3,8 @@
   "compilerOptions": {
     "noEmit": true,
     "paths": {
-      "@ryuunest/core": ["../core/src/index.ts"]
+      "@ryuunest/core": ["../core/src/index.ts"],
+      "@ryuunest/test-site": ["../test-site/src/index.ts"]
     }
   },
   "include": ["src", "tests", "../core/src/globals.d.ts"]
