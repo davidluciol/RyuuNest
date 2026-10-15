@@ -12,6 +12,7 @@ declare function clearTimeout(id: number | undefined): void;
 interface URL {
   readonly protocol: string;
   readonly hostname: string;
+  readonly href: string;
 }
 
 declare const URL: {

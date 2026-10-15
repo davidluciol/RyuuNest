@@ -201,7 +201,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [ ] Revisión humana
 
 ### Fase 2 — Corte vertical 1: instalación
-- [ ] T12 Repos + index.json
+- [x] T12 Repos + index.json
 - [ ] T13 PackageInstaller
 - [ ] T14 ModuleRegistry
 - [ ] T15 E2E de instalación desde fixture (**AC-2, AC-8**)

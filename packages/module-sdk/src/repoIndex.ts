@@ -1,10 +1,15 @@
 /**
  * Validación del índice de repositorio (SPEC §6.7).
  *
+ * La **forma** del índice es parte del contrato y vive en el núcleo (`@ryuunest/core`,
+ * P-37); aquí queda el validador (SPEC §5.1) y se reexportan los tipos para que el API
+ * público del SDK no cambie.
+ *
  * Cada entrada se valida como el manifest, más los campos del paquete
  * (`package`, `sha256`, `size`).
  */
-import type { MediaKind } from "@ryuunest/core";
+import type { RepoIndex } from "@ryuunest/core";
+import { REPO_INDEX_FORMAT, REPO_INDEX_VERSION } from "@ryuunest/core";
 
 import { validateModuleFields, type ValidateOptions } from "./manifest.js";
 import {
@@ -17,37 +22,8 @@ import {
   type ValidationResult,
 } from "./validation.js";
 
-/** Entrada de un módulo dentro del índice (SPEC §6.7). */
-export interface RepoModuleEntry {
-  id: string;
-  name: string;
-  version: string;
-  apiVersion: 1;
-  runtime: "declarative" | "script";
-  kinds: MediaKind[];
-  lang: string;
-  nsfw: boolean;
-  permissions: { domains: string[] };
-  /** Ruta del paquete `.zip` dentro del repo. */
-  package: string;
-  /** SHA-256 del paquete, en hexadecimal (64 caracteres). */
-  sha256: string;
-  /** Tamaño del paquete en bytes. */
-  size: number;
-}
-
-/** Índice de un repositorio de módulos (SPEC §6.7). */
-export interface RepoIndex {
-  format: "ryuunest-repo";
-  version: 1;
-  name: string;
-  /** ISO 8601. */
-  updatedAt: string;
-  modules: RepoModuleEntry[];
-}
-
-export const REPO_INDEX_FORMAT = "ryuunest-repo";
-export const REPO_INDEX_VERSION = 1;
+export type { RepoIndex, RepoModuleEntry } from "@ryuunest/core";
+export { REPO_INDEX_FORMAT, REPO_INDEX_VERSION };
 
 export function validateRepoIndex(
   value: unknown,

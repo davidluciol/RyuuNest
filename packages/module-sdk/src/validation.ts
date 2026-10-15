@@ -1,13 +1,8 @@
 /** Utilidades de validación compartidas (sin dependencias). */
+import type { ValidationIssue, ValidationResult } from "@ryuunest/core";
 
-/** Un problema de validación: dónde está (`path`) y por qué (`message`). */
-export interface ValidationIssue {
-  path: string;
-  message: string;
-}
-
-/** Resultado: o el valor tipado, o la lista de problemas. */
-export type ValidationResult<T> = { ok: true; value: T } | { ok: false; issues: ValidationIssue[] };
+/** La forma del resultado es del contrato: vive en el núcleo y se reexporta aquí. */
+export type { ValidationIssue, ValidationResult };
 
 /** Acumula los problemas durante una validación. */
 export class IssueCollector {

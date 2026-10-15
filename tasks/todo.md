@@ -316,6 +316,8 @@ SHA-256 (`pack`). Incluye plantilla declarativa y de script.
 
 ## Task T12: Repositorios + index.json
 
+**Estado:** ✅ hecho 2026-10-15.
+
 **Descripción.** Dominio de repositorios (SPEC §3.1): añadir un repo por URL HTTPS, descargar
 `index.json` vía `Http`, validarlo (T09), persistirlo en `Storage` y listar sus módulos con
 metadatos (nombre, tipo, idioma, NSFW, runtime, permisos). Eliminar un repo no desinstala sus
@@ -323,14 +325,20 @@ módulos (RF-8) pero marca que no recibirán actualizaciones.
 
 **Criterios de aceptación:**
 
-- [ ] Añadir un repo válido lo persiste y sus módulos quedan listables.
-- [ ] Una URL no-HTTPS o un `index.json` inválido se rechazan con mensaje claro.
-- [ ] Eliminar un repo conserva sus módulos y marca el aviso de "sin actualizaciones".
+- [x] Añadir un repo válido lo persiste y sus módulos quedan listables.
+- [x] Una URL no-HTTPS o un `index.json` inválido se rechazan con mensaje claro.
+- [x] Eliminar un repo conserva sus módulos y marca el aviso de "sin actualizaciones".
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: repos con `StubHttp` sirviendo un `index.json` de fixture.
+- [x] `pnpm --filter @ryuunest/core test` (12 tests nuevos, rojo→verde)
+- [x] Manual: repos con `StubHttp` sirviendo un `index.json` de fixture.
+- [x] Integración en `module-sdk` (`tests/repoRegistry.test.ts`): el validador real de T09
+      inyectado en `RepoRegistry` acepta el índice válido y rechaza el inválido con su motivo.
+
+**Notas:** el validador entra **inyectado** (`RepoIndexValidator`, decisión P-46): el núcleo no
+puede importar `module-sdk` (P-37). La **forma** del índice y el resultado de validación se
+movieron al núcleo (`contract/repoIndex.ts`, `validation.ts`) y el SDK los reexporta.
 
 **Dependencias:** T07, T09.
 **Archivos probables:** `packages/core/src/repo/RepoRegistry.ts`,
