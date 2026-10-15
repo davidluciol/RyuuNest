@@ -192,7 +192,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [x] T07 Puertos + adaptadores falsos
 - [x] T08 ModuleHost
 - [x] T09 Validadores de manifest e índice de repo
-- [ ] T10 Paquete `test-site` + arnés de contrato
+- [x] T10 Paquete `test-site` + arnés de contrato
 - [ ] T11 CLI del SDK + plantilla
 
 ### ✅ Checkpoint B (tras T06–T11)

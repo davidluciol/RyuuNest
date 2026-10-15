@@ -12,9 +12,15 @@
 
 ## 1. Estado actual
 
-- **Fase:** Fase 0 en curso (fundación) y Fase 1 en curso. Del plan de la Parte 1: **T01–T04 hechos**; **T05 en curso** (la app arranca en los 3 dispositivos; faltan los smokes de librerías); **T06–T09 hechos**.
+- **Fase:** Fase 0 en curso (fundación) y Fase 1 en curso. Del plan de la Parte 1: **T01–T04 hechos**; **T05 en curso** (la app arranca en los 3 dispositivos; faltan los smokes de librerías); **T06–T10 hechos**. Próximo: T11.
 - **Hecho:** documentación (`IDEA.md`, `SPEC.md`, `DESIGN.md`, `DESIGN_RULES.md`, 7 pantallas en `design/`, `AGENTS.md`, `MEMORY.md` en la raíz) y **monorepo** con `packages/core`, `module-sdk`, `test-site` y `ui-tokens`, más tooling (pnpm, TypeScript estricto, ESLint, Prettier, Vitest, CI) y prueba de humo en verde. Documentación base (T03: ADR-0001, `CONTRIBUTING.md`, `ASSETS.md`, DoD) y `design/` organizado (T04).
-- **Siguiente paso:** T10 (paquete `test-site` + arnés de contrato); cerrar T05 con los smokes de librerías.
+- **Siguiente paso:** T10 (paquete `test-site` + arnés de contrato); cerrar T05 con los smokes.
+
+### 2026-10-14 · Fase 1 (T10)
+- **Hecho:** T10: `packages/test-site`, con un **único conjunto de fixtures** (`FIXTURE_SERIES`: 5 series inventadas que cubren los cuatro tipos y una NSFW, con capítulos y releases), **dos sitios falsos de arquitecturas opuestas** — HTML con selectores CSS y paginación `?page=` (`createHtmlSite`, `HTML_SELECTORS`) y JSON con cursor `?cursor=` (`createJsonApiSite`) — servidos por `TestSiteHttp` (implementa el puerto `Http`, sin dependencia de plataforma) y el **arnés de contrato** `runContract(api, options)`, que valida los cinco métodos, la paginación, los capítulos con dos releases y, si se pide, las cabeceras de imagen; falla con `ContractError` y mensaje concreto. 20 tests en `test-site` (58 en total: 20 + 18 + 20). Se commitó aparte la revisión del Checkpoint A que dejó el humano en `tasks/todo.md`. Línea base (`lint`, `typecheck`, `test`, `build`, `format:check`) en verde.
+- **Decisiones:** P-38 (el arnés vive en `@ryuunest/test-site`, no en `packages/core/tests/`, para que el CLI del SDK también pueda usarlo sin invertir la dependencia `test-site → core`).
+- **Preguntas nuevas / respondidas:** ninguna nueva. Siguen abiertas la 10 (mecanismo de tipos entre paquetes) y la 11 (validación de `index.json` en `core` para T12).
+- **Siguiente paso:** T11 (CLI del SDK + plantilla); cerrar T05 con los smokes.
 
 ## 2. Decisiones
 
@@ -59,6 +65,7 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 | P-35 | 2026-10-13 | Los IDs de decisión **canónicos** son los de `MEMORY.md` §2 (`P-n`) y los del SPEC (`D-n`); los `P-n` locales de `tasks/plan.md` §3 quedan como históricos y **no se citan** | `plan.md` §3 y `MEMORY.md` §2 usaban `P-1…P-n` para decisiones distintas; se resuelve en `ADR-0001` |
 | P-36 | 2026-10-13 | Librerías del host (P-5) fijadas: `htmlparser2@12`, `css-select@7`, `domhandler@6` en `packages/core` | `host.html()` (selectores CSS) sin APIs de plataforma; son JS puro y corren en RN |
 | P-37 | 2026-10-13 | Dirección de dependencias: **`module-sdk` → `@ryuunest/core`** (solo tipos); `core` **no** depende del SDK | El contrato (SPEC §6) vive en `core`; el SDK lo reutiliza para validar |
+| P-38 | 2026-10-14 | El **arnés de contrato** (`runContract`) vive en **`@ryuunest/test-site`**, no en `packages/core/tests/` (ver `tasks/plan.md` T10, «archivos probables») | Lo necesitan el núcleo (T17/T19) y el CLI del SDK (T11); así se reutiliza sin invertir la dependencia `test-site → core` (solo tipos) |
 
 ## 3. Recomendaciones hechas
 

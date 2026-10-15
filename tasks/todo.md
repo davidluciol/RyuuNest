@@ -250,6 +250,8 @@ dominio; `html()` con selectores CSS (P-5); `log()`; `settings`. Se apoya en `Ht
 
 ## Task T10: Paquete `test-site` + arnés de contrato
 
+**Estado:** ✅ hecho 2026-10-14.
+
 **Descripción.** Crear **`packages/test-site`** (P-9, respuesta del humano): paquete reutilizable
 con sitios falsos y fixtures que cubran `popular`, `latest`, `search` (paginación), `details`
 (capítulos con varias `releases`) y `pages`. Incluye un **arnés reutilizable** que ejecute
@@ -258,15 +260,15 @@ cursor) para T32.
 
 **Criterios de aceptación:**
 
-- [ ] El paquete exporta fixtures y un servidor/`StubHttp` de prueba reutilizable.
-- [ ] Cubre los 5 métodos del contrato, con al menos 2 `releases` en un capítulo.
-- [ ] Incluye dos arquitecturas: (a) HTML + paginación numérica; (b) JSON + paginación por cursor.
-- [ ] El arnés falla con mensaje claro si un módulo no implementa un método requerido.
+- [x] El paquete exporta fixtures y un servidor/`StubHttp` de prueba reutilizable (`TestSiteHttp`).
+- [x] Cubre los 5 métodos del contrato, con al menos 2 `releases` en un capítulo.
+- [x] Incluye dos arquitecturas: (a) HTML + paginación numérica; (b) JSON + paginación por cursor.
+- [x] El arnés falla con mensaje claro si un módulo no implementa un método requerido.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/test-site test && pnpm --filter @ryuunest/core test`
-- [ ] Manual: ejecutar el arnés contra un módulo de ejemplo (aún no implementado → skip).
+- [x] `pnpm --filter @ryuunest/test-site test && pnpm --filter @ryuunest/core test`
+- [x] Manual: el arnés se ejecutó contra un módulo de ejemplo (simulado en `tests/harness.test.ts`; el runtime real llega en T16/T18).
 
 **Dependencias:** T06, T08.
 **Archivos probables:** `packages/test-site/src/*`, `packages/test-site/fixtures/**`,
