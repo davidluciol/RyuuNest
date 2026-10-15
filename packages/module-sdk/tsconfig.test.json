@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
+    "types": ["node"],
     "paths": {
       "@ryuunest/core": ["../core/src/index.ts"],
       "@ryuunest/test-site": ["../test-site/src/index.ts"]
