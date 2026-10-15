@@ -347,6 +347,8 @@ movieron al núcleo (`contract/repoIndex.ts`, `validation.ts`) y el SDK los reex
 
 ## Task T13: PackageInstaller (descarga, límites, SHA-256, unzip seguro, atomicidad)
 
+**Estado:** ✅ hecho 2026-10-15.
+
 **Descripción.** Implementar el flujo de instalación (SPEC §7.1): descargar el `.zip` con
 límite de tamaño, verificar SHA-256 contra el índice, descomprimir de forma segura (sin
 zip-slip, límites de tamaño total y de número de archivos), validar el manifest y guardar de
@@ -354,15 +356,23 @@ forma **atómica** (si algo falla, no queda nada a medias).
 
 **Criterios de aceptación:**
 
-- [ ] Hash incorrecto → rechazo con mensaje claro y sin dejar restos.
-- [ ] Rutas `../` en el zip → rechazo (zip-slip).
-- [ ] Se respetan los límites del SPEC §7.1: paquete ≤ 2 MB, descomprimido ≤ 5 MB, ≤ 50 archivos.
-- [ ] En fallo, el registro y el disco quedan igual que antes de iniciar.
+- [x] Hash incorrecto → rechazo con mensaje claro y sin dejar restos.
+- [x] Rutas `../` en el zip → rechazo (zip-slip).
+- [x] Se respetan los límites del SPEC §7.1: paquete ≤ 2 MB, descomprimido ≤ 5 MB, ≤ 50 archivos.
+- [x] En fallo, el registro y el disco quedan igual que antes de iniciar.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: fixtures de zip correctos, con hash malo, con zip-slip y bomba de compresión.
+- [x] `pnpm --filter @ryuunest/core test` (18 tests del instalador + 5 de bytes, rojo→verde)
+- [x] Manual: fixtures de zip correctos, con hash malo, con zip-slip y bomba de compresión.
+- [x] Integración en `module-sdk` (`tests/packageInstaller.test.ts`): el validador real de
+      manifest (T09) inyectado en `PackageInstaller` acepta el válido y rechaza el inválido.
+
+**Notas:** el validador de manifest entra **inyectado** (`ManifestValidator`, P-46). El hash
+es **real** (`@noble/hashes` en `core`, decisión P-47). El puerto `Http` gana `bytes()` porque
+los `.zip` son binarios. La atomicidad se logra comprobando **todo antes** de la única
+escritura (`module:<id>`); los archivos se guardan en hexadecimal porque el `Storage`
+provisional es de texto (se cierra en T21).
 
 **Dependencias:** T12, T07.
 **Archivos probables:** `packages/core/src/install/PackageInstaller.ts`,

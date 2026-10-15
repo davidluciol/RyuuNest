@@ -5,6 +5,7 @@
  * (SQLite/IndexedDB, cliente nativo/extensión, unzip, auth) llegan en su tarea.
  */
 import type { Archive, ArchiveEntry } from "./archive.js";
+import { utf8Encode } from "../bytes.js";
 import type { Clock } from "./clock.js";
 import type { Http, HttpRequest, HttpResponse } from "./http.js";
 import type { SecureLock } from "./secureLock.js";
@@ -40,7 +41,10 @@ export class MemoryStorage implements Storage {
 export interface StubHttpRoute {
   status?: number;
   headers?: Record<string, string>;
+  /** Cuerpo de texto (JSON, HTML). */
   body?: string;
+  /** Cuerpo binario (paquetes `.zip`). Si no se indica, se codifica `body` en UTF-8. */
+  bodyBytes?: Uint8Array;
 }
 
 /** Petición registrada por `StubHttp`. */
@@ -60,13 +64,19 @@ export class StubHttp implements Http {
 
     const route = this.routes[url];
     if (route === undefined) {
-      return { status: 404, headers: {}, text: async () => "" };
+      return {
+        status: 404,
+        headers: {},
+        text: async () => "",
+        bytes: async () => new Uint8Array(),
+      };
     }
 
     return {
       status: route.status ?? 200,
       headers: route.headers ?? {},
       text: async () => route.body ?? "",
+      bytes: async () => route.bodyBytes ?? utf8Encode(route.body ?? ""),
     };
   }
 }

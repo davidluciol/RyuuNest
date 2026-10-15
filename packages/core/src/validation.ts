@@ -15,3 +15,12 @@ export interface ValidationIssue {
 
 /** Resultado: o el valor tipado, o la lista de problemas. */
 export type ValidationResult<T> = { ok: true; value: T } | { ok: false; issues: ValidationIssue[] };
+
+/** Resume los problemas del validador en un mensaje corto y legible. */
+export function describeIssues(issues: readonly ValidationIssue[], max = 3): string {
+  const shown = issues.slice(0, max).map((issue) => `${issue.path || "raíz"}: ${issue.message}`);
+  if (issues.length > shown.length) {
+    shown.push(`y ${issues.length - shown.length} más`);
+  }
+  return shown.join("; ");
+}

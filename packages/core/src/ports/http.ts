@@ -9,7 +9,10 @@ export interface HttpRequest {
 export interface HttpResponse {
   status: number;
   headers: Record<string, string>;
+  /** Cuerpo como texto (JSON, HTML). */
   text(): Promise<string>;
+  /** Cuerpo como bytes (paquetes `.zip` e imágenes): nunca pasa por UTF-8. */
+  bytes(): Promise<Uint8Array>;
 }
 
 /**

@@ -10,6 +10,7 @@
  * datos. `createSiteHttp()` los sirve detrás del puerto `Http` del núcleo.
  */
 import type { Http, HttpRequest, HttpResponse } from "@ryuunest/core";
+import { utf8Encode } from "@ryuunest/core";
 
 import {
   FIXTURE_SERIES,
@@ -499,7 +500,12 @@ export class TestSiteHttp implements Http {
         : this.site.routes.find((candidate) => matchesRoute(candidate, parsed));
 
     if (parsed === undefined || parsed.origin !== this.site.origin || route === undefined) {
-      return { status: 404, headers: {}, text: async () => "" };
+      return {
+        status: 404,
+        headers: {},
+        text: async () => "",
+        bytes: async () => new Uint8Array(),
+      };
     }
 
     const body = route.handler !== undefined ? route.handler(parsed.query) : (route.body ?? "");
@@ -507,6 +513,7 @@ export class TestSiteHttp implements Http {
       status: route.status ?? 200,
       headers: { "content-type": route.contentType ?? "text/plain; charset=utf-8" },
       text: async () => body,
+      bytes: async () => utf8Encode(body),
     };
   }
 }

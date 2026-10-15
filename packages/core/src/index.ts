@@ -9,10 +9,12 @@
  */
 export const CORE_VERSION = "0.0.0";
 
+export * from "./bytes.js";
 export * from "./contract/errors.js";
 export * from "./contract/repoIndex.js";
 export * from "./contract/types.js";
 export * from "./host/ModuleHost.js";
+export * from "./install/PackageInstaller.js";
 export * from "./ports/index.js";
 export * from "./repo/RepoRegistry.js";
 export * from "./validation.js";

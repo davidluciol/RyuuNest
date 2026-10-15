@@ -5,13 +5,15 @@
  * sus módulos con metadatos. El **validador entra inyectado** (`RepoIndexValidator`):
  * vive en `module-sdk` (SPEC §5.1) y el núcleo no puede importarlo (P-37).
  */
-import { ModuleError, type ModuleErrorCode } from "../contract/errors.js";
+import { ModuleError } from "../contract/errors.js";
 import type { RepoIndex } from "../contract/repoIndex.js";
 import type { MediaKind } from "../contract/types.js";
 import type { Clock } from "../ports/clock.js";
 import type { Http } from "../ports/http.js";
+import { httpErrorCode, httpErrorMessage } from "../ports/httpStatus.js";
 import type { Storage } from "../ports/storage.js";
-import type { ValidationIssue, ValidationResult } from "../validation.js";
+import type { ValidationResult } from "../validation.js";
+import { describeIssues } from "../validation.js";
 
 /** Validador de `index.json` (SPEC §6.7). Lo aporta `module-sdk`. */
 export type RepoIndexValidator = (value: unknown) => ValidationResult<RepoIndex>;
@@ -170,7 +172,7 @@ export class RepoRegistry {
     if (response.status < 200 || response.status >= 300) {
       throw new ModuleError(
         httpErrorCode(response.status),
-        httpErrorMessage(response.status, url),
+        httpErrorMessage(response.status, "Repositorio", url),
         {
           url,
           status: response.status,
@@ -195,34 +197,4 @@ export class RepoRegistry {
 
     return result.value;
   }
-}
-
-/** Traduce el estado HTTP a un código del contrato (SPEC §6.4). */
-function httpErrorCode(status: number): ModuleErrorCode {
-  if (status === 404) {
-    return "NOT_FOUND";
-  }
-  if (status === 429) {
-    return "RATE_LIMITED";
-  }
-  if (status === 401 || status === 403) {
-    return "BLOCKED";
-  }
-  return "NETWORK";
-}
-
-function httpErrorMessage(status: number, url: string): string {
-  if (status === 404) {
-    return `Repositorio no encontrado (404): ${url}`;
-  }
-  return `El repositorio respondió ${status}: ${url}`;
-}
-
-/** Resume los problemas del validador en un mensaje corto y legible. */
-function describeIssues(issues: ValidationIssue[], max = 3): string {
-  const shown = issues.slice(0, max).map((issue) => `${issue.path || "índice"}: ${issue.message}`);
-  if (issues.length > shown.length) {
-    shown.push(`y ${issues.length - shown.length} más`);
-  }
-  return shown.join("; ");
 }

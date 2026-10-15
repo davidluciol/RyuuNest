@@ -28,7 +28,12 @@ class TrackingHttp implements Http {
       } else if (this.behavior.delayMs !== undefined) {
         await new Promise<void>((resolve) => setTimeout(resolve, this.behavior.delayMs));
       }
-      return { status: 200, headers: {}, text: async () => "ok" };
+      return {
+        status: 200,
+        headers: {},
+        text: async () => "ok",
+        bytes: async () => new Uint8Array(),
+      };
     } finally {
       this.active -= 1;
     }
