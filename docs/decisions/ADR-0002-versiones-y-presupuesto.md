@@ -1,6 +1,6 @@
 # ADR-0002: Versiones y presupuesto de memoria (calibración de dispositivos)
 
-- **Estado:** borrador — **pendiente de mediciones en los 3 dispositivos**
+- **Estado:** borrador — smokes **OK en los 2 teléfonos** (2026-10-14); **MiBox 4 pospuesta** (Android TV de lado, `MEMORY.md` P-43); quedan por fijar las versiones y el tope de imágenes
 - **Fecha:** 2026-10-13
 - **Tarea:** T05 (Fase 0)
 - **Fuentes:** `docs/SPEC.md` §14 y §17.2; `tasks/todo.md` T05; registro npm (2026-10-13)
@@ -58,6 +58,8 @@ números que muestre la app. Rellenar una fila por dispositivo.
 | Xiaomi MiBox 4 | 9 (API 28) | 5600ms | 323mb | Piso de rendimiento (2 GB) |
 
 **Tope de imágenes en memoria para la MiBox 4:** _pendiente_ (lo usará el lector, SPEC §9).
+Con el Android TV pospuesto (P-43) hay que decidir **dónde** medirlo: en la MiBox cuando
+vuelva, en un teléfono, o fijarlo al construir el lector (T27) — pregunta abierta 12.
 
 ## Librerías JS puras en React Native
 
@@ -65,9 +67,17 @@ La app de calibración ejecuta estas comprobaciones y muestra OK/FALLO por dispo
 
 | Comprobación | POCO F6 Pro | Galaxy S25 Ultra | MiBox 4 |
 | --- | --- | --- | --- |
-| `@noble/hashes` · sha256 | _pendiente_ | _pendiente_ | _pendiente_ |
-| `fflate` · gzip round-trip | _pendiente_ | _pendiente_ | _pendiente_ |
-| `htmlparser2` · parse | _pendiente_ | _pendiente_ | _pendiente_ |
+| `@noble/hashes` · sha256 | **OK** (2026-10-14) | **OK** (2026-10-14) | _pospuesto_ (P-43) |
+| `fflate` · gzip round-trip | **OK** (2026-10-14) | **OK** (2026-10-14) | _pospuesto_ (P-43) |
+| `htmlparser2` · parse | **OK** (2026-10-14) | **OK** (2026-10-14) | _pospuesto_ (P-43) |
+
+**Evidencia:** `docs/capturasT05/Samsung_s25Ultra.jpeg` (Galaxy S25 Ultra: «Módulo cargado +314490 ms · 3/3 comprobaciones» con las tres filas `OK`) y la misma prueba **3/3 OK** en el POCO, hecha en mano sin captura.
+
+> ⚠ **Pendiente de confirmar el modelo del POCO:** el humano lo llamó «POCO F5 Pro»
+> (2026-10-14), mientras el proyecto registra **POCO F6 Pro** (SPEC §14, `MEMORY.md` P-10,
+> RNF-1, AC-4, AC-12). Hasta confirmarlo no se renombra ningún equipo.
+> ⚠ **Android TV (MiBox 4) queda de lado de momento** — `MEMORY.md` P-43; su alcance está
+> por confirmar y arrastra el tope de imágenes (SPEC §9 lo mide en esa MiBox).
 
 ## Consecuencias
 

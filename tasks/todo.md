@@ -110,7 +110,7 @@ ubicación de `MEMORY.md` y `AGENTS.md`.
 
 ## Task T05: Calibración de dispositivos y presupuesto de memoria
 
-**Estado:** 🟡 en curso 2026-10-13 — la app arranca en los 3 dispositivos y las mediciones de arranque/memoria están en `ADR-0002`; faltan los smokes de librerías en dispositivo, el `minSdk` (Android 9 / API 28) y el tope de imágenes.
+**Estado:** 🟡 casi listo 2026-10-14 — **smokes 3/3 OK en los 2 teléfonos** (Galaxy S25 Ultra con captura en `docs/capturasT05/Samsung_s25Ultra.jpeg`; POCO en mano). **Android TV (MiBox 4) queda de lado de momento** (P-43): smokes y captura pospuestos, y con ello el tope de imágenes que el SPEC §9 mide en esa MiBox. Quedan fijar las versiones en el ADR y resolver las preguntas 12 (alcance de P-43 y dónde medir el tope) y 13 (¿POCO F5 o F6 Pro?).
 
 **Descripción.** Aplicación Expo mínima de prueba (shell vacío) que arranque en POCO F6 Pro,
 Galaxy S25 Ultra y MiBox 4; medir arranque en frío y presupuesto de memoria; confirmar que el
