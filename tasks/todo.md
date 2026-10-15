@@ -20,15 +20,15 @@ paquetes `@ryuunest/core`, `@ryuunest/module-sdk`, `@ryuunest/test-site` y
 
 **Criterios de aceptación:**
 
-- [ ] `pnpm install` enlaza los paquetes del workspace sin publicar.
-- [ ] `tsconfig` base con `strict: true`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`.
-- [ ] El core no importa nada de `apps/*` ni de RN/DOM.
-- [ ] `pnpm -r build` compila los paquetes.
+- [X] `pnpm install` enlaza los paquetes del workspace sin publicar.
+- [X] `tsconfig` base con `strict: true`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`.
+- [X] El core no importa nada de `apps/*` ni de RN/DOM.
+- [X] `pnpm -r build` compila los paquetes.
 
 **Verificación:**
 
-- [ ] `pnpm install && pnpm -r build`
-- [ ] Manual: los `package.json` tienen `"name": "@ryuunest/*"` y `"private": true`.
+- [X] `pnpm install && pnpm -r build`
+- [X] Manual: los `package.json` tienen `"name": "@ryuunest/*"` y `"private": true`.
 
 **Dependencias:** Ninguna.
 **Archivos probables:** `package.json`, `pnpm-workspace.yaml`, `tsconfig.base.json`,
@@ -45,14 +45,14 @@ verificación del proyecto.
 
 **Criterios de aceptación:**
 
-- [ ] `pnpm lint`, `pnpm -r typecheck`, `pnpm -r test` funcionan en local y en CI.
-- [ ] CI corre en cada push/PR y falla si algo no está en verde.
-- [ ] Un test de humo trivial pasa en `core`.
+- [X] `pnpm lint`, `pnpm -r typecheck`, `pnpm -r test` funcionan en local y en CI.
+- [X] CI corre en cada push/PR y falla si algo no está en verde.
+- [X] Un test de humo trivial pasa en `core`.
 
 **Verificación:**
 
-- [ ] `pnpm lint && pnpm -r typecheck && pnpm -r test`
-- [ ] Manual: revisar `.github/workflows/ci.yml`.
+- [X] `pnpm lint && pnpm -r typecheck && pnpm -r test`
+- [X] Manual: revisar `.github/workflows/ci.yml`.
 
 **Dependencias:** T01.
 **Archivos probables:** `.github/workflows/ci.yml`, `eslint.config.js`, `.prettierrc`,
@@ -131,8 +131,8 @@ y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1*
 - [x] `pnpm --filter @ryuunest/mobile test` — 11 tests (presupuesto de imágenes y builder del PNG), rojo→verde.
 - [x] Manual: arranque cronometrado y lectura de memoria en los 3 dispositivos (números en `ADR-0002`; medidos **en desarrollo**, revalidar RNF-1 en release).
 - [x] `pnpm --filter @ryuunest/mobile start` en los 2 teléfonos (MiBox pendiente: P-43).
-- [ ] Manual: **medir el tope de imágenes** en un teléfono con el panel de `ImageCapPanel.tsx` y anotarlo en `ADR-0002`.
-- [ ] Fijar en `ADR-0002` las versiones de Expo/RN/RNTV (hoy candidatas).
+- [X] Manual: **medir el tope de imágenes** en un teléfono con el panel de `ImageCapPanel.tsx` y anotarlo en `ADR-0002`.
+- [X] Fijar en `ADR-0002` las versiones de Expo/RN/RNTV (hoy candidatas).
 
 **Dependencias:** Ninguna (transversal a T01–T02).
 **Archivos probables:** `apps/mobile/{package.json,app.json,App.tsx}`,
@@ -308,7 +308,7 @@ SHA-256 (`pack`). Incluye plantilla declarativa y de script.
 
 - [x] `pnpm -r test && pnpm -r build` en verde
 - [x] Un módulo de ejemplo se valida y se prueba contra `test-site`
-- [ ] Revisión humana
+- [X] Revisión humana
 
 ---
 
