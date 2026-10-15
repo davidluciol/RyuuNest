@@ -1,6 +1,6 @@
 # ADR-0002: Versiones y presupuesto de memoria (calibración de dispositivos)
 
-- **Estado:** borrador — smokes **OK en los 2 teléfonos** (2026-10-14); **MiBox 4 pospuesta** (Android TV de lado, `MEMORY.md` P-43); quedan por fijar las versiones y el tope de imágenes
+- **Estado:** borrador — smokes **OK en los 2 teléfonos** (2026-10-14); **MiBox 4 pospuesta** (Android TV de lado, `MEMORY.md` P-43, alcance solo evidencia); quedan fijar las versiones y medir el tope de imágenes en un teléfono (provisional hasta repetirlo en la MiBox)
 - **Fecha:** 2026-10-13
 - **Tarea:** T05 (Fase 0)
 - **Fuentes:** `docs/SPEC.md` §14 y §17.2; `tasks/todo.md` T05; registro npm (2026-10-13)
@@ -53,19 +53,24 @@ números que muestre la app. Rellenar una fila por dispositivo.
 
 | Dispositivo | Android | Arranque en frío (ms) | Memoria (MB) | Notas |
 | --- | --- | --- | --- | --- |
-| POCO F6 Pro | 12–15 | 4580ms | 226mb | Equipo principal |
+| POCO F5 Pro | 12–15 | 4580ms | 226mb | Equipo principal |
 | Galaxy S25 Ultra | 12–15 | 1940ms | 140mb | Equipo principal |
 | Xiaomi MiBox 4 | 9 (API 28) | 5600ms | 323mb | Piso de rendimiento (2 GB) |
 
-**Tope de imágenes en memoria para la MiBox 4:** _pendiente_ (lo usará el lector, SPEC §9).
-Con el Android TV pospuesto (P-43) hay que decidir **dónde** medirlo: en la MiBox cuando
-vuelva, en un teléfono, o fijarlo al construir el lector (T27) — pregunta abierta 12.
+**Tope de imágenes en memoria:** se mide **en un teléfono** (decisión 2026-10-14, con el
+Android TV de lado) con el panel de calibración de `apps/mobile`, y queda como **constante
+provisional**: se recalibra en la MiBox 4 cuando vuelva esa prueba. Lo usará el lector
+(SPEC §9).
+
+> ⚠ **Cuidado al leer esta tabla:** las mediciones se hicieron con la app **en desarrollo**
+> (Expo Go + Metro, ver la captura con el menú de Expo). RNF-1 (`< 3 s` en frío) apunta al
+> **APK compilado**, así que hay que revalidar en release antes de dar RNF-1 por cumplido.
 
 ## Librerías JS puras en React Native
 
 La app de calibración ejecuta estas comprobaciones y muestra OK/FALLO por dispositivo:
 
-| Comprobación | POCO F6 Pro | Galaxy S25 Ultra | MiBox 4 |
+| Comprobación | POCO F5 Pro | Galaxy S25 Ultra | MiBox 4 |
 | --- | --- | --- | --- |
 | `@noble/hashes` · sha256 | **OK** (2026-10-14) | **OK** (2026-10-14) | _pospuesto_ (P-43) |
 | `fflate` · gzip round-trip | **OK** (2026-10-14) | **OK** (2026-10-14) | _pospuesto_ (P-43) |
@@ -73,11 +78,11 @@ La app de calibración ejecuta estas comprobaciones y muestra OK/FALLO por dispo
 
 **Evidencia:** `docs/capturasT05/Samsung_s25Ultra.jpeg` (Galaxy S25 Ultra: «Módulo cargado +314490 ms · 3/3 comprobaciones» con las tres filas `OK`) y la misma prueba **3/3 OK** en el POCO, hecha en mano sin captura.
 
-> ⚠ **Pendiente de confirmar el modelo del POCO:** el humano lo llamó «POCO F5 Pro»
-> (2026-10-14), mientras el proyecto registra **POCO F6 Pro** (SPEC §14, `MEMORY.md` P-10,
-> RNF-1, AC-4, AC-12). Hasta confirmarlo no se renombra ningún equipo.
-> ⚠ **Android TV (MiBox 4) queda de lado de momento** — `MEMORY.md` P-43; su alcance está
-> por confirmar y arrastra el tope de imágenes (SPEC §9 lo mide en esa MiBox).
+> ⚠ **Modelo confirmado: POCO F5 Pro** (2026-10-14, el humano). El proyecto venía diciendo
+> «F6 Pro» por error; se corrigió en SPEC, `AGENTS.md` y decisiones (`MEMORY.md` P-44).
+> ⚠ **Android TV (MiBox 4) queda de lado de momento** (`MEMORY.md` P-43), con alcance **solo
+> de evidencia**: la MiBox **sigue siendo el equipo mínimo** (D-9, `minSdk` 28). Sus casillas
+> de smokes y el tope de imágenes quedan pendientes de tenerla en mano.
 
 ## Consecuencias
 

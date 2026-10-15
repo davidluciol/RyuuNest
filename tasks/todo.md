@@ -110,9 +110,9 @@ ubicación de `MEMORY.md` y `AGENTS.md`.
 
 ## Task T05: Calibración de dispositivos y presupuesto de memoria
 
-**Estado:** 🟡 casi listo 2026-10-14 — **smokes 3/3 OK en los 2 teléfonos** (Galaxy S25 Ultra con captura en `docs/capturasT05/Samsung_s25Ultra.jpeg`; POCO en mano). **Android TV (MiBox 4) queda de lado de momento** (P-43): smokes y captura pospuestos, y con ello el tope de imágenes que el SPEC §9 mide en esa MiBox. Quedan fijar las versiones en el ADR y resolver las preguntas 12 (alcance de P-43 y dónde medir el tope) y 13 (¿POCO F5 o F6 Pro?).
+**Estado:** 🟡 casi listo 2026-10-14 — **smokes 3/3 OK en los 2 teléfonos** (Galaxy S25 Ultra con captura en `docs/capturasT05/Samsung_s25Ultra.jpeg`; POCO F5 Pro en mano). **Android TV (MiBox 4) queda de lado de momento** (P-43, alcance **solo evidencia**: sigue siendo el equipo mínimo). Quedan: fijar las versiones en el ADR, medir el tope de imágenes en un teléfono (decidido 2026-10-14; provisional hasta la MiBox) y verificar en release el RNF-1 (las mediciones actuales son de desarrollo).
 
-**Descripción.** Aplicación Expo mínima de prueba (shell vacío) que arranque en POCO F6 Pro,
+**Descripción.** Aplicación Expo mínima de prueba (shell vacío) que arranque en POCO F5 Pro,
 Galaxy S25 Ultra y MiBox 4; medir arranque en frío y presupuesto de memoria; confirmar que el
 SDK elegido admite Android 9 (API 28). Smokes de compatibilidad para `@noble/hashes`, `fflate`
 y `htmlparser2` en RN. Salida: un ADR con números. **Se mantiene en la Parte 1** (decisión del humano).
@@ -1186,7 +1186,7 @@ formato local (RNF-11).
 **Verificación:**
 
 - [ ] Playwright: navegar entre los 5 destinos; comprobar cabecera y barra.
-- [ ] Manual: verificar en el POCO F6 Pro.
+- [ ] Manual: verificar en el POCO F5 Pro.
 
 **Dependencias:** Checkpoint P-A; T35 (núcleo estable).
 **Archivos probables:** `apps/mobile/src/navigation/*`, `apps/mobile/src/shell/*`.
@@ -1228,7 +1228,7 @@ módulos. Si no hay lectura en curso, "Empieza algo nuevo" → Descubrir.
 **Verificación:**
 
 - [ ] Playwright contra `inicio_guarida/screen.png` (móvil).
-- [ ] Manual en POCO F6 Pro.
+- [ ] Manual en POCO F5 Pro.
 
 **Dependencias:** F11; T25/T27 (progreso/estado).
 **Archivos probables:** `apps/mobile/src/screens/home/*`.
@@ -1569,7 +1569,7 @@ captura en dispositivo para AC-12.
 
 **Verificación:**
 
-- [ ] Playwright sobre la **galería compilada para web**; captura en el POCO F6 Pro y la MiBox 4 (P2-9).
+- [ ] Playwright sobre la **galería compilada para web**; captura en el POCO F5 Pro y la MiBox 4 (P2-9).
 - [ ] Revisión humana de la lista de 20 s.
 
 **Dependencias:** Checkpoint P-D.

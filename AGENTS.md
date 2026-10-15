@@ -88,7 +88,7 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
 - **Desarrollo guiado por pruebas (obligatorio).** Cada tarea empieza por una prueba que **falla** (rojo); después se implementa lo mínimo para pasarla (verde) y se limpia. Si no hay ningún test en rojo, la tarea todavía no ha empezado: **nunca se implementa antes de tener su prueba**. Se avanza por cortes pequeños (rojo → verde) dentro de la misma tarea, verificando la suite en cada corte, y cada tarea termina con su commit.
 - Las pruebas del contrato de módulos usan HTML guardado (fixtures), no sitios reales.
 - **No añadas dependencias sin preguntar.** Las versiones de Expo, React Native y librerías se fijan en la Fase 0 (Regla 1).
-- Dispositivos de prueba: POCO F6 Pro, Galaxy S25 Ultra y Xiaomi MiBox 4 (Android 9, 2 GB), que fija el piso de rendimiento.
+- Dispositivos de prueba: POCO F5 Pro, Galaxy S25 Ultra y Xiaomi MiBox 4 (Android 9, 2 GB), que fija el piso de rendimiento.
 - Convenciones por defecto (el humano puede cambiarlas): identificadores de código en inglés, igual que el contrato del SPEC; documentos, mensajes de commit y respuestas al humano en español.
 
 ## 8. Lista de cierre de sesión

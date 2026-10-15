@@ -59,7 +59,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 | AC-1 | Instalar sin módulos y completar el primer uso | El flujo guía hasta añadir un repo y activar un módulo |
 | AC-2 | Instalar un paquete desde un repo | Un hash incorrecto o un manifest inválido se rechaza con mensaje claro |
 | AC-3 | Buscar y leer un capítulo con un módulo real | Tras cerrar y reabrir la app, el lector vuelve a la página exacta |
-| AC-4 | Filtros sobre biblioteca grande | Con 3 000 series sintéticas, filtrar o buscar responde en < 300 ms en el POCO F6 Pro y < 1 s en la MiBox 4 |
+| AC-4 | Filtros sobre biblioteca grande | Con 3 000 series sintéticas, filtrar o buscar responde en < 300 ms en el POCO F5 Pro y < 1 s en la MiBox 4 |
 | AC-5 | Capacidad de módulos | Con 5 módulos sintéticos instalados, el arranque y la memoria se mantienen dentro de los objetivos RNF-1 y RNF-2 |
 | AC-6 | Lector en el equipo más limitado | Un capítulo vertical de 60 imágenes se lee completo en la MiBox 4 sin cierres por memoria |
 | AC-7 | Respaldo JSON | Exportar e importar reproduce biblioteca, carpetas, progreso y repos sin pérdidas |
@@ -67,7 +67,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 | AC-9 | TV | Todas las pantallas de la v1 se usan solo con el control remoto (D-pad), con anillo de foco visible (2 px `accent`, separación de 2 px) |
 | AC-10 | Web | Con la extensión instalada, se lee un capítulo desde el navegador |
 | AC-11 | Calidad | CI en verde: lint, tipos estrictos, pruebas del contrato y compilación del APK |
-| AC-12 | Fidelidad al diseño | Cada pantalla de la v1 que tiene diseño se compara en el POCO F6 Pro con su `screen.png` usando la lista del apéndice B; no hay diferencias de color, tipografía, radio ni espaciado, y el resto se registra en `design/stitch/DIFFS.md` |
+| AC-12 | Fidelidad al diseño | Cada pantalla de la v1 que tiene diseño se compara en el POCO F5 Pro con su `screen.png` usando la lista del apéndice B; no hay diferencias de color, tipografía, radio ni espaciado, y el resto se registra en `design/stitch/DIFFS.md` |
 | AC-13 | Reglas del sistema de diseño | Una prueba automática verifica que `ui-tokens` coincide con `DESIGN.md`, que los pares de color usados cumplen WCAG AA y que ningún relleno de acento lleva texto claro; el lint rechaza colores y medidas literales en `apps/*` |
 
 ---
@@ -151,7 +151,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 
 | ID | Requisito | Objetivo (a validar) |
 |---|---|---|
-| RNF-1 | Arranque en frío hasta pantalla útil | < 3 s en POCO F6 Pro; < 8 s en MiBox 4 |
+| RNF-1 | Arranque en frío hasta pantalla útil | < 3 s en POCO F5 Pro; < 8 s en MiBox 4 |
 | RNF-2 | Memoria del proceso | Sin cierres por memoria en la MiBox 4 (2 GB) leyendo 60 imágenes seguidas; presupuesto medido y registrado en la Fase 0 |
 | RNF-3 | Fluidez | Desplazamiento de listas sin pérdidas visibles de cuadros en el teléfono; en TV, navegación con foco sin retrasos perceptibles |
 | RNF-4 | Almacenamiento | Caché de imágenes con tope configurable (por defecto menor en TV) y botón para vaciarla |
@@ -782,11 +782,11 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 - **CLI del SDK:** crear un módulo desde plantilla, validarlo, probarlo contra fixtures y empaquetarlo con su hash.
 - **Pruebas de carga:** 3 000 series sintéticas y 5 módulos sintéticos (AC-4 y AC-5).
 - **CI en GitHub Actions:** lint, tipos, pruebas y compilación del APK en cada cambio.
-- **Pruebas manuales por fase** en POCO F6 Pro, Galaxy S25 Ultra y MiBox 4.
+- **Pruebas manuales por fase** en POCO F5 Pro, Galaxy S25 Ultra y MiBox 4.
 - **Prueba de tokens (AC-13):** el CI compara `ui-tokens` con el front-matter de `DESIGN.md` (solo los tokens de 11.9) y calcula el contraste WCAG de los pares usados.
 - **Playwright:** verifica la web y la galería de componentes contra `screen.png` (composición, tokens, áreas táctiles, foco, cero peticiones externas). No controla la app nativa; ver pregunta abierta 11 y `AGENTS.md` §5.
 - **Lint de diseño:** prohibidos colores hexadecimales y medidas literales de fuente, radio o espacio en `apps/*`.
-- **Revisión visual por pantalla (AC-12):** captura en el POCO F6 Pro comparada con `screen.png` (apéndice B y lista de 20 segundos de `DESIGN_RULES.md`).
+- **Revisión visual por pantalla (AC-12):** captura en el POCO F5 Pro comparada con `screen.png` (apéndice B y lista de 20 segundos de `DESIGN_RULES.md`).
 - **Datos de ejemplo:** un único conjunto de fixtures coherente en todas las pantallas (cifras que cuadran, series inventadas, portadas sin texto), según `DESIGN_RULES.md` D1 a D5.
 
 ---
@@ -795,7 +795,7 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 
 | Plataforma | Dispositivos de prueba | Notas |
 |---|---|---|
-| Android móvil | POCO F6 Pro, Galaxy S25 Ultra | Pruebas principales en Android 12 a 15 |
+| Android móvil | POCO F5 Pro, Galaxy S25 Ultra | Pruebas principales en Android 12 a 15 |
 | Android TV | Xiaomi MiBox 4 (Android 9, 2 GB de RAM) | Es el equipo más limitado y fija el piso de rendimiento |
 | Web | Navegadores de escritorio con la extensión | Ver sección 10 |
 

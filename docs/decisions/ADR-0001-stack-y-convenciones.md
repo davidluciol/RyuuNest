@@ -49,7 +49,7 @@ Se adoptan las decisiones `P-1`…`P-12` de `MEMORY.md` §2:
 | P-7 | La v1 no incluye sincronización ni descargas; respaldo en JSON |
 | P-8 | Sitios con anti-bot: se informa `BLOCKED` y se deja para la v2 |
 | P-9 | Se desarrolla con Opencode; sin fecha límite y sin experiencia previa en React Native |
-| P-10 | Dispositivos de prueba: POCO F6 Pro, Galaxy S25 Ultra y Xiaomi MiBox 4 |
+| P-10 | Dispositivos de prueba: POCO F5 Pro, Galaxy S25 Ultra y Xiaomi MiBox 4 |
 | P-11 | Interfaz en español al inicio, con cadenas externalizadas |
 | P-12 | El diseño es la plantilla de Stitch «RyuuNest Dragon Nest Themed UI» |
 
