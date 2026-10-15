@@ -203,7 +203,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 ### Fase 2 — Corte vertical 1: instalación
 - [x] T12 Repos + index.json
 - [x] T13 PackageInstaller
-- [ ] T14 ModuleRegistry
+- [x] T14 ModuleRegistry
 - [ ] T15 E2E de instalación desde fixture (**AC-2, AC-8**)
 
 ### ✅ Checkpoint C (tras T12–T15)

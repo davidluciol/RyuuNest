@@ -381,21 +381,29 @@ provisional es de texto (se cierra en T21).
 
 ## Task T14: ModuleRegistry (ciclo de vida)
 
+**Estado:** ✅ hecho 2026-10-15.
+
 **Descripción.** Registro de módulos instalados (SPEC §3.1): activar, desactivar, desinstalar y
 actualizar; guardar el último error; en la actualización, volver a pedir confirmación si se
 amplían permisos o cambia de declarativo a script.
 
 **Criterios de aceptación:**
 
-- [ ] Activar/desactivar cambia el estado sin reinstalar.
-- [ ] Desinstalar elimina archivos y registro de forma consistente.
-- [ ] Una actualización que amplía permisos o cambia de runtime exige nueva confirmación.
-- [ ] `last_error` se guarda y se puede consultar por módulo.
+- [x] Activar/desactivar cambia el estado sin reinstalar.
+- [x] Desinstalar elimina archivos y registro de forma consistente.
+- [x] Una actualización que amplía permisos o cambia de runtime exige nueva confirmación.
+- [x] `last_error` se guarda y se puede consultar por módulo.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: secuencia instalar→desactivar→actualizar→desinstalar.
+- [x] `pnpm --filter @ryuunest/core test` (16 tests, rojo→verde)
+- [x] Manual: secuencia instalar→desactivar→actualizar→desinstalar.
+
+**Notas:** el registro trabaja sobre la misma fila `module:<id>` que dejó T13; se le añaden
+`enabled` y `lastError` (SPEC §8.1). `update` devuelve `needs-confirmation` con los motivos y
+**no** aplica nada hasta repetirse con `{ confirmed: true }`; con confirmación conserva el
+estado de activación y limpia el último error. La reducción de permisos y el paso de script a
+declarativo no piden confirmación (el SPEC solo menciona la ampliación y declarativo→script).
 
 **Dependencias:** T13.
 **Archivos probables:** `packages/core/src/modules/ModuleRegistry.ts`,

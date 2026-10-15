@@ -70,6 +70,13 @@ export interface InstalledPackage {
   files: PackageFile[];
   /** Milisegundos desde la época. */
   installedAt: number;
+  /**
+   * Ciclo de vida (SPEC §8.1, tabla `module`): lo gobierna el registro de módulos (T14).
+   * El instalador siempre deja el módulo activado.
+   */
+  enabled: boolean;
+  /** Último error del módulo, si lo hubo (RF-5, RNF-8). */
+  lastError?: string;
 }
 
 /** Opciones del instalador. */
@@ -192,6 +199,7 @@ export class PackageInstaller {
         .map((entry) => ({ path: normalizeEntryPath(entry.path), hex: toHex(entry.data) }))
         .sort((a, b) => a.path.localeCompare(b.path)),
       installedAt: this.clock.now(),
+      enabled: true,
     };
 
     await this.storage.set(moduleKey(manifest.id), JSON.stringify(installed));

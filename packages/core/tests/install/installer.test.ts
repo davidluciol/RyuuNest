@@ -167,6 +167,7 @@ describe("PackageInstaller · instalación (SPEC §7.1)", () => {
       nsfw: false,
       permissions: { domains: ["ejemplo.com"] },
       installedAt: 1_000,
+      enabled: true,
     });
     expect(installed.files.map((file) => file.path)).toEqual(["index.js", "manifest.json"]);
 
