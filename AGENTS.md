@@ -114,6 +114,7 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
     - Cualquier nota adicional para el revisor.
 - No hagas push directo a la rama principal. Siempre pasa por un PR y revisión.
 - No dejes branches huérfanos en el repositorio.
+- No haras push de la rama que hayas creado, si el humano la aprueba le hara merge y te informara.
 
 ## 10. Evitar
 
@@ -143,3 +144,7 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
 - Coste y número de iteraciones documentados.
 El criterio económico principal sería:
 coste por exito = coste total de las ejecuciones / tareas completadas correctamente
+
+## 12. Sugerencias
+- Mide la tarea por complejidad, mira la categoria de skills si se requiere mas informacion para una area especifica usa skill-find y si esta no es suficiente pide permiso al humano para instalar la skill necesaria.
+- No des por sentado que el humano sabe lo que quiere, siempre pregunta y confirma.
