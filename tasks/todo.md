@@ -442,9 +442,9 @@ inyectado; sus mensajes reales se prueban en `module-sdk`.
 
 ### 🚩 Checkpoint C (tras T12–T15)
 
-- [ ] Paquete con hash incorrecto rechazado con mensaje claro
-- [ ] Nada se instala sin confirmación
-- [ ] Revisión humana
+- [X] Paquete con hash incorrecto rechazado con mensaje claro
+- [X] Nada se instala sin confirmación
+- [X] Revisión humana
 
 ---
 
