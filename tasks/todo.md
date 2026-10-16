@@ -1015,14 +1015,14 @@ tipografía (Manrope/Inter con tamaños, pesos, interlineado y tracking), espaci
 
 **Criterios de aceptación:**
 
-- [ ] Todos los tokens de SPEC §11.9 existen como tokens semánticos; los genéricos del front-matter no se usan.
-- [ ] Existe un mapa de tema Dragon Night y la estructura para añadir temas futuros.
-- [ ] Ningún componente consumirá valores literales (P2-4).
+- [x] Todos los tokens de SPEC §11.9 existen como tokens semánticos; los genéricos del front-matter no se usan.
+- [x] Existe un mapa de tema Dragon Night y la estructura para añadir temas futuros.
+- [x] Ningún componente consumirá valores literales (P2-4).
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/ui-tokens test && pnpm --filter @ryuunest/ui-tokens build`
-- [ ] Manual: comparar cada token con `DESIGN.md` y SPEC §11.9.
+- [x] `pnpm --filter @ryuunest/ui-tokens test && pnpm --filter @ryuunest/ui-tokens build`
+- [x] Manual: comparar cada token con `DESIGN.md` y SPEC §11.9.
 
 **Dependencias:** T01, T02.
 **Archivos probables:** `packages/ui-tokens/src/{colors,typography,spacing,radii,density,theme}.ts`,
