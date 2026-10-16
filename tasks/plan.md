@@ -421,7 +421,7 @@ datos de ejemplo → estados de carga/vacío/error → verificación con Playwri
 
 ### Fase 6a — Sistema de diseño
 - [x] F01 `ui-tokens` (colores §11.9, tipografía, espaciado, radios, densidades) + tema Dragon Night
-- [ ] F02 Prueba de tokens vs `DESIGN.md` y contraste WCAG (**AC-13**)
+- [x] F02 Prueba de tokens vs `DESIGN.md` y contraste WCAG (**AC-13**)
 - [ ] F03 Fuentes (Manrope/Inter) e iconos (Lucide) empaquetados + `ASSETS.md`
 - [ ] F04 Escala y layout por densidad (móvil/web/TV), rejilla de 4 px
 - [ ] F05 Galería de componentes (pantalla de desarrollo)

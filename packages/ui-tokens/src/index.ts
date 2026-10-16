@@ -19,5 +19,6 @@ export {
   type DensityName,
 } from "./density";
 export { defaultTheme, dragonNight, getTheme, themes, type Theme } from "./theme";
+export { contrastRatio, hexToRgb, relativeLuminance, WCAG_AA } from "./contrast";
 
 export const UI_TOKENS_VERSION = "0.1.0";

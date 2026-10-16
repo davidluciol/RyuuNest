@@ -1045,14 +1045,14 @@ tipografía (Manrope/Inter con tamaños, pesos, interlineado y tracking), espaci
 
 **Criterios de aceptación:**
 
-- [ ] Los tokens propios coinciden con `DESIGN.md`; si un genérico difiere, se ignora y se anota.
-- [ ] Todos los pares usados cumplen WCAG AA; los rellenos de `accent`/`progress` llevan texto `bg`.
-- [ ] La prueba corre en CI (**AC-13**).
+- [x] Los tokens propios coinciden con `DESIGN.md`; si un genérico difiere, se ignora y se anota.
+- [x] Todos los pares usados cumplen WCAG AA; los rellenos de `accent`/`progress` llevan texto `bg`.
+- [x] La prueba corre en CI (**AC-13**).
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/ui-tokens test`
-- [ ] Manual: introducir un color que falle y comprobar que la prueba falla.
+- [x] `pnpm --filter @ryuunest/ui-tokens test`
+- [x] Manual: introducir un color que falle y comprobar que la prueba falla.
 
 **Dependencias:** F01.
 **Archivos probables:** `packages/ui-tokens/src/__tests__/contrast.test.ts`, `vitest.config.ts`.

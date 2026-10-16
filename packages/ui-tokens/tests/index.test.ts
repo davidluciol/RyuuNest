@@ -11,7 +11,9 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
     expect(Object.keys(uiTokens).sort()).toEqual(
       [
         "UI_TOKENS_VERSION",
+        "WCAG_AA",
         "breakpoints",
+        "contrastRatio",
         "coverAspectRatio",
         "defaultTheme",
         "densities",
@@ -19,13 +21,20 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
         "dragonNightColors",
         "fonts",
         "getTheme",
+        "hexToRgb",
         "radii",
+        "relativeLuminance",
         "spacing",
         "themes",
         "touchTarget",
         "typography",
       ].sort(),
     );
+  });
+
+  it("exporta las utilidades de contraste de F02 (AC-13)", () => {
+    expect(uiTokens.contrastRatio("#000000", "#ffffff")).toBeCloseTo(21, 1);
+    expect(uiTokens.WCAG_AA.text).toBe(4.5);
   });
 
   it("los valores vuelven a ser los del SPEC cuando se importan desde el índice", () => {
