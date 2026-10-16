@@ -114,7 +114,7 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
     - Cualquier nota adicional para el revisor.
 - No hagas push directo a la rama principal. Siempre pasa por un PR y revisión.
 - No dejes branches huérfanos en el repositorio.
-- No haras push de la rama que hayas creado, si el humano la aprueba le hara merge y te informara.
+- Crea el Pull Request automáticamente con `gh pr create` en cuanto la tarea esté terminada y el gate (`pnpm lint`, `pnpm -r typecheck`, `pnpm -r test`) esté en verde; no esperes a que el humano lo pida. Incluye en el cuerpo la evidencia del gate. **No fusiones el PR**: lo revisa y lo fusiona el humano.
 
 ## 10. Evitar
 
