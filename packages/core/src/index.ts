@@ -20,6 +20,7 @@ export * from "./modules/ModuleRegistry.js";
 export * from "./ports/index.js";
 export * from "./repo/RepoRegistry.js";
 export * from "./runtimes/DeclarativeRuntime.js";
+export * from "./runtimes/ScriptRuntime.js";
 export * from "./runtimes/transforms.js";
 export * from "./validation.js";
 

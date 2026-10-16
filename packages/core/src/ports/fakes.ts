@@ -8,6 +8,7 @@ import type { Archive, ArchiveEntry } from "./archive.js";
 import { utf8Encode } from "../bytes.js";
 import type { Clock } from "./clock.js";
 import type { Http, HttpRequest, HttpResponse } from "./http.js";
+import type { ScriptFactory, ScriptLoader } from "./scriptLoader.js";
 import type { SecureLock } from "./secureLock.js";
 import type { Storage } from "./storage.js";
 
@@ -115,5 +116,33 @@ export class NoopSecureLock implements SecureLock {
 
   async authenticate(_reason: string): Promise<boolean> {
     return false;
+  }
+}
+
+/**
+ * `ScriptLoader` de prueba: devuelve la fábrica registrada para cada código fuente y
+ * apunta las fuentes pedidas. No evalúa nada (el núcleo no toca APIs de plataforma).
+ */
+export class FakeScriptLoader implements ScriptLoader {
+  readonly loaded: string[] = [];
+  readonly #factories = new Map<string, ScriptFactory>();
+
+  constructor(factories: Record<string, ScriptFactory> = {}) {
+    for (const [source, factory] of Object.entries(factories)) {
+      this.#factories.set(source, factory);
+    }
+  }
+
+  register(source: string, factory: ScriptFactory): void {
+    this.#factories.set(source, factory);
+  }
+
+  async load(source: string): Promise<ScriptFactory> {
+    this.loaded.push(source);
+    const factory = this.#factories.get(source);
+    if (factory === undefined) {
+      throw new Error(`No hay ninguna fábrica registrada para ese código fuente`);
+    }
+    return factory;
   }
 }
