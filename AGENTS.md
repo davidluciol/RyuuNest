@@ -114,7 +114,6 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
     - Cualquier nota adicional para el revisor.
 - No hagas push directo a la rama principal. Siempre pasa por un PR y revisión.
 - No dejes branches huérfanos en el repositorio.
-- No haras push de la rama que hayas creado, si el humano la aprueba le hara merge y te informara.
 
 ## 10. Evitar
 
