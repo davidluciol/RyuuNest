@@ -213,10 +213,10 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 
 ### Fase 3 — Corte vertical 2: declarativo
 - [x] T16 DeclarativeRuntime + transformaciones
-- [ ] T17 E2E declarativo contra el sitio falso
+- [x] T17 E2E declarativo contra el sitio falso
 
 ### ✅ Checkpoint D (tras T16–T17)
-- [ ] `popular`, `latest`, `search`, `details` y `pages` responden desde fixtures
+- [x] `popular`, `latest`, `search`, `details` y `pages` responden desde fixtures
 - [ ] Revisión humana
 
 ### Fase 4 — Corte vertical 3: script

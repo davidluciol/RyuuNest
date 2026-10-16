@@ -485,18 +485,28 @@ valor extraído de `attr` o del texto. Un campo obligatorio que no se puede extr
 
 ## Task T17: E2E declarativo contra el sitio falso
 
+**Estado:** ✅ hecho 2026-10-16.
+
 **Descripción.** Ejecutar el arnés de contrato (T10) contra un módulo declarativo completo que
 apunta a las fixtures HTML, cubriendo los 5 métodos y comprobando `releases` múltiples.
 
 **Criterios de aceptación:**
 
-- [ ] El arnés pasa para el módulo declarativo de ejemplo.
-- [ ] Un selector roto produce `ModuleError` con `code` y `details.selector`.
+- [x] El arnés pasa para el módulo declarativo de ejemplo.
+- [x] Un selector roto produce `ModuleError` con `code` y `details.selector`.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test -- declarative.contract`
-- [ ] Manual: romper un selector en la fixture y ver el error tipado.
+- [x] `pnpm --filter @ryuunest/core test -- declarative.contract` (4 tests, rojo→verde)
+- [x] Manual: romper un selector en la fixture y ver el error tipado (pruebas 2 y 3).
+
+**Notas:** el módulo de ejemplo se publica como **constante TypeScript**
+(`packages/test-site/src/exampleDeclarative.ts`, `EXAMPLE_DECLARATIVE`) en vez de
+`fixtures/modules/example-declarative.json`: el núcleo no tiene tipos de Node y así lo consume
+sin leer ficheros. `test-site` entra en las pruebas del núcleo por **alias a fuentes**
+(`packages/core/vitest.config.ts` + `paths` de `tsconfig.test.json`), **no** como dependencia
+declarada: `test-site` depende del núcleo y declararla rompería el build con
+`ERR_PNPM_TASK_CYCLE`.
 
 **Dependencias:** T16, T10.
 **Archivos probables:** `packages/core/tests/contract/declarative.contract.test.ts`,

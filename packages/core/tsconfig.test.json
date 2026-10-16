@@ -1,8 +1,11 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": "."
+    "paths": {
+      "@ryuunest/core": ["./src/index.ts"],
+      "@ryuunest/test-site": ["../test-site/src/index.ts"]
+    }
   },
-  "include": ["src", "tests"]
+  "include": ["src", "tests", "../test-site/src"]
 }

@@ -31,5 +31,7 @@ export {
 } from "./sites.js";
 export type { SiteName, TestRoute, TestSite } from "./sites.js";
 
+export { EXAMPLE_DECLARATIVE } from "./exampleDeclarative.js";
+
 export { ContractError, runContract } from "./harness.js";
 export type { ContractHarnessOptions, ContractReport } from "./harness.js";
