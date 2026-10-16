@@ -99,3 +99,47 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
 - [ ] Diferencias aceptadas en `design/stitch/DIFFS.md`.
 - [ ] Entrada nueva en `MEMORY.md`: qué se hizo, decisiones, siguiente paso.
 - [ ] Preguntas sin resolver listadas en `MEMORY.md` y dichas al humano.
+
+## 9. Regla 9: Git
+- Cada tarea debe tener su branch riênga, por ejemplo: `feature/T16-declarative-runtime`.
+- Antes de empezar a trabajar en una tarea, asegúrate de que tu branch local esté actualizado con la rama principal (generalmente `main` o `master`). Usa `git pull origin main`.
+- Cada commit debe ser atómico y descriptivo. Sigue el formato: `<tipo>: <descripción breve>`.
+    - Ejemplos de tipos: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `style`, `chore`.
+- Antes de subir tus cambios, corre `pnpm lint`, `pnpm -r typecheck` y `pnpm -r test`. Si algo falla, arréglalo antes de hacer push.
+- Cuando una tarea esté terminada, crea un Pull Request (PR) para fusionarla con la rama principal. El PR debe incluir:
+    - Un título claro que resuma los cambios.
+    - Una descripción detallada de lo que se implementó y por qué.
+    - Los criterios de aceptación de la tarea cumplidos.
+    - Capturas de pantalla o GIFs si la tarea incluye cambios visuales.
+    - Cualquier nota adicional para el revisor.
+- No hagas push directo a la rama principal. Siempre pasa por un PR y revisión.
+- No dejes branches huérfanos en el repositorio.
+
+## 10. Evitar
+
+- Evitar auditorías repetidas de todo el repositorio. Si `F<numbertask>` ya dejó pruebas y build correctos, `F<numbertask+1>` debería reutilizar ese resultado, no rehacer la implementación.
+- Evita si ya hiciste una auditoria del repositorio, no la repitas.
+- Seleccionar las skills por tarea. No cargar todas las skills de diseño y marketing en una tarea de tokens o pruebas unitarias.
+- Limitar el alcance de los cambios. Una tarea debe especificar qué archivos puede modificar y qué pruebas debe ejecutar.
+- Separar implementación y revisión. Una segunda revisión puede ser valiosa para componentes críticos, pero no necesitas pagar una revisión frontier de cada archivo trivial.
+- Evitar costos innecesarios. No generes planes de fases, ADRs ni capturas de pantalla para tareas de mantenimiento o corrección de errores menores. El humano decidirá si vale la pena documentarlas a fondo.
+- No ofrezcas opciones de diseño si el usuario solo pide una corrección técnica.
+- No propongas tareas de documentación o planificación a menos que el usuario las solicite explícitamente.
+- No generes ADRs o “planes de fase” como respuesta automática a una tarea de implementación. Esos documentos se crean solo cuando el humano lo pide de forma explícita.
+- Escalar por fallos concretos. Si el modelo no consigue pasar una prueba después de una corrección razonable, entonces se escala. No se escala solamente porque el trabajo parezca grande.
+- **Escalar si despues de 2 intentos fallidos, detente para escalar al siguiente modelo.**
+   - **Caso 1: Primer fallo recuperable**
+   - **Caso 2: Segundo fallo relevante o bloqueo de arquitectura**
+   - **Caso 3: Coste inesperado. Detén la ejecución al alcanzar el límite asignado.**
+   - **Caso 4 Exitoso: Primera ejecución correcta. Si pasan las pruebas y se cumplen los criterios de aceptación, no escales ni solicites otra revisión completa sin una razón concreta.**
+
+## 11. Qué debe significar **tarea completada**
+- Build y pruebas obligatorias en verde.
+- Criterios de aceptación cumplidos.
+- Sin cambios fuera del alcance.
+- Sin regresiones ni dependencias innecesarias.
+- Revisión visual cuando corresponda.
+- Intervención manual registrada.
+- Coste y número de iteraciones documentados.
+El criterio económico principal sería:
+coste por exito = coste total de las ejecuciones / tareas completadas correctamente
