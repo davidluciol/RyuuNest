@@ -220,7 +220,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [ ] Revisión humana
 
 ### Fase 4 — Corte vertical 3: script
-- [ ] T18 ScriptRuntime + frontera de sandbox/host
+- [x] T18 ScriptRuntime + frontera de sandbox/host
 - [ ] T19 E2E script contra el sitio falso
 - [ ] T20 Carga/selección de runtime + mapeo de errores
 

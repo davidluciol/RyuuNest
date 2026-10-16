@@ -4,4 +4,5 @@ export * from "./fakes.js";
 export * from "./http.js";
 export * from "./httpStatus.js";
 export * from "./secureLock.js";
+export * from "./scriptLoader.js";
 export * from "./storage.js";

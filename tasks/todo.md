@@ -515,8 +515,8 @@ declarada: `test-site` depende del núcleo y declararla rompería el build con
 
 ### 🚩 Checkpoint D (tras T16–T17)
 
-- [ ] `popular`, `latest`, `search`, `details`, `pages` responden desde fixtures
-- [ ] Revisión humana
+- [X] `popular`, `latest`, `search`, `details`, `pages` responden desde fixtures
+- [X] Revisión humana
 
 ---
 
@@ -524,20 +524,28 @@ declarada: `test-site` depende del núcleo y declararla rompería el build con
 
 ## Task T18: ScriptRuntime + frontera de sandbox/host
 
+**Estado:** ✅ hecho 2026-10-16.
+
 **Descripción.** Runtime que carga un módulo script (SPEC §6.5): el módulo exporta
 `create(host)` y devuelve un `ModuleApi`. El módulo solo dispone de `host.*`. Documenta la
 limitación conocida (D-5: sin aislamiento real en la v1).
 
 **Criterios de aceptación:**
 
-- [ ] Un módulo script de ejemplo se carga y devuelve un `ModuleApi` válido.
-- [ ] El módulo no puede llamar red fuera de `host.fetch` (documentado y verificado).
-- [ ] Los errores del módulo se convierten en `ModuleError` con código.
+- [x] Un módulo script de ejemplo se carga y devuelve un `ModuleApi` válido.
+- [x] El módulo no puede llamar red fuera de `host.fetch` (documentado y verificado).
+- [x] Los errores del módulo se convierten en `ModuleError` con código.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: módulo que llama a `host.fetch` a un dominio no permitido → error.
+- [x] `pnpm --filter @ryuunest/core test` (11 tests nuevos, rojo→verde)
+- [x] Manual: módulo que llama a `host.fetch` a un dominio no permitido → `ModuleError` `UNSUPPORTED` (prueba cubierta).
+
+**Notas:** la carga del código fuente entra por el **puerto `ScriptLoader`** (contrato en el
+núcleo, implementación de plataforma en el cliente) con su doble `FakeScriptLoader`. El runtime
+valida el contrato (`search`/`details`/`pages`) y envuelve cada método para que cualquier fallo
+sea `ModuleError` (`INTERNAL` por defecto; conserva el código si el módulo lanza un `ModuleError`).
+Se documenta **D-5**: sin aislamiento real; la única frontera es el `Host`.
 
 **Dependencias:** T08.
 **Archivos probables:** `packages/core/src/runtimes/ScriptRuntime.ts`,
