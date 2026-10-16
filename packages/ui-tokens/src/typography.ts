@@ -17,9 +17,12 @@ export const fonts = {
   bodyWeights: [400, 500, 600],
 } as const;
 
+/** Familias tipográficas del sistema (P2-3). */
+export type FontFamily = "Manrope" | "Inter";
+
 /** Estilo completo de un token de texto. */
 export interface TypeStyle {
-  readonly fontFamily: "Manrope" | "Inter";
+  readonly fontFamily: FontFamily;
   readonly fontSize: number;
   readonly lineHeight: number;
   readonly fontWeight: number;

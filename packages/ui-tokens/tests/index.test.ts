@@ -19,6 +19,8 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
         "densities",
         "dragonNight",
         "dragonNightColors",
+        "fontFiles",
+        "fontLicenses",
         "fonts",
         "getTheme",
         "hexToRgb",
