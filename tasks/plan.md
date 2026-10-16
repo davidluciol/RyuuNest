@@ -212,7 +212,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [ ] Revisión humana
 
 ### Fase 3 — Corte vertical 2: declarativo
-- [ ] T16 DeclarativeRuntime + transformaciones
+- [x] T16 DeclarativeRuntime + transformaciones
 - [ ] T17 E2E declarativo contra el sitio falso
 
 ### ✅ Checkpoint D (tras T16–T17)

@@ -452,6 +452,8 @@ inyectado; sus mensajes reales se prueban en `module-sdk`.
 
 ## Task T16: DeclarativeRuntime + transformaciones
 
+**Estado:** ✅ hecho 2026-10-16.
+
 **Descripción.** Runtime que ejecuta un módulo declarativo (SPEC §6.6): construir URLs con
 plantillas (`{baseUrl}`, `{query}`, `{page}`), listar con selectores, extraer campos con
 `attr`/`text`/`regex` y aplicar transformaciones (`trim`, `path`, `absoluteUrl`, `regex`,
@@ -459,15 +461,21 @@ plantillas (`{baseUrl}`, `{query}`, `{page}`), listar con selectores, extraer ca
 
 **Criterios de aceptación:**
 
-- [ ] `search`, `popular`, `latest` → `Page<SeriesSummary>` desde fixtures.
-- [ ] `details` y `pages` producen los tipos del contrato.
-- [ ] Cada transformación tiene prueba unitaria; `absoluteUrl` y `path` manejan URLs relativas.
-- [ ] `hasNext` se calcula según la configuración.
+- [x] `search`, `popular`, `latest` → `Page<SeriesSummary>` desde fixtures.
+- [x] `details` y `pages` producen los tipos del contrato.
+- [x] Cada transformación tiene prueba unitaria; `absoluteUrl` y `path` manejan URLs relativas.
+- [x] `hasNext` se calcula según la configuración.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: módulo declarativo de ejemplo contra `test-site` (arquitectura HTML).
+- [x] `pnpm --filter @ryuunest/core test` (34 tests nuevos, rojo→verde)
+- [x] Manual: módulo declarativo de ejemplo contra `test-site` (arquitectura HTML).
+
+**Notas:** el formato declarativo se **cierra** en esta fase. Decisión **P-50**: `path` devuelve
+el **último segmento** de la ruta (`/serie/dragon-de-ceniza` → `dragon-de-ceniza`), que es el `id`
+estable de la serie; coincide con la plantilla script ya revisada. `regex` (campo) se aplica al
+valor extraído de `attr` o del texto. Un campo obligatorio que no se puede extraer (o un
+`index.json` sin capítulos/imágenes) produce `ModuleError` `PARSE` con `details.selector`.
 
 **Dependencias:** T06, T08.
 **Archivos probables:** `packages/core/src/runtimes/DeclarativeRuntime.ts`,

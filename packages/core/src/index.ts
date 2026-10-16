@@ -19,6 +19,8 @@ export * from "./install/PackageInstaller.js";
 export * from "./modules/ModuleRegistry.js";
 export * from "./ports/index.js";
 export * from "./repo/RepoRegistry.js";
+export * from "./runtimes/DeclarativeRuntime.js";
+export * from "./runtimes/transforms.js";
 export * from "./validation.js";
 
 // Los validadores de manifest e índice de repo viven en `module-sdk` (SPEC §5.1) y
