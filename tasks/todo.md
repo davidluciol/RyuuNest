@@ -554,18 +554,29 @@ Se documenta **D-5**: sin aislamiento real; la única frontera es el `Host`.
 
 ## Task T19: E2E script contra el sitio falso
 
+**Estado:** ✅ hecho 2026-10-16.
+
 **Descripción.** Ejecutar el arnés de contrato (T10) contra un módulo script de ejemplo que usa
 `host.html()` y `host.fetch` sobre las fixtures (incluida la arquitectura JSON de `test-site`).
 
 **Criterios de aceptación:**
 
-- [ ] El arnés pasa para el módulo script de ejemplo (mismo contrato que el declarativo).
-- [ ] `images` en `pages()` incluye `headers` (`Referer`, `User-Agent`) cuando el módulo los define.
+- [x] El arnés pasa para el módulo script de ejemplo (mismo contrato que el declarativo).
+- [x] `images` en `pages()` incluye `headers` (`Referer`, `User-Agent`) cuando el módulo los define.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test -- script.contract`
-- [ ] Manual: comparar la salida contra el runtime declarativo.
+- [x] `pnpm --filter @ryuunest/core test -- script.contract` (4 tests nuevos, rojo→verde)
+- [x] Manual: el informe del arnés del módulo script **es idéntico** al del declarativo
+      (`expect(scriptReport).toEqual(declarativeReport)`, dentro de la prueba).
+
+**Notas:** el módulo de ejemplo es una **fábrica TypeScript** en `test-site`
+(`src/exampleScript.ts`: `createExampleScript`, `EXAMPLE_SCRIPT_HTML` y `EXAMPLE_SCRIPT_JSON`), no
+un `.js` en `fixtures/` (P-52, mismo motivo que P-51). Cubre las **dos arquitecturas**: la HTML con
+`host.fetch()` + `host.html()` y selectores CSS, y la JSON con `JSON.parse` y paginación por
+cursor. Las cabeceras de las imágenes (RF-24) las declara el propio módulo en su configuración: si
+no las define, las imágenes van sin `headers`. La carga del código entra por el puerto
+`ScriptLoader` (T18) con su doble, porque el núcleo no toca APIs de plataforma.
 
 **Dependencias:** T18, T10.
 **Archivos probables:** `packages/core/tests/contract/script.contract.test.ts`,
