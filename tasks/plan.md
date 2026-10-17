@@ -221,13 +221,13 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 
 ### Fase 4 — Corte vertical 3: script
 - [x] T18 ScriptRuntime + frontera de sandbox/host
-- [ ] T19 E2E script contra el sitio falso
+- [x] T19 E2E script contra el sitio falso
 - [x] T20 Carga/selección de runtime + mapeo de errores
 
 ### ✅ Checkpoint E (tras T18–T20)
 - [x] Módulo script y declarativo pasan el mismo contrato (T17 declarativo, T19 script)
 - [x] Los errores se mapean a `ModuleErrorCode` (T20)
-- [ ] Revisión humana
+- [x] Revisión humana
 
 ### Fase 5 — Corte vertical 4: biblioteca
 - [ ] T21 Storage SQL + esquema/migraciones + en memoria
