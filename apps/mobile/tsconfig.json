@@ -1,6 +1,9 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@ryuunest/ui-tokens": ["../../packages/ui-tokens/src/index.ts"]
+    }
   }
 }

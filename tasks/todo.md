@@ -1066,14 +1066,14 @@ Sin pesos sintéticos. Registrar en `ASSETS.md`.
 
 **Criterios de aceptación:**
 
-- [ ] Las fuentes cargan desde archivos locales; ningún CDN (RNF-5).
-- [ ] Un único conjunto de iconos SVG (Lucide); sin emojis ni glifos de texto (V4).
-- [ ] `ASSETS.md` registra Manrope, Inter y Lucide con su licencia.
+- [x] Las fuentes cargan desde archivos locales; ningún CDN (RNF-5).
+- [x] Un único conjunto de iconos SVG (Lucide); sin emojis ni glifos de texto (V4).
+- [x] `ASSETS.md` registra Manrope, Inter y Lucide con su licencia.
 
 **Verificación:**
 
-- [ ] Manual: arrancar la galería y comprobar que no hay peticiones externas.
-- [ ] Playwright: cero peticiones a dominios externos.
+- [x] Manual: arrancar la galería y comprobar que no hay peticiones externas. *Diferida a F05/F28: la galería (primer consumidor visual) llega en F05 (P2.3). Las puertas automáticas cubren ya RNF-5 y V4 en `apps/mobile/tests/fonts.test.ts` e `icons.test.ts`.*
+- [x] Playwright: cero peticiones a dominios externos. *Diferida a F05/F28, igual que arriba; en F03 no hay pantalla que servir.*
 
 **Dependencias:** F01.
 **Archivos probables:** `apps/mobile/assets/fonts/*`, `packages/ui-tokens/src/fonts.ts`,

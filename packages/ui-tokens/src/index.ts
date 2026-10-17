@@ -7,7 +7,8 @@
  */
 
 export { dragonNightColors, type ThemeColors } from "./colors";
-export { fonts, typography, type TypeStyle, type TypeToken } from "./typography";
+export { fonts, typography, type FontFamily, type TypeStyle, type TypeToken } from "./typography";
+export { fontFiles, fontLicenses, type FontFile } from "./fonts";
 export { spacing, type SpacingToken } from "./spacing";
 export { radii, type RadiusToken } from "./radii";
 export {

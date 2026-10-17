@@ -19,20 +19,24 @@ código se registran con su licencia en los `package.json` y en `pnpm-lock.yaml`
 
 | Recurso | Versión / pesos | Licencia | Origen | Estado |
 |---|---|---|---|---|
-| **Manrope** | 600, 700 | SIL Open Font License 1.1 (OFL-1.1) | Proyecto Manrope | Previsto (F03) |
-| **Inter** | 400, 500, 600 | SIL Open Font License 1.1 (OFL-1.1) | Proyecto Inter | Previsto (F03) |
+| **Manrope** | 4.505 (estáticos 600, 700) | SIL Open Font License 1.1 (OFL-1.1) | `github.com/googlefonts/manrope` → `fonts/ttf/` (descarga 2026-10-16; el repo original `sharanda/manrope` fue borrado) | **Incluida** (F03): `apps/mobile/assets/fonts/Manrope-SemiBold.ttf`, `Manrope-Bold.ttf` + `LICENSE-Manrope.txt` |
+| **Inter** | 4.1 (estáticos 400, 500, 600) | SIL Open Font License 1.1 (OFL-1.1) | release oficial `github.com/rsms/inter` v4.1 → `extras/ttf/` (descarga 2026-10-16) | **Incluida** (F03): `apps/mobile/assets/fonts/Inter-Regular.ttf`, `Inter-Medium.ttf`, `Inter-SemiBold.ttf` + `LICENSE-Inter.txt` |
 
 Notas: un archivo de fuente por peso, cargado explícitamente; sin pesos sintéticos
-(`docs/SPEC.md` §11.3).
+(`docs/SPEC.md` §11.3). Los nombres embebidos llevan el peso integrado (`Manrope-SemiBold`,
+`Inter-Medium`…): el `fontFamily` de React Native por peso es el nombre PostScript del
+archivo, listado en `packages/ui-tokens/src/fonts.ts` (`fontFiles`). La puerta automática
+`apps/mobile/tests/fonts.test.ts` comprueba existencia, formato, nombre embebido y licencia.
 
 ## Iconos
 
 | Recurso | Licencia | Origen | Estado |
 |---|---|---|---|
-| **Lucide** (`lucide-react-native` en móvil/TV, `lucide-react` en web) | ISC | Proyecto Lucide | Previsto (F03) |
+| **Lucide** (`lucide-react-native@^1.57.0` en móvil/TV, `lucide-react` en web) | ISC | `github.com/lucide-icons/lucide` (paquete npm, instalado con `npx expo install` para la versión compatible con SDK 57) | **Incluido** (F03): punto de entrada único `apps/mobile/src/icons.ts`; requiere `react-native-svg@15.15.4` (par nativo, mismo origen ISC/MIT de su paquete) |
 
 Notas: un único conjunto de iconos SVG, un icono por significado; sin emojis ni glifos de
-texto (`DESIGN_RULES.md` V4).
+texto (`DESIGN_RULES.md` V4). La puerta `apps/mobile/tests/icons.test.ts` prohíbe emojis en
+`src/` y que otra pantalla importe `lucide-react-native` a mano.
 
 ## Imágenes y marcadores temporales
 
