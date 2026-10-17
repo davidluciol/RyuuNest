@@ -25,6 +25,7 @@ import type {
 } from "../contract/types.js";
 import { ModuleError } from "../contract/errors.js";
 import type { ScriptFactory, ScriptLoader } from "../ports/scriptLoader.js";
+import { toModuleError, describeError } from "./errorMapping.js";
 
 /** Opciones del runtime. */
 export interface ScriptRuntimeOptions {
@@ -36,18 +37,6 @@ export interface ScriptRuntimeOptions {
 
 /** Métodos que todo módulo debe implementar (SPEC §6.3). */
 const REQUIRED_METHODS = ["search", "details", "pages"] as const;
-
-function describe(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
-}
-
-/** Convierte cualquier fallo del módulo en un `ModuleError` del contrato. */
-function toModuleError(error: unknown): ModuleError {
-  if (error instanceof ModuleError) {
-    return error;
-  }
-  return new ModuleError("INTERNAL", describe(error));
-}
 
 export class ScriptRuntime {
   readonly #host: Host;
@@ -87,7 +76,7 @@ export class ScriptRuntime {
     try {
       return await this.#loader.load(this.#source);
     } catch (error) {
-      throw new ModuleError("INTERNAL", `No se pudo cargar el módulo: ${describe(error)}`);
+      throw new ModuleError("INTERNAL", `No se pudo cargar el módulo: ${describeError(error)}`);
     }
   }
 

@@ -23,7 +23,8 @@ import type {
   SeriesStatus,
   SeriesSummary,
 } from "../contract/types.js";
-import { ModuleError, type ModuleErrorCode } from "../contract/errors.js";
+import { ModuleError } from "../contract/errors.js";
+import { moduleErrorFromStatus } from "./errorMapping.js";
 import {
   applyTransforms,
   joinValues,
@@ -392,21 +393,9 @@ export class DeclarativeRuntime {
   async #document(url: string): Promise<HtmlDocument> {
     const response = await this.#host.fetch(url);
     if (response.status !== 200) {
-      throw this.#statusError(url, response.status);
+      throw moduleErrorFromStatus(url, response.status);
     }
     return this.#host.html(await response.text());
-  }
-
-  #statusError(url: string, status: number): ModuleError {
-    const code: ModuleErrorCode =
-      status === 404
-        ? "NOT_FOUND"
-        : status === 429
-          ? "RATE_LIMITED"
-          : status === 401 || status === 403
-            ? "BLOCKED"
-            : "NETWORK";
-    return new ModuleError(code, `El sitio respondió ${status} a ${url}`, { url, status });
   }
 
   #hasNext(document: HtmlDocument, config: DeclarativeListMethod): boolean {
