@@ -574,6 +574,8 @@ Se documenta **D-5**: sin aislamiento real; la única frontera es el `Host`.
 
 ## Task T20: Carga/selección de ModuleRuntime + mapeo de errores
 
+**Estado:** ✅ hecho 2026-10-16.
+
 **Descripción.** Punto único que, a partir de un módulo instalado, elige el runtime adecuado
 (declarativo o script) y devuelve un `ModuleApi`. Centraliza el mapeo de errores (red,
 timeout, bloqueo, parseo) a `ModuleErrorCode` y garantiza que un módulo roto no tumba la app
@@ -581,14 +583,26 @@ timeout, bloqueo, parseo) a `ModuleErrorCode` y garantiza que un módulo roto no
 
 **Criterios de aceptación:**
 
-- [ ] `createModuleApi(manifest, entry)` devuelve la implementación correcta.
-- [ ] Cada fallo se mapea a un `ModuleErrorCode` del SPEC §6.4.
-- [ ] Un módulo que lanza excepciones no propaga fallos no controlados; expone `last_error`.
+- [x] `createModuleApi(manifest, entry)` devuelve la implementación correcta.
+- [x] Cada fallo se mapea a un `ModuleErrorCode` del SPEC §6.4.
+- [x] Un módulo que lanza excepciones no propaga fallos no controlados; expone `last_error`.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: módulo que lanza en `details()` → `ModuleError` contenido.
+- [x] `pnpm --filter @ryuunest/core test` (**143** en `core`; 16 nuevos entre los dos cortes)
+- [x] Manual: módulo que lanza en `details()` → `ModuleError` contenido (prueba cubierta: el
+      fallo se devuelve tipado y `lastError()` lo expone).
+
+**Notas:** `ModuleRuntime` es la **costura** del SPEC §5.4/D-5: la interfaz común que
+implementan (estructuralmente) `DeclarativeRuntime` y `ScriptRuntime` (`createApi()`), sin
+imports circulares. `createModuleApi(options)` monta la API desde `manifest` + `entry` (el
+`index.json` del declarativo o el código fuente del script) y devuelve `{ api, lastError() }`:
+la API envuelve cada método para que **ningún fallo salga sin tipar** y deja el último listo
+para `ModuleRegistry.setLastError` (SPEC §8.1, RF-5). El mapeo a `ModuleErrorCode` se centraliza
+en `src/runtimes/errorMapping.ts` (`toModuleError`, `moduleErrorFromStatus`) y lo usan los dos
+runtimes (se retiró la tabla privada que tenía el declarativo). El test vive en
+`packages/core/tests/runtimes/runtimeSelection.test.ts` (convención del repo), no en un
+`__tests__/` propio.
 
 **Dependencias:** T16, T18.
 **Archivos probables:** `packages/core/src/runtimes/ModuleRuntime.ts`,
@@ -597,8 +611,9 @@ timeout, bloqueo, parseo) a `ModuleErrorCode` y garantiza que un módulo roto no
 
 ### 🚩 Checkpoint E (tras T18–T20)
 
-- [ ] Módulo script y declarativo pasan el mismo contrato
-- [ ] Errores mapeados a `ModuleErrorCode`
+- [x] Módulo script y declarativo pasan el mismo contrato (T17 y T19: el informe del arnés es
+      idéntico en los dos)
+- [x] Errores mapeados a `ModuleErrorCode` (T20: mapeo central en `errorMapping.ts`)
 - [ ] Revisión humana
 
 ---
