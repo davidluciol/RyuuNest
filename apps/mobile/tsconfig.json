@@ -3,7 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@ryuunest/ui-tokens": ["../packages/ui-tokens/src/index.ts"]
+      "@ryuunest/ui-tokens": ["../../packages/ui-tokens/src/index.ts"]
     }
   }
 }
