@@ -24,6 +24,11 @@ export * from "./runtimes/errorMapping.js";
 export * from "./runtimes/ModuleRuntime.js";
 export * from "./runtimes/ScriptRuntime.js";
 export * from "./runtimes/transforms.js";
+export * from "./storage/MemoryStorage.js";
+export * from "./storage/migrations.js";
+export * from "./storage/schema.js";
+export * from "./storage/SqlDriver.js";
+export * from "./storage/SqliteStorage.js";
 export * from "./validation.js";
 
 // Los validadores de manifest e índice de repo viven en `module-sdk` (SPEC §5.1) y

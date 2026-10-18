@@ -1,8 +1,9 @@
 /**
  * Adaptadores falsos de los puertos (SPEC §5.3), para las pruebas del núcleo.
  *
- * Son deterministas y sin dependencias de plataforma. Las implementaciones reales
- * (SQLite/IndexedDB, cliente nativo/extensión, unzip, auth) llegan en su tarea.
+ * Son deterministas y sin dependencias de plataforma. El almacén real ya existe
+ * (`SqliteStorage`, SPEC §8.1); los demás adaptadores de producción (cliente nativo o
+ * extensión, unzip, auth) llegan en su tarea.
  */
 import type { Archive, ArchiveEntry } from "./archive.js";
 import { utf8Encode } from "../bytes.js";
@@ -10,33 +11,12 @@ import type { Clock } from "./clock.js";
 import type { Http, HttpRequest, HttpResponse } from "./http.js";
 import type { ScriptFactory, ScriptLoader } from "./scriptLoader.js";
 import type { SecureLock } from "./secureLock.js";
-import type { Storage } from "./storage.js";
 
 /**
- * `Storage` en memoria.
- *
- * ⚠️ Mínimo: el API completo sobre el esquema del SPEC §8.1 llega en T21.
+ * `Storage` en memoria: reexpuesto desde `src/storage/MemoryStorage.ts` (T21) para que los
+ * dobles de prueba sigan importándolo de aquí.
  */
-export class MemoryStorage implements Storage {
-  readonly #data = new Map<string, string>();
-
-  async get(key: string): Promise<string | undefined> {
-    return this.#data.get(key);
-  }
-
-  async set(key: string, value: string): Promise<void> {
-    this.#data.set(key, value);
-  }
-
-  async delete(key: string): Promise<void> {
-    this.#data.delete(key);
-  }
-
-  async keys(prefix?: string): Promise<string[]> {
-    const all = [...this.#data.keys()];
-    return prefix === undefined ? all : all.filter((key) => key.startsWith(prefix));
-  }
-}
+export { MemoryStorage } from "../storage/MemoryStorage.js";
 
 /** Respuesta configurable de `StubHttp`. */
 export interface StubHttpRoute {
