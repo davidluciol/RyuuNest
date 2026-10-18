@@ -425,7 +425,7 @@ datos de ejemplo → estados de carga/vacío/error → verificación con Playwri
 - [x] F03 Fuentes (Manrope/Inter) e iconos (Lucide) empaquetados + `ASSETS.md`
 - [x] F04 Escala y layout por densidad (móvil/web/TV), rejilla de 4 px
 - [x] F05 Galería de componentes (pantalla de desarrollo)
-- [ ] F06 Componentes base 1: botones, campos, casillas/radios, chips, insignias
+- [x] F06 Componentes base 1: botones, campos, casillas/radios, chips, insignias
 - [ ] F07 Componentes base 2: tarjeta de portada, fila de capítulo, filas de ajustes, cabecera, navegación, hojas/diálogos
 - [ ] F08 Estados vacíos y de error + dragón marcador
 - [ ] F09 Lint de diseño (prohíbe literales en `apps/*`) (**AC-13**)

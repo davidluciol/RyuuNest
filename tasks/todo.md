@@ -1175,17 +1175,26 @@ chip de filtro (36 px + `hitSlop`), insignia de tipo/estado (24 px, **neutra** s
 
 **Criterios de aceptación:**
 
-- [ ] Un botón primario por pantalla; relleno `accent`/`progress` con texto `bg`.
-- [ ] Chips e insignias con `hitSlop` para llegar a 48 dp (RNF-7).
-- [ ] Todos los estados en la galería; animaciones solo `transform`/`opacity` (Regla 4).
+- [x] Un botón primario por pantalla; relleno `accent`/`progress` con texto `bg`. *(Inversión fijada en `buttonStyles`; contraste por la puerta AA de ui-tokens.)*
+- [x] Chips e insignias con `hitSlop` para llegar a 48 dp (RNF-7). *(Chip 36→48, casilla/radio 20→48; la insignia no es interactiva.)*
+- [x] Todos los estados en la galería; animaciones solo `transform`/`opacity` (Regla 4). *(Los 5 componentes con variantes/estados; el presionado usa opacidad/capa.)*
 
 **Verificación:**
 
-- [ ] Playwright sobre la galería; comprobación de áreas táctiles y contraste.
+- [x] Playwright sobre la galería; comprobación de áreas táctiles y contraste. *(Los 5 componentes renderizan; cero dominios externos; evidencia en `docs/capturasF05/`.)*
 
 **Dependencias:** F05.
 **Archivos probables:** `apps/mobile/src/components/{Button,TextField,Checkbox,Chip,Badge}.tsx`.
 **Tamaño:** M.
+
+**Hecho (2026-10-18).** Componentes en `apps/mobile/src/components/`, con la lógica de color/
+forma separada en `*Styles.ts` (pura, testeable sin Metro) y el componente `*.tsx` montándola:
+**botón** (primario/secundario/destructivo, 48 px, inversión `bg` sobre `accent`, capa accent
+10 % al pulsar el secundario), **campo de texto** (surface/border, 48 px, foco accent sin
+brillo), **casilla y radio** (20×20, borde 1,5 px, marcado accent/glifo bg, hitSlop a 48),
+**chip de filtro** (pill 36 px, seleccionado badge-bg/accent, hitSlop a 48) e **insignia**
+(pill 24 px **neutra** elevated/text-secondary, V1). Registrados en la galería con sus estados.
+**65 tests en mobile (375 en el repo)**; Playwright: renderizan y cero peticiones externas.
 
 ## Task F07: Componentes base 2 (tarjeta, fila de capítulo, cabecera, navegación, hojas)
 
