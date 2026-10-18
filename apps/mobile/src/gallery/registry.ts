@@ -94,7 +94,7 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
     id: "componentes",
     title: "Componentes",
     kind: "componentes",
-    items: [],
+    items: ["botón", "campo de texto", "casilla y radio", "chip de filtro", "insignia"],
     states: COMPONENT_STATES,
   },
 ]);
