@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { breakpoints, coverAspectRatio, densities, touchTarget } from "../src/density";
+import { type BreakpointName, layoutForWidth } from "../src/layout";
 import { radii } from "../src/radii";
 import { spacing } from "../src/spacing";
 
@@ -56,5 +57,64 @@ describe("densidades y constantes de layout (SPEC §11.9)", () => {
   it("área táctil mínima de 48 dp y portadas 2:3", () => {
     expect(touchTarget.min).toBe(48);
     expect(coverAspectRatio).toMatchObject({ width: 2, height: 3 });
+  });
+});
+
+/**
+ * F04 — layout por punto de corte (SPEC §11.9): móvil < 600 (margen 16,
+ * separación 12, 2–3 columnas), tablet 600–1024 (margen 24, separación 16 —
+ * decisión del humano, el SPEC no la fijaba —, 4–6 columnas), escritorio
+ * > 1024 (margen 32, separación 24, riel de 240 y 8 columnas).
+ */
+describe("layoutForWidth (puntos de corte y márgenes, SPEC §11.9)", () => {
+  it("móvil: < 600 px da margen 16, separación 12 y 2–3 columnas", () => {
+    expect(layoutForWidth(375)).toMatchObject({
+      breakpoint: "mobile",
+      margin: 16,
+      gap: 12,
+      rail: 0,
+      columns: { min: 2, max: 3 },
+    });
+  });
+
+  it("tablet: 600–1024 px da margen 24, separación 16 y 4–6 columnas", () => {
+    expect(layoutForWidth(600)).toMatchObject({
+      breakpoint: "tablet",
+      margin: 24,
+      gap: 16,
+      rail: 0,
+      columns: { min: 4, max: 6 },
+    });
+    expect(layoutForWidth(1024)).toMatchObject({
+      breakpoint: "tablet",
+      margin: 24,
+      gap: 16,
+    });
+  });
+
+  it("escritorio: > 1024 px da margen 32, separación 24, riel 240 y 8 columnas", () => {
+    expect(layoutForWidth(1025)).toMatchObject({
+      breakpoint: "desktop",
+      margin: 32,
+      gap: 24,
+      rail: 240,
+      columns: { min: 8, max: 8 },
+    });
+    expect(layoutForWidth(1920)).toMatchObject({ breakpoint: "desktop", margin: 32 });
+  });
+
+  it("los límites: móvil hasta 599, tablet 600–1024 inclusive, escritorio desde 1025", () => {
+    expect(layoutForWidth(599).breakpoint).toBe<BreakpointName>("mobile");
+    expect(layoutForWidth(600).breakpoint).toBe<BreakpointName>("tablet");
+    expect(layoutForWidth(1024).breakpoint).toBe<BreakpointName>("tablet");
+    expect(layoutForWidth(1025).breakpoint).toBe<BreakpointName>("desktop");
+  });
+
+  it("márgenes y separaciones salen de la rejilla de 4 px", () => {
+    for (const width of [375, 800, 1440]) {
+      const { margin, gap } = layoutForWidth(width);
+      expect(margin % 4).toBe(0);
+      expect(gap % 4).toBe(0);
+    }
   });
 });
