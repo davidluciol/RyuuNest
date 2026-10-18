@@ -25,7 +25,13 @@ const WORKSPACE_PACKAGES = ["@ryuunest/core", "@ryuunest/test-site", "@ryuunest/
 const defaultResolveRequest = config.resolver.resolveRequest;
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (WORKSPACE_PACKAGES.includes(moduleName)) {
-    const resolved = path.join(workspaceRoot, "packages", moduleName.split("/")[1], "dist", "index.js");
+    const resolved = path.join(
+      workspaceRoot,
+      "packages",
+      moduleName.split("/")[1],
+      "dist",
+      "index.js",
+    );
     return { type: "sourceFile", filePath: resolved };
   }
   if (defaultResolveRequest) {

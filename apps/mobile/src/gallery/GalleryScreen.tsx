@@ -12,7 +12,7 @@ import {
   type ThemeColors,
 } from "@ryuunest/ui-tokens";
 
-import { galleryEntries, COMPONENT_STATES } from "./registry";
+import { COMPONENT_STATES } from "./registry";
 
 /**
  * F05 — galería de componentes (pantalla solo de desarrollo, Regla 3 y 5 de
