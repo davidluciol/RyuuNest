@@ -21,7 +21,7 @@ describe("registro de la galería (F05)", () => {
     ]);
   });
 
-  it("la sección de componentes muestra los 6 estados de la Regla 3 y nace vacía", () => {
+  it("la sección de componentes muestra los 6 estados de la Regla 3 (vacía en F05, la llena F06)", () => {
     const components = galleryEntries.find((entry) => entry.id === "componentes");
     expect(components?.kind).toBe<GalleryKind>("componentes");
     expect(components?.states).toEqual([
@@ -32,7 +32,6 @@ describe("registro de la galería (F05)", () => {
       "cargando",
       "error",
     ]);
-    expect(components?.items).toEqual([]);
   });
 
   it("toda entrada tiene id, título y tipo; la de tipografía muestra los 12 estilos", () => {

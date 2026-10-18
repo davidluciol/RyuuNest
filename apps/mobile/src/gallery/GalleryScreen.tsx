@@ -12,6 +12,12 @@ import {
   type ThemeColors,
 } from "@ryuunest/ui-tokens";
 
+import Badge from "../components/Badge";
+import Button from "../components/Button";
+import Checkbox from "../components/Checkbox";
+import Chip from "../components/Chip";
+import TextField from "../components/TextField";
+
 import { COMPONENT_STATES } from "./registry";
 
 /**
@@ -129,8 +135,38 @@ export default function GalleryScreen() {
       </Section>
 
       <Section title="Componentes">
-        <Text style={styles.body}>Estados: {COMPONENT_STATES.join(" · ")}</Text>
-        <Text style={styles.muted}>Todavía no hay componentes registrados (llegan en F06+).</Text>
+        <Text style={styles.muted}>Estados: {COMPONENT_STATES.join(" · ")}</Text>
+
+        <Text style={styles.groupLabel}>botón</Text>
+        <View style={styles.componentColumn}>
+          <Button label="Primario" />
+          <Button label="Secundario" variant="secondary" />
+          <Button label="Destructivo" variant="destructive" />
+          <Button label="Deshabilitado" disabled />
+        </View>
+
+        <Text style={styles.groupLabel}>campo de texto</Text>
+        <TextField placeholder="Buscar…" />
+
+        <Text style={styles.groupLabel}>casilla y radio</Text>
+        <View style={styles.row}>
+          <Checkbox checked={false} />
+          <Checkbox checked />
+          <Checkbox radio checked={false} />
+          <Checkbox radio checked />
+        </View>
+
+        <Text style={styles.groupLabel}>chip de filtro</Text>
+        <View style={styles.row}>
+          <Chip label="Inactivo" />
+          <Chip label="Seleccionado" selected />
+        </View>
+
+        <Text style={styles.groupLabel}>insignia</Text>
+        <View style={styles.row}>
+          <Badge label="Manhwa" />
+          <Badge label="En curso" />
+        </View>
       </Section>
     </ScrollView>
   );
@@ -153,6 +189,14 @@ const styles = StyleSheet.create({
     lineHeight: typography.bodyMd.lineHeight,
   },
   section: { gap: spacing.sm },
+  componentColumn: { gap: spacing.sm, alignItems: "stretch" },
+  groupLabel: {
+    color: colors.textSecondary,
+    fontFamily: typography.labelSm.fontFamily,
+    fontSize: typography.labelSm.fontSize,
+    lineHeight: typography.labelSm.lineHeight,
+    marginTop: spacing.sm,
+  },
   sectionTitle: {
     color: colors.textPrimary,
     fontFamily: typography.headlineSm.fontFamily,

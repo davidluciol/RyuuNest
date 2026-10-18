@@ -46,8 +46,11 @@ const blocks: Record<string, () => string> = {
   layout: () => "  móvil < 600 · tablet 600–1024 · escritorio > 1024",
   iconos: () => "  Lucide vía src/icons.ts",
   portadas: coversBlock,
-  componentes: () =>
-    `  Estados: ${COMPONENT_STATES.join(" · ")}\n  (sin componentes registrados todavía)`,
+  componentes: () => {
+    const entry = galleryEntries.find((item) => item.id === "componentes");
+    const names = entry?.items ?? [];
+    return `  Estados: ${COMPONENT_STATES.join(" · ")}\n${names.map((name) => `  ${name}`).join("\n")}`;
+  },
 };
 
 /** La galería entera serializada a texto, sección a sección. */
