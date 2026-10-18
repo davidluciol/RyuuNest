@@ -13,9 +13,15 @@ import {
 } from "@ryuunest/ui-tokens";
 
 import Badge from "../components/Badge";
+import BottomNav from "../components/BottomNav";
 import Button from "../components/Button";
+import ChapterRow from "../components/ChapterRow";
 import Checkbox from "../components/Checkbox";
 import Chip from "../components/Chip";
+import CoverCard from "../components/CoverCard";
+import Header from "../components/Header";
+import SettingsRow from "../components/SettingsRow";
+import Sheet from "../components/Sheet";
 import TextField from "../components/TextField";
 
 import { COMPONENT_STATES } from "./registry";
@@ -167,6 +173,37 @@ export default function GalleryScreen() {
           <Badge label="Manhwa" />
           <Badge label="En curso" />
         </View>
+
+        <Text style={styles.groupLabel}>tarjeta de portada</Text>
+        <View style={styles.row}>
+          <View style={styles.coverWrap}>
+            <CoverCard />
+          </View>
+          <View style={styles.coverWrap}>
+            <CoverCard progress={0.42} />
+          </View>
+        </View>
+
+        <Text style={styles.groupLabel}>fila de capítulo</Text>
+        <View style={styles.componentColumn}>
+          <ChapterRow title="Capítulo 1" hint="hace 2 h · Equipo Ryuu" />
+          <ChapterRow title="Capítulo 2" state="in-progress" percent={42} />
+          <ChapterRow title="Capítulo 3" state="completed" />
+        </View>
+
+        <Text style={styles.groupLabel}>cabecera</Text>
+        <Header title="Biblioteca" />
+
+        <Text style={styles.groupLabel}>barra inferior</Text>
+        <BottomNav active="Biblioteca" />
+
+        <Text style={styles.groupLabel}>fila de ajustes</Text>
+        <SettingsRow label="Tema" hint="Dragon Night" />
+
+        <Text style={styles.groupLabel}>hoja y diálogo</Text>
+        <Sheet>
+          <Text style={styles.body}>Contenido de una hoja (nivel 2, sin sombra).</Text>
+        </Sheet>
       </Section>
     </ScrollView>
   );
@@ -190,6 +227,7 @@ const styles = StyleSheet.create({
   },
   section: { gap: spacing.sm },
   componentColumn: { gap: spacing.sm, alignItems: "stretch" },
+  coverWrap: { width: 96 },
   groupLabel: {
     color: colors.textSecondary,
     fontFamily: typography.labelSm.fontFamily,
