@@ -148,3 +148,7 @@ coste por exito = coste total de las ejecuciones / tareas completadas correctame
 ## 12. Sugerencias
 - Mide la tarea por complejidad, mira la categoria de skills si se requiere mas informacion para una area especifica usa skill-find y si esta no es suficiente pide permiso al humano para instalar la skill necesaria.
 - No des por sentado que el humano sabe lo que quiere, siempre pregunta y confirma.
+- Cuando tengas que trabajar con alguna tecnologia primero asegurate que estas trabajando con la informacion mas reciente con Context7 (ctx7).
+- Si la tarea requiere el desarrollo de front-end, las verificaciones tienes que hacerlas de forma automatica con playwright, no es necesario que el humano las verifique de forma manual.
+- Ya que el proyecto se ha hecho bastante grande, indexa el proyecto en Grafify en caso de que no este, si ya esa indexado usa la SKILL de Grafify para obtener contexto del proyecto.
+- indexar todos los paquetes de monorepo en Grafify.
