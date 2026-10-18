@@ -10,12 +10,7 @@
  */
 import type { Storage } from "../ports/storage.js";
 import { migrate } from "./migrations.js";
-import type { SqlDriver } from "./SqlDriver.js";
-
-/** Escapa los comodines de `LIKE` para que un prefijo nunca amplié el filtro. */
-function escapeLike(valor: string): string {
-  return valor.replace(/[\\%_]/g, (caracter) => `\\${caracter}`);
-}
+import { escapeLike, type SqlDriver } from "./SqlDriver.js";
 
 export class SqliteStorage implements Storage {
   readonly #driver: SqlDriver;

@@ -49,6 +49,14 @@ export function fromSqlBoolean(value: unknown): boolean {
 }
 
 /**
+ * Escapa los comodines de `LIKE` (`%`, `_` y la barra invertida) para que un texto dado
+ * por el usuario nunca amplié el patrón de búsqueda.
+ */
+export function escapeLike(valor: string): string {
+  return valor.replace(/[\\%_]/g, (caracter) => `\\${caracter}`);
+}
+
+/**
  * Ejecuta una acción dentro de una transacción SQLite: `BEGIN`, y `COMMIT` solo si todo va
  * bien (si no, `ROLLBACK` y se propaga el fallo). Los cambios de `PRAGMA user_version` también
  * son transaccionales, así que una migración a medias no deja versión nueva.
