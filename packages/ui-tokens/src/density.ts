@@ -1,7 +1,7 @@
 /**
- * Densidades y constantes de layout (SPEC §11.9). La escala tipográfica por
- * densidad y los helpers por punto de corte se construyen en F04 sobre estos
- * tokens base.
+ * Densidades y constantes de layout (SPEC §11.9). Sobre estos tokens base,
+ * `scale.ts` y `layout.ts` (F04) construyen la escala tipográfica por
+ * densidad y los helpers por punto de corte.
  */
 
 /** Escala tipográfica de cada densidad (TV multiplica por 1,25; SPEC §11.9). */

@@ -1114,19 +1114,27 @@ punto de corte (móvil < 600, tablet 600–1024, escritorio > 1024), portadas 2:
 
 **Criterios de aceptación:**
 
-- [ ] Un helper de densidad (compacta/cómoda/TV) expone espaciado, márgenes y escala tipográfica.
-- [ ] La escala TV aplica 1,25× a todos los tamaños (SPEC §11.9).
-- [ ] Márgenes correctos por punto de corte.
+- [x] Un helper de densidad (compacta/cómoda/TV) expone espaciado, márgenes y escala tipográfica.
+- [x] La escala TV aplica 1,25× a todos los tamaños (SPEC §11.9).
+- [x] Márgenes correctos por punto de corte.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/ui-tokens test`
-- [ ] Manual: galería en 3 anchos (móvil, tablet, escritorio).
+- [x] `pnpm --filter @ryuunest/ui-tokens test`
+- [ ] Manual: galería en 3 anchos (móvil, tablet, escritorio). *Diferida a F05/F28: la galería llega en F05 (P2.3); mientras, `tests/layout.test.ts` fija los tres tramos y sus límites (599/600/1024/1025).*
 
 **Dependencias:** F01.
 **Archivos probables:** `packages/ui-tokens/src/{scale,layout}.ts`,
 `packages/ui-tokens/src/__tests__/layout.test.ts`.
 **Tamaño:** S.
+
+**Hecho (2026-10-17).** `scale.ts` (factor por estilo con redondeo a píxel entero; el tracking
+en em no se escala) y `layout.ts` (`breakpointForWidth`, `layoutForWidth`, `densityLayout`);
+19 tests nuevos en `tests/scale.test.ts` y `tests/layout.test.ts`; superficie de `index.test.ts`
+actualizada. La **separación de tablet es 16 px** (el SPEC da 12 móvil y 24 escritorio pero nada
+entre medias): elegido por el humano, P-54. Las densidades comparten la rejilla de 4 px: el
+factor 1,25 de TV es tipográfico (así lo fija §11.9 bajo la tabla de tipografía), así que
+`densityLayout` escala solo la tipografía y deja `spacing` intacto.
 
 ## Task F05: Galería de componentes (pantalla de desarrollo)
 

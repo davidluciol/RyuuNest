@@ -22,3 +22,4 @@
 | Fecha | Tarea | Comprobación | Situación |
 |---|---|---|---|
 | 2026-10-16 | F03 | «Arrancar la galería» y «Playwright: cero peticiones a dominios externos» | **Diferida a F05/F28**: la galería de componentes (primer consumidor) llega en F05 (grafo P2.3). En F03 la puerta automática cubre el requisito estructural: fuentes locales con OFL, nombre embebido verificado, Lucide tras `src/icons.ts` único y cero URLs remotas en el cableado (`apps/mobile/tests/fonts.test.ts`, `icons.test.ts`). |
+| 2026-10-17 | F04 | «Galería en 3 anchos (móvil, tablet, escritorio)» | **Diferida a F05/F28** (la galería no existe hasta F05). La puerta automática `packages/ui-tokens/tests/layout.test.ts` fija ya los tres tramos, los límites exactos (599/600/1024/1025), márgenes 16/24/32, riel 240 en escritorio y la escala TV 1,25× sobre la tipografía. |

@@ -423,7 +423,7 @@ datos de ejemplo → estados de carga/vacío/error → verificación con Playwri
 - [x] F01 `ui-tokens` (colores §11.9, tipografía, espaciado, radios, densidades) + tema Dragon Night
 - [x] F02 Prueba de tokens vs `DESIGN.md` y contraste WCAG (**AC-13**)
 - [x] F03 Fuentes (Manrope/Inter) e iconos (Lucide) empaquetados + `ASSETS.md`
-- [ ] F04 Escala y layout por densidad (móvil/web/TV), rejilla de 4 px
+- [x] F04 Escala y layout por densidad (móvil/web/TV), rejilla de 4 px
 - [ ] F05 Galería de componentes (pantalla de desarrollo)
 - [ ] F06 Componentes base 1: botones, campos, casillas/radios, chips, insignias
 - [ ] F07 Componentes base 2: tarjeta de portada, fila de capítulo, filas de ajustes, cabecera, navegación, hojas/diálogos
