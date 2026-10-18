@@ -1,12 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import {
-  BookOpen,
-  Compass,
-  Home,
-  Library,
-  Settings,
-  type LucideIcon,
-} from "lucide-react-native";
+import { BookOpen, Compass, Home, Library, Settings, type LucideIcon } from "lucide-react-native";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import {

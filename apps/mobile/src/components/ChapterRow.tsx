@@ -2,11 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Check } from "lucide-react-native";
 import { spacing, typography, dragonNightColors } from "@ryuunest/ui-tokens";
 
-import {
-  type ChapterState,
-  chapterRowColors,
-  chapterRowStyle,
-} from "./chapterRowStyles";
+import { type ChapterState, chapterRowColors, chapterRowStyle } from "./chapterRowStyles";
 
 /**
  * F07 — fila de capítulo (SPEC §11.10, V8): alto mínimo 56 px, relleno
