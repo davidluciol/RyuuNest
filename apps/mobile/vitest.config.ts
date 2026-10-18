@@ -14,6 +14,10 @@ export default defineConfig({
       "@ryuunest/ui-tokens": fileURLToPath(
         new URL("../../packages/ui-tokens/src/index.ts", import.meta.url),
       ),
+      "@ryuunest/test-site": fileURLToPath(
+        new URL("../../packages/test-site/src/index.ts", import.meta.url),
+      ),
+      "@ryuunest/core": fileURLToPath(new URL("../../packages/core/src/index.ts", import.meta.url)),
     },
   },
 });
