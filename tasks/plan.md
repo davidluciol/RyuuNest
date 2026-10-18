@@ -230,14 +230,14 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [x] Revisión humana
 
 ### Fase 5 — Corte vertical 4: biblioteca
-- [ ] T21 Storage SQL + esquema/migraciones + en memoria
-- [ ] T22 Series + favoritos + carpetas (D-12)
-- [ ] T23 Filtros/orden/búsqueda + carga 3000 series (**AC-4**)
-- [ ] T24 Preferencias por serie
+- [x] T21 Storage SQL + esquema/migraciones + en memoria
+- [x] T22 Series + favoritos + carpetas (D-12)
+- [x] T23 Filtros/orden/búsqueda + carga 3000 series (**AC-4**)
+- [x] T24 Preferencias por serie
 
 ### ✅ Checkpoint F (tras T21–T24)
-- [ ] Filtro/búsqueda < 300 ms con 3000 series sintéticas (entorno Node)
-- [ ] Un favorito pertenece a una carpeta o a ninguna
+- [x] Filtro/búsqueda < 300 ms con 3000 series sintéticas (entorno Node)
+- [x] Un favorito pertenece a una carpeta o a ninguna
 - [ ] Revisión humana
 
 ### Fase 6 — Corte vertical 5: progreso
