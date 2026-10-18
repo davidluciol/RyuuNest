@@ -9,11 +9,29 @@ import { defineConfig } from "vitest/config";
  * En runtime, Metro sigue resolviendo el paquete por su `dist`.
  */
 export default defineConfig({
+  plugins: [
+    {
+      name: "ryuunest-mock-ttf",
+      // Vitest no empaqueta assets como Metro: los `.ttf` importados desde el
+      // código se sustituyen por un mock con el id numérico que Metro asigna.
+      enforce: "pre",
+      resolveId(id, importer) {
+        if (id.endsWith(".ttf") && importer) {
+          return fileURLToPath(new URL("./tests/assetMock.ts", import.meta.url));
+        }
+        return null;
+      },
+    },
+  ],
   resolve: {
     alias: {
       "@ryuunest/ui-tokens": fileURLToPath(
         new URL("../../packages/ui-tokens/src/index.ts", import.meta.url),
       ),
+      "@ryuunest/test-site": fileURLToPath(
+        new URL("../../packages/test-site/src/index.ts", import.meta.url),
+      ),
+      "@ryuunest/core": fileURLToPath(new URL("../../packages/core/src/index.ts", import.meta.url)),
     },
   },
 });

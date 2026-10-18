@@ -1144,17 +1144,28 @@ AC-13 y del trabajo por pantallas (Regla 3 y 5 de `AGENTS.md`).
 
 **Criterios de aceptación:**
 
-- [ ] La galería lista todos los componentes y sus estados.
-- [ ] Compila para web (base de la verificación con Playwright).
-- [ ] Sin valores literales; todo sale de `ui-tokens`.
+- [x] La galería lista todos los componentes y sus estados. *(Las 8 secciones de tokens/datos están; la sección de componentes nace vacía con sus 6 estados declarados y la llenan F06+.)*
+- [x] Compila para web (base de la verificación con Playwright).
+- [x] Sin valores literales; todo sale de `ui-tokens`. *(Puerta `tests/galleryTokens.test.tsx` + `styleAudit`.)*
 
 **Verificación:**
 
-- [ ] Playwright: abrir la galería y comprobar estados y cero peticiones externas.
+- [x] Playwright: abrir la galería y comprobar estados y cero peticiones externas. *(Las 8 secciones renderizan; solo peticiones a `localhost`; los 3 anchos responden con el layout de F04.)*
 
 **Dependencias:** F01, F03, F04.
 **Archivos probables:** `apps/mobile/src/gallery/*` (o `apps/web/src/gallery/*`).
 **Tamaño:** M.
+
+**Hecho (2026-10-17).** Galería en `apps/mobile/src/gallery/`: `registry.ts` (8 secciones;
+la de componentes nace vacía con los 6 estados de la Regla 3), `fontSources.ts` (mapa para
+`useFonts` desde el manifiesto `fontFiles` de F03), `GalleryScreen.tsx` (todo desde tokens,
+puerta anti-literales con `styleAudit`), `renderGallery.ts` (harness que fija la estructura
+sin Metro) y `App.tsx` montando la galería. Dependencias aprobadas: `react-dom`,
+`react-native-web`, `@expo/metro-runtime`, `expo-font` (vía `expo install`) y el enlace
+`@ryuunest/test-site`. `metro.config.js` con monorepo pnpm (los `@ryuunest/*` por `dist`).
+`expo export --platform web` compila; Playwright: 8 secciones, cero dominios externos (RNF-5)
+y los 3 anchos con el layout de F04 (cierra la verificación diferida de F04). Evidencia en
+`docs/capturasF05/`. **47 tests en mobile (357 en el repo).**
 
 ## Task F06: Componentes base 1 (botones, campos, casillas, chips, insignias)
 

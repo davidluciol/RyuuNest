@@ -30,3 +30,6 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Bundle web exportado por Expo (F05); se regenera con `expo export`.
+apps/mobile/dist/
