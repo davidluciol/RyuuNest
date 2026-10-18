@@ -1,11 +1,7 @@
 import { Pressable, StyleSheet, Text, type StyleProp, type ViewStyle } from "react-native";
 import { touchTarget, typography } from "@ryuunest/ui-tokens";
 
-import {
-  type ButtonVariant,
-  buttonStyle,
-  buttonTextColor,
-} from "./buttonStyles";
+import { type ButtonVariant, buttonStyle, buttonTextColor } from "./buttonStyles";
 
 /**
  * F06 — botón primario / secundario / destructivo (SPEC §11.10). Props
