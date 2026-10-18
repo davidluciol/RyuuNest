@@ -1205,17 +1205,26 @@ inferior de 5 destinos / riel, hojas y diálogos (esquinas superiores 24 px).
 
 **Criterios de aceptación:**
 
-- [ ] La fila de capítulo muestra máximo dos señales por estado (V8).
-- [ ] La cabecera y la barra inferior son las mismas en todas las pantallas (T1, V5).
-- [ ] Sin sombras; profundidad por niveles de superficie (RNF-12).
+- [x] La fila de capítulo muestra máximo dos señales por estado (V8). *(Leído atenuado + ✓ sin tachar; en curso marcador + porcentaje.)*
+- [x] La cabecera y la barra inferior son las mismas en todas las pantallas (T1, V5). *(Componentes `Header`/`BottomNav` únicos, 5 destinos T1.)*
+- [x] Sin sombras; profundidad por niveles de superficie (RNF-12). *(Cabecera/barra/hoja `elevated` con `elevation: 0` y `shadowOpacity: 0`.)*
 
 **Verificación:**
 
-- [ ] Playwright sobre la galería; comprobación de estados de capítulo y barra de progreso.
+- [x] Playwright sobre la galería; comprobación de estados de capítulo y barra de progreso. *(Renderizan los 6 componentes; cero dominios externos; evidencia en `docs/capturasF05/`.)*
 
 **Dependencias:** F06.
 **Archivos probables:** `apps/mobile/src/components/{CoverCard,ChapterRow,Header,BottomNav,Sheet,Dialog}.tsx`.
 **Tamaño:** M.
+
+**Hecho (2026-10-18).** Componentes en `apps/mobile/src/components/` (patrón `*Styles.ts` puro +
+componente): **tarjeta de portada** (2:3, radio 12, borde, barra de progreso 3 px RF-41, sin
+contador), **fila de capítulo** (56 px, 3 estados, máximo dos señales V8), **cabecera única**
+(elevated, sin sombra, logo local V5), **barra inferior de 5 destinos** (T1, elevated 95 %,
+sin sombra, activo accent), **fila de ajustes** y **hoja/diálogo** (nivel 2, esquinas
+superiores, sin sombra). Registrados en la galería. **79 tests en mobile (389 en el repo)**;
+Playwright: renderizan y cero peticiones externas. `typecheck` de mobile ahora corre tsc con
+stack ampliado (TS 6 recurría en profundidad y agotaba el stack por defecto).
 
 ## Task F08: Estados vacíos y de error + dragón marcador
 
