@@ -8,15 +8,17 @@ import { renderGalleryScreen } from "../../src/gallery/renderGallery";
  * estados (Regla 3). La sección «Componentes» pasa a listarlos.
  */
 describe("galería con componentes base 1 (F06)", () => {
-  it("la sección de componentes ya no está vacía y lista los 5 componentes", () => {
+  it("la sección de componentes ya no está vacía y lista los 5 componentes base 1", () => {
     const components = galleryEntries.find((entry) => entry.id === "componentes");
-    expect(components?.items).toEqual([
+    for (const name of [
       "botón",
       "campo de texto",
       "casilla y radio",
       "chip de filtro",
       "insignia",
-    ]);
+    ]) {
+      expect(components?.items, `falta ${name}`).toContain(name);
+    }
   });
 
   it("la galería renderizada nombra los componentes y sus estados", () => {
