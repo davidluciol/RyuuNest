@@ -19,6 +19,16 @@ export {
   type Density,
   type DensityName,
 } from "./density";
+export { scaleSize, scaleStyle, scaleTypography } from "./scale";
+export {
+  breakpointForWidth,
+  densityLayout,
+  layoutForWidth,
+  type BreakpointName,
+  type ColumnRange,
+  type DensityLayout,
+  type ScreenLayout,
+} from "./layout";
 export { defaultTheme, dragonNight, getTheme, themes, type Theme } from "./theme";
 export { contrastRatio, hexToRgb, relativeLuminance, WCAG_AA } from "./contrast";
 

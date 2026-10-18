@@ -1,14 +1,15 @@
 import { describe, expect, it } from "vitest";
 
 import { breakpoints, coverAspectRatio, densities, touchTarget } from "../src/density";
-import { type BreakpointName, layoutForWidth } from "../src/layout";
+import { type BreakpointName, densityLayout, layoutForWidth } from "../src/layout";
 import { radii } from "../src/radii";
 import { spacing } from "../src/spacing";
+import { typography } from "../src/typography";
 
 /**
  * F01 — espaciado (rejilla de 4 px), radios y densidades de SPEC §11.9.
- * La escala por punto de corte y el helper de densidad completos llegan en F04;
- * aquí solo viven los tokens base.
+ * F04 añadió encima la escala tipográfica por factor, el layout por punto de
+ * corte y el helper de densidad completo.
  */
 describe("espaciado (rejilla de 4 px, SPEC §11.9)", () => {
   it("expone los 7 pasos nombrados con sus valores", () => {
@@ -116,5 +117,44 @@ describe("layoutForWidth (puntos de corte y márgenes, SPEC §11.9)", () => {
       expect(margin % 4).toBe(0);
       expect(gap % 4).toBe(0);
     }
+  });
+});
+
+/**
+ * F04 — helper de densidad: expone espaciado, márgenes y escala tipográfica
+ * según la densidad elegida (compacta/web, cómoda/móvil, TV) y el ancho.
+ * En TV los tamaños de texto se multiplican por 1,25 (SPEC §11.9); el
+ * espaciado sigue en la rejilla de 4 px en las tres densidades, porque el
+ * factor TV es tipográfico y la rejilla no se rompe.
+ */
+describe("densityLayout (compacta / cómoda / TV)", () => {
+  it("exponen espaciado, márgenes y escala tipográfica", () => {
+    const layout = densityLayout("comfortable", 375);
+    expect(layout.spacing).toBe(spacing);
+    expect(layout.margin).toBe(16);
+    expect(Object.keys(layout.typography)).toEqual(Object.keys(typography));
+  });
+
+  it("compacta y cómoda usan factor 1: la tipografía es la base de §11.9", () => {
+    expect(densityLayout("compact", 1440).fontScale).toBe(1);
+    expect(densityLayout("compact", 1440).typography).toEqual(typography);
+    expect(densityLayout("comfortable", 375).fontScale).toBe(1);
+    expect(densityLayout("comfortable", 375).typography).toEqual(typography);
+  });
+
+  it("TV multiplica todos los tamaños por 1,25 sobre la misma rejilla", () => {
+    const tv = densityLayout("tv", 375);
+    expect(tv.fontScale).toBe(1.25);
+    expect(tv.typography.displayLg.fontSize).toBe(50);
+    expect(tv.typography.displayLg.lineHeight).toBe(60);
+    expect(tv.typography.bodySm.fontSize).toBe(16); // 13 × 1,25 = 16,25 → 16
+    // El espaciado NO se escala: la rejilla de 4 px es intocable.
+    expect(tv.spacing).toBe(spacing);
+  });
+
+  it("los márgenes los manda el ancho también en TV", () => {
+    expect(densityLayout("tv", 375).margin).toBe(16);
+    expect(densityLayout("tv", 800).margin).toBe(24);
+    expect(densityLayout("compact", 1440)).toMatchObject({ margin: 32, gap: 24, rail: 240 });
   });
 });

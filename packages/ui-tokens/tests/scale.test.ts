@@ -35,8 +35,6 @@ describe("scaleStyle (un estilo tipográfico)", () => {
 });
 
 describe("scaleTypography (la escala completa)", () => {
-  const base = typography as unknown as Record<string, TypeStyle>;
-
   it("con factor 1 reproduce exactamente la escala base", () => {
     expect(scaleTypography(1)).toEqual(typography);
   });
@@ -45,8 +43,8 @@ describe("scaleTypography (la escala completa)", () => {
     const tv = scaleTypography(1.25);
     expect(Object.keys(tv)).toEqual(Object.keys(typography));
     for (const name of Object.keys(typography) as (keyof typeof typography)[]) {
-      expect(tv[name].fontSize).toBe(scaleSize(base[name].fontSize, 1.25));
-      expect(tv[name].lineHeight).toBe(scaleSize(base[name].lineHeight, 1.25));
+      expect(tv[name].fontSize).toBe(scaleSize(typography[name].fontSize, 1.25));
+      expect(tv[name].lineHeight).toBe(scaleSize(typography[name].lineHeight, 1.25));
     }
   });
 

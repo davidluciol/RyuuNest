@@ -1,5 +1,7 @@
-import { breakpoints } from "./density";
+import { breakpoints, densities, type DensityName } from "./density";
+import { scaleTypography } from "./scale";
 import { spacing } from "./spacing";
+import { type TypeStyle, type TypeToken } from "./typography";
 
 /**
  * F04 — layout por punto de corte (SPEC §11.9): márgenes, separaciones, riel
@@ -63,4 +65,30 @@ export function breakpointForWidth(width: number): BreakpointName {
 /** Márgenes, separaciones, riel y columnas para un ancho de pantalla. */
 export function layoutForWidth(width: number): ScreenLayout {
   return layouts[breakpointForWidth(width)];
+}
+
+/** Todo lo que un componente necesita según su densidad y el ancho de pantalla. */
+export interface DensityLayout extends ScreenLayout {
+  readonly density: DensityName;
+  /** Factor tipográfico de la densidad; 1,25 en TV (SPEC §11.9). */
+  readonly fontScale: number;
+  /** Rejilla de 4 px: la misma en las tres densidades (el factor TV es tipográfico). */
+  readonly spacing: typeof spacing;
+  /** Escala tipográfica base ya multiplicada por `fontScale`. */
+  readonly typography: Record<TypeToken, TypeStyle>;
+}
+
+/**
+ * Helper de densidad: combina la densidad elegida por plataforma (compacta
+ * para web, cómoda para móvil, TV) con el punto de corte que marca el ancho.
+ */
+export function densityLayout(name: DensityName, width: number): DensityLayout {
+  const fontScale = densities[name].fontScale;
+  return {
+    ...layoutForWidth(width),
+    density: name,
+    fontScale,
+    spacing,
+    typography: scaleTypography(fontScale),
+  };
 }
