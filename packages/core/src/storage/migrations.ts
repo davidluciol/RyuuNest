@@ -7,6 +7,7 @@
  * al día no hace nada (criterio de T21: idempotente y versionada).
  */
 import type { SqlDriver } from "./SqlDriver.js";
+import { withTransaction } from "./SqlDriver.js";
 import { MIGRATION_1, SCHEMA_VERSION } from "./schema.js";
 
 export { SCHEMA_VERSION };
@@ -38,17 +39,11 @@ export async function migrate(driver: SqlDriver): Promise<void> {
       continue;
     }
 
-    await driver.exec("BEGIN");
-    try {
+    await withTransaction(driver, async () => {
       for (const statement of migration.statements) {
         await driver.exec(statement);
       }
-      await driver.exec("COMMIT");
-    } catch (error) {
-      await driver.exec("ROLLBACK");
-      throw error;
-    }
-
-    await driver.exec(`PRAGMA user_version = ${migration.version}`);
+      await driver.exec(`PRAGMA user_version = ${migration.version}`);
+    });
   }
 }

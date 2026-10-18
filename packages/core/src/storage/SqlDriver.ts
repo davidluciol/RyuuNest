@@ -28,10 +28,14 @@ export interface SqlDriver {
   exec(sql: string): Promise<void>;
   /** Sentencia que modifica filas (`INSERT`, `UPDATE`, `DELETE`). */
   run(sql: string, params?: readonly SqlValue[]): Promise<SqlRunResult>;
-  /** Sentencia que devuelve un conjunto de filas. */
-  all<T extends SqlRow = SqlRow>(sql: string, params?: readonly SqlValue[]): Promise<T[]>;
+  /**
+   * Sentencia que devuelve un conjunto de filas. La forma de la fila (`T`) es una
+   * promesa de quien llama: SQLite devuelve registros sueltos y el dominio los declara
+   * aquí al atravesar la frontera, sin comprobación estática del SQL.
+   */
+  all<T = SqlRow>(sql: string, params?: readonly SqlValue[]): Promise<T[]>;
   /** Primera fila del conjunto, o `undefined` si no hay ninguna. */
-  get<T extends SqlRow = SqlRow>(sql: string, params?: readonly SqlValue[]): Promise<T | undefined>;
+  get<T = SqlRow>(sql: string, params?: readonly SqlValue[]): Promise<T | undefined>;
 }
 
 /** Los booleanos del dominio viajan por SQL como `0` y `1`. */
@@ -42,4 +46,21 @@ export function toSqlBoolean(value: boolean): number {
 /** Y vuelven como booleano, tratando cualquier distinto de cero como verdadero. */
 export function fromSqlBoolean(value: unknown): boolean {
   return Number(value) !== 0;
+}
+
+/**
+ * Ejecuta una acción dentro de una transacción SQLite: `BEGIN`, y `COMMIT` solo si todo va
+ * bien (si no, `ROLLBACK` y se propaga el fallo). Los cambios de `PRAGMA user_version` también
+ * son transaccionales, así que una migración a medias no deja versión nueva.
+ */
+export async function withTransaction<T>(driver: SqlDriver, accion: () => Promise<T>): Promise<T> {
+  await driver.exec("BEGIN");
+  try {
+    const resultado = await accion();
+    await driver.exec("COMMIT");
+    return resultado;
+  } catch (error) {
+    await driver.exec("ROLLBACK");
+    throw error;
+  }
 }
