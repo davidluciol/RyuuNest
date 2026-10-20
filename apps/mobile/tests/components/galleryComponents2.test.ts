@@ -8,7 +8,7 @@ import { renderGalleryScreen } from "../../src/gallery/renderGallery";
  * galería con sus estados (Regla 3).
  */
 describe("galería con componentes base 2 (F07)", () => {
-  it("la sección lista los componentes base 1 y base 2", () => {
+  it("la sección lista los componentes base 1, base 2 y los estados de F08", () => {
     const components = galleryEntries.find((entry) => entry.id === "componentes");
     expect(components?.items).toEqual([
       "botón",
@@ -22,6 +22,9 @@ describe("galería con componentes base 2 (F07)", () => {
       "barra inferior",
       "fila de ajustes",
       "hoja y diálogo",
+      "estado vacío",
+      "error de módulo",
+      "carga breve",
     ]);
   });
 
@@ -35,6 +38,13 @@ describe("galería con componentes base 2 (F07)", () => {
       "fila de ajustes",
       "hoja y diálogo",
     ]) {
+      expect(out, `falta ${name}`).toContain(name);
+    }
+  });
+
+  it("la galería renderizada nombra los estados de F08", () => {
+    const out = renderGalleryScreen();
+    for (const name of ["estado vacío", "error de módulo", "carga breve"]) {
       expect(out, `falta ${name}`).toContain(name);
     }
   });
