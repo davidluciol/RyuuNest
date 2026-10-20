@@ -10,6 +10,7 @@ export { dragonNightColors, type ThemeColors } from "./colors";
 export { fonts, typography, type FontFamily, type TypeStyle, type TypeToken } from "./typography";
 export { fontFiles, fontLicenses, type FontFile } from "./fonts";
 export { spacing, type SpacingToken } from "./spacing";
+export { markers, type MarkerToken } from "./markers";
 export { radii, type RadiusToken } from "./radii";
 export {
   breakpoints,

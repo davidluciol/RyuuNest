@@ -19,7 +19,10 @@ import ChapterRow from "../components/ChapterRow";
 import Checkbox from "../components/Checkbox";
 import Chip from "../components/Chip";
 import CoverCard from "../components/CoverCard";
+import EmptyState from "../components/EmptyState";
+import ErrorState from "../components/ErrorState";
 import Header from "../components/Header";
+import LoadingState from "../components/LoadingState";
 import SettingsRow from "../components/SettingsRow";
 import Sheet from "../components/Sheet";
 import TextField from "../components/TextField";
@@ -204,6 +207,37 @@ export default function GalleryScreen() {
         <Sheet>
           <Text style={styles.body}>Contenido de una hoja (nivel 2, sin sombra).</Text>
         </Sheet>
+
+        <Text style={styles.groupLabel}>estado vacío</Text>
+        <EmptyState
+          title="Tu biblioteca está vacía"
+          message="Añade un repositorio e instala un módulo para empezar."
+          actionLabel="Añadir repositorio"
+        />
+
+        <Text style={styles.groupLabel}>estado vacío (sin resultados)</Text>
+        <EmptyState
+          title="Buscó por todas partes"
+          message={`Ningún resultado para "${FIXTURE_SERIES[0].title}".`}
+          actionLabel="Explorar de nuevo"
+        />
+
+        <Text style={styles.groupLabel}>error de módulo</Text>
+        <ErrorState
+          title="El módulo falló"
+          message="El listado no se pudo leer."
+          detail={{
+            module: "m-ejemplo",
+            url: "https://sitio-falso.test/listado?page=2",
+            code: "PARSE",
+            selector: ".lista .item",
+          }}
+          retryLabel="Reintentar"
+          detailLabel="Ver detalle"
+        />
+
+        <Text style={styles.groupLabel}>carga breve</Text>
+        <LoadingState title="Cargando…" message="Página 2 de 5" />
       </Section>
     </ScrollView>
   );

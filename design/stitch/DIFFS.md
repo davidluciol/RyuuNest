@@ -16,6 +16,7 @@
 | Fecha | Pantalla | Diferencia | Motivo |
 |---|---|---|---|
 | 2026-10-16 | (F03, aún sin pantalla) | La galería de componentes y sus fuentes **no están cableadas**: la carga real de Manrope/Inter con `expo-font` (dependencia) llega con la galería (F05) y el shell (F11). F03 **empaqueta** los archivos y **prohíbe** por prueba el CDN y los emojis. | F05 depende de F03 (grafo P2.3), no al revés. **Resuelto en F05**: `expo-font` instalado y `src/gallery/fontSources.ts` mapea los 5 pesos desde el manifiesto. |
+| 2026-10-20 | (F08, estados vacíos y de error) | **Sin diseño de Stitch**: no hay `screen.png` de referencia para estos estados (pregunta abierta 1 del SPEC §17.2). Se componen con `DESIGN.md`/`DESIGN_RULES.md` y los tokens; el dragón es una silueta original simplificada (no la ilustración de las capturas). | P-30: pantallas sin diseño se componen con los documentos de autoridad y quedan marcadas «sin diseño». El arte final llega con el artista (subtarea FA1). |
 
 ## Verificaciones diferidas
 
