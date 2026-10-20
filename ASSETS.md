@@ -43,6 +43,7 @@ texto (`DESIGN_RULES.md` V4). La puerta `apps/mobile/tests/icons.test.ts` prohí
 | Recurso | Licencia / situación | Ubicación | Estado |
 |---|---|---|---|
 | Dragón y arte de pantallas del diseño | Marcadores generados con IA | `assets/placeholder/` | Temporal |
+| `dragon.svg` (dragón marcador de estados, F08) | Silueta vectorial **original** del proyecto (GPL-3.0), dibujada a mano; registro en `apps/mobile/assets/placeholder/README.md` | `apps/mobile/assets/placeholder/` | Temporal — artista pendiente |
 | Portadas, avatar y dragón de `design/` | Marcadores de ejemplo (nunca se enlazan por URL) | `assets/placeholder/` | Temporal |
 
 Reglas de los marcadores (`docs/SPEC.md` §12):

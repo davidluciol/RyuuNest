@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none" role="img" aria-label="Dragon marcador">
+  <!--
+    Marcador TEMPORAL de RyuuNest: silueta original y sencilla de dragon
+    (SPEC 11.12/12). Se sustituira por arte de un artista antes de la v1.0
+    publica. Registro completo en README.md de esta carpeta.
+  -->
+  <!-- cuerpo serpenteante -->
+  <path d="M24 22 C34 12 48 14 55 25 C61 34 56 45 45 49 C36 52 30 58 32 67 C34 77 46 82 57 75"
+        stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+  <!-- asta del dragon -->
+  <path d="M31 14 L36 4 L40 16 Z" fill="currentColor" />
+  <!-- hocico -->
+  <path d="M25 20 L11 25 L23 32 Z" fill="currentColor" />
+  <!-- ala -->
+  <path d="M47 31 L72 18 L65 42 Z" fill="currentColor" />
+  <!-- aleta de la cola -->
+  <path d="M57 75 L74 77 L62 86 Z" fill="currentColor" />
+</svg>
