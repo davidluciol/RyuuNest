@@ -2,6 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
+    // `node:sqlite` solo se usa en las pruebas (el adaptador de producción lo pondrá
+    // expo-sqlite en el dispositivo); `src/` se sigue compilando sin tipos de Node.
+    "types": ["node"],
     "paths": {
       "@ryuunest/core": ["./src/index.ts"],
       "@ryuunest/test-site": ["../test-site/src/index.ts"]

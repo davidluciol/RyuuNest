@@ -16,6 +16,11 @@ export * from "./contract/types.js";
 export * from "./host/ModuleHost.js";
 export * from "./install/InstallFlow.js";
 export * from "./install/PackageInstaller.js";
+export * from "./library/Favorites.js";
+export * from "./library/Folders.js";
+export * from "./library/queries.js";
+export * from "./library/SeriesPrefs.js";
+export * from "./library/SeriesStore.js";
 export * from "./modules/ModuleRegistry.js";
 export * from "./ports/index.js";
 export * from "./repo/RepoRegistry.js";
@@ -24,6 +29,11 @@ export * from "./runtimes/errorMapping.js";
 export * from "./runtimes/ModuleRuntime.js";
 export * from "./runtimes/ScriptRuntime.js";
 export * from "./runtimes/transforms.js";
+export * from "./storage/MemoryStorage.js";
+export * from "./storage/migrations.js";
+export * from "./storage/schema.js";
+export * from "./storage/SqlDriver.js";
+export * from "./storage/SqliteStorage.js";
 export * from "./validation.js";
 
 // Los validadores de manifest e índice de repo viven en `module-sdk` (SPEC §5.1) y

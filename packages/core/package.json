@@ -26,5 +26,8 @@
     "css-select": "^7.0.0",
     "domhandler": "^6.0.1",
     "htmlparser2": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5"
   }
 }
