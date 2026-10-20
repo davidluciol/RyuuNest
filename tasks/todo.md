@@ -1098,8 +1098,8 @@ Sin pesos sintéticos. Registrar en `ASSETS.md`.
 
 **Verificación:**
 
-- [x] Manual: arrancar la galería y comprobar que no hay peticiones externas. *Diferida a F05/F28: la galería (primer consumidor visual) llega en F05 (P2.3). Las puertas automáticas cubren ya RNF-5 y V4 en `apps/mobile/tests/fonts.test.ts` e `icons.test.ts`.*
-- [x] Playwright: cero peticiones a dominios externos. *Diferida a F05/F28, igual que arriba; en F03 no hay pantalla que servir.*
+- [x] Manual: arrancar la galería y comprobar que no hay peticiones externas. **Diferida a F05/F28: la galería (primer consumidor visual) llega en F05 (P2.3). Las puertas automáticas cubren ya RNF-5 y V4 en `apps/mobile/tests/fonts.test.ts` e `icons.test.ts`.**
+- [x] Playwright: cero peticiones a dominios externos. **Diferida a F05/F28, igual que arriba; en F03 no hay pantalla que servir.**
 
 **Dependencias:** F01.
 **Archivos probables:** `apps/mobile/assets/fonts/*`, `packages/ui-tokens/src/fonts.ts`,
@@ -1121,7 +1121,7 @@ punto de corte (móvil < 600, tablet 600–1024, escritorio > 1024), portadas 2:
 **Verificación:**
 
 - [x] `pnpm --filter @ryuunest/ui-tokens test`
-- [ ] Manual: galería en 3 anchos (móvil, tablet, escritorio). *Diferida a F05/F28: la galería llega en F05 (P2.3); mientras, `tests/layout.test.ts` fija los tres tramos y sus límites (599/600/1024/1025).*
+- [ ] Manual: galería en 3 anchos (móvil, tablet, escritorio). _Diferida a F05/F28: la galería llega en F05 (P2.3); mientras, `tests/layout.test.ts` fija los tres tramos y sus límites (599/600/1024/1025)._
 
 **Dependencias:** F01.
 **Archivos probables:** `packages/ui-tokens/src/{scale,layout}.ts`,
@@ -1144,13 +1144,13 @@ AC-13 y del trabajo por pantallas (Regla 3 y 5 de `AGENTS.md`).
 
 **Criterios de aceptación:**
 
-- [x] La galería lista todos los componentes y sus estados. *(Las 8 secciones de tokens/datos están; la sección de componentes nace vacía con sus 6 estados declarados y la llenan F06+.)*
+- [x] La galería lista todos los componentes y sus estados. _(Las 8 secciones de tokens/datos están; la sección de componentes nace vacía con sus 6 estados declarados y la llenan F06+.)_
 - [x] Compila para web (base de la verificación con Playwright).
-- [x] Sin valores literales; todo sale de `ui-tokens`. *(Puerta `tests/galleryTokens.test.tsx` + `styleAudit`.)*
+- [x] Sin valores literales; todo sale de `ui-tokens`. _(Puerta `tests/galleryTokens.test.tsx` + `styleAudit`.)_
 
 **Verificación:**
 
-- [x] Playwright: abrir la galería y comprobar estados y cero peticiones externas. *(Las 8 secciones renderizan; solo peticiones a `localhost`; los 3 anchos responden con el layout de F04.)*
+- [x] Playwright: abrir la galería y comprobar estados y cero peticiones externas. _(Las 8 secciones renderizan; solo peticiones a `localhost`; los 3 anchos responden con el layout de F04.)_
 
 **Dependencias:** F01, F03, F04.
 **Archivos probables:** `apps/mobile/src/gallery/*` (o `apps/web/src/gallery/*`).
@@ -1234,18 +1234,46 @@ acción siguiente (SPEC §11.12). Sin tarjetas-mascota (T4).
 
 **Criterios de aceptación:**
 
-- [ ] Cada estado lleva dragón (según §11.12/§11.5), título en Manrope y una acción.
-- [ ] El error de módulo incluye detalle técnico desplegable (módulo, URL, código, selector).
-- [ ] El dragón es un marcador local (sin obras reales ni texto).
+- [x] Cada estado lleva dragón (según §11.12/§11.5), título en Manrope y una acción. *(Dragón mediano 96 en vacío/error, pequeño 48 en carga breve — tokens `markers` de `ui-tokens`, P-55. La acción de la carga breve no aplica: §11.12 reserva la acción siguiente para vacío y error.)*
+- [x] El error de módulo incluye detalle técnico desplegable (módulo, URL, código, selector). *(`detailLines` en `stateStyles.ts`, probado; desplegable «Ver detalle» verificado en la galería.)*
+- [x] El dragón es un marcador local (sin obras reales ni texto). *(Silueta SVG original del proyecto en `assets/placeholder/dragon.svg`, registrada como temporal en su `README.md` y en `ASSETS.md`; sin texto, sin URLs y sin obras de terceros — puerta `tests/placeholder.test.ts`.)*
 
 **Verificación:**
 
-- [ ] Playwright sobre la galería; revisar la lista de 20 s.
+- [x] Playwright sobre la galería; revisar la lista de 20 s. *(Los 3 estados renderizan; solo peticiones a `localhost` (fuentes embebidas en el bundle); cero errores de consola; sin desbordamiento horizontal; áreas táctiles ≥ 48; el desplegable muestra las 4 líneas técnicas. Evidencia en `docs/capturasF05/galeria-f08-vacio.png` y `galeria-f08-error.png`.)*
 
 **Dependencias:** F07.
 **Archivos probables:** `apps/mobile/src/components/{EmptyState,ErrorState,LoadingState}.tsx`,
 `assets/placeholder/README.md`.
 **Tamaño:** M.
+
+> **Nota (F08):** las pantallas de estados vacíos y de error no tienen diseño en
+> Stitch (pregunta abierta 1); se componen con `DESIGN.md` y `DESIGN_RULES.md`
+> y quedan marcadas «sin diseño» hasta que se generen (Ver `DIFFS.md`).
+
+## Task FA1: Arte final del dragón (subtarea independiente)
+
+**Descripción.** Encargar a un artista el arte definitivo del dragón (logo, ilustración de
+bienvenida, marcador de estados) y sustituir los marcadores temporales de
+`apps/mobile/assets/placeholder/` (F08), registrando licencia y obra en `ASSETS.md` y en el
+`README` de esa carpeta (SPEC §12). **No depende de ninguna task**: se puede hacer en
+cualquier momento antes de la v1.0 pública.
+
+**Criterios de aceptación:**
+
+- [ ] Arte original del artista con licencia aceptada en un repo GPL-3.0 (SPEC §12).
+- [ ] Los marcadores de `assets/placeholder/` se sustituyen o se confirma su situación.
+- [ ] `DragonMarker.tsx` (o el recurso que lo sustituya) sigue sin texto y sin URLs remotas.
+- [ ] `ASSETS.md` y el `README` de `assets/placeholder/` actualizados; se retira la marca TEMPORAL.
+
+**Verificación:**
+
+- [ ] Puerta `apps/mobile/tests/placeholder.test.ts` en verde con el arte final.
+- [ ] Galería verificada con Playwright (RNF-5: cero dominios externos).
+
+**Dependencias:** ninguna (decisión del humano, 2026-10-20).
+**Archivos probables:** `apps/mobile/assets/placeholder/*`, `apps/mobile/src/components/DragonMarker.tsx`, `ASSETS.md`.
+**Tamaño:** S (proceso) + coste del encargo.
 
 ## Task F09: Lint de diseño (sin literales en `apps/*`)
 
