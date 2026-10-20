@@ -1330,14 +1330,15 @@ radio o espacio en `apps/*` (SPEC §11.11, AC-13). Fuerza a usar tokens.
 
 **Criterios de aceptación:**
 
-- [ ] El lint falla ante un `#RRGGBB` o un `padding: 13` literal en `apps/*`.
-- [ ] La regla corre en CI junto al resto.
-- [ ] Excepciones documentadas (si las hay) con comentario.
+- [x] El lint falla ante un `#RRGGBB` o un `padding: 13` literal en `apps/*`. *(Regla `ryuunest/no-design-literals` (`tools/eslint-plugin-ryuunest/`), aplicada solo al código de `src` en `apps/`; probada con `RuleTester` (15 casos) y con la configuración real vía `ESLint` (3 tests de integración, incluida la prueba de que un literal de prueba hace fallar el lint).)*
+- [x] La regla corre en CI junto al resto. *(`pnpm lint` la aplica; el paquete del plugin entra en `pnpm -r test`, que el CI ejecuta.)*
+- [x] Excepciones documentadas (si las hay) con comentario. *(`ImageCapPanel.tsx`: panel de calibración del tope de imágenes (T05/P-45), de un solo uso y fuera de la interfaz; `eslint-disable` con motivo. Valores estructurales permitidos: `0`, `1`, `transparent`.)*
 
 **Verificación:**
 
-- [ ] `pnpm lint`
-- [ ] Manual: introducir un literal y comprobar que falla.
+- [x] `pnpm lint` *(limpio sobre todo el repo, con la regla activa)*
+- [x] Manual: introducir un literal y comprobar que falla. *(Automatizado: `tests/config-integration.test.ts` lintea un literal contra la configuración real y exige el error; sensibilidad comprobada rompiendo la regla.)*
+- [x] Playwright sobre la galería (regla de `AGENTS.md` §12): renderiza, cero dominios externos, cero errores de consola; el refactor a `withAlpha` conserva el color calculado `rgba(27, 34, 48, 0.95)` de la barra inferior. Evidencia en `docs/capturasF05/galeria-f09-lint.png`.
 
 **Dependencias:** T02, F01.
 **Archivos probables:** `eslint.config.js` (regla personalizada), `tools/eslint-plugin-ryuunest/*`.
