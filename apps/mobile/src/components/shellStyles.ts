@@ -1,4 +1,4 @@
-import { spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
+import { spacing, touchTarget, withAlpha, dragonNightColors } from "@ryuunest/ui-tokens";
 
 /**
  * F07 — reglas de la cabecera y la barra inferior (SPEC §11.10, T1, V5,
@@ -47,7 +47,7 @@ export const NAV_BAR_HEIGHT = 64;
 /** Barra inferior: `elevated` al 95 %, borde superior `border`, sin sombra. */
 export function bottomNavStyle(): ShellStyleShape {
   return {
-    backgroundColor: "rgba(27, 34, 48, 0.95)", // elevated #1B2230 al 95 %
+    backgroundColor: withAlpha(colors.elevated, 0.95), // elevated al 95 % (SPEC §11.10)
     minHeight: Math.max(NAV_BAR_HEIGHT, touchTarget.min),
     borderTopColor: colors.border,
     borderTopWidth: 1,

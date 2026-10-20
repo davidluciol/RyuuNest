@@ -9,5 +9,8 @@ export default defineConfig({
   test: {
     globals: true,
     include: ["tests/**/*.test.ts"],
+    // Levantar una instancia de ESLint con la configuración real tarda varios
+    // segundos (lint de integración), más que el límite por defecto.
+    testTimeout: 30000,
   },
 });

@@ -1,4 +1,4 @@
-import { radii, spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, spacing, touchTarget, withAlpha, dragonNightColors } from "@ryuunest/ui-tokens";
 
 /**
  * F06 — reglas de estilo del botón (SPEC §11.10), separadas del componente
@@ -43,7 +43,7 @@ export function buttonStyle(variant: ButtonVariant, state: ButtonState = {}): Bu
     variantStyle = { backgroundColor: colors.accent };
   } else if (variant === "secondary") {
     variantStyle = state.pressed
-      ? { backgroundColor: "rgba(53, 201, 138, 0.1)" } // accent al 10 %
+      ? { backgroundColor: withAlpha(colors.accent, 0.1) } // accent al 10 %
       : { backgroundColor: colors.elevated, borderColor: colors.border, borderWidth: 1 };
   } else {
     variantStyle = {

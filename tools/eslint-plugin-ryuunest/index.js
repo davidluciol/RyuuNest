@@ -84,6 +84,12 @@ const MEASURE_KEYS = new Set([
  */
 const ALLOWED_NUMBERS = new Set([0, 1]);
 
+/**
+ * Colores estructurales: ausencia de color. No son valores de diseño y no
+ * tienen token (`transparent` en React Native).
+ */
+const ALLOWED_COLOR_KEYWORDS = new Set(["transparent"]);
+
 /** Nombre de la clave de una propiedad, si es simple (no computada). */
 function keyName(node) {
   if (node.computed) return null;
@@ -117,7 +123,10 @@ const noDesignLiterals = {
 
         if (value.type === "Literal" && typeof value.value === "string") {
           const text = value.value.trim();
-          if (COLOR_LITERAL.test(text) || COLOR_KEYS.has(name)) {
+          if (
+            !ALLOWED_COLOR_KEYWORDS.has(text) &&
+            (COLOR_LITERAL.test(text) || COLOR_KEYS.has(name))
+          ) {
             context.report({ node: value, messageId: "color", data: { value: value.value } });
             return;
           }

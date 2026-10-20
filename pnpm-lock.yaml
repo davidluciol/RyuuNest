@@ -166,6 +166,9 @@ importers:
 
   .:
     devDependencies:
+      '@ryuunest/eslint-plugin':
+        specifier: workspace:*
+        version: link:tools/eslint-plugin-ryuunest
       eslint:
         specifier: ^10.12.0
         version: 10.12.0(supports-color@8.1.1)

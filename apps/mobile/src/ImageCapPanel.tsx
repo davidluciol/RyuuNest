@@ -1,3 +1,6 @@
+/* eslint-disable ryuunest/no-design-literals -- Excepción documentada (F09): panel de medida del
+   tope de imágenes (T05, P-45), de un solo uso y fuera del alcance de diseño de la Fase 6a
+   (Regla 3). Sus colores claros son deliberados para la medición y no son interfaz de la app. */
 // single-use: panel de medición del tope de imágenes en memoria (T05) — no forma parte
 // de la app de lectura; vive solo en la app de calibración.
 import { useMemo, useState } from "react";
