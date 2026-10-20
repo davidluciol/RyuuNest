@@ -1,15 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
-import { typography } from "@ryuunest/ui-tokens";
 
 import Button from "./Button";
 import DragonMarker from "./DragonMarker";
-import {
-  type StateScale,
-  messageStyle,
-  stateColors,
-  stateStyle,
-  titleStyle,
-} from "./stateStyles";
+import { type StateScale, messageStyle, stateColors, stateStyle, titleStyle } from "./stateStyles";
 
 /**
  * F08 — estado vacío (SPEC §11.12): dragon mediano (biblioteca vacía, sin

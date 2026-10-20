@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from "react-native";
-import { typography } from "@ryuunest/ui-tokens";
 
 import DragonMarker from "./DragonMarker";
 import { messageStyle, stateColors, stateStyle, titleStyle } from "./stateStyles";

@@ -82,7 +82,11 @@ export default function ErrorState({
           {expanded ? (
             <View style={styles.detailBox}>
               {lines.map((line) => (
-                <Text key={line} style={[styles.detailLine, { color: colors.message }]} numberOfLines={1}>
+                <Text
+                  key={line}
+                  style={[styles.detailLine, { color: colors.message }]}
+                  numberOfLines={1}
+                >
                   {line}
                 </Text>
               ))}
