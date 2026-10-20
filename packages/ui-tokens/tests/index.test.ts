@@ -27,6 +27,7 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
         "getTheme",
         "hexToRgb",
         "layoutForWidth",
+        "markers",
         "radii",
         "relativeLuminance",
         "scaleSize",
