@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   },
   section: { gap: spacing.sm },
   componentColumn: { gap: spacing.sm, alignItems: "stretch" },
-  coverWrap: { width: 96 },
+  coverWrap: { width: spacing["2xl"] * 2 },
   groupLabel: {
     color: colors.textSecondary,
     fontFamily: typography.labelSm.fontFamily,

@@ -1,0 +1,20 @@
+{
+  "name": "@ryuunest/eslint-plugin",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reglas de lint de diseño de RyuuNest (SPEC §11.11, AC-13): cero literales de color, tamaño, radio o espacio fuera de ui-tokens.",
+  "license": "GPL-3.0-only",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "eslint": "^10.12.0",
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^5.0.4"
+  }
+}

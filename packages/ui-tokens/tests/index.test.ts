@@ -37,6 +37,7 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
         "themes",
         "touchTarget",
         "typography",
+        "withAlpha",
       ].sort(),
     );
   });

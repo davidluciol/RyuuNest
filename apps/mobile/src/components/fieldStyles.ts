@@ -1,4 +1,4 @@
-import { radii, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
 
 /**
  * F06 — reglas de campo de texto y casilla/radio (SPEC §11.10, `DESIGN.md`).
@@ -20,7 +20,7 @@ export interface TextFieldStyleShape {
 /** Estilo del campo según foco. */
 export function textFieldStyle(state: { focused?: boolean } = {}): TextFieldStyleShape {
   return {
-    height: 48,
+    height: touchTarget.min,
     backgroundColor: colors.surface,
     borderColor: state.focused ? colors.accent : colors.border,
     borderWidth: 1,
