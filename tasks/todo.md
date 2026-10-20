@@ -625,13 +625,15 @@ runtimes (se retiró la tabla privada que tenía el declarativo). El test vive e
 - [x] Módulo script y declarativo pasan el mismo contrato (T17 y T19: el informe del arnés es
       idéntico en los dos)
 - [x] Errores mapeados a `ModuleErrorCode` (T20: mapeo central en `errorMapping.ts`)
-- [ ] Revisión humana
+- [x] Revisión humana (PRs #6 y #8 fusionados por el humano el 2026-10-17)
 
 ---
 
 ## Fase 5 — Corte vertical 4: biblioteca local
 
 ## Task T21: Storage SQL + esquema/migraciones + adaptador en memoria
+
+**Estado:** ✅ hecho 2026-10-18.
 
 **Descripción.** Implementar el puerto `Storage` sobre un `SqlDriver` fino (SPEC §8.1): esquema
 completo (`repo`, `module`, `series`, `folder`, `favorite`, `progress`, `chapter_read`,
@@ -640,15 +642,25 @@ completo (`repo`, `module`, `series`, `folder`, `favorite`, `progress`, `chapter
 
 **Criterios de aceptación:**
 
-- [ ] El esquema coincide con el SPEC §8.1 (incluidos `title_norm`, `page_total` e índices).
-- [ ] Las migraciones son idempotentes y versionadas.
-- [ ] `MemoryStorage` y `SqliteStorage` pasan la misma suite de conformidad.
-- [ ] `PRAGMA foreign_keys` activo; `favorite.folder_id` usa `ON DELETE SET NULL`.
+- [x] El esquema coincide con el SPEC §8.1 (incluidos `title_norm`, `page_total` e índices).
+- [x] Las migraciones son idempotentes y versionadas.
+- [x] `MemoryStorage` y `SqliteStorage` pasan la misma suite de conformidad.
+- [x] `PRAGMA foreign_keys` activo; `favorite.folder_id` usa `ON DELETE SET NULL`.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: aplicar migraciones dos veces sin error.
+- [x] `pnpm --filter @ryuunest/core test` (21 tests nuevos: 11 de esquema + 10 × 2 de conformidad)
+- [x] Manual: aplicar migraciones dos veces sin error (prueba automática en `schema.test.ts`;
+      `PRAGMA user_version` queda en 1 y el inventario de objetos no cambia).
+
+**Notas:** decisión del humano (P-55): `MemoryStorage` cubre solo el puerto clave-valor; el
+dominio relacional (T22–T24) habla SQL por `SqlDriver` y se prueba con SQLite real
+(`node:sqlite` en Node 24, tipos vía `@types/node` en `core`, patrón de P-42). El esquema
+añade una tabla `kv` (casa del puerto clave-valor que usan instalador y registros; §8.1 no la
+define: está anotado y se retirará cuando esas filas migren a `repo`/`module`). Las
+migraciones se versionan con `PRAGMA user_version` dentro de su transacción (verificado: el
+rollback revierte también la versión). `MemoryStorage` se promueve de `ports/fakes.ts` a
+`src/storage/MemoryStorage.ts` y el doble queda reexpuesto.
 
 **Dependencias:** T03, T07.
 **Archivos probables:** `packages/core/src/storage/schema.ts`,
@@ -659,21 +671,31 @@ completo (`repo`, `module`, `series`, `folder`, `favorite`, `progress`, `chapter
 
 ## Task T22: Series + favoritos + carpetas (D-12)
 
+**Estado:** ✅ hecho 2026-10-18.
+
 **Descripción.** Dominio de biblioteca: registrar/actualizar series (con `title_norm`),
 añadir/quitar favoritos (quitar un favorito no borra su progreso, RF-30) y CRUD de carpetas
 (crear, renombrar, reordenar, borrar). Un favorito pertenece a **una** carpeta o a ninguna (D-12).
 
 **Criterios de aceptación:**
 
-- [ ] Alta/actualización de serie con normalización de título (minúsculas, sin acentos).
-- [ ] Un favorito se asigna a una carpeta o a ninguna; moverlo reemplaza la anterior.
-- [ ] Borrar carpeta deja sus favoritos sin carpeta (`ON DELETE SET NULL`).
-- [ ] Quitar un favorito conserva la fila de `progress`.
+- [x] Alta/actualización de serie con normalización de título (minúsculas, sin acentos).
+- [x] Un favorito se asigna a una carpeta o a ninguna; moverlo reemplaza la anterior.
+- [x] Borrar carpeta deja sus favoritos sin carpeta (`ON DELETE SET NULL`).
+- [x] Quitar un favorito conserva la fila de `progress`.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: secuencia crear carpeta→favoritear→mover→borrar carpeta.
+- [x] `pnpm --filter @ryuunest/core test` (16 tests en `tests/library/library.test.ts`)
+- [x] Manual: secuencia crear carpeta→favoritear→mover→borrar carpeta (cubierta como prueba
+      automática en `library.test.ts`; SQLite real aplica el `SET NULL`).
+
+**Notas:** tres módulos (`SeriesStore`, `Folders`, `Favorites`) que reciben `{ driver, clock }`
+—el `updated_at` sale del puerto `Clock` inyectable (SPEC §5.3), nunca de `Date.now()`—.
+`normalizeTitle` usa NFD + quitar diacríticos + minúsculas + espacios comprimidos. `add` de un
+favorito existente conserva `added_at` (reasignar no es «rearañadir»). El reorden de carpetas
+va en una transacción (`withTransaction`, P-55). Tipos de fila con `| null` (calco del NULL de
+SQLite) para no pelear con `exactOptionalPropertyTypes`.
 
 **Dependencias:** T21.
 **Archivos probables:** `packages/core/src/library/SeriesStore.ts`,
@@ -683,6 +705,8 @@ añadir/quitar favoritos (quitar un favorito no borra su progreso, RF-30) y CRUD
 
 ## Task T23: Filtros/orden/búsqueda + carga 3000 series (AC-4)
 
+**Estado:** ✅ hecho 2026-10-18.
+
 **Descripción.** Consultas de biblioteca (SPEC §3.5, §8.2): búsqueda por nombre (`title_norm`
 con `LIKE`), filtros por tipo (manga, manhua, manhwa, cómic), fuente, carpeta y NSFW/SFW, y
 orden por nombre, último leído y fecha de adición. Chips Todo · Leyendo · Carpetas (sin
@@ -690,16 +714,29 @@ orden por nombre, último leído y fecha de adición. Chips Todo · Leyendo · C
 
 **Criterios de aceptación:**
 
-- [ ] Todos los filtros y órdenes del SPEC funcionan y se combinan.
-- [ ] Con 3000 series sintéticas, filtrar/buscar responde < 300 ms en el entorno de CI.
-- [ ] Con el filtro NSFW apagado, las series NSFW no aparecen (**RF-35**, núcleo).
-- [ ] No se calculan contadores de no leídos ni totales de capítulos (RF-42 es v2).
-- [ ] Los resultados usan índices (se verifica con `EXPLAIN QUERY PLAN`).
+- [x] Todos los filtros y órdenes del SPEC funcionan y se combinan.
+- [x] Con 3000 series sintéticas, filtrar/buscar responde < 300 ms en el entorno de CI.
+- [x] Con el filtro NSFW apagado, las series NSFW no aparecen (**RF-35**, núcleo).
+- [x] No se calculan contadores de no leídos ni totales de capítulos (RF-42 es v2).
+- [x] Los resultados usan índices (se verifica con `EXPLAIN QUERY PLAN`).
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test -- library.perf`
-- [ ] Manual: revisar el plan de consulta de la búsqueda por título.
+- [x] `pnpm --filter @ryuunest/core test -- library.perf` (10 pruebas: las 6 consultas por
+      debajo de 300 ms con 3000 series; medidas dos veces, se toma la segunda)
+- [x] Manual: revisar el plan de consulta de la búsqueda por título — hecho y anotado abajo:
+      `SCAN s USING INDEX idx_series_title` + `SEARCH f USING INDEX sqlite_autoindex_favorite_1`
+      + `SEARCH p USING INDEX ... LEFT-JOIN`; el `TEMP B-TREE` solo para los dos términos de
+      desempate del `ORDER BY`. La carpeta filtra por `idx_favorite_folder` (probado).
+
+**Notas:** cursor **keyset** (P-56): JSON opaco con `{order, key}` de las tres expresiones del
+orden; SQLite compara valores de fila `(a,b,c) > (?,?,?)`, así insertar/borrar entre páginas no
+repite ni salta filas. Un cursor de otro orden o ilegible → `ModuleError` `PARSE`. Las listas
+de `kinds`/`moduleIds` se expanden con marcadores de posición (nunca interpolación de texto).
+`lastRead` ordena por `COALESCE(p.updated_at, f.added_at)` DESC (las no leídas caen detrás por
+su fecha de adición). El `limit` lo pone siempre la pantalla: el núcleo no inventa números. El
+chip **«Leyendo»** NO se implementa: el SPEC no define qué cuenta como «leyendo» → pregunta 17
+abierta para el humano (la UI F14 queda bloqueada por ahí si quiere filtro, no solo chip).
 
 **Dependencias:** T22.
 **Archivos probables:** `packages/core/src/library/queries.ts`,
@@ -709,20 +746,31 @@ orden por nombre, último leído y fecha de adición. Chips Todo · Leyendo · C
 
 ## Task T24: Preferencias por serie (modo de lectura, release preferida)
 
+**Estado:** ✅ hecho 2026-10-18.
+
 **Descripción.** Tabla y dominio `series_pref` (SPEC §8.1): modo de lectura por serie
 (vertical/paginado y dirección) y release/grupo preferido por serie (RF-16, RF-18).
 
 **Criterios de aceptación:**
 
-- [ ] Guardar/leer modo de lectura y release preferida por `(module_id, series_id)`.
-- [ ] El modo predeterminado según tipo se aplica cuando no hay preferencia (manhua y manhwa
+- [x] Guardar/leer modo de lectura y release preferida por `(module_id, series_id)`.
+- [x] El modo predeterminado según tipo se aplica cuando no hay preferencia (manhua y manhwa
       vertical, manga D→I, cómic I→D).
-- [ ] Actualizar una preferencia actualiza `updated_at`.
+- [x] Actualizar una preferencia actualiza `updated_at`.
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test`
-- [ ] Manual: comprobar el valor por defecto por cada tipo.
+- [x] `pnpm --filter @ryuunest/core test` (11 tests en `tests/library/prefs.test.ts`)
+- [x] Manual: comprobar el valor por defecto por cada tipo — la tabla `esperado` del primer
+      test fija los cuatro tipos (manga `paged-rtl`, manhua/manhwa `vertical`, cómic
+      `paged-ltr`) contra RF-18.
+
+**Notas:** la columna única `reader_mode` del SPEC codifica modo y dirección en un valor:
+`"vertical" | "paged-ltr" | "paged-rtl"` (P-56). `modeFor` devuelve el guardado, si no el del
+tipo, y `null` si no hay preferencia **ni** tipo conocido — lo resuelve el ajuste global de
+lector (F20); el núcleo no inventa un quinto modo. Un `reader_mode` ilegible en la base lanza
+`ModuleError` `PARSE`. Cambiar el modo no borra la release y al revés (dos `ON CONFLICT`
+parciales).
 
 **Dependencias:** T22.
 **Archivos probables:** `packages/core/src/library/SeriesPrefs.ts`,
@@ -731,8 +779,8 @@ orden por nombre, último leído y fecha de adición. Chips Todo · Leyendo · C
 
 ### 🚩 Checkpoint F (tras T21–T24)
 
-- [ ] Filtro/búsqueda < 300 ms con 3000 series (entorno Node)
-- [ ] Un favorito pertenece a una carpeta o a ninguna
+- [x] Filtro/búsqueda < 300 ms con 3000 series (entorno Node) — `tests/perf/library.perf.test.ts`
+- [x] Un favorito pertenece a una carpeta o a ninguna — `library.test.ts` (D-12)
 - [ ] Revisión humana
 
 ---
@@ -1234,7 +1282,7 @@ acción siguiente (SPEC §11.12). Sin tarjetas-mascota (T4).
 
 **Criterios de aceptación:**
 
-- [x] Cada estado lleva dragón (según §11.12/§11.5), título en Manrope y una acción. *(Dragón mediano 96 en vacío/error, pequeño 48 en carga breve — tokens `markers` de `ui-tokens`, P-55. La acción de la carga breve no aplica: §11.12 reserva la acción siguiente para vacío y error.)*
+- [x] Cada estado lleva dragón (según §11.12/§11.5), título en Manrope y una acción. *(Dragón mediano 96 en vacío/error, pequeño 48 en carga breve - tokens `markers` de `ui-tokens`, P-57. La acción de la carga breve no aplica: §11.12 reserva la acción siguiente para vacío y error.)*
 - [x] El error de módulo incluye detalle técnico desplegable (módulo, URL, código, selector). *(`detailLines` en `stateStyles.ts`, probado; desplegable «Ver detalle» verificado en la galería.)*
 - [x] El dragón es un marcador local (sin obras reales ni texto). *(Silueta SVG original del proyecto en `assets/placeholder/dragon.svg`, registrada como temporal en su `README.md` y en `ASSETS.md`; sin texto, sin URLs y sin obras de terceros — puerta `tests/placeholder.test.ts`.)*
 

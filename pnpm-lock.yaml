@@ -254,6 +254,10 @@ importers:
       htmlparser2:
         specifier: ^12.0.0
         version: 12.0.0
+    devDependencies:
+      '@types/node':
+        specifier: ^22.20.5
+        version: 22.20.5
 
   packages/module-sdk:
     dependencies:

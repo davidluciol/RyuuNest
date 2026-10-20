@@ -1,7 +1,7 @@
 /**
  * Tamaños del dragón marcador (SPEC §11.12): la tabla solo dice «pequeño»
  * (carga breve) y «mediano» (biblioteca vacía, sin resultados, error de
- * módulo); los píxeles los fijó el humano en la rejilla de 4 px (P-55).
+ * módulo); los píxeles los fijó el humano en la rejilla de 4 px (P-57).
  */
 export const markers = {
   /** Dragón pequeño: carga breve. */
