@@ -30,7 +30,7 @@ cuando la decisión y el código van de la mano**.
 ## 2. Taxonomía de niveles
 
 | Nivel | Qué la caracteriza | Riesgo si falla |
-|---|---|---|
+| --- | --- | --- |
 | **N1 · Mecánica** | Un archivo, criterio de aceptación literal, sin decisión de diseño | bajo |
 | **N2 · Local** | 1–3 archivos, un solo paquete, el SPEC ya dice qué hacer | bajo |
 | **N3 · Integración** | 3–6 archivos, cruza dos paquetes (núcleo ↔ UI) o dos dominios | medio |
@@ -46,11 +46,11 @@ con el más fuerte**.
 ## 3. Escalones de modelo (workspace `opencode`)
 
 | Escalón | Modelos disponibles | Para qué |
-|---|---|---|
+| --- | --- | --- |
 | **A · Frontier** | `claude-opus-5-5`, `gpt-6.1-sol`, `gpt-5.5-pro`, `grok-4.6`, `gemini-4-argon` | N5: arquitectura, semántica de merge, protocolo de la extensión, máquina de estados del lector, diseño de la pantalla más densa |
 | **B · Equilibrado** | `claude-sonnet-5-5`, `gpt-6-astra`, `kimi-k3`, `glm-5.3`, `mistral-large-4`, `deepseek-v4-pro` | N3–N4: el caballo de batalla. Implementa bien, respeta convenciones, no alucina APIs |
 | **C · Rápido** | `claude-haiku-5-5`, `qwen3.6-plus`, `qwen3.5-plus`, `gpt-5.4-mini` | N2, y los cortes de refactor/tests de un N3–N4 ya diseñado |
-| **D · Gratis** | `minimax-m3.1-flash-free` (el actual), `nemotron-3.5-super-vl-free`, `deepseek-v4.1-flash-free`, `qwen3.8-flash`, `glm-5.3-flash`, `qwen3.5-codex-spark` | N1–N2, y respaldo si el presupuesto manda |
+| **D · Gratis** | `minimax-m3.1-flash-free`, `nemotron-3.5-super-vl-free`, `deepseek-v4.1-flash-free`, `qwen3.8-flash`, `glm-5.3-flash`, `qwen3.5-codex-spark` | N1–N2, y respaldo si el presupuesto manda |
 
 Notas de la casa:
 
@@ -66,7 +66,7 @@ Notas de la casa:
 ## 4. Escala de esfuerzo
 
 | Símbolo | Significado |
-|---|---|
+| --- | --- |
 | **R** (razonamiento) | Nº de decisiones que exigen leer el SPEC y/o preguntar al humano (Regla 1) |
 | **C** (código) | Volumen de archivos y complejidad de estado (componentes reutilizables, máquinas de estado) |
 | **H** (herramientas) | Coste de andamiaje: Playwright, `expo export`, Metro, Vite, `node:sqlite`, plugin de ESLint, Web Worker |
@@ -78,7 +78,7 @@ Notas de la casa:
 ## 5. Parte 1 — Núcleo / back-end (pendientes)
 
 | Tarea | Nivel | Modelo (diseño → implementación) | R | C | H | V | S | Notas de esfuerzo |
-|---|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **T05** (cierre: medir tope de imágenes, revalidar RNF-1 en release) | N1 | humano + escalón D para el APK | 0 | 0 | 1 | 2 | 0.3 | La medición es del humano (P-45). Solo regenerar el APK release y anotar en `ADR-0002` |
 | **T25** Progreso atómico y reanudación (`page_total`) | N3 | B (`claude-sonnet-5-5`) → D/C | 1 | 2 | 0 | 1 | 1 | `ProgressStore` sobre `SqlDriver`; escrituras concurrentes y `updated_at` por el puerto `Clock`. SPEC §3.6 es claro |
 | **T26** `chapter_read` | N2 | D (`minimax-m3.1-flash-free`) | 0 | 1 | 0 | 0 | 0.5 | La tabla ya existe en el esquema §8.1; solo el dominio y las pruebas |
@@ -108,14 +108,14 @@ Notas de la casa:
 ### 6.1 Fase 6a — Sistema de diseño
 
 | Tarea | Nivel | Modelo | R | C | H | V | S | Notas de esfuerzo |
-|---|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **F10** Internacionalización | N2 | C (`claude-haiku-5-5`) → D | 0 | 1 | 0 | 1 | 1 | Convertir la galería (mucho texto) a claves + estructura para inglés. Sin decisiones de producto |
 | **FA1** Arte final del dragón | N1 | humano (artista) | — | — | — | — | — | Proceso, no código. La puerta `tests/placeholder.test.ts` debe seguir en verde |
 
 ### 6.2 Fase 6b — Interfaz móvil (una pantalla = un corte)
 
 | Tarea | Nivel | Modelo | R | C | H | V | S | Notas de esfuerzo |
-|---|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **F11** Shell: navegación de 5 destinos + cabecera | N4 | **A** → B | 2 | 3 | 2 | 1 | 2 | Es el esqueleto del que dependen las 9 pantallas. **Decisión de dependencia nueva** (librería de navegación) → Regla 1. Primera app RN real: Metro, estado de navegación, safe areas |
 | **F12** Primer uso (3 pasos) | N4 | B alto (`claude-sonnet-5-5`) | 2 | 3 | 1 | 2 | 2 | Depende de F16 y T15. Portapapeles, «Importar respaldo», instalación con confirmación. En TV el paso 2 cambia: condicional de plataforma |
 | **F13** Inicio (Continuar, Recientes, Tesoros, Descubrir) | N3 | B → C | 1 | 2 | 1 | 1 | 1–2 | Depende de T25/T27 para el «Continuar». Máximo 4 secciones (V1) |
@@ -131,14 +131,14 @@ Notas de la casa:
 ### 6.3 Fase 7 — TV
 
 | Tarea | Nivel | Modelo | R | C | H | V | S | Notas de esfuerzo |
-|---|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **F22** Riel lateral + navegación espacial + foco | **N5** | **A** | 3 | 4 | 3 | 2 | 2–3 | Foco espacial con D-pad (no hay puntero), anillo de 2 px `accent`, escala 1,25×, márgenes seguros de TV. **React Native TVOS sin confirmar** (P-43/P-110 pendiente) → el andamiaje es la parte más incierta |
 | **F23** Lector para TV (mapeo D-pad) | N4 | B alto | 2 | 3 | 1 | 2 | 1–2 | Mapeo de teclas completo, OK muestra/oculta, foco visible en los controles, sin animaciones. Depende de F18/F19 |
 
 ### 6.4 Fase 8 — Web + extensión
 
 | Tarea | Nivel | Modelo | R | C | H | V | S | Notas de esfuerzo |
-|---|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **F24** Cliente web (React + Vite) | N4 | B alto (`claude-sonnet-5-5`) | 2 | 3 | 3 | 1 | 2–3 | App nueva con su propio pipeline (Vite + monorepo pnpm), densidad compacta, riel de 240 px, rejilla de 8 columnas, fuentes locales sin CDN (RNF-5). El riesgo es el **dual de render** (RN-Web vs React DOM) de los componentes compartidos |
 | **F25** Pantallas web | N4 | B | 1 | 4 | 1 | 2 | 3 | Reutilizar los componentes base con otra densidad. Mecánico si F24 salió bien; caro si el dual de render forced cambios en F06–F08 |
 | **F26** Extensión de navegador (protocolo HTTP) | N4 | B alto → **A** para el protocolo | 2 | 3 | 2 | 2 | 2 | Manifest V3, service worker, permisos por dominio, `postMessage` validando el origen, cuerpo en texto o base64. La superficie de seguridad exige buen diseño |
@@ -150,7 +150,7 @@ Notas de la casa:
 ## 7. Resumen: qué modelo para qué fase
 
 | Tramo | Modelo por defecto | Modelo de escalada |
-|---|---|---|
+| --- | --- | --- |
 | T25–T26, T30, T34, T35, F10 | D / C | B si la prueba no queda verde en 2 intentos |
 | T27, T28, T31, T32, T33 | B (diseño con A en T27/T32/T33) | A |
 | F11–F21 (móvil) | B (A en F11/F14/F16/F18/F19) | A |
@@ -161,7 +161,7 @@ Notas de la casa:
 ## 8. Coste por tipo de tarea (estimación de uso)
 
 | Nivel | Sesiones | Tokens de entrada aprox. | Tokens de salida aprox. | Modelo típico |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | N1 | 0.3 | 40–80 k | 10–20 k | D |
 | N2 | 0.5–1 | 80–200 k | 20–60 k | D/C |
 | N3 | 1–2 | 200–500 k | 60–150 k | B |
