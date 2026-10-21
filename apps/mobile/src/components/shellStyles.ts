@@ -31,13 +31,17 @@ export function headerStyle(): ShellStyleShape {
   };
 }
 
-/** Los 5 destinos de la barra inferior, iguales en todas las pantallas (T1). */
+/**
+ * Los 5 destinos de la barra inferior, iguales en todas las pantallas (T1).
+ * Los valores son **identificadores** de la API (no copy); su etiqueta visible
+ * vive en el catálogo (`nav.*`, F10).
+ */
 export const BOTTOM_NAV_DESTINATIONS = [
-  "Inicio",
-  "Biblioteca",
-  "Descubrir",
-  "Fuentes",
-  "Ajustes",
+  "home",
+  "library",
+  "discover",
+  "sources",
+  "settings",
 ] as const;
 
 export type BottomNavDestination = (typeof BOTTOM_NAV_DESTINATIONS)[number];

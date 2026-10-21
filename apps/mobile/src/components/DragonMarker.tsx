@@ -1,5 +1,7 @@
 import Svg, { Path } from "react-native-svg";
 
+import { t } from "../i18n";
+
 /**
  * F08 — dragón marcador (SPEC §11.12): reproduce la silueta original de
  * `assets/placeholder/dragon.svg` (registro y carácter temporal en el README de
@@ -18,7 +20,7 @@ export default function DragonMarker({ size, color }: { size: number; color: str
       viewBox="0 0 96 96"
       fill="none"
       accessibilityRole="image"
-      accessibilityLabel="Dragón marcador"
+      accessibilityLabel={t("a11y.dragonMarker")}
     >
       {/* cuerpo serpenteante */}
       <Path

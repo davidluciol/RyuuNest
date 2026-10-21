@@ -8,23 +8,23 @@ import { renderGalleryScreen } from "../../src/gallery/renderGallery";
  * galería con sus estados (Regla 3).
  */
 describe("galería con componentes base 2 (F07)", () => {
-  it("la sección lista los componentes base 1, base 2 y los estados de F08", () => {
+  it("la sección lista los componentes base 1, base 2 y los estados de F08 (claves de F10)", () => {
     const components = galleryEntries.find((entry) => entry.id === "componentes");
     expect(components?.items).toEqual([
-      "botón",
-      "campo de texto",
-      "casilla y radio",
-      "chip de filtro",
-      "insignia",
-      "tarjeta de portada",
-      "fila de capítulo",
-      "cabecera",
-      "barra inferior",
-      "fila de ajustes",
-      "hoja y diálogo",
-      "estado vacío",
-      "error de módulo",
-      "carga breve",
+      "gallery.component.button",
+      "gallery.component.textField",
+      "gallery.component.checkbox",
+      "gallery.component.chip",
+      "gallery.component.badge",
+      "gallery.component.coverCard",
+      "gallery.component.chapterRow",
+      "gallery.component.header",
+      "gallery.component.bottomNav",
+      "gallery.component.settingsRow",
+      "gallery.component.sheet",
+      "gallery.component.emptyState",
+      "gallery.component.errorState",
+      "gallery.component.loadingState",
     ]);
   });
 

@@ -41,7 +41,9 @@ describe("catálogo de traducciones (RF-40)", () => {
   it("la estructura admite más idiomas aunque hoy solo exista español", () => {
     expect(supportedLocales).toEqual(["es"]);
     expect(Object.keys(catalogs)).toEqual(["es"]);
-    // Añadir inglés es rellenar un catálogo, no tocar componentes:
+    // Añadir inglés es rellenar un catálogo, no tocar componentes. Hoy tanto el
+    // tipo como el guardia de ejecución lo rechazan:
+    // @ts-expect-error «en» todavía no tiene catálogo registrado.
     expect(() => setLocale("en")).toThrow(/en/);
     expect(getLocale()).toBe("es");
   });
