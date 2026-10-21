@@ -33,3 +33,10 @@ Thumbs.db
 
 # Bundle web exportado por Expo (F05); se regenera con `expo export`.
 apps/mobile/dist/
+
+# Graphify: el grafo actual sí se versiona, pero su caché y los snapshots
+# con fecha (copia del grafo anterior) son derivados y se regeneran solos.
+graphify-out/cache/ast/
+graphify-out/cache/last_query_stamp
+graphify-out/cache/*.tmp
+graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/

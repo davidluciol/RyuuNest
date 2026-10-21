@@ -1,24 +1,28 @@
-# Graph Report - RyuuNest  (2026-10-17)
+# Graph Report - RyuuNest  (2026-10-20)
 
 ## Corpus Check
-- 177 files · ~254,944 words
+- 228 files · ~292,021 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: .ttf 5, (none) 4)
 
 ## Summary
-- 1263 nodes · 2496 edges · 110 communities (70 shown, 40 thin omitted)
-- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 121 edges (avg confidence: 0.84)
+- 1685 nodes · 3608 edges · 139 communities (91 shown, 48 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 157 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
+## Graph Freshness
+- Built from commit: `7e6138ef`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
+
 ## Community Hubs (Navigation)
-- Clock and Declarative Contract Tests
-- FoxMangas and Luscious Scrapers
-- HTML Parsing Helpers
+- sites.ts
+- DeclarativeRuntime
 - Repository Index Format
 - Calibration PNG Generator
 - Module Host Runtime
-- Host and Manifest Types
-- Manifest Validator Test Doubles
+- contract.types.test-d.ts
+- install.e2e.test.ts
 - Lint and Package Config
 - Hex and Archive Utilities
 - Module SDK Package Config
@@ -27,7 +31,7 @@
 - Package Installer
 - Core Parser Dependencies
 - Design Rules and Screens
-- Module Error Mapping
+- runtimeSelection.test.ts
 - Base TypeScript Config
 - Declarative Runtime Types
 - Declarative Field Transforms
@@ -35,14 +39,14 @@
 - Core Package Manifest
 - Expo App Configuration
 - FoxMangas Book Logic
-- Memory Settings and Domain Guard
-- Density and Breakpoint Tokens
+- FixedClock
+- ui-tokens/src/index.ts
 - App Test Dependencies
-- Asset Generation Scripts
+- ref_vitest
 - Settings Screen Sections
 - Mobile Package Manifest
 - Image Budget Panel
-- Font Loading and Typography
+- ErrorState.tsx
 - Library Screen Components
 - TMO Module Port
 - Test Site Manifest
@@ -52,17 +56,17 @@
 - MangaIn Scraping Logic
 - Sources Screen Elements
 - Contrast Ratio Utilities
-- Calibration App Checks
+- App.tsx
 - Mobile App Dependencies
-- Runtime Selection Tests
+- SqlDriver
 - Dragon Night Theme
 - Core Error Codes
-- Install Flow Orchestration
+- types.ts
 - Core Test TypeScript Config
 - Discover Screen Components
 - Home Screen Sections
 - Module Contract and Templates
-- Module API Surface
+- ChapterRow.tsx
 - UI Package Test Config
 - Declarative Module Example
 - Reader Screen Controls
@@ -74,7 +78,7 @@
 - SDK Build Config
 - UI Tokens Build Config
 - Mobile Test TypeScript Config
-- TTF Name Reader
+- ref_node_fs
 - CI Verification Pipeline
 - Test Dev Dependencies
 - Local Fonts and Icons
@@ -111,93 +115,117 @@
 - InstallFlow Confirmation Rule
 - createModuleApi Seam
 - React Native Expo Stack
+- nodeSqliteDriver.ts
+- GalleryScreen.tsx
+- registry.ts
+- test-site/src/index.ts
+- shellStyles.ts
+- HtmlElement
+- Chip.tsx
+- fieldStyles.ts
+- core/src/index.ts
+- exampleScript.ts
+- eslint-plugin-ryuunest/package.json
+- Storage
+- fixtures.ts
+- logicMangaIn.py
+- calibrationPage.ts
+- Folders.ts
+- buttonStyles.ts
+- index.js
+- harness.ts
+- NineManga
+- SeriesPrefs.ts
+- Luscious
+- fontSources.ts
+- cli.test.ts
+- logicYupmanga
+- metro.config.js
+- harness.test.ts
+- Marcadores temporales (`assets/placeholder/`)
 
 ## God Nodes (most connected - your core abstractions)
-1. `ModuleError` - 58 edges
-2. `DeclarativeRuntime` - 28 edges
-3. `ModuleHost` - 25 edges
-4. `FixedClock` - 25 edges
-5. `ModuleApi` - 20 edges
-6. `PackageInstaller` - 20 edges
-7. `Storage` - 20 edges
-8. `RepoRegistry` - 20 edges
-9. `MemoryStorage` - 19 edges
-10. `compilerOptions` - 19 edges
+1. `ModuleError` - 64 edges
+2. `FixedClock` - 30 edges
+3. `DeclarativeRuntime` - 30 edges
+4. `SqlDriver` - 29 edges
+5. `ModuleHost` - 27 edges
+6. `Clock` - 27 edges
+7. `MediaKind` - 26 edges
+8. `Storage` - 24 edges
+9. `spacing` - 23 edges
+10. `GalleryScreen()` - 22 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Dragon Night theme (design/themes)` --semantically_similar_to--> `Dragon Night design system (root DESIGN.md)`  [INFERRED] [semantically similar]
   design/themes/dragon_night/DESIGN.md → DESIGN.md
+- `Inter font SIL OFL 1.1 license` --conceptually_related_to--> `RyuuNest SPEC (authoritative specification)`  [INFERRED]
+  apps/mobile/assets/fonts/LICENSE-Inter.txt → docs/SPEC.md
+- `Manrope font SIL OFL 1.1 license` --conceptually_related_to--> `RyuuNest SPEC (authoritative specification)`  [INFERRED]
+  apps/mobile/assets/fonts/LICENSE-Manrope.txt → docs/SPEC.md
 - `Ajustes screen mockup` --implements--> `Dragon Night design system (root DESIGN.md)`  [INFERRED]
   design/stitch/ajustes_pantalla/code.html → DESIGN.md
 - `Biblioteca (Tesoros) screen mockup` --implements--> `Dragon Night design system (root DESIGN.md)`  [INFERRED]
   design/stitch/biblioteca_tesoros/code.html → DESIGN.md
-- `Descubrir (Aventuras) screen mockup` --implements--> `Dragon Night design system (root DESIGN.md)`  [INFERRED]
-  design/stitch/descubrir_aventuras/code.html → DESIGN.md
-- `Serie detail screen mockup` --implements--> `Dragon Night design system (root DESIGN.md)`  [INFERRED]
-  design/stitch/detalle_pantalla/code.html → DESIGN.md
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
-- **7 Dragon Night captures reviewed under DESIGN_RULES** — design_stitch_inicio_guarida_code_screen, design_stitch_biblioteca_tesoros_code_screen, design_stitch_descubrir_aventuras_code_screen, design_stitch_fuentes_portales_code_screen, design_stitch_pantalla_lector_code_screen, design_stitch_detalle_pantalla_code_screen, design_stitch_ajustes_pantalla_code_screen, design_rules_anti_ai_slop [EXTRACTED 1.00]
-- **RyuuNest theme variants under one token architecture (v1 ships Dragon Night only)** — design_themes_dragon_night_design_theme, design_themes_arcane_vault_design_theme, design_themes_ember_hearth_design_theme, design_themes_moonlit_frost_design_theme [INFERRED 0.75]
-- **Module contract API v1 (SPEC §6)** — docs_spec_md_module_manifest, docs_spec_md_module_api, docs_spec_md_module_error, docs_spec_md_host_interface, docs_spec_md_declarative_module_format, docs_spec_md_repo_index_format [EXTRACTED 1.00]
-- **Secure module installation path (SPEC §7 + T13)** — docs_spec_md_installation_flow, docs_spec_md_threat_model, tasks_todo_md_t13_package_installer, docs_spec_md_repo_index_format [INFERRED 0.80]
-- **Design and documentation authority chain (SPEC §11.1)** — docs_spec_md_ryuunest_spec, docs_spec_md_visual_authority_order, docs_idea_md_ryuunest_vision, docs_spec_md_design_tokens_dragon_night [INFERRED 0.80]
-- **Ajustes screen grouped into vertical card sections** — design_stitch_ajustes_pantalla_screen_settings_screen, design_stitch_ajustes_pantalla_screen_local_profile, design_stitch_ajustes_pantalla_screen_language_setting, design_stitch_ajustes_pantalla_screen_reading_preferences, design_stitch_ajustes_pantalla_screen_nsfw_settings, design_stitch_ajustes_pantalla_screen_theme_picker, design_stitch_ajustes_pantalla_screen_backup_migration, design_stitch_ajustes_pantalla_screen_storage_cache, design_stitch_ajustes_pantalla_screen_footer_about [EXTRACTED 1.00]
-- **Boolean settings rendered as switch toggles with explanatory subtitles** — design_stitch_ajustes_pantalla_screen_reader_toggles, design_stitch_ajustes_pantalla_screen_nsfw_settings, design_stitch_ajustes_pantalla_screen_install_protection, design_stitch_ajustes_pantalla_screen_oled_mode [EXTRACTED 1.00]
-- **Privacy-first stance: no telemetry, local-only data, user-controlled content visibility and install gating** — design_stitch_ajustes_pantalla_screen_footer_about, design_stitch_ajustes_pantalla_screen_nsfw_settings, design_stitch_ajustes_pantalla_screen_install_protection [INFERRED 0.75]
 - **design_stitch_biblioteca_tesoros_screen_hyper_filtering** — design_stitch_biblioteca_tesoros_screen_image, design_stitch_biblioteca_tesoros_screen_filter_chips, design_stitch_biblioteca_tesoros_screen_advanced_filters, design_stitch_biblioteca_tesoros_screen_sfw_toggle, design_stitch_biblioteca_tesoros_screen_reading_status [EXTRACTED 1.00]
 - **design_stitch_biblioteca_tesoros_screen_hyper_progress_tracking** — design_stitch_biblioteca_tesoros_screen_image, design_stitch_biblioteca_tesoros_screen_cover_grid, design_stitch_biblioteca_tesoros_screen_progress_indicator, design_stitch_biblioteca_tesoros_screen_reading_status [EXTRACTED 1.00]
 - **Discover screen composes search + module source + filters + curated sections + catalog grid** — design_stitch_descubrir_aventuras_screen_mockup, design_stitch_descubrir_aventuras_screen_search_field, design_stitch_descubrir_aventuras_screen_module_selector, design_stitch_descubrir_aventuras_screen_filter_chips, design_stitch_descubrir_aventuras_screen_cover_card, design_stitch_descubrir_aventuras_screen_catalog_pagination [EXTRACTED 1.00]
-- **Reading resume and chapter navigation flow** — design_stitch_detalle_pantalla_screen_continue_bar, design_stitch_detalle_pantalla_screen_chapter_rows, design_stitch_detalle_pantalla_screen_chapter_toolbar [INFERRED 0.85]
-- **Content provenance and extraction source disclosure** — design_stitch_detalle_pantalla_screen_origin_footer, design_stitch_detalle_pantalla_screen_source_badge, design_stitch_detalle_pantalla_screen_action_row [INFERRED 0.75]
 - **Sources screen composes repository management, filtering and sync visibility** — design_stitch_fuentes_portales_screen_mockup, design_stitch_fuentes_portales_screen_add_repository, design_stitch_fuentes_portales_screen_repository_card, design_stitch_fuentes_portales_screen_category_filters, design_stitch_fuentes_portales_screen_sync_indicator [EXTRACTED 1.00]
-- **Repository trust model: sandboxing, index, backup import and security card** — design_stitch_fuentes_portales_screen_security_card, design_stitch_fuentes_portales_screen_sandboxing, design_stitch_fuentes_portales_screen_repository_index, design_stitch_fuentes_portales_screen_import_backup [INFERRED 0.75]
 - **Home screen vertical stack: greeting header, nido status, continue-reading hero, recent reads carousel** — design_stitch_inicio_guarida_screen, design_stitch_inicio_guarida_screen_status_card, design_stitch_inicio_guarida_screen_continue_section, design_stitch_inicio_guarida_screen_recent_reads [EXTRACTED 1.00]
-- **Library organization and discovery: saved collections, portal update feed, and total work counter** — design_stitch_inicio_guarida_screen_treasures, design_stitch_inicio_guarida_screen_portal_updates, design_stitch_inicio_guarida_screen_work_count [INFERRED 0.85]
-- **Navigation and resume flow: bottom tabs with primary CTA continuing the last read chapter** — design_stitch_inicio_guarida_screen_bottom_nav, design_stitch_inicio_guarida_screen_continue_section, design_stitch_inicio_guarida_screen_resume_progress [INFERRED 0.75]
 - **hyper_design_stitch_pantalla_lector_screen_reader_chrome** — design_stitch_pantalla_lector_screen_top_bar, design_stitch_pantalla_lector_screen_bottom_controls, design_stitch_pantalla_lector_screen_vertical_page_stream [EXTRACTED 1.00]
+- **Ajustes screen grouped into vertical card sections** — design_stitch_ajustes_pantalla_screen_settings_screen, design_stitch_ajustes_pantalla_screen_local_profile, design_stitch_ajustes_pantalla_screen_language_setting, design_stitch_ajustes_pantalla_screen_reading_preferences, design_stitch_ajustes_pantalla_screen_nsfw_settings, design_stitch_ajustes_pantalla_screen_theme_picker, design_stitch_ajustes_pantalla_screen_backup_migration, design_stitch_ajustes_pantalla_screen_storage_cache, design_stitch_ajustes_pantalla_screen_footer_about [EXTRACTED 1.00]
+- **Boolean settings rendered as switch toggles with explanatory subtitles** — design_stitch_ajustes_pantalla_screen_reader_toggles, design_stitch_ajustes_pantalla_screen_nsfw_settings, design_stitch_ajustes_pantalla_screen_install_protection, design_stitch_ajustes_pantalla_screen_oled_mode [EXTRACTED 1.00]
+- **Module contract API v1 (SPEC §6)** — docs_spec_md_module_manifest, docs_spec_md_module_api, docs_spec_md_module_error, docs_spec_md_host_interface, docs_spec_md_declarative_module_format, docs_spec_md_repo_index_format [EXTRACTED 1.00]
+- **7 Dragon Night captures reviewed under DESIGN_RULES** — design_stitch_inicio_guarida_code_screen, design_stitch_biblioteca_tesoros_code_screen, design_stitch_descubrir_aventuras_code_screen, design_stitch_fuentes_portales_code_screen, design_stitch_pantalla_lector_code_screen, design_stitch_detalle_pantalla_code_screen, design_stitch_ajustes_pantalla_code_screen, design_rules_anti_ai_slop [EXTRACTED 1.00]
+- **Repository trust model: sandboxing, index, backup import and security card** — design_stitch_fuentes_portales_screen_security_card, design_stitch_fuentes_portales_screen_sandboxing, design_stitch_fuentes_portales_screen_repository_index, design_stitch_fuentes_portales_screen_import_backup [INFERRED 0.75]
+- **Content provenance and extraction source disclosure** — design_stitch_detalle_pantalla_screen_origin_footer, design_stitch_detalle_pantalla_screen_source_badge, design_stitch_detalle_pantalla_screen_action_row [INFERRED 0.75]
+- **Privacy-first stance: no telemetry, local-only data, user-controlled content visibility and install gating** — design_stitch_ajustes_pantalla_screen_footer_about, design_stitch_ajustes_pantalla_screen_nsfw_settings, design_stitch_ajustes_pantalla_screen_install_protection [INFERRED 0.75]
+- **RyuuNest theme variants under one token architecture (v1 ships Dragon Night only)** — design_themes_dragon_night_design_theme, design_themes_arcane_vault_design_theme, design_themes_ember_hearth_design_theme, design_themes_moonlit_frost_design_theme [INFERRED 0.75]
+- **Navigation and resume flow: bottom tabs with primary CTA continuing the last read chapter** — design_stitch_inicio_guarida_screen_bottom_nav, design_stitch_inicio_guarida_screen_continue_section, design_stitch_inicio_guarida_screen_resume_progress [INFERRED 0.75]
+- **Design and documentation authority chain (SPEC §11.1)** — docs_spec_md_ryuunest_spec, docs_spec_md_visual_authority_order, docs_idea_md_ryuunest_vision, docs_spec_md_design_tokens_dragon_night [INFERRED 0.80]
+- **Secure module installation path (SPEC §7 + T13)** — docs_spec_md_installation_flow, docs_spec_md_threat_model, tasks_todo_md_t13_package_installer, docs_spec_md_repo_index_format [INFERRED 0.80]
+- **Reading resume and chapter navigation flow** — design_stitch_detalle_pantalla_screen_continue_bar, design_stitch_detalle_pantalla_screen_chapter_rows, design_stitch_detalle_pantalla_screen_chapter_toolbar [INFERRED 0.85]
+- **Library organization and discovery: saved collections, portal update feed, and total work counter** — design_stitch_inicio_guarida_screen_treasures, design_stitch_inicio_guarida_screen_portal_updates, design_stitch_inicio_guarida_screen_work_count [INFERRED 0.85]
 - **T05 verification evidence: module load calibration on Samsung S25 Ultra** — docs_capturast05_samsung_s25ultra_screenshot, docs_capturast05_samsung_s25ultra_calibration_screen, docs_capturast05_samsung_s25ultra_module_checks [INFERRED]
 
-## Communities (110 total, 40 thin omitted)
+## Communities (139 total, 48 thin omitted)
 
-### Community 0 - "Clock and Declarative Contract Tests"
-Cohesion: 0.06
-Nodes (64): FixedClock, makeApi(), EXAMPLE_DECLARATIVE, listFields, cronicasDeMoonlit, dracoDeJade, dragonDeCeniza, findChapter() (+56 more)
+### Community 0 - "sites.ts"
+Cohesion: 0.13
+Nodes (25): searchFixtureSeries(), apiSummary(), createHtmlSite(), createJsonApiSite(), escapeHtml(), htmlListBody(), imageUrlsFor(), jsonDetailBody() (+17 more)
 
-### Community 1 - "FoxMangas and Luscious Scrapers"
-Cohesion: 0.05
-Nodes (4): Luscious, NineManga, logicTmoHentai, logicYupmanga
-
-### Community 2 - "HTML Parsing Helpers"
-Cohesion: 0.09
-Nodes (16): HtmlDocument, HtmlElement, DocumentView, ElementView, parseHtml(), readText(), DeclarativeRuntime, findJoin() (+8 more)
+### Community 2 - "DeclarativeRuntime"
+Cohesion: 0.25
+Nodes (5): HtmlDocument, DeclarativeRuntime, isMediaKind(), parseBoolean(), parseError()
 
 ### Community 3 - "Repository Index Format"
-Cohesion: 0.12
-Nodes (37): REPO_INDEX_FORMAT, REPO_INDEX_VERSION, RepoIndex, RepoModuleEntry, ValidationIssue, ValidationResult, MODULE_SDK_VERSION, MEDIA_KINDS (+29 more)
+Cohesion: 0.11
+Nodes (40): REPO_INDEX_FORMAT, REPO_INDEX_VERSION, RepoIndex, RepoModuleEntry, ValidationIssue, ValidationResult, fakeValidator(), makeRegistry() (+32 more)
 
 ### Community 4 - "Calibration PNG Generator"
-Cohesion: 0.10
-Nodes (28): buildCalibrationPng(), chunk(), crc32(), header(), rawPixels(), SIGNATURE, applyPlaceholders(), BOOLEAN_FLAGS (+20 more)
+Cohesion: 0.19
+Nodes (21): applyPlaceholders(), BOOLEAN_FLAGS, CLI_NAME, CliIo, collectFiles(), createCommand(), describe(), domainOf() (+13 more)
 
 ### Community 5 - "Module Host Runtime"
-Cohesion: 0.10
-Nodes (17): HOST_DEFAULTS, HostLogger, HostLogLevel, ModuleHostOptions, sleep(), Clock, NoopSecureLock, StubHttpRequest (+9 more)
+Cohesion: 0.12
+Nodes (11): ModuleHostOptions, NoopSecureLock, StubHttpRequest, StubHttpRoute, Http, HttpRequest, HttpResponse, SecureLock (+3 more)
 
-### Community 6 - "Host and Manifest Types"
-Cohesion: 0.10
-Nodes (25): Chapter, ChapterPages, Host, ModuleManifest, Page, Release, SeriesDetails, SeriesSummary (+17 more)
+### Community 6 - "contract.types.test-d.ts"
+Cohesion: 0.12
+Nodes (16): Chapter, Release, SeriesDetails, SeriesSummary, api, chapter, chapterPages, details (+8 more)
 
-### Community 7 - "Manifest Validator Test Doubles"
-Cohesion: 0.09
-Nodes (18): ManifestValidator, MemoryStorage, StubHttp, RepoIndexValidator, acceptIndex(), defaultEntries(), INDEX, makeApp() (+10 more)
+### Community 7 - "install.e2e.test.ts"
+Cohesion: 0.13
+Nodes (14): InstallConfirmation, InstallFlow, InstallFlowOptions, InstallPreview, ManifestValidator, PackageInstaller, RepoModuleSummary, acceptIndex() (+6 more)
 
 ### Community 8 - "Lint and Package Config"
 Cohesion: 0.07
-Nodes (27): description, devDependencies, eslint, prettier, typescript, typescript-eslint, vitest, engines (+19 more)
+Nodes (29): description, devDependencies, eslint, prettier, @ryuunest/eslint-plugin, typescript, typescript-eslint, vitest (+21 more)
 
 ### Community 9 - "Hex and Archive Utilities"
 Cohesion: 0.11
@@ -208,40 +236,40 @@ Cohesion: 0.07
 Nodes (28): bin, ryuunest-module, dependencies, fflate, @noble/hashes, @ryuunest/core, @ryuunest/test-site, description (+20 more)
 
 ### Community 11 - "Module Registry"
-Cohesion: 0.18
-Nodes (11): InstalledPackage, moduleKey(), confirmationReasons(), ModuleRegistry, ModuleRegistryOptions, UpdateOptions, UpdateResult, Storage (+3 more)
+Cohesion: 0.17
+Nodes (10): ModuleErrorCode, InstalledPackage, moduleKey(), confirmationReasons(), ModuleRegistry, ModuleRegistryOptions, UpdateOptions, UpdateResult (+2 more)
 
 ### Community 12 - "Host HTTP Layer"
-Cohesion: 0.16
-Nodes (8): httpErrorCode(), httpErrorMessage(), canonicalHttpsUrl(), repoIndexKey(), repoKey(), RepoRecord, RepoRegistry, describeIssues()
+Cohesion: 0.18
+Nodes (9): httpErrorCode(), httpErrorMessage(), canonicalHttpsUrl(), repoIndexKey(), RepoIndexValidator, repoKey(), RepoRecord, RepoRegistry (+1 more)
 
 ### Community 13 - "Package Installer"
-Cohesion: 0.19
-Nodes (15): InstallFlowOptions, ManifestValidateOptions, normalizeEntryPath(), PackageFile, PackageInstaller, PackageInstallerOptions, resolveHttpsUrl(), assertSafeEntryPath() (+7 more)
+Cohesion: 0.20
+Nodes (15): ModuleError, ManifestValidateOptions, normalizeEntryPath(), PackageFile, PackageInstallerOptions, resolveHttpsUrl(), assertSafeEntryPath(), assertUnpackedLimits() (+7 more)
 
 ### Community 14 - "Core Parser Dependencies"
-Cohesion: 0.09
-Nodes (21): dependencies, css-select, domhandler, htmlparser2, @noble/hashes, description, exports, files (+13 more)
+Cohesion: 0.08
+Nodes (24): dependencies, css-select, domhandler, htmlparser2, @noble/hashes, description, devDependencies, @types/node (+16 more)
 
 ### Community 15 - "Design Rules and Screens"
 Cohesion: 0.10
 Nodes (13): Dragon Night design system (root DESIGN.md), Ajustes screen mockup, Biblioteca (Tesoros) screen mockup, Descubrir (Aventuras) screen mockup, Serie detail screen mockup, label-sm implemented at 12px (design table says 11px), Registry of accepted differences between Stitch design and implementation, Fuentes (Portales) screen mockup (+5 more)
 
-### Community 16 - "Module Error Mapping"
-Cohesion: 0.22
-Nodes (10): ModuleError, describeError(), moduleErrorFromStatus(), toModuleError(), createModuleApi(), createModuleRuntime(), ModuleApiHandle, parseDeclarativeConfig() (+2 more)
+### Community 16 - "runtimeSelection.test.ts"
+Cohesion: 0.06
+Nodes (35): ChapterPages, Host, HostRequestInit, HostResponse, ModuleApi, ModuleManifest, Page, createMemorySettings() (+27 more)
 
 ### Community 17 - "Base TypeScript Config"
 Cohesion: 0.10
 Nodes (20): compilerOptions, declaration, declarationMap, exactOptionalPropertyTypes, forceConsistentCasingInFileNames, isolatedModules, lib, module (+12 more)
 
 ### Community 18 - "Declarative Runtime Types"
-Cohesion: 0.15
-Nodes (15): ImageRef, SeriesStatus, DeclarativeChaptersSpec, DeclarativeConfig, DeclarativeDetailsMethod, DeclarativeHasNext, DeclarativeListMethod, DeclarativePagesMethod (+7 more)
+Cohesion: 0.14
+Nodes (15): DeclarativeChaptersSpec, DeclarativeDetailsMethod, DeclarativeFieldSpec, DeclarativeHasNext, DeclarativeListMethod, DeclarativePagesMethod, isHtmlElement(), isSeriesStatus() (+7 more)
 
 ### Community 19 - "Declarative Field Transforms"
 Cohesion: 0.19
-Nodes (17): DeclarativeFieldSpec, applyOne(), applyTransforms(), compile(), firstNumber(), isTransformName(), joinValues(), lastSegment() (+9 more)
+Nodes (17): findJoin(), applyOne(), applyTransforms(), compile(), firstNumber(), isTransformName(), joinValues(), lastSegment() (+9 more)
 
 ### Community 20 - "Docs, ADRs and Principles"
 Cohesion: 0.12
@@ -252,24 +280,24 @@ Cohesion: 0.11
 Nodes (17): dependencies, @ryuunest/core, description, exports, files, @ryuunest/core, license, main (+9 more)
 
 ### Community 22 - "Expo App Configuration"
-Cohesion: 0.12
-Nodes (16): backgroundColor, backgroundImage, foregroundImage, monochromeImage, adaptiveIcon, package, predictiveBackGestureEnabled, expo (+8 more)
+Cohesion: 0.11
+Nodes (17): backgroundColor, backgroundImage, foregroundImage, monochromeImage, adaptiveIcon, package, predictiveBackGestureEnabled, expo (+9 more)
 
-### Community 24 - "Memory Settings and Domain Guard"
-Cohesion: 0.16
-Nodes (7): HostRequestInit, HostResponse, createMemorySettings(), ModuleHost, ModuleSettings, makeHost(), makeHost()
+### Community 24 - "FixedClock"
+Cohesion: 0.18
+Nodes (7): FixedClock, StubHttp, makeRuntime(), makeHttp(), makeHost(), makeRegistry(), validIndex
 
-### Community 25 - "Density and Breakpoint Tokens"
-Cohesion: 0.28
-Nodes (11): breakpoints, coverAspectRatio, densities, Density, DensityName, touchTarget, UI_TOKENS_VERSION, radii (+3 more)
+### Community 25 - "ui-tokens/src/index.ts"
+Cohesion: 0.14
+Nodes (28): breakpoints, coverAspectRatio, densities, Density, DensityName, FontFile, fontFiles, fontLicenses (+20 more)
 
 ### Community 26 - "App Test Dependencies"
-Cohesion: 0.13
-Nodes (13): fflate, htmlparser2, @noble/hashes, typescript, vitest, main, name, private (+5 more)
+Cohesion: 0.11
+Nodes (17): fflate, htmlparser2, @noble/hashes, @ryuunest/test-site, typescript, vitest, main, name (+9 more)
 
-### Community 27 - "Asset Generation Scripts"
-Cohesion: 0.18
-Nodes (3): output, png, SRC_DIR
+### Community 27 - "ref_vitest"
+Cohesion: 0.15
+Nodes (4): galleryStyleLiterals(), StyleLiterals, eslint, REPO_ROOT
 
 ### Community 28 - "Settings Screen Sections"
 Cohesion: 0.15
@@ -280,12 +308,12 @@ Cohesion: 0.13
 Nodes (14): description, exports, files, license, main, name, private, scripts (+6 more)
 
 ### Community 30 - "Image Budget Panel"
-Cohesion: 0.27
-Nodes (11): Calibration Page Gradient Image, Full-Screen Color Gradient Calibration Pattern, capFor(), clampCount(), decodedBytes(), toMB(), ImageCapPanel(), step() (+3 more)
+Cohesion: 0.35
+Nodes (9): Calibration Page Gradient Image, Full-Screen Color Gradient Calibration Pattern, capFor(), clampCount(), decodedBytes(), toMB(), ImageCapPanel(), step() (+1 more)
 
-### Community 31 - "Font Loading and Typography"
-Cohesion: 0.24
-Nodes (9): FONTS_DIR, FontFile, fontFiles, fontLicenses, FontFamily, fonts, TypeStyle, TypeToken (+1 more)
+### Community 31 - "ErrorState.tsx"
+Cohesion: 0.15
+Nodes (26): Button(), DRAGON_VIEWBOX, DragonMarker(), colors, EmptyState(), EmptyStateProps, styles, colors (+18 more)
 
 ### Community 32 - "Library Screen Components"
 Cohesion: 0.18
@@ -300,8 +328,8 @@ Cohesion: 0.14
 Nodes (13): apiVersion, baseUrl, capabilities, entry, id, kinds, lang, name (+5 more)
 
 ### Community 36 - "Design Token Test"
-Cohesion: 0.14
-Nodes (8): COLOR_ALIASES, designColors, designMd, designRadii, designSpacing, designTypography, FM, TYPE_ALIASES
+Cohesion: 0.12
+Nodes (10): radii, RadiusToken, COLOR_ALIASES, designColors, designMd, designRadii, designSpacing, designTypography (+2 more)
 
 ### Community 37 - "Detail Screen Components"
 Cohesion: 0.22
@@ -312,32 +340,32 @@ Cohesion: 0.18
 Nodes (11): Add Repository Button (Añadir repositorio), Content Type Filter Chips (Todos, Manga, Manhwa, Cómic), Top Navigation Header (search, notifications, profile), Import Sources Backup Button (Importar respaldo de fuentes .json), Fuentes (Sources/Portals) Screen Mockup, Community Repository Card (Repositorio Comunitario, ACTIVO), JSON Repository Index (repo.ejemplo.org/indice.json), Nido Security Card (Seguridad del Nido) (+3 more)
 
 ### Community 40 - "Contrast Ratio Utilities"
-Cohesion: 0.29
-Nodes (9): contrastRatio(), hexToRgb(), relativeLuminance(), Rgb, toLinear(), WCAG_AA, Foreground, NON_TEXT_PAIRS (+1 more)
-
-### Community 41 - "Calibration App Checks"
 Cohesion: 0.24
-Nodes (8): App(), check(), CheckResult, moduleLoadAt, runChecks(), styles, expo, expo-status-bar
+Nodes (10): withAlpha(), contrastRatio(), hexToRgb(), relativeLuminance(), Rgb, toLinear(), WCAG_AA, Foreground (+2 more)
+
+### Community 41 - "App.tsx"
+Cohesion: 0.50
+Nodes (3): App(), styles, expo-status-bar
 
 ### Community 42 - "Mobile App Dependencies"
-Cohesion: 0.18
-Nodes (11): dependencies, expo, expo-status-bar, fflate, htmlparser2, lucide-react-native, @noble/hashes, react (+3 more)
+Cohesion: 0.12
+Nodes (16): dependencies, expo, expo-font, @expo/metro-runtime, expo-status-bar, fflate, htmlparser2, lucide-react-native (+8 more)
 
-### Community 43 - "Runtime Selection Tests"
-Cohesion: 0.24
-Nodes (4): FakeScriptLoader, ScriptFactory, BUSCAR_HTML, DECLARATIVE_ENTRY
+### Community 43 - "SqlDriver"
+Cohesion: 0.13
+Nodes (7): Favorites, Folders, SeriesPrefs, SeriesStore, Clock, SqlDriver, SqliteStorage
 
 ### Community 44 - "Dragon Night Theme"
 Cohesion: 0.33
 Nodes (7): dragonNightColors, ThemeColors, defaultTheme, dragonNight, getTheme(), Theme, themes
 
 ### Community 45 - "Core Error Codes"
-Cohesion: 0.29
-Nodes (6): isModuleError(), isModuleErrorCode(), MODULE_ERROR_CODES, ModuleErrorCode, ModuleErrorDetails, CORE_VERSION
+Cohesion: 0.53
+Nodes (4): isModuleError(), isModuleErrorCode(), MODULE_ERROR_CODES, ModuleErrorDetails
 
-### Community 46 - "Install Flow Orchestration"
-Cohesion: 0.31
-Nodes (5): MediaKind, InstallConfirmation, InstallFlow, InstallPreview, RepoModuleSummary
+### Community 46 - "types.ts"
+Cohesion: 0.09
+Nodes (29): ImageRef, MediaKind, SeriesStatus, browseLibrary(), buildLibraryQuery(), BuiltQuery, claveDe(), Cursor (+21 more)
 
 ### Community 47 - "Core Test TypeScript Config"
 Cohesion: 0.20
@@ -355,13 +383,13 @@ Nodes (9): Inicio / Tu Guarida Home Screen Mockup, Bottom Tab Navigation Bar, Co
 Cohesion: 0.22
 Nodes (8): Declarative module format (CSS selectors), Host interface for script modules, ModuleManifest contract type, Web to extension HTTP bridge protocol (SPEC §10), Declarative module template (module-sdk), Script module template (module-sdk), T16 DeclarativeRuntime task, T18 ScriptRuntime task
 
-### Community 51 - "Module API Surface"
-Cohesion: 0.33
-Nodes (3): ModuleApi, guardApi(), ModuleRuntime
+### Community 51 - "ChapterRow.tsx"
+Cohesion: 0.16
+Nodes (18): ChapterRow(), ChapterRowProps, styles, CHAPTER_ROW_MIN_HEIGHT, chapterRowColors, chapterRowStyle(), ChapterRowStyleShape, ChapterSignal (+10 more)
 
 ### Community 52 - "UI Package Test Config"
-Cohesion: 0.22
-Nodes (8): compilerOptions, noEmit, paths, extends, include, ../../tsconfig.base.json, @ryuunest/core, @ryuunest/test-site
+Cohesion: 0.20
+Nodes (9): compilerOptions, noEmit, paths, types, extends, include, ../../tsconfig.base.json, @ryuunest/core (+1 more)
 
 ### Community 53 - "Declarative Module Example"
 Cohesion: 0.50
@@ -384,8 +412,8 @@ Cohesion: 0.29
 Nodes (7): scripts, android, ios, start, test, typecheck, web
 
 ### Community 58 - "Mobile TypeScript Paths"
-Cohesion: 0.29
-Nodes (6): compilerOptions, paths, strict, extends, @ryuunest/ui-tokens, expo/tsconfig.base
+Cohesion: 0.22
+Nodes (8): compilerOptions, paths, strict, extends, @ryuunest/core, @ryuunest/test-site, @ryuunest/ui-tokens, expo/tsconfig.base
 
 ### Community 59 - "Core Build Config"
 Cohesion: 0.29
@@ -403,9 +431,9 @@ Nodes (6): compilerOptions, outDir, rootDir, extends, include, ../../tsconfig.ba
 Cohesion: 0.33
 Nodes (5): compilerOptions, noEmit, extends, include, ../../tsconfig.base.json
 
-### Community 63 - "TTF Name Reader"
-Cohesion: 0.50
-Nodes (4): readTtfNames(), TtfNames, weightFrom(), WEIGHTS
+### Community 63 - "ref_node_fs"
+Cohesion: 0.18
+Nodes (8): FONTS_DIR, SRC_DIR, PLACEHOLDER_DIR, REPO_ROOT, readTtfNames(), TtfNames, weightFrom(), WEIGHTS
 
 ### Community 64 - "CI Verification Pipeline"
 Cohesion: 0.50
@@ -443,6 +471,94 @@ Nodes (3): SourceModule contract draft (IDEA §7), logicTMO.py port mapping (SPE
 Cohesion: 0.67
 Nodes (3): Package installation flow (SPEC §7.1), Repository index.json format, T13 PackageInstaller task
 
+### Community 110 - "nodeSqliteDriver.ts"
+Cohesion: 0.13
+Nodes (12): SqlRunResult, SqlValue, ColumnSpec, ForeignKeyRow, IndexInfoRow, IndexListRow, INDICES, TABLAS (+4 more)
+
+### Community 111 - "GalleryScreen.tsx"
+Cohesion: 0.14
+Nodes (18): SettingsRow(), SettingsRowProps, styles, Sheet(), SheetProps, styles, SETTINGS_ROW_MIN_HEIGHT, settingsRowStyle() (+10 more)
+
+### Community 112 - "registry.ts"
+Cohesion: 0.15
+Nodes (11): colorNames, COMPONENT_STATES, galleryEntries, GalleryEntry, GalleryKind, radiiNames, spacingNames, typeNames (+3 more)
+
+### Community 113 - "test-site/src/index.ts"
+Cohesion: 0.17
+Nodes (17): DeclarativeConfig, makeApi(), CAPABILITIES, makeDeclarativeApi(), makeHost(), makeScriptApi(), EXAMPLE_DECLARATIVE, listFields (+9 more)
+
+### Community 114 - "shellStyles.ts"
+Cohesion: 0.18
+Nodes (17): BottomNav(), BottomNavProps, DESTINATION_ICONS, styles, Header(), HeaderProps, styles, BOTTOM_NAV_DESTINATIONS (+9 more)
+
+### Community 115 - "HtmlElement"
+Cohesion: 0.14
+Nodes (7): HtmlElement, DocumentView, ElementView, parseHtml(), readText(), css-select, domhandler
+
+### Community 116 - "Chip.tsx"
+Cohesion: 0.19
+Nodes (14): Badge(), BadgeProps, styles, BADGE_HEIGHT, badgeColors(), badgeStyle(), BadgeStyleShape, Chip() (+6 more)
+
+### Community 117 - "fieldStyles.ts"
+Cohesion: 0.19
+Nodes (14): Checkbox(), CheckboxProps, styles, CHECKBOX_SIZE, checkboxStyle(), CheckStyleShape, radioStyle(), textFieldColors() (+6 more)
+
+### Community 118 - "core/src/index.ts"
+Cohesion: 0.18
+Nodes (12): CORE_VERSION, migrate(), Migration, MIGRATIONS, INDICES, KV, MIGRATION_1, SCHEMA_VERSION (+4 more)
+
+### Community 119 - "exampleScript.ts"
+Cohesion: 0.22
+Nodes (15): attrIn(), attrOf(), createExampleScript(), createHtmlApi(), createJsonApi(), describe(), ExampleScriptSite, lastSegment() (+7 more)
+
+### Community 120 - "eslint-plugin-ryuunest/package.json"
+Cohesion: 0.11
+Nodes (17): description, devDependencies, eslint, typescript-eslint, vitest, exports, eslint, typescript-eslint (+9 more)
+
+### Community 121 - "Storage"
+Cohesion: 0.20
+Nodes (6): Storage, MemoryStorage, makeRegistry(), BajoPrueba, claves(), suiteDeConformidad()
+
+### Community 122 - "fixtures.ts"
+Cohesion: 0.17
+Nodes (13): cronicasDeMoonlit, dracoDeJade, dragonDeCeniza, findChapter(), findSeries(), FIXTURE_DEFAULTS, FIXTURE_SERIES, FixtureChapter (+5 more)
+
+### Community 124 - "calibrationPage.ts"
+Cohesion: 0.24
+Nodes (8): output, png, buildCalibrationPng(), chunk(), crc32(), header(), rawPixels(), SIGNATURE
+
+### Community 125 - "Folders.ts"
+Cohesion: 0.15
+Nodes (7): FavoriteRecord, FavoriteRow, toRecord(), FolderOrder, FolderRecord, FolderRow, toRecord()
+
+### Community 126 - "buttonStyles.ts"
+Cohesion: 0.33
+Nodes (9): ButtonProps, styles, BUTTON_MIN_HEIGHT, buttonColors(), ButtonState, buttonStyle(), ButtonStyleShape, buttonTextColor() (+1 more)
+
+### Community 127 - "index.js"
+Cohesion: 0.17
+Nodes (6): ALLOWED_COLOR_KEYWORDS, ALLOWED_NUMBERS, COLOR_KEYS, MEASURE_KEYS, noDesignLiterals, ruleTester
+
+### Community 128 - "harness.ts"
+Cohesion: 0.33
+Nodes (10): assertDetails(), assertImageHeaders(), assertImages(), assertPage(), checkListing(), ContractError, ContractHarnessOptions, ContractReport (+2 more)
+
+### Community 130 - "SeriesPrefs.ts"
+Cohesion: 0.25
+Nodes (7): defaultReaderModeFor(), modoConocido(), MODOS, ReaderMode, SeriesPreference, SeriesPrefRow, toRecord()
+
+### Community 135 - "metro.config.js"
+Cohesion: 0.29
+Nodes (6): config, { getDefaultConfig }, path, WORKSPACE_PACKAGES, workspaceRoot, expo
+
+### Community 136 - "harness.test.ts"
+Cohesion: 0.52
+Nodes (6): normalizeText(), createFixtureApi(), fixtureSeries(), slicePage(), toDetails(), toSummary()
+
+### Community 137 - "Marcadores temporales (`assets/placeholder/`)"
+Cohesion: 0.50
+Nodes (3): `dragon.svg` — dragón marcador (estados vacíos, error y carga), Marcadores temporales (`assets/placeholder/`), Reglas de esta carpeta (SPEC §12)
+
 ## Ambiguous Edges - Review These
 - `Tipo and Portal Advanced Filter Dropdowns` → `SFW Content Safety Toggle Badge`  [AMBIGUOUS]
   design/stitch/biblioteca_tesoros/screen.png · relation: conceptually_related_to
@@ -450,23 +566,23 @@ Nodes (3): Package installation flow (SPEC §7.1), Repository index.json format,
   design/stitch/fuentes_portales/screen.png · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **117 isolated node(s):** `@noble/hashes`, `@ryuunest/ui-tokens`, `fflate`, `htmlparser2`, `react-native-svg` (+112 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 546 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **40 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **126 isolated node(s):** `@expo/metro-runtime`, `@noble/hashes`, `@ryuunest/test-site`, `@ryuunest/ui-tokens`, `fflate` (+121 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 707 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **48 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `ModuleError` connect `Module Error Mapping` to `Clock and Declarative Contract Tests`, `HTML Parsing Helpers`, `Module Host Runtime`, `Host and Manifest Types`, `Manifest Validator Test Doubles`, `Hex and Archive Utilities`, `Module Registry`, `Host HTTP Layer`, `Package Installer`, `Core Error Codes`, `Install Flow Orchestration`, `Runtime Selection Tests`, `Declarative Runtime Types`, `Declarative Field Transforms`, `Memory Settings and Domain Guard`?**
-  _High betweenness centrality (0.026) - this node is a cross-community bridge._
-- **What connects `@noble/hashes`, `@ryuunest/ui-tokens`, `fflate` to the rest of the system?**
-  _117 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Clock and Declarative Contract Tests` be split into smaller, more focused modules?**
-  _Cohesion score 0.056790123456790124 - nodes in this community are weakly interconnected._
-- **Why does `ModuleHost` connect `Memory Settings and Domain Guard` to `Clock and Declarative Contract Tests`, `HTML Parsing Helpers`, `Calibration PNG Generator`, `Module Host Runtime`, `Host and Manifest Types`, `Manifest Validator Test Doubles`, `Runtime Selection Tests`, `Declarative Runtime Types`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
-- **Should `FoxMangas and Luscious Scrapers` be split into smaller, more focused modules?**
-  _Cohesion score 0.05310734463276836 - nodes in this community are weakly interconnected._
+- **Why does `ModuleError` connect `Package Installer` to `SeriesPrefs.ts`, `DeclarativeRuntime`, `Repository Index Format`, `Module Host Runtime`, `install.e2e.test.ts`, `Hex and Archive Utilities`, `Module Registry`, `Host HTTP Layer`, `Core Error Codes`, `types.ts`, `runtimeSelection.test.ts`, `test-site/src/index.ts`, `Declarative Runtime Types`, `Declarative Field Transforms`, `FixedClock`?**
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+- **What connects `@expo/metro-runtime`, `@noble/hashes`, `@ryuunest/test-site` to the rest of the system?**
+  _126 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `sites.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.1349206349206349 - nodes in this community are weakly interconnected._
+- **Why does `react-native` connect `ErrorState.tsx` to `App.tsx`, `GalleryScreen.tsx`, `shellStyles.ts`, `ChapterRow.tsx`, `Chip.tsx`, `fieldStyles.ts`, `Image Budget Panel`, `App Test Dependencies`, `buttonStyles.ts`?**
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+- **Should `Repository Index Format` be split into smaller, more focused modules?**
+  _Cohesion score 0.10519480519480519 - nodes in this community are weakly interconnected._
 
 ### Low-confidence Hints
 _AMBIGUOUS edges — the extractor was unsure. Verify before acting on these._
