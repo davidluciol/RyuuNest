@@ -20,21 +20,24 @@
 
 ## Fase 6 — Progreso y lecturas
 
-### T25 + T26 — una sola sesión (mismo patrón) `[BE · Baja · N2]`
+### T25 + T26 — una sola sesión (mismo patrón) `[BE · Baja · N2]` ✅
 > Hacer T25 y T26 juntas (~4 archivos, un commit por tarea). Si el test de concurrencia de T25 falla 2 veces → «modelo con poca potencia cambiar.»
 
-#### T25 Progreso atómico y reanudación
+#### T25 Progreso atómico y reanudación ✅
 Dep: T21 · S · `core/src/progress/ProgressStore.ts` (+test)
-- [ ] Guardar/leer `(chapter_id, release_id, page_index, page_total)` por serie (SPEC §3.6, RF-20/31)
-- [ ] Cerrar/reabrir (simulado) devuelve la misma página; `updated_at` cambia en cada escritura
-- [ ] Escrituras concurrentes de la misma serie no corrompen el registro
+- [x] Guardar/leer `(chapter_id, release_id, page_index, page_total)` por serie (SPEC §3.6, RF-20/31)
+- [x] Cerrar/reabrir (simulado) devuelve la misma página; `updated_at` cambia en cada escritura
+- [x] Escrituras concurrentes de la misma serie no corrompen el registro
 - Debounce y «al salir» son de la UI. Verif: `pnpm --filter @ryuunest/core test`
+- **Hecho (2026-10-20):** `ProgressStore` (`get`, `save`) con **una sola sentencia `INSERT … ON CONFLICT`** (la fila nunca pasa por un estado intermedio: 30 escrituras simultáneas dejan una fila coherente, probado); título del capítulo y versión de publicación opcionales; páginas inválidas (negativas, no enteras) se rechazan con `ModuleError` sin escribir. 10 tests.
 
-#### T26 `chapter_read`
+#### T26 `chapter_read` ✅
 Dep: T21 · S · `core/src/progress/ChapterReadStore.ts` (+test)
-- [ ] Marcar/desmarcar por `(module_id, series_id, chapter_id)` (RF-32); al terminar el capítulo se marca solo
-- [ ] La consulta devuelve el conjunto de leídos de una serie (sin contadores: RF-42 es v2)
+- [x] Marcar/desmarcar por `(module_id, series_id, chapter_id)` (RF-32); al terminar el capítulo se marca solo
+- [x] La consulta devuelve el conjunto de leídos de una serie (sin contadores: RF-42 es v2)
 - Verif: `pnpm --filter @ryuunest/core test`
+- **Hecho (2026-10-20):** `ChapterReadStore` (`markRead`, `unmarkRead`, `isRead`, `readIn` → `Set`). El marcado automático lo dispara `ProgressStore.save`: con un `ChapterReadMarker` **inyectado**, guardar la **última página** (`page_index >= page_total - 1`, base 0 — decisión **P-61**) marca el capítulo; sin marcador, el núcleo sigue headless. 12 tests.
+- **Fuera del alcance (no hecho):** borrar el progreso/leídos al quitar una serie (no está en los criterios; el esquema tampoco lo exige) y el porcentaje de RF-41 (lo calcula la pantalla, F13/F18).
 
 ### T27 Máquina de estados del lector (headless) `[BE · Intermedia · N3]`
 Dep: T25 · M · `core/src/reader/ReaderState.ts` (+test)
