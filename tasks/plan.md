@@ -430,7 +430,7 @@ datos de ejemplo → estados de carga/vacío/error → verificación con Playwri
 - [x] F07 Componentes base 2: tarjeta de portada, fila de capítulo, filas de ajustes, cabecera, navegación, hojas/diálogos
 - [x] F08 Estados vacíos y de error + dragón marcador
 - [x] F09 Lint de diseño (prohíbe literales en `apps/*`) (**AC-13**)
-- [ ] F10 Internacionalización: archivo de traducciones (RF-40)
+- [x] F10 Internacionalización: archivo de traducciones (RF-40)
 
 ### ✅ Checkpoint P-A (tras F01–F10)
 - [ ] `ui-tokens` coincide con `DESIGN.md`; contraste WCAG en verde (AC-13)

@@ -1354,17 +1354,27 @@ formato local (RNF-11).
 
 **Criterios de aceptación:**
 
-- [ ] Todas las cadenas visibles viven en el archivo de traducciones.
-- [ ] Existe la estructura para añadir inglés después.
-- [ ] Los componentes de la galería ya usan claves de traducción.
+- [x] Todas las cadenas visibles viven en el archivo de traducciones. *(`apps/mobile/src/i18n/es.json` + `index.ts`; galería, estados, detalle del error, etiquetas de la barra inferior y el nombre accesible del marcador se leen con `t("…")`. Puerta `tests/i18nUsage.test.ts`: toda clave usada existe, ninguna clave queda sin usar y **ninguna cadena del catálogo aparece escrita a mano** fuera de `src/i18n/`.)*
+- [x] Existe la estructura para añadir inglés después. *(`LocaleCode`, `catalogs` por idioma, `supportedLocales`, `setLocale`; añadir inglés es rellenar un catálogo y registrarlo. Hoy el tipo y el guardia de ejecución rechazan «en», con prueba.)*
+- [x] Los componentes de la galería ya usan claves de traducción. *(Los componentes reciben texto por props y la **galería** los alimenta desde el catálogo; el registro guarda claves. Los valores de API —variante del botón, estado del capítulo, destino de la barra— siguen siendo identificadores y **no** son copy.)*
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test` (o paquete i18n) y revisión de la galería.
+- [x] `pnpm --filter @ryuunest/core test` (o paquete i18n) y revisión de la galería. *(`apps/mobile/tests/i18n.test.ts` (7 tests: claves, interpolación, fallo ruidoso, estructura de idiomas) y `tests/i18nUsage.test.ts` (3 tests). **102 tests en mobile (523 en el repo)**; lint, tipos y build en verde.)*
+- [x] Playwright sobre la galería (regla de `AGENTS.md` §12): renderiza con las cadenas del catálogo (nav, estados, detalle, capítulos), **cero dominios externos**, cero errores de consola, sin desbordamiento. Evidencia en `docs/capturasF05/galeria-f10-i18n.png`.
 
 **Dependencias:** F05.
 **Archivos probables:** `apps/mobile/src/i18n/{es.json,index.ts}`.
 **Tamaño:** S.
+
+**Hecho (2026-10-20).** `es.json` (catálogo plano por claves) e `index.ts` (`t` con
+interpolación y fallo ruidoso, `catalogs`/`supportedLocales`/`setLocale`, `formatNumber` y
+`formatDate` por localidad). La galería, los tres estados, el detalle del error, las etiquetas
+de la barra inferior (`nav.*`, destinos por id) y el nombre accesible del marcador se leen del
+catálogo; el registro guarda claves. Puertas: `i18n.test.ts` (7) e `i18nUsage.test.ts` (3).
+Playwright: renderiza desde el catálogo, cero dominios externos. **102 tests en mobile (523 en
+el repo)**. Límite deliberado: valores de API (variant «primary», estado «in-progress», destino
+«library») **no** son copy.
 
 ### 🚩 Checkpoint P-A (tras F01–F10)
 
