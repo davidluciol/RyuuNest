@@ -5,6 +5,7 @@
 > → PNG de `design/` → HTML de `design/` → `docs/IDEA.md`. Contexto: `docs/SPEC_Legacy.md`,
 > `legacyModulos/*.py`, `AGENTS.md`, `docs/MEMORY.md`.
 > Fecha: 13 de octubre de 2026 · Licencia: GPL-3.0.
+> Actualizado: 20 de octubre de 2026 (reordenación de tareas y gestión por complejidad; ver §11 y §12).
 > Complejidad, modelo y esfuerzo por tarea pendiente: `tasks/complexity.md`.
 
 ## 1. Resumen
@@ -31,7 +32,7 @@ progreso, respaldo, SDK/CLI y CI. Se ejecuta sin UI y se verifica con pruebas au
 | 2 | T04 (app de calibración) | **Se mantiene en la Parte 1.** |
 | 3 | Sitio falso de pruebas | **Paquete reutilizable** (`packages/test-site`). |
 | 4 | Límites del módulo | **Se mantienen los del SPEC §7.1** (paquete ≤ 2 MB, descomprimido ≤ 5 MB, ≤ 50 archivos). Se descarta subir a 150 MB. |
-| 5 | Segundo sitio real | **Se acepta la propuesta de §8**: segundo sitio falso de otra arquitectura + sitio real aplazado (T32). |
+| 5 | Segundo sitio real | **Se acepta la propuesta de §8**: segundo sitio falso de otra arquitectura + sitio real aplazado (T32b). |
 | 6 | Tracker de tareas | **`bd` local ahora**; migrar a GitHub Issues cuando exista el repositorio. |
 | 7 | `MEMORY.md` | **Se mueve a la raíz** en la Fase 0 (T04). |
 | 8 | Parte 2 (diseño/front-end) | **Se planifica en esta misma sesión** (ver la Parte 2 más abajo). |
@@ -89,6 +90,8 @@ técnicas que el plan necesita y que el SPEC deja abiertas:
 | P-12 | Seguimiento con **`bd` local** ahora; migrar a **GitHub Issues** cuando exista el repo | Respuesta del humano | `tasks/todo.md` como única fuente |
 | P-13 | `MEMORY.md` se mueve a la raíz en la Fase 0 | Coincide con SPEC §5.1 | Dejarlo en `docs/` |
 | P-14 | La Parte 2 (diseño/front-end) se planifica en esta misma sesión | Respuesta del humano | Esperar al cambio de modelo |
+| P-15 | Reordenación de tareas (2026-10-20): T25+T26 en una sola sesión; T29 en dos pasos (T29a tests y esquema, T29b implementación); T32 dividida en T32a (sitio falso) y T32b (ADR) | Cada pieza se asigna al modelo más barato que la resuelve; el juicio de diseño (ADR) va al modelo más fuerte | Mantener T29/T32 como tareas únicas |
+| P-16 | Gestión por complejidad y modelo en `tasks/complexity.md` (niveles N1–N5 de OpenCode Zen, regla de 2 intentos) | Controlar costo y evitar bucles de arreglo | Un solo modelo para todo |
 
 ## 4. Grafo de dependencias
 
@@ -130,23 +133,25 @@ FASE 5 — Corte vertical 4: biblioteca local
         └─ T24 Preferencias por serie (modo, release preferida) (T22)
 
 FASE 6 — Corte vertical 5: progreso y lecturas
-  T25 Progreso atómico + reanudación (con page_total) (T21)
+  T25 Progreso atómico + reanudación (con page_total) (T21)   ⇄ T25+T26: una sola sesión
    ├─ T26 chapter_read (marcar al terminar) (T21)
    └─ T27 Máquina de estados del lector (headless) (T25)
 
 FASE 7 — Corte vertical 6: respaldo
   T28 Exportar respaldo JSON (T22, T24, T25, T26)
    └─ T29 Importar respaldo (validar/merge/replace/sugerencias) (T28)
+        [T29a tests+esquema (modelo fuerte) → T29b implementación (modelo barato)]
         └─ T30 E2E de respaldo (T29)   → AC-7
 
 FASE 8 — Módulos reales y generalidad
   T31 Port de logicTMO.py a módulo script (T19)
-   └─ T32 2.º sitio falso de arquitectura distinta + ADR congelación API 1.0 (T31)
+   └─ T32a 2.º sitio falso de arquitectura distinta (T31)
+        └─ T32b ADR congelación API 1.0 (T32a)
 
 FASE 9 — Endurecimiento
   T33 Pruebas de seguridad (zip-slip, bomba, hash, manifest, deep link) (T13)
    ├─ T34 Pruebas de resiliencia (timeout, concurrencia, rate-limit, last_error) (T08, T14)
-   └─ T35 Puertas de CI / contrato / cobertura (T02, T32)   → AC-11 (núcleo)
+   └─ T35 Puertas de CI / contrato / cobertura (T02, T32a)   → AC-11 (núcleo)
 
 FASE 10 — PARTE 2 (PENDIENTE, otro modelo)
   Fase 6a sistema de diseño · Fase 6b móvil · Fase 7 TV · Fase 8 web+extensión.
@@ -242,7 +247,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [ ] Revisión humana
 
 ### Fase 6 — Corte vertical 5: progreso
-- [ ] T25 Progreso atómico y reanudación (con `page_total`)
+- [ ] T25 Progreso atómico y reanudación (con `page_total`) — una sola sesión con T26
 - [ ] T26 `chapter_read`
 - [ ] T27 Máquina de estados del lector (headless)
 
@@ -253,7 +258,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 
 ### Fase 7 — Corte vertical 6: respaldo
 - [ ] T28 Exportar respaldo JSON (incluye `pageTotal`)
-- [ ] T29 Importar respaldo
+- [ ] T29 Importar respaldo — en dos pasos: T29a tests y esquema · T29b implementación
 - [ ] T30 E2E de respaldo (**AC-7**)
 
 ### ✅ Checkpoint H (tras T28–T30)
@@ -263,9 +268,10 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 
 ### Fase 8 — Módulos reales y generalidad
 - [ ] T31 Port de `logicTMO.py` a módulo script + fixtures
-- [ ] T32 Segundo sitio falso de otra arquitectura + ADR de congelación de API 1.0
+- [ ] T32a Segundo sitio falso de otra arquitectura (JSON + cursor)
+- [ ] T32b ADR de congelación de API 1.0
 
-### ✅ Checkpoint I (tras T31–T32)
+### ✅ Checkpoint I (tras T31–T32b)
 - [ ] `logicTMO` busca, lista capítulos y entrega imágenes desde un sitio real
 - [ ] El contrato pasa con dos arquitecturas de sitio distintas
 - [ ] La API 1.0 se considera congelable
@@ -291,9 +297,9 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 |---|---|---|
 | Sin experiencia previa en RN/Expo | Medio | El núcleo es TS puro (Parte 1); la Parte 2 es donde más ayuda hace falta |
 | MiBox 4 (2 GB) hace OOM en el lector | Alto | Presupuesto medido en Fase 0 (T05); políticas de memoria en el estado del lector (T27) |
-| `htmlparser2 + css-select` no cubre todos los selectores reales | Medio | `test-site` (T10) + dos arquitecturas distintas (T32) + sitio real (T31) |
+| `htmlparser2 + css-select` no cubre todos los selectores reales | Medio | `test-site` (T10) + dos arquitecturas distintas (T32a) + sitio real (T31) |
 | `@noble/hashes` / `fflate` en RN | Bajo | JS puro; smoke test en la app de calibración (T05) |
-| Contrato ajustado a un solo sitio | Alto | Segundo sitio falso de otra arquitectura (T32) + sitio real (T31) antes de congelar |
+| Contrato ajustado a un solo sitio | Alto | Segundo sitio falso de otra arquitectura (T32a) + sitio real (T31) antes de congelar |
 | Instalación insegura (zip-slip, bomba) | Alto | Límites del SPEC §7.1 y pruebas explícitas (T13, T33) |
 | Driver SQL distinto entre Node y RN | Medio | `SqlDriver` fino + pruebas en ambos (T21) |
 | Diseño exportado como HTML web (riesgo del SPEC §17.1) | Medio | Fase 6a/6b aplican 11.1–11.4 y el lint de diseño; fuera del alcance de esta Parte 1 |
@@ -310,7 +316,7 @@ Como aún no hay un segundo sitio real, y congelar la API 1.0 con un solo sitio 
    sin depender de un sitio real ni de anti-bot.
 2. **Aplazar el segundo sitio real, sin bloquear.** El sitio real se busca antes de **congelar
    publicamente** la API 1.0 y vive en el repo aparte de módulos (SPEC §15), no en el
-   principal. T32 deja el ADR con lo aprendido y la lista de candidatos.
+   principal. T32b deja el ADR con lo aprendido y la lista de candidatos.
 3. **Spike de candidatos (opcional, sin comprometerlos).** Evaluar 2–3 sitios con licencia/
    condiciones compatibles para ver si son viables (selectores, redirecciones, anti-bot) y
    anotarlos en `MEMORY.md`. Si ninguno es viable, la prueba de generalidad (punto 1) ya
@@ -338,7 +344,31 @@ Pendientes:
 - [x] No se sobrescribió ningún plan previo (no existía `tasks/`).
 - [x] Ninguna tarea toca más de ~5 archivos (tamaño S/M).
 - [x] Hay checkpoints entre fases.
+- [x] Cada tarea pendiente tiene complejidad, nivel de modelo y límites en `tasks/complexity.md`.
 - [ ] El humano ha revisado y aprobado el plan. ⬅ **pendiente**
+
+## 11. Gestión por complejidad y modelo
+
+Detalle en `tasks/complexity.md` (niveles N1–N5 de OpenCode Zen, tabla por tarea). Resumen:
+
+- Una tarea por sesión (T25+T26 son la excepción, por compartir patrón), máx. ~5 archivos.
+- **Regla de 2 intentos:** ante el mismo error, tras 2 intentos fallidos el modelo se detiene y escribe «modelo con poca potencia cambiar.» con un resumen para el siguiente nivel.
+- Escalada de uno en uno (N1→N5); si N5 falla 2 veces, se pregunta al humano.
+- Flujos que ahorran tokens: plano de pantalla (FB1), tests primero (T29a/T29b) y la división de T32 y F14.
+- Los pasos de dispositivo (POCO, Galaxy, MiBox 4) son del humano (🧍); el agente no inventa mediciones.
+
+## 12. Registro de cambios (2026-10-20)
+
+| Cambio | Motivo |
+|---|---|
+| T32 → T32a (sitio falso) + T32b (ADR) | El ADR es juicio de diseño: modelo N5; los fixtures, N3 |
+| T29 → T29a (tests y esquema) + T29b (implementación) | El modelo fuerte define; el barato implementa |
+| T25 + T26 en una sola sesión | Mismo patrón y archivos |
+| F12 después de F16 | F12 depende de F16 |
+| F14 → F14a + F14b | No cabe en una sesión |
+| Nueva FB1 (plano de pantalla) | Reduce nivel de modelo y tokens en F12, F15, F17, F20, F21 y F25 |
+| FA1 añadida al índice de la Parte 2 | Ya existía en `todo.md` y faltaba aquí |
+| `tasks/todo.md` pasa a contener solo pendientes; el anterior se archiva como `tasks/todo.archive.md` | Menos tokens por sesión |
 
 ---
 
@@ -377,6 +407,8 @@ contador de no leídos, campana, perfiles, marcador en el lector, etc.
 | P2-9 | Verificación visual: **galería compilada para web con Playwright + capturas de dispositivo** para AC-12 | Playwright no controla la app nativa |
 | P2-10 | Confirmado: la v1 trae **solo Dragon Night** | Solo ese tema tiene las 7 pantallas |
 | P2-11 | Pantallas sin diseño: se **deciden más adelante** (al llegar a ellas) | Respuesta del humano |
+| P2-12 | **Plano de pantalla** (`docs/screen-blueprint.md`, tarea FB1): tras F11 y F13 un modelo fuerte documenta el patrón en una página; F12, F15, F17, F20, F21 y F25 lo leen | Menos tokens y consistencia; permite usar modelos más baratos |
+| P2-13 | **F14 se divide** en F14a (cuadrícula, búsqueda y filtros) y F14b (carpetas y orden); **F12 va después de F16** | F14 no cabe en una sesión; F12 depende de F16 |
 
 ## P2.3 Grafo de dependencias
 
@@ -392,11 +424,11 @@ FASE 6a — Sistema de diseño (puede empezar tras T02)
         ▼
 FASE 6b — Interfaz móvil (necesita el núcleo)
   F11 shell/navegación+cabecera
-   ├─ F12 primer uso
-   ├─ F13 Inicio
-   ├─ F14 Biblioteca
+   ├─ F13 Inicio ─ FB1 plano de pantalla (docs/screen-blueprint.md)
+   │                 └─ F15, F17, F20, F21 (y F25 web) leen el plano
+   ├─ F14a Biblioteca: cuadrícula+filtros ─ F14b carpetas+orden
    ├─ F15 Descubrir
-   ├─ F16 Fuentes
+   ├─ F16 Fuentes ─ F12 primer uso (después de F16)
    ├─ F17 Serie
    ├─ F18 Lector (1) ─ F19 Lector (2)
    ├─ F20 Ajustes
@@ -429,6 +461,7 @@ datos de ejemplo → estados de carga/vacío/error → verificación con Playwri
 - [x] F06 Componentes base 1: botones, campos, casillas/radios, chips, insignias
 - [x] F07 Componentes base 2: tarjeta de portada, fila de capítulo, filas de ajustes, cabecera, navegación, hojas/diálogos
 - [x] F08 Estados vacíos y de error + dragón marcador
+- [ ] FA1 Arte final del dragón (subtarea independiente; 🧍 artista; antes de la v1.0 pública)
 - [x] F09 Lint de diseño (prohíbe literales en `apps/*`) (**AC-13**)
 - [x] F10 Internacionalización: archivo de traducciones (RF-40)
 
@@ -439,11 +472,13 @@ datos de ejemplo → estados de carga/vacío/error → verificación con Playwri
 
 ### Fase 6b — Interfaz móvil
 - [ ] F11 Shell: navegación de 5 destinos + cabecera única
-- [ ] F12 Primer uso (3 pasos) + estado vacío inicial
 - [ ] F13 Inicio (Continuar, Recientes, Tesoros, Descubrir) — RF-14, RF-33, RF-41
-- [ ] F14 Biblioteca (búsqueda, chips, filtros, carpetas, orden) — RF-26 a RF-30
+- [ ] FB1 Plano de pantalla (`docs/screen-blueprint.md`, 1 página; modelo fuerte)
+- [ ] F14a Biblioteca: cuadrícula, búsqueda y filtros — RF-26 a RF-30
+- [ ] F14b Biblioteca: carpetas y orden
 - [ ] F15 Descubrir (selector de módulo, popular/latest, búsqueda, error de módulo) — RF-9 a RF-12
 - [ ] F16 Fuentes (repos y módulos, confirmación normal y reforzada, permisos, NSFW) — RF-1 a RF-8
+- [ ] F12 Primer uso (3 pasos) + estado vacío inicial (después de F16)
 - [ ] F17 Serie (detalle: portada, metadatos, continuar, capítulos, releases, favorito) — RF-13 a RF-17
 - [ ] F18 Lector 1 (modos, zonas táctiles, controles, progreso, siguiente capítulo)
 - [ ] F19 Lector 2 (zoom, pantalla encendida, errores/reintento, precarga)
