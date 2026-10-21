@@ -5,6 +5,7 @@
 > → PNG de `design/` → HTML de `design/` → `docs/IDEA.md`. Contexto: `docs/SPEC_Legacy.md`,
 > `legacyModulos/*.py`, `AGENTS.md`, `docs/MEMORY.md`.
 > Fecha: 13 de octubre de 2026 · Licencia: GPL-3.0.
+> Complejidad, modelo y esfuerzo por tarea pendiente: `tasks/complexity.md`.
 
 ## 1. Resumen
 

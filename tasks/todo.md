@@ -6,6 +6,8 @@
 > `pnpm -r build` · `pnpm lint` · focalizada: `pnpm --filter @ryuunest/core test`.
 > Estados: `[ ]` pendiente · `[x]` hecho · `[-]` descartado/bloqueado.
 > Tracker: pendiente elegir GitHub Issues o `bd` (ver pregunta abierta 2 de `plan.md`).
+> **Nivel de complejidad, modelo recomendado y esfuerzo** de cada tarea pendiente:
+> `tasks/complexity.md`.
 
 ## Fase 0 — Fundación
 
