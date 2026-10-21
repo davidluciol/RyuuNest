@@ -1225,13 +1225,13 @@ chip de filtro (36 px + `hitSlop`), insignia de tipo/estado (24 px, **neutra** s
 
 **Criterios de aceptación:**
 
-- [x] Un botón primario por pantalla; relleno `accent`/`progress` con texto `bg`. *(Inversión fijada en `buttonStyles`; contraste por la puerta AA de ui-tokens.)*
-- [x] Chips e insignias con `hitSlop` para llegar a 48 dp (RNF-7). *(Chip 36→48, casilla/radio 20→48; la insignia no es interactiva.)*
-- [x] Todos los estados en la galería; animaciones solo `transform`/`opacity` (Regla 4). *(Los 5 componentes con variantes/estados; el presionado usa opacidad/capa.)*
+- [x] Un botón primario por pantalla; relleno `accent`/`progress` con texto `bg`. _(Inversión fijada en `buttonStyles`; contraste por la puerta AA de ui-tokens.)_
+- [x] Chips e insignias con `hitSlop` para llegar a 48 dp (RNF-7). _(Chip 36→48, casilla/radio 20→48; la insignia no es interactiva.)_
+- [x] Todos los estados en la galería; animaciones solo `transform`/`opacity` (Regla 4). _(Los 5 componentes con variantes/estados; el presionado usa opacidad/capa.)_
 
 **Verificación:**
 
-- [x] Playwright sobre la galería; comprobación de áreas táctiles y contraste. *(Los 5 componentes renderizan; cero dominios externos; evidencia en `docs/capturasF05/`.)*
+- [x] Playwright sobre la galería; comprobación de áreas táctiles y contraste. **(Los 5 componentes renderizan; cero dominios externos; evidencia en `docs/capturasF05/`.)**
 
 **Dependencias:** F05.
 **Archivos probables:** `apps/mobile/src/components/{Button,TextField,Checkbox,Chip,Badge}.tsx`.
@@ -1255,13 +1255,13 @@ inferior de 5 destinos / riel, hojas y diálogos (esquinas superiores 24 px).
 
 **Criterios de aceptación:**
 
-- [x] La fila de capítulo muestra máximo dos señales por estado (V8). *(Leído atenuado + ✓ sin tachar; en curso marcador + porcentaje.)*
-- [x] La cabecera y la barra inferior son las mismas en todas las pantallas (T1, V5). *(Componentes `Header`/`BottomNav` únicos, 5 destinos T1.)*
-- [x] Sin sombras; profundidad por niveles de superficie (RNF-12). *(Cabecera/barra/hoja `elevated` con `elevation: 0` y `shadowOpacity: 0`.)*
+- [x] La fila de capítulo muestra máximo dos señales por estado (V8). _(Leído atenuado + ✓ sin tachar; en curso marcador + porcentaje.)_
+- [x] La cabecera y la barra inferior son las mismas en todas las pantallas (T1, V5). _(Componentes `Header`/`BottomNav` únicos, 5 destinos T1.)_
+- [x] Sin sombras; profundidad por niveles de superficie (RNF-12). _(Cabecera/barra/hoja `elevated` con `elevation: 0` y `shadowOpacity: 0`.)_
 
 **Verificación:**
 
-- [x] Playwright sobre la galería; comprobación de estados de capítulo y barra de progreso. *(Renderizan los 6 componentes; cero dominios externos; evidencia en `docs/capturasF05/`.)*
+- [x] Playwright sobre la galería; comprobación de estados de capítulo y barra de progreso. _(Renderizan los 6 componentes; cero dominios externos; evidencia en `docs/capturasF05/`.)_
 
 **Dependencias:** F06.
 **Archivos probables:** `apps/mobile/src/components/{CoverCard,ChapterRow,Header,BottomNav,Sheet,Dialog}.tsx`.
@@ -1284,13 +1284,13 @@ acción siguiente (SPEC §11.12). Sin tarjetas-mascota (T4).
 
 **Criterios de aceptación:**
 
-- [x] Cada estado lleva dragón (según §11.12/§11.5), título en Manrope y una acción. *(Dragón mediano 96 en vacío/error, pequeño 48 en carga breve - tokens `markers` de `ui-tokens`, P-57. La acción de la carga breve no aplica: §11.12 reserva la acción siguiente para vacío y error.)*
-- [x] El error de módulo incluye detalle técnico desplegable (módulo, URL, código, selector). *(`detailLines` en `stateStyles.ts`, probado; desplegable «Ver detalle» verificado en la galería.)*
-- [x] El dragón es un marcador local (sin obras reales ni texto). *(Silueta SVG original del proyecto en `assets/placeholder/dragon.svg`, registrada como temporal en su `README.md` y en `ASSETS.md`; sin texto, sin URLs y sin obras de terceros — puerta `tests/placeholder.test.ts`.)*
+- [x] Cada estado lleva dragón (según §11.12/§11.5), título en Manrope y una acción. _(Dragón mediano 96 en vacío/error, pequeño 48 en carga breve - tokens `markers` de `ui-tokens`, P-57. La acción de la carga breve no aplica: §11.12 reserva la acción siguiente para vacío y error.)_
+- [x] El error de módulo incluye detalle técnico desplegable (módulo, URL, código, selector). _(`detailLines` en `stateStyles.ts`, probado; desplegable «Ver detalle» verificado en la galería.)_
+- [x] El dragón es un marcador local (sin obras reales ni texto). _(Silueta SVG original del proyecto en `assets/placeholder/dragon.svg`, registrada como temporal en su `README.md` y en `ASSETS.md`; sin texto, sin URLs y sin obras de terceros — puerta `tests/placeholder.test.ts`.)_
 
 **Verificación:**
 
-- [x] Playwright sobre la galería; revisar la lista de 20 s. *(Los 3 estados renderizan; solo peticiones a `localhost` (fuentes embebidas en el bundle); cero errores de consola; sin desbordamiento horizontal; áreas táctiles ≥ 48; el desplegable muestra las 4 líneas técnicas. Evidencia en `docs/capturasF05/galeria-f08-vacio.png` y `galeria-f08-error.png`.)*
+- [x] Playwright sobre la galería; revisar la lista de 20 s. _(Los 3 estados renderizan; solo peticiones a `localhost` (fuentes embebidas en el bundle); cero errores de consola; sin desbordamiento horizontal; áreas táctiles ≥ 48; el desplegable muestra las 4 líneas técnicas. Evidencia en `docs/capturasF05/galeria-f08-vacio.png` y `galeria-f08-error.png`.)_
 
 **Dependencias:** F07.
 **Archivos probables:** `apps/mobile/src/components/{EmptyState,ErrorState,LoadingState}.tsx`,
@@ -1332,14 +1332,14 @@ radio o espacio en `apps/*` (SPEC §11.11, AC-13). Fuerza a usar tokens.
 
 **Criterios de aceptación:**
 
-- [x] El lint falla ante un `#RRGGBB` o un `padding: 13` literal en `apps/*`. *(Regla `ryuunest/no-design-literals` (`tools/eslint-plugin-ryuunest/`), aplicada solo al código de `src` en `apps/`; probada con `RuleTester` (15 casos) y con la configuración real vía `ESLint` (3 tests de integración, incluida la prueba de que un literal de prueba hace fallar el lint).)*
-- [x] La regla corre en CI junto al resto. *(`pnpm lint` la aplica; el paquete del plugin entra en `pnpm -r test`, que el CI ejecuta.)*
-- [x] Excepciones documentadas (si las hay) con comentario. *(`ImageCapPanel.tsx`: panel de calibración del tope de imágenes (T05/P-45), de un solo uso y fuera de la interfaz; `eslint-disable` con motivo. Valores estructurales permitidos: `0`, `1`, `transparent`.)*
+- [x] El lint falla ante un `#RRGGBB` o un `padding: 13` literal en `apps/*`. _(Regla `ryuunest/no-design-literals` (`tools/eslint-plugin-ryuunest/`), aplicada solo al código de `src` en `apps/`; probada con `RuleTester` (15 casos) y con la configuración real vía `ESLint` (3 tests de integración, incluida la prueba de que un literal de prueba hace fallar el lint).)_
+- [x] La regla corre en CI junto al resto. _(`pnpm lint` la aplica; el paquete del plugin entra en `pnpm -r test`, que el CI ejecuta.)_
+- [x] Excepciones documentadas (si las hay) con comentario. _(`ImageCapPanel.tsx`: panel de calibración del tope de imágenes (T05/P-45), de un solo uso y fuera de la interfaz; `eslint-disable` con motivo. Valores estructurales permitidos: `0`, `1`, `transparent`.)_
 
 **Verificación:**
 
-- [x] `pnpm lint` *(limpio sobre todo el repo, con la regla activa)*
-- [x] Manual: introducir un literal y comprobar que falla. *(Automatizado: `tests/config-integration.test.ts` lintea un literal contra la configuración real y exige el error; sensibilidad comprobada rompiendo la regla.)*
+- [x] `pnpm lint` _(limpio sobre todo el repo, con la regla activa)_
+- [x] Manual: introducir un literal y comprobar que falla. _(Automatizado: `tests/config-integration.test.ts` lintea un literal contra la configuración real y exige el error; sensibilidad comprobada rompiendo la regla.)_
 - [x] Playwright sobre la galería (regla de `AGENTS.md` §12): renderiza, cero dominios externos, cero errores de consola; el refactor a `withAlpha` conserva el color calculado `rgba(27, 34, 48, 0.95)` de la barra inferior. Evidencia en `docs/capturasF05/galeria-f09-lint.png`.
 
 **Dependencias:** T02, F01.
@@ -1354,17 +1354,27 @@ formato local (RNF-11).
 
 **Criterios de aceptación:**
 
-- [ ] Todas las cadenas visibles viven en el archivo de traducciones.
-- [ ] Existe la estructura para añadir inglés después.
-- [ ] Los componentes de la galería ya usan claves de traducción.
+- [x] Todas las cadenas visibles viven en el archivo de traducciones. *(`apps/mobile/src/i18n/es.json` + `index.ts`; galería, estados, detalle del error, etiquetas de la barra inferior y el nombre accesible del marcador se leen con `t("…")`. Puerta `tests/i18nUsage.test.ts`: toda clave usada existe, ninguna clave queda sin usar y **ninguna cadena del catálogo aparece escrita a mano** fuera de `src/i18n/`.)*
+- [x] Existe la estructura para añadir inglés después. *(`LocaleCode`, `catalogs` por idioma, `supportedLocales`, `setLocale`; añadir inglés es rellenar un catálogo y registrarlo. Hoy el tipo y el guardia de ejecución rechazan «en», con prueba.)*
+- [x] Los componentes de la galería ya usan claves de traducción. *(Los componentes reciben texto por props y la **galería** los alimenta desde el catálogo; el registro guarda claves. Los valores de API —variante del botón, estado del capítulo, destino de la barra— siguen siendo identificadores y **no** son copy.)*
 
 **Verificación:**
 
-- [ ] `pnpm --filter @ryuunest/core test` (o paquete i18n) y revisión de la galería.
+- [x] `pnpm --filter @ryuunest/core test` (o paquete i18n) y revisión de la galería. *(`apps/mobile/tests/i18n.test.ts` (7 tests: claves, interpolación, fallo ruidoso, estructura de idiomas) y `tests/i18nUsage.test.ts` (3 tests). **102 tests en mobile (523 en el repo)**; lint, tipos y build en verde.)*
+- [x] Playwright sobre la galería (regla de `AGENTS.md` §12): renderiza con las cadenas del catálogo (nav, estados, detalle, capítulos), **cero dominios externos**, cero errores de consola, sin desbordamiento. Evidencia en `docs/capturasF05/galeria-f10-i18n.png`.
 
 **Dependencias:** F05.
 **Archivos probables:** `apps/mobile/src/i18n/{es.json,index.ts}`.
 **Tamaño:** S.
+
+**Hecho (2026-10-20).** `es.json` (catálogo plano por claves) e `index.ts` (`t` con
+interpolación y fallo ruidoso, `catalogs`/`supportedLocales`/`setLocale`, `formatNumber` y
+`formatDate` por localidad). La galería, los tres estados, el detalle del error, las etiquetas
+de la barra inferior (`nav.*`, destinos por id) y el nombre accesible del marcador se leen del
+catálogo; el registro guarda claves. Puertas: `i18n.test.ts` (7) e `i18nUsage.test.ts` (3).
+Playwright: renderiza desde el catálogo, cero dominios externos. **102 tests en mobile (523 en
+el repo)**. Límite deliberado: valores de API (variant «primary», estado «in-progress», destino
+«library») **no** son copy.
 
 ### 🚩 Checkpoint P-A (tras F01–F10)
 

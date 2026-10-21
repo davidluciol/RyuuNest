@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BookOpen, Compass, Home, Library, Settings, type LucideIcon } from "lucide-react-native";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
+import { t } from "../i18n";
 import {
   BOTTOM_NAV_DESTINATIONS,
   type BottomNavDestination,
@@ -13,14 +14,26 @@ import {
  * F07 — barra inferior de 5 destinos (T1): Inicio, Biblioteca, Descubrir,
  * Fuentes, Ajustes; la misma en todas las pantallas. `elevated` al 95 %, borde
  * superior `border`, **sin sombra** (RNF-12). Destino activo en `accent`.
+ *
+ * F10: los destinos son identificadores de API y sus etiquetas salen del
+ * catálogo (`nav.*`), escritas con claves literales para que la puerta de i18n
+ * las vea.
  */
 
 const DESTINATION_ICONS: Record<BottomNavDestination, LucideIcon> = {
-  Inicio: Home,
-  Biblioteca: Library,
-  Descubrir: Compass,
-  Fuentes: BookOpen,
-  Ajustes: Settings,
+  home: Home,
+  library: Library,
+  discover: Compass,
+  sources: BookOpen,
+  settings: Settings,
+};
+
+const DESTINATION_LABELS: Record<BottomNavDestination, string> = {
+  home: t("nav.home"),
+  library: t("nav.library"),
+  discover: t("nav.discover"),
+  sources: t("nav.sources"),
+  settings: t("nav.settings"),
 };
 
 export interface BottomNavProps {
@@ -45,7 +58,9 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
             style={styles.item}
           >
             <Icon size={24} color={colors.icon} />
-            <Text style={[styles.label, { color: colors.text }]}>{destination}</Text>
+            <Text style={[styles.label, { color: colors.text }]}>
+              {DESTINATION_LABELS[destination]}
+            </Text>
           </Pressable>
         );
       })}

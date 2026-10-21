@@ -9,16 +9,18 @@ import {
 
 /**
  * F05 — registro de la galería de componentes (pantalla solo de desarrollo,
- * Regla 3 de `AGENTS.md`): qué secciones hay y qué muestra cada una. Los
- * componentes reutilizables se registran aquí a medida que existan (F06+);
- * de momento la galería expone los tokens aplicados y los datos de ejemplo
- * únicos (D1–D5, vía `@ryuunest/test-site`).
+ * Regla 3 de `AGENTS.md`): qué secciones hay y qué muestra cada una.
+ *
+ * F10: los títulos y los nombres de los elementos son **claves de traducción**
+ * (RF-40); la galería los resuelve con `t()`. Los valores de API (los 6 estados
+ * de la Regla 3, las variantes del botón, los destinos) **no son copy** y siguen
+ * siendo identificadores.
  */
 
 /** Tipos de sección de la galería. */
 export type GalleryKind = "tokens" | "componentes";
 
-/** Estados que la Regla 3 exige mostrar de cada componente. */
+/** Estados que la Regla 3 exige mostrar de cada componente (vocabulario de API). */
 export const COMPONENT_STATES = [
   "normal",
   "presionado",
@@ -32,10 +34,10 @@ export const COMPONENT_STATES = [
 export interface GalleryEntry {
   /** Identificador estable, en minúsculas. */
   readonly id: string;
-  /** Título visible de la sección. */
+  /** Clave de traducción del título visible de la sección (F10). */
   readonly title: string;
   readonly kind: GalleryKind;
-  /** Nombres de los elementos que muestra la sección. */
+  /** Claves de traducción de los elementos que muestra la sección (F10). */
   readonly items: readonly string[];
   /** Estados listados (solo secciones de componentes). */
   readonly states?: readonly string[];
@@ -50,65 +52,69 @@ const typeNames = Object.keys(typography);
 export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
   {
     id: "colores",
-    title: "Colores",
+    title: "gallery.section.colors",
     kind: "tokens",
     items: colorNames,
   },
   {
     id: "tipografia",
-    title: "Tipografía",
+    title: "gallery.section.typography",
     kind: "tokens",
     items: typeNames,
   },
   {
     id: "espaciado",
-    title: "Espaciado",
+    title: "gallery.section.spacing",
     kind: "tokens",
     items: spacingNames,
   },
   {
     id: "radios",
-    title: "Radios",
+    title: "gallery.section.radii",
     kind: "tokens",
     items: radiiNames,
   },
   {
     id: "layout",
-    title: "Layout por ancho",
+    title: "gallery.section.layout",
     kind: "tokens",
-    items: ["móvil < 600", "tablet 600–1024", "escritorio > 1024"],
+    items: [
+      "gallery.layout.mobile",
+      "gallery.layout.tablet",
+      "gallery.layout.desktop",
+    ],
   },
   {
     id: "iconos",
-    title: "Iconos",
+    title: "gallery.section.icons",
     kind: "tokens",
-    items: ["Lucide vía src/icons.ts"],
+    items: ["gallery.section.iconsSource"],
   },
   {
     id: "portadas",
-    title: "Portadas de ejemplo",
+    title: "gallery.section.covers",
     kind: "tokens",
     items: FIXTURE_SERIES.map((series) => series.id),
   },
   {
     id: "componentes",
-    title: "Componentes",
+    title: "gallery.section.components",
     kind: "componentes",
     items: [
-      "botón",
-      "campo de texto",
-      "casilla y radio",
-      "chip de filtro",
-      "insignia",
-      "tarjeta de portada",
-      "fila de capítulo",
-      "cabecera",
-      "barra inferior",
-      "fila de ajustes",
-      "hoja y diálogo",
-      "estado vacío",
-      "error de módulo",
-      "carga breve",
+      "gallery.component.button",
+      "gallery.component.textField",
+      "gallery.component.checkbox",
+      "gallery.component.chip",
+      "gallery.component.badge",
+      "gallery.component.coverCard",
+      "gallery.component.chapterRow",
+      "gallery.component.header",
+      "gallery.component.bottomNav",
+      "gallery.component.settingsRow",
+      "gallery.component.sheet",
+      "gallery.component.emptyState",
+      "gallery.component.errorState",
+      "gallery.component.loadingState",
     ],
     states: COMPONENT_STATES,
   },

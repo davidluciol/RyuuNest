@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { t } from "../../src/i18n";
 import {
   BOTTOM_NAV_DESTINATIONS,
   HEADER_HEIGHT,
@@ -29,8 +30,16 @@ describe("headerStyle (cabecera única, V5)", () => {
 });
 
 describe("barra inferior de 5 destinos (T1)", () => {
-  it("exactamente 5 destinos: Inicio, Biblioteca, Descubrir, Fuentes, Ajustes", () => {
+  it("exactamente 5 destinos, identificados por id y etiquetados por el catálogo (F10)", () => {
     expect(BOTTOM_NAV_DESTINATIONS).toEqual([
+      "home",
+      "library",
+      "discover",
+      "sources",
+      "settings",
+    ]);
+    // Las etiquetas visibles viven en el catálogo, no en el componente.
+    expect(BOTTOM_NAV_DESTINATIONS.map((id) => t(`nav.${id}`))).toEqual([
       "Inicio",
       "Biblioteca",
       "Descubrir",

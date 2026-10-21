@@ -46,9 +46,9 @@ describe("registro de la galería (F05)", () => {
 
   it("F08: la sección de componentes lista los tres estados (vacío, error, carga)", () => {
     const components = galleryEntries.find((entry) => entry.id === "componentes");
-    expect(components?.items).toContain("estado vacío");
-    expect(components?.items).toContain("error de módulo");
-    expect(components?.items).toContain("carga breve");
+    expect(components?.items).toContain("gallery.component.emptyState");
+    expect(components?.items).toContain("gallery.component.errorState");
+    expect(components?.items).toContain("gallery.component.loadingState");
   });
 
   it("los ids son únicos y la colección es de solo lectura", () => {

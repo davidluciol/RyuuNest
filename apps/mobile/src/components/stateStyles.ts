@@ -1,5 +1,7 @@
 import { markers, radii, spacing, typography, dragonNightColors, type TypeStyle } from "@ryuunest/ui-tokens";
 
+import { t } from "../i18n";
+
 /**
  * F08 — reglas de los estados vacío, error y carga (SPEC §11.12): cada estado
  * lleva el dragón marcador (pequeño en carga breve, mediano en vacío/error),
@@ -69,10 +71,12 @@ export interface ErrorDetail {
 /** Líneas del detalle desplegable: solo los campos presentes, en orden fijo. */
 export function detailLines(detail: ErrorDetail): string[] {
   const lines: string[] = [];
-  if (detail.module !== undefined) lines.push(`módulo: ${detail.module}`);
-  if (detail.url !== undefined) lines.push(`URL: ${detail.url}`);
-  if (detail.code !== undefined) lines.push(`código: ${detail.code}`);
-  if (detail.selector !== undefined) lines.push(`selector: ${detail.selector}`);
+  if (detail.module !== undefined) lines.push(t("error.detail.module", { value: detail.module }));
+  if (detail.url !== undefined) lines.push(t("error.detail.url", { value: detail.url }));
+  if (detail.code !== undefined) lines.push(t("error.detail.code", { value: detail.code }));
+  if (detail.selector !== undefined) {
+    lines.push(t("error.detail.selector", { value: detail.selector }));
+  }
   return lines;
 }
 

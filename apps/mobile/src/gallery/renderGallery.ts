@@ -1,6 +1,7 @@
 import { FIXTURE_SERIES } from "@ryuunest/test-site";
 import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
+import { t } from "../i18n";
 import { COMPONENT_STATES, galleryEntries } from "./registry";
 
 /**
@@ -8,6 +9,8 @@ import { COMPONENT_STATES, galleryEntries } from "./registry";
  * de `GalleryScreen` a texto plano (secciones, títulos, valores). Así la
  * estructura queda fijada por tests sin levantar la app; la comprobación
  * visual real la hace Playwright contra la galería servida (F28).
+ *
+ * F10: las claves del registro se resuelven con `t()`, igual que la pantalla.
  */
 
 function colorsBlock(): string {
@@ -38,25 +41,32 @@ function coversBlock(): string {
   return FIXTURE_SERIES.map((series) => `  ${series.id}: ${series.title}`).join("\n");
 }
 
+/** Claves del registro resueltas a texto, con su separador. */
+function translatedKeys(keys: readonly string[], indent = "  "): string {
+  return keys.map((key) => `${indent}${t(key)}`).join("\n");
+}
+
 const blocks: Record<string, () => string> = {
   colores: colorsBlock,
   tipografia: typographyBlock,
   espaciado: spacingBlock,
   radios: radiiBlock,
-  layout: () => "  móvil < 600 · tablet 600–1024 · escritorio > 1024",
-  iconos: () => "  Lucide vía src/icons.ts",
+  layout: () =>
+    translatedKeys(galleryEntries.find((entry) => entry.id === "layout")?.items ?? []),
+  iconos: () =>
+    translatedKeys(galleryEntries.find((entry) => entry.id === "iconos")?.items ?? []),
   portadas: coversBlock,
   componentes: () => {
     const entry = galleryEntries.find((item) => item.id === "componentes");
     const names = entry?.items ?? [];
-    return `  Estados: ${COMPONENT_STATES.join(" · ")}\n${names.map((name) => `  ${name}`).join("\n")}`;
+    return `${t("gallery.states", { list: COMPONENT_STATES.join(" · ") })}\n${translatedKeys(names)}`;
   },
 };
 
 /** La galería entera serializada a texto, sección a sección. */
 export function renderGalleryScreen(): string {
   return galleryEntries
-    .map((entry) => `${entry.title}\n${blocks[entry.id]?.() ?? ""}`)
+    .map((entry) => `${t(entry.title)}\n${blocks[entry.id]?.() ?? ""}`)
     .join("\n\n");
 }
 

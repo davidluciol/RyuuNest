@@ -28,6 +28,7 @@ import Sheet from "../components/Sheet";
 import TextField from "../components/TextField";
 
 import { COMPONENT_STATES } from "./registry";
+import { t } from "../i18n";
 
 /**
  * F05 — galería de componentes (pantalla solo de desarrollo, Regla 3 y 5 de
@@ -83,25 +84,29 @@ export default function GalleryScreen() {
       style={styles.screen}
       contentContainerStyle={[styles.content, { paddingHorizontal: screen.margin }]}
     >
-      <Text style={styles.title}>Galería de componentes</Text>
+      <Text style={styles.title}>{t("gallery.title")}</Text>
       <Text style={styles.subtitle}>
-        {screen.breakpoint} · margen {screen.margin} · separación {screen.gap} · tipografía ×
-        {density.fontScale}
+        {t("gallery.subtitle", {
+          breakpoint: screen.breakpoint,
+          margin: screen.margin,
+          gap: screen.gap,
+          fontScale: density.fontScale,
+        })}
       </Text>
 
-      <Section title="Colores">
+      <Section title={t("gallery.section.colors")}>
         {colorNames.map((name) => (
           <ColorSwatch key={name} name={name} />
         ))}
       </Section>
 
-      <Section title="Tipografía">
+      <Section title={t("gallery.section.typography")}>
         {(Object.keys(typography) as (keyof typeof typography)[]).map((name) => (
           <TypeSample key={name} name={name} />
         ))}
       </Section>
 
-      <Section title="Espaciado">
+      <Section title={t("gallery.section.spacing")}>
         {Object.entries(spacing).map(([name, value]) => (
           <View key={name} style={styles.row}>
             <Text style={styles.itemName}>{name}</Text>
@@ -111,7 +116,7 @@ export default function GalleryScreen() {
         ))}
       </Section>
 
-      <Section title="Radios">
+      <Section title={t("gallery.section.radii")}>
         {Object.entries(radii).map(([name, value]) => (
           <View key={name} style={styles.row}>
             <Text style={styles.itemName}>{name}</Text>
@@ -120,18 +125,21 @@ export default function GalleryScreen() {
         ))}
       </Section>
 
-      <Section title="Layout por ancho">
+      <Section title={t("gallery.section.layout")}>
         <Text style={styles.body}>
-          móvil &lt; {breakpoints.mobileMax} · tablet hasta {breakpoints.tabletMax} · escritorio
-          mayor · riel {breakpoints.desktopRail}
+          {t("gallery.section.layoutSummary", {
+            mobileMax: breakpoints.mobileMax,
+            tabletMax: breakpoints.tabletMax,
+            rail: breakpoints.desktopRail,
+          })}
         </Text>
       </Section>
 
-      <Section title="Iconos">
-        <Text style={styles.body}>Lucide vía src/icons.ts</Text>
+      <Section title={t("gallery.section.icons")}>
+        <Text style={styles.body}>{t("gallery.section.iconsSource")}</Text>
       </Section>
 
-      <Section title="Portadas de ejemplo">
+      <Section title={t("gallery.section.covers")}>
         {FIXTURE_SERIES.map((series) => (
           <View key={series.id} style={styles.row}>
             <View style={styles.cover} />
@@ -143,21 +151,23 @@ export default function GalleryScreen() {
         ))}
       </Section>
 
-      <Section title="Componentes">
-        <Text style={styles.muted}>Estados: {COMPONENT_STATES.join(" · ")}</Text>
+      <Section title={t("gallery.section.components")}>
+        <Text style={styles.muted}>
+          {t("gallery.states", { list: COMPONENT_STATES.join(" · ") })}
+        </Text>
 
-        <Text style={styles.groupLabel}>botón</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.button")}</Text>
         <View style={styles.componentColumn}>
-          <Button label="Primario" />
-          <Button label="Secundario" variant="secondary" />
-          <Button label="Destructivo" variant="destructive" />
-          <Button label="Deshabilitado" disabled />
+          <Button label={t("gallery.button.primary")} />
+          <Button label={t("gallery.button.secondary")} variant="secondary" />
+          <Button label={t("gallery.button.destructive")} variant="destructive" />
+          <Button label={t("gallery.button.disabled")} disabled />
         </View>
 
-        <Text style={styles.groupLabel}>campo de texto</Text>
-        <TextField placeholder="Buscar…" />
+        <Text style={styles.groupLabel}>{t("gallery.component.textField")}</Text>
+        <TextField placeholder={t("gallery.field.placeholder")} />
 
-        <Text style={styles.groupLabel}>casilla y radio</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.checkbox")}</Text>
         <View style={styles.row}>
           <Checkbox checked={false} />
           <Checkbox checked />
@@ -165,19 +175,19 @@ export default function GalleryScreen() {
           <Checkbox radio checked />
         </View>
 
-        <Text style={styles.groupLabel}>chip de filtro</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.chip")}</Text>
         <View style={styles.row}>
-          <Chip label="Inactivo" />
-          <Chip label="Seleccionado" selected />
+          <Chip label={t("gallery.chip.inactive")} />
+          <Chip label={t("gallery.chip.selected")} selected />
         </View>
 
-        <Text style={styles.groupLabel}>insignia</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.badge")}</Text>
         <View style={styles.row}>
-          <Badge label="Manhwa" />
-          <Badge label="En curso" />
+          <Badge label={t("gallery.badge.manhwa")} />
+          <Badge label={t("gallery.badge.inProgress")} />
         </View>
 
-        <Text style={styles.groupLabel}>tarjeta de portada</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.coverCard")}</Text>
         <View style={styles.row}>
           <View style={styles.coverWrap}>
             <CoverCard />
@@ -187,57 +197,67 @@ export default function GalleryScreen() {
           </View>
         </View>
 
-        <Text style={styles.groupLabel}>fila de capítulo</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.chapterRow")}</Text>
         <View style={styles.componentColumn}>
-          <ChapterRow title="Capítulo 1" hint="hace 2 h · Equipo Ryuu" />
-          <ChapterRow title="Capítulo 2" state="in-progress" percent={42} />
-          <ChapterRow title="Capítulo 3" state="completed" />
+          <ChapterRow
+            title={t("gallery.chapter.title", { number: 1 })}
+            hint={t("gallery.chapter.hint")}
+          />
+          <ChapterRow
+            title={t("gallery.chapter.title", { number: 2 })}
+            state="in-progress"
+            percent={42}
+          />
+          <ChapterRow title={t("gallery.chapter.title", { number: 3 })} state="completed" />
         </View>
 
-        <Text style={styles.groupLabel}>cabecera</Text>
-        <Header title="Biblioteca" />
+        <Text style={styles.groupLabel}>{t("gallery.component.header")}</Text>
+        <Header title={t("nav.library")} />
 
-        <Text style={styles.groupLabel}>barra inferior</Text>
-        <BottomNav active="Biblioteca" />
+        <Text style={styles.groupLabel}>{t("gallery.component.bottomNav")}</Text>
+        <BottomNav active="library" />
 
-        <Text style={styles.groupLabel}>fila de ajustes</Text>
-        <SettingsRow label="Tema" hint="Dragon Night" />
+        <Text style={styles.groupLabel}>{t("gallery.component.settingsRow")}</Text>
+        <SettingsRow label={t("gallery.settings.label")} hint={t("gallery.settings.value")} />
 
-        <Text style={styles.groupLabel}>hoja y diálogo</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.sheet")}</Text>
         <Sheet>
-          <Text style={styles.body}>Contenido de una hoja (nivel 2, sin sombra).</Text>
+          <Text style={styles.body}>{t("gallery.sheet.body")}</Text>
         </Sheet>
 
-        <Text style={styles.groupLabel}>estado vacío</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.emptyState")}</Text>
         <EmptyState
-          title="Tu biblioteca está vacía"
-          message="Añade un repositorio e instala un módulo para empezar."
-          actionLabel="Añadir repositorio"
+          title={t("state.empty.library.title")}
+          message={t("state.empty.library.message")}
+          actionLabel={t("actions.addRepository")}
         />
 
-        <Text style={styles.groupLabel}>estado vacío (sin resultados)</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.emptySearch")}</Text>
         <EmptyState
-          title="Buscó por todas partes"
-          message={`Ningún resultado para "${FIXTURE_SERIES[0].title}".`}
-          actionLabel="Explorar de nuevo"
+          title={t("state.empty.search.title")}
+          message={t("state.empty.search.message", { query: FIXTURE_SERIES[0].title })}
+          actionLabel={t("actions.exploreAgain")}
         />
 
-        <Text style={styles.groupLabel}>error de módulo</Text>
+        <Text style={styles.groupLabel}>{t("gallery.component.errorState")}</Text>
         <ErrorState
-          title="El módulo falló"
-          message="El listado no se pudo leer."
+          title={t("state.error.module.title")}
+          message={t("state.error.module.message")}
           detail={{
             module: "m-ejemplo",
             url: "https://sitio-falso.test/listado?page=2",
             code: "PARSE",
             selector: ".lista .item",
           }}
-          retryLabel="Reintentar"
-          detailLabel="Ver detalle"
+          retryLabel={t("actions.retry")}
+          detailLabel={t("actions.showDetail")}
         />
 
-        <Text style={styles.groupLabel}>carga breve</Text>
-        <LoadingState title="Cargando…" message="Página 2 de 5" />
+        <Text style={styles.groupLabel}>{t("gallery.component.loadingState")}</Text>
+        <LoadingState
+          title={t("state.loading.title")}
+          message={t("state.loading.message", { page: 2, total: 5 })}
+        />
       </Section>
     </ScrollView>
   );
