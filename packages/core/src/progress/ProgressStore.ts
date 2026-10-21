@@ -13,6 +13,15 @@ import { ModuleError } from "../contract/errors.js";
 import type { Clock } from "../ports/clock.js";
 import type { SqlDriver } from "../storage/SqlDriver.js";
 
+/**
+ * Quien marca un capítulo como leído al terminarlo (T26 · RF-32). Se inyecta: el progreso
+ * solo avisa, no conoce la tabla `chapter_read`. Sin marcador, el núcleo sigue siendo
+ * headless (el guardado no toca `chapter_read`).
+ */
+export interface ChapterReadMarker {
+  markRead(chapter: { moduleId: string; seriesId: string; chapterId: string }): Promise<void>;
+}
+
 /** Dónde se quedó la lectura de una serie. `null` = el módulo no lo dio. */
 export interface ReadingProgress {
   moduleId: string;
@@ -83,13 +92,20 @@ function toRecord(fila: ProgressRow): ReadingProgress {
   };
 }
 
+/** ¿El lector ya está en la última página del capítulo? (página base 0, RF-32). */
+function capituloTerminado(pageIndex: number, pageTotal: number | null | undefined): boolean {
+  return pageTotal !== undefined && pageTotal !== null && pageIndex >= pageTotal - 1;
+}
+
 export class ProgressStore {
   readonly #driver: SqlDriver;
   readonly #clock: Clock;
+  readonly #chapterRead: ChapterReadMarker | undefined;
 
-  constructor(options: { driver: SqlDriver; clock: Clock }) {
+  constructor(options: { driver: SqlDriver; clock: Clock; chapterRead?: ChapterReadMarker }) {
     this.#driver = options.driver;
     this.#clock = options.clock;
+    this.#chapterRead = options.chapterRead;
   }
 
   /** Progreso guardado de la serie, o `undefined` si no se ha leído todavía. */
@@ -128,5 +144,14 @@ export class ProgressStore {
         this.#clock.now(),
       ],
     );
+
+    // Terminar el capítulo lo marca solo (RF-32). Solo si hay marcador inyectado.
+    if (this.#chapterRead !== undefined && capituloTerminado(input.pageIndex, input.pageTotal)) {
+      await this.#chapterRead.markRead({
+        moduleId: input.moduleId,
+        seriesId: input.seriesId,
+        chapterId: input.chapterId,
+      });
+    }
   }
 }
