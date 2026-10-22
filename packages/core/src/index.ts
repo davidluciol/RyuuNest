@@ -25,6 +25,7 @@ export * from "./modules/ModuleRegistry.js";
 export * from "./ports/index.js";
 export * from "./progress/ChapterReadStore.js";
 export * from "./progress/ProgressStore.js";
+export * from "./reader/ReaderState.js";
 export * from "./repo/RepoRegistry.js";
 export * from "./runtimes/DeclarativeRuntime.js";
 export * from "./runtimes/errorMapping.js";
