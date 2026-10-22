@@ -1,4 +1,4 @@
-import { spacing, touchTarget, withAlpha, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, spacing, touchTarget, withAlpha, dragonNightColors } from "@ryuunest/ui-tokens";
 
 /**
  * F07 — reglas de la cabecera y la barra inferior (SPEC §11.10, T1, V5,
@@ -64,6 +64,29 @@ export function bottomNavStyle(): ShellStyleShape {
 export function navItemColors(active: boolean): { icon: string; text: string } {
   const value = active ? colors.accent : colors.textSecondary;
   return { icon: value, text: value };
+}
+
+/** F11: blancos reales, no hitSlop solapado entre destinos contiguos. */
+export function navItemStyle({
+  focused,
+  pressed,
+  disabled,
+}: {
+  focused: boolean;
+  pressed: boolean;
+  disabled: boolean;
+}) {
+  return {
+    minWidth: touchTarget.min,
+    minHeight: touchTarget.min,
+    borderRadius: radii.control,
+    outlineColor: focused ? colors.accent : "transparent",
+    outlineWidth: spacing.xxs / 2,
+    outlineOffset: spacing.xxs / 2,
+    outlineStyle: "solid" as const,
+    backgroundColor: pressed ? withAlpha(colors.accent, 0.1) : "transparent",
+    opacity: disabled ? 0.5 : 1,
+  };
 }
 
 /** Relleno horizontal de la cabecera y las filas. */
