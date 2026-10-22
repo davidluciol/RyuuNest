@@ -210,9 +210,9 @@
     "semantic_hash": ""
   },
   "packages/core/src/index.ts": {
-    "mtime": 1792634850.0868344,
-    "seen": 1792635770.2928069,
-    "ast_hash": "d258656de900407ed03da97e4f4dae42",
+    "mtime": 1792639457.3368735,
+    "seen": 1792639990.9274309,
+    "ast_hash": "aa01e3ba4c240467dba4c42e4a2de426",
     "semantic_hash": ""
   },
   "packages/core/src/install/InstallFlow.ts": {
@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1792635545.7663195,
-    "seen": 1792635770.29482,
-    "ast_hash": "83252bf2c28e273fa5962dac362f20d1",
+    "mtime": 1792639921.6739564,
+    "seen": 1792639990.9274309,
+    "ast_hash": "8cf1ea959261503af9780db8f8638dc2",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -960,15 +960,15 @@
     "semantic_hash": ""
   },
   "tasks/plan.md": {
-    "mtime": 1792635445.3589153,
-    "seen": 1792635770.29482,
+    "mtime": 1792636543.2208695,
+    "seen": 1792639990.9274309,
     "ast_hash": "642114a842d9ea0752052cb86656b6cd",
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1792635411.022496,
-    "seen": 1792635770.29482,
-    "ast_hash": "e0360c6c5744b5fbd6eb84c4c40c0975",
+    "mtime": 1792639933.4138892,
+    "seen": 1792639990.9274309,
+    "ast_hash": "84691d7ab809722014fc5e0e8b340037",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -1608,9 +1608,9 @@
     "semantic_hash": ""
   },
   "packages/core/src/reader/ReaderState.ts": {
-    "mtime": 1792634836.7186563,
-    "seen": 1792635770.2928069,
-    "ast_hash": "1a136a51dbebff11a2ffbf0dda47b0b5",
+    "mtime": 1792636543.2141278,
+    "seen": 1792639990.9274309,
+    "ast_hash": "d4cc13385cbafa281c9b069652d2f714",
     "semantic_hash": ""
   },
   "packages/core/tests/progress/chapterRead.test.ts": {
@@ -1626,9 +1626,9 @@
     "semantic_hash": ""
   },
   "packages/core/tests/reader/readerState.test.ts": {
-    "mtime": 1792635031.4655142,
-    "seen": 1792635770.2928069,
-    "ast_hash": "2c2f4064691d400a6db1d46b87d1cbee",
+    "mtime": 1792636543.2194264,
+    "seen": 1792639990.9274309,
+    "ast_hash": "8016fc6a6153068db1faec4a824e0723",
     "semantic_hash": ""
   },
   "tasks/complexity.md": {
@@ -1653,6 +1653,24 @@
     "mtime": 1792551302.484943,
     "seen": 1792635770.29482,
     "ast_hash": "7fdf68afefe13cc125e46d90301bc67a",
+    "semantic_hash": ""
+  },
+  "packages/core/src/backup/export.ts": {
+    "mtime": 1792639450.654252,
+    "seen": 1792639990.9274309,
+    "ast_hash": "1d8ac19bcf0420f70a35fd44a53d88f6",
+    "semantic_hash": ""
+  },
+  "packages/core/src/backup/schema.ts": {
+    "mtime": 1792639428.7771914,
+    "seen": 1792639990.9274309,
+    "ast_hash": "f7db3df54474af9ff5a9f0224eb168fa",
+    "semantic_hash": ""
+  },
+  "packages/core/tests/backup/export.test.ts": {
+    "mtime": 1792639515.4564764,
+    "seen": 1792639990.9274309,
+    "ast_hash": "89c03c6f357edd592d144fc61657ccc5",
     "semantic_hash": ""
   }
 }

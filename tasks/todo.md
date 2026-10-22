@@ -65,13 +65,14 @@ Dep: T25 · M · `core/src/reader/ReaderState.ts` (+test)
 
 ## Fase 7 — Respaldo
 
-### T28 Exportar respaldo JSON `[BE · Intermedia · N3]`
+### T28 Exportar respaldo JSON `[BE · Intermedia · N3]` ✅
 
 Dep: T22, T24, T25, T26 · M · `core/src/backup/{export,schema}.ts` (+test)
 
-- [ ] JSON cumple SPEC §8.3 (`format`, `version`, `createdAt`); progreso con `pageTotal`
-- [ ] Incluye todos los repos y filas de usuario con `updatedAt`; sin secretos ni credenciales
+- [x] JSON cumple SPEC §8.3 (`format`, `version`, `createdAt`); progreso con `pageTotal`
+- [x] Incluye todos los repos y filas de usuario con `updatedAt`; sin secretos ni credenciales
 - Verif: `pnpm --filter @ryuunest/core test` + validar contra un esquema de fixture
+- **Hecho (2026-10-21):** `exportBackup({ driver, storage, clock })` vuelca todo el estado local en un `Backup` con la forma de SPEC §8.3 (decisión **P-64**: extendido con `series.status`, `progress.chapterTitle`, `repo.addedAt`/`updatedAt` y la metadata del módulo; `settings` como `Record<string,string>` desde la tabla `setting`). Repos y módulos se leen del `Storage` clave-valor; las filas de usuario, de SQL. Lectura pura, sin secretos (sin `files`/`manifest`/`permissions`). 6 tests; 292 en core (580 en el repo), gate completo en verde.
 
 ### T29 Importar respaldo — en dos pasos `[BE · Alta · N4 tests · N2 implementación]`
 
