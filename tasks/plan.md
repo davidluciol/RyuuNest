@@ -247,13 +247,13 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [ ] Revisión humana
 
 ### Fase 6 — Corte vertical 5: progreso
-- [ ] T25 Progreso atómico y reanudación (con `page_total`) — una sola sesión con T26
-- [ ] T26 `chapter_read`
-- [ ] T27 Máquina de estados del lector (headless)
+- [x] T25 Progreso atómico y reanudación (con `page_total`) — una sola sesión con T26
+- [x] T26 `chapter_read`
+- [x] T27 Máquina de estados del lector (headless)
 
-### ✅ Checkpoint G (tras T25–T27)
-- [ ] Guardar y reabrir devuelve la página exacta (núcleo, sin UI)
-- [ ] `page_total` se guarda para el porcentaje y la barra (RF-41)
+### 🚩 Checkpoint G (tras T25–T27)
+- [x] Guardar y reabrir devuelve la página exacta (núcleo, sin UI)
+- [x] `page_total` se guarda para el porcentaje y la barra (RF-41)
 - [ ] Revisión humana
 
 ### Fase 7 — Corte vertical 6: respaldo

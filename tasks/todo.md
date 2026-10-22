@@ -39,16 +39,17 @@ Dep: T21 · S · `core/src/progress/ChapterReadStore.ts` (+test)
 - **Hecho (2026-10-20):** `ChapterReadStore` (`markRead`, `unmarkRead`, `isRead`, `readIn` → `Set`). El marcado automático lo dispara `ProgressStore.save`: con un `ChapterReadMarker` **inyectado**, guardar la **última página** (`page_index >= page_total - 1`, base 0 — decisión **P-61**) marca el capítulo; sin marcador, el núcleo sigue headless. 12 tests.
 - **Fuera del alcance (no hecho):** borrar el progreso/leídos al quitar una serie (no está en los criterios; el esquema tampoco lo exige) y el porcentaje de RF-41 (lo calcula la pantalla, F13/F18).
 
-### T27 Máquina de estados del lector (headless) `[BE · Intermedia · N3]`
+### T27 Máquina de estados del lector (headless) `[BE · Intermedia · N3]` ✅
 Dep: T25 · M · `core/src/reader/ReaderState.ts` (+test)
-- [ ] Modos vertical continuo/paginado; cambiar de página y saltar entre capítulos
-- [ ] Cambiar de modo actualiza la preferencia de la serie (T24)
-- [ ] Última página → «capítulo terminado» y ofrece el siguiente
-- [ ] `page_index` en `[0, page_total]`; políticas de memoria documentadas (el render es Parte 2)
+- [x] Modos vertical continuo/paginado; cambiar de página y saltar entre capítulos
+- [x] Cambiar de modo actualiza la preferencia de la serie (T24)
+- [x] Última página → «capítulo terminado» y ofrece el siguiente
+- [x] `page_index` en `[0, page_total]`; políticas de memoria documentadas (el render es Parte 2)
 - Verif: `pnpm --filter @ryuunest/core test` + recorrer un capítulo de 60 páginas
+- **Hecho (2026-10-21):** `ReaderState` headless sobre `ProgressStore` (T25) y `SeriesPrefs` (T24): `openSeries`/`resume`/`openChapter`/`openNextChapter`/`openPreviousChapter`/`next`/`previous`/`goToPage`/`setMode`/`flush` + `snapshot` inmutable. Páginas **base 0** (confirma **P-61**), ajustadas a `[0, page_total]`; llegar a la última página guarda de inmediato y marca leído (RF-32) y ofrece el siguiente (RF-21); el resto de cambios quedan `dirty` para que la UI guarde con retraso corto o al salir (RF-20). Políticas de memoria declaradas como **ventana** (`snapshot.window`): paginado = página actual + `PAGED_PRELOAD_AHEAD` delante; vertical = `VERTICAL_BEHIND`/`VERTICAL_AHEAD` alrededor de la visible (constantes provisionales, pendiente la medición P-45). 29 tests, incluido el recorrido de un capítulo de 60 páginas.
 
-### 🚩 Checkpoint G `[Ops · Baja · N1]`
-- [ ] Guardar y reabrir devuelve la página exacta · [ ] `page_total` guardado (RF-41) · [ ] 🧍 Revisión
+### 🚩 Checkpoint G `[Ops · Baja · N1]` ✅ (pendiente de revisión humana)
+- [x] Guardar y reabrir devuelve la página exacta · [x] `page_total` guardado (RF-41) · [ ] 🧍 Revisión
 
 ---
 
