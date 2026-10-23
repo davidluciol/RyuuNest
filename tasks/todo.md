@@ -192,25 +192,25 @@ Dep: F11; T25/T27 · M · `apps/mobile/src/screens/home/*`
 - [ ] Verif: Playwright vs `inicio_guarida/screen.png` (Corte 10 pendiente) · 🧍 POCO
 - **Hecho (2026-10-23):** 9 cortes TDD en rama `feature/F13-home-screen`; 26 tests nuevos; 629 tests en verde; lint y typecheck en verde. Fuera de la v1 (SPEC §11.5): sin «Novedades de Portales» ni tarjeta de estado del nido. Ver `MEMORY.md` §5.
 
-### F14a Biblioteca: cuadrícula, búsqueda y filtros `[FE · Intermedia · N3]`
-
-🟡 Marco navegable de F11; contenido, datos y estados de esta pantalla **pendientes**.
+### F14a Biblioteca: cuadrícula, búsqueda y filtros `[FE · Intermedia · N3]` ✅ (pendiente Playwright + POCO)
 
 Dep: F11; T23 · M · `apps/mobile/src/screens/library/*`
 
-- [ ] Búsqueda siempre visible; chips Todo · Leyendo (sin «Completado»); filtros por tipo (los 4: P2-8), fuente y NSFW (apagado oculta series NSFW, RF-35)
-- [ ] Cuadrícula virtualizada; títulos a 2 líneas sin «…» (T7)
-- Verif: Playwright vs `biblioteca_tesoros/screen.png` · 🧍 3000 series con desplazamiento fluido (AC-4)
+- [x] Búsqueda siempre visible; chips Todo · Leyendo (sin «Completado»); filtros por tipo (los 4: P2-8), fuente y NSFW (apagado oculta series NSFW, RF-35)
+- [x] Cuadrícula virtualizada (`FlatList` numColumns=3); títulos a 2 líneas sin «…» (T7)
+- [x] Componente LibraryCard reutilizable (portada 2:3, insignia neutra V1/V7, barra 3px RF-41)
+- [ ] Verif: Playwright vs `biblioteca_tesoros/screen.png` · 🧍 3000 series con desplazamiento fluido (AC-4)
+- **Hecho (2026-10-23):** F14a+F14b en una rama `feature/F14ab-library-screen` (TDD, 23 tests nuevos). 652 tests en verde. Ver `MEMORY.md` §5.
 
-### F14b Biblioteca: carpetas y orden `[FE · Intermedia · N3]`
-
-🟡 Comparte el marco navegable de Biblioteca; carpetas y orden **pendientes**.
+### F14b Biblioteca: carpetas y orden `[FE · Intermedia · N3]` ✅ (pendiente Playwright + POCO)
 
 Dep: F14a · M · `apps/mobile/src/screens/library/*`
 
-- [ ] Chip Carpetas y gestión de carpetas; un solo acceso a carpetas por pantalla (V6)
-- [ ] Orden por nombre / último leído / fecha
-- Verif: Playwright vs `biblioteca_tesoros/screen.png`
+- [x] Chip Carpetas y gestión de carpetas; un solo acceso a carpetas por pantalla (V6)
+- [x] Orden por nombre / último leído / fecha (cicla al pulsar el chip)
+- [x] Sección de carpetas con chips horizontales
+- [ ] Verif: Playwright vs `biblioteca_tesoros/screen.png`
+- **Hecho (2026-10-23):** junto con F14a en `feature/F14ab-library-screen`. Filtros de tipo/fuente como chips placeholder (la hoja llega con la conexión al núcleo).
 
 ### FB1 Plano de pantalla (`screen-blueprint.md`) `[Doc · Baja · N4]`
 

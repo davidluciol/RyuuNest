@@ -118,6 +118,8 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
       "gallery.component.recentCard",
       "gallery.component.folderCard",
       "gallery.component.homeScreen",
+      "gallery.component.libraryCard",
+      "gallery.component.libraryScreen",
     ],
     states: COMPONENT_STATES,
   },
