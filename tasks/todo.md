@@ -169,7 +169,7 @@ Dep: T02, T32a · S · `.github/workflows/ci.yml`, `vitest.config.ts`
 
 ---
 
-## Fase 6b — Interfaz móvil (cada pantalla: componentes → datos de ejemplo → estados → Playwright vs `screen.png`)
+## Fase 6b — Interfaz móvil (cada pantalla: componentes → datos (ejemplo o reales) → estados → Playwright vs `screen.png`)
 
 ### F11 Shell: 5 destinos + cabecera única `[FE · Alta · N4]`
 
@@ -192,14 +192,6 @@ Dep: F11; T25/T27 · M · `apps/mobile/src/screens/home/*`
 - [ ] Verif: Playwright vs `inicio_guarida/screen.png` (Corte 10 pendiente) · 🧍 POCO
 - **Hecho (2026-10-23):** 9 cortes TDD en rama `feature/F13-home-screen`; 26 tests nuevos; 629 tests en verde; lint y typecheck en verde. Fuera de la v1 (SPEC §11.5): sin «Novedades de Portales» ni tarjeta de estado del nido. Ver `MEMORY.md` §5.
 
-### FB1 Plano de pantalla (`screen-blueprint.md`) `[Doc · Baja · N4]`
-
-Dep: F11, F13 · S · `docs/screen-blueprint.md` (1 página)
-
-- [ ] Documenta, a partir de F11 y F13 ya hechas: estructura de carpetas de una pantalla, patrón (componentes → datos de ejemplo → estados → Playwright vs `screen.png`), uso de `t()` y tokens, cómo se conecta con el núcleo y un ejemplo de test Playwright
-- [ ] Máx. 1 página; sin reglas nuevas (solo lo que ya hacen F11/F13)
-- Las pantallas F12, F15, F17, F20, F21 y F25 **leen este plano** en vez de explorar el repo. Verif: 🧍 revisión
-
 ### F14a Biblioteca: cuadrícula, búsqueda y filtros `[FE · Intermedia · N3]`
 
 🟡 Marco navegable de F11; contenido, datos y estados de esta pantalla **pendientes**.
@@ -219,6 +211,16 @@ Dep: F14a · M · `apps/mobile/src/screens/library/*`
 - [ ] Chip Carpetas y gestión de carpetas; un solo acceso a carpetas por pantalla (V6)
 - [ ] Orden por nombre / último leído / fecha
 - Verif: Playwright vs `biblioteca_tesoros/screen.png`
+
+### FB1 Plano de pantalla (`screen-blueprint.md`) `[Doc · Baja · N4]`
+
+> Se ejecuta después de F14b: F13 es el ejemplo de fixtures y F14a/F14b el de datos reales (P-67).
+
+Dep: F11, F13, F14a, F14b · S · `docs/screen-blueprint.md` (1 página)
+
+- [ ] Documenta, a partir de F11, F13, F14a y F14b ya hechas: estructura de carpetas de una pantalla, patrón (componentes → datos de ejemplo o reales → estados → Playwright vs `screen.png`), uso de `t()` y tokens, cómo se conecta con el núcleo **con datos reales de la biblioteca** (F14a/F14b; T22/T23) y un ejemplo de test Playwright
+- [ ] Máx. 1 página; sin reglas nuevas (solo lo que ya hacen F11/F13/F14a/F14b). F13 queda como ejemplo de fixtures; F14a/F14b, como ejemplo de datos reales
+- Las pantallas F12, F15, F17, F20, F21 y F25 **leen este plano** en vez de explorar el repo. Verif: 🧍 revisión
 
 ### F15 Descubrir `[FE · Intermedia · N2]`
 
