@@ -2,8 +2,12 @@ import {
   coverAspectRatio,
   layoutForWidth,
   radii,
+  spacing,
+  typography,
   dragonNightColors,
 } from "@ryuunest/ui-tokens";
+
+import { BADGE_HEIGHT } from "./badgeStyles";
 
 /**
  * F14a — reglas de la tarjeta de serie de la cuadrícula de Biblioteca
@@ -52,9 +56,9 @@ export interface LibraryCardTitleStyleShape {
 export function libraryCardTitleStyle(): LibraryCardTitleStyleShape {
   return {
     numberOfLines: LIBRARY_CARD_TITLE_LINES,
-    fontFamily: "Manrope",
-    fontSize: 14,
-    lineHeight: 20,
+    fontFamily: typography.labelLg.fontFamily,
+    fontSize: typography.labelLg.fontSize,
+    lineHeight: typography.labelLg.lineHeight,
     color: colors.textPrimary,
   };
 }
@@ -72,9 +76,9 @@ export interface LibraryCardBadgeStyleShape {
 export function libraryCardBadgeStyle(): LibraryCardBadgeStyleShape {
   return {
     position: "absolute",
-    top: 8,
-    left: 8,
-    height: 24,
+    top: spacing.xs,
+    left: spacing.xs,
+    height: BADGE_HEIGHT,
     borderRadius: radii.pill,
     backgroundColor: colors.elevated,
   };
