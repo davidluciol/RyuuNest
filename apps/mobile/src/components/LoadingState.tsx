@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import DragonMarker from "./DragonMarker";
 import { messageStyle, stateColors, stateStyle, titleStyle } from "./stateStyles";
+import { textStyle } from "./textStyle";
 
 /**
  * F08 — carga breve (SPEC §11.12): dragon **pequeño** y texto corto; sin
@@ -40,16 +41,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontFamily: titleStyle().fontFamily,
-    fontSize: titleStyle().fontSize,
-    lineHeight: titleStyle().lineHeight,
-    fontWeight: "600",
+    ...textStyle(titleStyle()),
     textAlign: "center",
   },
   message: {
-    fontFamily: messageStyle().fontFamily,
-    fontSize: messageStyle().fontSize,
-    lineHeight: messageStyle().lineHeight,
+    ...textStyle(messageStyle()),
     textAlign: "center",
   },
 });

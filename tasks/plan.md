@@ -471,7 +471,7 @@ datos de ejemplo → estados de carga/vacío/error → verificación con Playwri
 - [ ] Revisión humana
 
 ### Fase 6b — Interfaz móvil
-- [ ] F11 Shell: navegación de 5 destinos + cabecera única
+- [ ] F11 Shell: navegación de 5 destinos + cabecera única — 🟡 implementado y verificado en web; falta la verificación POCO (P-65: P-A/T35 siguen pendientes)
 - [ ] F13 Inicio (Continuar, Recientes, Tesoros, Descubrir) — RF-14, RF-33, RF-41
 - [ ] FB1 Plano de pantalla (`docs/screen-blueprint.md`, 1 página; modelo fuerte)
 - [ ] F14a Biblioteca: cuadrícula, búsqueda y filtros — RF-26 a RF-30

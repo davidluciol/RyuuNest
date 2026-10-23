@@ -175,11 +175,15 @@ Dep: T02, T32a · S · `.github/workflows/ci.yml`, `vitest.config.ts`
 
 Dep: P-A; T35 · M · `apps/mobile/src/{navigation,shell}/*`
 
-- [ ] Una sola cabecera y barra inferior, iguales en todas las pantallas (T1)
-- [ ] Etiquetas funcionales (SPEC §11.7); destino activo con `accent` (V1)
-- Verif: Playwright navegando los 5 destinos · 🧍 POCO F5 Pro
+- P-65: el humano autoriza adelantar **solo F11**; P-A y T35 siguen pendientes.
+
+- [x] Una sola cabecera y barra inferior, iguales en los cinco marcos (T1)
+- [x] Etiquetas funcionales (SPEC §11.7); destino activo con `accent` (V1)
+- Verif: [x] Playwright navegando los 5 destinos en 5 anchos · [ ] 🧍 POCO F5 Pro (AC-12 pendiente; el bundle Android no sustituye esta verificación)
 
 ### F13 Inicio `[FE · Intermedia · N3]`
+
+🟡 Marco navegable de F11; contenido, datos y estados de esta pantalla **pendientes**.
 
 Dep: F11; T25/T27 · M · `apps/mobile/src/screens/home/*`
 
@@ -196,6 +200,8 @@ Dep: F11, F13 · S · `docs/screen-blueprint.md` (1 página)
 
 ### F14a Biblioteca: cuadrícula, búsqueda y filtros `[FE · Intermedia · N3]`
 
+🟡 Marco navegable de F11; contenido, datos y estados de esta pantalla **pendientes**.
+
 Dep: F11; T23 · M · `apps/mobile/src/screens/library/*`
 
 - [ ] Búsqueda siempre visible; chips Todo · Leyendo (sin «Completado»); filtros por tipo (los 4: P2-8), fuente y NSFW (apagado oculta series NSFW, RF-35)
@@ -203,6 +209,8 @@ Dep: F11; T23 · M · `apps/mobile/src/screens/library/*`
 - Verif: Playwright vs `biblioteca_tesoros/screen.png` · 🧍 3000 series con desplazamiento fluido (AC-4)
 
 ### F14b Biblioteca: carpetas y orden `[FE · Intermedia · N3]`
+
+🟡 Comparte el marco navegable de Biblioteca; carpetas y orden **pendientes**.
 
 Dep: F14a · M · `apps/mobile/src/screens/library/*`
 
@@ -212,6 +220,8 @@ Dep: F14a · M · `apps/mobile/src/screens/library/*`
 
 ### F15 Descubrir `[FE · Intermedia · N2]`
 
+🟡 Marco navegable de F11; contenido, datos, estados y búsqueda global de cabecera **pendientes**.
+
 Dep: F11, FB1; T20, T10 · M · `apps/mobile/src/screens/discover/*`
 
 - [ ] Recuerda el último módulo; módulo NSFW oculto con el filtro apagado
@@ -219,6 +229,8 @@ Dep: F11, FB1; T20, T10 · M · `apps/mobile/src/screens/discover/*`
 - Verif: Playwright vs `descubrir_aventuras/screen.png` con `test-site`
 
 ### F16 Fuentes `[FE · Alta · N4]`
+
+🟡 Marco navegable de F11; contenido, datos y estados de esta pantalla **pendientes**.
 
 Dep: F11; T14, T15 · M · `apps/mobile/src/screens/sources/*`
 
@@ -259,6 +271,8 @@ Dep: F18; T05 · M · `apps/mobile/src/{screens/reader,reader}/*`
 - Verif: Playwright (zoom/controles) · 🧍 romper una imagen y medir memoria en precarga
 
 ### F20 Ajustes `[FE · Baja · N2]`
+
+🟡 Marco navegable de F11; contenido, datos y estados de esta pantalla **pendientes**.
 
 Dep: F11, FB1; T25 · M · `apps/mobile/src/screens/settings/*`
 

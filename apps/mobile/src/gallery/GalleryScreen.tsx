@@ -26,6 +26,10 @@ import LoadingState from "../components/LoadingState";
 import SettingsRow from "../components/SettingsRow";
 import Sheet from "../components/Sheet";
 import TextField from "../components/TextField";
+import type { BottomNavDestination } from "../components/shellStyles";
+import { destinationLabel } from "../navigation/routes";
+import AppShell from "../shell/AppShell";
+import DestinationFrame from "../shell/DestinationFrame";
 
 import { COMPONENT_STATES } from "./registry";
 import { t } from "../i18n";
@@ -75,6 +79,7 @@ function TypeSample({ name }: { name: keyof typeof typography }) {
 }
 
 export default function GalleryScreen() {
+  const [previewDestination, setPreviewDestination] = useState<BottomNavDestination>("home");
   const { width } = useWindowDimensions();
   const screen = layoutForWidth(width);
   const density = densityLayout("comfortable", width);
@@ -216,6 +221,8 @@ export default function GalleryScreen() {
 
         <Text style={styles.groupLabel}>{t("gallery.component.bottomNav")}</Text>
         <BottomNav active="library" />
+        <Text style={styles.muted}>{t("gallery.button.disabled")}</Text>
+        <BottomNav active="library" disabled />
 
         <Text style={styles.groupLabel}>{t("gallery.component.settingsRow")}</Text>
         <SettingsRow label={t("gallery.settings.label")} hint={t("gallery.settings.value")} />
@@ -258,6 +265,31 @@ export default function GalleryScreen() {
           title={t("state.loading.title")}
           message={t("state.loading.message", { page: 2, total: 5 })}
         />
+
+        <Text style={styles.groupLabel}>{t("gallery.component.appShell")}</Text>
+        <AppShell section={destinationLabel(previewDestination)} style={styles.shellPreview}>
+          <DestinationFrame destination={previewDestination} />
+          <BottomNav active={previewDestination} onSelect={setPreviewDestination} />
+        </AppShell>
+        <AppShell section={t("nav.home")} style={styles.shellPreview}>
+          <LoadingState
+            title={t("state.loading.title")}
+            message={t("state.loading.message", { page: 2, total: 5 })}
+          />
+          <BottomNav active="home" disabled />
+        </AppShell>
+        <AppShell section={t("nav.discover")} style={styles.shellErrorPreview}>
+          <ErrorState
+            title={t("state.error.module.title")}
+            message={t("state.error.module.message")}
+            retryLabel={t("actions.retry")}
+            detailLabel={t("actions.showDetail")}
+            detail={{ code: "PARSE" }}
+          />
+          <BottomNav active="discover" />
+        </AppShell>
+        <Text style={styles.groupLabel}>{t("gallery.component.destinationFrame")}</Text>
+        <DestinationFrame destination="sources" />
       </Section>
     </ScrollView>
   );
@@ -282,6 +314,8 @@ const styles = StyleSheet.create({
   section: { gap: spacing.sm },
   componentColumn: { gap: spacing.sm, alignItems: "stretch" },
   coverWrap: { width: spacing["2xl"] * 2 },
+  shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
+  shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
     color: colors.textSecondary,
     fontFamily: typography.labelSm.fontFamily,
@@ -336,3 +370,4 @@ const styles = StyleSheet.create({
     fontSize: typography.bodySm.fontSize,
   },
 });
+import { useState } from "react";
