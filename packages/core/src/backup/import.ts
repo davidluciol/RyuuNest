@@ -14,8 +14,14 @@
  * sugerencias para que el usuario las confirme una por una (RF-38, AC-8).
  */
 import type { SqlDriver } from "../storage/SqlDriver.js";
-import type { ValidationIssue } from "../validation.js";
-import type { BackupModule, BackupRepo } from "./schema.js";
+import { describeIssues, type ValidationIssue } from "../validation.js";
+import {
+  MAX_BACKUP_BYTES,
+  utf8ByteLength,
+  validateBackup,
+  type BackupModule,
+  type BackupRepo,
+} from "./schema.js";
 
 /** Cómo se aplica el respaldo. */
 export type ImportMode = "merge" | "replace";
@@ -72,7 +78,35 @@ export interface ImportBackupOptions {
  */
 export async function importBackup(
   _options: ImportBackupOptions,
-  _text: string,
+  text: string,
 ): Promise<ImportResult> {
-  throw new Error("T29b: importBackup sin implementar");
+  if (utf8ByteLength(text, MAX_BACKUP_BYTES) > MAX_BACKUP_BYTES) {
+    return rechazo("TOO_LARGE", "El respaldo supera el tamaño máximo permitido", []);
+  }
+
+  let value: unknown;
+  try {
+    value = JSON.parse(text);
+  } catch {
+    return rechazo("NOT_JSON", "El archivo no es un JSON válido", []);
+  }
+
+  const validation = validateBackup(value);
+  if (!validation.ok) {
+    return rechazo(
+      "INVALID",
+      `El respaldo no es válido: ${describeIssues(validation.issues)}`,
+      validation.issues,
+    );
+  }
+
+  throw new Error("T29b: aplicar el respaldo sin implementar");
+}
+
+function rechazo(
+  reason: ImportRejection,
+  message: string,
+  issues: ValidationIssue[],
+): Extract<ImportResult, { ok: false }> {
+  return { ok: false, reason, message, issues };
 }
