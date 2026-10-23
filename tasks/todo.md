@@ -181,14 +181,16 @@ Dep: P-A; T35 · M · `apps/mobile/src/{navigation,shell}/*`
 - [x] Etiquetas funcionales (SPEC §11.7); destino activo con `accent` (V1)
 - Verif: [x] Playwright navegando los 5 destinos en 5 anchos · [ ] 🧍 POCO F5 Pro (AC-12 pendiente; el bundle Android no sustituye esta verificación)
 
-### F13 Inicio `[FE · Intermedia · N3]`
-
-🟡 Marco navegable de F11; contenido, datos y estados de esta pantalla **pendientes**.
+### F13 Inicio `[FE · Intermedia · N3]` ✅ (pendiente Playwright + POCO)
 
 Dep: F11; T25/T27 · M · `apps/mobile/src/screens/home/*`
 
-- [ ] «Continuar» abre en la página exacta; máx. 4 secciones; sin contadores (RF-42); barra = `page_index/page_total`
-- Verif: Playwright vs `inicio_guarida/screen.png` · 🧍 POCO
+- [x] «Continuar» abre en la página exacta; 3 secciones (máx. 4, V6); sin contadores (RF-42); barra = `page_index/page_total`
+- [x] Componentes reutilizables: SectionHeader, ContinueCard, RecentCard, FolderCard
+- [x] Estados: vacío (sin favoritos ni progreso), datos de ejemplo coherentes (D1)
+- [x] Traducciones (`home.*`), galería actualizada, DIFFS.md anotado
+- [ ] Verif: Playwright vs `inicio_guarida/screen.png` (Corte 10 pendiente) · 🧍 POCO
+- **Hecho (2026-10-23):** 9 cortes TDD en rama `feature/F13-home-screen`; 26 tests nuevos; 629 tests en verde; lint y typecheck en verde. Fuera de la v1 (SPEC §11.5): sin «Novedades de Portales» ni tarjeta de estado del nido. Ver `MEMORY.md` §5.
 
 ### FB1 Plano de pantalla (`screen-blueprint.md`) `[Doc · Baja · N4]`
 
