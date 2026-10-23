@@ -36,7 +36,7 @@ apps/mobile/dist/
 
 # Graphify: el grafo actual sí se versiona, pero su caché y los snapshots
 # con fecha (copia del grafo anterior) son derivados y se regeneran solos.
-graphify-out/cache/ast/
-graphify-out/cache/last_query_stamp
-graphify-out/cache/*.tmp
+# `stat-index.json` guarda mtime/hash por fichero de ESTA máquina: versionarlo
+# provoca conflictos y trabajo extra en cada indexación desde otro dispositivo.
+graphify-out/cache/
 graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
