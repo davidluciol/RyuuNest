@@ -10,6 +10,7 @@
 export const CORE_VERSION = "0.0.0";
 
 export * from "./backup/export.js";
+export * from "./backup/import.js";
 export * from "./backup/schema.js";
 export * from "./bytes.js";
 export * from "./contract/errors.js";
