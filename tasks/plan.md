@@ -367,6 +367,7 @@ Detalle en `tasks/complexity.md` (niveles N1–N5 de OpenCode Zen, tabla por tar
 | F12 después de F16 | F12 depende de F16 |
 | F14 → F14a + F14b | No cabe en una sesión |
 | Nueva FB1 (plano de pantalla) | Reduce nivel de modelo y tokens en F12, F15, F17, F20, F21 y F25 |
+| FB1 pasa después de F14b | Documenta el patrón cuando ya hay datos reales de biblioteca (T22/T23), no solo los fixtures de F13 |
 | FA1 añadida al índice de la Parte 2 | Ya existía en `todo.md` y faltaba aquí |
 | `tasks/todo.md` pasa a contener solo pendientes; el anterior se archiva como `tasks/todo.archive.md` | Menos tokens por sesión |
 
@@ -407,7 +408,7 @@ contador de no leídos, campana, perfiles, marcador en el lector, etc.
 | P2-9 | Verificación visual: **galería compilada para web con Playwright + capturas de dispositivo** para AC-12 | Playwright no controla la app nativa |
 | P2-10 | Confirmado: la v1 trae **solo Dragon Night** | Solo ese tema tiene las 7 pantallas |
 | P2-11 | Pantallas sin diseño: se **deciden más adelante** (al llegar a ellas) | Respuesta del humano |
-| P2-12 | **Plano de pantalla** (`docs/screen-blueprint.md`, tarea FB1): tras F11 y F13 un modelo fuerte documenta el patrón en una página; F12, F15, F17, F20, F21 y F25 lo leen | Menos tokens y consistencia; permite usar modelos más baratos |
+| P2-12 | **Plano de pantalla** (`docs/screen-blueprint.md`, tarea FB1): tras F11, F13, F14a y F14b (primera pantalla con datos reales de biblioteca) un modelo fuerte documenta el patrón en una página; F12, F15, F17, F20, F21 y F25 lo leen | Menos tokens y consistencia; F13 aporta el ejemplo de fixtures y F14a/F14b el de datos reales; permite usar modelos más baratos |
 | P2-13 | **F14 se divide** en F14a (cuadrícula, búsqueda y filtros) y F14b (carpetas y orden); **F12 va después de F16** | F14 no cabe en una sesión; F12 depende de F16 |
 
 ## P2.3 Grafo de dependencias
@@ -424,11 +425,12 @@ FASE 6a — Sistema de diseño (puede empezar tras T02)
         ▼
 FASE 6b — Interfaz móvil (necesita el núcleo)
   F11 shell/navegación+cabecera
-   ├─ F13 Inicio ─ FB1 plano de pantalla (docs/screen-blueprint.md)
-   │                 └─ F15, F17, F20, F21 (y F25 web) leen el plano
+   ├─ F13 Inicio
    ├─ F14a Biblioteca: cuadrícula+filtros ─ F14b carpetas+orden
+   │                                           └─ FB1 plano de pantalla (docs/screen-blueprint.md)
+   │                                                 └─ F12, F15, F17, F20, F21 (y F25 web) leen el plano
+   ├─ F16 Fuentes ─ F12 primer uso (después de F16 y FB1)
    ├─ F15 Descubrir
-   ├─ F16 Fuentes ─ F12 primer uso (después de F16)
    ├─ F17 Serie
    ├─ F18 Lector (1) ─ F19 Lector (2)
    ├─ F20 Ajustes
@@ -447,8 +449,9 @@ Verificación: F28 Playwright por pantalla + DIFFS.md + galería
 ## P2.4 Estrategia de cortes verticales
 
 Cada **pantalla es un corte vertical** completo: componentes reutilizables → pantalla con
-datos de ejemplo → estados de carga/vacío/error → verificación con Playwright contra
-`screen.png`. La Fase 6a es la fundación compartida (tokens, componentes, galería).
+datos (fixtures en F13; datos reales desde F14a) → estados de carga/vacío/error → verificación
+con Playwright contra `screen.png`. La Fase 6a es la fundación compartida (tokens, componentes,
+galería).
 
 ## P2.5 Índice de tareas y checkpoints (Parte 2)
 
@@ -473,9 +476,9 @@ datos de ejemplo → estados de carga/vacío/error → verificación con Playwri
 ### Fase 6b — Interfaz móvil
 - [ ] F11 Shell: navegación de 5 destinos + cabecera única — 🟡 implementado y verificado en web; falta la verificación POCO (P-65: P-A/T35 siguen pendientes)
 - [ ] F13 Inicio (Continuar, Recientes, Tesoros, Descubrir) — RF-14, RF-33, RF-41
-- [ ] FB1 Plano de pantalla (`docs/screen-blueprint.md`, 1 página; modelo fuerte)
 - [ ] F14a Biblioteca: cuadrícula, búsqueda y filtros — RF-26 a RF-30
 - [ ] F14b Biblioteca: carpetas y orden
+- [ ] FB1 Plano de pantalla (después de F14b; `docs/screen-blueprint.md`, 1 página; modelo fuerte; datos reales de biblioteca)
 - [ ] F15 Descubrir (selector de módulo, popular/latest, búsqueda, error de módulo) — RF-9 a RF-12
 - [ ] F16 Fuentes (repos y módulos, confirmación normal y reforzada, permisos, NSFW) — RF-1 a RF-8
 - [ ] F12 Primer uso (3 pasos) + estado vacío inicial (después de F16)

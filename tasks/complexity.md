@@ -78,7 +78,7 @@ Notas:
 |---|---|---|---|---|---|
 | F11 Shell/navegación | FE | **Alta** | N4 | N5 | Fundacional: fija el patrón de pantalla |
 | F13 Inicio | FE | Intermedia | N3 | N4 | 1.ª pantalla con datos reales |
-| FB1 Plano de pantalla | Ops | Baja | N4 | — | 1 página que luego copian modelos baratos |
+| FB1 Plano de pantalla (tras F14b) | Ops | Baja | N4 | — | 1 página con datos reales de biblioteca (T22/T23) que luego copian modelos baratos |
 | F14a Biblioteca: cuadrícula y filtros | FE | Intermedia | N3 | N4 | Virtualización (3000) + filtros |
 | F14b Biblioteca: carpetas y orden | FE | Intermedia | N3 | N4 | Gestión de carpetas |
 | F15 Descubrir | FE | Intermedia | N2 | N3 | Con plano: módulo + paginación + error |
@@ -100,6 +100,6 @@ Notas:
 
 ## 5. Flujos que ahorran tokens
 
-- **Plano de pantalla (FB1):** un modelo N4 documenta el patrón tras F11 y F13; F12, F15, F17, F20, F21 y F25 lo leen en vez de explorar el repo, por eso bajan de nivel.
+- **Plano de pantalla (FB1):** un modelo N4 documenta el patrón tras F11, F13 y F14a/F14b (primera pantalla con datos reales de biblioteca); F12, F15, F17, F20, F21 y F25 lo leen en vez de explorar el repo, por eso bajan de nivel.
 - **Tests primero (T29):** el modelo fuerte escribe los tests y el esquema (T29a); el barato implementa hasta verde sin editarlos (T29b).
 - **Sesiones unidas:** T25+T26 van juntas porque comparten patrón y archivos.
