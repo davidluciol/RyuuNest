@@ -78,11 +78,7 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
     id: "layout",
     title: "gallery.section.layout",
     kind: "tokens",
-    items: [
-      "gallery.layout.mobile",
-      "gallery.layout.tablet",
-      "gallery.layout.desktop",
-    ],
+    items: ["gallery.layout.mobile", "gallery.layout.tablet", "gallery.layout.desktop"],
   },
   {
     id: "iconos",
@@ -115,6 +111,8 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
       "gallery.component.emptyState",
       "gallery.component.errorState",
       "gallery.component.loadingState",
+      "gallery.component.appShell",
+      "gallery.component.destinationFrame",
     ],
     states: COMPONENT_STATES,
   },

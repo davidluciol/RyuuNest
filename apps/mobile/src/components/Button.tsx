@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, type StyleProp, type ViewStyle } from "rea
 import { touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import { type ButtonVariant, buttonStyle, buttonTextColor } from "./buttonStyles";
+import { textStyle } from "./textStyle";
 
 /**
  * F06 — botón primario / secundario / destructivo (SPEC §11.10). Props
@@ -47,9 +48,6 @@ export default function Button({
 
 const styles = StyleSheet.create({
   label: {
-    fontFamily: typography.labelLg.fontFamily,
-    fontSize: typography.labelLg.fontSize,
-    lineHeight: typography.labelLg.lineHeight,
-    fontWeight: "600",
+    ...textStyle(typography.labelLg),
   },
 });

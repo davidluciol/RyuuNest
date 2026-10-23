@@ -4,6 +4,7 @@
   "nav.discover": "Descubrir",
   "nav.sources": "Fuentes",
   "nav.settings": "Ajustes",
+  "shell.brand": "RyuuNest",
 
   "a11y.dragonMarker": "Dragón marcador",
 
@@ -60,6 +61,8 @@
   "gallery.component.emptySearch": "estado vacío (sin resultados)",
   "gallery.component.errorState": "error de módulo",
   "gallery.component.loadingState": "carga breve",
+  "gallery.component.appShell": "estructura compartida",
+  "gallery.component.destinationFrame": "marco de destino",
 
   "gallery.button.primary": "Primario",
   "gallery.button.secondary": "Secundario",

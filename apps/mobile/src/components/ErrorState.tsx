@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp } from "lucide-react-native";
 
 import Button from "./Button";
 import DragonMarker from "./DragonMarker";
+import { textStyle } from "./textStyle";
 import {
   type ErrorDetail,
   detailBoxStyle,
@@ -103,16 +104,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontFamily: titleStyle().fontFamily,
-    fontSize: titleStyle().fontSize,
-    lineHeight: titleStyle().lineHeight,
-    fontWeight: "600",
+    ...textStyle(titleStyle()),
     textAlign: "center",
   },
   message: {
-    fontFamily: messageStyle().fontFamily,
-    fontSize: messageStyle().fontSize,
-    lineHeight: messageStyle().lineHeight,
+    ...textStyle(messageStyle()),
     textAlign: "center",
   },
   detailArea: { alignItems: "center" },
@@ -124,15 +120,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   toggleText: {
-    fontFamily: typography.labelLg.fontFamily,
-    fontSize: typography.labelLg.fontSize,
-    lineHeight: typography.labelLg.lineHeight,
-    fontWeight: "600",
+    ...textStyle(typography.labelLg),
   },
   detailBox: detailBoxStyle(),
   detailLine: {
-    fontFamily: detailTextStyle().fontFamily,
-    fontSize: detailTextStyle().fontSize,
-    lineHeight: detailTextStyle().lineHeight,
+    ...textStyle(detailTextStyle()),
   },
 });

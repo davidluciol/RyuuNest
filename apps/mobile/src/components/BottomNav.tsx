@@ -1,13 +1,16 @@
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { BookOpen, Compass, Home, Library, Settings, type LucideIcon } from "lucide-react-native";
-import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
+import { BookOpen, Compass, Home, Library, Settings, type LucideIcon } from "../icons";
+import { spacing, typography } from "@ryuunest/ui-tokens";
 
-import { t } from "../i18n";
+import { destinationLabel } from "../navigation/routes";
+import { textStyle } from "./textStyle";
 import {
   BOTTOM_NAV_DESTINATIONS,
   type BottomNavDestination,
   bottomNavStyle,
   navItemColors,
+  navItemStyle,
 } from "./shellStyles";
 
 /**
@@ -28,22 +31,16 @@ const DESTINATION_ICONS: Record<BottomNavDestination, LucideIcon> = {
   settings: Settings,
 };
 
-const DESTINATION_LABELS: Record<BottomNavDestination, string> = {
-  home: t("nav.home"),
-  library: t("nav.library"),
-  discover: t("nav.discover"),
-  sources: t("nav.sources"),
-  settings: t("nav.settings"),
-};
-
 export interface BottomNavProps {
   active: BottomNavDestination;
   onSelect?: (destination: BottomNavDestination) => void;
+  disabled?: boolean;
 }
 
-export default function BottomNav({ active, onSelect }: BottomNavProps) {
+export default function BottomNav({ active, onSelect, disabled = false }: BottomNavProps) {
+  const [focused, setFocused] = useState<BottomNavDestination | null>(null);
   return (
-    <View style={[bottomNavStyle(), styles.container]}>
+    <View accessibilityRole="tablist" style={[bottomNavStyle(), styles.container]}>
       {BOTTOM_NAV_DESTINATIONS.map((destination) => {
         const isActive = destination === active;
         const colors = navItemColors(isActive);
@@ -51,15 +48,23 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
         return (
           <Pressable
             key={destination}
-            accessibilityRole="button"
-            accessibilityState={{ selected: isActive }}
+            accessibilityRole="tab"
+            accessibilityLabel={destinationLabel(destination)}
+            accessibilityState={{ selected: isActive, disabled }}
+            aria-selected={isActive}
+            aria-disabled={disabled}
+            disabled={disabled}
+            onFocus={() => setFocused(destination)}
+            onBlur={() => setFocused(null)}
             onPress={() => onSelect?.(destination)}
-            hitSlop={touchTarget.min / 8}
-            style={styles.item}
+            style={({ pressed }) => [
+              styles.item,
+              navItemStyle({ focused: focused === destination, pressed, disabled }),
+            ]}
           >
-            <Icon size={24} color={colors.icon} />
-            <Text style={[styles.label, { color: colors.text }]}>
-              {DESTINATION_LABELS[destination]}
+            <Icon size={spacing.lg} color={colors.icon} />
+            <Text testID="nav-label" style={[styles.label, { color: colors.text }]}>
+              {destinationLabel(destination)}
             </Text>
           </Pressable>
         );
@@ -73,6 +78,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "stretch",
     justifyContent: "space-around",
+    padding: spacing.xxs,
   },
   item: {
     flex: 1,
@@ -82,8 +88,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   label: {
-    fontFamily: typography.labelSm.fontFamily,
-    fontSize: typography.labelSm.fontSize,
-    lineHeight: typography.labelSm.lineHeight,
+    ...textStyle(typography.labelSm),
   },
 });

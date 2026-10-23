@@ -25,6 +25,8 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.emptyState",
       "gallery.component.errorState",
       "gallery.component.loadingState",
+      "gallery.component.appShell",
+      "gallery.component.destinationFrame",
     ]);
   });
 
@@ -47,5 +49,11 @@ describe("galería con componentes base 2 (F07)", () => {
     for (const name of ["estado vacío", "error de módulo", "carga breve"]) {
       expect(out, `falta ${name}`).toContain(name);
     }
+  });
+
+  it("incluye la estructura compartida y los marcos pendientes de F11", () => {
+    const out = renderGalleryScreen();
+    expect(out).toContain("estructura compartida");
+    expect(out).toContain("marco de destino");
   });
 });

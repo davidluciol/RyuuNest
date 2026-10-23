@@ -8,6 +8,7 @@ import {
   bottomNavStyle,
   headerStyle,
   navItemColors,
+  navItemStyle,
 } from "../../src/components/shellStyles";
 import {
   SETTINGS_ROW_MIN_HEIGHT,
@@ -31,13 +32,7 @@ describe("headerStyle (cabecera única, V5)", () => {
 
 describe("barra inferior de 5 destinos (T1)", () => {
   it("exactamente 5 destinos, identificados por id y etiquetados por el catálogo (F10)", () => {
-    expect(BOTTOM_NAV_DESTINATIONS).toEqual([
-      "home",
-      "library",
-      "discover",
-      "sources",
-      "settings",
-    ]);
+    expect(BOTTOM_NAV_DESTINATIONS).toEqual(["home", "library", "discover", "sources", "settings"]);
     // Las etiquetas visibles viven en el catálogo, no en el componente.
     expect(BOTTOM_NAV_DESTINATIONS.map((id) => t(`nav.${id}`))).toEqual([
       "Inicio",
@@ -61,6 +56,28 @@ describe("barra inferior de 5 destinos (T1)", () => {
   it("destino activo en accent, inactivo en text-secondary", () => {
     expect(navItemColors(true)).toEqual({ icon: "#35C98A", text: "#35C98A" });
     expect(navItemColors(false)).toEqual({ icon: "#9BA5B5", text: "#9BA5B5" });
+  });
+
+  it("garantiza 48 × 48 sin hitSlop solapado y foco visible de 2 px", () => {
+    expect(navItemStyle({ focused: false, pressed: false, disabled: false })).toMatchObject({
+      minWidth: 48,
+      minHeight: 48,
+      outlineColor: "transparent",
+    });
+    expect(navItemStyle({ focused: true, pressed: false, disabled: false })).toMatchObject({
+      outlineColor: "#35C98A",
+      outlineWidth: 2,
+      outlineOffset: 2,
+    });
+  });
+
+  it("diferencia presionado y deshabilitado sin introducir colores nuevos", () => {
+    expect(navItemStyle({ focused: false, pressed: true, disabled: false }).backgroundColor).toBe(
+      "rgba(53, 201, 138, 0.1)",
+    );
+    expect(navItemStyle({ focused: false, pressed: false, disabled: true }).opacity).toBeLessThan(
+      1,
+    );
   });
 });
 
