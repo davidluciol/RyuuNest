@@ -123,6 +123,12 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
 
+### 2026-10-23 · UP1 (solo plan): actualización a Expo SDK 58 documentada, sin ejecutar
+
+- **Hecho:** se documentó el plan completo de subida a **Expo SDK 58** (publicado 2026-10-15) en `tasks/upgrade-sdk58.md`, con Context7 (`/websites/expo_dev`), changelog oficial y registro npm — sin tocar dependencias ni código. Contiene: tabla de pines destino, **10 puntos de ruptura con impacto real sobre el código actual** (verificado por búsqueda, no suposición) y su solución (la única que exige cambio de ficheros es `web.output: "static"` en `app.json` para no romper la verificación Playwright), guía por **cortes** con comandos, rollback y referencias. Añadida la fila **UP1 (Ops/FE, Alta, N4→N5)** y **UP1b (fuentes variables post-UP1)** en `tasks/complexity.md` §4.2.
+- **Decisiones del humano:** (1) **documentar, no ejecutar todavía** — UP1 queda pendiente de autorización; (2) pinning destino = **última `58.0.x` publicada en npm al ejecutar** (hoy: `expo@58.0.17`, `expo-router@58.0.25`), peers alineados con `expo install --fix` y verificados contra el registro npm (los docs de ctx7 van rezagados, pregunta 3). La subida reemplaza **P-66** (antigüedad mínima de paquetes) y el pin de router `57.0.28` (P-65) **para esta tarea**; el reemplazo formal de P-66 en §2 se registrará al autorizar la ejecución.
+- **Siguiente paso:** autorizar la ejecución de UP1 (empieza en el Corte 0 del plan). **UP1b** (fuentes variables/multifamilia — la mejora que F11 anotó «es de SDK 58») queda como tarea aparte después de UP1.
+
 ### 2026-10-23 · FB1: el plano se mueve después de F14b
 
 - **Hecho:** se revisó el alcance de FB1 y se movió en la planificación **después de F14b**, con dependencia de F11, F13, F14a y F14b. Motivo: F13 es la única pantalla hecha y usa `SAMPLE_HOME_DATA` (fixtures), sin conectar el núcleo; F14a/F14b son el primer patrón con datos reales de biblioteca (T22/T23). Se actualizaron `tasks/todo.md` (orden y alcance), `tasks/plan.md` (P2-12, P2.3, P2.4, P2.5 y §12), `tasks/complexity.md` (fila y §5) y este archivo. **No se escribió `docs/screen-blueprint.md` ni se tocó código.**

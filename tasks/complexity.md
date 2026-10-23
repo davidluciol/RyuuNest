@@ -96,6 +96,8 @@ Notas:
 | F26 Extensión | Sec | **Alta** | N4 | N5 | MV3: origen, permisos por dominio |
 | F27 Puente web↔ext. | FE/BE | **Alta** | N4 | N5 | Web Worker + mensajes |
 | F28 Verificación | FE | Intermedia | N3 | N4 | Mucha comparación visual (requiere visión) |
+| UP1 Actualización total a SDK 58 (plan listo en `tasks/upgrade-sdk58.md`; pendiente de autorización) | Ops/FE | **Alta** | N4 | N5 | Toca el andamio de todo lo hecho (F03–F14b): deps, build, Playwright, gates; P-66 queda reemplazada para esta tarea por orden del humano |
+| UP1b Fuentes variables/multifamilia (post-UP1) | FE | Intermedia | N3 | N4 | Mejora de F03 que el SDK 58 ya ofrece: `expo-font` con `fontDefinitions` |
 | Checkpoints | Ops | Baja | N1 | — | Correr comandos; 🧍 revisión |
 
 ## 5. Flujos que ahorran tokens
