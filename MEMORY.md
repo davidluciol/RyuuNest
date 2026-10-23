@@ -129,7 +129,7 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 - **Decisiones:** **P-67** — FB1 documenta el patrón cuando ya hay datos reales; F13 queda como ejemplo de fixtures y F14a/F14b como ejemplo de datos reales. Lectores sin cambios (F12, F15, F17, F20, F21, F25). Se descartó moverlo tras F17 porque exigía quitar FB1 de F17 y subir F17 de N2 a N3.
 - **Gate:** `pnpm lint`, `pnpm -r typecheck` y `pnpm -r test` en verde (**629 tests**: core 292, mobile 151, ui-tokens 100, module-sdk 48, test-site 20, eslint-plugin 18). Rama `feature/FB1-screen-blueprint`, desde `master` actualizado (`7eb23b5`, con F13 ya fusionada en el PR #23).
 - **Preguntas nuevas / respondidas:** ninguna. Sigue abierta la **17** («Leyendo»).
-- **Siguiente paso:** revisión y fusión de este cambio de planificación; después, **F14a** y **F14b** (Biblioteca) y, ya con datos reales, **FB1**.
+- **Siguiente paso:** PR #24 creado (https://github.com/davidluciol/RyuuNest/pull/24) para revisión humana; después, **F14a** y **F14b** (Biblioteca) y, ya con datos reales, **FB1**.
 
 ### 2026-10-23 · F13: pantalla Inicio (3 secciones, componentes reutilizables)
 
