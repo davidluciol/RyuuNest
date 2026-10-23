@@ -74,15 +74,16 @@ Dep: T22, T24, T25, T26 · M · `core/src/backup/{export,schema}.ts` (+test)
 - Verif: `pnpm --filter @ryuunest/core test` + validar contra un esquema de fixture
 - **Hecho (2026-10-21):** `exportBackup({ driver, storage, clock })` vuelca todo el estado local en un `Backup` con la forma de SPEC §8.3 (decisión **P-64**: extendido con `series.status`, `progress.chapterTitle`, `repo.addedAt`/`updatedAt` y la metadata del módulo; `settings` como `Record<string,string>` desde la tabla `setting`). Repos y módulos se leen del `Storage` clave-valor; las filas de usuario, de SQL. Lectura pura, sin secretos (sin `files`/`manifest`/`permissions`). 6 tests; 292 en core (580 en el repo), gate completo en verde.
 
-### T29 Importar respaldo — en dos pasos `[BE · Alta · N4 tests · N2 implementación]`
+### T29 Importar respaldo — en dos pasos `[BE · Alta · N4 tests · N2 implementación]` ✅
 
 Dep: T28 · M · `core/src/backup/import.ts` (+test)
 > **T29a (N4):** escribir solo los tests (en rojo) y los tipos/esquema de resultado; no implementar. **T29b (N2→N3):** implementar hasta verde **sin editar los tests**; si falla 2 veces → «modelo con poca potencia cambiar.» (escala N3, luego N4).
 
-- [ ] Respaldo inválido o sobredimensionado se rechaza sin tocar datos
-- [ ] Fusión respeta el `updated_at` más reciente; reemplazo restaura el estado del respaldo
-- [ ] Repos/módulos del respaldo se devuelven como **sugerencias**, sin instalar nada (RF-38)
+- [x] Respaldo inválido o sobredimensionado se rechaza sin tocar datos
+- [x] Fusión respeta el `updated_at` más reciente; reemplazo restaura el estado del respaldo
+- [x] Repos/módulos del respaldo se devuelven como **sugerencias**, sin instalar nada (RF-38)
 - Verif: `pnpm --filter @ryuunest/core test` + fusionar dos respaldos con progreso en conflicto
+- **Hecho (2026-10-23):** T29a y T29b en una sola sesión y rama (`feature/T29ab-backup-import`), por petición del humano. `importBackup({ driver, mode }, texto)` → `ImportResult`: rechazo `TOO_LARGE` (50 MB en bytes UTF-8) / `NOT_JSON` / `INVALID` (con rutas) antes de tocar nada; aplicación en **una transacción** (un fallo a mitad revierte todo). `merge`: por `updated_at` (empate: local), carpetas por nombre, leídos en unión, ajustes con prioridad local; `replace`: restaura el respaldo. Repos y módulos solo como sugerencias (**P-68**, **P-69**). 65 tests (T29a en rojo, verificados con 2 mutaciones); core 357, 717 en el repo.
 
 ### T30 E2E de respaldo (AC-7) `[BE · Baja · N2]`
 
