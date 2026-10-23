@@ -17,12 +17,19 @@
  */
 import type { MediaKind, SeriesStatus } from "../contract/types.js";
 import type { ReaderMode } from "../library/SeriesPrefs.js";
+import type { ValidationResult } from "../validation.js";
 
 /** Identificador del formato (SPEC §8.3). */
 export const BACKUP_FORMAT = "ryuunest-backup";
 
 /** Versión del formato (SPEC §8.3). */
 export const BACKUP_VERSION = 1;
+
+/**
+ * Tamaño máximo, en bytes UTF-8, del texto de un respaldo al importarlo (SPEC §7.2: «límites
+ * de tamaño»). Lo fijó el humano en T29 (50 MB): se comprueba antes de parsear.
+ */
+export const MAX_BACKUP_BYTES = 50 * 1024 * 1024;
 
 /** Repositorio registrado en el respaldo. */
 export interface BackupRepo {
@@ -119,4 +126,13 @@ export interface Backup {
   prefs: BackupPref[];
   /** Ajustes tal cual viven en la tabla `setting` (clave-valor); hoy vacía (F20). */
   settings: Record<string, string>;
+}
+
+/**
+ * Valida un valor desconocido (el JSON ya parseado) contra el formato del respaldo, de forma
+ * estricta: tipos, enumeraciones, URLs HTTPS de repos, claves duplicadas y carpetas
+ * referenciadas por los favoritos. Cada problema lleva su ruta (`progress[0].pageIndex`).
+ */
+export function validateBackup(_value: unknown): ValidationResult<Backup> {
+  throw new Error("T29b: validateBackup sin implementar");
 }
