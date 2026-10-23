@@ -27,6 +27,11 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.loadingState",
       "gallery.component.appShell",
       "gallery.component.destinationFrame",
+      "gallery.component.sectionHeader",
+      "gallery.component.continueCard",
+      "gallery.component.recentCard",
+      "gallery.component.folderCard",
+      "gallery.component.homeScreen",
     ]);
   });
 
@@ -55,5 +60,18 @@ describe("galería con componentes base 2 (F07)", () => {
     const out = renderGalleryScreen();
     expect(out).toContain("estructura compartida");
     expect(out).toContain("marco de destino");
+  });
+
+  it("F13: la galería nombra los componentes de la pantalla Inicio", () => {
+    const out = renderGalleryScreen();
+    for (const name of [
+      "encabezado de sección",
+      "tarjeta hero (continuar)",
+      "tarjeta de recientes",
+      "tarjeta de carpeta",
+      "pantalla Inicio",
+    ]) {
+      expect(out, `falta ${name}`).toContain(name);
+    }
   });
 });

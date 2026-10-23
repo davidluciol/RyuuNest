@@ -18,11 +18,15 @@ import Button from "../components/Button";
 import ChapterRow from "../components/ChapterRow";
 import Checkbox from "../components/Checkbox";
 import Chip from "../components/Chip";
+import ContinueCard from "../components/ContinueCard";
 import CoverCard from "../components/CoverCard";
 import EmptyState from "../components/EmptyState";
 import ErrorState from "../components/ErrorState";
+import FolderCard from "../components/FolderCard";
 import Header from "../components/Header";
 import LoadingState from "../components/LoadingState";
+import RecentCard from "../components/RecentCard";
+import SectionHeader from "../components/SectionHeader";
 import SettingsRow from "../components/SettingsRow";
 import Sheet from "../components/Sheet";
 import TextField from "../components/TextField";
@@ -30,6 +34,9 @@ import type { BottomNavDestination } from "../components/shellStyles";
 import { destinationLabel } from "../navigation/routes";
 import AppShell from "../shell/AppShell";
 import DestinationFrame from "../shell/DestinationFrame";
+import HomeScreen from "../screens/home/HomeScreen";
+import { SAMPLE_HOME_DATA } from "../screens/home/homeFixtures";
+import { Flame, History } from "../icons";
 
 import { COMPONENT_STATES } from "./registry";
 import { t } from "../i18n";
@@ -290,6 +297,70 @@ export default function GalleryScreen() {
         </AppShell>
         <Text style={styles.groupLabel}>{t("gallery.component.destinationFrame")}</Text>
         <DestinationFrame destination="sources" />
+
+        <Text style={styles.groupLabel}>{t("gallery.component.sectionHeader")}</Text>
+        <View style={styles.componentColumn}>
+          <SectionHeader title={t("home.section.continue")} icon={Flame} />
+          <SectionHeader
+            title={t("home.section.recent")}
+            icon={History}
+            actionLabel={t("home.action.seeAll")}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.continueCard")}</Text>
+        <ContinueCard
+          kind={t("gallery.badge.manhwa")}
+          title="El dragón de ceniza"
+          meta="Crónicas de Alden · En emisión"
+          chapter="Cap. 41"
+          pageIndex={11}
+          pageTotal={38}
+          actionLabel={t("home.action.continueChapter", { number: 41 })}
+        />
+
+        <Text style={styles.groupLabel}>{t("gallery.component.recentCard")}</Text>
+        <View style={styles.row}>
+          <RecentCard
+            kind={t("gallery.badge.manhwa")}
+            title="Sombras de Arcano"
+            chapter="Cap. 24"
+            progress={0.78}
+          />
+          <RecentCard
+            kind="Manga"
+            title="La forja perdida"
+            chapter="Cap. 52"
+            progress={0.1}
+          />
+          <RecentCard
+            kind="Manga"
+            title="Guardián del nido sin progreso"
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.folderCard")}</Text>
+        <View style={styles.row}>
+          <View style={{ flex: 1 }}>
+            <FolderCard
+              name="Favoritos Épicos"
+              description="Fantasía y Aventuras"
+              count={24}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <FolderCard
+              name="Lectura Nocturna"
+              description="Atmósfera y Misterio"
+              count={14}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.homeScreen")}</Text>
+        <View style={styles.shellPreview}>
+          <HomeScreen data={SAMPLE_HOME_DATA} />
+        </View>
       </Section>
     </ScrollView>
   );
