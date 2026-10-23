@@ -36,6 +36,9 @@ import AppShell from "../shell/AppShell";
 import DestinationFrame from "../shell/DestinationFrame";
 import HomeScreen from "../screens/home/HomeScreen";
 import { SAMPLE_HOME_DATA } from "../screens/home/homeFixtures";
+import LibraryCard from "../components/LibraryCard";
+import LibraryScreen from "../screens/library/LibraryScreen";
+import { SAMPLE_LIBRARY_DATA } from "../screens/library/libraryFixtures";
 import { Flame, History } from "../icons";
 
 import { COMPONENT_STATES } from "./registry";
@@ -328,13 +331,13 @@ export default function GalleryScreen() {
             progress={0.78}
           />
           <RecentCard
-            kind="Manga"
+            kind={t("kind.manga")}
             title="La forja perdida"
             chapter="Cap. 52"
             progress={0.1}
           />
           <RecentCard
-            kind="Manga"
+            kind={t("kind.manga")}
             title="Guardián del nido sin progreso"
           />
         </View>
@@ -361,6 +364,34 @@ export default function GalleryScreen() {
         <View style={styles.shellPreview}>
           <HomeScreen data={SAMPLE_HOME_DATA} />
         </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.libraryCard")}</Text>
+        <View style={styles.row}>
+          <View style={styles.libraryCardWrap}>
+            <LibraryCard
+              kind={t("kind.manhwa")}
+              title="El dragón de ceniza"
+              progress={0.29}
+            />
+          </View>
+          <View style={styles.libraryCardWrap}>
+            <LibraryCard
+              kind={t("kind.manga")}
+              title="La forja perdida de las estrellas del norte"
+            />
+          </View>
+          <View style={styles.libraryCardWrap}>
+            <LibraryCard
+              kind={t("kind.comic")}
+              title="Noche de ámbar"
+            />
+          </View>
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.libraryScreen")}</Text>
+        <View style={styles.shellPreview}>
+          <LibraryScreen data={SAMPLE_LIBRARY_DATA} />
+        </View>
       </Section>
     </ScrollView>
   );
@@ -385,6 +416,7 @@ const styles = StyleSheet.create({
   section: { gap: spacing.sm },
   componentColumn: { gap: spacing.sm, alignItems: "stretch" },
   coverWrap: { width: spacing["2xl"] * 2 },
+  libraryCardWrap: { flex: 1, minWidth: 0 },
   shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
   shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
