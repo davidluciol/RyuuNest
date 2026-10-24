@@ -6,9 +6,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/app.json": {
-    "mtime": 1792776990.216058,
-    "seen": 1792788128.4695883,
-    "ast_hash": "ec01f2d8ff59c4727a291f232c3d7c22",
+    "mtime": 1792814859.5890656,
+    "seen": 1792815091.6198635,
+    "ast_hash": "e44a42c86977b47977171c4d79177e91",
     "semantic_hash": ""
   },
   "apps/mobile/globals.d.ts": {
@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1792813410.9606905,
-    "seen": 1792813432.2710483,
-    "ast_hash": "d3c14acf163de4bfa646b29b59c2be0c",
+    "mtime": 1792814997.2645895,
+    "seen": 1792815091.6198635,
+    "ast_hash": "260f44243a5349cd1b64911e922db458",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -912,9 +912,9 @@
     "semantic_hash": ""
   },
   "docs/SPEC.md": {
-    "mtime": 1792122397.9418337,
-    "seen": 1792775428.1628587,
-    "ast_hash": "44db4be30f484d6317d151812d7234c0",
+    "mtime": 1792814931.1925738,
+    "seen": 1792815091.6198635,
+    "ast_hash": "3c9273d7b747fd894e520250d0b81385",
     "semantic_hash": ""
   },
   "docs/SPEC_Legacy.md": {
@@ -960,15 +960,15 @@
     "semantic_hash": ""
   },
   "tasks/plan.md": {
-    "mtime": 1792813346.6159651,
-    "seen": 1792813432.2710483,
-    "ast_hash": "e6ed53091eab9eac57167cdfb5726a68",
+    "mtime": 1792814931.1925738,
+    "seen": 1792815091.6198635,
+    "ast_hash": "1fcbea79e1104761a508a2e6a26b9e3b",
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1792813333.1017916,
-    "seen": 1792813432.2710483,
-    "ast_hash": "b45b1decc8942c177d412e243f09d159",
+    "mtime": 1792815001.5003183,
+    "seen": 1792815091.6198635,
+    "ast_hash": "eda9d911dafcf0d2b4e3447d3159f0dd",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -1356,8 +1356,8 @@
     "semantic_hash": ""
   },
   "packages/core/src/library/queries.ts": {
-    "mtime": 1792813103.4565623,
-    "seen": 1792813432.2710483,
+    "mtime": 1792813525.2562313,
+    "seen": 1792815091.6198635,
     "ast_hash": "dc425dac8e6d1e14d02304cc067792d6",
     "semantic_hash": ""
   },
@@ -1410,8 +1410,8 @@
     "semantic_hash": ""
   },
   "packages/core/tests/library/queries.test.ts": {
-    "mtime": 1792813112.096446,
-    "seen": 1792813432.2710483,
+    "mtime": 1792813525.2587774,
+    "seen": 1792815091.6198635,
     "ast_hash": "cc4c974ed2f30fbb3e4b449426957616",
     "semantic_hash": ""
   },
@@ -1632,9 +1632,9 @@
     "semantic_hash": ""
   },
   "tasks/complexity.md": {
-    "mtime": 1792813343.5773585,
-    "seen": 1792813432.2710483,
-    "ast_hash": "52e8d2e54869503c99ab4d824bd56d87",
+    "mtime": 1792815003.7836754,
+    "seen": 1792815091.6198635,
+    "ast_hash": "b03335fb78d7c032b6201d3a88d21ed5",
     "semantic_hash": ""
   },
   "tasks/plan.archive.md": {
@@ -2010,9 +2010,9 @@
     "semantic_hash": ""
   },
   "packages/core/tests/e2e/backup.e2e.test.ts": {
-    "mtime": 1792811235.3331487,
-    "seen": 1792811402.1613004,
-    "ast_hash": "09ef6d441dd8c29b929f1585ee816eb7",
+    "mtime": 1792813525.0705214,
+    "seen": 1792815091.6198635,
+    "ast_hash": "61c5c052189f813cffda18386b9a3c6c",
     "semantic_hash": ""
   }
 }
