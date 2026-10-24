@@ -152,6 +152,7 @@ FASE 9 — Endurecimiento
   T33 Pruebas de seguridad (zip-slip, bomba, hash, manifest, deep link) (T13)
    ├─ T34 Pruebas de resiliencia (timeout, concurrencia, rate-limit, last_error) (T08, T14)
    └─ T35 Puertas de CI / contrato / cobertura (T02, T32a)   → AC-11 (núcleo)
+  T36 Núcleo de diagnóstico (tabla `log`, redacción, export) (T21) — P-72, independiente del Checkpoint J
 
 FASE 10 — PARTE 2 (PENDIENTE, otro modelo)
   Fase 6a sistema de diseño · Fase 6b móvil · Fase 7 TV · Fase 8 web+extensión.
@@ -281,6 +282,7 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 - [ ] T33 Pruebas de seguridad
 - [ ] T34 Pruebas de resiliencia
 - [ ] T35 Puertas de CI / contrato / cobertura (**AC-11 núcleo**)
+- [ ] T36 Núcleo de diagnóstico (tabla `log`, redacción, export **JSON + texto**) — P-72; independiente del Checkpoint J
 
 ### ✅ Checkpoint J — Fin de la Parte 1 (tras T33–T35)
 - [ ] Toda la suite de pruebas y el CI en verde
@@ -487,6 +489,10 @@ galería).
 - [ ] F19 Lector 2 (zoom, pantalla encendida, errores/reintento, precarga)
 - [ ] F20 Ajustes (idioma, NSFW, protección, modo de lectura, caché, respaldo, acerca de) — RF-37 a RF-40
 - [ ] F21a Exportar y compartir respaldo; F21b importar (merge/replace, errores); F21c sugerencias de repos y módulos — RF-37, RF-38
+- [ ] FB2 Diseño en Stitch: toast/modal/banner, Ajustes → Diagnóstico y estados vacíos — P-72
+- [ ] F29 Componentes de error (toast, modal, banner) — P-72
+- [ ] F30 Ajustes → Diagnóstico (ver, exportar, copiar y borrar registros) — P-72
+- [ ] F31 Integrar errores en F15/F16/F21/lector y registrar cada fallo — P-72
 
 ### ✅ Checkpoint P-B (tras F11–F21)
 - [ ] AC-1, AC-3 y AC-12 (móvil); AC-6 medido en la MiBox 4
