@@ -27,6 +27,12 @@ export interface ContractHarnessOptions {
   searchQuery?: string;
   /** Si se indica, cada imagen debe llevar estas cabeceras (RF-24). */
   expectImageHeaders?: Readonly<Record<string, string>>;
+  /**
+   * El sitio no informa de si hay más páginas y el módulo estima `hasNext` (true mientras
+   * la página traiga series). Se sigue exigiendo que la página 1 traiga series, pero la
+   * página 2 puede venir vacía o seguir marcando `hasNext`.
+   */
+  estimatedHasNext?: boolean;
 }
 
 /** Qué se comprobó y con qué datos. */
@@ -69,19 +75,21 @@ export async function runContract(
   const searchQuery = options.searchQuery ?? FIXTURE_DEFAULTS.searchQuery;
   const exercised: string[] = [];
 
+  const estimated = options.estimatedHasNext === true;
+
   const popular = moduleApi.popular;
   if (popular !== undefined) {
-    await checkListing("popular", popular);
+    await checkListing("popular", popular, estimated);
     exercised.push("popular");
   }
 
   const latest = moduleApi.latest;
   if (latest !== undefined) {
-    await checkListing("latest", latest);
+    await checkListing("latest", latest, estimated);
     exercised.push("latest");
   }
 
-  await checkListing("search", (page) => moduleApi.search(searchQuery, page));
+  await checkListing("search", (page) => moduleApi.search(searchQuery, page), estimated);
   exercised.push("search");
 
   const details = await moduleApi.details(seriesId);
@@ -106,6 +114,7 @@ export async function runContract(
 async function checkListing(
   name: string,
   run: (page: number) => Promise<Page<SeriesSummary>>,
+  estimatedHasNext: boolean,
 ): Promise<void> {
   const first = await run(1);
   assertPage(name, first);
@@ -118,6 +127,9 @@ async function checkListing(
 
   const second = await run(2);
   assertPage(name, second);
+  if (estimatedHasNext) {
+    return;
+  }
   if (second.items.length === 0) {
     throw new ContractError(`${name}(2) no devolvió ninguna serie`);
   }
