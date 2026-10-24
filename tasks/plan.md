@@ -486,7 +486,7 @@ galería).
 - [ ] F18 Lector 1 (modos, zonas táctiles, controles, progreso, siguiente capítulo)
 - [ ] F19 Lector 2 (zoom, pantalla encendida, errores/reintento, precarga)
 - [ ] F20 Ajustes (idioma, NSFW, protección, modo de lectura, caché, respaldo, acerca de) — RF-37 a RF-40
-- [ ] F21 Respaldo (exportar/compartir, importar, lista de sugerencias) — RF-37, RF-38
+- [ ] F21a Exportar y compartir respaldo; F21b importar (merge/replace, errores); F21c sugerencias de repos y módulos — RF-37, RF-38
 
 ### ✅ Checkpoint P-B (tras F11–F21)
 - [ ] AC-1, AC-3 y AC-12 (móvil); AC-6 medido en la MiBox 4

@@ -59,11 +59,13 @@ Notas:
 |---|---|---|---|---|---|
 | T05 cierre | Ops | Baja | N1 | — | 🧍 confirmar ADR-0002 |
 | T25+T26 Progreso y chapter_read (1 sesión) | BE | Baja | N2 | N3 | Copian el patrón de T22/T24 |
+| T25b Borrar progreso al quitar serie (P-62) | BE | Baja | N2 | — | Borrado transaccional + tests |
 | T27 Estado del lector | BE | Intermedia | N3 | N4 | Máquina de estados e invariantes |
 | T28 Exportar respaldo | BE | Intermedia | N3 | N4 | Esquema SPEC §8.3 sobre todas las tablas |
 | T29a Importar: tests y esquema | BE | **Alta** | N4 | N5 | Define fusión, atomicidad y entrada hostil |
 | T29b Importar: implementación | BE | Intermedia | N2 | N3 → N4 | Implementar hasta verde sin tocar los tests |
 | T30 E2E respaldo | BE | Baja | N2 | N3 | Solo ida y vuelta |
+| T30b Filtro «Leyendo» (P-70) | BE | Baja | N2 | — | Filtro SQL + 6 tests |
 | T31 Port `logicTMO` | BE | **Alta** | N4 | N5 | Python→TS, 8 defectos, sitio real |
 | T32a 2.º sitio falso | BE | Intermedia | N3 | N4 | Fixtures JSON + cursor |
 | T32b ADR congelación API | BE | **Alta** | N5 | — | Congelar API pública es juicio de diseño |
@@ -88,7 +90,9 @@ Notas:
 | F18 Lector 1 | FE | **Alta** | N4 | N5 | Gestos, modos, RTL, progreso, memoria |
 | F19 Lector 2 | FE | **Alta** | N4 | N5 | Zoom y precarga con presupuesto de memoria |
 | F20 Ajustes | FE | Baja | N2 | N3 | Filas de ajustes con componentes existentes |
-| F21 Respaldo UI | FE | Intermedia | N3 | N4 | Archivos/compartir + validación |
+| F21a Exportar/compartir respaldo | FE | Intermedia | N3 | N4 | Archivo del sistema + estados |
+| F21b Importar respaldo | FE | Intermedia | N3 | N4 | Validación, errores y confirmación destructiva |
+| F21c Sugerencias repos/módulos | FE | Baja | N2 | N3 | Lista + descarte de ya registrados |
 | F22 TV riel+foco | FE | **Alta** | N4 | N5 | Foco espacial; difícil de probar sin dispositivo |
 | F23 Lector TV | FE | **Alta** | N4 | N5 | D-pad sobre el lector |
 | F24 Cliente web | FE | Intermedia | N3 | N4 | Vite + reutilización de componentes |

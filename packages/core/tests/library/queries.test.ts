@@ -195,6 +195,74 @@ describe("browseLibrary · filtros del SPEC §3.5", () => {
   });
 });
 
+describe("browseLibrary · «Leyendo» (P-70)", () => {
+  it("solo devuelve las series con una fila en progress", async () => {
+    await ponerProgreso("ceniza", "cap-3", 12, 50_000);
+    await ponerProgreso("templo", "cap-1", 0, 60_000);
+
+    const pagina = await browseLibrary(driver, { reading: true, order: "name", limit: 10 });
+
+    expect(pagina.items.map((e) => e.seriesId)).toEqual(["ceniza", "templo"]);
+  });
+
+  it("cuenta la serie aunque el capítulo esté en la última página (P-70, no la opción b)", async () => {
+    await ponerProgreso("ceniza", "cap-3", 39, 50_000);
+
+    const pagina = await browseLibrary(driver, { reading: true, order: "name", limit: 10 });
+
+    expect(pagina.items.map((e) => e.seriesId)).toEqual(["ceniza"]);
+  });
+
+  it("sin el filtro devuelve también las series sin progreso", async () => {
+    await ponerProgreso("ceniza", "cap-3", 12, 50_000);
+
+    const pagina = await browseLibrary(driver, { order: "name", limit: 10 });
+
+    expect(pagina.items.map((e) => e.seriesId)).toEqual(["moonlit", "ceniza", "templo", "nido"]);
+  });
+
+  it("`reading: false` devuelve las que no se han empezado", async () => {
+    await ponerProgreso("ceniza", "cap-3", 12, 50_000);
+
+    const pagina = await browseLibrary(driver, { reading: false, order: "name", limit: 10 });
+
+    expect(pagina.items.map((e) => e.seriesId)).toEqual(["moonlit", "templo", "nido"]);
+  });
+
+  it("se combina con la paginación por cursor sin repetir ni saltar series", async () => {
+    await ponerProgreso("ceniza", "cap-1", 0, 50_000);
+    await ponerProgreso("nido", "cap-1", 0, 60_000);
+    await ponerProgreso("templo", "cap-1", 0, 70_000);
+
+    const primera = await browseLibrary(driver, { reading: true, order: "name", limit: 2 });
+    expect(primera.items.map((e) => e.seriesId)).toEqual(["ceniza", "templo"]);
+    expect(primera.nextCursor).not.toBeNull();
+
+    const segunda = await browseLibrary(driver, {
+      reading: true,
+      order: "name",
+      limit: 2,
+      cursor: primera.nextCursor ?? undefined,
+    });
+    expect(segunda.items.map((e) => e.seriesId)).toEqual(["nido"]);
+  });
+
+  it("la serie NSFW sigue oculta salvo que se pidan las NSFW (RF-35)", async () => {
+    await ponerProgreso("sombra", "cap-1", 0, 50_000);
+
+    const oculto = await browseLibrary(driver, { reading: true, order: "name", limit: 10 });
+    expect(oculto.items.map((e) => e.seriesId)).toEqual([]);
+
+    const visible = await browseLibrary(driver, {
+      reading: true,
+      nsfwVisible: true,
+      order: "name",
+      limit: 10,
+    });
+    expect(visible.items.map((e) => e.seriesId)).toEqual(["sombra"]);
+  });
+});
+
 describe("browseLibrary · órdenes del SPEC §3.5 (RF-28)", () => {
   it("por nombre usa el título normalizado (minúsculas y sin acentos)", async () => {
     const pagina = await browseLibrary(driver, { order: "name", limit: 10 });
