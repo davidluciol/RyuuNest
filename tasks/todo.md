@@ -185,6 +185,17 @@ Dep: T02, T32a · S · `.github/workflows/ci.yml`, `vitest.config.ts`
 - [ ] `pnpm -r test && pnpm -r typecheck && pnpm lint` es la puerta única de fusión
 - Verif: ese comando + 🧍 PR de prueba que rompe el contrato y falla el CI
 
+### T36 Núcleo de diagnóstico y errores (P-72) `[BE · Intermedia · N3]`
+
+Dep: T21 · M · `packages/core/src/diagnostics/*`, `packages/core/src/storage/{schema,migrations}.ts` (+test)
+
+- [ ] Migración nueva con tabla `log` (`at`, `level`, `code`, `message`, `context`, `app_version`, `platform`); tope **500 entradas** (borra las más viejas)
+- [ ] `record`/`list`/`clear`/`export`; niveles `info`/`warn`/`error`; contexto saneado
+- [ ] Redacción estricta: sin credenciales, cookies, cabeceras, HTML, títulos, URLs completas ni rutas locales
+- [ ] Export **JSON + texto legible**; sin red ni telemetría
+- Verif: `pnpm --filter @ryuunest/core test`
+- **Origen:** P-72 (2026-10-23); independiente del Checkpoint J.
+
 ### 🚩 Checkpoint J — Fin de la Parte 1 `[Ops · Baja · N1]`
 
 - [ ] Suite y CI en verde · [ ] Cobertura del contrato completa · [ ] 🧍 Revisión → continuar con F11 (Parte 2 ya planificada)
@@ -325,7 +336,7 @@ Dep: F20, FB1; T28 · S · `apps/mobile/src/screens/settings/backup/*`
 
 #### F21b Importar respaldo `[FE · Intermedia · N3]`
 
-Dep: F21a; T29 · M · `apps/mobile/src/screens/settings/backup/*`
+Dep: F21a, F29; T29, T36 · M · `apps/mobile/src/screens/settings/backup/*`
 
 - [ ] Elegir archivo, leerlo y aplicar `merge` o `replace` con `importBackup` (RF-38)
 - [ ] Rechazo `TOO_LARGE` / `NOT_JSON` / `INVALID` con mensaje claro y sin tocar datos
@@ -344,6 +355,47 @@ Dep: F21b; T29 · S · `apps/mobile/src/screens/settings/backup/*`
 ### 🚩 Checkpoint P-B `[Ops · Baja · N1]`
 
 - [ ] AC-1, AC-3, AC-12 (móvil) · [ ] 🧍 AC-6 en MiBox 4 · [ ] Sin literales; estados resueltos · [ ] 🧍 Revisión
+
+---
+
+## Fase 6c — Errores y diagnóstico (transversal, P-72)
+
+### FB2 Diseño en Stitch de errores y Diagnóstico `[Ops · Baja · N2]`
+
+Dep: FB1, F06, F20 · S · `design/stitch/` (PNG/HTML)
+
+- [ ] Toast, modal y banner con estados (info, warning, error, con acción, expandido)
+- [ ] Ajustes → Diagnóstico: lista, exportar, copiar, borrar y estado vacío
+- [ ] Estados vacíos a pantalla completa (dragón, título y acción)
+- Verif: 🧍 revisión y exportación a `design/stitch/`
+
+### F29 Componentes de error: toast, modal y banner `[FE · Intermedia · N3]`
+
+Dep: F06, F10, FB2 · M · `apps/mobile/src/components/*`
+
+- [ ] Toast 4 s, una línea y acción opcional; no bloquea
+- [ ] Modal con título, explicación simple, código, detalle expandible y acciones (reintentar, copiar, exportar)
+- [ ] Banner inline para error de módulo con causa, código, reintentar y detalle (F15)
+- [ ] Todos los estados en la galería; tokens, i18n y sin animación en el lector
+- Verif: Playwright + galería
+
+### F30 Ajustes → Diagnóstico `[FE · Baja · N2]`
+
+Dep: F20, F29, T36 · S · `apps/mobile/src/screens/settings/diagnostics/*`
+
+- [ ] Ver últimos registros, exportar (JSON + texto), copiar informe y borrar
+- [ ] Estado vacío y confirmación antes de borrar
+- Verif: Playwright · 🧍 compartir el archivo
+
+### F31 Integrar errores en las pantallas `[FE · Intermedia · N3]`
+
+Dep: F15, F16, F21, F29, T36 · M · `apps/mobile/src/screens/*`
+
+- [ ] Descubrir y Fuentes usan banner/modal con causa, código, reintentar y detalle
+- [ ] Respaldo (F21) muestra rechazos y errores con modal/toast y registra el evento
+- [ ] Lector muestra un banner estático (sin animación) y registra el fallo
+- [ ] Cada error visible deja una entrada en `log` sin datos sensibles
+- Verif: Playwright por pantalla + tests de integración
 
 ---
 

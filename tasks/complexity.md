@@ -73,6 +73,7 @@ Notas:
 | T33 Seguridad | Sec | **Alta** | N4 | N5 | Pensamiento adversarial |
 | T34 Resiliencia | BE | Intermedia | N3 | N4 | Timers/async, tests inestables |
 | T35 Puertas de CI | Ops | Baja | N2 | N3 | YAML + umbral de cobertura (dep. T32a) |
+| T36 Núcleo de diagnóstico (P-72) | BE | Intermedia | N3 | N4 | Migración, redacción y export |
 | FA1 Arte dragón | Ops | Baja | N1 | — | 🧍 proceso con artista; solo docs |
 
 ### Parte 2 — Interfaz
@@ -94,6 +95,10 @@ Notas:
 | F21a Exportar/compartir respaldo | FE | Intermedia | N3 | N4 | Archivo del sistema + estados |
 | F21b Importar respaldo | FE | Intermedia | N3 | N4 | Validación, errores y confirmación destructiva |
 | F21c Sugerencias repos/módulos | FE | Baja | N2 | N3 | Lista + descarte de ya registrados |
+| FB2 Diseño Stitch errores/Diagnóstico (P-72) | Ops | Baja | N2 | — | Toast/modal/banner + sección Diagnóstico + vacíos |
+| F29 Componentes de error (P-72) | FE | Intermedia | N3 | N4 | Toast/modal/banner con estados y a11y |
+| F30 Ajustes → Diagnóstico (P-72) | FE | Baja | N2 | N3 | Lista, exportar, copiar y borrar |
+| F31 Integrar errores en pantallas (P-72) | FE | Intermedia | N3 | N4 | F15/F16/F21/lector + logging |
 | F22 TV riel+foco | FE | **Alta** | N4 | N5 | Foco espacial; difícil de probar sin dispositivo |
 | F23 Lector TV | FE | **Alta** | N4 | N5 | D-pad sobre el lector |
 | F24 Cliente web | FE | Intermedia | N3 | N4 | Vite + reutilización de componentes |
