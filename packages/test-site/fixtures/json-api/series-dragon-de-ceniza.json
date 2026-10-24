@@ -1,0 +1,61 @@
+{
+  "id": "dragon-de-ceniza",
+  "title": "El dragón de ceniza",
+  "cover": {
+    "url": "https://api-json.test/img/dragon-de-ceniza.svg"
+  },
+  "kind": "manhwa",
+  "nsfw": false,
+  "badges": ["★ 8.4"],
+  "hint": "hace 2 h · Equipo Ryuu",
+  "description": "Una cartógrafa hereda un dragón de ceniza y un mapa que miente. Cada página dibujada se convierte en terreno real.",
+  "genres": ["Fantasía", "Aventura"],
+  "status": "ongoing",
+  "altTitles": ["Ash Dragon", "Ceniza y cartografía"],
+  "extra": {
+    "Origen": "manhwa"
+  },
+  "chapters": [
+    {
+      "id": "ch-1",
+      "title": "Capítulo 1",
+      "number": 1,
+      "releases": [
+        {
+          "id": "r-oficial",
+          "group": "Equipo Ryuu",
+          "publishedAt": "2026-09-01T10:00:00Z"
+        },
+        {
+          "id": "r-alt",
+          "group": "Escuadrón Noche",
+          "publishedAt": "2026-09-02T18:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ch-2",
+      "title": "Capítulo 2",
+      "number": 2,
+      "releases": [
+        {
+          "id": "r-oficial",
+          "group": "Equipo Ryuu",
+          "publishedAt": "2026-09-08T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "ch-3",
+      "title": "Capítulo 3",
+      "number": 3,
+      "releases": [
+        {
+          "id": "r-oficial",
+          "group": "Equipo Ryuu",
+          "publishedAt": "2026-09-15T10:00:00Z"
+        }
+      ]
+    }
+  ]
+}

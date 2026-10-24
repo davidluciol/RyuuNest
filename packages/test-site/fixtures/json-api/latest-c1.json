@@ -1,0 +1,38 @@
+{
+  "items": [
+    {
+      "id": "draco-de-jade",
+      "title": "Draco de jade",
+      "cover": {
+        "url": "https://api-json.test/img/draco-de-jade.svg"
+      },
+      "kind": "manhwa",
+      "nsfw": true,
+      "badges": ["+18"],
+      "hint": "hace 12 h · Sello Nocturno"
+    },
+    {
+      "id": "noche-de-ambar",
+      "title": "Noche de ámbar",
+      "cover": {
+        "url": "https://api-json.test/img/noche-de-ambar.svg"
+      },
+      "kind": "comic",
+      "nsfw": false,
+      "badges": ["Completa"],
+      "hint": "hace 1 sem · Taller Ámbar"
+    },
+    {
+      "id": "cronicas-de-moonlit",
+      "title": "Crónicas de Moonlit",
+      "cover": {
+        "url": "https://api-json.test/img/cronicas-de-moonlit.svg"
+      },
+      "kind": "manhua",
+      "nsfw": false,
+      "badges": ["En pausa"],
+      "hint": "hace 3 d · Estudio Linterna"
+    }
+  ],
+  "next": "c2"
+}
