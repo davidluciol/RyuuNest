@@ -26,6 +26,8 @@ export interface StubHttpRoute {
   body?: string;
   /** Cuerpo binario (paquetes `.zip`). Si no se indica, se codifica `body` en UTF-8. */
   bodyBytes?: Uint8Array;
+  /** URL final que informa la respuesta, para simular una redirección. */
+  finalUrl?: string;
 }
 
 /** Petición registrada por `StubHttp`. */
@@ -56,6 +58,7 @@ export class StubHttp implements Http {
     return {
       status: route.status ?? 200,
       headers: route.headers ?? {},
+      ...(route.finalUrl === undefined ? {} : { url: route.finalUrl }),
       text: async () => route.body ?? "",
       bytes: async () => route.bodyBytes ?? utf8Encode(route.body ?? ""),
     };

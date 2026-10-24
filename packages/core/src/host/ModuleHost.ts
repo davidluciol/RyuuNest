@@ -141,7 +141,13 @@ export class ModuleHost implements Host {
     });
 
     try {
-      return await Promise.race([this.http.request(url, init), timeout]);
+      const response = await Promise.race([this.http.request(url, init), timeout]);
+      return {
+        status: response.status,
+        headers: response.headers,
+        url: response.url ?? url,
+        text: () => response.text(),
+      };
     } catch (error) {
       if (error instanceof ModuleError) {
         throw error;

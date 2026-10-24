@@ -133,6 +133,48 @@ describe("arnés de contrato · módulo completo", () => {
   });
 });
 
+describe("arnés de contrato · hasNext estimado", () => {
+  /** Sitio sin paginador: `hasNext` es true mientras la página traiga series. */
+  function createEstimatingApi(secondPageEmpty: boolean): ModuleApi {
+    const [first, second] = FIXTURE_SERIES;
+    if (first === undefined || second === undefined) {
+      throw new Error("faltan fixtures");
+    }
+    return {
+      ...createFixtureApi(),
+      search: async (_query, page) =>
+        page === 1
+          ? { items: [toSummary(first)], hasNext: true }
+          : secondPageEmpty
+            ? { items: [], hasNext: false }
+            : { items: [toSummary(second)], hasNext: true },
+    };
+  }
+
+  it("por defecto exige que la página 2 sea la última", async () => {
+    await expect(runContract(createEstimatingApi(false))).rejects.toThrow(/última página/);
+    await expect(runContract(createEstimatingApi(true))).rejects.toThrow(/ninguna serie/);
+  });
+
+  it("con `estimatedHasNext` admite una página 2 que siga o que venga vacía", async () => {
+    await expect(
+      runContract(createEstimatingApi(false), { estimatedHasNext: true }),
+    ).resolves.toBeDefined();
+    await expect(
+      runContract(createEstimatingApi(true), { estimatedHasNext: true }),
+    ).resolves.toBeDefined();
+  });
+
+  it("con `estimatedHasNext` sigue exigiendo series en la página 1", async () => {
+    const api: ModuleApi = {
+      ...createFixtureApi(),
+      search: async () => ({ items: [], hasNext: false }),
+    };
+
+    await expect(runContract(api, { estimatedHasNext: true })).rejects.toThrow(/ninguna serie/);
+  });
+});
+
 describe("arnés de contrato · fallos claros", () => {
   it("exige los métodos obligatorios", async () => {
     const { search: _search, ...incomplete } = createFixtureApi();
