@@ -22,6 +22,7 @@ export * from "./install/PackageInstaller.js";
 export * from "./library/Favorites.js";
 export * from "./library/Folders.js";
 export * from "./library/queries.js";
+export * from "./library/removeSeriesFromLibrary.js";
 export * from "./library/SeriesPrefs.js";
 export * from "./library/SeriesStore.js";
 export * from "./modules/ModuleRegistry.js";
