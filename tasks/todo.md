@@ -56,6 +56,15 @@ Dep: T25 · M · `core/src/reader/ReaderState.ts` (+test)
 - Verif: `pnpm --filter @ryuunest/core test` + recorrer un capítulo de 60 páginas
 - **Hecho (2026-10-21):** `ReaderState` headless sobre `ProgressStore` (T25) y `SeriesPrefs` (T24): `openSeries`/`resume`/`openChapter`/`openNextChapter`/`openPreviousChapter`/`next`/`previous`/`goToPage`/`setMode`/`flush` + `snapshot` inmutable. Páginas **base 0** (confirma **P-61**), ajustadas a `[0, page_total]`; llegar a la última página guarda de inmediato y marca leído (RF-32) y ofrece el siguiente (RF-21); el resto de cambios quedan `dirty` para que la UI guarde con retraso corto o al salir (RF-20). Políticas de memoria declaradas como **ventana** (`snapshot.window`): paginado = página actual + `PAGED_PRELOAD_AHEAD` delante; vertical = `VERTICAL_BEHIND`/`VERTICAL_AHEAD` alrededor de la visible (constantes provisionales, pendiente la medición P-45). 29 tests, incluido el recorrido de un capítulo de 60 páginas.
 
+### T25b Borrar progreso y capítulos leídos al quitar una serie (P-62) `[BE · Baja · N2]`
+
+Dep: T22, T25, T26 · S · `packages/core/src/library/*` (+test)
+
+- [ ] Quitar una serie de la biblioteca borra su `progress` y sus filas de `chapter_read` en la misma transacción (P-62)
+- [ ] No deja filas huérfanas ni toca otras series; decide y documenta qué pasa con `series_pref` y la fila `series`
+- Verif: `pnpm --filter @ryuunest/core test` con SQLite real
+- **Origen:** fuera del alcance de T25/T26 (P-62); el humano pidió tratarlo como tarea separada (2026-10-23).
+
 ### 🚩 Checkpoint G `[Ops · Baja · N1]` ✅ (pendiente de revisión humana)
 
 - [x] Guardar y reabrir devuelve la página exacta · [x] `page_total` guardado (RF-41) ·
@@ -93,6 +102,15 @@ Dep: T29 · S · `core/tests/e2e/backup.e2e.test.ts`
 - [x] Nada se instala solo; fusión por `updated_at` verificada con un conflicto
 - Verif: `pnpm --filter @ryuunest/core test -- backup.e2e`
 - **Hecho (2026-10-23):** E2E con dos dispositivos reales (SQLite en memoria + `Storage`) unidos solo por el JSON: el origen exporta y una instalación limpia importa en `replace`; la exportación del destino iguala la del origen en todas las secciones de usuario (`folders`, `series`, `favorites`, `progress`, `read`, `prefs`, `settings`). Los 2 repos y el módulo vuelven como **sugerencias** y no se registran ni instalan solos (AC-8); confirmar un repo con `RepoRegistry` lo recupera sin instalar su módulo. La fusión se prueba con tres conflictos de progreso: gana el `updated_at` más reciente en ambos sentidos y el empate conserva lo local (P-68). 4 tests; core **361** (721 en el repo). Al no haber código nuevo, se comprobó que los tests cazan fallos con 3 mutaciones: `>=` en lugar de `>` rompe el empate, no restaurar `prefs` rompe el ida y vuelta y vaciar las sugerencias rompe 2 tests.
+
+### T30b Filtro «Leyendo» (P-70) `[BE · Baja · N2]` ✅
+
+Dep: T23 · S · `packages/core/src/library/queries.ts` (+test)
+
+- [x] `browseLibrary` acepta `reading: true` y devuelve solo series con fila en `progress` (P-70)
+- [x] `reading: false` devuelve las no empezadas; ausente no filtra; se combina con NSFW, búsqueda, carpeta y cursor
+- Verif: `pnpm --filter @ryuunest/core test`
+- **Hecho (2026-10-23):** `LibraryFilter.reading?: boolean`; `true` → `p.module_id IS NOT NULL`, `false` → `IS NULL`. 6 tests nuevos (incluye capítulo en la última página, que sigue contando como «Leyendo», y paginación por cursor). F14 ya filtra sus fixtures por `progress !== null` y tiene su test; la conexión real con el núcleo deberá pasar `reading: true` al chip. Core 367, 727 en el repo.
 
 ### 🚩 Checkpoint H `[Ops · Baja · N1]`
 
@@ -285,13 +303,35 @@ Dep: F11, FB1; T25 · M · `apps/mobile/src/screens/settings/*`
 - [ ] NSFW apagado por defecto (RF-34); sin «Modo OLED», «Zonas táctiles», «Precarga» ni selector de tema
 - Verif: Playwright vs `ajustes_pantalla/screen.png` · 🧍 cambiar NSFW y ver Biblioteca/Descubrir
 
-### F21 Respaldo (UI) `[FE · Intermedia · N3]`
+### F21 Respaldo (UI) — dividida en tres tareas (2026-10-23)
 
-Dep: F20, FB1; T28, T29 · M · `apps/mobile/src/screens/settings/backup/*`
+> El humano pidió tratar como tareas separadas lo que quedó fuera de T29. F21a–F21c sustituyen a la F21 única; FB1 se lee en las tres.
 
-- [ ] Exportar/compartir e importar (fusión/reemplazo) reproduce todo (AC-7); sugerencias de repos sin instalar solas
-- [ ] Respaldo inválido se rechaza con mensaje claro
-- Verif: Playwright exportar/reimportar en instalación limpia · 🧍 compartir el archivo
+#### F21a Exportar y compartir respaldo `[FE · Intermedia · N3]`
+
+Dep: F20, FB1; T28 · S · `apps/mobile/src/screens/settings/backup/*`
+
+- [ ] Exporta con `exportBackup` y comparte el archivo con la hoja del sistema (RF-37)
+- [ ] Estado de error si falla la escritura o el compartir
+- Verif: Playwright en web · 🧍 compartir el archivo en un teléfono
+
+#### F21b Importar respaldo `[FE · Intermedia · N3]`
+
+Dep: F21a; T29 · M · `apps/mobile/src/screens/settings/backup/*`
+
+- [ ] Elegir archivo, leerlo y aplicar `merge` o `replace` con `importBackup` (RF-38)
+- [ ] Rechazo `TOO_LARGE` / `NOT_JSON` / `INVALID` con mensaje claro y sin tocar datos
+- [ ] Confirmación explícita antes de `replace` (destructivo)
+- Verif: Playwright exportar/reimportar en instalación limpia · 🧍 archivo real
+
+#### F21c Sugerencias de repos y módulos `[FE · Baja · N2]`
+
+Dep: F21b; T29 · S · `apps/mobile/src/screens/settings/backup/*`
+
+- [ ] Lista las sugerencias de `importBackup`; nada se instala solo (AC-8)
+- [ ] Descarta los repos ya registrados (`RepoRegistry.listRepos`)
+- [ ] Confirmar un repo lo registra; un módulo sigue su flujo de instalación con confirmación (RF-38)
+- Verif: Playwright + tests de la lógica de filtrado
 
 ### 🚩 Checkpoint P-B `[Ops · Baja · N1]`
 
