@@ -133,7 +133,7 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 - **Decisión:** **P-71** aplicada. No se crea org de GitHub ni dominio; el org de npm `@ryuunest` lo reserva el humano. Al cambiar el `package`, el APK de calibración instalado no se actualiza en sitio: es otra app y hay que reinstalar para probar.
 - **Gate:** cambio solo de configuración (JSON); `expo config` válido y `pnpm lint`, `pnpm -r typecheck` y `pnpm -r test` en verde (**727 tests**). No se añaden tests de configuración.
 - **Intervención manual:** ninguna durante la implementación. Sin subagentes ni escaladas de modelo.
-- **Siguiente paso:** PR apilado sobre #29 (P-70); fusionar #29 primero. Después, las pantallas sin diseño y F21a/T31.
+- **Siguiente paso:** PR **#30** para revisión humana (el #29 de P-70 ya está fusionado). Después, las pantallas sin diseño y F21a/T31.
 
 ### 2026-10-23 · P-70: filtro «Leyendo» en el núcleo y tareas separadas de T29
 
