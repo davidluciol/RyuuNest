@@ -210,8 +210,8 @@
     "semantic_hash": ""
   },
   "packages/core/src/index.ts": {
-    "mtime": 1792795617.0344849,
-    "seen": 1792795689.8532057,
+    "mtime": 1792811090.8745282,
+    "seen": 1792811402.1613004,
     "ast_hash": "b8cf3a2ca7916465231afb6424b5e826",
     "semantic_hash": ""
   },
@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1792795673.33693,
-    "seen": 1792795689.8532057,
-    "ast_hash": "8f28fee6ca980102ae08468f5de562dd",
+    "mtime": 1792811386.7651358,
+    "seen": 1792811402.1613004,
+    "ast_hash": "8078312575499020560ae1dc470e9919",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -966,9 +966,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1792795656.5157979,
-    "seen": 1792795689.8532057,
-    "ast_hash": "21bf3b277097a994f7d6d08c2207bfea",
+    "mtime": 1792811374.199183,
+    "seen": 1792811402.1613004,
+    "ast_hash": "7b30e60ae2a1c0d4760ab9bb7255e09d",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -1662,8 +1662,8 @@
     "semantic_hash": ""
   },
   "packages/core/src/backup/schema.ts": {
-    "mtime": 1792795500.208643,
-    "seen": 1792795689.8532057,
+    "mtime": 1792811090.8735168,
+    "seen": 1792811402.1613004,
     "ast_hash": "298e53d4fbf9df030bd1d1e31c23e0ee",
     "semantic_hash": ""
   },
@@ -1998,15 +1998,21 @@
     "semantic_hash": ""
   },
   "packages/core/src/backup/import.ts": {
-    "mtime": 1792795610.077777,
-    "seen": 1792795689.8532057,
-    "ast_hash": "e0dee8b03d449b4c431eb5b032f04101",
+    "mtime": 1792811301.7217793,
+    "seen": 1792811402.1613004,
+    "ast_hash": "085029d7f3a4ed5af54e33d35cedd781",
     "semantic_hash": ""
   },
   "packages/core/tests/backup/import.test.ts": {
-    "mtime": 1792795381.5317588,
-    "seen": 1792795689.8532057,
-    "ast_hash": "f055797740df332b2d4faddf835bba18",
+    "mtime": 1792811090.876541,
+    "seen": 1792811402.1613004,
+    "ast_hash": "5016d882ba24acbb29ea9a52106b5496",
+    "semantic_hash": ""
+  },
+  "packages/core/tests/e2e/backup.e2e.test.ts": {
+    "mtime": 1792811235.3331487,
+    "seen": 1792811402.1613004,
+    "ast_hash": "09ef6d441dd8c29b929f1585ee816eb7",
     "semantic_hash": ""
   }
 }
