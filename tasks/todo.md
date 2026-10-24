@@ -64,14 +64,15 @@ Dep: T25 · M · `core/src/reader/ReaderState.ts` (+test)
 - Verif: `pnpm --filter @ryuunest/core test` + recorrer un capítulo de 60 páginas
 - **Hecho (2026-10-21):** `ReaderState` headless sobre `ProgressStore` (T25) y `SeriesPrefs` (T24): `openSeries`/`resume`/`openChapter`/`openNextChapter`/`openPreviousChapter`/`next`/`previous`/`goToPage`/`setMode`/`flush` + `snapshot` inmutable. Páginas **base 0** (confirma **P-61**), ajustadas a `[0, page_total]`; llegar a la última página guarda de inmediato y marca leído (RF-32) y ofrece el siguiente (RF-21); el resto de cambios quedan `dirty` para que la UI guarde con retraso corto o al salir (RF-20). Políticas de memoria declaradas como **ventana** (`snapshot.window`): paginado = página actual + `PAGED_PRELOAD_AHEAD` delante; vertical = `VERTICAL_BEHIND`/`VERTICAL_AHEAD` alrededor de la visible (constantes provisionales, pendiente la medición P-45). 29 tests, incluido el recorrido de un capítulo de 60 páginas.
 
-### T25b Borrar progreso y capítulos leídos al quitar una serie (P-62) `[BE · Baja · N2]`
+### T25b Borrar progreso y capítulos leídos al quitar una serie (P-62) `[BE · Baja · N2]` ✅
 
 Dep: T22, T25, T26 · S · `packages/core/src/library/*` (+test)
 
-- [ ] Quitar una serie de la biblioteca borra su `progress` y sus filas de `chapter_read` en la misma transacción (P-62)
-- [ ] No deja filas huérfanas ni toca otras series; decide y documenta qué pasa con `series_pref` y la fila `series`
+- [x] Quitar una serie de la biblioteca borra su `progress` y sus filas de `chapter_read` en la misma transacción (P-62)
+- [x] No deja filas huérfanas ni toca otras series; decide y documenta qué pasa con `series_pref` y la fila `series`
 - Verif: `pnpm --filter @ryuunest/core test` con SQLite real
 - **Origen:** fuera del alcance de T25/T26 (P-62); el humano pidió tratarlo como tarea separada (2026-10-23).
+- **Hecho (2026-10-23):** `removeSeriesFromLibrary({ driver, moduleId, seriesId })` borra `favorite`, `progress` y `chapter_read` en una transacción. **P-73:** se conservan `series` y `series_pref` como caché (título, portada, modo y grupo); no se toca ninguna otra serie y la operación es idempotente. 5 tests sobre SQLite real, incluido el rollback con un driver que falla a mitad.
 
 ### 🚩 Checkpoint G `[Ops · Baja · N1]` ✅ (pendiente de revisión humana)
 
