@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1792811386.7651358,
-    "seen": 1792811402.1613004,
-    "ast_hash": "8078312575499020560ae1dc470e9919",
+    "mtime": 1792813410.9606905,
+    "seen": 1792813432.2710483,
+    "ast_hash": "d3c14acf163de4bfa646b29b59c2be0c",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -960,15 +960,15 @@
     "semantic_hash": ""
   },
   "tasks/plan.md": {
-    "mtime": 1792785409.7796667,
-    "seen": 1792788128.4705987,
-    "ast_hash": "eb8c669316696e7293331a71ea560137",
+    "mtime": 1792813346.6159651,
+    "seen": 1792813432.2710483,
+    "ast_hash": "e6ed53091eab9eac57167cdfb5726a68",
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1792811374.199183,
-    "seen": 1792811402.1613004,
-    "ast_hash": "7b30e60ae2a1c0d4760ab9bb7255e09d",
+    "mtime": 1792813333.1017916,
+    "seen": 1792813432.2710483,
+    "ast_hash": "b45b1decc8942c177d412e243f09d159",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -1356,9 +1356,9 @@
     "semantic_hash": ""
   },
   "packages/core/src/library/queries.ts": {
-    "mtime": 1792770105.469223,
-    "seen": 1792775428.1628587,
-    "ast_hash": "685ddaac179cfa9157836c6bbc706bcf",
+    "mtime": 1792813103.4565623,
+    "seen": 1792813432.2710483,
+    "ast_hash": "dc425dac8e6d1e14d02304cc067792d6",
     "semantic_hash": ""
   },
   "packages/core/src/storage/MemoryStorage.ts": {
@@ -1410,9 +1410,9 @@
     "semantic_hash": ""
   },
   "packages/core/tests/library/queries.test.ts": {
-    "mtime": 1792770105.48011,
-    "seen": 1792775428.1628587,
-    "ast_hash": "ce5cc46e823bc9174183c5473b173d42",
+    "mtime": 1792813112.096446,
+    "seen": 1792813432.2710483,
+    "ast_hash": "cc4c974ed2f30fbb3e4b449426957616",
     "semantic_hash": ""
   },
   "packages/core/tests/perf/library.perf.test.ts": {
@@ -1632,9 +1632,9 @@
     "semantic_hash": ""
   },
   "tasks/complexity.md": {
-    "mtime": 1792794569.5801365,
-    "seen": 1792795689.8532057,
-    "ast_hash": "e69640adb37f47ddbb5d398d0abb0a76",
+    "mtime": 1792813343.5773585,
+    "seen": 1792813432.2710483,
+    "ast_hash": "52e8d2e54869503c99ab4d824bd56d87",
     "semantic_hash": ""
   },
   "tasks/plan.archive.md": {

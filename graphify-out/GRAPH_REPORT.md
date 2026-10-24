@@ -1,7 +1,7 @@
 # Graph Report - RyuuNest  (2026-10-23)
 
 ## Corpus Check
-- 286 files · ~349,125 words
+- 286 files · ~350,652 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: .ttf 5, (none) 4)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `996f2383`
+- Built from commit: `8ccb2bfd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
