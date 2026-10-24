@@ -9,6 +9,8 @@ export interface HttpRequest {
 export interface HttpResponse {
   status: number;
   headers: Record<string, string>;
+  /** URL final tras seguir las redirecciones. Si falta, se entiende que fue la pedida. */
+  url?: string;
   /** Cuerpo como texto (JSON, HTML). */
   text(): Promise<string>;
   /** Cuerpo como bytes (paquetes `.zip` e imágenes): nunca pasa por UTF-8. */

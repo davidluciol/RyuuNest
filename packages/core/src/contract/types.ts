@@ -130,6 +130,8 @@ export interface HostRequestInit {
 export interface HostResponse {
   status: number;
   headers: Record<string, string>;
+  /** URL final tras seguir las redirecciones; la pedida si no hubo ninguna. */
+  url: string;
   text(): Promise<string>;
 }
 
