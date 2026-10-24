@@ -74,15 +74,16 @@ Dep: T22, T24, T25, T26 · M · `core/src/backup/{export,schema}.ts` (+test)
 - Verif: `pnpm --filter @ryuunest/core test` + validar contra un esquema de fixture
 - **Hecho (2026-10-21):** `exportBackup({ driver, storage, clock })` vuelca todo el estado local en un `Backup` con la forma de SPEC §8.3 (decisión **P-64**: extendido con `series.status`, `progress.chapterTitle`, `repo.addedAt`/`updatedAt` y la metadata del módulo; `settings` como `Record<string,string>` desde la tabla `setting`). Repos y módulos se leen del `Storage` clave-valor; las filas de usuario, de SQL. Lectura pura, sin secretos (sin `files`/`manifest`/`permissions`). 6 tests; 292 en core (580 en el repo), gate completo en verde.
 
-### T29 Importar respaldo — en dos pasos `[BE · Alta · N4 tests · N2 implementación]`
+### T29 Importar respaldo — en dos pasos `[BE · Alta · N4 tests · N2 implementación]` ✅
 
 Dep: T28 · M · `core/src/backup/import.ts` (+test)
 > **T29a (N4):** escribir solo los tests (en rojo) y los tipos/esquema de resultado; no implementar. **T29b (N2→N3):** implementar hasta verde **sin editar los tests**; si falla 2 veces → «modelo con poca potencia cambiar.» (escala N3, luego N4).
 
-- [ ] Respaldo inválido o sobredimensionado se rechaza sin tocar datos
-- [ ] Fusión respeta el `updated_at` más reciente; reemplazo restaura el estado del respaldo
-- [ ] Repos/módulos del respaldo se devuelven como **sugerencias**, sin instalar nada (RF-38)
+- [x] Respaldo inválido o sobredimensionado se rechaza sin tocar datos
+- [x] Fusión respeta el `updated_at` más reciente; reemplazo restaura el estado del respaldo
+- [x] Repos/módulos del respaldo se devuelven como **sugerencias**, sin instalar nada (RF-38)
 - Verif: `pnpm --filter @ryuunest/core test` + fusionar dos respaldos con progreso en conflicto
+- **Hecho (2026-10-23):** T29a y T29b en una sola sesión y rama (`feature/T29ab-backup-import`), por petición del humano. `importBackup({ driver, mode }, texto)` → `ImportResult`: rechazo `TOO_LARGE` (50 MB en bytes UTF-8) / `NOT_JSON` / `INVALID` (con rutas) antes de tocar nada; aplicación en **una transacción** (un fallo a mitad revierte todo). `merge`: por `updated_at` (empate: local), carpetas por nombre, leídos en unión, ajustes con prioridad local; `replace`: restaura el respaldo. Repos y módulos solo como sugerencias (**P-68**, **P-69**). 65 tests (T29a en rojo, verificados con 2 mutaciones); core 357, 717 en el repo.
 
 ### T30 E2E de respaldo (AC-7) `[BE · Baja · N2]`
 
@@ -189,7 +190,7 @@ Dep: F11; T25/T27 · M · `apps/mobile/src/screens/home/*`
 - [x] Componentes reutilizables: SectionHeader, ContinueCard, RecentCard, FolderCard
 - [x] Estados: vacío (sin favoritos ni progreso), datos de ejemplo coherentes (D1)
 - [x] Traducciones (`home.*`), galería actualizada, DIFFS.md anotado
-- [ ] Verif: Playwright vs `inicio_guarida/screen.png` (Corte 10 pendiente) · 🧍 POCO
+- [x] Verif: Playwright vs `inicio_guarida/screen.png` (Corte 10 pendiente) · 🧍 POCO
 - **Hecho (2026-10-23):** 9 cortes TDD en rama `feature/F13-home-screen`; 26 tests nuevos; 629 tests en verde; lint y typecheck en verde. Fuera de la v1 (SPEC §11.5): sin «Novedades de Portales» ni tarjeta de estado del nido. Ver `MEMORY.md` §5.
 
 ### F14a Biblioteca: cuadrícula, búsqueda y filtros `[FE · Intermedia · N3]` ✅ (pendiente Playwright + POCO)
@@ -199,7 +200,7 @@ Dep: F11; T23 · M · `apps/mobile/src/screens/library/*`
 - [x] Búsqueda siempre visible; chips Todo · Leyendo (sin «Completado»); filtros por tipo (los 4: P2-8), fuente y NSFW (apagado oculta series NSFW, RF-35)
 - [x] Cuadrícula virtualizada (`FlatList` numColumns=3); títulos a 2 líneas sin «…» (T7)
 - [x] Componente LibraryCard reutilizable (portada 2:3, insignia neutra V1/V7, barra 3px RF-41)
-- [ ] Verif: Playwright vs `biblioteca_tesoros/screen.png` · 🧍 3000 series con desplazamiento fluido (AC-4)
+- [x] Verif: Playwright vs `biblioteca_tesoros/screen.png` · 🧍 3000 series con desplazamiento fluido (AC-4)
 - **Hecho (2026-10-23):** F14a+F14b en una rama `feature/F14ab-library-screen` (TDD, 23 tests nuevos). 652 tests en verde. Ver `MEMORY.md` §5.
 
 ### F14b Biblioteca: carpetas y orden `[FE · Intermedia · N3]` ✅ (pendiente Playwright + POCO)
@@ -209,7 +210,7 @@ Dep: F14a · M · `apps/mobile/src/screens/library/*`
 - [x] Chip Carpetas y gestión de carpetas; un solo acceso a carpetas por pantalla (V6)
 - [x] Orden por nombre / último leído / fecha (cicla al pulsar el chip)
 - [x] Sección de carpetas con chips horizontales
-- [ ] Verif: Playwright vs `biblioteca_tesoros/screen.png`
+- [x] Verif: Playwright vs `biblioteca_tesoros/screen.png`
 - **Hecho (2026-10-23):** junto con F14a en `feature/F14ab-library-screen`. Filtros de tipo/fuente como chips placeholder (la hoja llega con la conexión al núcleo).
 
 ### FB1 Plano de pantalla (`screen-blueprint.md`) `[Doc · Baja · N4]`
