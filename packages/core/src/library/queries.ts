@@ -3,8 +3,8 @@
  *
  * La biblioteca es la lista de favoritos enriquecida con su serie y su progreso. Se puede
  * buscar por nombre (sobre `title_norm`, sin acentos ni mayúsculas), filtrar por tipo,
- * fuente, carpeta y NSFW, y ordenar por nombre, último leído o fecha de adición. Todos los
- * filtros se combinan.
+ * fuente, carpeta, NSFW y «Leyendo» (P-70), y ordenar por nombre, último leído o fecha de
+ * adición. Todos los filtros se combinan.
  *
  * Dos decisiones del SPEC guían el diseño:
  * - **RF-35**: el NSFW se oculta por defecto; solo se incluye si quien llama lo pide.
@@ -32,6 +32,11 @@ export interface LibraryFilter {
   moduleIds?: readonly string[] | undefined;
   /** `number` = esa carpeta; `null` = sin carpeta; ausente = da igual. */
   folderId?: number | null | undefined;
+  /**
+   * «Leyendo» (P-70): `true` = solo series con fila en `progress` (se abrieron o se
+   * leyeron); `false` = solo las que no se han empezado; ausente = da igual.
+   */
+  reading?: boolean | undefined;
   /** Con `true` se ven también las series NSFW (RF-35: por defecto no). */
   nsfwVisible?: boolean | undefined;
   order?: LibraryOrder | undefined;
@@ -160,6 +165,14 @@ export function buildLibraryQuery(filtro: LibraryFilter): BuiltQuery {
   } else if (filtro.folderId !== undefined) {
     donde.push("f.folder_id = ?");
     params.push(filtro.folderId);
+  }
+
+  // «Leyendo» (P-70): una serie cuenta si tiene fila en `progress`, aunque el capítulo
+  // actual esté terminado (la v1 no distingue «serie terminada»).
+  if (filtro.reading === true) {
+    donde.push("p.module_id IS NOT NULL");
+  } else if (filtro.reading === false) {
+    donde.push("p.module_id IS NULL");
   }
 
   if (filtro.cursor !== undefined && filtro.cursor !== "") {
