@@ -538,4 +538,4 @@ tipos de obra en los filtros (los cuatro) y temas (solo Dragon Night). Pendiente
    con `DESIGN.md` y se marcan «sin diseño» (primer uso, confirmación de instalación, hoja de
    filtros, estados vacíos y de error).
 2. **`accent-alt` violeta** (SPEC §17.2.9): regla provisional es no usarlo en la v1; confirmar.
-3. **Disponibilidad del nombre** (SPEC §15): bloquea el repo, los Issues y el `applicationId`.
+3. **Disponibilidad del nombre** (SPEC §15): **resuelta el 2026-10-23 (P-71)** — repo en `davidluciol`, scope npm `@ryuunest`, sin dominio en la v1 y `applicationId` `io.github.davidluciol.ryuunest`.

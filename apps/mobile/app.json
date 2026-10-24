@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "RyuuNest Calibración",
-    "slug": "ryuunest-calibracion",
+    "name": "RyuuNest",
+    "slug": "ryuunest",
     "version": "0.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "android": {
-      "package": "com.ryuunest.calibracion",
+      "package": "io.github.davidluciol.ryuunest",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
