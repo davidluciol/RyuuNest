@@ -151,12 +151,13 @@ Dep: T19 · M · `packages/test-site/fixtures/tmo/*.html`; módulo fuera del rep
 | `logicYupmanga.py` | solo lista | anti-bot a nivel TLS (nota del legado): `BLOCKED` en la v1 (P-8) |
 | `logicTmoHentai.py` | vacío (`pass`) | nada que portar |
 
-### T32a 2.º sitio falso (JSON + cursor) `[BE · Intermedia · N3]`
+### T32a 2.º sitio falso (JSON + cursor) `[BE · Intermedia · N3]` ✅
 
 Dep: T31 · M · `packages/test-site/fixtures/json-api/**`
 
-- [ ] El contrato pasa con las dos arquitecturas de `test-site`; ajustes de API necesarios anotados en la tarea
+- [x] El contrato pasa con las dos arquitecturas de `test-site`; ajustes de API necesarios anotados en la tarea
 - Verif: `pnpm -r test`
+- **Hecho (2026-10-24):** 8 fixtures JSON estáticos en `packages/test-site/fixtures/json-api/` (`popular-c1/c2`, `latest-c1/c2`, `search-dragon-c1`, `series-dragon-de-ceniza`, `pages-ch-1-r-oficial`, `pages-ch-1-r-alt`) que reproducen las respuestas del sitio JSON dinámico con paginación por cursor. Nuevo test de contrato `packages/core/tests/contract/jsonApi.contract.test.ts` (3 tests) que monta el módulo `EXAMPLE_SCRIPT_JSON` sobre un `StubHttp` con los fixtures estáticos y ejecuta el arnés de contrato completo (`popular`, `latest`, `search`, `details`, `pages`) con `expectImageHeaders`. Verifica que el módulo traduce páginas a cursores (`?cursor=c2`) y que las imágenes llevan las cabeceras exigidas. **Sin ajustes de API nuevos**: los cambios aditivos de T31 (P-74 `HostResponse.url`, P-75 errores tipados, P-76 `estimatedHasNext`) ya cubren la arquitectura JSON + cursor. Suite completa en verde: 787 tests (core 423, +3 nuevos).
 
 ### T32b ADR de congelación de API 1.0 `[BE · Alta · N5]`
 

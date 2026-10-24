@@ -1,0 +1,26 @@
+{
+  "title": "Capítulo 1",
+  "images": [
+    {
+      "url": "https://api-json.test/img/dragon-de-ceniza-ch-1-r-alt-1.svg",
+      "headers": {
+        "Referer": "https://api-json.test/lector",
+        "User-Agent": "RyuuNest/0.0 (test-site)"
+      }
+    },
+    {
+      "url": "https://api-json.test/img/dragon-de-ceniza-ch-1-r-alt-2.svg",
+      "headers": {
+        "Referer": "https://api-json.test/lector",
+        "User-Agent": "RyuuNest/0.0 (test-site)"
+      }
+    },
+    {
+      "url": "https://api-json.test/img/dragon-de-ceniza-ch-1-r-alt-3.svg",
+      "headers": {
+        "Referer": "https://api-json.test/lector",
+        "User-Agent": "RyuuNest/0.0 (test-site)"
+      }
+    }
+  ]
+}

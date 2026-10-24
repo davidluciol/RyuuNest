@@ -1,0 +1,38 @@
+{
+  "items": [
+    {
+      "id": "dragon-de-ceniza",
+      "title": "El dragón de ceniza",
+      "cover": {
+        "url": "https://api-json.test/img/dragon-de-ceniza.svg"
+      },
+      "kind": "manhwa",
+      "nsfw": false,
+      "badges": ["★ 8.4"],
+      "hint": "hace 2 h · Equipo Ryuu"
+    },
+    {
+      "id": "guardiana-del-nido",
+      "title": "La guardiana del nido",
+      "cover": {
+        "url": "https://api-json.test/img/guardiana-del-nido.svg"
+      },
+      "kind": "manga",
+      "nsfw": false,
+      "badges": ["★ 7.9"],
+      "hint": "hace 6 h · Nido Editorial"
+    },
+    {
+      "id": "cronicas-de-moonlit",
+      "title": "Crónicas de Moonlit",
+      "cover": {
+        "url": "https://api-json.test/img/cronicas-de-moonlit.svg"
+      },
+      "kind": "manhua",
+      "nsfw": false,
+      "badges": ["En pausa"],
+      "hint": "hace 3 d · Estudio Linterna"
+    }
+  ],
+  "next": "c2"
+}

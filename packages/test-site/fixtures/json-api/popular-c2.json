@@ -1,0 +1,27 @@
+{
+  "items": [
+    {
+      "id": "noche-de-ambar",
+      "title": "Noche de ámbar",
+      "cover": {
+        "url": "https://api-json.test/img/noche-de-ambar.svg"
+      },
+      "kind": "comic",
+      "nsfw": false,
+      "badges": ["Completa"],
+      "hint": "hace 1 sem · Taller Ámbar"
+    },
+    {
+      "id": "draco-de-jade",
+      "title": "Draco de jade",
+      "cover": {
+        "url": "https://api-json.test/img/draco-de-jade.svg"
+      },
+      "kind": "manhwa",
+      "nsfw": true,
+      "badges": ["+18"],
+      "hint": "hace 12 h · Sello Nocturno"
+    }
+  ],
+  "next": null
+}
