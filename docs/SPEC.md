@@ -814,7 +814,7 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 - **README:** declara que no está afiliado a ningún sitio, que no aloja ni distribuye contenido, y que cada usuario es responsable de los repos que añade y de respetar los derechos de autor y los términos de cada sitio.
 - **Documentos:** `CONTRIBUTING.md`, guía del SDK de módulos, código de conducta, plantillas de issues y política de seguridad.
 - **API versionada con semver.** Un cambio incompatible sube `apiVersion` y la app informa qué módulos no son compatibles.
-- **Nombre:** RyuuNest. Antes de fijarlo, verificar disponibilidad del repo y la organización en GitHub, el scope de npm, un dominio y el `applicationId` de Android.
+- **Nombre:** RyuuNest. Verificado el 2026-10-23 (**P-71**): repo en `davidluciol` (sin org por ahora), scope npm `@ryuunest` (se reservará), sin dominio en la v1 y `applicationId` de Android `io.github.davidluciol.ryuunest` (aplicado en `apps/mobile/app.json`).
 
 ---
 

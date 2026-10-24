@@ -17,6 +17,14 @@
 - [ ] 🧍 Confirmar que `ADR-0002` fija versiones Expo/RN/RNTV y el tope de imágenes medido; marcar T05 ✅
 - Aparte (no bloquea): MiBox 4 pospuesta (P-43); revalidar RNF-1 en release.
 
+### T05b Identidad de la app (P-71) `[Ops · Baja · N1]` ✅
+
+Dep: P-71 · S · `apps/mobile/app.json`
+
+- [x] `name` = `RyuuNest`, `slug` = `ryuunest`, `android.package` = `io.github.davidluciol.ryuunest`
+- Verif: `expo config --type public` (los tres valores)
+- **Hecho (2026-10-23):** aplicado en `apps/mobile/app.json`; el APK de calibración anterior queda como otra app al cambiar el package.
+
 ---
 
 ## Fase 6 — Progreso y lecturas

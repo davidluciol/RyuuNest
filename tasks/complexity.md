@@ -58,6 +58,7 @@ Notas:
 | Tarea | Tipo | Complejidad | Nivel | Escalar | Motivo |
 |---|---|---|---|---|---|
 | T05 cierre | Ops | Baja | N1 | — | 🧍 confirmar ADR-0002 |
+| T05b Identidad de la app (P-71) | Ops | Baja | N1 | — | Cambio de `app.json` + `expo config` |
 | T25+T26 Progreso y chapter_read (1 sesión) | BE | Baja | N2 | N3 | Copian el patrón de T22/T24 |
 | T25b Borrar progreso al quitar serie (P-62) | BE | Baja | N2 | — | Borrado transaccional + tests |
 | T27 Estado del lector | BE | Intermedia | N3 | N4 | Máquina de estados e invariantes |
