@@ -327,6 +327,8 @@ export class ModuleError extends Error {
 ```
 `BLOCKED` identifica protecciones anti-bot. En la v1 se informa al usuario y no se intenta resolver (ver sección 17).
 
+Un módulo script no puede importar `ModuleError` (solo recibe `host`), así que lanza un `Error` con `name === "ModuleError"`, un `code` del contrato y, opcional, `details`; el runtime lo convierte en un `ModuleError` real. Cualquier otro error del módulo llega como `INTERNAL`.
+
 ### 6.5 API del host para módulos script
 
 ```ts
@@ -341,6 +343,8 @@ export interface Host {
 export default function create(host: Host): ModuleApi;
 ```
 El host aplica por defecto un tiempo límite por petición, un máximo de peticiones simultáneas por módulo y una pausa mínima entre peticiones al mismo dominio.
+
+`HostResponse` trae `status`, `headers`, `text()` y `url`: la URL final tras seguir las redirecciones (la pedida si no hubo ninguna). El puerto `Http` la informa de forma opcional; el host rellena la pedida cuando falta.
 
 ### 6.6 Módulos declarativos (borrador)
 

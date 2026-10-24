@@ -133,10 +133,23 @@ Dep: T23 · S · `packages/core/src/library/queries.ts` (+test)
 
 Dep: T19 · M · `packages/test-site/fixtures/tmo/*.html`; módulo fuera del repo principal (P-8)
 
-- [ ] `popular`/`latest`/`search`/`details`/`pages` funcionan contra las fixtures, usando solo `host.*`
-- [ ] Corregidos los 8 defectos del Apéndice A.4 (errores tipados, timeouts, sin estado compartido)
-- [ ] `pages()` devuelve `Referer`/`User-Agent` en `ImageRef.headers` cuando el sitio lo exige
+- [x] `popular`/`latest`/`search`/`details`/`pages` funcionan contra las fixtures, usando solo `host.*`
+- [x] Corregidos los 8 defectos del Apéndice A.4 (errores tipados, timeouts, sin estado compartido)
+- [x] `pages()` devuelve `Referer`/`User-Agent` en `ImageRef.headers` cuando el sitio lo exige
 - Verif: `pnpm --filter @ryuunest/core test -- tmo` · 🧍 ejecución real contra el sitio (fuera de CI)
+- **Hecho (2026-10-24):** módulo en `modules/tmo/` (`manifest.json` + `module.js`, formato de la plantilla del SDK; se mueve al repo de módulos cuando exista, P-8) y fixtures sintéticas en `packages/test-site/fixtures/tmo/`. 37 tests en `packages/core/tests/modules/tmo/` + 1 de manifest en `module-sdk`; comprobados con 4 mutaciones. Cambios de API **aditivos** que T32b debe revisar (P-74, P-75, P-76): `HostResponse.url`, errores tipados por forma y `estimatedHasNext` en el arnés. `pnpm --filter @ryuunest/core test -- tmo` ejecuta **toda** la suite de core (el filtro no llega a Vitest); para solo TMO: `pnpm --filter @ryuunest/core exec vitest run tests/modules/tmo`.
+- **🧍 Pendiente del humano (ejecución real, fuera de CI)** — lo que las fixtures **no pueden** confirmar porque el sitio no responde desde el entorno del agente: (1) que los selectores del legado siguen vigentes; (2) si `latest_uploads` admite más páginas y cuál es su parámetro (hoy solo página 1); (3) el formato real de la fecha de la release (hoy solo se conserva si es `AAAA-MM-DD`) y los textos de estado (`Publicándose`/`Finalizado`/…); (4) que `Referer` + `User-Agent` bastan para las imágenes; (5) si hay desafío anti-bot (el módulo informa `BLOCKED`, P-8); (6) que la app nativa rellena `HttpResponse.url` con la URL final.
+
+**Ports pendientes de `legacyModulos/`** (decidido 2026-10-24: solo TMO en T31; los demás, tareas separadas a priorizar):
+
+| Módulo legado | Estado en el legado | Bloqueo |
+|---|---|---|
+| `logicMangaIn.py` (m440.in) | `latest` por JSON y capítulo por HTML estático | `details` usa Playwright (clics para cargar capítulos): el host no tiene navegador |
+| `logicFoxManga.py` | listas y ficha por HTML estático | `pages` renderiza JS (`arender`): el host no tiene navegador |
+| `logicNineManga.py` | solo lista; `details` incompleto | faltan `details` y `pages` en el legado |
+| `logicLuscious.py` | solo lista; `details` incompleto y usa Playwright | faltan `details`/`pages`; NSFW |
+| `logicYupmanga.py` | solo lista | anti-bot a nivel TLS (nota del legado): `BLOCKED` en la v1 (P-8) |
+| `logicTmoHentai.py` | vacío (`pass`) | nada que portar |
 
 ### T32a 2.º sitio falso (JSON + cursor) `[BE · Intermedia · N3]`
 
