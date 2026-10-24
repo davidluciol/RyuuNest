@@ -3,7 +3,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { runContract } from "@ryuunest/test-site";
 
 import { ModuleError, type ModuleErrorCode } from "../../../src/contract/errors";
-import type { ModuleApi } from "../../../src/contract/types";
 import { StubHttp, type StubHttpRoute } from "../../../src/ports/fakes";
 import type { Http, HttpResponse } from "../../../src/ports/http";
 import { BASE, fixture, makeTmoApi, manifestJson, tmoRoutes } from "./tmoHarness";
@@ -159,7 +158,8 @@ describe("tmo · popular, latest y search", () => {
   });
 
   it("una tarjeta sin título o sin enlace es un fallo PARSE, no una lista vacía", async () => {
-    const broken = '<div class="element"><a href="/library/manga/1/x"><div class="thumbnail"></div></a></div>';
+    const broken =
+      '<div class="element"><a href="/library/manga/1/x"><div class="thumbnail"></div></a></div>';
     const api = await makeTmoApi({ http: withRoutes({ [`${BASE}/populars`]: { body: broken } }) });
 
     const error = await expectCode(api.popular!(1), "PARSE");
@@ -344,7 +344,9 @@ describe("tmo · pages", () => {
   });
 
   it("sin imágenes es PARSE (no un capítulo vacío)", async () => {
-    const http = withRoutes({ [`${BASE}/view_uploads/9200`]: { body: fixture("viewer-paginated.html") } });
+    const http = withRoutes({
+      [`${BASE}/view_uploads/9200`]: { body: fixture("viewer-paginated.html") },
+    });
     const api = await makeTmoApi({ http });
 
     const error = await expectCode(api.pages("c", "/view_uploads/9200"), "PARSE");
@@ -463,9 +465,13 @@ describe("tmo · sin estado compartido (defecto 3)", () => {
   });
 
   it("dos instancias del módulo no comparten nada", async () => {
-    const [one, two]: ModuleApi[] = await Promise.all([makeTmoApi(), makeTmoApi()]);
+    const one = await makeTmoApi();
+    const two = await makeTmoApi();
 
-    const [a, b] = await Promise.all([one.details(SERIES_ID), two.pages("c", "/view_uploads/9003")]);
+    const [a, b] = await Promise.all([
+      one.details(SERIES_ID),
+      two.pages("c", "/view_uploads/9003"),
+    ]);
 
     expect(a.title).toBe("El dragón de ceniza");
     expect(b.images).toHaveLength(4);

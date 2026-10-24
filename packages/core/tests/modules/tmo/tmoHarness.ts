@@ -1,4 +1,6 @@
 import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import type { ModuleApi } from "../../../src/contract/types";
 import { ModuleHost } from "../../../src/host/ModuleHost";
@@ -9,19 +11,20 @@ import { ScriptRuntime } from "../../../src/runtimes/ScriptRuntime";
 
 export const BASE = "https://zonatmo.com";
 
-const FIXTURES = new URL("../../../../test-site/fixtures/tmo/", import.meta.url);
-const MODULE_DIR = new URL("../../../../../modules/tmo/", import.meta.url);
+const HERE = dirname(fileURLToPath(import.meta.url));
+const FIXTURES = resolve(HERE, "../../../../test-site/fixtures/tmo");
+const MODULE_DIR = resolve(HERE, "../../../../../modules/tmo");
 
 export function fixture(name: string): string {
-  return readFileSync(new URL(name, FIXTURES), "utf8");
+  return readFileSync(resolve(FIXTURES, name), "utf8");
 }
 
 export function moduleSource(): string {
-  return readFileSync(new URL("module.js", MODULE_DIR), "utf8");
+  return readFileSync(resolve(MODULE_DIR, "module.js"), "utf8");
 }
 
 export function manifestJson(): unknown {
-  return JSON.parse(readFileSync(new URL("manifest.json", MODULE_DIR), "utf8")) as unknown;
+  return JSON.parse(readFileSync(resolve(MODULE_DIR, "manifest.json"), "utf8")) as unknown;
 }
 
 /** Carga el código fuente del módulo como un módulo ES real (URL `data:`). */
