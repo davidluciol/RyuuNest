@@ -85,17 +85,18 @@ Dep: T28 · M · `core/src/backup/import.ts` (+test)
 - Verif: `pnpm --filter @ryuunest/core test` + fusionar dos respaldos con progreso en conflicto
 - **Hecho (2026-10-23):** T29a y T29b en una sola sesión y rama (`feature/T29ab-backup-import`), por petición del humano. `importBackup({ driver, mode }, texto)` → `ImportResult`: rechazo `TOO_LARGE` (50 MB en bytes UTF-8) / `NOT_JSON` / `INVALID` (con rutas) antes de tocar nada; aplicación en **una transacción** (un fallo a mitad revierte todo). `merge`: por `updated_at` (empate: local), carpetas por nombre, leídos en unión, ajustes con prioridad local; `replace`: restaura el respaldo. Repos y módulos solo como sugerencias (**P-68**, **P-69**). 65 tests (T29a en rojo, verificados con 2 mutaciones); core 357, 717 en el repo.
 
-### T30 E2E de respaldo (AC-7) `[BE · Baja · N2]`
+### T30 E2E de respaldo (AC-7) `[BE · Baja · N2]` ✅
 
 Dep: T29 · S · `core/tests/e2e/backup.e2e.test.ts`
 
-- [ ] Biblioteca, carpetas, progreso y repos se reproducen sin pérdidas en instalación limpia
-- [ ] Nada se instala solo; fusión por `updated_at` verificada con un conflicto
+- [x] Biblioteca, carpetas, progreso y repos se reproducen sin pérdidas en instalación limpia
+- [x] Nada se instala solo; fusión por `updated_at` verificada con un conflicto
 - Verif: `pnpm --filter @ryuunest/core test -- backup.e2e`
+- **Hecho (2026-10-23):** E2E con dos dispositivos reales (SQLite en memoria + `Storage`) unidos solo por el JSON: el origen exporta y una instalación limpia importa en `replace`; la exportación del destino iguala la del origen en todas las secciones de usuario (`folders`, `series`, `favorites`, `progress`, `read`, `prefs`, `settings`). Los 2 repos y el módulo vuelven como **sugerencias** y no se registran ni instalan solos (AC-8); confirmar un repo con `RepoRegistry` lo recupera sin instalar su módulo. La fusión se prueba con tres conflictos de progreso: gana el `updated_at` más reciente en ambos sentidos y el empate conserva lo local (P-68). 4 tests; core **361** (721 en el repo). Al no haber código nuevo, se comprobó que los tests cazan fallos con 3 mutaciones: `>=` en lugar de `>` rompe el empate, no restaurar `prefs` rompe el ida y vuelta y vaciar las sugerencias rompe 2 tests.
 
 ### 🚩 Checkpoint H `[Ops · Baja · N1]`
 
-- [ ] Exportar/importar sin pérdidas · [ ] Módulos/repos no se instalan solos · [ ] 🧍 Revisión
+- [x] Exportar/importar sin pérdidas · [x] Módulos/repos no se instalan solos · [ ] 🧍 Revisión
 
 ---
 
