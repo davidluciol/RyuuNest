@@ -40,3 +40,10 @@ apps/mobile/dist/
 # provoca conflictos y trabajo extra en cada indexación desde otro dispositivo.
 graphify-out/cache/
 graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+
+# Documentos para el repo de módulos (RyuuNest-Models): se mantienen aquí para
+# trabajar, pero no se publican en este repo; su destino es el otro repositorio.
+# El código de módulos de verdad (modules/tmo/…) sí se versiona aquí.
+modules/AGENTS.md
+modules/README.md
+modules/NOTES.md
