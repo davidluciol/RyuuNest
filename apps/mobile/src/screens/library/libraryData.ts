@@ -19,6 +19,18 @@ export interface LoadLibraryOptions {
   pageSize?: number;
 }
 
+/**
+ * Datos de la pantalla: de la base del dispositivo si la plataforma la tiene; si no
+ * (web, donde Playwright verifica la pantalla), los datos de reserva.
+ */
+export async function resolveLibraryData(
+  open: () => Promise<SqlDriver | null>,
+  fallback: LibraryData,
+): Promise<LibraryData> {
+  const driver = await open();
+  return driver === null ? fallback : loadLibraryData(driver);
+}
+
 export async function loadLibraryData(
   driver: SqlDriver,
   options: LoadLibraryOptions = {},

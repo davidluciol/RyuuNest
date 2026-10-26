@@ -21,6 +21,8 @@
   "state.empty.search.message": "Ningún resultado para «{query}».",
   "state.error.module.title": "El módulo falló",
   "state.error.module.message": "El listado no se pudo leer.",
+  "state.error.library.title": "No se pudo abrir tu biblioteca",
+  "state.error.library.message": "Algo falló al leer los datos guardados en este dispositivo.",
   "state.loading.title": "Cargando…",
   "state.loading.message": "Página {page} de {total}",
 

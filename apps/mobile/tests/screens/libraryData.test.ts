@@ -6,7 +6,8 @@ import {
   openMigratedDriver,
   type NodeSqliteDriver,
 } from "../../../../packages/core/tests/support/nodeSqliteDriver";
-import { loadLibraryData } from "../../src/screens/library/libraryData";
+import { loadLibraryData, resolveLibraryData } from "../../src/screens/library/libraryData";
+import type { LibraryData } from "../../src/screens/library/libraryFixtures";
 
 /**
  * F14c — la pantalla Biblioteca lee del núcleo (`browseLibrary`, T23; `Folders`, T22)
@@ -79,6 +80,29 @@ async function addSeries(
     );
   }
 }
+
+describe("resolveLibraryData (F14c)", () => {
+  const fallback: LibraryData = { series: [], folders: [], sources: [{ id: "x", name: "x" }] };
+
+  it("sin base de datos en la plataforma (web) usa los datos de reserva", async () => {
+    expect(await resolveLibraryData(async () => null, fallback)).toBe(fallback);
+  });
+
+  it("con base de datos lee del núcleo, no de la reserva", async () => {
+    await addSeries(driver, { id: "real", title: "Real", addedAt: 1 });
+
+    const data = await resolveLibraryData(async () => driver, fallback);
+
+    expect(data.series.map((s) => s.seriesId)).toEqual(["real"]);
+  });
+
+  it("una base vacía muestra la biblioteca vacía real, sin sembrar nada", async () => {
+    const data = await resolveLibraryData(async () => driver, fallback);
+
+    expect(data).toEqual({ series: [], folders: [], sources: [] });
+    expect(await driver.get("SELECT COUNT(*) AS n FROM favorite")).toEqual({ n: 0 });
+  });
+});
 
 describe("loadLibraryData (F14c)", () => {
   it("una base vacía da una biblioteca vacía", async () => {
