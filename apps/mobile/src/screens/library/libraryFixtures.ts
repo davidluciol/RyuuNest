@@ -20,8 +20,8 @@ export interface LibrarySeries {
   moduleId: string;
   /** Título de la serie. */
   title: string;
-  /** Tipo de obra. */
-  kind: MediaKind;
+  /** Tipo de obra; `null` si el módulo no lo declara. */
+  kind: MediaKind | null;
   /** Fuente de la portada (asset local). */
   cover?: ImageSourcePropType;
   /** NSFW (RF-35: oculto por defecto). */
@@ -32,6 +32,8 @@ export interface LibrarySeries {
   folderId: string | null;
   /** Fecha de adición a favoritos (timestamp ms). */
   addedAt: number;
+  /** Último movimiento (progreso o, sin él, alta); ausente = `addedAt`. */
+  lastReadAt?: number;
   /** Progreso de lectura; `null` = sin progreso. */
   progress: LibraryProgress | null;
 }
@@ -332,7 +334,7 @@ export function filterLibrarySeries(
 
   // Filtro por tipos.
   if (filters.kinds.length > 0) {
-    result = result.filter((s) => filters.kinds.includes(s.kind));
+    result = result.filter((s) => s.kind !== null && filters.kinds.includes(s.kind));
   }
 
   // Filtro por fuentes.
@@ -353,7 +355,7 @@ export function filterLibrarySeries(
       case "name":
         return a.title.localeCompare(b.title, "es");
       case "lastRead":
-        return (b.progress?.pageIndex ?? 0) - (a.progress?.pageIndex ?? 0);
+        return (b.lastReadAt ?? b.addedAt) - (a.lastReadAt ?? a.addedAt);
       case "addedAt":
         return b.addedAt - a.addedAt;
     }
