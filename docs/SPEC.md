@@ -814,7 +814,7 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 ## 15. Código abierto y comunidad
 
 - **Licencia GPL-3.0.** Los módulos son obras independientes de cada autor, que decide su licencia. Esto no es asesoría legal.
-- **El repo principal no incluye módulos de sitios concretos.** Los módulos del autor viven en un repo público aparte, no afiliado a la app.
+- **El repo principal no incluye módulos de sitios concretos.** Los módulos del autor viven en un repo público aparte, no afiliado a la app. Repo de módulos decidido el 2026-10-25 (**P-78**): **`https://github.com/davidluciol/RyuuNest-Models.git`**. La estructura de contribución (carpeta `<site>` con `manifest.json` + `module.js` y apoyo en `bin/`) está en el `AGENTS.md` de ese repo.
 - **README:** declara que no está afiliado a ningún sitio, que no aloja ni distribuye contenido, y que cada usuario es responsable de los repos que añade y de respetar los derechos de autor y los términos de cada sitio.
 - **Documentos:** `CONTRIBUTING.md`, guía del SDK de módulos, código de conducta, plantillas de issues y política de seguridad.
 - **API versionada con semver.** Un cambio incompatible sube `apiVersion` y la app informa qué módulos no son compatibles.
