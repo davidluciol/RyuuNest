@@ -123,20 +123,25 @@ const moduleEntry = (
 
 export const SAMPLE_DISCOVER_MODULES: readonly DiscoverModule[] = [
   { id: "m-ejemplo-a", name: "Módulo de ejemplo A", nsfw: false, hasPopular: true, hasLatest: true },
-  { id: "m-ejemplo-b", name: "Módulo de ejemplo B", nsfw: true, hasPopular: true, hasLatest: true },
+  { id: "m-ejemplo-b", name: "Módulo de ejemplo B", nsfw: true, hasPopular: false, hasLatest: true },
 ];
 
+/**
+ * Las filas reproducen el conjunto de `test-site` (`SeriesSummary` de SPEC §6.2
+ * con su `hint`), y el catálogo añade series de la familia ya usada en
+ * Biblioteca (F14). «Draco de jade» es NSFW: con el filtro apagado no se ve.
+ */
 export const SAMPLE_DISCOVER_LATEST: readonly DiscoverEntry[] = [
-  moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "Hoy"),
-  moduleEntry("sombras-de-arcano", "Sombras de Arcano", "manhwa", "Ayer"),
-  moduleEntry("la-forja-perdida", "La forja perdida", "manga", "Hace 2 días"),
-  moduleEntry("cronicas-de-moonlit", "Crónicas de Moonlit", "manhua", "Hace 3 días"),
+  moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 h · Equipo Ryuu"),
+  moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "hace 6 h · Nido Editorial"),
+  moduleEntry("cronicas-de-moonlit", "Crónicas de Moonlit", "manhua", "hace 3 d · Estudio Linterna"),
+  moduleEntry("noche-de-ambar", "Noche de ámbar", "comic", "hace 1 sem · Taller Ámbar"),
 ];
 
 export const SAMPLE_DISCOVER_POPULAR: readonly DiscoverEntry[] = [
-  moduleEntry("vortice-celeste", "Vórtice celeste", "manhwa", "★ 8.4"),
-  moduleEntry("espada-del-crepusculo", "Espada del crepúsculo", "manga", "★ 8.1"),
-  moduleEntry("reino-olvidado", "Reino olvidado", "comic", "★ 7.9"),
+  moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "★ 8.4"),
+  moduleEntry("la-forja-perdida", "La forja perdida", "manga", "★ 8.1"),
+  moduleEntry("sombras-de-arcano", "Sombras de Arcano", "manhwa", "★ 7.9"),
   moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "★ 7.6"),
 ];
 
@@ -144,11 +149,18 @@ export const SAMPLE_DISCOVER_CATALOG: DiscoverPage = {
   page: 1,
   hasNext: true,
   entries: [
-    moduleEntry("vortice-celeste", "Vórtice celeste", "manhwa", "Cap. 48"),
-    moduleEntry("espada-del-crepusculo", "Espada del crepúsculo", "manga", "Cap. 112"),
-    moduleEntry("reino-olvidado", "Reino olvidado", "comic", "Cap. 29"),
-    moduleEntry("alquimista-callejero", "Alquimista callejero", "manhua", "Cap. 74"),
-    moduleEntry("cronicas-del-abismo", "Crónicas del abismo", "manga", "Cap. 12"),
-    moduleEntry("sendero-de-sombras", "Sendero de sombras", "manhwa", "Cap. 90"),
+    moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 h · Equipo Ryuu"),
+    moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "hace 6 h · Nido Editorial"),
+    moduleEntry("cronicas-de-moonlit", "Crónicas de Moonlit", "manhua", "hace 3 d · Estudio Linterna"),
+    moduleEntry("noche-de-ambar", "Noche de ámbar", "comic", "hace 1 sem · Taller Ámbar"),
+    {
+      seriesId: "draco-de-jade",
+      moduleId: "m-ejemplo-a",
+      title: "Draco de jade",
+      kind: "manhwa",
+      nsfw: true,
+      hint: "hace 4 d · Sellos Unidos",
+    },
+    moduleEntry("montana-de-hielo", "Montaña de hielo", "manhwa", "hace 5 d · Estudio Linterna"),
   ],
 };
