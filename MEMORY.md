@@ -135,6 +135,11 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
 
+### 2026-10-26 · FB1: plano de pantalla
+
+- **Hecho:** docs/screen-blueprint.md (42 líneas): estructura de una pantalla, patrón, textos y tokens, datos reales (F14c) y verificación con Playwright; solo describe lo que ya hacen F11/F13/F14. TDD con una prueba guardia (pps/mobile/tests/docs/screenBlueprint.test.ts: existe, ≤ 80 líneas, secciones, y **solo cita rutas que existen**, para que el plano no se pudra). Rama eature/FB1-screen-blueprint apilada sobre F14c.
+- **Pendiente:** 🧍 revisión humana del plano.
+
 ### 2026-10-26 · F14c: Biblioteca conectada al núcleo (previa a FB1)
 
 - **Hecho:** al empezar FB1 se vio que F14a/F14b no usaban el núcleo (P-67 daba por hecho lo contrario). Preguntado (Regla 1), el humano eligió **cablear Biblioteca primero** (**P-79**). TDD en rama `feature/F14c-library-core-connection`: (1) `loadLibraryData` (`browseLibrary` + `Folders` → `LibraryData`, 8 tests con SQLite real `node:sqlite`), (2) orden «último leído» real con `lastReadAt` (1 test), (3) `createExpoSqlDriver` (5 tests con doble de `expo-sqlite`), (4) `resolveLibraryData` + `appDatabase(.native).ts` + `useLibraryData` + ruta con carga/error (3 tests) y `expo-sqlite` instalado con `expo install`.

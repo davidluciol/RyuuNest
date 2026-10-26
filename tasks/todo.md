@@ -283,8 +283,8 @@ Dep: F14a, F14b; T21, T22, T23 · M · `apps/mobile/src/{data,screens/library,ap
 
 Dep: F11, F13, F14a, F14b, F14c · S · `docs/screen-blueprint.md` (1 página)
 
-- [ ] Documenta, a partir de F11, F13, F14a y F14b ya hechas: estructura de carpetas de una pantalla, patrón (componentes → datos de ejemplo o reales → estados → Playwright vs `screen.png`), uso de `t()` y tokens, cómo se conecta con el núcleo **con datos reales de la biblioteca** (F14a/F14b; T22/T23) y un ejemplo de test Playwright
-- [ ] Máx. 1 página; sin reglas nuevas (solo lo que ya hacen F11/F13/F14a/F14b). F13 queda como ejemplo de fixtures; F14a/F14b, como ejemplo de datos reales
+- [x] Documenta, a partir de F11, F13, F14a, F14b y F14c ya hechas: estructura de carpetas de una pantalla, patrón (componentes → datos de ejemplo o reales → estados → Playwright vs `screen.png`), uso de `t()` y tokens, cómo se conecta con el núcleo **con datos reales de la biblioteca** (F14a/F14b; T22/T23) y un ejemplo de test Playwright
+- [x] Máx. 1 página (42 líneas, con prueba guardia en pps/mobile/tests/docs/screenBlueprint.test.ts); sin reglas nuevas. F13, ejemplo de fixtures; F14c, ejemplo de datos reales
 - Las pantallas F12, F15, F17, F20, F21 y F25 **leen este plano** en vez de explorar el repo. Verif: 🧍 revisión
 
 ### F15 Descubrir `[FE · Intermedia · N2]`
