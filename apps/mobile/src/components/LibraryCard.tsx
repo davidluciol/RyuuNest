@@ -1,11 +1,4 @@
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  type ImageSourcePropType,
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "./Badge";
@@ -29,8 +22,8 @@ import { textStyle } from "./textStyle";
 export interface LibraryCardProps {
   /** Fuente de la portada. */
   cover?: ImageSourcePropType;
-  /** Tipo de obra para el badge (p. ej. «Manhwa»). */
-  kind: string;
+  /** Tipo de obra para el badge (p. ej. «Manhwa»); sin él no hay insignia. */
+  kind?: string;
   /** Título de la serie (máx. 2 líneas, T7). */
   title: string;
   /** Avance 0–1; si > 0 muestra la barra de progreso (RF-41). */
@@ -73,20 +66,22 @@ export default function LibraryCard({
         ]}
       >
         {cover ? <Image source={cover} style={styles.cover} /> : null}
-        <View
-          style={[
-            styles.badgeWrap,
-            {
-              top: badgeStyle.top,
-              left: badgeStyle.left,
-              height: badgeStyle.height,
-              borderRadius: badgeStyle.borderRadius,
-              backgroundColor: badgeStyle.backgroundColor,
-            },
-          ]}
-        >
-          <Badge label={kind} />
-        </View>
+        {kind ? (
+          <View
+            style={[
+              styles.badgeWrap,
+              {
+                top: badgeStyle.top,
+                left: badgeStyle.left,
+                height: badgeStyle.height,
+                borderRadius: badgeStyle.borderRadius,
+                backgroundColor: badgeStyle.backgroundColor,
+              },
+            ]}
+          >
+            <Badge label={kind} />
+          </View>
+        ) : null}
         {hasProgress ? (
           <View style={styles.progressTrack}>
             <View style={libraryCardProgressStyle(progress)} />

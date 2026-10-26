@@ -1,12 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import {
   dragonNightColors,
   layoutForWidth,
@@ -163,14 +156,8 @@ export default function LibraryScreen({
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.filtersRow}
         >
-          <Chip
-            label={t("library.filter.kind")}
-            selected={filters.kinds.length > 0}
-          />
-          <Chip
-            label={t("library.filter.source")}
-            selected={filters.moduleIds.length > 0}
-          />
+          <Chip label={t("library.filter.kind")} selected={filters.kinds.length > 0} />
+          <Chip label={t("library.filter.source")} selected={filters.moduleIds.length > 0} />
           <Chip
             label={`${t("library.sort.label")}: ${t(ORDER_KEYS[filters.order])}`}
             selected={filters.order !== "name"}
@@ -247,7 +234,7 @@ export default function LibraryScreen({
           renderItem={({ item }) => (
             <View style={styles.gridItem}>
               <LibraryCard
-                kind={t(KIND_KEYS[item.kind])}
+                kind={item.kind === null ? undefined : t(KIND_KEYS[item.kind])}
                 title={item.title}
                 progress={
                   item.progress && item.progress.pageTotal > 0

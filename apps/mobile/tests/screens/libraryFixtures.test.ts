@@ -105,6 +105,20 @@ describe("filterLibrarySeries (F14a/F14b)", () => {
     }
   });
 
+  it("orden por último leído: la marca más reciente primero, sin marca usa la fecha de alta", () => {
+    const base = all[0]!;
+    const series = [
+      { ...base, seriesId: "viejo", title: "Viejo", addedAt: 10, lastReadAt: 10 },
+      { ...base, seriesId: "leido", title: "Leído", addedAt: 5, lastReadAt: 90 },
+      { ...base, seriesId: "sin-marca", title: "Sin marca", addedAt: 50, lastReadAt: undefined },
+    ];
+    const filters: LibraryFilters = { ...DEFAULT_LIBRARY_FILTERS, order: "lastRead" };
+
+    const ids = filterLibrarySeries(series, filters).map((s) => s.seriesId);
+
+    expect(ids).toEqual(["leido", "sin-marca", "viejo"]);
+  });
+
   it("cifras coherentes con Inicio (D1): 3 carpetas, 48 obras totales", () => {
     expect(SAMPLE_LIBRARY_DATA.folders).toHaveLength(3);
     const total = SAMPLE_LIBRARY_DATA.folders.reduce((sum, f) => sum + f.count, 0);

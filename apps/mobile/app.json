@@ -18,6 +18,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font", "expo-router", "expo-status-bar"]
+    "plugins": [
+      "expo-font",
+      "expo-router",
+      "expo-status-bar",
+      "expo-sqlite"
+    ]
   }
 }
