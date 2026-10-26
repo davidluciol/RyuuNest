@@ -1,6 +1,5 @@
 {
   "3": "Repository Index Format",
-  "4": "Calibration PNG Generator",
   "8": "Lint and Package Config",
   "10": "Module SDK Package Config",
   "14": "Core Parser Dependencies",
@@ -13,7 +12,6 @@
   "26": "App Test Dependencies",
   "28": "Settings Screen Sections",
   "29": "Mobile Package Manifest",
-  "30": "Image Budget Panel",
   "32": "Library Screen Components",
   "33": "TMO Module Port",
   "34": "Test Site Manifest",
@@ -44,7 +42,6 @@
   "68": "Monochrome Android Icon",
   "69": "App Icon Brand Mark",
   "70": "Splash Screen Icon",
-  "71": "Node Type Definitions",
   "72": "GPL-3.0 Asset Licensing",
   "73": "T05 Device Calibration Capture",
   "74": "ModuleApi Contract Draft",

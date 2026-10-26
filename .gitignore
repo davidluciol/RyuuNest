@@ -43,7 +43,7 @@ graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
 
 # Documentos para el repo de módulos (RyuuNest-Models): se mantienen aquí para
 # trabajar, pero no se publican en este repo; su destino es el otro repositorio.
-# El código de módulos de verdad (modules/tmo/…) sí se versiona aquí.
+# Los módulos reales viven en el repo externo (P-78); aquí ya no hay código de módulos.
 modules/AGENTS.md
 modules/README.md
 modules/NOTES.md
