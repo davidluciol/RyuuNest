@@ -131,7 +131,9 @@ Dep: T23 · S · `packages/core/src/library/queries.ts` (+test)
 
 ### T31 Port de `logicTMO.py` a módulo script `[BE · Alta · N4]`
 
-Dep: T19 · M · `packages/test-site/fixtures/tmo/*.html`; módulo fuera del repo principal (P-8)
+> **Retirado del repo el 2026-10-26 (P-80):** `modules/tmo/`, sus fixtures y sus pruebas se eliminaron porque el módulo está deprecado y el repo externo (P-78) ya sirve los módulos. Los cambios de API aditivos de T31 (P-74/P-75/P-76) **se conservan** con sus propias pruebas. Lo de abajo es el historial; el «🧍 pendiente» sobre el sitio real ya no aplica a este repo.
+
+Dep: T19 · M · ~~`packages/test-site/fixtures/tmo/*.html`~~ (retirado); módulo fuera del repo principal (P-8)
 
 - [x] `popular`/`latest`/`search`/`details`/`pages` funcionan contra las fixtures, usando solo `host.*`
 - [x] Corregidos los 8 defectos del Apéndice A.4 (errores tipados, timeouts, sin estado compartido)
