@@ -266,11 +266,22 @@ Dep: F14a · M · `apps/mobile/src/screens/library/*`
 - [x] Verif: Playwright vs `biblioteca_tesoros/screen.png`
 - **Hecho (2026-10-23):** junto con F14a en `feature/F14ab-library-screen`. Filtros de tipo/fuente como chips placeholder (la hoja llega con la conexión al núcleo).
 
+### F14c Biblioteca conectada al núcleo `[FE · Intermedia · N3]` ✅ (pendiente POCO)
+
+> Añadida el 2026-10-26 (P-79): F14a/F14b usaban solo `SAMPLE_LIBRARY_DATA`, así que FB1 (P-67) no tenía un ejemplo real de conexión con el núcleo.
+
+Dep: F14a, F14b; T21, T22, T23 · M · `apps/mobile/src/{data,screens/library,app/(tabs)/library.tsx}`
+
+- [x] `loadLibraryData` recorre `browseLibrary` (cursor) y `Folders` y adapta a `LibraryData`; sin sembrar datos
+- [x] `createExpoSqlDriver` (`SqlDriver` sobre `expo-sqlite`) + `appDatabase.native.ts` (migra el esquema §8.1); web sin SQLite (`appDatabase.ts` → datos de ejemplo)
+- [x] Ruta Biblioteca: carga, error (ErrorState + reintentar) y datos; orden «último leído» real (`lastReadAt`)
+- Verif: [x] Vitest con SQLite real (`node:sqlite`) · [x] export web + Playwright (`tests/e2e/library.cjs`) · [x] bundle Android compila · [ ] 🧍 POCO F5 Pro (base real vacía → estado vacío)
+
 ### FB1 Plano de pantalla (`screen-blueprint.md`) `[Doc · Baja · N4]`
 
-> Se ejecuta después de F14b: F13 es el ejemplo de fixtures y F14a/F14b el de datos reales (P-67).
+> Se ejecuta después de F14c: F13 es el ejemplo de fixtures y F14a/F14b/F14c el de datos reales (P-67, P-79).
 
-Dep: F11, F13, F14a, F14b · S · `docs/screen-blueprint.md` (1 página)
+Dep: F11, F13, F14a, F14b, F14c · S · `docs/screen-blueprint.md` (1 página)
 
 - [ ] Documenta, a partir de F11, F13, F14a y F14b ya hechas: estructura de carpetas de una pantalla, patrón (componentes → datos de ejemplo o reales → estados → Playwright vs `screen.png`), uso de `t()` y tokens, cómo se conecta con el núcleo **con datos reales de la biblioteca** (F14a/F14b; T22/T23) y un ejemplo de test Playwright
 - [ ] Máx. 1 página; sin reglas nuevas (solo lo que ya hacen F11/F13/F14a/F14b). F13 queda como ejemplo de fixtures; F14a/F14b, como ejemplo de datos reales
