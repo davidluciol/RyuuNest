@@ -32,6 +32,9 @@ export default defineConfig({
         new URL("../../packages/test-site/src/index.ts", import.meta.url),
       ),
       "@ryuunest/core": fileURLToPath(new URL("../../packages/core/src/index.ts", import.meta.url)),
+      "@ryuunest/module-sdk": fileURLToPath(
+        new URL("../../packages/module-sdk/src/index.ts", import.meta.url),
+      ),
     },
   },
 });

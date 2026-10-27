@@ -193,6 +193,9 @@ importers:
       '@noble/hashes':
         specifier: ^2.4.0
         version: 2.4.0
+      '@ryuunest/module-sdk':
+        specifier: workspace:*
+        version: link:../../packages/module-sdk
       '@ryuunest/test-site':
         specifier: workspace:*
         version: link:../../packages/test-site

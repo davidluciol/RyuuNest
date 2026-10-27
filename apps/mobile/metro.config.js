@@ -21,7 +21,12 @@ config.resolver.disableHierarchicalLookup = false;
 // no tiene condición `default`, así que Metro cae a `src`; aquí se fuerza
 // el `main` compilado. En tests, vitest usa alias a fuentes (P-51).
 // El resto de paquetes sí usan package exports (entities, css-select…).
-const WORKSPACE_PACKAGES = ["@ryuunest/core", "@ryuunest/test-site", "@ryuunest/ui-tokens"];
+const WORKSPACE_PACKAGES = [
+  "@ryuunest/core",
+  "@ryuunest/module-sdk",
+  "@ryuunest/test-site",
+  "@ryuunest/ui-tokens",
+];
 const defaultResolveRequest = config.resolver.resolveRequest;
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (WORKSPACE_PACKAGES.includes(moduleName)) {
