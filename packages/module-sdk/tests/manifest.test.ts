@@ -50,6 +50,24 @@ describe("manifest · válido", () => {
 
     expect(result.ok).toBe(true);
   });
+
+  it("acepta `details` y `pages` en capabilities (P-82: la forma de zonatmo)", () => {
+    const result = validateManifest({
+      ...validManifest,
+      capabilities: ["popular", "latest", "search", "details", "pages"],
+    });
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.value.capabilities).toEqual(["popular", "latest", "search", "details", "pages"]);
+    }
+  });
+
+  it("acepta un manifest que solo declara `details` y `pages`", () => {
+    expect(
+      validateManifest({ ...validManifest, capabilities: ["details", "pages"] }).ok,
+    ).toBe(true);
+  });
 });
 
 describe("manifest · inválido", () => {

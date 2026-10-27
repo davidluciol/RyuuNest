@@ -93,9 +93,19 @@ const MANIFEST = {
   entry: "module.js",
 };
 
-function simulatedRepo(overrides: { sha256?: string } = {}): { http: StubHttp; index: RepoIndex } {
+/** La forma del `zonatmo` real (P-80): declara también `details` y `pages`. */
+const ZONATMO_STYLE_MANIFEST = {
+  ...MANIFEST,
+  capabilities: ["popular", "latest", "search", "details", "pages"],
+};
+
+function simulatedRepo(options: { sha256?: string; manifest?: typeof MANIFEST } = {}): {
+  http: StubHttp;
+  index: RepoIndex;
+} {
+  const manifest = options.manifest ?? MANIFEST;
   const zip = zipSync({
-    "manifest.json": utf8Encode(JSON.stringify(MANIFEST)),
+    "manifest.json": utf8Encode(JSON.stringify(manifest)),
     "module.js": utf8Encode("export default {};"),
   });
   const index: RepoIndex = {
@@ -115,7 +125,7 @@ function simulatedRepo(overrides: { sha256?: string } = {}): { http: StubHttp; i
         nsfw: false,
         permissions: { domains: ["ejemplo.com"] },
         package: "packages/ejemplo-1.0.0.zip",
-        sha256: overrides.sha256 ?? bytesToHex(sha256(zip)),
+        sha256: options.sha256 ?? bytesToHex(sha256(zip)),
         size: zip.length,
       },
     ],
@@ -159,6 +169,16 @@ describe("descarga desde el repo externo (simulado, con la URL del real)", () =>
     expect((error as ModuleError).message).toContain("hash");
     expect(await app.modules.list()).toEqual([]);
   });
+
+  it("instala un módulo cuyo manifest declara `details` y `pages` (P-80 → P-82)", async () => {
+    const { http } = simulatedRepo({ manifest: ZONATMO_STYLE_MANIFEST });
+    const app = makeApp(http);
+
+    const repo = await app.repos.addRepo(REAL_REPO_URL);
+    await app.flow.install(repo.id, "ejemplo", { confirmed: true, reinforced: true });
+
+    expect((await app.modules.get("ejemplo"))?.enabled).toBe(true);
+  });
 });
 
 describe.skipIf(process.env.RYUUNEST_LIVE !== "1")(
@@ -179,7 +199,17 @@ describe.skipIf(process.env.RYUUNEST_LIVE !== "1")(
         expect(response.status, `${entry.id}: HTTP`).toBe(200);
         expect(bytes.length, `${entry.id}: tamaño`).toBe(entry.size);
         expect(bytesToHex(sha256(bytes)), `${entry.id}: sha256`).toBe(entry.sha256);
-        expect(Object.keys(unzipSync(bytes)), `${entry.id}: contenido`).toContain("manifest.json");
+
+        // El hallazgo de P-80: instalar el módulo real fallaba porque su manifest
+        // declara `details` y `pages`. Con el validador relajado (P-82) debe pasar.
+        const files = unzipSync(bytes);
+        const manifestBytes = files["manifest.json"];
+        expect(manifestBytes, `${entry.id}: contenido`).toBeDefined();
+        const manifest = JSON.parse(new TextDecoder().decode(manifestBytes)) as unknown;
+        const result = validateManifest(manifest);
+        expect(result.ok, `${entry.id}: manifest (${result.ok ? "" : JSON.stringify(result.issues)})`).toBe(
+          true,
+        );
       }
     }, 60_000);
   },
