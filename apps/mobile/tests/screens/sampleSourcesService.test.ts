@@ -119,3 +119,15 @@ describe("createSampleSourcesService", () => {
     ).toBeUndefined();
   });
 });
+
+describe("createSampleSourcesService · sincronizar", () => {
+  it("sincronizar un repo conocido no cambia nada y uno desconocido lanza NOT_FOUND", async () => {
+    const service = createSampleSourcesService();
+    const before = await service.load();
+
+    await service.refreshRepo(REPO);
+
+    expect(await service.load()).toEqual(before);
+    await expect(service.refreshRepo("https://otro.test/index.json")).rejects.toThrow("no está");
+  });
+});

@@ -162,3 +162,31 @@ describe("canConfirmInstall (RF-4, confirmación reforzada)", () => {
     expect(canConfirmInstall(script, { reinforced: true })).toBe(true);
   });
 });
+
+describe("quitar un repositorio (RF-8)", () => {
+  it("pide confirmación con el repo elegido", () => {
+    expect(run({ type: "ask-remove-repo", repoId: "r" })).toEqual({
+      sheet: "remove-repo",
+      repoId: "r",
+      busy: false,
+      error: null,
+    });
+  });
+
+  it("mientras quita no se cierra a medias y un fallo deja la hoja abierta", () => {
+    const busy = run({ type: "ask-remove-repo", repoId: "r" }, { type: "submit-remove-repo" });
+
+    expect(busy).toMatchObject({ sheet: "remove-repo", busy: true });
+    expect(sourcesFlowReducer(busy, { type: "close" })).toEqual(busy);
+    expect(sourcesFlowReducer(busy, { type: "fail", message: "x" })).toMatchObject({
+      busy: false,
+      error: "x",
+    });
+  });
+
+  it("volver cierra la hoja", () => {
+    expect(run({ type: "ask-remove-repo", repoId: "r" }, { type: "back" })).toEqual({
+      sheet: "none",
+    });
+  });
+});

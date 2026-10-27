@@ -22,7 +22,8 @@ export type SourcesFlow =
       busy: boolean;
       error: string | null;
     }
-  | { sheet: "uninstall"; moduleId: string; busy: boolean; error: string | null };
+  | { sheet: "uninstall"; moduleId: string; busy: boolean; error: string | null }
+  | { sheet: "remove-repo"; repoId: string; busy: boolean; error: string | null };
 
 export type SourcesFlowAction =
   | { type: "open-add-repo" }
@@ -34,6 +35,8 @@ export type SourcesFlowAction =
   | { type: "submit-update" }
   | { type: "ask-uninstall" }
   | { type: "submit-uninstall" }
+  | { type: "ask-remove-repo"; repoId: string }
+  | { type: "submit-remove-repo" }
   | { type: "back" }
   | { type: "fail"; message: string }
   | { type: "done" }
@@ -66,13 +69,20 @@ export function sourcesFlowReducer(state: SourcesFlow, action: SourcesFlowAction
         ? { sheet: "uninstall", moduleId: state.moduleId, busy: false, error: null }
         : state;
 
+    case "ask-remove-repo":
+      return { sheet: "remove-repo", repoId: action.repoId, busy: false, error: null };
+
     case "submit-add-repo":
       return state.sheet === "add-repo" ? { ...state, error: null } : state;
 
     case "submit-install":
     case "submit-update":
     case "submit-uninstall":
-      return state.sheet === "install" || state.sheet === "update" || state.sheet === "uninstall"
+    case "submit-remove-repo":
+      return state.sheet === "install" ||
+        state.sheet === "update" ||
+        state.sheet === "uninstall" ||
+        state.sheet === "remove-repo"
         ? { ...state, busy: true, error: null }
         : state;
 
@@ -83,6 +93,7 @@ export function sourcesFlowReducer(state: SourcesFlow, action: SourcesFlowAction
         : { ...state, busy: false, error: action.message };
 
     case "back":
+      if (state.sheet === "remove-repo") return INITIAL_SOURCES_FLOW;
       return state.sheet === "uninstall" || state.sheet === "update"
         ? { sheet: "manage", moduleId: state.moduleId, busy: false, error: null }
         : state;

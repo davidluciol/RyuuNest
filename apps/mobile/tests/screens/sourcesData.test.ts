@@ -61,7 +61,15 @@ function zipOf(v: Version): Uint8Array {
 
 class Repo {
   readonly http: StubHttp;
-  private readonly routes: Record<string, { body?: string; bodyBytes?: Uint8Array }> = {};
+  private readonly routes: Record<
+    string,
+    { status?: number; body?: string; bodyBytes?: Uint8Array }
+  > = {};
+
+  /** El índice deja de responder bien (error 500). */
+  breakIndex(): void {
+    this.routes[REPO_URL] = { status: 500, body: "" };
+  }
 
   constructor(versions: Version[]) {
     this.http = new StubHttp(this.routes);
@@ -340,5 +348,33 @@ describe("createSourcesService · último error del módulo (RF-5)", () => {
     expect((await service.load()).modules[0]).toMatchObject({
       lastError: "El selector ya no existe",
     });
+  });
+});
+
+describe("createSourcesService · sincronizar un repo (botón del diseño)", () => {
+  it("vuelve a leer el índice sin pedir el bloqueo: no es añadir un repo (RF-7)", async () => {
+    const repo = new Repo([{ id: "uno", version: "1.0.0" }]);
+    const lock = fakeLock({ available: true });
+    const service = build(repo, lock);
+    await service.addRepo(REPO_URL);
+    await service.install(REPO_URL, "uno", { confirmed: true });
+
+    await setProtection(true);
+    repo.publish([{ id: "uno", version: "1.1.0" }]);
+    await service.refreshRepo(REPO_URL);
+
+    expect(lock.asked).toEqual([]);
+    expect((await service.load()).modules[0]).toMatchObject({ updateTo: "1.1.0" });
+  });
+
+  it("si el índice falla, lanza y conserva lo que ya había", async () => {
+    const repo = new Repo([{ id: "uno", version: "1.0.0" }]);
+    const service = build(repo);
+    await service.addRepo(REPO_URL);
+
+    repo.breakIndex();
+
+    await expect(service.refreshRepo(REPO_URL)).rejects.toBeInstanceOf(ModuleError);
+    expect((await service.load()).repos).toHaveLength(1);
   });
 });

@@ -75,6 +75,12 @@ export function createSampleSourcesService(
       };
     },
 
+    async refreshRepo(id) {
+      if (!state.repos.some((repo) => repo.id === id)) {
+        throw new ModuleError("NOT_FOUND", `El repositorio ${id} no está registrado`);
+      }
+    },
+
     async removeRepo(id) {
       state = {
         repos: state.repos.filter((repo) => repo.id !== id),

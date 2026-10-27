@@ -72,6 +72,8 @@ export type SourcesUpdateResult =
 export interface SourcesService {
   load(): Promise<SourcesData>;
   addRepo(url: string): Promise<void>;
+  /** Vuelve a leer el índice de un repo ya registrado (RF-6: detecta versiones nuevas). */
+  refreshRepo(id: string): Promise<void>;
   removeRepo(id: string): Promise<void>;
   previewInstall(repoId: string, moduleId: string): Promise<InstallPreview>;
   install(repoId: string, moduleId: string, confirmation: InstallConfirmation): Promise<void>;
@@ -200,6 +202,11 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
     async addRepo(url) {
       await requireUnlock("Confirma para añadir el repositorio");
       await repos.addRepo(url);
+    },
+
+    async refreshRepo(id) {
+      // Releer un repo ya registrado no es añadir uno nuevo: no pide el bloqueo (RF-7).
+      await repos.addRepo(id);
     },
 
     async removeRepo(id) {
