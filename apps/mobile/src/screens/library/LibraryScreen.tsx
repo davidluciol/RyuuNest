@@ -14,6 +14,7 @@ import EmptyState from "../../components/EmptyState";
 import TextField from "../../components/TextField";
 import { Search } from "../../icons";
 import { t } from "../../i18n";
+import { kindLabel } from "../../components/kindLabel";
 import {
   DEFAULT_LIBRARY_FILTERS,
   EMPTY_LIBRARY_DATA,
@@ -37,14 +38,6 @@ const ORDER_KEYS = {
   name: "library.sort.name",
   lastRead: "library.sort.lastRead",
   addedAt: "library.sort.addedAt",
-} as const;
-
-/** Mapa de claves de traducción para los tipos de obra (D-13). */
-const KIND_KEYS = {
-  manga: "kind.manga",
-  manhua: "kind.manhua",
-  manhwa: "kind.manhwa",
-  comic: "kind.comic",
 } as const;
 
 export interface LibraryScreenProps {
@@ -234,7 +227,7 @@ export default function LibraryScreen({
           renderItem={({ item }) => (
             <View style={styles.gridItem}>
               <LibraryCard
-                kind={item.kind === null ? undefined : t(KIND_KEYS[item.kind])}
+                kind={item.kind === null ? undefined : kindLabel(item.kind)}
                 title={item.title}
                 progress={
                   item.progress && item.progress.pageTotal > 0
