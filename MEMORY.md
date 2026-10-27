@@ -8,6 +8,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 
 - **Parte 1 (núcleo):** T01–T30, T25b, T31 y T32a hechos; T05 🟡 (falta tope de imágenes y RNF-1 en release); T32b–T35 pendientes. Checkpoints A–F cerrados; **G y H** esperan revisión humana.
 - **Parte 2 (diseño/front):** F01–F11, F11b, F13, F14a/b/c, F15, F15b y FB1 hechos. **Checkpoint P-A** (tras F01–F10) esperando revisión humana. Marcos de F11 y pantallas sin verificar en el POCO.
+- **F16 (Fuentes) hecha** (rama `feature/F16-sources`, PR abierto); falta la prueba en el POCO. F16b (interruptor de protección de instalación) pendiente hasta F20.
 - Suite en verde (~800 tests), CI activo, Graphify indexado.
 
 ## 2. Hitos
@@ -23,6 +24,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - **Módulos externos:** repo `davidluciol/RyuuNest-Models` con 3 módulos (zonatmo, yupmanga, m440); descarga verificada en vivo; validador acepta `details`/`pages`; módulo TMO local retirado (T31, P-78–P-82).
 - **Diseño 6a:** `ui-tokens` + tema Dragon Night, puertas AC-13 en CI, fuentes/iconos locales, escala y layout por densidad, galería web, componentes base 1 y 2, dragón marcador, lint de diseño, i18n (F01–F10).
 - **Pantallas 6b:** shell con Expo Router (F11), Inicio (F13), Biblioteca conectada a SQLite (F14a–c), Descubrir sobre runtime real (F15) y conectado al registro de módulos instalados con recuerdo del último módulo (F15b), plano de pantalla `docs/screen-blueprint.md` (FB1), e2e del shell estabilizado con marcadores `screen-<id>` y un guard que evita que se pudra (F11b).
+- **Fuentes (F16):** pantalla con repos, módulos por tipo, instalar con confirmación (permisos y huella; `script` exige mantener pulsado), gestionar, actualizar con reconfirmación (RF-6), desinstalar y quitar repo (RF-8). Núcleo ampliado con `PackageInstaller.prepare` e `InstallFlow.previewUpdate/applyUpdate`; `SecureLock` real con `expo-local-authentication`; web con servicio en memoria.
 
 ## 3. Decisiones vigentes
 
@@ -60,6 +62,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - P-65/P-66 Expo Router permitido; sin excepciones a la antigüedad mínima de paquetes (Router 57.0.28).
 - P-79 Biblioteca: `expo-sqlite ~57.0.4`, web con datos de ejemplo, nativo con SQLite y base vacía real. P-81 Descubrir se ejercita con el runtime real sobre `test-site`.
 - P-83 Descubrir habla con `DiscoverDataSource`: en el dispositivo lista módulos **instalados** (`ModuleRegistry` + `createModuleApi` + `Http` sobre `fetch`); en web usa los ejemplos de `test-site`. El último módulo persiste en `setting` (`discover.lastModule`) solo en nativo. Los módulos `script` **no se listan** hasta que la app tenga su `ScriptLoader` (sin `eval`/`new Function`: Hermes no los admite y rompería el modelo de seguridad del `Host`).
+- P-84 Fuentes (F16): `@ryuunest/module-sdk` pasa a dependencia de workspace de `apps/mobile` (validadores inyectados al núcleo, respeta P-37/P-46); `expo-local-authentication ~57.0.3` para `SecureLock` (docs SDK 57, `docs.expo.dev/versions/v57.0.0/sdk/local-authentication`). RF-7: ajuste `security.installProtection` en `setting`, apagado por defecto; activo, añadir repo e instalar/actualizar a `script` piden el bloqueo y, **sin bloqueo en el dispositivo, falla cerrado**. Sincronizar un repo ya registrado no pide bloqueo. Cambio aditivo del núcleo: `prepare()` (verifica sin guardar) y `previewUpdate/applyUpdate`. Sin diseño en Stitch para las hojas (P-30); se omiten «Importar respaldo» (F21b), «Seguridad del Nido» y «Escanear QR».
 - Convenio de pruebas: cada pantalla raíz declara `testID="screen-<id>"`; los e2e esperan ese marcador (`tests/e2e/markers.cjs`) y un guard falla si una ruta de destino no es marco ni lo declara.
 
 **Proceso**
@@ -79,9 +82,12 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - 🧍 **Diseño en Stitch (FB2):** componentes de error, Ajustes → Diagnóstico, estados vacíos, y las pantallas sin diseño (primer uso, confirmación de instalación, hoja de filtros). Falta confirmar el orden.
 - 🧍 Encargar el arte final del dragón (FA1). Validar los textos `state.error.library.*` (sin diseño).
 
+- 🧍 **F16 en el POCO:** añadir un repo real, instalar un módulo declarativo y uno `script` (confirmación reforzada y bloqueo del dispositivo con la protección activada a mano en `setting`).
+- 🧍 **`app.json` está en `0.0.0`**: por eso `useSourcesData` no pasa `appVersion` al validador; un módulo con `minAppVersion` mayor se rechazaría entero. Fijar la versión de la app antes de publicar módulos con `minAppVersion`.
+
 ### Del agente (orden sugerido)
 1. **T32b:** ADR de congelación de la API 1.0 (revisa P-74/P-75/P-76, resuelve las preguntas técnicas de SPEC §17.2 y fija el segundo sitio real, P-21). *Sugerencia:* hacerlo antes de que crezca el repo de módulos externo para no romper módulos publicados.
-2. **F16** (Fuentes: instalar y gestionar módulos; ya usa el convenio `screen-sources`). Sin ella no hay módulos instalados que probar en Descubrir. Después **F17** (ficha de la serie: Descubrir aún no navega a ella).
+2. **F17** (ficha de la serie: Descubrir aún no navega a ella). Después **F16b** junto con F20 (interruptor de protección de instalación).
 3. **Biblioteca (restos de F14):** pasar `reading: true` al núcleo, hoja de filtros real (tipo/fuente son chips placeholder), menú de orden (hoy cicla al pulsar) y nombre visible de la fuente desde `ModuleRegistry`.
 4. **Respaldo en UI:** F21a (exportar/compartir), F21b (importar con errores y confirmación), F21c (sugerencias que descartan repos ya registrados).
 5. **Errores y diagnóstico:** T36 (núcleo), F29 (toast/modal/banner), F30 (Diagnóstico), F31 (integración en F15/F16/F21/lector).

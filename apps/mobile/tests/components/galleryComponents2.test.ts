@@ -36,6 +36,11 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.libraryScreen",
       "gallery.component.modulePicker",
       "gallery.component.discoverScreen",
+      "gallery.component.repoCard",
+      "gallery.component.moduleRow",
+      "gallery.component.holdToConfirm",
+      "gallery.component.sheetModal",
+      "gallery.component.sourcesScreen",
     ]);
   });
 

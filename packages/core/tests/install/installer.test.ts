@@ -349,3 +349,33 @@ describe("PackageInstaller · atomicidad (SPEC §7.1, paso 8)", () => {
     expect(await storage.keys()).toEqual(before);
   });
 });
+
+describe("PackageInstaller · prepare (F16, RF-6: verificar sin guardar)", () => {
+  it("descarga y verifica el paquete y devuelve el resultado sin escribir nada", async () => {
+    const { installer, storage, http, request } = makeInstaller();
+
+    const prepared = await installer.prepare(request);
+
+    expect(http.requests.map((entry) => entry.url)).toEqual([PACKAGE_URL]);
+    expect(prepared).toMatchObject({ id: "ejemplo", version: "1.0.0", enabled: true });
+    expect(await storage.keys()).toEqual([]);
+  });
+
+  it("aplica las mismas verificaciones: un hash incorrecto falla igual", async () => {
+    const { installer, storage, request } = makeInstaller({ sha256: "0".repeat(64) });
+
+    await captureError(installer.prepare(request), "PARSE");
+
+    expect(await storage.keys()).toEqual([]);
+  });
+
+  it("install() guarda exactamente lo que prepare() devolvió", async () => {
+    const { installer, storage, request } = makeInstaller();
+
+    const prepared = await installer.prepare(request);
+    const installed = await installer.install(request);
+
+    expect(installed).toEqual(prepared);
+    expect(JSON.parse((await storage.get(moduleKey("ejemplo"))) ?? "null")).toEqual(prepared);
+  });
+});

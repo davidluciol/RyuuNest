@@ -322,15 +322,23 @@ Dep: F15, F16; T14, T20 · S · `apps/mobile/src/screens/discover/discoverData.t
 - [ ] Al tocar una serie, navegar a la ficha — **bloqueado por F17** (no existe la pantalla de detalle); se hace al hacer F17
 - Verif: [x] Vitest (10 tests nuevos: adaptador `Http`, fuente instalada sobre SQLite real, `setting`) · [x] Playwright sin cambios de comportamiento en web (`discover.cjs` y `library.cjs` en verde) · [ ] 🧍 POCO con un módulo instalado desde F16 (pendiente: F16 aún no da la UI de instalación)
 
-### F16 Fuentes `[FE · Alta · N4]`
-
-🟡 Marco navegable de F11; contenido, datos y estados de esta pantalla **pendientes**.
+### F16 Fuentes `[FE · Alta · N4]` ✅ (pendiente POCO)
 
 Dep: F11; T14, T15 · M · `apps/mobile/src/screens/sources/*`
 
-- [ ] Confirmación muestra permisos y hash; script exige mantener pulsado; protección vía `SecureLock` (RF-7)
-- [ ] Actualizar con ampliación de permisos pide confirmar de nuevo (RF-6); activar/desactivar/desinstalar/actualizar; último error
-- Verif: Playwright vs `fuentes_portales/screen.png` · 🧍 instalar un módulo `script`
+- [x] Confirmación muestra permisos y hash; script exige mantener pulsado (`HoldToConfirm`); protección vía `SecureLock` (RF-7, `expo-local-authentication`, falla cerrado si no hay bloqueo)
+- [x] Actualizar con ampliación de permisos pide confirmar de nuevo (RF-6): `PackageInstaller.prepare` + `InstallFlow.previewUpdate/applyUpdate` en el núcleo; activar/desactivar/desinstalar/actualizar; último error; sincronizar y quitar repositorio (RF-8)
+- [x] Capa de datos `createSourcesService` (núcleo real sobre SQLite) y servicio en memoria para web/galería; ajuste `security.installProtection` en `setting` (apagado por defecto)
+- Verif: [x] Vitest · [x] Playwright (`tests/e2e/sources.cjs`, 426 y 1440, capturas en `docs/capturasF16/`, cero errores y cero externos) · [ ] 🧍 POCO con un repo y un módulo reales · [ ] 🧍 instalar un módulo `script` y comprobar la confirmación reforzada y el bloqueo del dispositivo
+
+### F16b Interruptor de «Protección de instalación» `[FE · Baja · N2]` (nace de F16)
+
+> Añadida el 2026-10-27 (decisión del humano): F16 lee `security.installProtection` de `setting`, pero no hay interruptor visible hasta F20.
+
+Dep: F16, F20 · S · `apps/mobile/src/screens/settings/*`
+
+- [ ] Fila con interruptor en Ajustes (`SettingsRow`) que escribe `security.installProtection` (RF-7); si el dispositivo no tiene bloqueo, avisar en la fila en vez de dejarlo activable sin efecto
+- [ ] Prueba con SQLite real: activar y comprobar que añadir repo y instalar `script` piden el bloqueo (ya cubierto en `sourcesData.test.ts`)
 
 ### F12 Primer uso (3 pasos) + estado vacío `[FE · Intermedia · N3]`
 

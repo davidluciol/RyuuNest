@@ -45,6 +45,19 @@ import {
   SAMPLE_DISCOVER_MODULES,
   SAMPLE_DISCOVER_VIEW,
 } from "../screens/discover/discoverFixtures";
+import HoldToConfirm from "../components/HoldToConfirm";
+import ModuleRow from "../components/ModuleRow";
+import RepoCard from "../components/RepoCard";
+import { kindLabel } from "../components/kindLabel";
+import SourcesScreen from "../screens/sources/SourcesScreen";
+import { INITIAL_SOURCES_FLOW } from "../screens/sources/sourcesFlow";
+import { SAMPLE_SOURCES_DATA } from "../screens/sources/sourcesFixtures";
+import {
+  BADGE_LABEL_KEYS,
+  ROW_ACTION_KEYS,
+  moduleBadges,
+  moduleRowAction,
+} from "../screens/sources/sourcesView";
 import { Flame, History } from "../icons";
 
 import { COMPONENT_STATES } from "./registry";
@@ -342,27 +355,16 @@ export default function GalleryScreen() {
             chapter="Cap. 52"
             progress={0.1}
           />
-          <RecentCard
-            kind={t("kind.manga")}
-            title="Guardián del nido sin progreso"
-          />
+          <RecentCard kind={t("kind.manga")} title="Guardián del nido sin progreso" />
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.folderCard")}</Text>
         <View style={styles.row}>
           <View style={{ flex: 1 }}>
-            <FolderCard
-              name="Favoritos Épicos"
-              description="Fantasía y Aventuras"
-              count={24}
-            />
+            <FolderCard name="Favoritos Épicos" description="Fantasía y Aventuras" count={24} />
           </View>
           <View style={{ flex: 1 }}>
-            <FolderCard
-              name="Lectura Nocturna"
-              description="Atmósfera y Misterio"
-              count={14}
-            />
+            <FolderCard name="Lectura Nocturna" description="Atmósfera y Misterio" count={14} />
           </View>
         </View>
 
@@ -374,11 +376,7 @@ export default function GalleryScreen() {
         <Text style={styles.groupLabel}>{t("gallery.component.libraryCard")}</Text>
         <View style={styles.row}>
           <View style={styles.libraryCardWrap}>
-            <LibraryCard
-              kind={t("kind.manhwa")}
-              title="El dragón de ceniza"
-              progress={0.29}
-            />
+            <LibraryCard kind={t("kind.manhwa")} title="El dragón de ceniza" progress={0.29} />
           </View>
           <View style={styles.libraryCardWrap}>
             <LibraryCard
@@ -387,10 +385,7 @@ export default function GalleryScreen() {
             />
           </View>
           <View style={styles.libraryCardWrap}>
-            <LibraryCard
-              kind={t("kind.comic")}
-              title="Noche de ámbar"
-            />
+            <LibraryCard kind={t("kind.comic")} title="Noche de ámbar" />
           </View>
         </View>
 
@@ -411,6 +406,69 @@ export default function GalleryScreen() {
         <Text style={styles.groupLabel}>{t("gallery.component.discoverScreen")}</Text>
         <View style={styles.shellPreview}>
           <DiscoverScreen view={SAMPLE_DISCOVER_VIEW} />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.repoCard")}</Text>
+        <View style={styles.componentColumn}>
+          <RepoCard
+            name={SAMPLE_SOURCES_DATA.repos[0]?.name ?? ""}
+            url={SAMPLE_SOURCES_DATA.repos[0]?.url ?? ""}
+            meta={t("sources.repo.modules", { count: 6 })}
+            syncLabel={t("sources.repo.sync")}
+          />
+          <RepoCard
+            name={SAMPLE_SOURCES_DATA.repos[0]?.name ?? ""}
+            url={SAMPLE_SOURCES_DATA.repos[0]?.url ?? ""}
+            syncLabel={t("sources.repo.sync")}
+            syncing
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.moduleRow")}</Text>
+        <View style={styles.componentColumn}>
+          {SAMPLE_SOURCES_DATA.modules.slice(0, 3).map((module) => (
+            <ModuleRow
+              key={module.id}
+              name={module.name}
+              meta={t("sources.module.meta", {
+                kind: module.kinds.map(kindLabel).join(", "),
+                lang: module.lang,
+                version: module.version,
+              })}
+              badges={moduleBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
+              {...(module.lastError === undefined ? {} : { error: module.lastError })}
+              actionLabel={t(ROW_ACTION_KEYS[moduleRowAction(module)])}
+            />
+          ))}
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.holdToConfirm")}</Text>
+        <View style={styles.componentColumn}>
+          <HoldToConfirm
+            label={t("gallery.holdToConfirm.label")}
+            holdingLabel={t("sources.install.holding")}
+            onConfirm={() => {}}
+          />
+          <HoldToConfirm
+            label={t("gallery.holdToConfirm.label")}
+            holdingLabel={t("sources.install.holding")}
+            onConfirm={() => {}}
+            disabled
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.sheetModal")}</Text>
+        <Sheet>
+          <Text style={styles.body}>{t("sources.uninstall.message")}</Text>
+        </Sheet>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.sourcesScreen")}</Text>
+        <View style={styles.shellPreview}>
+          <SourcesScreen
+            view={{ status: "ready", data: SAMPLE_SOURCES_DATA }}
+            flow={INITIAL_SOURCES_FLOW}
+            controller={null}
+          />
         </View>
       </Section>
     </ScrollView>
