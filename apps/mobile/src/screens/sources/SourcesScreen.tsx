@@ -222,7 +222,6 @@ export default function SourcesScreen({
                         ? {}
                         : { error: module.lastError })}
                       actionLabel={t(ROW_ACTION_KEYS[action])}
-                      actionVariant={action === "install" ? "primary" : "secondary"}
                       onAction={() =>
                         action === "install"
                           ? void controller?.openInstall(module.repoId, module.id)
