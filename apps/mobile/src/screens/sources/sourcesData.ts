@@ -14,7 +14,6 @@ import {
   type SecureLock,
   type SqlDriver,
   type UpdatePreview,
-  type UpdateResult,
 } from "@ryuunest/core";
 import { validateManifest, validateRepoIndex } from "@ryuunest/module-sdk";
 
@@ -66,6 +65,10 @@ export interface SourcesData {
   modules: SourceModule[];
 }
 
+/** Resultado de actualizar para la pantalla: no necesita el paquete entero. */
+export type SourcesUpdateResult =
+  { status: "updated" } | { status: "needs-confirmation"; reasons: string[] };
+
 export interface SourcesService {
   load(): Promise<SourcesData>;
   addRepo(url: string): Promise<void>;
@@ -75,7 +78,10 @@ export interface SourcesService {
   setEnabled(moduleId: string, enabled: boolean): Promise<void>;
   uninstall(moduleId: string): Promise<void>;
   previewUpdate(moduleId: string): Promise<UpdatePreview>;
-  applyUpdate(moduleId: string, confirmation: Partial<InstallConfirmation>): Promise<UpdateResult>;
+  applyUpdate(
+    moduleId: string,
+    confirmation: Partial<InstallConfirmation>,
+  ): Promise<SourcesUpdateResult>;
   recordModuleError(moduleId: string, message: string | undefined): Promise<void>;
 }
 
@@ -228,7 +234,10 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
       if (preview.available && preview.reinforced && confirmation.confirmed === true) {
         await requireUnlock("Confirma para actualizar a un módulo que ejecuta código");
       }
-      return flow.applyUpdate(moduleId, confirmation);
+      const result = await flow.applyUpdate(moduleId, confirmation);
+      return result.status === "updated"
+        ? { status: "updated" }
+        : { status: "needs-confirmation", reasons: result.reasons };
     },
 
     async recordModuleError(moduleId, message) {
