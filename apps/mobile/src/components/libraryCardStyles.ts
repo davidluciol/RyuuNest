@@ -100,6 +100,25 @@ export function libraryCardProgressStyle(progress: number): LibraryCardProgressS
   };
 }
 
+export interface LibraryCardMetaStyleShape {
+  numberOfLines: number;
+  fontFamily: string;
+  fontSize: number;
+  lineHeight: number;
+  color: string;
+}
+
+/** Cuarta línea opcional de la tarjeta (F15): dato secundario, 1 línea (T7). */
+export function libraryCardMetaStyle(): LibraryCardMetaStyleShape {
+  return {
+    numberOfLines: 1,
+    fontFamily: typography.labelMd.fontFamily,
+    fontSize: typography.labelMd.fontSize,
+    lineHeight: typography.labelMd.lineHeight,
+    color: colors.textSecondary,
+  };
+}
+
 /**
  * Columnas de la cuadrícula según el ancho (SPEC §11.9, layout.ts):
  * móvil 2–3, tablet 4–6, escritorio 8. Se elige el máximo del tramo.

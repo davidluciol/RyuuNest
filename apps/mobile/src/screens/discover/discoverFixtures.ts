@@ -132,7 +132,7 @@ export const SAMPLE_DISCOVER_MODULES: readonly DiscoverModule[] = [
  * Biblioteca (F14). «Draco de jade» es NSFW: con el filtro apagado no se ve.
  */
 export const SAMPLE_DISCOVER_LATEST: readonly DiscoverEntry[] = [
-  moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 h · Equipo Ryuu"),
+  moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 d · Equipo Ryuu"),
   moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "hace 6 h · Nido Editorial"),
   moduleEntry("cronicas-de-moonlit", "Crónicas de Moonlit", "manhua", "hace 3 d · Estudio Linterna"),
   moduleEntry("noche-de-ambar", "Noche de ámbar", "comic", "hace 1 sem · Taller Ámbar"),
@@ -149,7 +149,7 @@ export const SAMPLE_DISCOVER_CATALOG: DiscoverPage = {
   page: 1,
   hasNext: true,
   entries: [
-    moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 h · Equipo Ryuu"),
+    moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 d · Equipo Ryuu"),
     moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "hace 6 h · Nido Editorial"),
     moduleEntry("cronicas-de-moonlit", "Crónicas de Moonlit", "manhua", "hace 3 d · Estudio Linterna"),
     moduleEntry("noche-de-ambar", "Noche de ámbar", "comic", "hace 1 sem · Taller Ámbar"),
@@ -163,4 +163,17 @@ export const SAMPLE_DISCOVER_CATALOG: DiscoverPage = {
     },
     moduleEntry("montana-de-hielo", "Montaña de hielo", "manhwa", "hace 5 d · Estudio Linterna"),
   ],
+};
+
+/** Vista de ejemplo con contenido (galería y pruebas de la pantalla). */
+export const SAMPLE_DISCOVER_VIEW: DiscoverView = {
+  status: "ready",
+  ready: {
+    modules: SAMPLE_DISCOVER_MODULES,
+    selectedModuleId: "m-ejemplo-a",
+    query: "",
+    latest: SAMPLE_DISCOVER_LATEST,
+    popular: SAMPLE_DISCOVER_POPULAR,
+    catalog: SAMPLE_DISCOVER_CATALOG,
+  },
 };

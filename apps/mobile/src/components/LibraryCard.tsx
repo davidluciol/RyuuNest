@@ -5,6 +5,7 @@ import Badge from "./Badge";
 import {
   LIBRARY_CARD_TITLE_LINES,
   libraryCardBadgeStyle,
+  libraryCardMetaStyle,
   libraryCardProgressStyle,
   libraryCardStyle,
   libraryCardTitleStyle,
@@ -28,6 +29,8 @@ export interface LibraryCardProps {
   title: string;
   /** Avance 0–1; si > 0 muestra la barra de progreso (RF-41). */
   progress?: number;
+  /** Dato secundario bajo el título (F15 Descubrir: tipo · pista). */
+  meta?: string;
   /** Accesibilidad: nombre completo de la serie. */
   accessibilityLabel?: string;
   onPress?: () => void;
@@ -38,12 +41,14 @@ export default function LibraryCard({
   kind,
   title,
   progress = 0,
+  meta,
   accessibilityLabel,
   onPress,
 }: LibraryCardProps) {
   const cardStyle = libraryCardStyle();
   const titleStyle = libraryCardTitleStyle();
   const badgeStyle = libraryCardBadgeStyle();
+  const metaStyle = libraryCardMetaStyle();
   const hasProgress = progress > 0;
 
   return (
@@ -102,6 +107,22 @@ export default function LibraryCard({
       >
         {title}
       </Text>
+      {meta ? (
+        <Text
+          style={[
+            styles.meta,
+            {
+              fontFamily: metaStyle.fontFamily,
+              fontSize: metaStyle.fontSize,
+              lineHeight: metaStyle.lineHeight,
+              color: metaStyle.color,
+            },
+          ]}
+          numberOfLines={metaStyle.numberOfLines}
+        >
+          {meta}
+        </Text>
+      ) : null}
     </Pressable>
   );
 }
@@ -133,5 +154,9 @@ const styles = StyleSheet.create({
     ...textStyle(typography.labelMd),
     fontWeight: "600",
     marginTop: spacing.xs,
+  },
+  meta: {
+    ...textStyle(typography.labelMd),
+    marginTop: spacing.xxs,
   },
 });

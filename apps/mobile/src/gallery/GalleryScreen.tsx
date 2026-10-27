@@ -39,6 +39,12 @@ import { SAMPLE_HOME_DATA } from "../screens/home/homeFixtures";
 import LibraryCard from "../components/LibraryCard";
 import LibraryScreen from "../screens/library/LibraryScreen";
 import { SAMPLE_LIBRARY_DATA } from "../screens/library/libraryFixtures";
+import ModulePicker from "../components/ModulePicker";
+import DiscoverScreen from "../screens/discover/DiscoverScreen";
+import {
+  SAMPLE_DISCOVER_MODULES,
+  SAMPLE_DISCOVER_VIEW,
+} from "../screens/discover/discoverFixtures";
 import { Flame, History } from "../icons";
 
 import { COMPONENT_STATES } from "./registry";
@@ -391,6 +397,20 @@ export default function GalleryScreen() {
         <Text style={styles.groupLabel}>{t("gallery.component.libraryScreen")}</Text>
         <View style={styles.shellPreview}>
           <LibraryScreen data={SAMPLE_LIBRARY_DATA} />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.modulePicker")}</Text>
+        <View style={styles.row}>
+          <ModulePicker
+            modules={SAMPLE_DISCOVER_MODULES.map(({ id, name }) => ({ id, name }))}
+            selectedId="m-ejemplo-a"
+            onSelect={() => {}}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.discoverScreen")}</Text>
+        <View style={styles.shellPreview}>
+          <DiscoverScreen view={SAMPLE_DISCOVER_VIEW} />
         </View>
       </Section>
     </ScrollView>

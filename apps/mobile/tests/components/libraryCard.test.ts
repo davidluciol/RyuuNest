@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { typography } from "@ryuunest/ui-tokens";
 
 import {
   LIBRARY_CARD_TITLE_LINES,
@@ -6,6 +7,7 @@ import {
   libraryCardTitleStyle,
   libraryCardBadgeStyle,
   libraryCardProgressStyle,
+  libraryCardMetaStyle,
   libraryCardGridColumns,
 } from "../../src/components/libraryCardStyles";
 
@@ -59,6 +61,18 @@ describe("libraryCardStyle (tarjeta de serie, cuadrícula)", () => {
   it("clampa el progreso a [0, 1]", () => {
     expect(libraryCardProgressStyle(-0.5).width).toBe("0%");
     expect(libraryCardProgressStyle(1.5).width).toBe("100%");
+  });
+});
+
+describe("libraryCardMetaStyle (cuarta línea de datos, F15)", () => {
+  it("secundaria en text-secondary con la tipografía labelMd", () => {
+    expect(libraryCardMetaStyle()).toMatchObject({
+      fontFamily: typography.labelMd.fontFamily,
+      fontSize: typography.labelMd.fontSize,
+      lineHeight: typography.labelMd.lineHeight,
+      color: "#9BA5B5",
+      numberOfLines: 1,
+    });
   });
 });
 
