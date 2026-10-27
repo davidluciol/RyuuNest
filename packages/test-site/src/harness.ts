@@ -6,7 +6,14 @@
  * CLI del SDK (T11). Cada fallo lanza `ContractError` con un mensaje concreto, así
  * que un módulo roto se detecta con una causa legible.
  */
-import type { ImageRef, ModuleApi, Page, SeriesDetails, SeriesSummary } from "@ryuunest/core";
+import type {
+  ImageRef,
+  ModuleApi,
+  ModuleCapability,
+  Page,
+  SeriesDetails,
+  SeriesSummary,
+} from "@ryuunest/core";
 
 import { FIXTURE_DEFAULTS } from "./fixtures.js";
 
@@ -19,8 +26,12 @@ export class ContractError extends Error {
 }
 
 export interface ContractHarnessOptions {
-  /** Capacidades declaradas por el módulo que exigen método (SPEC §6.1). */
-  capabilities?: ReadonlyArray<"popular" | "latest" | "search">;
+  /**
+   * Capacidades declaradas por el módulo (SPEC §6.1). `details` y `pages` ya
+   * son obligatorias por contrato (§6.3), así que en el arnés solo importan
+   * `popular` y `latest` (P-82 admite declarar también las otras dos).
+   */
+  capabilities?: ReadonlyArray<ModuleCapability>;
   seriesId?: string;
   chapterId?: string;
   releaseIds?: readonly string[];

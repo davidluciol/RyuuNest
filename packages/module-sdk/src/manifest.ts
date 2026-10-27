@@ -3,7 +3,7 @@
  *
  * Devuelve o el manifest tipado o una lista de problemas con **ruta y motivo**.
  */
-import type { MediaKind, ModuleManifest } from "@ryuunest/core";
+import type { MediaKind, ModuleCapability, ModuleManifest } from "@ryuunest/core";
 
 import { compareSemver, isSemver } from "./semver.js";
 import {
@@ -26,7 +26,18 @@ export const MEDIA_KINDS = [
 ] as const satisfies readonly MediaKind[];
 
 export const MODULE_RUNTIMES = ["declarative", "script"] as const;
-export const MODULE_CAPABILITIES = ["popular", "latest", "search"] as const;
+/**
+ * P-82: `details` y `pages` se admiten (los publica así el `zonatmo` del repo
+ * externo); son informativas porque sus métodos siempre están en la `ModuleApi`
+ * (SPEC §6.3). Cualquier otro valor sigue rechazándose.
+ */
+export const MODULE_CAPABILITIES = [
+  "popular",
+  "latest",
+  "search",
+  "details",
+  "pages",
+] as const satisfies readonly ModuleCapability[];
 
 export interface ValidateOptions {
   /** Versión de la app, para comprobar `minAppVersion` contra ella. */

@@ -51,6 +51,12 @@ describe("registro de la galería (F05)", () => {
     expect(components?.items).toContain("gallery.component.loadingState");
   });
 
+  it("F15: la sección lista el selector de módulo y la pantalla Descubrir", () => {
+    const components = galleryEntries.find((entry) => entry.id === "componentes");
+    expect(components?.items).toContain("gallery.component.modulePicker");
+    expect(components?.items).toContain("gallery.component.discoverScreen");
+  });
+
   it("los ids son únicos y la colección es de solo lectura", () => {
     const ids = galleryEntries.map((entry: GalleryEntry) => entry.id);
     expect(new Set(ids).size).toBe(ids.length);

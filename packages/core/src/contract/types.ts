@@ -8,6 +8,13 @@
 /** Tipos de obra soportados (D-13). */
 export type MediaKind = "manga" | "manhua" | "manhwa" | "comic";
 
+/**
+ * Capacidades que un manifest puede declarar (SPEC §6.1). `details` y `pages`
+ * se admiten como informativas desde P-82 (la forma del `zonatmo` real); los
+ * métodos obligatorios del contrato no cambian (§6.3).
+ */
+export type ModuleCapability = "popular" | "latest" | "search" | "details" | "pages";
+
 /** Estado de publicación de una serie. */
 export type SeriesStatus = "ongoing" | "completed" | "hiatus" | "cancelled" | "unknown";
 
@@ -90,7 +97,13 @@ export interface ModuleManifest {
   /** El módulo completo es NSFW. */
   nsfw: boolean;
   baseUrl: string;
-  capabilities: Array<"popular" | "latest" | "search">;
+  /**
+   * Métodos que declara el módulo. `search`, `details` y `pages` siempre son
+   * obligatorios en la `ModuleApi` (SPEC §6.3); declararlos es informativo y
+   * se admite por compatibilidad con módulos publicados (P-82). `popular` y
+   * `latest` son las únicas que cambian qué ofrece la API.
+   */
+  capabilities: ModuleCapability[];
   /** Dominios a los que el módulo puede llamar. */
   permissions: { domains: string[] };
   /** Archivo de entrada dentro del paquete. */
