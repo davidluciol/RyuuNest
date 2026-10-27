@@ -311,16 +311,16 @@ Dep: F11, FB1; T20, T10 · M · `apps/mobile/src/screens/discover/*`
 - [x] Capa de datos real: los módulos de ejemplo se montan con `createModuleApi` (T20) sobre `test-site` (T10) vía `DeclarativeRuntime` + `TestSiteHttp` (P-81)
 - Verif: [x] Vitest (23 tests nuevos: fixtures, capa de datos, selector, puerta de galería) · [x] Playwright (`tests/e2e/discover.cjs`, 426 y 1440, cero externos) · [ ] 🧍 POCO F5 Pro
 
-### F15b Descubrir conectado a módulos instalados `[FE · Baja · N2]`
+### F15b Descubrir conectado a módulos instalados `[FE · Baja · N2]` ✅ (queda la navegación con F17)
 
-> Añadida el 2026-10-26 con F15 (P-81): la pantalla ya está hecha; falta leer el registro real y persistir entre arranques.
+> Añadida el 2026-10-26 con F15 (P-81): la pantalla ya está hecha; falta leer el registro real y persistir entre arranques. Hecha el 2026-10-27 (P-83).
 
 Dep: F15, F16; T14, T20 · S · `apps/mobile/src/screens/discover/discoverData.ts`
 
-- [ ] `discoverData` lee `ModuleRegistry` (T14) en el dispositivo (hoy: los dos módulos de ejemplo de `test-site`)
-- [ ] El último módulo elegido persiste entre arranques (tabla `setting`; hoy: memoria de sesión)
-- [ ] Al tocar una serie, navegar a la ficha (F17)
-- Verif: 🧍 POCO con un módulo instalado desde F16
+- [x] `discoverData` lee `ModuleRegistry` (T14) en el dispositivo: `DiscoverDataSource` con dos implementaciones — instalados (activos y **declarativos**; los `script` esperan el `ScriptLoader` de app, D-5) y `test-site` en web; la entrada del paquete se decodifica del hexadecimal y se monta con `createModuleApi` (T20) sobre `createFetchHttp` (puerto `Http` sobre el `fetch` de la plataforma)
+- [x] El último módulo elegido persiste entre arranques: tabla `setting`, ajuste `discover.lastModule` (web sigue con memoria de sesión: no hay SQLite)
+- [ ] Al tocar una serie, navegar a la ficha — **bloqueado por F17** (no existe la pantalla de detalle); se hace al hacer F17
+- Verif: [x] Vitest (10 tests nuevos: adaptador `Http`, fuente instalada sobre SQLite real, `setting`) · [x] Playwright sin cambios de comportamiento en web (`discover.cjs` y `library.cjs` en verde) · [ ] 🧍 POCO con un módulo instalado desde F16 (pendiente: F16 aún no da la UI de instalación)
 
 ### F16 Fuentes `[FE · Alta · N4]`
 

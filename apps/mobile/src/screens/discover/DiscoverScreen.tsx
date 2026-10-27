@@ -117,7 +117,7 @@ export default function DiscoverScreen({
           title={t("state.error.module.title")}
           message={view.error.cause}
           detail={{
-            module: view.error.moduleName,
+            ...(view.error.moduleName === "" ? {} : { module: view.error.moduleName }),
             url: view.error.url,
             code: view.error.code,
             selector: view.error.selector,
