@@ -41,7 +41,7 @@ const colors = dragonNightColors;
 /** Ancho del carrusel de portadas: el mismo que la fila de Inicio (F13). */
 const ROW_CARD_WIDTH = recentCardStyle().width;
 
-/** Filas del catálogo: 3 por línea en móvil, como la cuadrícula de Biblioteca. */
+/** Filas del catálogo: 3 por línea, como la cuadrícula de Biblioteca (F14a). */
 const CATALOG_COLUMNS = 3;
 
 function chunk<T>(items: readonly T[], size: number): T[][] {

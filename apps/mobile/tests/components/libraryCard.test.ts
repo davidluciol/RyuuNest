@@ -65,13 +65,13 @@ describe("libraryCardStyle (tarjeta de serie, cuadrícula)", () => {
 });
 
 describe("libraryCardMetaStyle (cuarta línea de datos, F15)", () => {
-  it("secundaria en text-secondary con la tipografía labelMd", () => {
+  it("secundaria en text-secondary con la tipografía labelMd; sin «…» (T7)", () => {
     expect(libraryCardMetaStyle()).toMatchObject({
       fontFamily: typography.labelMd.fontFamily,
       fontSize: typography.labelMd.fontSize,
       lineHeight: typography.labelMd.lineHeight,
       color: "#9BA5B5",
-      numberOfLines: 1,
+      numberOfLines: 2,
     });
   });
 });

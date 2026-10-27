@@ -108,10 +108,10 @@ export interface LibraryCardMetaStyleShape {
   color: string;
 }
 
-/** Cuarta línea opcional de la tarjeta (F15): dato secundario, 1 línea (T7). */
+/** Cuarta línea opcional de la tarjeta (F15): dato secundario, 2 líneas sin «…» (T7). */
 export function libraryCardMetaStyle(): LibraryCardMetaStyleShape {
   return {
-    numberOfLines: 1,
+    numberOfLines: 2,
     fontFamily: typography.labelMd.fontFamily,
     fontSize: typography.labelMd.fontSize,
     lineHeight: typography.labelMd.lineHeight,
