@@ -289,15 +289,26 @@ Dep: F11, F13, F14a, F14b, F14c · S · `docs/screen-blueprint.md` (1 página)
 - [x] Máx. 1 página (42 líneas, con prueba guardia en pps/mobile/tests/docs/screenBlueprint.test.ts); sin reglas nuevas. F13, ejemplo de fixtures; F14c, ejemplo de datos reales
 - Las pantallas F12, F15, F17, F20, F21 y F25 **leen este plano** en vez de explorar el repo. Verif: 🧍 revisión
 
-### F15 Descubrir `[FE · Intermedia · N2]`
-
-🟡 Marco navegable de F11; contenido, datos, estados y búsqueda global de cabecera **pendientes**.
+### F15 Descubrir `[FE · Intermedia · N2]` ✅
 
 Dep: F11, FB1; T20, T10 · M · `apps/mobile/src/screens/discover/*`
 
-- [ ] Recuerda el último módulo; módulo NSFW oculto con el filtro apagado
-- [ ] Error de módulo con causa, código, reintentar y ver detalle; sin orden/filtro por género
-- Verif: Playwright vs `descubrir_aventuras/screen.png` con `test-site`
+- [x] Selector de módulo (hoja de nivel 2) que recuerda el último en la sesión; módulo NSFW oculto con el filtro apagado (RF-35)
+- [x] Filas `latest` y `popular` solo si el módulo las ofrece (RF-9); búsqueda con paginación Anterior/Siguiente (RF-10); catálogo = `search` del módulo activo
+- [x] Error de módulo con causa, código, reintentar y ver detalle (RF-11); vacío → ir a Fuentes; carga con `LoadingState`; sin orden/filtro por género
+- [x] Capa de datos real: los módulos de ejemplo se montan con `createModuleApi` (T20) sobre `test-site` (T10) vía `DeclarativeRuntime` + `TestSiteHttp` (P-81)
+- Verif: [x] Vitest (23 tests nuevos: fixtures, capa de datos, selector, puerta de galería) · [x] Playwright (`tests/e2e/discover.cjs`, 426 y 1440, cero externos) · [ ] 🧍 POCO F5 Pro
+
+### F15b Descubrir conectado a módulos instalados `[FE · Baja · N2]`
+
+> Añadida el 2026-10-26 con F15 (P-81): la pantalla ya está hecha; falta leer el registro real y persistir entre arranques.
+
+Dep: F15, F16; T14, T20 · S · `apps/mobile/src/screens/discover/discoverData.ts`
+
+- [ ] `discoverData` lee `ModuleRegistry` (T14) en el dispositivo (hoy: los dos módulos de ejemplo de `test-site`)
+- [ ] El último módulo elegido persiste entre arranques (tabla `setting`; hoy: memoria de sesión)
+- [ ] Al tocar una serie, navegar a la ficha (F17)
+- Verif: 🧍 POCO con un módulo instalado desde F16
 
 ### F16 Fuentes `[FE · Alta · N4]`
 
