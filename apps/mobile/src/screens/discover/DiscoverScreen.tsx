@@ -91,7 +91,7 @@ export default function DiscoverScreen({
 
   if (view.status === "empty") {
     return (
-      <View style={styles.stateWrap} testID="discover-screen">
+      <View style={styles.stateWrap} testID="screen-discover">
         <EmptyState
           title={t("state.empty.discover.title")}
           message={t("state.empty.discover.message")}
@@ -104,7 +104,7 @@ export default function DiscoverScreen({
 
   if (view.status === "loading") {
     return (
-      <View style={styles.stateWrap} testID="discover-screen">
+      <View style={styles.stateWrap} testID="screen-discover">
         <LoadingState title={t("state.loading.title")} />
       </View>
     );
@@ -112,7 +112,7 @@ export default function DiscoverScreen({
 
   if (view.status === "error") {
     return (
-      <View style={styles.stateWrap} testID="discover-screen">
+      <View style={styles.stateWrap} testID="screen-discover">
         <ErrorState
           title={t("state.error.module.title")}
           message={view.error.cause}
@@ -187,7 +187,7 @@ function DiscoverReady({
 
   if (!selected || modules.length === 0) {
     return (
-      <View style={styles.stateWrap} testID="discover-screen">
+      <View style={styles.stateWrap} testID="screen-discover">
         <EmptyState
           title={t("state.empty.discover.title")}
           message={t("state.empty.discover.message")}
@@ -198,7 +198,7 @@ function DiscoverReady({
   }
 
   return (
-    <View style={styles.screen} testID="discover-screen">
+    <View style={styles.screen} testID="screen-discover">
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: sidePadding,

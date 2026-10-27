@@ -93,7 +93,7 @@ export default function LibraryScreen({
   // Estado vacío: sin favoritos.
   if (data.series.length === 0) {
     return (
-      <View style={styles.emptyWrap}>
+      <View style={styles.emptyWrap} testID="screen-library">
         <EmptyState
           title={t("state.empty.library.title")}
           message={t("state.empty.library.message")}
@@ -105,7 +105,7 @@ export default function LibraryScreen({
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={styles.screen} testID="screen-library">
       {/* Búsqueda siempre visible (RF-26). */}
       <View style={[styles.searchWrap, { paddingHorizontal: layout.margin }]}>
         <TextField

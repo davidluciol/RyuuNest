@@ -59,7 +59,7 @@ export default function HomeScreen({
 
   if (!hasContent) {
     return (
-      <View style={styles.emptyWrap}>
+      <View style={styles.emptyWrap} testID="screen-home">
         <EmptyState
           title={t("state.empty.home.title")}
           message={t("state.empty.home.message")}
@@ -72,6 +72,7 @@ export default function HomeScreen({
 
   return (
     <ScrollView
+      testID="screen-home"
       style={styles.screen}
       contentContainerStyle={[
         styles.content,

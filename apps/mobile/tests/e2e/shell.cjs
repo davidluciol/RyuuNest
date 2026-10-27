@@ -1,9 +1,15 @@
+// F11 — regresión del CHROME del shell (cabecera, barra, foco, teclado, fuentes
+// locales, historial y recarga) sobre los cinco destinos en cinco anchos.
+// F11b: espera marcadores estables — `screen-<id>` en pantallas reales,
+// `destination-<id>` en los marcos pendientes (ver markers.cjs) — para que
+// sustituir un marco por su pantalla ya no rompa este script.
 // PLAYWRIGHT_MODULE permite reutilizar Playwright del entorno sin añadir dependencias.
 // Ejecutar con el cliente servido: node apps/mobile/tests/e2e/shell.cjs
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { destinationMarker } = require("./markers.cjs");
 
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
 const output = path.resolve(__dirname, "../../../../docs/capturasF11");
@@ -44,7 +50,7 @@ const destinations = [
       for (const [label, route, id] of destinations) {
         await page.getByRole("tab", { name: label, exact: true }).click();
         await page.waitForURL((url) => url.pathname === route);
-        await page.getByTestId(`destination-${id}`).waitFor({ state: "visible" });
+        await page.getByTestId(destinationMarker(id)).waitFor({ state: "visible" });
         assert.equal(await page.getByTestId("shell-header").count(), 1);
         assert.equal(await page.getByRole("tablist").count(), 1);
         assert.equal(await page.getByRole("tab", { selected: true }).count(), 1);
@@ -82,11 +88,11 @@ const destinations = [
     }
     // Historial real del navegador y entrada directa, no solo cambio de color.
     await page.goto(`${baseURL}/library`);
-    await page.getByTestId("destination-library").waitFor();
+    await page.getByTestId(destinationMarker("library")).waitFor();
     await page.getByRole("tab", { name: "Fuentes", exact: true }).click();
     await page.waitForURL("**/sources");
     await page.goBack();
-    await page.getByTestId("destination-library").waitFor({ state: "visible" });
+    await page.getByTestId(destinationMarker("library")).waitFor({ state: "visible" });
     await page.reload();
     await page.getByRole("tab", { name: "Biblioteca", selected: true }).waitFor();
     await page.getByRole("tab", { name: "Inicio", exact: true }).focus();
@@ -96,7 +102,7 @@ const destinations = [
     }));
     assert.deepEqual(focus, { color: "rgb(53, 201, 138)", width: "2px" });
     await page.keyboard.press("Enter");
-    await page.getByTestId("destination-home").waitFor({ state: "visible" });
+    await page.getByTestId(destinationMarker("home")).waitFor({ state: "visible" });
     const fonts = await page.evaluate(() =>
       [...document.fonts].filter((font) => font.status === "loaded").map((font) => font.family),
     );
@@ -108,7 +114,7 @@ const destinations = [
     }
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.getByRole("tab", { name: "Ajustes", exact: true }).click();
-    await page.getByTestId("destination-settings").waitFor({ state: "visible" });
+    await page.getByTestId(destinationMarker("settings")).waitFor({ state: "visible" });
     assert.deepEqual(external, []);
     assert.deepEqual(errors, []);
     console.log(
