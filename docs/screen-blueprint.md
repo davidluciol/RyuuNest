@@ -8,6 +8,7 @@
 - `apps/mobile/src/screens/<nombre>/<nombre>Fixtures.ts`: tipos de `data`, estado vacío (`EMPTY_*`) y datos de ejemplo (`SAMPLE_*`, series inventadas, D1 a D5).
 - Pantalla con datos reales: además `<nombre>Data.ts` (núcleo → `data`) y `use<Nombre>Data.ts` (carga/error).
 - `apps/mobile/src/app/(tabs)/<nombre>.tsx`: la ruta de Expo Router; solo conecta datos y pantalla. El marco (cabecera y barra) lo da `apps/mobile/src/navigation/ShellNavigator.tsx`.
+- Marcador estable (F11b): la raíz de cada pantalla destino declara `testID="screen-<id>"`; el marco de F11 usa `destination-<id>`. `apps/mobile/tests/e2e/markers.cjs` los espera a los dos y `apps/mobile/tests/screens/destinationMarkers.test.ts` vigila el convenio: sustituir un marco por su pantalla no debe romper `shell.cjs`.
 - Piezas repetibles van a `apps/mobile/src/components/` (`Nombre.tsx` + `nombreStyles.ts` puro) y se registran en `apps/mobile/src/gallery/registry.ts`.
 
 ## Patrón

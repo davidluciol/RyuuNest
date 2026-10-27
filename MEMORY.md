@@ -142,6 +142,13 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
 
+### 2026-10-27 · F11b: el e2e del shell deja de pudrirse (marcadores estables)
+
+- **Hecho:** rama `fix/F11b-e2e-shell-stable`, TDD con el e2e como prueba (RED: `shell.cjs` caía en `destination-home`): `markers.cjs` (`destinationMarker(id)` = `^(screen|destination)-<id>$`); `testID="screen-<id>"` en la raíz de `HomeScreen`, `LibraryScreen` y `DiscoverScreen` (renombrado desde `discover-screen`); `shell.cjs` y `home.cjs` esperan por el marcador (cinco anchors en el primero: 5×5 destinos, historial, recarga, teclado y `reduced-motion`); guard `tests/screens/destinationMarkers.test.ts` (la ruta de cada destino o es marco o su pantalla declara `screen-<id>`; ambos scripts usan `markers.cjs`) para que F16/F20 no repitan la avería. Convenio escrito en `docs/screen-blueprint.md`. Capturas base de `docs/capturasF11/` regeneradas con las pantallas reales.
+- **Sin decisiones nuevas:** implementa lo sugerido en la entrada de F11b (2026-10-26), que el humano aprobó.
+- **Verificación:** `shell.cjs`, `home.cjs`, `library.cjs` y `discover.cjs` en verde sobre el export (cero errores, cero externos); `gallery-shell.cjs` en verde sobre Metro; Vitest móvil 35 ficheros / **225 tests** (+2 del guard); lint y typecheck limpios. Fuera del alcance y revocados: los reprocesos accidentales de `capturasF13/home-*.png` y `capturasF11/galeria-shell-error.png`.
+- **Siguiente paso:** F16 (Fuentes) es la que ya usa el convenio (su pantalla nace con `screen-sources`).
+
 ### 2026-10-26 · F11b: tarea para el e2e obsoleto del shell
 
 - **Hecho:** apuntada **F11b** en `tasks/todo.md` (rama `docs/F11b-e2e-shell-obsoleto`; solo `todo.md` y esta entrada). Sin código: el arreglo espera la decisión del humano (corregir vs eliminar).
