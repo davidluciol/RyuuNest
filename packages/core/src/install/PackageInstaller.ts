@@ -144,6 +144,17 @@ export class PackageInstaller {
 
   /** Descarga y valida el paquete, y lo guarda si todo pasa (SPEC §7.1). */
   async install(request: InstallRequest): Promise<InstalledPackage> {
+    const installed = await this.prepare(request);
+    await this.storage.set(moduleKey(installed.id), JSON.stringify(installed));
+    return installed;
+  }
+
+  /**
+   * Descarga y verifica el paquete (todos los pasos de §7.1 salvo guardar) y devuelve
+   * lo que se instalaría, **sin escribir nada** (F16, RF-6: una actualización se
+   * previsualiza y se confirma antes de aplicarse).
+   */
+  async prepare(request: InstallRequest): Promise<InstalledPackage> {
     if (request.size > this.limits.packageBytes) {
       throw new ModuleError(
         "UNSUPPORTED",
@@ -185,7 +196,7 @@ export class PackageInstaller {
       );
     }
 
-    const installed: InstalledPackage = {
+    return {
       id: manifest.id,
       version: manifest.version,
       repoUrl: request.repoUrl,
@@ -201,9 +212,6 @@ export class PackageInstaller {
       installedAt: this.clock.now(),
       enabled: true,
     };
-
-    await this.storage.set(moduleKey(manifest.id), JSON.stringify(installed));
-    return installed;
   }
 
   /** Descarga el `.zip` y traduce los fallos de red y de estado. */
