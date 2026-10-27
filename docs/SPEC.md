@@ -252,7 +252,7 @@ export interface ModuleManifest {
   lang: string;                  // BCP 47: "es", "en"
   nsfw: boolean;                 // el módulo completo es NSFW
   baseUrl: string;
-  capabilities: Array<"popular" | "latest" | "search">;
+  capabilities: Array<"popular" | "latest" | "search" | "details" | "pages">;
   permissions: { domains: string[] };   // dominios a los que puede llamar
   entry: string;                 // archivo de entrada dentro del paquete
   minAppVersion?: string;
@@ -261,6 +261,8 @@ export interface ModuleManifest {
   license?: string;
 }
 ```
+
+**Sobre `capabilities` (P-82).** `search`, `details` y `pages` son obligatorios siempre en la `ModuleApi` (§6.3); declararlas en `capabilities` es informativo y se admite, porque así publican módulos ya existentes (el `zonatmo` del repo externo). Las dos que cambian de verdad lo que ofrece la API son `popular` y `latest` (§6.3). Cualquier valor fuera de estos cinco se rechaza.
 
 ### 6.2 Tipos de datos
 
