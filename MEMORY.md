@@ -142,6 +142,11 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
 
+### 2026-10-26 · F11b: tarea para el e2e obsoleto del shell
+
+- **Hecho:** apuntada **F11b** en `tasks/todo.md` (rama `docs/F11b-e2e-shell-obsoleto`; solo `todo.md` y esta entrada). Sin código: el arreglo espera la decisión del humano (corregir vs eliminar).
+- **Hipótesis de la rotura:** `shell.cjs` (F11) usaba los testID transitorios `destination-<id>` del marco como marcador de «destino renderizado». Cada tarea de pantalla los borra legítimamente al sustituir el marco (home en F13, library en F14c, discover en F15), y ninguna tarea se llevó la actualización del script: quedó pudriéndose pantalla a pantalla. `home.cjs` comparte la causa desde F14c. Fallo de diseño del arnés: acoplar la verificación del *marco* a marcadores del *contenido*.
+- **Sugerencia:** corregir, no eliminar (es la única red del chrome del shell: 5 anchos × 5 destinos, foco/teclado, áreas táctiles, fuentes locales, historial/recarga, `reduced-motion`) y cambiar las esperas por URL + `app-shell` + pestaña seleccionada, o testID estable por pantalla raíz. Con F16/F20 no quedará ningún `destination-*` en la app.
 ### 2026-10-26 · P-82: relajado el validador de capabilities (detalle de P-80)
 
 - **Hecho:** rama `fix/relax-manifest-capabilities` (independiente de F15; solo comparten `MEMORY.md`, el conflicto de fusión se resuelve quedándose con ambas entradas). TDD: 3 tests en rojo (manifest con `details`/`pages` válido; con solo `details`+`pages` también; **flujo completo de instalación** con la forma del `zonatmo` real) → verde con `ModuleCapability` en `core` (tipo exportado), `MODULE_CAPABILITIES` ampliada en el SDK (atada al tipo con `satisfies`) y arnés de `test-site` aceptando el tipo completo. SPEC §6.1 actualizado con la nota P-82. El test **live** (`RYUUNEST_LIVE=1`) ahora además descomprime y **valida el manifest real** de cada módulo del repo externo (era la prueba del hallazgo).
