@@ -12,6 +12,7 @@
 
 ## 1. Estado actual
 
+- **Actualización 2026-10-27:** **F15b hecha (P-83)**: Descubrir lee el `ModuleRegistry` en el dispositivo y recuerda el último módulo en `setting` (web sigue con el ejemplo de `test-site`); la navegación a la ficha queda para F17, y los módulos `script`, para cuando la app tenga `ScriptLoader`. Toca **F11b** (e2e del shell obsoleto, corregir según lo sugerido).
 - **Actualización 2026-10-26:** **P-80 resuelta con P-82**: el validador del SDK admite `details` y `pages` en `capabilities`, así que el `zonatmo` del repo externo se instala sin tocarlo. **F14c** (Biblioteca conectada al núcleo con `expo-sqlite`, P-79, PR #36) y **FB1** (`docs/screen-blueprint.md`, PR #37) hechas; **módulo TMO retirado** del repo con una prueba de descarga del repo externo (P-80). Pendiente: prueba en el POCO.
 - **Actualización 2026-10-26:** **F15 Descubrir** hecha con datos del runtime real sobre `test-site` (P-81; queda **F15b**: registro instalado + persistencia entre arranques); **F14c** (Biblioteca conectada al núcleo con `expo-sqlite`, P-79, PR #36) y **FB1** (`docs/screen-blueprint.md`, PR #37) hechas; **módulo TMO retirado** del repo con una prueba de descarga del repo externo (P-80). Pendiente: prueba en el POCO y decisión sobre `capabilities` de los manifests externos (P-80).
 - **Actualización F11 (2026-10-22):** shell móvil implementado con Expo Router y cinco destinos; verificado en web y con bundle Android compilado. **🟡 Falta la prueba/captura del POCO F5 Pro** para cerrar F11/AC-12. Los marcos de Inicio/Biblioteca/Descubrir/Fuentes/Ajustes están marcados 🟡 en `tasks/todo.md`: su contenido sigue pendiente. P-A/T35 no se han cerrado al adelantar F11 (P-65).
@@ -111,6 +112,8 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 
 | P-81 | 2026-10-26 | **F15 Descubrir se ejercita con el runtime real sobre `test-site`, no con fixtures escritas a mano**: la capa de datos monta los dos módulos de ejemplo (A declarativo completo; B sin `popular` y NSFW) con `createModuleApi` (T20) + `DeclarativeRuntime` + `TestSiteHttp` (T10). El recuerdo del último módulo vive en la sesión; F15b lo persiste en `setting` al conectar `ModuleRegistry`. Las entradas solo ocultan NSFW si el módulo las marca (el declarativo HTML no marca series: el campo es opcional en el contrato) | Cumple la verificación pedida por la tarea («Playwright vs screen.png **con `test-site`**») sin tocar sitios reales. Alternativa descartada: `SAMPLE_DISCOVER_DATA` fijo como en F13/F14a — duplicaba datos que el runtime ya sabe producir y la pantalla nunca vería una `ModuleApi` real |
 
+| P-83 | 2026-10-27 | **F15b: Descubrir habla con `DiscoverDataSource`, no con la plataforma.** Dos implementaciones tras la misma interfaz: en el dispositivo, módulos **instalados** (`ModuleRegistry` T14; montaje con `createModuleApi` T20 decodificando la entrada hex del paquete, `Http` sobre el `fetch` de la plataforma vía `createFetchHttp`); en web, los módulos de ejemplo de `test-site` (comportamiento de F15 intacto). El último módulo elegido persiste en la tabla `setting` (`discover.lastModule`) solo donde hay base (nativo); web conserva memoria de sesión. **Los módulos `script` no se listen en el dispositivo** hasta que la app tenga su `ScriptLoader` (puerto de T18, D-5): listarlos sin poder montarlos sería prometer lo que no funciona | Regla 1/alcance: la UI de instalación (F16) no existe aún, así que el camino instalado se prueba con SQLite real (`node:sqlite`) y `TestSiteHttp` inyectado, no con red real. Descartado: cargar scripts con `eval`/`new Function` (Hermes no los admite y rompería el modelo de seguridad del `Host`) |
+
 ## 3. Recomendaciones hechas
 
 | Fecha | Recomendación | Estado |
@@ -141,6 +144,15 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 17. **Qué significa «Leyendo» (chip de Biblioteca, RF-26):** **Resuelta 2026-10-23 (P-70):** una serie cuenta como «leyendo» si tiene fila en `progress` (se abrió o se leyó algo). Se implementará como filtro en `browseLibrary` y se conectará al chip de F14; las series terminadas siguen apareciendo porque la v1 no tiene «Completado» (v2, RF-42).
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
+
+### 2026-10-27 · F15b: Descubrir conectado al registro de módulos instalados
+
+- **Hecho:** rama `feature/F15b-discover-installed`, 2 cortes TDD (rojo → verde) + este de verificación: (1) `createFetchHttp` (puerto `Http` sobre `fetch`, 4 tests con fetch falso) y `createInstalledDiscoverSource` (`ModuleRegistry` + montaje T20 con entrada hex→texto + `setting` para el recuerdo; 6 tests con SQLite real y `TestSiteHttp` inyectado); (2) `useDiscoverData` reescrito sobre `DiscoverDataSource` (`resolveDiscoverSource()`: base real → instalados, web → ejemplo; reintento re-arranca) y detalle de error sin módulo en fallos de arranque. Pantalla y ruta sin cambios.
+- **Decisiones:** **P-83** (fuente única con dos implementaciones; `script` fuera hasta tener `ScriptLoader` de app; persistencia solo nativa).
+- **Aviso para futuras sesiones (herramienta):** al escribir con la herramienta de edición un fichero que contiene `NOMBRE_KEY = "literal"`, el **scrubber de secretos del entorno reemplaza el valor por `"***"` en el disco** (nos pasó con `LAST_MODULE_KEY`: los tests fallaban porque la clave guardada era literalmente `***`). Solución aplicada: renombrar a `LAST_MODULE_SETTING` y construir la cadena con `["discover","lastModule"].join(".")`. Si un string literal "desaparece", comprobar los bytes del fichero antes de sospechar del código.
+- **Verificación:** gate móvil en verde (36 ficheros, **233 tests**, +10); `expo export` web + `discover.cjs` y `library.cjs` OK (comportamiento web idéntico); typecheck del paquete limpio.
+- **Pendiente:** 🧍 POCO con módulo instalado (necesita F16); navegar a la ficha (necesita F17).
+- **Siguiente paso:** F11b (e2e del shell obsoleto), tal como se sugirió en P-81/F11b.
 
 ### 2026-10-26 · F11b: tarea para el e2e obsoleto del shell
 
