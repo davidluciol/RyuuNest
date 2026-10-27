@@ -237,16 +237,17 @@ Dep: P-A; T35 · M · `apps/mobile/src/{navigation,shell}/*`
 - [x] Etiquetas funcionales (SPEC §11.7); destino activo con `accent` (V1)
 - Verif: [x] Playwright navegando los 5 destinos en 5 anchos · [ ] 🧍 POCO F5 Pro (AC-12 pendiente; el bundle Android no sustituye esta verificación)
 
-### F11b Arreglar el e2e obsoleto del shell (`shell.cjs` y `home.cjs`) `[FE · Baja · N1]`
+### F11b Arreglar el e2e obsoleto del shell (`shell.cjs` y `home.cjs`) `[FE · Baja · N1]` ✅
 
 > Apuntada el 2026-10-26 (hallazgo en F14c y F15). `tests/e2e/shell.cjs` espera los testID `destination-*` del marco de F11, que van desapareciendo al sustituir cada marco por su pantalla real: `destination-home` se fue con F13, `destination-library` con F14c y `destination-discover` se irá con F15. `home.cjs` está roto por lo mismo desde F14c (espera `destination-library`). Quedan vivos solo `destination-sources`/`destination-settings`, y desaparecerán con F16/F20.
 
 Dep: F11; F13, F14c, F15 · S · `apps/mobile/tests/e2e/{shell.cjs,home.cjs}` + raíz de cada pantalla
 
-- [ ] Decisión del humano: **corregir** (recomendado) o eliminar. Si se corrige: esperas estables — URL + `app-shell` + pestaña seleccionada — o testID propio por pantalla (`screen-<id>` en la raíz, una línea cada una); los scripts no deben depender de marcadores de contenido transitorios
-- [ ] `home.cjs`: mismo criterio (su tramo de `reduced-motion` viaja a un destino estable, no a `destination-library`)
-- [ ] Regenerar las capturas base de `docs/capturasF11/` (los destinos con pantalla real ya muestran contenido, no el marco)
-- Verif: los cinco scripts e2e (`shell`, `home`, `library`, `discover`, `gallery-shell`) en verde, cero errores de consola y cero dominios externos · 🧍 POCO (de siempre)
+- [x] Decisión del humano (2026-10-27): **corregir**, no eliminar. Esperas estables: `screen-<id>` en la raíz de cada pantalla real (`HomeScreen`, `LibraryScreen`, `DiscoverScreen`) y `destination-<id>` en los marcos; `markers.cjs` (`destinationMarker`) une los dos y `tests/screens/destinationMarkers.test.ts` vigila el convenio para que la próxima pantalla (F16/F20) no vuelva a romper el script
+- [x] `home.cjs`: el tramo de `reduced-motion` pasa por el marcador estable (`destinationMarker("library")`)
+- [x] Capturas base de `docs/capturasF11/` regeneradas (426 y 1440; los destinos con pantalla real ya muestran contenido)
+- [x] Convenio escrito en `docs/screen-blueprint.md` (para F16/F20 y las pantallas nuevas)
+- Verif: [x] los cuatro scripts sobre el export estático (`shell`, `home`, `library`, `discover`) en verde, cero errores de consola y cero dominios externos · [x] `gallery-shell.cjs` sobre Metro · [ ] 🧍 POCO (de siempre)
 
 ### F13 Inicio `[FE · Intermedia · N3]` ✅ (pendiente Playwright + POCO)
 

@@ -5,6 +5,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { destinationMarker } = require("./markers.cjs");
 
 const baseURL = process.env.HOME_URL || "http://127.0.0.1:8082";
 const output = path.resolve(__dirname, "../../../../docs/capturasF13");
@@ -109,7 +110,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF13");
     // Verificar prefers-reduced-motion
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.getByRole("tab", { name: "Biblioteca", exact: true }).click();
-    await page.getByTestId("destination-library").waitFor();
+    await page.getByTestId(destinationMarker("library")).waitFor();
     await page.getByRole("tab", { name: "Inicio", exact: true }).click();
     await page.getByText("Continuar la Aventura").waitFor();
 
