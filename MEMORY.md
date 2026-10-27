@@ -137,6 +137,12 @@ Las decisiones de arquitectura D-1 a D-13 están en `SPEC.md` §5.4. Las de proc
 
 ## 5. Bitácora de sesiones (la más reciente arriba)
 
+### 2026-10-26 · F11b: tarea para el e2e obsoleto del shell
+
+- **Hecho:** apuntada **F11b** en `tasks/todo.md` (rama `docs/F11b-e2e-shell-obsoleto`; solo `todo.md` y esta entrada). Sin código: el arreglo espera la decisión del humano (corregir vs eliminar).
+- **Hipótesis de la rotura:** `shell.cjs` (F11) usaba los testID transitorios `destination-<id>` del marco como marcador de «destino renderizado». Cada tarea de pantalla los borra legítimamente al sustituir el marco (home en F13, library en F14c, discover en F15), y ninguna tarea se llevó la actualización del script: quedó pudriéndose pantalla a pantalla. `home.cjs` comparte la causa desde F14c. Fallo de diseño del arnés: acoplar la verificación del *marco* a marcadores del *contenido*.
+- **Sugerencia:** corregir, no eliminar (es la única red del chrome del shell: 5 anchos × 5 destinos, foco/teclado, áreas táctiles, fuentes locales, historial/recarga, `reduced-motion`) y cambiar las esperas por URL + `app-shell` + pestaña seleccionada, o testID estable por pantalla raíz. Con F16/F20 no quedará ningún `destination-*` en la app.
+
 ### 2026-10-26 · Extra: retirar el módulo TMO y verificar la descarga externa
 
 - **Hecho:** rama `chore/remove-tmo-module` (apilada sobre FB1). Primero el test de descarga (`externalRepoDownload.test.ts`: 2 tests + 1 opt-in) y luego, en otro commit, el borrado del módulo, fixtures y pruebas de TMO (**P-80**). Suite: core 423 → 386 (los 37 de TMO), module-sdk 50 + 1 omitido, mobile 200; lint y tipos en verde. Verificación **en vivo** con `RYUUNEST_LIVE=1`: los 3 módulos del repo real (zonatmo, yupmanga, m440) se descargan con tamaño y SHA-256 correctos.
