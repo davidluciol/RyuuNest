@@ -9,6 +9,22 @@ import type { SourceModule } from "./sourcesData";
 /** Señales de una fila, de más a menos urgente. */
 export type ModuleBadge = "error" | "update" | "orphan" | "disabled" | "script" | "nsfw";
 
+/** Clave de traducción de cada insignia: citadas aquí, la puerta de i18n las ve usadas. */
+export const BADGE_LABEL_KEYS: Record<ModuleBadge, string> = {
+  error: "sources.badge.error",
+  update: "sources.badge.update",
+  orphan: "sources.badge.orphan",
+  disabled: "sources.badge.disabled",
+  script: "sources.badge.script",
+  nsfw: "sources.badge.nsfw",
+};
+
+/** Clave de traducción de la acción de la fila. */
+export const ROW_ACTION_KEYS: Record<"install" | "manage", string> = {
+  install: "sources.module.install",
+  manage: "sources.module.manage",
+};
+
 /** Tope de señales por fila (V8/V9 de `DESIGN_RULES.md`: máximo dos). */
 export const MAX_ROW_BADGES = 2;
 

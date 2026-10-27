@@ -20,6 +20,10 @@ export const SOURCE_KIND_FILTERS: readonly SourceKindFilter[] = [
   "comic",
 ];
 
+/** Estado de la pantalla, como lo ve la ruta. */
+export type SourcesView =
+  { status: "loading" } | { status: "error" } | { status: "ready"; data: SourcesData };
+
 /** Estado vacío (RF-1): sin repos ni módulos. */
 export const EMPTY_SOURCES_DATA: SourcesData = { repos: [], modules: [] };
 

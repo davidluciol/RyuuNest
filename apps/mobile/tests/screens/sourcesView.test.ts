@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import type { SourceModule } from "../../src/screens/sources/sourcesData";
+import { t } from "../../src/i18n";
 import {
+  BADGE_LABEL_KEYS,
   MAX_ROW_BADGES,
   moduleBadges,
   moduleRowAction,
+  ROW_ACTION_KEYS,
   validateRepoUrl,
 } from "../../src/screens/sources/sourcesView";
 
@@ -120,5 +123,19 @@ describe("validateRepoUrl (RF-2)", () => {
 
   it("rechaza lo que no es una URL", () => {
     expect(validateRepoUrl("esto no es una url")).toEqual({ ok: false, reason: "invalid" });
+  });
+});
+
+describe("claves de traducción de la fila", () => {
+  it("cada insignia y cada acción tiene su texto en el catálogo", () => {
+    for (const badge of ["error", "update", "orphan", "disabled", "script", "nsfw"] as const) {
+      expect(t(BADGE_LABEL_KEYS[badge]).length).toBeGreaterThan(0);
+    }
+    expect(t(ROW_ACTION_KEYS.install)).toBe("Instalar");
+    expect(t(ROW_ACTION_KEYS.manage)).toBe("Gestionar");
+  });
+
+  it("el texto de script no usa jerga (T5): dice que ejecuta código", () => {
+    expect(t(BADGE_LABEL_KEYS.script)).toBe("Ejecuta código");
   });
 });
