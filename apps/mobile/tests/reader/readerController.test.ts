@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   ChapterReadStore,
   ProgressStore,
+  SeriesPrefs,
   type ReaderChapter,
   type SqlDriver,
 } from "@ryuunest/core";
@@ -199,6 +200,15 @@ describe("ReaderController · modo de lectura por serie (RF-18)", () => {
 
     expect(sameSeries.snapshot.mode).toBe("paged-rtl");
     expect(otherSeries.snapshot.mode).toBe("vertical");
+  });
+
+  it("sin tipo ni preferencia usa el modo por defecto y su ventana de memoria, sin guardarlo", async () => {
+    const reader = controller({ kind: null, defaultMode: "vertical" });
+    await reader.open({ chapterId: "ch-1", pageTotal: 10 });
+
+    expect(reader.snapshot.mode).toBe("vertical");
+    expect(reader.snapshot.window).toEqual({ from: 0, to: 4 });
+    expect(await new SeriesPrefs({ driver, clock }).get("m-a", "serie-1")).toBeUndefined();
   });
 
   it("sin preferencia, manga abre paginado D→I y cómic I→D", async () => {

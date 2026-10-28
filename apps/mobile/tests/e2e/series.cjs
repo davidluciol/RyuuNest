@@ -33,7 +33,8 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByText("Capítulo 1: Capítulo 1").waitFor({ state: "visible" });
       await page.getByText("Capítulo 2: Capítulo 2").waitFor({ state: "visible" });
       await page.getByText("Sin leer").waitFor({ state: "visible" });
-      await page.getByText("● 40%").waitFor({ state: "visible" });
+      // Progreso de ejemplo de la fuente de lectura: capítulo 2, página 3 de 4 (2 / 4).
+      await page.getByText("● 50%").waitFor({ state: "visible" });
 
       await page.getByRole("button", { name: "Guardar" }).click();
       await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });

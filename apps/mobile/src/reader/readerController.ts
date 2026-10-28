@@ -39,6 +39,8 @@ export interface ReaderControllerOptions {
   seriesId: string;
   /** Tipo de obra, para el modo por defecto (RF-18). */
   kind: MediaKind | null;
+  /** Modo cuando ni la preferencia ni el tipo deciden (ajuste global, F20); no se guarda. */
+  defaultMode?: ReaderMode;
   /** Capítulos de la serie **en orden de lectura** (del primero al último). */
   chapters: readonly ReaderChapter[];
   /** Un guardado diferido que falla no lanza: se avisa aquí y el progreso sigue pendiente. */
@@ -138,6 +140,7 @@ export class ReaderController {
       prefs: this.#prefs,
       chapters,
       kind: this.#options.kind,
+      defaultMode: this.#options.defaultMode ?? null,
     });
   }
 
