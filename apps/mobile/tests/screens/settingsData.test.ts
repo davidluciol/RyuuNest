@@ -59,6 +59,21 @@ describe("createSettingsService · protección de instalación (RF-7, F16b)", ()
       installProtection: false,
       lockAvailable: true,
       officialRepoRegistered: false,
+      nsfwVisible: false,
+      language: "es",
+      defaultReaderMode: "vertical",
+    });
+  });
+
+  it("guarda la visibilidad NSFW y el modo de lectura predeterminado", async () => {
+    const service = build(fakeLock(true));
+
+    await service.setNsfwVisible(true);
+    await service.setDefaultReaderMode("paged-rtl");
+
+    expect(await service.load()).toMatchObject({
+      nsfwVisible: true,
+      defaultReaderMode: "paged-rtl",
     });
   });
 

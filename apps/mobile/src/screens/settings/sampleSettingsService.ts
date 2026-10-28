@@ -1,6 +1,12 @@
 import { ModuleError } from "@ryuunest/core";
 
-import type { SettingsData, SettingsService } from "./settingsData";
+import {
+  DEFAULT_LANGUAGE,
+  DEFAULT_READER_MODE,
+  type SettingsData,
+  type SettingsListener,
+  type SettingsService,
+} from "./settingsData";
 
 /**
  * F16b — `SettingsService` en memoria para la web (sin SQLite, P-79) y la
@@ -16,12 +22,25 @@ export function createSampleSettingsService(
     installProtection: false,
     lockAvailable: false,
     officialRepoRegistered: true,
+    nsfwVisible: false,
+    language: DEFAULT_LANGUAGE,
+    defaultReaderMode: DEFAULT_READER_MODE,
     ...initial,
   };
+  const listeners = new Set<SettingsListener>();
+
+  function notify(): void {
+    for (const listener of listeners) listener();
+  }
 
   return {
     async load() {
       return { ...state };
+    },
+
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
     },
 
     async setInstallProtection(on) {
@@ -32,10 +51,22 @@ export function createSampleSettingsService(
         );
       }
       state = { ...state, installProtection: on };
+      notify();
+    },
+
+    async setNsfwVisible(on) {
+      state = { ...state, nsfwVisible: on };
+      notify();
+    },
+
+    async setDefaultReaderMode(mode) {
+      state = { ...state, defaultReaderMode: mode };
+      notify();
     },
 
     async restoreOfficialRepo() {
       state = { ...state, officialRepoRegistered: true };
+      notify();
     },
   };
 }

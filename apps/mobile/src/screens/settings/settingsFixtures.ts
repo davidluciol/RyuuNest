@@ -1,4 +1,8 @@
-import type { SettingsData } from "./settingsData";
+import {
+  DEFAULT_LANGUAGE,
+  DEFAULT_READER_MODE,
+  type SettingsData,
+} from "./settingsData";
 
 /**
  * F16b — datos de ejemplo de Ajustes para la galería y Playwright en web
@@ -11,6 +15,9 @@ export const SAMPLE_SETTINGS_DATA: SettingsData = {
   installProtection: false,
   lockAvailable: true,
   officialRepoRegistered: true,
+  nsfwVisible: false,
+  language: DEFAULT_LANGUAGE,
+  defaultReaderMode: DEFAULT_READER_MODE,
 };
 
 /** Sin bloqueo en el dispositivo: el interruptor no se puede activar (RF-7). */
@@ -18,6 +25,9 @@ export const NO_LOCK_SETTINGS_DATA: SettingsData = {
   installProtection: false,
   lockAvailable: false,
   officialRepoRegistered: true,
+  nsfwVisible: false,
+  language: DEFAULT_LANGUAGE,
+  defaultReaderMode: DEFAULT_READER_MODE,
 };
 
 /** El usuario quitó el repo oficial: Ajustes ofrece restaurarlo (P-85). */
@@ -25,4 +35,7 @@ export const OFFICIAL_DISMISSED_SETTINGS_DATA: SettingsData = {
   installProtection: true,
   lockAvailable: true,
   officialRepoRegistered: false,
+  nsfwVisible: false,
+  language: DEFAULT_LANGUAGE,
+  defaultReaderMode: DEFAULT_READER_MODE,
 };
