@@ -25,7 +25,11 @@ export type SourcesView =
   { status: "loading" } | { status: "error" } | { status: "ready"; data: SourcesData };
 
 /** Estado vacío (RF-1): sin repos ni módulos. */
-export const EMPTY_SOURCES_DATA: SourcesData = { repos: [], modules: [] };
+export const EMPTY_SOURCES_DATA: SourcesData = {
+  repos: [],
+  modules: [],
+  officialRepoDismissed: false,
+};
 
 /** Contador de cada chip; un módulo de varios tipos cuenta en cada uno. */
 export function kindFilterCounts(
@@ -102,6 +106,7 @@ export const SAMPLE_SOURCES_DATA: SourcesData = {
       moduleCount: 6,
     },
   ],
+  officialRepoDismissed: false,
   modules: [
     sampleModule({
       id: "portal-aurora",

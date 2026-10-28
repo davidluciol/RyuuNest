@@ -110,7 +110,11 @@ describe("sourcesSummary", () => {
 
 describe("datos de ejemplo y vacío", () => {
   it("el vacío no trae repos ni módulos (RF-1)", () => {
-    expect(EMPTY_SOURCES_DATA).toEqual({ repos: [], modules: [] });
+    expect(EMPTY_SOURCES_DATA).toEqual({
+      repos: [],
+      modules: [],
+      officialRepoDismissed: false,
+    });
   });
 
   it("el ejemplo reproduce el diseño: 6 módulos (3 manga, 2 manhwa, 1 cómic), 2 instalados", () => {
