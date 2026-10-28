@@ -25,6 +25,7 @@ function clone(data: SourcesData): SourcesData {
       kinds: [...module.kinds],
       domains: [...module.domains],
     })),
+    officialRepoDismissed: data.officialRepoDismissed,
   };
 }
 
@@ -39,6 +40,27 @@ export function createSampleSourcesService(
       throw new ModuleError("NOT_FOUND", `El módulo ${id} no existe`);
     }
     return module;
+  }
+
+  /** Añade el repo de ejemplo (con sus módulos disponibles) si no estaba. */
+  function addSampleRepo(): void {
+    if (SAMPLE_REPO === undefined || state.repos.some((repo) => repo.id === SAMPLE_REPO.id)) {
+      return;
+    }
+    state = {
+      repos: [...state.repos, { ...SAMPLE_REPO }],
+      modules: [
+        ...state.modules,
+        ...SAMPLE_SOURCES_DATA.modules
+          .filter(
+            (module) =>
+              module.status === "available" &&
+              !state.modules.some((existing) => existing.id === module.id),
+          )
+          .map((module) => ({ ...module })),
+      ],
+      officialRepoDismissed: false,
+    };
   }
 
   function replace(id: string, patch: (module: SourceModule) => SourceModule): void {
@@ -57,22 +79,17 @@ export function createSampleSourcesService(
       if (!url.startsWith("https://")) {
         throw new ModuleError("UNSUPPORTED", "El repositorio debe usar HTTPS");
       }
-      if (SAMPLE_REPO === undefined || state.repos.some((repo) => repo.id === SAMPLE_REPO.id)) {
-        return;
-      }
-      state = {
-        repos: [...state.repos, { ...SAMPLE_REPO }],
-        modules: [
-          ...state.modules,
-          ...SAMPLE_SOURCES_DATA.modules
-            .filter(
-              (module) =>
-                module.status === "available" &&
-                !state.modules.some((existing) => existing.id === module.id),
-            )
-            .map((module) => ({ ...module })),
-        ],
-      };
+      addSampleRepo();
+    },
+
+    async ensureOfficialRepo() {
+      if (state.repos.length > 0 || state.officialRepoDismissed) return false;
+      addSampleRepo();
+      return true;
+    },
+
+    async restoreOfficialRepo() {
+      addSampleRepo();
     },
 
     async refreshRepo(id) {
@@ -87,6 +104,7 @@ export function createSampleSourcesService(
         modules: state.modules
           .filter((module) => module.status === "installed" || module.repoId !== id)
           .map((module) => (module.repoId === id ? { ...module, orphan: true } : module)),
+        officialRepoDismissed: state.officialRepoDismissed || id === SAMPLE_REPO?.id,
       };
     },
 

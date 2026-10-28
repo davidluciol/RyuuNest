@@ -7,9 +7,11 @@ import { ModuleError, StubHttp, type SecureLock } from "@ryuunest/core";
 
 import { openMigratedDriver } from "../../../../packages/core/tests/support/nodeSqliteDriver";
 import { createFflateArchive } from "../../src/data/fflateArchive";
+import { OFFICIAL_REPO_URL } from "../../src/data/officialRepo";
 import {
   INSTALL_PROTECTION_SETTING,
   createSourcesService,
+  loadSourcesWithOfficialRepo,
   type SourcesService,
 } from "../../src/screens/sources/sourcesData";
 
@@ -76,26 +78,45 @@ class Repo {
     this.publish(versions);
   }
 
-  publish(versions: Version[]): void {
-    this.routes[REPO_URL] = {
-      body: JSON.stringify({
-        format: "ryuunest-repo",
-        version: 1,
-        name: "Repo de prueba",
-        updatedAt: "2026-10-05T00:00:00Z",
-        modules: versions.map((v) => {
-          const bytes = zipOf(v);
-          this.routes[`${PACKAGE_URL}${v.id}.zip`] = { bodyBytes: bytes };
-          const { entry: _entry, ...rest } = manifestOf(v);
-          return {
-            ...rest,
-            package: `packages/${v.id}.zip`,
-            sha256: bytesToHex(sha256(bytes)),
-            size: bytes.length,
-          };
-        }),
+  /** Sirve el índice del repo oficial (P-85) con los módulos indicados. */
+  serveOfficial(versions: Version[]): void {
+    this.routes[OFFICIAL_REPO_URL] = {
+      body: JSON.stringify(this.indexBody("Repo oficial de prueba", versions)),
+    };
+  }
+
+  /** El índice del repo oficial deja de responder bien (error 500). */
+  breakOfficialIndex(): void {
+    this.routes[OFFICIAL_REPO_URL] = { status: 500, body: "" };
+  }
+
+  private indexBody(name: string, versions: Version[]) {
+    return {
+      format: "ryuunest-repo",
+      version: 1,
+      name,
+      updatedAt: "2026-10-05T00:00:00Z",
+      modules: versions.map((v) => {
+        const bytes = zipOf(v);
+        const { entry: _entry, ...rest } = manifestOf(v);
+        return {
+          ...rest,
+          package: `packages/${v.id}.zip`,
+          sha256: bytesToHex(sha256(bytes)),
+          size: bytes.length,
+        };
       }),
     };
+  }
+
+  publish(versions: Version[]): void {
+    this.routes[REPO_URL] = {
+      body: JSON.stringify(this.indexBody("Repo de prueba", versions)),
+    };
+    for (const v of versions) {
+      const bytes = zipOf(v);
+      this.routes[`${PACKAGE_URL}${v.id}.zip`] = { bodyBytes: bytes };
+    }
   }
 }
 
@@ -145,7 +166,11 @@ describe("createSourcesService · repos y lista (RF-1 a RF-3, RF-8)", () => {
   it("sin repos ni módulos devuelve la lista vacía (RF-1)", async () => {
     const service = build(new Repo([]));
 
-    expect(await service.load()).toEqual({ repos: [], modules: [] });
+    expect(await service.load()).toEqual({
+      repos: [],
+      modules: [],
+      officialRepoDismissed: false,
+    });
   });
 
   it("añade un repo y lista sus módulos como disponibles con sus metadatos (RF-2, RF-3)", async () => {
@@ -376,5 +401,146 @@ describe("createSourcesService · sincronizar un repo (botón del diseño)", () 
 
     await expect(service.refreshRepo(REPO_URL)).rejects.toBeInstanceOf(ModuleError);
     expect((await service.load()).repos).toHaveLength(1);
+  });
+});
+
+describe("createSourcesService · repo oficial por defecto (P-85)", () => {
+  it("con la lista vacía lo registra y sus módulos quedan disponibles", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([{ id: "uno", version: "1.0.0" }]);
+    const service = build(repo);
+
+    expect(await service.ensureOfficialRepo()).toBe(true);
+    const data = await service.load();
+
+    expect(data.repos).toEqual([
+      expect.objectContaining({ id: OFFICIAL_REPO_URL, name: "Repo oficial de prueba" }),
+    ]);
+    expect(data.modules).toEqual([
+      expect.objectContaining({ id: "uno", status: "available", repoId: OFFICIAL_REPO_URL }),
+    ]);
+  });
+
+  it("no lo añade si ya hay repos, y no toca la red", async () => {
+    const repo = new Repo([{ id: "uno", version: "1.0.0" }]);
+    repo.serveOfficial([{ id: "otro", version: "1.0.0" }]);
+    const service = build(repo);
+    await service.addRepo(REPO_URL);
+    repo.http.requests.length = 0;
+
+    expect(await service.ensureOfficialRepo()).toBe(false);
+    expect(repo.http.requests).toEqual([]);
+  });
+
+  it("primera parte: no pide el bloqueo aunque la protección esté activa (RF-7)", async () => {
+    await setProtection(true);
+    const lock = fakeLock({ available: true });
+    const repo = new Repo([]);
+    repo.serveOfficial([{ id: "uno", version: "1.0.0" }]);
+    const service = build(repo, lock);
+
+    await service.ensureOfficialRepo();
+
+    expect(lock.asked).toEqual([]);
+  });
+
+  it("quitar el repo oficial recuerda el descarte y no vuelve a añadirse solo", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([{ id: "uno", version: "1.0.0" }]);
+    const service = build(repo);
+    await service.ensureOfficialRepo();
+
+    await service.removeRepo(OFFICIAL_REPO_URL);
+    repo.http.requests.length = 0;
+
+    expect(await service.load()).toMatchObject({ repos: [], officialRepoDismissed: true });
+    expect(await service.ensureOfficialRepo()).toBe(false);
+    expect(repo.http.requests).toEqual([]);
+  });
+
+  it("restaurarlo lo vuelve a registrar y limpia el descarte", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([{ id: "uno", version: "1.0.0" }]);
+    const service = build(repo);
+    await service.ensureOfficialRepo();
+    await service.removeRepo(OFFICIAL_REPO_URL);
+
+    await service.restoreOfficialRepo();
+
+    expect(await service.load()).toMatchObject({
+      repos: [expect.objectContaining({ id: OFFICIAL_REPO_URL })],
+      officialRepoDismissed: false,
+    });
+  });
+
+  it("si el índice oficial falla, lanza sin dejar nada a medias", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([]);
+    repo.breakOfficialIndex();
+    const service = build(repo);
+
+    await expect(service.ensureOfficialRepo()).rejects.toBeInstanceOf(ModuleError);
+    expect((await service.load()).repos).toEqual([]);
+  });
+});
+
+describe("loadSourcesWithOfficialRepo · carga inicial de Fuentes (P-85)", () => {
+  it("con repos ya registrados no toca el repo oficial", async () => {
+    const repo = new Repo([{ id: "uno", version: "1.0.0" }]);
+    repo.serveOfficial([{ id: "otro", version: "1.0.0" }]);
+    const service = build(repo);
+    await service.addRepo(REPO_URL);
+    repo.http.requests.length = 0;
+
+    const result = await loadSourcesWithOfficialRepo(service);
+
+    expect(result.officialRepoFailed).toBe(false);
+    expect(result.data.repos).toHaveLength(1);
+    expect(repo.http.requests).toEqual([]);
+  });
+
+  it("vacía y sin descarte: prueba el repo oficial y recarga la lista", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([{ id: "uno", version: "1.0.0" }]);
+    const service = build(repo);
+
+    const result = await loadSourcesWithOfficialRepo(service);
+
+    expect(result.officialRepoFailed).toBe(false);
+    expect(result.data.repos).toEqual([expect.objectContaining({ id: OFFICIAL_REPO_URL })]);
+    expect(result.data.modules).toEqual([
+      expect.objectContaining({ id: "uno", status: "available" }),
+    ]);
+  });
+
+  it("si el índice oficial falla, devuelve la lista vacía y avisa", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([]);
+    repo.breakOfficialIndex();
+    const service = build(repo);
+
+    const result = await loadSourcesWithOfficialRepo(service);
+
+    expect(result.officialRepoFailed).toBe(true);
+    expect(result.data).toEqual({
+      repos: [],
+      modules: [],
+      officialRepoDismissed: false,
+    });
+  });
+
+  it("con el descarte del oficial no toca la red", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([{ id: "uno", version: "1.0.0" }]);
+    const service = build(repo);
+    await service.ensureOfficialRepo();
+    await service.removeRepo(OFFICIAL_REPO_URL);
+    repo.http.requests.length = 0;
+
+    const result = await loadSourcesWithOfficialRepo(service);
+
+    expect(result.officialRepoFailed).toBe(false);
+    expect(result.data.repos).toEqual([]);
+    expect(repo.http.requests).toEqual([]);
   });
 });

@@ -37,24 +37,28 @@ export default function RepoCard({
 }: RepoCardProps) {
   const text = repoCardTextColors();
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel ?? name}
-      onPress={onPress}
-      style={[repoCardStyle(), styles.card]}
-    >
-      <View style={styles.icon}>
-        <Network size={spacing.md + spacing.xxs} color={colors.accent} />
-      </View>
-      <View style={styles.texts}>
-        <Text style={[styles.name, { color: text.name }]} numberOfLines={2}>
-          {name}
-        </Text>
-        <Text style={[styles.url, { color: text.url }]} numberOfLines={2}>
-          {url}
-        </Text>
-        {meta ? <Text style={[styles.url, { color: text.url }]}>{meta}</Text> : null}
-      </View>
+    // La fila no puede ser un botón: en web anidaría el botón de sincronizar
+    // (HTML inválido). El cuerpo (icono y textos) es el botón de quitar.
+    <View style={[repoCardStyle(), styles.card]}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel ?? name}
+        onPress={onPress}
+        style={styles.body}
+      >
+        <View style={styles.icon}>
+          <Network size={spacing.md + spacing.xxs} color={colors.accent} />
+        </View>
+        <View style={styles.texts}>
+          <Text style={[styles.name, { color: text.name }]} numberOfLines={2}>
+            {name}
+          </Text>
+          <Text style={[styles.url, { color: text.url }]} numberOfLines={2}>
+            {url}
+          </Text>
+          {meta ? <Text style={[styles.url, { color: text.url }]}>{meta}</Text> : null}
+        </View>
+      </Pressable>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={syncLabel}
@@ -65,12 +69,13 @@ export default function RepoCard({
       >
         <RefreshCw size={spacing.md + spacing.xxs} color={colors.textSecondary} />
       </Pressable>
-    </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  body: { flex: 1, minWidth: 0, flexDirection: "row", alignItems: "center", gap: spacing.sm },
   icon: {
     width: spacing.xl + spacing.xs,
     height: spacing.xl + spacing.xs,

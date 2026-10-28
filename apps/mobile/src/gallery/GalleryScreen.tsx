@@ -29,6 +29,7 @@ import RecentCard from "../components/RecentCard";
 import SectionHeader from "../components/SectionHeader";
 import SettingsRow from "../components/SettingsRow";
 import Sheet from "../components/Sheet";
+import Switch from "../components/Switch";
 import TextField from "../components/TextField";
 import type { BottomNavDestination } from "../components/shellStyles";
 import { destinationLabel } from "../navigation/routes";
@@ -51,7 +52,14 @@ import RepoCard from "../components/RepoCard";
 import { kindLabel } from "../components/kindLabel";
 import SourcesScreen from "../screens/sources/SourcesScreen";
 import { INITIAL_SOURCES_FLOW } from "../screens/sources/sourcesFlow";
-import { SAMPLE_SOURCES_DATA } from "../screens/sources/sourcesFixtures";
+import { EMPTY_SOURCES_DATA, SAMPLE_SOURCES_DATA } from "../screens/sources/sourcesFixtures";
+import SettingsScreen from "../screens/settings/SettingsScreen";
+import {
+  NO_LOCK_SETTINGS_DATA,
+  OFFICIAL_DISMISSED_SETTINGS_DATA,
+  SAMPLE_SETTINGS_DATA,
+} from "../screens/settings/settingsFixtures";
+import OnboardingSample from "../screens/onboarding/OnboardingSample";
 import {
   BADGE_LABEL_KEYS,
   ROW_ACTION_KEYS,
@@ -255,6 +263,26 @@ export default function GalleryScreen() {
 
         <Text style={styles.groupLabel}>{t("gallery.component.settingsRow")}</Text>
         <SettingsRow label={t("gallery.settings.label")} hint={t("gallery.settings.value")} />
+
+        <Text style={styles.groupLabel}>{t("gallery.component.switch")}</Text>
+        <View style={styles.row}>
+          <Switch
+            value={false}
+            accessibilityLabel={t("gallery.switch.off")}
+            onValueChange={() => {}}
+          />
+          <Switch
+            value
+            accessibilityLabel={t("gallery.switch.on")}
+            onValueChange={() => {}}
+          />
+          <Switch
+            value
+            disabled
+            accessibilityLabel={t("gallery.button.disabled")}
+            onValueChange={() => {}}
+          />
+        </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.sheet")}</Text>
         <Sheet>
@@ -470,6 +498,44 @@ export default function GalleryScreen() {
             controller={null}
           />
         </View>
+        <View style={styles.shellPreview}>
+          <SourcesScreen
+            view={{
+              status: "ready",
+              data: { ...EMPTY_SOURCES_DATA, officialRepoDismissed: true },
+            }}
+            flow={INITIAL_SOURCES_FLOW}
+            controller={null}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.settingsScreen")}</Text>
+        <View style={styles.settingsPreview}>
+          <SettingsScreen
+            view={{ status: "ready", data: SAMPLE_SETTINGS_DATA }}
+            onToggleProtection={() => {}}
+            onRestoreOfficialRepo={() => {}}
+          />
+        </View>
+        <View style={styles.settingsPreview}>
+          <SettingsScreen
+            view={{ status: "ready", data: NO_LOCK_SETTINGS_DATA }}
+            onToggleProtection={() => {}}
+            onRestoreOfficialRepo={() => {}}
+          />
+        </View>
+        <View style={styles.settingsPreview}>
+          <SettingsScreen
+            view={{ status: "ready", data: OFFICIAL_DISMISSED_SETTINGS_DATA }}
+            onToggleProtection={() => {}}
+            onRestoreOfficialRepo={() => {}}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.onboardingScreen")}</Text>
+        <View style={styles.onboardingPreview}>
+          <OnboardingSample />
+        </View>
       </Section>
     </ScrollView>
   );
@@ -496,6 +562,8 @@ const styles = StyleSheet.create({
   coverWrap: { width: spacing["2xl"] * 2 },
   libraryCardWrap: { flex: 1, minWidth: 0 },
   shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
+  settingsPreview: { flex: 0, minHeight: spacing["2xl"] * 4 },
+  onboardingPreview: { flex: 0, minHeight: spacing["2xl"] * 10 },
   shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
     color: colors.textSecondary,

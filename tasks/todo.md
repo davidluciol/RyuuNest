@@ -331,22 +331,36 @@ Dep: F11; T14, T15 · M · `apps/mobile/src/screens/sources/*`
 - [x] Capa de datos `createSourcesService` (núcleo real sobre SQLite) y servicio en memoria para web/galería; ajuste `security.installProtection` en `setting` (apagado por defecto)
 - Verif: [x] Vitest · [x] Playwright (`tests/e2e/sources.cjs`, 426 y 1440, capturas en `docs/capturasF16/`, cero errores y cero externos) · [ ] 🧍 POCO con un repo y un módulo reales · [ ] 🧍 instalar un módulo `script` y comprobar la confirmación reforzada y el bloqueo del dispositivo
 
-### F16b Interruptor de «Protección de instalación» `[FE · Baja · N2]` (nace de F16)
+### F16b Interruptor de «Protección de instalación» `[FE · Baja · N2]` ✅
 
-> Añadida el 2026-10-27 (decisión del humano): F16 lee `security.installProtection` de `setting`, pero no hay interruptor visible hasta F20.
+> Añadida el 2026-10-27 (decisión del humano): F16 lee `security.installProtection` de `setting`, pero no hay interruptor visible hasta F20. Hecha el 2026-10-27 con una pantalla mínima de Ajustes que F20 ampliará.
 
-Dep: F16, F20 · S · `apps/mobile/src/screens/settings/*`
+Dep: F16 · S · `apps/mobile/src/screens/settings/*`
 
-- [ ] Fila con interruptor en Ajustes (`SettingsRow`) que escribe `security.installProtection` (RF-7); si el dispositivo no tiene bloqueo, avisar en la fila en vez de dejarlo activable sin efecto
-- [ ] Prueba con SQLite real: activar y comprobar que añadir repo y instalar `script` piden el bloqueo (ya cubierto en `sourcesData.test.ts`)
+- [x] Fila con interruptor en Ajustes (`SettingsRow` + `Switch` nuevo) que escribe `security.installProtection` (RF-7); sin bloqueo en el dispositivo, la fila avisa (hint en tono aviso) y el interruptor queda deshabilitado en vez de activable sin efecto
+- [x] Prueba con SQLite real: activar escribe el ajuste y falla cerrado sin bloqueo; el efecto sobre añadir repo e instalar `script` ya estaba cubierto en `sourcesData.test.ts`
+- [x] Además (P-85): fila «Fuentes» que restaura el repo oficial cuando falta
+- Verif: [x] Vitest (6 tests nuevos) · [x] Playwright (`tests/e2e/settings.cjs`, 426 y 1440, capturas en `docs/capturasF16b/`) · [ ] 🧍 POCO con bloqueo real del dispositivo
 
-### F12 Primer uso (3 pasos) + estado vacío `[FE · Intermedia · N3]`
+### F16c Repo oficial por defecto `[FE · Baja · N2]` ✅ (nace de F16/F12)
 
-Dep: F11, FB1, F16, T15 (va después de F16) · M · `apps/mobile/src/screens/onboarding/*`
+> Añadida el 2026-10-27 (decisión del humano, P-85): al entrar en Fuentes sin repos, la app añade sola el repo `davidluciol/RyuuNest-Models` y muestra sus módulos.
 
-- [ ] Guía hasta añadir un repo y activar un módulo; nada se instala sin confirmación (AC-8)
-- [ ] En TV, el paso 2 prioriza «Importar respaldo»
-- Verif: Playwright del flujo con `test-site` (AC-1) · 🧍 dispositivo
+Dep: F16 · S · `apps/mobile/src/data/officialRepo.ts`, `screens/sources/sourcesData.ts`
+
+- [x] `ensureOfficialRepo` registra el repo oficial con la lista vacía; es de primera parte, no pide bloqueo (RF-7 protege los repos que añade el usuario)
+- [x] Quitarlo recuerda el descarte (`setting` `sources.officialRepoDismissed`): no vuelve a añadirse solo y el estado vacío explica cómo recuperarlo (Ajustes → Restaurar)
+- [x] Si la descarga falla (sin red o índice caído), Fuentes queda en el vacío con un aviso
+- Verif: [x] Vitest (SQLite real: auto-registro, descarte, restaurar, fallo) · [x] Playwright (`sources.cjs` y `settings.cjs` sin regresión) · [ ] 🧍 POCO con el repo real
+
+### F12 Primer uso (3 pasos) + estado vacío `[FE · Intermedia · N3]` ✅
+
+Dep: F11, FB1, F16, T15 · M · `apps/mobile/src/screens/onboarding/*`
+
+- [x] Guía hasta añadir un repo (URL del repo oficial ya puesta, P-85) y activar un módulo con la confirmación de Fuentes (hoja `InstallSheet` compartida); nada se instala sin confirmación (AC-8); «Saltar» en cada paso (decisión del humano)
+- [x] En TV se omite «Importar respaldo» hasta F21b (anotado en `design/stitch/DIFFS.md`)
+- [x] La puerta sustituye a Inicio en el primer uso real (sin repos ni módulos; marca `onboarding.completed`); en web nunca hay primer uso (P-79)
+- Verif: [x] Vitest (controlador 8, puerta 3) · [x] Playwright del flujo en la galería (`tests/e2e/onboarding.cjs`, 426 y 1440, AC-8 comprobado; capturas en `docs/capturasF12/`) · [ ] 🧍 dispositivo
 
 ### F17 Serie (detalle) `[FE · Intermedia · N2]`
 

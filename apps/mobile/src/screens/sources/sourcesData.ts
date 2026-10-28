@@ -17,6 +17,8 @@ import {
 } from "@ryuunest/core";
 import { validateManifest, validateRepoIndex } from "@ryuunest/module-sdk";
 
+import { OFFICIAL_REPO_DISMISSAL_SETTING, OFFICIAL_REPO_URL } from "../../data/officialRepo";
+
 /**
  * F16 — capa de datos de Fuentes (RF-1 a RF-8). Junta el núcleo (T12–T15) con
  * las piezas de la plataforma: `SqliteStorage` sobre el `SqlDriver`, la `Http`
@@ -24,9 +26,9 @@ import { validateManifest, validateRepoIndex } from "@ryuunest/module-sdk";
  * importa el núcleo: habla con `SourcesService` (patrón de F14c y F15b).
  *
  * RF-7 (protección de instalación): se lee de la tabla `setting`
- * (`security.installProtection`, apagada por defecto; el interruptor lo pone
- * F20). Activa, añadir un repo e instalar o actualizar un módulo **script**
- * piden el bloqueo del dispositivo; si no hay bloqueo, falla cerrado.
+ * (`security.installProtection`, apagada por defecto; el interruptor está en
+ * Ajustes, F16b). Activa, añadir un repo e instalar o actualizar un módulo
+ * **script** piden el bloqueo del dispositivo; si no hay bloqueo, falla cerrado.
  */
 
 /** Ajuste (tabla `setting`, SPEC §8.1) que activa la protección de instalación. */
@@ -63,6 +65,11 @@ export interface SourceModule {
 export interface SourcesData {
   repos: RepoRow[];
   modules: SourceModule[];
+  /**
+   * El usuario quitó el repo oficial (P-85): no se vuelve a añadir solo y la
+   * pantalla avisa de cómo recuperarlo.
+   */
+  officialRepoDismissed: boolean;
 }
 
 /** Resultado de actualizar para la pantalla: no necesita el paquete entero. */
@@ -72,6 +79,13 @@ export type SourcesUpdateResult =
 export interface SourcesService {
   load(): Promise<SourcesData>;
   addRepo(url: string): Promise<void>;
+  /**
+   * Repo oficial por defecto (P-85): con la lista vacía y sin descarte, lo
+   * registra. Devuelve si lo añadió; si el índice falla, lanza.
+   */
+  ensureOfficialRepo(): Promise<boolean>;
+  /** Vuelve a registrar el repo oficial y limpia el descarte (Ajustes). */
+  restoreOfficialRepo(): Promise<void>;
   /** Vuelve a leer el índice de un repo ya registrado (RF-6: detecta versiones nuevas). */
   refreshRepo(id: string): Promise<void>;
   removeRepo(id: string): Promise<void>;
@@ -119,6 +133,13 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
   async function protectionOn(): Promise<boolean> {
     const row = await driver.get<{ value: string }>("SELECT value FROM setting WHERE key = ?", [
       INSTALL_PROTECTION_SETTING,
+    ]);
+    return row?.value === "true";
+  }
+
+  async function officialDismissed(): Promise<boolean> {
+    const row = await driver.get<{ value: string }>("SELECT value FROM setting WHERE key = ?", [
+      OFFICIAL_REPO_DISMISSAL_SETTING,
     ]);
     return row?.value === "true";
   }
@@ -196,12 +217,31 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
           moduleCount: offered.filter((o) => o.repoId === repo.id).length,
         })),
         modules: rows,
+        officialRepoDismissed: await officialDismissed(),
       };
     },
 
     async addRepo(url) {
       await requireUnlock("Confirma para añadir el repositorio");
       await repos.addRepo(url);
+      // Reponer el oficial a mano también limpia el descarte (P-85).
+      if (url === OFFICIAL_REPO_URL) {
+        await driver.run("DELETE FROM setting WHERE key = ?", [OFFICIAL_REPO_DISMISSAL_SETTING]);
+      }
+    },
+
+    async ensureOfficialRepo() {
+      if ((await repos.listRepos()).length > 0) return false;
+      if (await officialDismissed()) return false;
+      // Primera parte (P-85): no pide el bloqueo; RF-7 protege los repos que
+      // añade el usuario. Si el índice falla, lanza y quien llama decide.
+      await repos.addRepo(OFFICIAL_REPO_URL);
+      return true;
+    },
+
+    async restoreOfficialRepo() {
+      await repos.addRepo(OFFICIAL_REPO_URL);
+      await driver.run("DELETE FROM setting WHERE key = ?", [OFFICIAL_REPO_DISMISSAL_SETTING]);
     },
 
     async refreshRepo(id) {
@@ -211,6 +251,12 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
 
     async removeRepo(id) {
       await repos.removeRepo(id);
+      if (id === OFFICIAL_REPO_URL) {
+        // P-85: quitar el oficial se recuerda para no volver a añadirlo solo.
+        await driver.run("INSERT OR REPLACE INTO setting (key, value) VALUES (?, 'true')", [
+          OFFICIAL_REPO_DISMISSAL_SETTING,
+        ]);
+      }
     },
 
     previewInstall: (repoId, moduleId) => flow.preview(repoId, moduleId),
@@ -251,4 +297,25 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
       await modules.setLastError(moduleId, message);
     },
   };
+}
+
+/**
+ * Carga inicial de Fuentes (P-85): con cero repos y sin descarte, prueba el
+ * repo oficial una sola vez; si no se puede descargar (sin red o índice
+ * caído), la pantalla sigue con el estado vacío y un aviso. La usan la ruta
+ * de Fuentes y, más adelante, la de primer uso.
+ */
+export async function loadSourcesWithOfficialRepo(
+  service: SourcesService,
+): Promise<{ data: SourcesData; officialRepoFailed: boolean }> {
+  const data = await service.load();
+  if (data.repos.length > 0 || data.officialRepoDismissed) {
+    return { data, officialRepoFailed: false };
+  }
+  try {
+    const added = await service.ensureOfficialRepo();
+    return { data: added ? await service.load() : data, officialRepoFailed: false };
+  } catch {
+    return { data, officialRepoFailed: true };
+  }
 }

@@ -157,12 +157,21 @@ export default function SourcesScreen({
         ) : null}
 
         {repos.length === 0 && modules.length === 0 ? (
-          <EmptyState
-            title={t("sources.empty.title")}
-            message={t("sources.empty.message")}
-            actionLabel={t("actions.addRepository")}
-            onAction={controller?.openAddRepo}
-          />
+          view.data.officialRepoDismissed ? (
+            <EmptyState
+              title={t("sources.empty.dismissedTitle")}
+              message={t("sources.empty.dismissedMessage")}
+              actionLabel={t("actions.addRepository")}
+              onAction={controller?.openAddRepo}
+            />
+          ) : (
+            <EmptyState
+              title={t("sources.empty.title")}
+              message={t("sources.empty.message")}
+              actionLabel={t("actions.addRepository")}
+              onAction={controller?.openAddRepo}
+            />
+          )
         ) : (
           <>
             {repos.length > 0 ? (
