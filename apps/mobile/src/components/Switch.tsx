@@ -15,6 +15,8 @@ export interface SwitchProps {
   onValueChange: (value: boolean) => void;
   /** Etiqueta de accesibilidad del interruptor. */
   accessibilityLabel: string;
+  /** Marcador estable para las pruebas de interfaz. */
+  testID?: string;
 }
 
 export default function Switch({
@@ -22,6 +24,7 @@ export default function Switch({
   disabled = false,
   onValueChange,
   accessibilityLabel,
+  testID,
 }: SwitchProps) {
   const colors = switchColors();
   return (
@@ -29,6 +32,7 @@ export default function Switch({
       accessibilityRole="switch"
       accessibilityLabel={accessibilityLabel}
       accessibilityState={{ checked: value, disabled }}
+      testID={testID}
     >
       <NativeSwitch
         value={value}

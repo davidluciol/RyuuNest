@@ -112,6 +112,7 @@ export default function SettingsScreen({
                 disabled={!lockAvailable || busy}
                 onValueChange={(value) => onToggleProtection?.(value)}
                 accessibilityLabel={t("settings.security.installProtection")}
+                testID="settings-protection-switch"
               />
             }
           />
