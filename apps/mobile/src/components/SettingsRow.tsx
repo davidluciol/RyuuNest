@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { spacing, typography, dragonNightColors } from "@ryuunest/ui-tokens";
 
 import { settingsRowStyle } from "./sheetStyles";
+import { textStyle } from "./textStyle";
 
 /**
  * F07 — fila de ajustes: etiqueta a la izquierda y control/valor a la derecha
@@ -59,22 +60,7 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", flex: 1, gap: spacing.sm },
   textPress: { flex: 1, minWidth: 0 },
   textBlock: { flex: 1, minWidth: 0, gap: spacing.xxs },
-  label: {
-    color: colors.textPrimary,
-    fontFamily: typography.bodyLg.fontFamily,
-    fontSize: typography.bodyLg.fontSize,
-    lineHeight: typography.bodyLg.lineHeight,
-  },
-  hint: {
-    color: colors.textSecondary,
-    fontFamily: typography.bodySm.fontFamily,
-    fontSize: typography.bodySm.fontSize,
-    lineHeight: typography.bodySm.lineHeight,
-  },
-  hintWarning: {
-    color: colors.progress,
-    fontFamily: typography.bodySm.fontFamily,
-    fontSize: typography.bodySm.fontSize,
-    lineHeight: typography.bodySm.lineHeight,
-  },
+  label: { ...textStyle(typography.bodyLg), color: colors.textPrimary },
+  hint: { ...textStyle(typography.bodySm), color: colors.textSecondary },
+  hintWarning: { ...textStyle(typography.bodySm), color: colors.progress },
 });

@@ -371,21 +371,23 @@ Dep: F11, FB1; T22, T24, T26 · M · `apps/mobile/src/screens/series/*`
 - Verif: [x] Playwright vs `detalle_pantalla/screen.png` en 426 y 1440 px; sin desbordamiento, errores de consola ni peticiones externas
 - **Hecho (2026-10-28):** ficha dinámica fuera de `(tabs)` bajo `series/[moduleId]/[seriesId]`, navegación desde Descubrir, estados de capítulos, búsqueda/orden, favorito con etiqueta accesible actualizada y gesto largo de carpeta. La release preferida queda en el estado de la ficha; la persistencia SQLite y el salto al lector se completan al conectar F18/F20.
 
-### F18 Lector 1 `[FE · Alta · N4]`
+### F18 Lector 1 `[FE · Alta · N4]` ✅
 
 Dep: F17; T25, T27 · M · `apps/mobile/src/screens/reader/*`
 
-- [ ] Modo recordado por serie; centro muestra/oculta controles; guarda `page_index`+`page_total`; reabre en la página exacta
-- [ ] Nada decorativo sobre el contenido; sin animaciones en el lector
-- Verif: Playwright vs `pantalla_lector/screen.png` · 🧍 60 páginas en MiBox 4 sin OOM (AC-6)
+- [x] Modo recordado por serie; centro muestra/oculta controles; guarda `page_index`+`page_total`; reabre en la página exacta
+- [x] Nada decorativo sobre el contenido; sin animaciones en el lector
+- Verif: [x] Playwright (`tests/e2e/reader.cjs`, 426 y 1440 px; capturas en `docs/capturasF18/`) vs `pantalla_lector/screen.png` · [ ] 🧍 60 páginas en MiBox 4 sin OOM (AC-6)
+- **Hecho (2026-10-28, rama `feature/F18-F19-reader`, junto con F19):** ruta `reader/[moduleId]/[seriesId]/[chapterId]?release=` fuera del shell; vertical continuo (solo se montan las imágenes de la ventana del núcleo) y paginado (D→I / I→D, laterales invertidas); barras `elevated` al 95 %; hojas de modo y de capítulo; tarjeta de siguiente capítulo; `ReaderController` (guardado con retraso de 800 ms, `close()` al salir, reabre en la página exacta). La ficha (F17) ya lee `details()` real con progreso y leídos, y abre el lector. Núcleo: `ReaderState` acepta `defaultMode` (aditivo).
 
-### F19 Lector 2 `[FE · Alta · N4]`
+### F19 Lector 2 `[FE · Alta · N4]` ✅
 
 Dep: F18; T05 · M · `apps/mobile/src/{screens/reader,reader}/*`
 
-- [ ] Imágenes con `ImageRef.headers` (RF-24); fallo de imagen → reintento individual, sin descartar el capítulo
-- [ ] Zoom con pellizco, pantalla encendida; precarga dentro del presupuesto de memoria de la Fase 0
-- Verif: Playwright (zoom/controles) · 🧍 romper una imagen y medir memoria en precarga
+- [x] Imágenes con `ImageRef.headers` (RF-24); fallo de imagen → reintento individual, sin descartar el capítulo
+- [x] Zoom con pellizco, pantalla encendida; precarga dentro del presupuesto de memoria de la Fase 0
+- Verif: [x] Playwright (zoom con dos dedos por CDP, imagen rota y reintento, WakeLock) · [ ] 🧍 romper una imagen y medir memoria en precarga (POCO)
+- **Hecho (2026-10-28):** `expo-image` (cabeceras, caché a disco, `prefetch`) y `expo-keep-awake` (autorizadas por el humano); zoom con `PanResponder` (sin gesture-handler); precarga a disco de las páginas por delante (paginado) y de las 2 primeras del siguiente capítulo al acercarse al final. **Pendiente de medir (P-45):** `READER_IMAGE_BUDGET_MB` es `null`; sin cifra no hay tope de memoria, solo el máximo fijo.
 
 ### F20 Ajustes `[FE · Baja · N2]`
 

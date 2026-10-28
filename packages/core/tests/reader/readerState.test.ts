@@ -93,6 +93,37 @@ describe("ReaderState · estado inicial y apertura de serie", () => {
 
     await expect(lector.openSeries(MODULO, SERIE)).resolves.toMatchObject({ mode: null });
   });
+
+  it("con `defaultMode`, sin tipo ni preferencia se usa ese modo y no se guarda como preferencia", async () => {
+    const lector = new ReaderState({
+      progress: progreso,
+      prefs,
+      chapters: CAPITULOS,
+      kind: null,
+      defaultMode: "vertical",
+    });
+
+    const snapshot = await lector.openSeries(MODULO, SERIE);
+    await lector.openChapter("cap-1");
+
+    expect(snapshot.mode).toBe("vertical");
+    expect(lector.snapshot.window).not.toBeNull();
+    await expect(prefs.get(MODULO, SERIE)).resolves.toBeUndefined();
+  });
+
+  it("`defaultMode` no pisa el tipo de obra ni la preferencia de la serie", async () => {
+    const manga = new ReaderState({
+      progress: progreso,
+      prefs,
+      chapters: CAPITULOS,
+      kind: "manga",
+      defaultMode: "vertical",
+    });
+    await expect(manga.openSeries(MODULO, SERIE)).resolves.toMatchObject({ mode: "paged-rtl" });
+
+    await prefs.setReaderMode(MODULO, SERIE, "paged-ltr");
+    await expect(manga.openSeries(MODULO, SERIE)).resolves.toMatchObject({ mode: "paged-ltr" });
+  });
 });
 
 describe("ReaderState · modo de lectura (T24, RF-18)", () => {

@@ -139,6 +139,7 @@ export class ReaderState {
   readonly #prefs: SeriesPrefs;
   readonly #chapters: readonly ReaderChapter[];
   readonly #kind: MediaKind | null;
+  readonly #defaultMode: ReaderMode | null;
 
   #moduleId: string | null = null;
   #seriesId: string | null = null;
@@ -157,11 +158,17 @@ export class ReaderState {
     chapters: readonly ReaderChapter[];
     /** Tipo de obra, para el modo por defecto (RF-18); `null` si no se conoce. */
     kind?: MediaKind | null;
+    /**
+     * Modo cuando ni la preferencia de la serie ni el tipo de obra deciden (el ajuste global de
+     * lector, F20). No se guarda como preferencia de la serie. Sin él, el modo queda `null`.
+     */
+    defaultMode?: ReaderMode | null;
   }) {
     this.#progress = options.progress;
     this.#prefs = options.prefs;
     this.#chapters = options.chapters;
     this.#kind = options.kind ?? null;
+    this.#defaultMode = options.defaultMode ?? null;
   }
 
   /** Estado actual, inmutable. */
@@ -192,7 +199,7 @@ export class ReaderState {
   async openSeries(moduleId: string, seriesId: string): Promise<ReaderSnapshot> {
     this.#moduleId = moduleId;
     this.#seriesId = seriesId;
-    this.#mode = await this.#prefs.modeFor(moduleId, seriesId, this.#kind);
+    this.#mode = (await this.#prefs.modeFor(moduleId, seriesId, this.#kind)) ?? this.#defaultMode;
     this.#chapter = null;
     this.#pageIndex = 0;
     this.#dirty = false;
