@@ -86,7 +86,6 @@ export default function OnboardingScreen({
     );
   }
 
-  const available = view.data.modules.filter((module) => module.status === "available");
   const stepError = flow.sheet === "add-repo" ? flow.error : null;
 
   return (

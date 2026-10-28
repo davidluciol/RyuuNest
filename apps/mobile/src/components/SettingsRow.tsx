@@ -28,24 +28,37 @@ export default function SettingsRow({
   right,
   onPress,
 }: SettingsRowProps) {
+  const texts = (
+    <View style={styles.textBlock}>
+      <Text style={styles.label}>{label}</Text>
+      {hint ? (
+        <Text style={hintTone === "warning" ? styles.hintWarning : styles.hint}>{hint}</Text>
+      ) : null}
+    </View>
+  );
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} style={settingsRowStyle()}>
+    // La fila no puede ser un botón: el control de la derecha (interruptor,
+    // botón) anidaría en web un botón dentro de otro (HTML inválido). Solo el
+    // bloque de textos es pulsable cuando hay `onPress`.
+    <View style={settingsRowStyle()}>
       <View style={styles.row}>
-        <View style={styles.textBlock}>
-          <Text style={styles.label}>{label}</Text>
-          {hint ? (
-            <Text style={hintTone === "warning" ? styles.hintWarning : styles.hint}>{hint}</Text>
-          ) : null}
-        </View>
+        {onPress === undefined ? (
+          texts
+        ) : (
+          <Pressable accessibilityRole="button" onPress={onPress} style={styles.textPress}>
+            {texts}
+          </Pressable>
+        )}
         {right ? <View>{right}</View> : null}
       </View>
-    </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", flex: 1, gap: spacing.sm },
-  textBlock: { flex: 1, gap: spacing.xxs },
+  textPress: { flex: 1, minWidth: 0 },
+  textBlock: { flex: 1, minWidth: 0, gap: spacing.xxs },
   label: {
     color: colors.textPrimary,
     fontFamily: typography.bodyLg.fontFamily,
