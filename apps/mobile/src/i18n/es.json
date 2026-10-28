@@ -67,6 +67,7 @@
   "gallery.component.header": "cabecera",
   "gallery.component.bottomNav": "barra inferior",
   "gallery.component.settingsRow": "fila de ajustes",
+  "gallery.component.switch": "interruptor",
   "gallery.component.sheet": "hoja y diálogo",
   "gallery.component.emptyState": "estado vacío",
   "gallery.component.emptySearch": "estado vacío (sin resultados)",
@@ -129,6 +130,8 @@
   "gallery.chapter.hint": "hace 2 h · Equipo Ryuu",
   "gallery.settings.label": "Tema",
   "gallery.settings.value": "Dragon Night",
+  "gallery.switch.on": "Encendido",
+  "gallery.switch.off": "Apagado",
   "gallery.sheet.body": "Contenido de una hoja (nivel 2, sin sombra).",
 
   "sources.summary": "{installed} instalados · {available} disponibles",

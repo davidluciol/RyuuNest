@@ -107,6 +107,7 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
       "gallery.component.header",
       "gallery.component.bottomNav",
       "gallery.component.settingsRow",
+      "gallery.component.switch",
       "gallery.component.sheet",
       "gallery.component.emptyState",
       "gallery.component.errorState",

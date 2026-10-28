@@ -29,6 +29,7 @@ import RecentCard from "../components/RecentCard";
 import SectionHeader from "../components/SectionHeader";
 import SettingsRow from "../components/SettingsRow";
 import Sheet from "../components/Sheet";
+import Switch from "../components/Switch";
 import TextField from "../components/TextField";
 import type { BottomNavDestination } from "../components/shellStyles";
 import { destinationLabel } from "../navigation/routes";
@@ -255,6 +256,26 @@ export default function GalleryScreen() {
 
         <Text style={styles.groupLabel}>{t("gallery.component.settingsRow")}</Text>
         <SettingsRow label={t("gallery.settings.label")} hint={t("gallery.settings.value")} />
+
+        <Text style={styles.groupLabel}>{t("gallery.component.switch")}</Text>
+        <View style={styles.row}>
+          <Switch
+            value={false}
+            accessibilityLabel={t("gallery.switch.off")}
+            onValueChange={() => {}}
+          />
+          <Switch
+            value
+            accessibilityLabel={t("gallery.switch.on")}
+            onValueChange={() => {}}
+          />
+          <Switch
+            value
+            disabled
+            accessibilityLabel={t("gallery.button.disabled")}
+            onValueChange={() => {}}
+          />
+        </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.sheet")}</Text>
         <Sheet>
