@@ -10,38 +10,19 @@ import { textStyle } from "../../components/textStyle";
 import { t } from "../../i18n";
 import type { SourceModule } from "./sourcesData";
 import type { SourcesController } from "./sourcesController";
-import { canConfirmInstall, type SourcesFlow } from "./sourcesFlow";
+import InstallSheet from "./InstallSheet";
+import { DetailRow, SheetError, runtimeLabel } from "./sheetPieces";
+import type { SourcesFlow } from "./sourcesFlow";
 
 /**
  * F16 — hojas de Fuentes (sin diseño en Stitch, P-30): añadir repositorio,
- * confirmar instalación (permisos y huella; mantener pulsado si es `script`),
- * gestionar, confirmar actualización, desinstalar y quitar repositorio. Cada
- * hoja pinta el estado del flujo (`sourcesFlow`) y manda acciones al
- * controlador; no toca el núcleo.
+ * confirmar instalación (hoja compartida con el primer uso, F12), gestionar,
+ * confirmar actualización, desinstalar y quitar repositorio. Cada hoja pinta el
+ * estado del flujo (`sourcesFlow`) y manda acciones al controlador; no toca el
+ * núcleo.
  */
 
 const colors = dragonNightColors;
-
-function DetailRow({ label, value }: { label: string; value: string }) {
-  return (
-    <View style={styles.detail}>
-      <Text style={styles.detailLabel}>{label}</Text>
-      <Text style={styles.detailValue}>{value}</Text>
-    </View>
-  );
-}
-
-function SheetError({ message }: { message: string | null }) {
-  return message === null ? null : (
-    <Text accessibilityRole="alert" style={styles.error}>
-      {message}
-    </Text>
-  );
-}
-
-function runtimeLabel(runtime: "declarative" | "script"): string {
-  return t(runtime === "script" ? "sources.runtime.script" : "sources.runtime.declarative");
-}
 
 export interface SourcesSheetsProps {
   flow: SourcesFlow;
@@ -66,7 +47,7 @@ function AddRepoSheet({
       testID="sheet-add-repo"
     >
       <Text style={styles.body}>{t("sources.add.description")}</Text>
-      <Text style={styles.detailLabel}>{t("sources.add.label")}</Text>
+      <Text style={styles.fieldLabel}>{t("sources.add.label")}</Text>
       <TextField
         value={url}
         onChangeText={setUrl}
@@ -97,51 +78,14 @@ export default function SourcesSheets({ flow, controller, modules }: SourcesShee
   }
 
   if (flow.sheet === "install") {
-    const { preview } = flow;
     return (
-      <SheetModal
-        visible
-        title={t("sources.install.title")}
-        onClose={controller.close}
+      <InstallSheet
+        preview={flow.preview}
         busy={flow.busy}
-        testID="sheet-install"
-      >
-        <Text style={styles.name}>{preview.name}</Text>
-        <DetailRow label={t("sources.detail.version")} value={preview.version} />
-        <DetailRow label={t("sources.detail.runtime")} value={runtimeLabel(preview.runtime)} />
-        <DetailRow label={t("sources.detail.repo")} value={preview.repoId} />
-        <DetailRow
-          label={t("sources.detail.permissions")}
-          value={preview.permissions.domains.join(", ")}
-        />
-        <DetailRow label={t("sources.detail.hash")} value={preview.sha256} />
-        {preview.reinforced ? (
-          <Text style={styles.warning}>{t("sources.install.scriptWarning")}</Text>
-        ) : null}
-        <SheetError message={flow.error} />
-        <View style={styles.actions}>
-          <Button
-            variant="secondary"
-            label={t("sources.sheet.cancel")}
-            disabled={flow.busy}
-            onPress={controller.close}
-          />
-          {preview.reinforced ? (
-            <HoldToConfirm
-              label={t("sources.install.hold")}
-              holdingLabel={t("sources.install.holding")}
-              disabled={flow.busy}
-              onConfirm={() => void controller.confirmInstall(true)}
-            />
-          ) : (
-            <Button
-              label={t("sources.install.submit")}
-              disabled={!canConfirmInstall(preview, { reinforced: false }) || flow.busy}
-              onPress={() => void controller.confirmInstall(false)}
-            />
-          )}
-        </View>
-      </SheetModal>
+        error={flow.error}
+        onCancel={controller.close}
+        onConfirm={(reinforced) => void controller.confirmInstall(reinforced)}
+      />
     );
   }
 
@@ -295,11 +239,8 @@ export default function SourcesSheets({ flow, controller, modules }: SourcesShee
 const styles = StyleSheet.create({
   name: { ...textStyle(typography.headlineSm), color: colors.textPrimary },
   body: { ...textStyle(typography.bodyMd), color: colors.textSecondary },
+  fieldLabel: { ...textStyle(typography.labelMd), color: colors.textSecondary },
   warning: { ...textStyle(typography.bodyMd), color: colors.progress },
-  error: { ...textStyle(typography.bodyMd), color: colors.error },
-  detail: { gap: spacing.xxs },
-  detailLabel: { ...textStyle(typography.labelMd), color: colors.textSecondary },
-  detailValue: { ...textStyle(typography.bodyMd), color: colors.textPrimary },
   actions: {
     flexDirection: "row",
     justifyContent: "flex-end",
