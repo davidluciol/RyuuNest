@@ -3,6 +3,7 @@ import { Check } from "lucide-react-native";
 import { spacing, typography, dragonNightColors } from "@ryuunest/ui-tokens";
 
 import { type ChapterState, chapterRowColors, chapterRowStyle } from "./chapterRowStyles";
+import { textStyle } from "./textStyle";
 
 /**
  * F07 — fila de capítulo (SPEC §11.10, V8): alto mínimo 56 px, relleno
@@ -60,19 +61,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   textBlock: { flex: 1, gap: spacing.xxs },
-  title: {
-    fontFamily: typography.bodyLg.fontFamily,
-    fontSize: typography.bodyLg.fontSize,
-    lineHeight: typography.bodyLg.lineHeight,
-  },
-  progress: {
-    fontFamily: typography.labelMd.fontFamily,
-    fontSize: typography.labelMd.fontSize,
-    lineHeight: typography.labelMd.lineHeight,
-  },
-  hint: {
-    fontFamily: typography.bodySm.fontFamily,
-    fontSize: typography.bodySm.fontSize,
-    lineHeight: typography.bodySm.lineHeight,
-  },
+  title: { ...textStyle(typography.bodyLg) },
+  progress: { ...textStyle(typography.labelMd) },
+  hint: { ...textStyle(typography.bodySm) },
 });
