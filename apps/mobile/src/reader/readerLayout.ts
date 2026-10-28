@@ -29,6 +29,22 @@ export function tapActionFor(zone: TapZone, mode: ReaderMode): ReaderTapAction {
   return leftIsNext ? "previous" : "next";
 }
 
+/** Página vertical típica (2:3) mientras la imagen real no ha dicho su tamaño. */
+export const DEFAULT_PAGE_ASPECT = 2 / 3;
+
+/** Relación ancho / alto de una página; sin tamaño conocido, la típica. */
+export function pageAspect(width: number | undefined, height: number | undefined): number {
+  if (width === undefined || height === undefined || width <= 0 || height <= 0) {
+    return DEFAULT_PAGE_ASPECT;
+  }
+  return width / height;
+}
+
+/** En vertical continuo la página de lectura es la más alta de las visibles (progreso, RF-20). */
+export function pageFromViewable(visibleIndices: readonly number[]): number | null {
+  return visibleIndices.length === 0 ? null : Math.min(...visibleIndices);
+}
+
 /**
  * Porcentaje de lectura de un capítulo: `page_index / page_total` (RF-41, base 0), y 100 en
  * la última página porque ahí el capítulo está terminado. Sin total no hay porcentaje.
