@@ -40,9 +40,15 @@ export function pageAspect(width: number | undefined, height: number | undefined
   return width / height;
 }
 
-/** En vertical continuo la página de lectura es la más alta de las visibles (progreso, RF-20). */
-export function pageFromViewable(visibleIndices: readonly number[]): number | null {
-  return visibleIndices.length === 0 ? null : Math.min(...visibleIndices);
+/**
+ * Ancho máximo de la columna de lectura (SPEC §9: «límite de ancho»). Provisional: se ajusta con
+ * la medición de P-45; en móvil nunca se alcanza, en la web de escritorio evita estirar la página.
+ */
+export const READER_MAX_WIDTH = 720;
+
+/** Ancho de la columna de lectura dentro de un contenedor de `containerWidth`. */
+export function columnWidth(containerWidth: number): number {
+  return Math.min(containerWidth, READER_MAX_WIDTH);
 }
 
 /**

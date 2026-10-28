@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { percentOf, tapActionFor, tapZoneAt } from "../../src/reader/readerLayout";
+import {
+  READER_MAX_WIDTH,
+  columnWidth,
+  percentOf,
+  tapActionFor,
+  tapZoneAt,
+} from "../../src/reader/readerLayout";
 
 /**
  * F18 — zonas táctiles y porcentaje del lector (RF-19, RF-41). Lógica pura: la
@@ -60,5 +66,17 @@ describe("percentOf", () => {
   it("sin total de páginas no hay porcentaje", () => {
     expect(percentOf(3, null)).toBeNull();
     expect(percentOf(3, 0)).toBeNull();
+  });
+});
+
+describe("columnWidth", () => {
+  it("en móvil la página ocupa todo el ancho", () => {
+    expect(columnWidth(426)).toBe(426);
+  });
+
+  it("en pantallas anchas se limita a una columna de lectura (SPEC §9: límite de ancho)", () => {
+    expect(columnWidth(1440)).toBe(READER_MAX_WIDTH);
+    expect(READER_MAX_WIDTH).toBeGreaterThan(426);
+    expect(READER_MAX_WIDTH).toBeLessThan(1440);
   });
 });

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { dragonNightColors, touchTarget, withAlpha } from "@ryuunest/ui-tokens";
 
-import { DEFAULT_PAGE_ASPECT, pageAspect, pageFromViewable } from "../../src/reader/readerLayout";
+import { DEFAULT_PAGE_ASPECT, pageAspect } from "../../src/reader/readerLayout";
 import {
   readerBarStyle,
   readerCanvasStyle,
@@ -37,17 +37,6 @@ describe("readerIconButtonStyle", () => {
 
     expect(style.width).toBeGreaterThanOrEqual(touchTarget.min);
     expect(style.height).toBeGreaterThanOrEqual(touchTarget.min);
-  });
-});
-
-describe("pageFromViewable", () => {
-  it("la página de lectura es la más alta de las visibles", () => {
-    expect(pageFromViewable([3, 4, 5])).toBe(3);
-    expect(pageFromViewable([5, 3])).toBe(3);
-  });
-
-  it("sin páginas visibles no cambia nada", () => {
-    expect(pageFromViewable([])).toBeNull();
   });
 });
 

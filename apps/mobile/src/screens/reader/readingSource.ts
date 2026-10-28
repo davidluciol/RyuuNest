@@ -28,7 +28,7 @@ import type { SeriesViewData } from "../series/seriesFixtures";
 /** Una imagen de página: lo que dio el módulo y, solo en la web de ejemplo, su sustituto local. */
 export interface ReaderImage extends ImageRef {
   /** Recurso empaquetado que reemplaza a `url` (marcadores de la web, sin red). */
-  asset?: ImageSourcePropType;
+  asset?: number;
 }
 
 export interface ReaderPages {
@@ -106,7 +106,7 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
 
 // — Web: módulos de ejemplo sobre `test-site` con progreso en la sesión —
 
-const SAMPLE_PAGE_ASSETS: readonly ImageSourcePropType[] = [page1, page2, page3];
+const SAMPLE_PAGE_ASSETS: readonly number[] = [page1, page2, page3];
 
 /**
  * Datos de ejemplo coherentes (D1): `dragon-de-ceniza` lleva el capítulo 1 leído y el 2 a la
@@ -136,7 +136,7 @@ export function createSampleReadingSource(): ReadingSource {
     coverSource: dragonMarker,
     decorateImage: (image, index) => ({
       ...image,
-      asset: SAMPLE_PAGE_ASSETS[index % SAMPLE_PAGE_ASSETS.length] as ImageSourcePropType,
+      asset: SAMPLE_PAGE_ASSETS[index % SAMPLE_PAGE_ASSETS.length] as number,
     }),
     seed: seedSample,
   });
