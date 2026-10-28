@@ -395,7 +395,7 @@ Dep: F18; T05 · M · `apps/mobile/src/{screens/reader,reader}/*`
 
 Dep: F11, FB1; T25 · M · `apps/mobile/src/screens/settings/*`
 
-- [ ] NSFW apagado por defecto (RF-34); sin «Modo OLED», «Zonas táctiles», «Precarga» ni selector de tema
+- [ ] NSFW apagado por defecto (RF-34); Con «Modo OLED», «Zonas táctiles», «Precarga» y selector de temas
 - Verif: Playwright vs `ajustes_pantalla/screen.png` · 🧍 cambiar NSFW y ver Biblioteca/Descubrir
 
 ### F21 Respaldo (UI) — dividida en tres tareas (2026-10-23)
