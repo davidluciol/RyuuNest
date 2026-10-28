@@ -40,13 +40,13 @@ export interface SourcesController {
   dismissNotice(): void;
 }
 
-const URL_ERROR_KEYS = {
+export const URL_ERROR_KEYS = {
   empty: "sources.add.error.empty",
   invalid: "sources.add.error.invalid",
   "not-https": "sources.add.error.notHttps",
 } as const;
 
-function messageOf(error: unknown): string {
+export function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
