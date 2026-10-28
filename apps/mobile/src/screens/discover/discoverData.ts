@@ -4,8 +4,6 @@ import {
   ModuleRegistry,
   SqliteStorage,
   createModuleApi,
-  fromHex,
-  utf8Decode,
   type DeclarativeConfig,
   type Http,
   type ModuleApiHandle,
@@ -22,6 +20,7 @@ import {
 
 import { openAppDatabase } from "../../data/appDatabase";
 import { createFetchHttp } from "../../data/fetchHttp";
+import { createInstalledMounter } from "../../data/moduleMounter";
 import {
   SAMPLE_DISCOVER_MODULES,
   type DiscoverEntry,
@@ -245,50 +244,7 @@ export interface InstalledSourceDeps {
 export function createInstalledDiscoverSource(deps: InstalledSourceDeps): DiscoverDataSource {
   const { driver, http } = deps;
   const registry = new ModuleRegistry({ storage: new SqliteStorage(driver) });
-  const mounted = new Map<string, Promise<ModuleApiHandle>>();
-
-  async function requireUsablePackage(moduleId: string) {
-    const pkg = await registry.get(moduleId);
-    if (pkg === undefined || !pkg.enabled) {
-      throw new ModuleError("NOT_FOUND", `El módulo ${moduleId} no está instalado ni activo`);
-    }
-    if (pkg.runtime !== "declarative") {
-      throw new ModuleError(
-        "UNSUPPORTED",
-        `La app aún no carga módulos script en el dispositivo (${moduleId})`,
-      );
-    }
-    return pkg;
-  }
-
-  function mount(moduleId: string): Promise<ModuleApiHandle> {
-    let api = mounted.get(moduleId);
-    if (api === undefined) {
-      api = requireUsablePackage(moduleId).then((pkg) => {
-        const entry = pkg.files.find((file) => file.path === pkg.manifest.entry);
-        if (entry === undefined) {
-          throw new ModuleError(
-            "NOT_FOUND",
-            `El paquete de ${moduleId} no trae su archivo de entrada (${pkg.manifest.entry})`,
-          );
-        }
-        const host = new ModuleHost({
-          http,
-          clock: { now: () => Date.now() },
-          permissions: pkg.manifest.permissions,
-        });
-        return createModuleApi({
-          manifest: pkg.manifest,
-          entry: utf8Decode(fromHex(entry.hex)),
-          host,
-        });
-      });
-      // Un fallo al montar no se cachea: la próxima petición lo reintenta.
-      api.catch(() => mounted.delete(moduleId));
-      mounted.set(moduleId, api);
-    }
-    return api;
-  }
+  const mounter = createInstalledMounter({ driver, http });
 
   return {
     async listModules() {
@@ -303,13 +259,12 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
         }));
     },
     async load({ moduleId, query, page }) {
-      const pkg = await requireUsablePackage(moduleId);
-      const handle = await mount(moduleId);
+      const { handle, manifest } = await mounter.mount(moduleId);
       return loadFromApi(
         handle,
         {
-          hasLatest: pkg.manifest.capabilities.includes("latest"),
-          hasPopular: pkg.manifest.capabilities.includes("popular"),
+          hasLatest: manifest.capabilities.includes("latest"),
+          hasPopular: manifest.capabilities.includes("popular"),
         },
         moduleId,
         query,
