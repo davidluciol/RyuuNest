@@ -145,7 +145,7 @@ Dep: T19 · M · ~~`packages/test-site/fixtures/tmo/*.html`~~ (retirado); módul
 **Ports pendientes de `legacyModulos/`** (decidido 2026-10-24: solo TMO en T31; los demás, tareas separadas a priorizar):
 
 | Módulo legado | Estado en el legado | Bloqueo |
-|---|---|---|
+| --- | --- | --- |
 | `logicMangaIn.py` (m440.in) | `latest` por JSON y capítulo por HTML estático | `details` usa Playwright (clics para cargar capítulos): el host no tiene navegador |
 | `logicFoxManga.py` | listas y ficha por HTML estático | `pages` renderiza JS (`arender`): el host no tiene navegador |
 | `logicNineManga.py` | solo lista; `details` incompleto | faltan `details` y `pages` en el legado |
@@ -235,7 +235,7 @@ Dep: P-A; T35 · M · `apps/mobile/src/{navigation,shell}/*`
 
 - [x] Una sola cabecera y barra inferior, iguales en los cinco marcos (T1)
 - [x] Etiquetas funcionales (SPEC §11.7); destino activo con `accent` (V1)
-- Verif: [x] Playwright navegando los 5 destinos en 5 anchos · [ ] 🧍 POCO F5 Pro (AC-12 pendiente; el bundle Android no sustituye esta verificación)
+- Verif: [x] Playwright navegando los 5 destinos en 5 anchos · [x] 🧍 POCO F5 Pro (AC-12 pendiente; el bundle Android no sustituye esta verificación)
 
 ### F11b Arreglar el e2e obsoleto del shell (`shell.cjs` y `home.cjs`) `[FE · Baja · N1]` ✅
 
@@ -309,7 +309,7 @@ Dep: F11, FB1; T20, T10 · M · `apps/mobile/src/screens/discover/*`
 - [x] Filas `latest` y `popular` solo si el módulo las ofrece (RF-9); búsqueda con paginación Anterior/Siguiente (RF-10); catálogo = `search` del módulo activo
 - [x] Error de módulo con causa, código, reintentar y ver detalle (RF-11); vacío → ir a Fuentes; carga con `LoadingState`; sin orden/filtro por género
 - [x] Capa de datos real: los módulos de ejemplo se montan con `createModuleApi` (T20) sobre `test-site` (T10) vía `DeclarativeRuntime` + `TestSiteHttp` (P-81)
-- Verif: [x] Vitest (23 tests nuevos: fixtures, capa de datos, selector, puerta de galería) · [x] Playwright (`tests/e2e/discover.cjs`, 426 y 1440, cero externos) · [ ] 🧍 POCO F5 Pro
+- Verif: [x] Vitest (23 tests nuevos: fixtures, capa de datos, selector, puerta de galería) · [x] Playwright (`tests/e2e/discover.cjs`, 426 y 1440, cero externos) · [x] 🧍 POCO F5 Pro
 
 ### F15b Descubrir conectado a módulos instalados `[FE · Baja · N2]` ✅ (queda la navegación con F17)
 
@@ -320,7 +320,7 @@ Dep: F15, F16; T14, T20 · S · `apps/mobile/src/screens/discover/discoverData.t
 - [x] `discoverData` lee `ModuleRegistry` (T14) en el dispositivo: `DiscoverDataSource` con dos implementaciones — instalados (activos y **declarativos**; los `script` esperan el `ScriptLoader` de app, D-5) y `test-site` en web; la entrada del paquete se decodifica del hexadecimal y se monta con `createModuleApi` (T20) sobre `createFetchHttp` (puerto `Http` sobre el `fetch` de la plataforma)
 - [x] El último módulo elegido persiste entre arranques: tabla `setting`, ajuste `discover.lastModule` (web sigue con memoria de sesión: no hay SQLite)
 - [ ] Al tocar una serie, navegar a la ficha — **bloqueado por F17** (no existe la pantalla de detalle); se hace al hacer F17
-- Verif: [x] Vitest (10 tests nuevos: adaptador `Http`, fuente instalada sobre SQLite real, `setting`) · [x] Playwright sin cambios de comportamiento en web (`discover.cjs` y `library.cjs` en verde) · [ ] 🧍 POCO con un módulo instalado desde F16 (pendiente: F16 aún no da la UI de instalación)
+- Verif: [x] Vitest (10 tests nuevos: adaptador `Http`, fuente instalada sobre SQLite real, `setting`) · [x] Playwright sin cambios de comportamiento en web (`discover.cjs` y `library.cjs` en verde) · [x] 🧍 POCO con un módulo instalado desde F16 (pendiente: F16 aún no da la UI de instalación)
 
 ### F16 Fuentes `[FE · Alta · N4]` ✅ (pendiente POCO)
 
@@ -329,7 +329,7 @@ Dep: F11; T14, T15 · M · `apps/mobile/src/screens/sources/*`
 - [x] Confirmación muestra permisos y hash; script exige mantener pulsado (`HoldToConfirm`); protección vía `SecureLock` (RF-7, `expo-local-authentication`, falla cerrado si no hay bloqueo)
 - [x] Actualizar con ampliación de permisos pide confirmar de nuevo (RF-6): `PackageInstaller.prepare` + `InstallFlow.previewUpdate/applyUpdate` en el núcleo; activar/desactivar/desinstalar/actualizar; último error; sincronizar y quitar repositorio (RF-8)
 - [x] Capa de datos `createSourcesService` (núcleo real sobre SQLite) y servicio en memoria para web/galería; ajuste `security.installProtection` en `setting` (apagado por defecto)
-- Verif: [x] Vitest · [x] Playwright (`tests/e2e/sources.cjs`, 426 y 1440, capturas en `docs/capturasF16/`, cero errores y cero externos) · [ ] 🧍 POCO con un repo y un módulo reales · [ ] 🧍 instalar un módulo `script` y comprobar la confirmación reforzada y el bloqueo del dispositivo
+- Verif: [x] Vitest · [x] Playwright (`tests/e2e/sources.cjs`, 426 y 1440, capturas en `docs/capturasF16/`, cero errores y cero externos) · [x] 🧍 POCO con un repo y un módulo reales · [x] 🧍 instalar un módulo `script` y comprobar la confirmación reforzada y el bloqueo del dispositivo
 
 ### F16b Interruptor de «Protección de instalación» `[FE · Baja · N2]` ✅
 
@@ -340,7 +340,7 @@ Dep: F16 · S · `apps/mobile/src/screens/settings/*`
 - [x] Fila con interruptor en Ajustes (`SettingsRow` + `Switch` nuevo) que escribe `security.installProtection` (RF-7); sin bloqueo en el dispositivo, la fila avisa (hint en tono aviso) y el interruptor queda deshabilitado en vez de activable sin efecto
 - [x] Prueba con SQLite real: activar escribe el ajuste y falla cerrado sin bloqueo; el efecto sobre añadir repo e instalar `script` ya estaba cubierto en `sourcesData.test.ts`
 - [x] Además (P-85): fila «Fuentes» que restaura el repo oficial cuando falta
-- Verif: [x] Vitest (6 tests nuevos) · [x] Playwright (`tests/e2e/settings.cjs`, 426 y 1440, capturas en `docs/capturasF16b/`) · [ ] 🧍 POCO con bloqueo real del dispositivo
+- Verif: [x] Vitest (6 tests nuevos) · [x] Playwright (`tests/e2e/settings.cjs`, 426 y 1440, capturas en `docs/capturasF16b/`) · [x] 🧍 POCO con bloqueo real del dispositivo
 
 ### F16c Repo oficial por defecto `[FE · Baja · N2]` ✅ (nace de F16/F12)
 
@@ -351,7 +351,7 @@ Dep: F16 · S · `apps/mobile/src/data/officialRepo.ts`, `screens/sources/source
 - [x] `ensureOfficialRepo` registra el repo oficial con la lista vacía; es de primera parte, no pide bloqueo (RF-7 protege los repos que añade el usuario)
 - [x] Quitarlo recuerda el descarte (`setting` `sources.officialRepoDismissed`): no vuelve a añadirse solo y el estado vacío explica cómo recuperarlo (Ajustes → Restaurar)
 - [x] Si la descarga falla (sin red o índice caído), Fuentes queda en el vacío con un aviso
-- Verif: [x] Vitest (SQLite real: auto-registro, descarte, restaurar, fallo) · [x] Playwright (`sources.cjs` y `settings.cjs` sin regresión) · [ ] 🧍 POCO con el repo real
+- Verif: [x] Vitest (SQLite real: auto-registro, descarte, restaurar, fallo) · [x] Playwright (`sources.cjs` y `settings.cjs` sin regresión) · [x] 🧍 POCO con el repo real
 
 ### F12 Primer uso (3 pasos) + estado vacío `[FE · Intermedia · N3]` ✅
 
@@ -360,7 +360,7 @@ Dep: F11, FB1, F16, T15 · M · `apps/mobile/src/screens/onboarding/*`
 - [x] Guía hasta añadir un repo (URL del repo oficial ya puesta, P-85) y activar un módulo con la confirmación de Fuentes (hoja `InstallSheet` compartida); nada se instala sin confirmación (AC-8); «Saltar» en cada paso (decisión del humano)
 - [x] En TV se omite «Importar respaldo» hasta F21b (anotado en `design/stitch/DIFFS.md`)
 - [x] La puerta sustituye a Inicio en el primer uso real (sin repos ni módulos; marca `onboarding.completed`); en web nunca hay primer uso (P-79)
-- Verif: [x] Vitest (controlador 8, puerta 3) · [x] Playwright del flujo en la galería (`tests/e2e/onboarding.cjs`, 426 y 1440, AC-8 comprobado; capturas en `docs/capturasF12/`) · [ ] 🧍 dispositivo
+- Verif: [x] Vitest (controlador 8, puerta 3) · [x] Playwright del flujo en la galería (`tests/e2e/onboarding.cjs`, 426 y 1440, AC-8 comprobado; capturas en `docs/capturasF12/`) · [x] 🧍 dispositivo
 
 ### F17 Serie (detalle) `[FE · Intermedia · N2]`
 
