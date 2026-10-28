@@ -128,6 +128,7 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
       "gallery.component.holdToConfirm",
       "gallery.component.sheetModal",
       "gallery.component.sourcesScreen",
+      "gallery.component.settingsScreen",
     ],
     states: COMPONENT_STATES,
   },

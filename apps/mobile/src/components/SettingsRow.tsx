@@ -14,18 +14,28 @@ export interface SettingsRowProps {
   label: string;
   /** Valor o descripción secundaria bajo la etiqueta. */
   hint?: string;
+  /** F16b: tono del texto secundario; `warning` resalta avisos de la fila. */
+  hintTone?: "default" | "warning";
   /** Control de la derecha (interruptor, valor, icono…). */
   right?: React.ReactNode;
   onPress?: () => void;
 }
 
-export default function SettingsRow({ label, hint, right, onPress }: SettingsRowProps) {
+export default function SettingsRow({
+  label,
+  hint,
+  hintTone = "default",
+  right,
+  onPress,
+}: SettingsRowProps) {
   return (
     <Pressable accessibilityRole="button" onPress={onPress} style={settingsRowStyle()}>
       <View style={styles.row}>
         <View style={styles.textBlock}>
           <Text style={styles.label}>{label}</Text>
-          {hint ? <Text style={styles.hint}>{hint}</Text> : null}
+          {hint ? (
+            <Text style={hintTone === "warning" ? styles.hintWarning : styles.hint}>{hint}</Text>
+          ) : null}
         </View>
         {right ? <View>{right}</View> : null}
       </View>
@@ -44,6 +54,12 @@ const styles = StyleSheet.create({
   },
   hint: {
     color: colors.textSecondary,
+    fontFamily: typography.bodySm.fontFamily,
+    fontSize: typography.bodySm.fontSize,
+    lineHeight: typography.bodySm.lineHeight,
+  },
+  hintWarning: {
+    color: colors.progress,
     fontFamily: typography.bodySm.fontFamily,
     fontSize: typography.bodySm.fontSize,
     lineHeight: typography.bodySm.lineHeight,

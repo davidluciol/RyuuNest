@@ -12,6 +12,7 @@
   "actions.exploreAgain": "Explorar de nuevo",
   "actions.retry": "Reintentar",
   "actions.showDetail": "Ver detalle",
+  "actions.close": "Cerrar",
 
   "state.empty.library.title": "Tu biblioteca está vacía",
   "state.empty.library.message": "Añade un repositorio e instala un módulo para empezar.",
@@ -164,6 +165,17 @@
   "sources.filtered.message": "Prueba con otro tipo o con Todos.",
   "state.error.sources.title": "No se pudieron abrir tus fuentes",
   "state.error.sources.message": "Algo falló al leer los repositorios y módulos de este dispositivo.",
+  "state.error.settings.title": "No se pudieron abrir tus ajustes",
+  "state.error.settings.message": "Algo falló al leer los ajustes de este dispositivo.",
+
+  "settings.section.security": "Seguridad",
+  "settings.section.sources": "Fuentes",
+  "settings.security.installProtection": "Protección de instalación",
+  "settings.security.installProtection.hint": "Pide el bloqueo del dispositivo para añadir repos e instalar módulos con código propio.",
+  "settings.security.installProtection.noLock": "Este dispositivo no tiene bloqueo configurado: la protección no se puede activar.",
+  "settings.official.title": "Repositorio oficial",
+  "settings.official.hint": "Eliminaste el repositorio oficial: recupéralo para volver a ver sus módulos en Fuentes.",
+  "settings.official.restore": "Restaurar",
   "sources.sheet.close": "Cerrar",
   "sources.sheet.cancel": "Cancelar",
   "sources.sheet.back": "Volver",
@@ -204,6 +216,7 @@
   "sources.removeRepo.submit": "Quitar",
 
   "gallery.component.sourcesScreen": "pantalla Fuentes",
+  "gallery.component.settingsScreen": "pantalla Ajustes",
   "gallery.component.repoCard": "tarjeta de repositorio",
   "gallery.component.moduleRow": "fila de módulo",
   "gallery.component.holdToConfirm": "botón de mantener pulsado",

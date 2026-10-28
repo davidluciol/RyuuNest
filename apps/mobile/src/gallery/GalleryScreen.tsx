@@ -53,6 +53,12 @@ import { kindLabel } from "../components/kindLabel";
 import SourcesScreen from "../screens/sources/SourcesScreen";
 import { INITIAL_SOURCES_FLOW } from "../screens/sources/sourcesFlow";
 import { EMPTY_SOURCES_DATA, SAMPLE_SOURCES_DATA } from "../screens/sources/sourcesFixtures";
+import SettingsScreen from "../screens/settings/SettingsScreen";
+import {
+  NO_LOCK_SETTINGS_DATA,
+  OFFICIAL_DISMISSED_SETTINGS_DATA,
+  SAMPLE_SETTINGS_DATA,
+} from "../screens/settings/settingsFixtures";
 import {
   BADGE_LABEL_KEYS,
   ROW_ACTION_KEYS,
@@ -501,6 +507,29 @@ export default function GalleryScreen() {
             controller={null}
           />
         </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.settingsScreen")}</Text>
+        <View style={styles.settingsPreview}>
+          <SettingsScreen
+            view={{ status: "ready", data: SAMPLE_SETTINGS_DATA }}
+            onToggleProtection={() => {}}
+            onRestoreOfficialRepo={() => {}}
+          />
+        </View>
+        <View style={styles.settingsPreview}>
+          <SettingsScreen
+            view={{ status: "ready", data: NO_LOCK_SETTINGS_DATA }}
+            onToggleProtection={() => {}}
+            onRestoreOfficialRepo={() => {}}
+          />
+        </View>
+        <View style={styles.settingsPreview}>
+          <SettingsScreen
+            view={{ status: "ready", data: OFFICIAL_DISMISSED_SETTINGS_DATA }}
+            onToggleProtection={() => {}}
+            onRestoreOfficialRepo={() => {}}
+          />
+        </View>
       </Section>
     </ScrollView>
   );
@@ -527,6 +556,7 @@ const styles = StyleSheet.create({
   coverWrap: { width: spacing["2xl"] * 2 },
   libraryCardWrap: { flex: 1, minWidth: 0 },
   shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
+  settingsPreview: { flex: 0, minHeight: spacing["2xl"] * 4 },
   shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
     color: colors.textSecondary,

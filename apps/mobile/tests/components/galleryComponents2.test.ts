@@ -21,6 +21,7 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.header",
       "gallery.component.bottomNav",
       "gallery.component.settingsRow",
+      "gallery.component.switch",
       "gallery.component.sheet",
       "gallery.component.emptyState",
       "gallery.component.errorState",
@@ -41,6 +42,7 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.holdToConfirm",
       "gallery.component.sheetModal",
       "gallery.component.sourcesScreen",
+      "gallery.component.settingsScreen",
     ]);
   });
 

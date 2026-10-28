@@ -157,7 +157,7 @@ export default function SourcesScreen({
         ) : null}
 
         {repos.length === 0 && modules.length === 0 ? (
-          data.officialRepoDismissed ? (
+          view.data.officialRepoDismissed ? (
             <EmptyState
               title={t("sources.empty.dismissedTitle")}
               message={t("sources.empty.dismissedMessage")}
