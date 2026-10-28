@@ -123,6 +123,7 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
       "gallery.component.libraryScreen",
       "gallery.component.modulePicker",
       "gallery.component.discoverScreen",
+      "gallery.component.seriesScreen",
       "gallery.component.repoCard",
       "gallery.component.moduleRow",
       "gallery.component.holdToConfirm",
