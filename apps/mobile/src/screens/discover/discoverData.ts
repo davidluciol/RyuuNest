@@ -20,7 +20,7 @@ import {
 
 import { openAppDatabase } from "../../data/appDatabase";
 import { createFetchHttp } from "../../data/fetchHttp";
-import { createInstalledMounter } from "../../data/moduleMounter";
+import { createInstalledMounter, type ModuleMounter } from "../../data/moduleMounter";
 import {
   SAMPLE_DISCOVER_MODULES,
   type DiscoverEntry,
@@ -193,6 +193,15 @@ function mountSample(id: string): Promise<ModuleApiHandle> {
     mountedSamples.set(id, api);
   }
   return api;
+}
+
+/** Los módulos de ejemplo montados por el runtime real, para la ficha y el lector de la web. */
+export function createSampleMounter(): ModuleMounter {
+  return {
+    async mount(moduleId) {
+      return { handle: await mountSample(moduleId), manifest: sampleManifest(moduleId) };
+    },
+  };
 }
 
 /**

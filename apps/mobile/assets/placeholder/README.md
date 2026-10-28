@@ -20,6 +20,17 @@ La versión renderizable en la app es `src/components/DragonMarker.tsx`
 (`react-native-svg`), que reproduce esta misma silueta con colores del tema
 (`ui-tokens`). Este fichero es el registro del marcador (SPEC §12).
 
+## `page-1.svg`, `page-2.svg`, `page-3.svg` — páginas de ejemplo del lector (F18)
+
+| Campo | Valor |
+|---|---|
+| Estado | **TEMPORAL — marcador** |
+| Herramienta | Dibujados a mano como SVG (formas geométricas originales, sin IA ni obras de terceros) |
+| Fecha | 2026-10-28 |
+| Indicaciones | «Página vertical 900×1400 con viñetas abstractas (rectángulos, triángulos y círculos) en los colores del tema; sin letras ni rótulos (D3), sin personajes» |
+| Licencia | Original del proyecto RyuuNest (GPL-3.0) |
+| Uso | Solo la web y Playwright: sustituyen a las imágenes del sitio falso (`sitio-html.test`) para que el lector se pruebe sin pedir nada a un dominio externo (RNF-5). El dispositivo siempre lee las imágenes de su módulo |
+
 ## Reglas de esta carpeta (SPEC §12)
 
 1. Solo viven aquí los marcadores; nada enlaza recursos remotos (RNF-5).
