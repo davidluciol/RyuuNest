@@ -43,6 +43,7 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.sheetModal",
       "gallery.component.sourcesScreen",
       "gallery.component.settingsScreen",
+      "gallery.component.onboardingScreen",
     ]);
   });
 

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 
+import type { SqlDriver } from "@ryuunest/core";
 import { createFetchHttp } from "../../data/fetchHttp";
 import { openAppDatabase } from "../../data/appDatabase";
 import { createFflateArchive } from "../../data/fflateArchive";
@@ -27,7 +28,11 @@ import type { SourcesView } from "./sourcesFixtures";
 
 export async function resolveSourcesService(): Promise<SourcesService> {
   const driver = await openAppDatabase();
-  if (driver === null) return createSampleSourcesService();
+  return driver === null ? createSampleSourcesService() : createNativeSourcesService(driver);
+}
+
+/** El servicio de Fuentes sobre el driver nativo (compartido con el primer uso, F12). */
+export function createNativeSourcesService(driver: SqlDriver): SourcesService {
   return createSourcesService({
     driver,
     http: createFetchHttp(),

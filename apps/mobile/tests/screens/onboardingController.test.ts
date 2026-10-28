@@ -74,9 +74,10 @@ describe("createOnboardingController · pasos (SPEC §11.8)", () => {
     await controller.submitRepo("no-es-una-url");
 
     expect(steps).toEqual([2]);
-    expect(flow().sheet).toBe("add-repo");
-    if (flow().sheet !== "add-repo") throw new Error("unreachable");
-    expect(flow().error).toBe("Esa URL no es válida.");
+    const rejected = flow();
+    expect(rejected.sheet).toBe("add-repo");
+    if (rejected.sheet !== "add-repo") throw new Error("unreachable");
+    expect(rejected.error).toBe("Esa URL no es válida.");
   });
 
   it("añade el repo sugerido y pasa al paso 3", async () => {
@@ -104,8 +105,9 @@ describe("createOnboardingController · pasos (SPEC §11.8)", () => {
     await controller.submitRepo(REPO_URL);
 
     expect(steps).toEqual([2]);
-    if (flow().sheet !== "add-repo") throw new Error("unreachable");
-    expect(flow().error).toBe("Sin red para descargar el índice");
+    const failed = flow();
+    if (failed.sheet !== "add-repo") throw new Error("unreachable");
+    expect(failed.error).toBe("Sin red para descargar el índice");
   });
 });
 
@@ -116,9 +118,10 @@ describe("createOnboardingController · instalar con la confirmación de Fuentes
     await controller.submitRepo(REPO_URL);
 
     await controller.openInstall(SAMPLE_REPO_ID, "portal-duna");
-    expect(flow().sheet).toBe("install");
-    if (flow().sheet !== "install") throw new Error("unreachable");
-    expect(flow().preview.name).toBe("Portal Duna");
+    const opened = flow();
+    expect(opened.sheet).toBe("install");
+    if (opened.sheet !== "install") throw new Error("unreachable");
+    expect(opened.preview.name).toBe("Portal Duna");
 
     controller.close();
     expect((await service.load()).modules.find((m) => m.id === "portal-duna")).toMatchObject({
@@ -140,12 +143,14 @@ describe("createOnboardingController · instalar con la confirmación de Fuentes
     await controller.submitRepo(REPO_URL);
 
     await controller.openInstall(SAMPLE_REPO_ID, "portal-cenit");
-    if (flow().sheet !== "install") throw new Error("unreachable");
-    expect(flow().preview.reinforced).toBe(true);
+    const cenit = flow();
+    if (cenit.sheet !== "install") throw new Error("unreachable");
+    expect(cenit.preview.reinforced).toBe(true);
 
     await controller.confirmInstall(false);
-    if (flow().sheet !== "install") throw new Error("unreachable");
-    expect(flow().error).toContain("reforzada");
+    const refused = flow();
+    if (refused.sheet !== "install") throw new Error("unreachable");
+    expect(refused.error).toContain("reforzada");
     expect((await service.load()).modules.find((m) => m.id === "portal-cenit")).toMatchObject({
       status: "available",
     });

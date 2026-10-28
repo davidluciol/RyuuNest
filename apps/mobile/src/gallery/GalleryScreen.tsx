@@ -59,6 +59,7 @@ import {
   OFFICIAL_DISMISSED_SETTINGS_DATA,
   SAMPLE_SETTINGS_DATA,
 } from "../screens/settings/settingsFixtures";
+import OnboardingSample from "../screens/onboarding/OnboardingSample";
 import {
   BADGE_LABEL_KEYS,
   ROW_ACTION_KEYS,
@@ -530,6 +531,11 @@ export default function GalleryScreen() {
             onRestoreOfficialRepo={() => {}}
           />
         </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.onboardingScreen")}</Text>
+        <View style={styles.onboardingPreview}>
+          <OnboardingSample />
+        </View>
       </Section>
     </ScrollView>
   );
@@ -557,6 +563,7 @@ const styles = StyleSheet.create({
   libraryCardWrap: { flex: 1, minWidth: 0 },
   shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
   settingsPreview: { flex: 0, minHeight: spacing["2xl"] * 4 },
+  onboardingPreview: { flex: 0, minHeight: spacing["2xl"] * 10 },
   shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
     color: colors.textSecondary,
