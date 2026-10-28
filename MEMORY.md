@@ -27,6 +27,8 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - **Fuentes (F16):** pantalla con repos, módulos por tipo, instalar con confirmación (permisos y huella; `script` exige mantener pulsado), gestionar, actualizar con reconfirmación (RF-6), desinstalar y quitar repo (RF-8). Núcleo ampliado con `PackageInstaller.prepare` e `InstallFlow.previewUpdate/applyUpdate`; `SecureLock` real con `expo-local-authentication`; web con servicio en memoria.
 - **Ajustes mínima + repo oficial (F16b/F16c):** pantalla `screen-settings` con la sección Seguridad (interruptor de `security.installProtection`, aviso sin bloqueo) y la fila de restaurar el repo oficial (P-85); componente `Switch`. Al entrar en Fuentes sin repos, la app registra sola el repo externo (`ensureOfficialRepo`, primera parte sin bloqueo); quitarlo recuerda el descarte y el vacío explica cómo recuperarlo.
 - **Primer uso (F12):** flujo de 3 pasos (bienvenida, repo con URL del oficial puesta, instalar con la hoja compartida de Fuentes) con «Saltar»; sustituye a Inicio en el primer uso real (`onboarding.completed`); en la galería, montaje interactivo (`OnboardingSample`) y e2e con AC-8 comprobado.
+- **F17 (Serie):** ficha dinámica desde Descubrir con metadatos, descripción, CTA, favorito, gesto largo para carpeta, búsqueda/orden de capítulos y estados sin leer/en curso/leído; la release preferida se conserva en el estado de la ficha hasta integrar persistencia y lector.
+- **F17 pendiente de verificación visual:** el bundle web exporta y la suite pasa, pero Playwright no pudo abrir la ruta dinámica porque Metro no arrancó por una caché serializada corrupta y el servidor estático no ofrece fallback SPA.
 
 ## 3. Decisiones vigentes
 

@@ -20,6 +20,12 @@ export default function DiscoverRoute() {
       onNextPage={nextPage}
       onPrevPage={prevPage}
       onRetry={retry}
+      onSeriesPress={(entry) =>
+        router.push({
+          pathname: "/series/[moduleId]/[seriesId]",
+          params: { moduleId: entry.moduleId, seriesId: entry.seriesId },
+        })
+      }
       onEmptyAction={() => router.push(destinationRoutes.sources)}
     />
   );
