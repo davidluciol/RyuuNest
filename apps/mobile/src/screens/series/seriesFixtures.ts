@@ -1,5 +1,8 @@
+import type { ImageSourcePropType } from "react-native";
 import type { Chapter, Release, SeriesDetails } from "@ryuunest/core";
 import { findSeries } from "@ryuunest/test-site";
+
+import dragonMarker from "../../../assets/placeholder/dragon.svg";
 
 export type ChapterState = "unread" | "in-progress" | "completed";
 
@@ -11,6 +14,8 @@ export interface SeriesProgress {
 
 export interface SeriesViewData {
   details: SeriesDetails;
+  /** Portada local para la galería/web; los datos reales usan `details.cover`. */
+  coverSource?: ImageSourcePropType;
   moduleName: string;
   progress: SeriesProgress | null;
   readChapterIds: ReadonlySet<string>;
@@ -65,6 +70,7 @@ export function sampleSeriesView(seriesId = "dragon-de-ceniza"): SeriesViewData 
   };
   return {
     details,
+    coverSource: dragonMarker,
     moduleName: "Módulo de ejemplo A",
     progress: { chapterId: "ch-2", pageIndex: 4, pageTotal: 10 },
     readChapterIds: new Set(["ch-1"]),

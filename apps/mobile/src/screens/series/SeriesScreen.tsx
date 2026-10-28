@@ -81,7 +81,9 @@ export default function SeriesScreen({
       </View>
 
       <View style={styles.hero}>
-        {details.cover ? <Image source={{ uri: details.cover.url }} style={styles.cover} /> : null}
+        {details.cover ? (
+          <Image source={data.coverSource ?? { uri: details.cover.url }} style={styles.cover} />
+        ) : null}
         <View style={styles.heroText}>
           <View style={styles.badges}>
             {details.kind ? <Badge label={kindLabel(details.kind)} /> : null}
@@ -114,7 +116,13 @@ export default function SeriesScreen({
       />
 
       <View style={styles.actions}>
-        <Pressable style={styles.actionButton} onPress={onFavoriteToggle} hitSlop={touchTarget.min / 4} accessibilityRole="button" accessibilityLabel={t("series.favorite") }>
+        <Pressable
+          style={styles.actionButton}
+          onPress={onFavoriteToggle}
+          hitSlop={touchTarget.min / 4}
+          accessibilityRole="button"
+          accessibilityLabel={favorite ? t("series.favorited") : t("series.favorite")}
+        >
           <Heart size={20} color={favorite ? colors.progress : colors.textPrimary} fill={favorite ? colors.progress : "transparent"} />
           <Text style={styles.actionLabel}>{favorite ? t("series.favorited") : t("series.favorite")}</Text>
         </Pressable>

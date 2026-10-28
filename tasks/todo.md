@@ -368,8 +368,8 @@ Dep: F11, FB1; T22, T24, T26 · M · `apps/mobile/src/screens/series/*`
 
 - [x] Fila de capítulo con máx. 2 señales (V8); favorito con un toque; carpeta al mantener pulsado (RF-17)
 - [x] Release preferida recordada por serie (RF-16)
-- Verif: [ ] Playwright vs `detalle_pantalla/screen.png` (bundle web exportado; servidor Expo/SPA no quedó disponible en esta sesión)
-- **Hecho (2026-10-27):** ficha dinámica bajo `series/[moduleId]/[seriesId]`, navegación desde Descubrir, estados de capítulos, búsqueda/orden, favorito y gesto largo de carpeta. La release preferida queda en el estado de la ficha; la persistencia SQLite y el salto al lector se completan al conectar F18/F20.
+- Verif: [x] Playwright vs `detalle_pantalla/screen.png` en 426 y 1440 px; sin desbordamiento, errores de consola ni peticiones externas
+- **Hecho (2026-10-28):** ficha dinámica fuera de `(tabs)` bajo `series/[moduleId]/[seriesId]`, navegación desde Descubrir, estados de capítulos, búsqueda/orden, favorito con etiqueta accesible actualizada y gesto largo de carpeta. La release preferida queda en el estado de la ficha; la persistencia SQLite y el salto al lector se completan al conectar F18/F20.
 
 ### F18 Lector 1 `[FE · Alta · N4]`
 

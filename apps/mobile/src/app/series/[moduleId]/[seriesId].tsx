@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 
-import SeriesScreen from "../../../../screens/series/SeriesScreen";
-import { preferredRelease, sampleSeriesView } from "../../../../screens/series/seriesFixtures";
+import SeriesScreen from "../../../screens/series/SeriesScreen";
+import { preferredRelease, sampleSeriesView } from "../../../screens/series/seriesFixtures";
 
 export default function SeriesRoute() {
   const { moduleId, seriesId } = useLocalSearchParams<{ moduleId: string; seriesId: string }>();
