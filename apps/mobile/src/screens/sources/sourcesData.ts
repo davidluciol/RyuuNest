@@ -26,9 +26,9 @@ import { OFFICIAL_REPO_DISMISSAL_SETTING, OFFICIAL_REPO_URL } from "../../data/o
  * importa el núcleo: habla con `SourcesService` (patrón de F14c y F15b).
  *
  * RF-7 (protección de instalación): se lee de la tabla `setting`
- * (`security.installProtection`, apagada por defecto; el interruptor lo pone
- * F20). Activa, añadir un repo e instalar o actualizar un módulo **script**
- * piden el bloqueo del dispositivo; si no hay bloqueo, falla cerrado.
+ * (`security.installProtection`, apagada por defecto; el interruptor está en
+ * Ajustes, F16b). Activa, añadir un repo e instalar o actualizar un módulo
+ * **script** piden el bloqueo del dispositivo; si no hay bloqueo, falla cerrado.
  */
 
 /** Ajuste (tabla `setting`, SPEC §8.1) que activa la protección de instalación. */
