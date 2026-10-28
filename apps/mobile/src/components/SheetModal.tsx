@@ -4,7 +4,7 @@ import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
 import { X } from "../icons";
 import { t } from "../i18n";
 import Sheet from "./Sheet";
-import { sheetBackdropStyle } from "./sheetModalStyles";
+import { sheetAnimation, sheetBackdropStyle } from "./sheetModalStyles";
 import { textStyle } from "./textStyle";
 
 /**
@@ -22,6 +22,8 @@ export interface SheetModalProps {
   onClose: () => void;
   /** Trabajo en curso: bloquea el cierre. */
   busy?: boolean;
+  /** La hoja entra deslizando; el lector la pide sin animación. */
+  animated?: boolean;
   testID?: string;
   children: React.ReactNode;
 }
@@ -31,6 +33,7 @@ export default function SheetModal({
   title,
   onClose,
   busy = false,
+  animated = true,
   testID,
   children,
 }: SheetModalProps) {
@@ -39,7 +42,12 @@ export default function SheetModal({
   };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={close}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType={sheetAnimation(animated)}
+      onRequestClose={close}
+    >
       <Pressable
         style={sheetBackdropStyle()}
         accessibilityLabel={t("sources.sheet.close")}

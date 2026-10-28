@@ -14,6 +14,11 @@ export interface SheetBackdropStyleShape {
   justifyContent: "flex-end";
 }
 
+/** Transición de entrada de la hoja; el lector la apaga (F18: nada anima en el lector). */
+export function sheetAnimation(animated: boolean): "slide" | "none" {
+  return animated ? "slide" : "none";
+}
+
 export function sheetBackdropStyle(): SheetBackdropStyleShape {
   return {
     flex: 1,
