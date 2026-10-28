@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Pressable, View, type LayoutChangeEvent } from "react-native";
+import { useKeepAwake } from "expo-keep-awake";
 import type { ReaderMode } from "@ryuunest/core";
 import { spacing } from "@ryuunest/ui-tokens";
 
@@ -13,6 +14,7 @@ import ReaderVertical, { type ReaderVerticalHandle } from "./ReaderVertical";
 import { FALLBACK_READER_MODE, modeLabel } from "./readerModes";
 import { readerCanvasStyle } from "./readerStyles";
 import type { ReaderActions, ReaderReady } from "./useReader";
+import ZoomableView from "./ZoomableView";
 
 /**
  * F18 — pantalla del lector (RF-18 a RF-22): lienzo con el contenido y nada más; el centro
@@ -42,6 +44,9 @@ export default function ReaderScreen({ ready, actions, onClose, onOpenChapter }:
   const [endCard, setEndCard] = useState(false);
   const vertical = useRef<ReaderVerticalHandle>(null);
   const column = columnWidth(size.width);
+
+  // RF-23: la pantalla no se apaga mientras se lee.
+  useKeepAwake("reader");
 
   // Moverse de página, de modo o de capítulo cierra la tarjeta de fin del modo paginado.
   useEffect(() => setEndCard(false), [snapshot.pageIndex, chapter.id, mode]);
@@ -92,37 +97,39 @@ export default function ReaderScreen({ ready, actions, onClose, onOpenChapter }:
 
   return (
     <View testID="screen-reader" style={readerCanvasStyle()}>
-      <Pressable
-        testID="reader-canvas"
-        accessible={false}
-        style={readerCanvasStyle()}
-        onLayout={onLayout}
-        onPress={(event) => onCanvasPress(event.nativeEvent.pageX)}
-      >
-        <View style={{ flex: 1, alignItems: "center" }}>
-          {size.width === 0 ? null : mode === "vertical" ? (
-            <ReaderVertical
-              ref={vertical}
-              images={images}
-              width={column}
-              window={snapshot.window}
-              initialPage={snapshot.pageIndex}
-              onPageChange={actions.goToPage}
-              footer={endCardView}
-              footerClearance={controls ? FOOTER_CLEARANCE : 0}
-            />
-          ) : endCard ? (
-            <View style={{ flex: 1, justifyContent: "center" }}>{endCardView}</View>
-          ) : (
-            <ReaderPaged
-              image={images[snapshot.pageIndex] as (typeof images)[number]}
-              pageIndex={snapshot.pageIndex}
-              width={column}
-              height={size.height}
-            />
-          )}
-        </View>
-      </Pressable>
+      <ZoomableView resetKey={mode === "vertical" ? chapter.id : snapshot.pageIndex}>
+        <Pressable
+          testID="reader-canvas"
+          accessible={false}
+          style={readerCanvasStyle()}
+          onLayout={onLayout}
+          onPress={(event) => onCanvasPress(event.nativeEvent.pageX)}
+        >
+          <View style={{ flex: 1, alignItems: "center" }}>
+            {size.width === 0 ? null : mode === "vertical" ? (
+              <ReaderVertical
+                ref={vertical}
+                images={images}
+                width={column}
+                window={snapshot.window}
+                initialPage={snapshot.pageIndex}
+                onPageChange={actions.goToPage}
+                footer={endCardView}
+                footerClearance={controls ? FOOTER_CLEARANCE : 0}
+              />
+            ) : endCard ? (
+              <View style={{ flex: 1, justifyContent: "center" }}>{endCardView}</View>
+            ) : (
+              <ReaderPaged
+                image={images[snapshot.pageIndex] as (typeof images)[number]}
+                pageIndex={snapshot.pageIndex}
+                width={column}
+                height={size.height}
+              />
+            )}
+          </View>
+        </Pressable>
+      </ZoomableView>
 
       {controls ? (
         <ReaderTopBar

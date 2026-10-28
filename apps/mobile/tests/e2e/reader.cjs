@@ -18,14 +18,37 @@ async function tapAt(page, canvasTestId, fx, fy) {
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     for (const width of [426, 1440]) {
-      const context = await browser.newContext({ viewport: { width, height: 900 } });
+      const context = await browser.newContext({ viewport: { width, height: 900 }, hasTouch: true });
+      // RF-23: pantalla encendida mientras se lee. Se sustituye la API del navegador para contar
+      // cuántas veces se pide y se suelta.
+      await context.addInitScript(() => {
+        window.__wake = { requested: 0, released: 0 };
+        Object.defineProperty(navigator, "wakeLock", {
+          configurable: true,
+          value: {
+            request: async () => {
+              window.__wake.requested += 1;
+              return {
+                released: false,
+                release: async () => {
+                  window.__wake.released += 1;
+                },
+                addEventListener() {},
+                removeEventListener() {},
+              };
+            },
+          },
+        });
+      });
       const page = await context.newPage();
       page.setDefaultTimeout(15000);
       const errors = [];
       const external = [];
       page.on("pageerror", (error) => errors.push(error.message));
+      // Mientras se rompe una imagen a propósito (paso 9), el navegador registra el fallo de red.
+      let breakingImage = false;
       page.on("console", (message) => {
-        if (message.type() === "error") errors.push(message.text());
+        if (message.type() === "error" && !breakingImage) errors.push(message.text());
       });
       await context.route("**/*", (route) => {
         const url = new URL(route.request().url());
@@ -43,6 +66,11 @@ async function tapAt(page, canvasTestId, fx, fy) {
       await page.getByText("El dragón de ceniza").first().waitFor({ state: "visible" });
       await page.getByText("Pág. 1 / 3").waitFor({ state: "visible" });
       await page.getByRole("button", { name: "Cerrar lector" }).waitFor({ state: "visible" });
+
+      assert.ok(
+        (await page.evaluate(() => window.__wake.requested)) >= 1,
+        `el lector pide mantener la pantalla encendida @${width}`,
+      );
 
       // Barras: elevated al 95 % y sin transiciones (RF-22, Regla 4).
       const bar = page.getByTestId("reader-top-bar");
@@ -105,11 +133,62 @@ async function tapAt(page, canvasTestId, fx, fy) {
       await page.getByRole("button", { name: "Cerrar lector" }).click();
       await page.getByTestId("screen-series").waitFor({ state: "visible" });
       await page.getByText(/Continuar cap\. 3/).waitFor({ state: "visible" });
+      assert.ok(
+        (await page.evaluate(() => window.__wake.released)) >= 1,
+        `al salir del lector se suelta la pantalla @${width}`,
+      );
 
       // 7. Reabrir el capítulo 2 en frío lleva a la página exacta guardada (RF-20, ejemplo: 3 de 4).
       await page.goto(`${READER}/ch-2?release=r-oficial`);
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
       await page.getByText("Pág. 3 / 4").waitFor({ state: "visible" });
+
+      // 8. Zoom con pellizco (RF-23): dos dedos que se separan amplían el lienzo; juntarlos lo deshace.
+      const scaleOf = () =>
+        page.getByTestId("reader-zoom").evaluate((el) => {
+          const matrix = getComputedStyle(el).transform;
+          return matrix === "none" ? 1 : Number(matrix.slice(7, -1).split(",")[0]);
+        });
+      assert.equal(await scaleOf(), 1, `sin zoom al abrir @${width}`);
+      const client = await context.newCDPSession(page);
+      const canvas = await page.getByTestId("reader-canvas").boundingBox();
+      const cx = canvas.x + canvas.width / 2;
+      const cy = canvas.y + canvas.height / 2;
+      const touches = (spread) => [
+        { x: cx - spread, y: cy, id: 0 },
+        { x: cx + spread, y: cy, id: 1 },
+      ];
+      const pinch = async (from, to) => {
+        await client.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: touches(from) });
+        for (let step = 1; step <= 8; step += 1) {
+          await client.send("Input.dispatchTouchEvent", {
+            type: "touchMove",
+            touchPoints: touches(from + ((to - from) * step) / 8),
+          });
+        }
+        await client.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+      };
+      await pinch(20, 90);
+      assert.ok((await scaleOf()) > 2, `el pellizco amplía el lienzo @${width}`);
+      await pinch(90, 20);
+      assert.equal(await scaleOf(), 1, `juntar los dedos deshace el zoom @${width}`);
+
+      // 9. Una imagen que falla ofrece reintentar solo esa imagen, sin descartar el capítulo (RF-23).
+      breakingImage = true;
+      await page.route("**/*page-2.svg*", (route) => route.abort());
+      await page.goto(`${READER}/ch-2?release=r-oficial`);
+      await page.getByTestId("screen-reader").waitFor({ state: "visible" });
+      await page.getByText("No se pudo cargar la página 2").waitFor({ state: "visible" });
+      await page.getByText("Pág. 3 / 4").waitFor({ state: "visible" });
+      await page.getByTestId("reader-page-0").waitFor({ state: "visible" });
+      await page.getByTestId("reader-page-2").waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Ver detalle" }).click();
+      await page.getByText(/dragon-de-ceniza-ch-2-r-oficial-2\.svg/).first().waitFor({ state: "visible" });
+      await page.unroute("**/*page-2.svg*");
+      await page.getByRole("button", { name: "Reintentar" }).click();
+      await page.getByTestId("reader-page-1").waitFor({ state: "visible" });
+      await page.getByText("No se pudo cargar la página 2").waitFor({ state: "detached" });
+      breakingImage = false;
 
       assert.equal(
         await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth),

@@ -47,6 +47,7 @@
   "reader.page.next": "Página siguiente",
   "reader.page.indicator": "Pág. {current} / {total}",
   "reader.page.indicatorOpen": "Pág. {current}",
+  "reader.image.error": "No se pudo cargar la página {number}",
   "reader.progress.percent": "{percent}%",
   "reader.mode.open": "Modo de lectura",
   "reader.mode.vertical": "Vertical continuo",

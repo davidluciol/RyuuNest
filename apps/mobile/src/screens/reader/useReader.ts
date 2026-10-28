@@ -9,6 +9,7 @@ import type { DiscoverError } from "../discover/discoverFixtures";
 import { chapterState, type ChapterState } from "../series/seriesFixtures";
 import { FALLBACK_READER_MODE } from "./readerModes";
 import { resolveReadingSource, type ReaderImage } from "./readingSource";
+import { useReaderPrefetch } from "./useReaderPrefetch";
 
 /**
  * F18 — estado de la pantalla del lector: carga la ficha (capítulos y tipo de obra) y las páginas
@@ -175,6 +176,8 @@ export function useReader(target: ReaderTarget): { view: ReaderView; actions: Re
     [],
   );
   const retry = useCallback(() => setAttempt((value) => value + 1), []);
+
+  useReaderPrefetch(view.status === "ready" ? view.ready : null, moduleId);
 
   return { view, actions: { goToPage, next, previous, setMode, retry } };
 }

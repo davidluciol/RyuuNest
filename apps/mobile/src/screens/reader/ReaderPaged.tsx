@@ -1,7 +1,6 @@
 // single-use: vista del modo paginado; solo existe dentro del lector (F18).
 import { View } from "react-native";
 
-import { t } from "../../i18n";
 import ReaderPageImage from "./ReaderPageImage";
 import type { ReaderImage } from "./readingSource";
 
@@ -25,7 +24,7 @@ export default function ReaderPaged({ image, pageIndex, width, height }: ReaderP
         width={width}
         height={height}
         fit="contain"
-        label={t("reader.page.label", { number: pageIndex + 1 })}
+        pageNumber={pageIndex + 1}
         testID={`reader-page-${pageIndex}`}
       />
     </View>

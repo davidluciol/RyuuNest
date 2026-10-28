@@ -16,7 +16,6 @@ import {
 } from "react-native";
 import type { PageWindow } from "@ryuunest/core";
 
-import { t } from "../../i18n";
 import {
   anchorDelta,
   pageAtOffset,
@@ -140,7 +139,7 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
                 width={width}
                 height={heights[index] ?? 0}
                 fit="fill"
-                label={t("reader.page.label", { number: index + 1 })}
+                pageNumber={index + 1}
                 testID={`reader-page-${index}`}
                 onAspect={(aspect) => onAspect(index, aspect)}
               />
