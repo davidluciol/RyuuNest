@@ -51,7 +51,7 @@ import RepoCard from "../components/RepoCard";
 import { kindLabel } from "../components/kindLabel";
 import SourcesScreen from "../screens/sources/SourcesScreen";
 import { INITIAL_SOURCES_FLOW } from "../screens/sources/sourcesFlow";
-import { SAMPLE_SOURCES_DATA } from "../screens/sources/sourcesFixtures";
+import { EMPTY_SOURCES_DATA, SAMPLE_SOURCES_DATA } from "../screens/sources/sourcesFixtures";
 import {
   BADGE_LABEL_KEYS,
   ROW_ACTION_KEYS,
@@ -466,6 +466,16 @@ export default function GalleryScreen() {
         <View style={styles.shellPreview}>
           <SourcesScreen
             view={{ status: "ready", data: SAMPLE_SOURCES_DATA }}
+            flow={INITIAL_SOURCES_FLOW}
+            controller={null}
+          />
+        </View>
+        <View style={styles.shellPreview}>
+          <SourcesScreen
+            view={{
+              status: "ready",
+              data: { ...EMPTY_SOURCES_DATA, officialRepoDismissed: true },
+            }}
             flow={INITIAL_SOURCES_FLOW}
             controller={null}
           />

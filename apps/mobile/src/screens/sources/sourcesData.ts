@@ -298,3 +298,24 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
     },
   };
 }
+
+/**
+ * Carga inicial de Fuentes (P-85): con cero repos y sin descarte, prueba el
+ * repo oficial una sola vez; si no se puede descargar (sin red o índice
+ * caído), la pantalla sigue con el estado vacío y un aviso. La usan la ruta
+ * de Fuentes y, más adelante, la de primer uso.
+ */
+export async function loadSourcesWithOfficialRepo(
+  service: SourcesService,
+): Promise<{ data: SourcesData; officialRepoFailed: boolean }> {
+  const data = await service.load();
+  if (data.repos.length > 0 || data.officialRepoDismissed) {
+    return { data, officialRepoFailed: false };
+  }
+  try {
+    const added = await service.ensureOfficialRepo();
+    return { data: added ? await service.load() : data, officialRepoFailed: false };
+  } catch {
+    return { data, officialRepoFailed: true };
+  }
+}

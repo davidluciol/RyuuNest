@@ -4,9 +4,14 @@ import { createFetchHttp } from "../../data/fetchHttp";
 import { openAppDatabase } from "../../data/appDatabase";
 import { createFflateArchive } from "../../data/fflateArchive";
 import { createAppSecureLock } from "../../data/secureLock";
+import { t } from "../../i18n";
 import { createSampleSourcesService } from "./sampleSourcesService";
 import { createSourcesController, type SourcesController } from "./sourcesController";
-import { createSourcesService, type SourcesService } from "./sourcesData";
+import {
+  createSourcesService,
+  loadSourcesWithOfficialRepo,
+  type SourcesService,
+} from "./sourcesData";
 import { INITIAL_SOURCES_FLOW, sourcesFlowReducer, type SourcesFlow } from "./sourcesFlow";
 import type { SourcesView } from "./sourcesFixtures";
 
@@ -55,10 +60,12 @@ export function useSourcesData(): SourcesState {
     setView({ status: "loading" });
     resolveSourcesService()
       .then(async (resolved) => {
-        const data = await resolved.load();
+        // P-85: sin repos, la primera carga prueba el repo oficial.
+        const { data, officialRepoFailed } = await loadSourcesWithOfficialRepo(resolved);
         if (cancelled) return;
         setService(resolved);
         setView({ status: "ready", data });
+        if (officialRepoFailed) setNotice(t("sources.officialRepo.failedNotice"));
       })
       .catch((error: unknown) => {
         console.warn("No se pudieron abrir las fuentes:", error);

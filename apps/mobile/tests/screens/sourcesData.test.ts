@@ -11,6 +11,7 @@ import { OFFICIAL_REPO_URL } from "../../src/data/officialRepo";
 import {
   INSTALL_PROTECTION_SETTING,
   createSourcesService,
+  loadSourcesWithOfficialRepo,
   type SourcesService,
 } from "../../src/screens/sources/sourcesData";
 
@@ -480,5 +481,66 @@ describe("createSourcesService · repo oficial por defecto (P-85)", () => {
 
     await expect(service.ensureOfficialRepo()).rejects.toBeInstanceOf(ModuleError);
     expect((await service.load()).repos).toEqual([]);
+  });
+});
+
+describe("loadSourcesWithOfficialRepo · carga inicial de Fuentes (P-85)", () => {
+  it("con repos ya registrados no toca el repo oficial", async () => {
+    const repo = new Repo([{ id: "uno", version: "1.0.0" }]);
+    repo.serveOfficial([{ id: "otro", version: "1.0.0" }]);
+    const service = build(repo);
+    await service.addRepo(REPO_URL);
+    repo.http.requests.length = 0;
+
+    const result = await loadSourcesWithOfficialRepo(service);
+
+    expect(result.officialRepoFailed).toBe(false);
+    expect(result.data.repos).toHaveLength(1);
+    expect(repo.http.requests).toEqual([]);
+  });
+
+  it("vacía y sin descarte: prueba el repo oficial y recarga la lista", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([{ id: "uno", version: "1.0.0" }]);
+    const service = build(repo);
+
+    const result = await loadSourcesWithOfficialRepo(service);
+
+    expect(result.officialRepoFailed).toBe(false);
+    expect(result.data.repos).toEqual([expect.objectContaining({ id: OFFICIAL_REPO_URL })]);
+    expect(result.data.modules).toEqual([
+      expect.objectContaining({ id: "uno", status: "available" }),
+    ]);
+  });
+
+  it("si el índice oficial falla, devuelve la lista vacía y avisa", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([]);
+    repo.breakOfficialIndex();
+    const service = build(repo);
+
+    const result = await loadSourcesWithOfficialRepo(service);
+
+    expect(result.officialRepoFailed).toBe(true);
+    expect(result.data).toEqual({
+      repos: [],
+      modules: [],
+      officialRepoDismissed: false,
+    });
+  });
+
+  it("con el descarte del oficial no toca la red", async () => {
+    const repo = new Repo([]);
+    repo.serveOfficial([{ id: "uno", version: "1.0.0" }]);
+    const service = build(repo);
+    await service.ensureOfficialRepo();
+    await service.removeRepo(OFFICIAL_REPO_URL);
+    repo.http.requests.length = 0;
+
+    const result = await loadSourcesWithOfficialRepo(service);
+
+    expect(result.officialRepoFailed).toBe(false);
+    expect(result.data.repos).toEqual([]);
+    expect(repo.http.requests).toEqual([]);
   });
 });

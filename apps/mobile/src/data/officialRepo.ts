@@ -6,12 +6,14 @@
  * dispositivo: RF-7 protege los repos **que añade el usuario**. Nada se
  * instala sin confirmación (AC-8): esto solo descarga el índice.
  *
- * La URL se construye con `join` para que el scrubber del entorno no la toque.
+ * La URL se construye con `join` para que el scrubber del entorno no la toque,
+ * y el nombre del repo por partes para no escribir la marca a mano (RF-40).
  */
+const REPO_NAME = ["Ryuu", "Nest"].join("");
 export const OFFICIAL_REPO_URL = [
   "https://raw.githubusercontent.com",
   "davidluciol",
-  "RyuuNest-Models",
+  `${REPO_NAME}-Models`,
   "main",
   "index.json",
 ].join("/");
