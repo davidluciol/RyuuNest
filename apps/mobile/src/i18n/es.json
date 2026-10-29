@@ -326,5 +326,14 @@
   "gallery.component.moduleRow": "fila de módulo",
   "gallery.component.holdToConfirm": "botón de mantener pulsado",
   "gallery.component.sheetModal": "hoja modal",
-  "gallery.holdToConfirm.label": "Mantén pulsado"
+  "gallery.component.toast": "aviso transitorio (toast)",
+  "gallery.component.errorBanner": "aviso inline (banner)",
+  "gallery.component.errorDialog": "diálogo de error",
+  "gallery.holdToConfirm.label": "Mantén pulsado",
+  "gallery.toast.message": "Se vació la caché de imágenes",
+  "gallery.toast.action": "Deshacer",
+  "gallery.banner.title": "El módulo falló",
+  "gallery.banner.message": "No se pudo leer el listado de obras.",
+  "gallery.dialog.title": "No se pudo importar el respaldo",
+  "gallery.dialog.message": "El archivo no es un respaldo válido de RyuuNest."
 }
