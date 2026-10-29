@@ -10,6 +10,29 @@ export const INSTALL_PROTECTION_HINT_KEYS = {
   noLock: "settings.security.installProtection.noLock",
 } as const;
 
+/** Opciones visibles del ajuste global (RF-18/RF-39), sin duplicar copy. */
+export const READER_MODE_OPTIONS: readonly {
+  mode: ReaderMode;
+  labelKey: string;
+  hintKey: string;
+}[] = [
+  {
+    mode: "vertical",
+    labelKey: "reader.mode.vertical",
+    hintKey: "reader.mode.vertical.hint",
+  },
+  {
+    mode: "paged-rtl",
+    labelKey: "reader.mode.pagedRtl",
+    hintKey: "reader.mode.pagedRtl.hint",
+  },
+  {
+    mode: "paged-ltr",
+    labelKey: "reader.mode.pagedLtr",
+    hintKey: "reader.mode.pagedLtr.hint",
+  },
+];
+
 export function installProtectionHintKey(
   lockAvailable: boolean,
 ): (typeof INSTALL_PROTECTION_HINT_KEYS)["withLock" | "noLock"] {
@@ -17,3 +40,4 @@ export function installProtectionHintKey(
     ? INSTALL_PROTECTION_HINT_KEYS.withLock
     : INSTALL_PROTECTION_HINT_KEYS.noLock;
 }
+import type { ReaderMode } from "@ryuunest/core";

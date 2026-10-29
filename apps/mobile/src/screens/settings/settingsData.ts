@@ -10,10 +10,7 @@ import {
 } from "@ryuunest/core";
 import { validateRepoIndex } from "@ryuunest/module-sdk";
 
-import {
-  OFFICIAL_REPO_DISMISSAL_SETTING,
-  OFFICIAL_REPO_URL,
-} from "../../data/officialRepo";
+import { OFFICIAL_REPO_DISMISSAL_SETTING, OFFICIAL_REPO_URL } from "../../data/officialRepo";
 import { INSTALL_PROTECTION_SETTING } from "../sources/sourcesData";
 
 /** Ajustes globales persistentes de F20 (SPEC §8.1, RF-34 y RF-39). */
@@ -31,10 +28,9 @@ export interface SettingsListener {
 }
 
 /**
- * F16b — capa de datos de Ajustes. El contenido de la pantalla es cosa de F20;
- * esto nace del interruptor de «Protección de instalación» (RF-7) y del botón
- * de restaurar el repo oficial (P-85). La pantalla no importa el núcleo:
- * habla con `SettingsService` (patrón de F14c, F15b y F16).
+ * F20 — capa de datos de Ajustes. La pantalla no importa el núcleo: habla con
+ * `SettingsService` (patrón de F14c, F15b y F16), que centraliza las
+ * preferencias globales y las notifica a las pantallas que las consumen.
  */
 
 export interface SettingsData {
@@ -59,6 +55,7 @@ export interface SettingsService {
   setInstallProtection(on: boolean): Promise<void>;
   setNsfwVisible(on: boolean): Promise<void>;
   setDefaultReaderMode(mode: ReaderMode): Promise<void>;
+  clearCache(): Promise<void>;
   /** Vuelve a registrar el repo oficial y limpia el descarte (P-85). */
   restoreOfficialRepo(): Promise<void>;
 }
@@ -68,6 +65,7 @@ export interface SettingsServiceDeps {
   http: Http;
   clock: Clock;
   secureLock: SecureLock;
+  clearImageCache?: () => Promise<void>;
 }
 
 export function createSettingsService(deps: SettingsServiceDeps): SettingsService {
@@ -84,13 +82,15 @@ export function createSettingsService(deps: SettingsServiceDeps): SettingsServic
   }
 
   async function readReaderMode(): Promise<ReaderMode> {
-    const row = await driver.get<{ value: string }>(
-      "SELECT value FROM setting WHERE key = ?",
-      [DEFAULT_READER_MODE_SETTING],
-    );
+    const row = await driver.get<{ value: string }>("SELECT value FROM setting WHERE key = ?", [
+      DEFAULT_READER_MODE_SETTING,
+    ]);
     if (row === undefined) return DEFAULT_READER_MODE;
     if (!READER_MODES.includes(row.value as ReaderMode)) {
-      throw new ModuleError("PARSE", `Preferencia de lectura inválida en los ajustes: ${row.value}`);
+      throw new ModuleError(
+        "PARSE",
+        `Preferencia de lectura inválida en los ajustes: ${row.value}`,
+      );
     }
     return row.value as ReaderMode;
   }
@@ -147,6 +147,10 @@ export function createSettingsService(deps: SettingsServiceDeps): SettingsServic
       }
       await writeSetting(DEFAULT_READER_MODE_SETTING, mode);
       notify();
+    },
+
+    async clearCache() {
+      await deps.clearImageCache?.();
     },
 
     async restoreOfficialRepo() {

@@ -391,12 +391,15 @@ Dep: F18; T05 · M · `apps/mobile/src/{screens/reader,reader}/*`
 
 ### F20 Ajustes `[FE · Baja · N2]`
 
-🟡 Marco navegable de F11; contenido, datos y estados de esta pantalla **pendientes**.
+✅ Ajustes globales conectados con Biblioteca, Descubrir y el lector; OLED, zonas
+táctiles, precarga configurable y temas se omiten por no pertenecer a la v1.
 
 Dep: F11, FB1; T25 · M · `apps/mobile/src/screens/settings/*`
 
-- [ ] NSFW apagado por defecto (RF-34); Con «Modo OLED», «Zonas táctiles», «Precarga» y selector de temas
-- Verif: Playwright vs `ajustes_pantalla/screen.png` · 🧍 cambiar NSFW y ver Biblioteca/Descubrir
+- [x] Idioma español preparado para futuras traducciones, NSFW apagado por defecto (RF-34), protección de instalación (RF-7), modo global de lectura y vaciado de caché (RF-39)
+- [x] NSFW se propaga a Biblioteca y Descubrir; el modo global llega al lector como fallback sin pisar la preferencia de una serie
+- Verif: [x] Vitest, lint, tipos, build/export web y auditoría web interactiva · [ ] Playwright oficial bloqueado porque el entorno no incluye el paquete `playwright` · 🧍 POCO pendiente
+- **Hecho (2026-10-28):** `SettingsService` persiste `settings.nsfwVisible` y `settings.defaultReaderMode`, comparte cambios entre pantallas, usa `expo-image` para vaciar caché nativa y mantiene español como único idioma disponible en v1. La UI usa componentes existentes, tokens e i18n; la captura de Stitch se toma solo como composición y no se inventan cifras de almacenamiento.
 
 ### F21 Respaldo (UI) — dividida en tres tareas (2026-10-23)
 

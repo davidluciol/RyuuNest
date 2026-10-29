@@ -15,9 +15,7 @@ import {
  * con bloqueo para enseñar el interruptor activable.
  */
 
-export function createSampleSettingsService(
-  initial: Partial<SettingsData> = {},
-): SettingsService {
+export function createSampleSettingsService(initial: Partial<SettingsData> = {}): SettingsService {
   let state: SettingsData = {
     installProtection: false,
     lockAvailable: false,
@@ -63,6 +61,8 @@ export function createSampleSettingsService(
       state = { ...state, defaultReaderMode: mode };
       notify();
     },
+
+    async clearCache() {},
 
     async restoreOfficialRepo() {
       state = { ...state, officialRepoRegistered: true };

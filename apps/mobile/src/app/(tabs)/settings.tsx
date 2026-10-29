@@ -7,8 +7,18 @@ import { useSettingsData } from "../../screens/settings/useSettingsData";
  * resto del contenido de Ajustes llega con F20.
  */
 export default function SettingsRoute() {
-  const { view, notice, busy, toggleProtection, restoreOfficialRepo, dismissNotice, retry } =
-    useSettingsData();
+  const {
+    view,
+    notice,
+    busy,
+    toggleProtection,
+    toggleNsfw,
+    setDefaultReaderMode,
+    clearCache,
+    restoreOfficialRepo,
+    dismissNotice,
+    retry,
+  } = useSettingsData();
 
   return (
     <SettingsScreen
@@ -16,6 +26,9 @@ export default function SettingsRoute() {
       notice={notice}
       busy={busy}
       onToggleProtection={toggleProtection}
+      onToggleNsfw={toggleNsfw}
+      onDefaultReaderModeChange={setDefaultReaderMode}
+      onClearCache={clearCache}
       onRestoreOfficialRepo={restoreOfficialRepo}
       onDismissNotice={dismissNotice}
       onRetry={retry}

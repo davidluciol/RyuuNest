@@ -1,8 +1,4 @@
-import {
-  DEFAULT_LANGUAGE,
-  DEFAULT_READER_MODE,
-  type SettingsData,
-} from "./settingsData";
+import { DEFAULT_LANGUAGE, DEFAULT_READER_MODE, type SettingsData } from "./settingsData";
 
 /**
  * F16b — datos de ejemplo de Ajustes para la galería y Playwright en web

@@ -38,7 +38,10 @@ afterEach(() => {
   driver.close();
 });
 
-function build(lock: SecureLock = fakeLock(false), serveOfficial = true): ReturnType<typeof createSettingsService> {
+function build(
+  lock: SecureLock = fakeLock(false),
+  serveOfficial = true,
+): ReturnType<typeof createSettingsService> {
   const routes: Record<string, { body?: string }> = {};
   if (serveOfficial) {
     routes[OFFICIAL_REPO_URL] = { body: OFFICIAL_INDEX_BODY };
@@ -109,6 +112,23 @@ describe("createSettingsService · protección de instalación (RF-7, F16b)", ()
     await service.setInstallProtection(false);
 
     expect((await service.load()).installProtection).toBe(false);
+  });
+
+  it("vacía la caché a través del adaptador público", async () => {
+    let calls = 0;
+    const service = createSettingsService({
+      driver,
+      http: new StubHttp({}),
+      clock: { now: () => 5_000 },
+      secureLock: fakeLock(false),
+      clearImageCache: async () => {
+        calls += 1;
+      },
+    });
+
+    await service.clearCache();
+
+    expect(calls).toBe(1);
   });
 });
 

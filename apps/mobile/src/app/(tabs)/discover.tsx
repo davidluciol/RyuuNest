@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { destinationRoutes } from "../../navigation/routes";
 import DiscoverScreen from "../../screens/discover/DiscoverScreen";
 import { useDiscoverData } from "../../screens/discover/useDiscoverData";
+import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
 
 /**
  * F15 — ruta Descubrir: solo conecta el estado (useDiscoverData) con la
@@ -11,10 +12,12 @@ import { useDiscoverData } from "../../screens/discover/useDiscoverData";
  */
 export default function DiscoverRoute() {
   const { view, selectModule, search, nextPage, prevPage, retry } = useDiscoverData();
+  const settings = useSettingsPreferences();
 
   return (
     <DiscoverScreen
       view={view}
+      nsfwVisible={settings.nsfwVisible}
       onModuleSelect={selectModule}
       onSearch={search}
       onNextPage={nextPage}
