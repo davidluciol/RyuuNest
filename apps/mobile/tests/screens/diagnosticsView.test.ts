@@ -30,9 +30,9 @@ function entry(partial: Partial<LogEntry> = {}): LogEntry {
 
 describe("eventLevel", () => {
   it("cada nivel lleva etiqueta de texto y un tono semántico", () => {
-    expect(eventLevel("error")).toEqual({ label: "Error", tone: "error" });
+    expect(eventLevel("error")).toEqual({ label: "Fallo", tone: "error" });
     expect(eventLevel("warn")).toEqual({ label: "Aviso", tone: "warning" });
-    expect(eventLevel("info")).toEqual({ label: "Info", tone: "neutral" });
+    expect(eventLevel("info")).toEqual({ label: "Nota", tone: "neutral" });
   });
 });
 

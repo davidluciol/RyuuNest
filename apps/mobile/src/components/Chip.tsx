@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text } from "react-native";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import { chipColors, chipStyle } from "./chipStyles";
+import { textStyle } from "./textStyle";
 
 /**
  * F06 — chip de filtro (SPEC §11.10): pill de 36 px, inactivo/seleccionado.
@@ -37,10 +38,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
   },
   pressed: { opacity: 0.8 },
-  label: {
-    fontFamily: typography.labelMd.fontFamily,
-    fontSize: typography.labelMd.fontSize,
-    lineHeight: typography.labelMd.lineHeight,
-    fontWeight: "500",
-  },
+  label: { ...textStyle(typography.labelMd) },
 });

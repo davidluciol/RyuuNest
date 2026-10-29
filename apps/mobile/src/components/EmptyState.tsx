@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import Button from "./Button";
 import DragonMarker from "./DragonMarker";
 import { type StateScale, messageStyle, stateColors, stateStyle, titleStyle } from "./stateStyles";
+import { textStyle } from "./textStyle";
 
 /**
  * F08 — estado vacío (SPEC §11.12): dragon mediano (biblioteca vacía, sin
@@ -52,17 +53,6 @@ const styles = StyleSheet.create({
   block: {
     alignItems: "center",
   },
-  title: {
-    fontFamily: titleStyle().fontFamily,
-    fontSize: titleStyle().fontSize,
-    lineHeight: titleStyle().lineHeight,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-  message: {
-    fontFamily: messageStyle().fontFamily,
-    fontSize: messageStyle().fontSize,
-    lineHeight: messageStyle().lineHeight,
-    textAlign: "center",
-  },
+  title: { ...textStyle(titleStyle()), textAlign: "center" },
+  message: { ...textStyle(messageStyle()), textAlign: "center" },
 });
