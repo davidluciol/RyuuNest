@@ -1,4 +1,4 @@
-# todo.md — RyuuNest (solo pendientes) · 2026-10-20
+# todo.md — RyuuNest (solo pendientes) · 2026-10-28
 
 > Historial detallado (T01–T24, F01–F10 ✅) → `tasks/todo.archive.md` (el `todo.md` anterior). Contexto → `tasks/plan.md`.
 > **Al iniciar sesión leer `tasks/complexity.md` §1 (reglas).** Si fallas 2 veces el mismo error: **«modelo con poca potencia cambiar.»**
@@ -235,7 +235,7 @@ Dep: P-A; T35 · M · `apps/mobile/src/{navigation,shell}/*`
 
 - [x] Una sola cabecera y barra inferior, iguales en los cinco marcos (T1)
 - [x] Etiquetas funcionales (SPEC §11.7); destino activo con `accent` (V1)
-- Verif: [x] Playwright navegando los 5 destinos en 5 anchos · [x] 🧍 POCO F5 Pro (AC-12 pendiente; el bundle Android no sustituye esta verificación)
+- Verif: [x] Playwright navegando los 5 destinos en 5 anchos · [ ] 🧍 POCO F5 Pro (AC-12 pendiente; el bundle Android no sustituye esta verificación)
 
 ### F11b Arreglar el e2e obsoleto del shell (`shell.cjs` y `home.cjs`) `[FE · Baja · N1]` ✅
 
@@ -309,7 +309,7 @@ Dep: F11, FB1; T20, T10 · M · `apps/mobile/src/screens/discover/*`
 - [x] Filas `latest` y `popular` solo si el módulo las ofrece (RF-9); búsqueda con paginación Anterior/Siguiente (RF-10); catálogo = `search` del módulo activo
 - [x] Error de módulo con causa, código, reintentar y ver detalle (RF-11); vacío → ir a Fuentes; carga con `LoadingState`; sin orden/filtro por género
 - [x] Capa de datos real: los módulos de ejemplo se montan con `createModuleApi` (T20) sobre `test-site` (T10) vía `DeclarativeRuntime` + `TestSiteHttp` (P-81)
-- Verif: [x] Vitest (23 tests nuevos: fixtures, capa de datos, selector, puerta de galería) · [x] Playwright (`tests/e2e/discover.cjs`, 426 y 1440, cero externos) · [x] 🧍 POCO F5 Pro
+- Verif: [x] Vitest (23 tests nuevos: fixtures, capa de datos, selector, puerta de galería) · [x] Playwright (`tests/e2e/discover.cjs`, 426 y 1440, cero externos) · [ ] 🧍 POCO F5 Pro
 
 ### F15b Descubrir conectado a módulos instalados `[FE · Baja · N2]` ✅ (queda la navegación con F17)
 
@@ -319,8 +319,8 @@ Dep: F15, F16; T14, T20 · S · `apps/mobile/src/screens/discover/discoverData.t
 
 - [x] `discoverData` lee `ModuleRegistry` (T14) en el dispositivo: `DiscoverDataSource` con dos implementaciones — instalados (activos y **declarativos**; los `script` esperan el `ScriptLoader` de app, D-5) y `test-site` en web; la entrada del paquete se decodifica del hexadecimal y se monta con `createModuleApi` (T20) sobre `createFetchHttp` (puerto `Http` sobre el `fetch` de la plataforma)
 - [x] El último módulo elegido persiste entre arranques: tabla `setting`, ajuste `discover.lastModule` (web sigue con memoria de sesión: no hay SQLite)
-- [ ] Al tocar una serie, navegar a la ficha — **bloqueado por F17** (no existe la pantalla de detalle); se hace al hacer F17
-- Verif: [x] Vitest (10 tests nuevos: adaptador `Http`, fuente instalada sobre SQLite real, `setting`) · [x] Playwright sin cambios de comportamiento en web (`discover.cjs` y `library.cjs` en verde) · [x] 🧍 POCO con un módulo instalado desde F16 (pendiente: F16 aún no da la UI de instalación)
+- [x] Al tocar una serie, navegar a la ficha (F17)
+- Verif: [x] Vitest (10 tests nuevos: adaptador `Http`, fuente instalada sobre SQLite real, `setting`) · [x] Playwright sin cambios de comportamiento en web (`discover.cjs` y `library.cjs` en verde) · [ ] 🧍 POCO con un módulo instalado desde F16
 
 ### F16 Fuentes `[FE · Alta · N4]` ✅ (pendiente POCO)
 
@@ -329,7 +329,7 @@ Dep: F11; T14, T15 · M · `apps/mobile/src/screens/sources/*`
 - [x] Confirmación muestra permisos y hash; script exige mantener pulsado (`HoldToConfirm`); protección vía `SecureLock` (RF-7, `expo-local-authentication`, falla cerrado si no hay bloqueo)
 - [x] Actualizar con ampliación de permisos pide confirmar de nuevo (RF-6): `PackageInstaller.prepare` + `InstallFlow.previewUpdate/applyUpdate` en el núcleo; activar/desactivar/desinstalar/actualizar; último error; sincronizar y quitar repositorio (RF-8)
 - [x] Capa de datos `createSourcesService` (núcleo real sobre SQLite) y servicio en memoria para web/galería; ajuste `security.installProtection` en `setting` (apagado por defecto)
-- Verif: [x] Vitest · [x] Playwright (`tests/e2e/sources.cjs`, 426 y 1440, capturas en `docs/capturasF16/`, cero errores y cero externos) · [x] 🧍 POCO con un repo y un módulo reales · [x] 🧍 instalar un módulo `script` y comprobar la confirmación reforzada y el bloqueo del dispositivo
+- Verif: [x] Vitest · [x] Playwright (`tests/e2e/sources.cjs`, 426 y 1440, capturas en `docs/capturasF16/`, cero errores y cero externos) · [ ] 🧍 POCO con un repo y un módulo reales · [ ] 🧍 instalar un módulo `script` y comprobar la confirmación reforzada y el bloqueo del dispositivo
 
 ### F16b Interruptor de «Protección de instalación» `[FE · Baja · N2]` ✅
 
@@ -340,7 +340,7 @@ Dep: F16 · S · `apps/mobile/src/screens/settings/*`
 - [x] Fila con interruptor en Ajustes (`SettingsRow` + `Switch` nuevo) que escribe `security.installProtection` (RF-7); sin bloqueo en el dispositivo, la fila avisa (hint en tono aviso) y el interruptor queda deshabilitado en vez de activable sin efecto
 - [x] Prueba con SQLite real: activar escribe el ajuste y falla cerrado sin bloqueo; el efecto sobre añadir repo e instalar `script` ya estaba cubierto en `sourcesData.test.ts`
 - [x] Además (P-85): fila «Fuentes» que restaura el repo oficial cuando falta
-- Verif: [x] Vitest (6 tests nuevos) · [x] Playwright (`tests/e2e/settings.cjs`, 426 y 1440, capturas en `docs/capturasF16b/`) · [x] 🧍 POCO con bloqueo real del dispositivo
+- Verif: [x] Vitest (6 tests nuevos) · [x] Playwright (`tests/e2e/settings.cjs`, 426 y 1440, capturas en `docs/capturasF16b/`) · [ ] 🧍 POCO con bloqueo real del dispositivo
 
 ### F16c Repo oficial por defecto `[FE · Baja · N2]` ✅ (nace de F16/F12)
 
@@ -360,7 +360,7 @@ Dep: F11, FB1, F16, T15 · M · `apps/mobile/src/screens/onboarding/*`
 - [x] Guía hasta añadir un repo (URL del repo oficial ya puesta, P-85) y activar un módulo con la confirmación de Fuentes (hoja `InstallSheet` compartida); nada se instala sin confirmación (AC-8); «Saltar» en cada paso (decisión del humano)
 - [x] En TV se omite «Importar respaldo» hasta F21b (anotado en `design/stitch/DIFFS.md`)
 - [x] La puerta sustituye a Inicio en el primer uso real (sin repos ni módulos; marca `onboarding.completed`); en web nunca hay primer uso (P-79)
-- Verif: [x] Vitest (controlador 8, puerta 3) · [x] Playwright del flujo en la galería (`tests/e2e/onboarding.cjs`, 426 y 1440, AC-8 comprobado; capturas en `docs/capturasF12/`) · [x] 🧍 dispositivo
+- Verif: [x] Vitest (controlador 8, puerta 3) · [x] Playwright del flujo en la galería (`tests/e2e/onboarding.cjs`, 426 y 1440, AC-8 comprobado; capturas en `docs/capturasF12/`) · [ ] 🧍 dispositivo
 
 ### F17 Serie (detalle) `[FE · Intermedia · N2]`
 
@@ -400,6 +400,18 @@ Dep: F11, FB1; T25 · M · `apps/mobile/src/screens/settings/*`
 - [x] NSFW se propaga a Biblioteca y Descubrir; el modo global llega al lector como fallback sin pisar la preferencia de una serie
 - Verif: [x] Vitest, lint, tipos, build/export web y auditoría web interactiva · [ ] Playwright oficial bloqueado porque el entorno no incluye el paquete `playwright` · 🧍 POCO pendiente
 - **Hecho (2026-10-28):** `SettingsService` persiste `settings.nsfwVisible` y `settings.defaultReaderMode`, comparte cambios entre pantallas, usa `expo-image` para vaciar caché nativa y mantiene español como único idioma disponible en v1. La UI usa componentes existentes, tokens e i18n; la captura de Stitch se toma solo como composición y no se inventan cifras de almacenamiento.
+
+### Hallazgos UX/UI consolidados antes del merge
+
+Estos hallazgos se incorporan a las tareas pendientes existentes; no se corrigen dentro de F20:
+
+- **F14a/F14b:** los filtros de tipo y fuente siguen siendo chips provisionales; el orden cicla al pulsar y necesita un menú explícito; la fuente debe mostrar el nombre del `ModuleRegistry`, no el id técnico.
+- **F17:** favorito, carpeta y release preferida todavía no sobreviven a un reinicio; la ficha necesita cerrar esa persistencia antes de considerarse completa.
+- **F21a–F21c:** falta toda la experiencia de respaldo en Ajustes: exportar, importar, confirmar reemplazo y revisar sugerencias sin instalar automáticamente.
+- **FB2/F29–F31:** faltan patrones consistentes de toast, modal, banner, diagnóstico, estados vacíos/error y registro saneado de errores; además, F20/F16 no muestran todavía una confirmación de éxito del vaciado de caché.
+- **F22/F23:** falta la experiencia TV completa: navegación espacial, foco visible, márgenes seguros y lector usable solo con D-pad.
+- **F24–F27:** el cliente web, sus pantallas, la extensión y el puente HTTP todavía no existen como recorrido funcional.
+- **F28/F33:** queda una revisión transversal de copy, overflow, estados, contraste, foco, red externa y comparación con Stitch en móvil, escritorio y TV; Playwright debe estar disponible para cerrar la verificación automática.
 
 ### F21 Respaldo (UI) — dividida en tres tareas (2026-10-23)
 
@@ -549,3 +561,29 @@ Dep: P-D · M · `apps/web/tests/e2e/*`, `design/stitch/DIFFS.md`
 ### 🚩 Checkpoint P-E — Fin de la Parte 2 `[Ops · Baja · N1]`
 
 - [ ] Pantallas verificadas y diferencias registradas · [ ] AC-12 y AC-13 completos · [ ] 🧍 Revisión y publicación v1
+
+---
+
+## Recorridos de aceptación antes del merge
+
+### F32 Recorrido real mínimo: módulo → Descubrir → ficha → lector `[FE/QA · Alta · N4]` 🧍
+
+Dep: F16, F17, F18, F19 · M · dispositivo Android con red real y un módulo declarativo compatible
+
+- [ ] Desde el repo oficial, descargar e instalar manualmente al menos un módulo declarativo; confirmar permisos, hash y resultado de la instalación.
+- [ ] Abrir Descubrir, seleccionar el módulo instalado y buscar una obra de manga disponible en ese módulo.
+- [ ] Abrir la ficha de la obra desde Descubrir y comprobar portada, metadatos y capítulos.
+- [ ] Abrir un capítulo y confirmar que el lector carga al menos una imagen real; comprobar que el fallo deja un estado accionable si la red se interrumpe.
+- [ ] Registrar módulo, obra, dispositivo, versión de la app, resultado y capturas; si falla, conservar código, URL y paso exacto para crear una corrección reproducible.
+- Verif: recorrido manual en POCO F5 Pro; repetir en MiBox 4 si el módulo y la red lo permiten. Este recorrido cubre AC-2, AC-3 y AC-8 con datos reales y no se sustituye por fixtures.
+
+### F33 Revisión general UX/UI observable `[FE/QA · Intermedia · N3]` 🧍
+
+Dep: F20, F21, F22, F28, F32 · S · pantallas móviles, escritorio y TV disponibles
+
+- [ ] Recorrer Inicio, Biblioteca, Descubrir, Fuentes, Ajustes, ficha y lector con datos vacíos, datos normales y error cuando aplique.
+- [ ] Revisar copy y jerarquía: una etiqueta por concepto, sin jerga técnica, sin funciones v2 anunciadas y sin títulos truncados.
+- [ ] Revisar visualmente tokens, contraste, foco, áreas táctiles, overflow, estados no dependientes solo del color, fuentes locales y ausencia de peticiones externas.
+- [ ] Revisar la navegación con teclado/D-pad y la legibilidad a 426 px, 1440 px y la densidad TV; anotar toda diferencia aceptada en `design/stitch/DIFFS.md`.
+- [ ] Clasificar cada hallazgo como bloqueante, importante o menor; cada bloqueante/importante debe enlazar a una tarea existente o generar una nueva antes del merge.
+- Verif: lista de 20 segundos de `DESIGN_RULES.md` y revisión humana con capturas; F28 cierra la comparación formal con Stitch y F33 cierra la revisión transversal observable.
