@@ -8,7 +8,7 @@
  */
 import type { SqlDriver } from "./SqlDriver.js";
 import { withTransaction } from "./SqlDriver.js";
-import { MIGRATION_1, SCHEMA_VERSION } from "./schema.js";
+import { MIGRATION_1, MIGRATION_2, SCHEMA_VERSION } from "./schema.js";
 
 export { SCHEMA_VERSION };
 
@@ -20,7 +20,8 @@ export interface Migration {
 
 /** Historia ordenada del esquema. Al cambiar el esquema, se añade una entrada nueva, nunca se edita una existente. */
 export const MIGRATIONS: readonly Migration[] = [
-  { version: SCHEMA_VERSION, statements: MIGRATION_1 },
+  { version: 1, statements: MIGRATION_1 },
+  { version: 2, statements: MIGRATION_2 },
 ];
 
 /**

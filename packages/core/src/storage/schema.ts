@@ -10,7 +10,7 @@
  */
 
 /** Versión del esquema: sube con cada migración nueva (SPEC §8.1). */
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 /** Tablas, claves y valores por defecto del SPEC §8.1. */
 const TABLAS: readonly string[] = [
@@ -74,3 +74,20 @@ const KV: readonly string[] = [
 
 /** Migración 1: el esquema completo del SPEC §8.1. */
 export const MIGRATION_1: readonly string[] = [...TABLAS, ...INDICES, ...KV];
+
+/**
+ * Migración 2 (T36, P-72): tabla `log` del registro de diagnóstico. Sin
+ * secretos: `message` y `context` llegan ya saneados de quien registra.
+ */
+export const MIGRATION_2: readonly string[] = [
+  `CREATE TABLE IF NOT EXISTS log (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   at INTEGER NOT NULL,
+   level TEXT NOT NULL,
+   code TEXT NOT NULL,
+   message TEXT NOT NULL,
+   context TEXT,
+   app_version TEXT NOT NULL,
+   platform TEXT NOT NULL
+ )`,
+];
