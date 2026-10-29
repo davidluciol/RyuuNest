@@ -489,9 +489,10 @@ galería).
 - [ ] F19 Lector 2 (zoom, pantalla encendida, errores/reintento, precarga)
 - [ ] F20 Ajustes (idioma, NSFW, protección, modo de lectura, caché, respaldo, acerca de) — RF-37 a RF-40
 - [ ] F21a Exportar y compartir respaldo; F21b importar (merge/replace, errores); F21c sugerencias de repos y módulos — RF-37, RF-38
-- [ ] FB2 Diseño en Stitch: toast/modal/banner, Ajustes → Diagnóstico y estados vacíos — P-72
+- [x] FB2 Diseño en Stitch: toast/modal/banner, Ajustes → Diagnóstico y estados vacíos — P-72
 - [ ] F29 Componentes de error (toast, modal, banner) — P-72
-- [ ] F30 Ajustes → Diagnóstico (ver, exportar, copiar y borrar registros) — P-72
+- [x] F30 Ajustes → Diagnóstico (ver, exportar, copiar y borrar registros) — P-72
+- [ ] F34 Correcciones UX/UI transversales (fuentes en serif, toast, interruptores, filas, confirmación y zonas seguras) - complejidad Alta, N4
 - [ ] F31 Integrar errores en F15/F16/F21/lector y registrar cada fallo — P-72
 
 ### ✅ Checkpoint P-B (tras F11–F21)

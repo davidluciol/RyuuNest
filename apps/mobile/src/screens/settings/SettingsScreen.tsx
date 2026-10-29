@@ -10,6 +10,7 @@ import SectionHeader from "../../components/SectionHeader";
 import SettingsRow from "../../components/SettingsRow";
 import Switch from "../../components/Switch";
 import { textStyle } from "../../components/textStyle";
+import { ChevronRight } from "../../icons";
 import { t } from "../../i18n";
 import type { SettingsData } from "./settingsData";
 import { installProtectionHintKey, READER_MODE_OPTIONS } from "./settingsView";
@@ -51,6 +52,8 @@ export interface SettingsScreenProps {
   /** Una operación en curso bloquea los controles. */
   busy?: boolean;
   onRetry?: () => void;
+  /** F30 — abre Ajustes → Diagnóstico. */
+  onOpenDiagnostics?: () => void;
   /** F21 — flujo de hojas del respaldo (sección «Respaldo»). */
   backupFlow?: BackupFlow;
   backupController?: BackupController | null;
@@ -70,6 +73,7 @@ export default function SettingsScreen({
   onDismissNotice,
   busy = false,
   onRetry,
+  onOpenDiagnostics,
   backupFlow,
   backupController = null,
   backupNotice = null,
@@ -235,6 +239,16 @@ export default function SettingsScreen({
             <BackupSection controller={backupController} disabled={busy} />
           </View>
         ) : null}
+
+        <View style={styles.section}>
+          <SectionHeader title={t("settings.section.diagnostics")} />
+          <SettingsRow
+            label={t("settings.diagnostics.row")}
+            hint={t("settings.diagnostics.rowHint")}
+            onPress={onOpenDiagnostics}
+            right={<ChevronRight size={spacing.lg} color={colors.textSecondary} />}
+          />
+        </View>
       </ScrollView>
 
       {backupController !== null && backupFlow !== undefined ? (

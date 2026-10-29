@@ -98,6 +98,7 @@ Notas:
 | FB2 Diseño Stitch errores/Diagnóstico (P-72) | Ops | Baja | N2 | — | Toast/modal/banner + sección Diagnóstico + vacíos |
 | F29 Componentes de error (P-72) | FE | Intermedia | N3 | N4 | Toast/modal/banner con estados y a11y |
 | F30 Ajustes → Diagnóstico (P-72) | FE | Baja | N2 | N3 | Lista, exportar, copiar y borrar |
+| F34 Correcciones UX/UI transversales | FE | **Alta** | N4 | N5 | Patrones compartidos (fuentes, confirmación, aviso), regla de lint y visión contra `screen.png`; skills `ui-ux-pro-max` + `stitch-design-taste` |
 | F31 Integrar errores en pantallas (P-72) | FE | Intermedia | N3 | N4 | F15/F16/F21/lector + logging |
 | F22 TV riel+foco | FE | **Alta** | N4 | N5 | Foco espacial; difícil de probar sin dispositivo |
 | F23 Lector TV | FE | **Alta** | N4 | N5 | D-pad sobre el lector |

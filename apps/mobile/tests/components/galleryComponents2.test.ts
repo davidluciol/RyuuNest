@@ -48,6 +48,8 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.toast",
       "gallery.component.errorBanner",
       "gallery.component.errorDialog",
+      "gallery.component.logEventRow",
+      "gallery.component.diagnosticsScreen",
     ]);
   });
 

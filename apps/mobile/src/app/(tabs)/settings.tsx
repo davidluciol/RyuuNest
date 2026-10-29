@@ -1,3 +1,5 @@
+import { router } from "expo-router";
+
 import SettingsScreen from "../../screens/settings/SettingsScreen";
 import { useSettingsData } from "../../screens/settings/useSettingsData";
 import { useBackupData } from "../../screens/settings/backup/useBackupData";
@@ -35,6 +37,7 @@ export default function SettingsRoute() {
       onRestoreOfficialRepo={restoreOfficialRepo}
       onDismissNotice={dismissNotice}
       onRetry={retry}
+      onOpenDiagnostics={() => router.push("/diagnostics")}
       backupFlow={backupFlow}
       backupController={backupController}
       backupNotice={backupNotice}

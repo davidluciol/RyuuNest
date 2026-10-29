@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajustes · Fila de Diagnóstico — Dragon Night (FB2)</title>
+  <link rel="stylesheet" href="../_shared/dragon-night.css">
+  <style>
+    .row { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+    .row .txt { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .row .t { font-size: 16px; line-height: 24px; }
+    .row .h { font-size: 13px; line-height: 18px; color: var(--text-2); }
+    .sec { display: flex; flex-direction: column; gap: 8px; }
+    .shell { height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid var(--border); }
+    .shell span { font: 700 18px/24px "Manrope", sans-serif; }
+    nav { margin-top: auto; height: 64px; display: flex; justify-content: space-around; align-items: center; background: var(--elevated); border-top: 1px solid var(--border); }
+    nav div { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: var(--text-2); min-width: 64px; }
+    nav .on { color: var(--accent); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <header class="shell">
+      <svg width="28" height="28" viewBox="0 0 96 96" fill="none" style="color:var(--accent)"><path d="M24 22 C34 12 48 14 55 25 C61 34 56 45 45 49 C36 52 30 58 32 67 C34 77 46 82 57 75" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M31 14 L36 4 L40 16 Z" fill="currentColor"/><path d="M25 20 L11 25 L23 32 Z" fill="currentColor"/><path d="M47 31 L72 18 L65 42 Z" fill="currentColor"/><path d="M57 75 L74 77 L62 86 Z" fill="currentColor"/></svg>
+      <span>RyuuNest</span>
+    </header>
+    <main>
+      <div class="sec">
+        <span class="label">Respaldo</span>
+        <div class="row"><div class="txt"><span class="t">Exportar respaldo</span><span class="h">Guarda tu biblioteca, progreso y ajustes en un archivo JSON.</span></div><button class="btn">Exportar respaldo</button></div>
+        <div class="row"><div class="txt"><span class="t">Importar respaldo</span><span class="h">Recupera tu biblioteca, progreso y ajustes desde un archivo.</span></div><button class="btn">Importar respaldo</button></div>
+      </div>
+      <div class="sec">
+        <span class="label">Diagnóstico</span>
+        <div class="row" role="button" aria-label="Ver registro de diagnóstico">
+          <div class="txt"><span class="t">Registro de diagnóstico</span><span class="h">Revisa, exporta o borra los errores guardados en este dispositivo.</span></div>
+          <svg class="i" viewBox="0 0 24 24" style="color:var(--text-2)"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      </div>
+    </main>
+    <nav aria-label="Navegación principal">
+      <div>Inicio</div><div>Biblioteca</div><div>Descubrir</div><div>Fuentes</div><div class="on">Ajustes</div>
+    </nav>
+  </div>
+</body>
+</html>

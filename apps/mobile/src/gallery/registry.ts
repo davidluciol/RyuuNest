@@ -134,6 +134,8 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
       "gallery.component.toast",
       "gallery.component.errorBanner",
       "gallery.component.errorDialog",
+      "gallery.component.logEventRow",
+      "gallery.component.diagnosticsScreen",
     ],
     states: COMPONENT_STATES,
   },

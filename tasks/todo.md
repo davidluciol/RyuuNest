@@ -454,14 +454,15 @@ Dep: F21b; T29 · S · `apps/mobile/src/screens/settings/backup/*`
 
 ## Fase 6c — Errores y diagnóstico (transversal, P-72)
 
-### FB2 Diseño en Stitch de errores y Diagnóstico `[Ops · Baja · N2]`
+### FB2 Diseño en Stitch de errores y Diagnóstico `[Ops · Baja · N2]` ✅
 
 Dep: FB1, F06, F20 · S · `design/stitch/` (PNG/HTML)
 
-- [ ] Toast, modal y banner con estados (info, warning, error, con acción, expandido)
-- [ ] Ajustes → Diagnóstico: lista, exportar, copiar, borrar y estado vacío
-- [ ] Estados vacíos a pantalla completa (dragón, título y acción)
+- [x] Toast, modal y banner con estados (info, warning, error, con acción, expandido) — los dos diseños de Stitch (`banner_inline_de_error_y_toast_dragon_night`, `di_logo_de_error_bloqueante_dragon_night`) los añadió el humano en `8c1457c`
+- [x] Ajustes → Diagnóstico: lista, exportar, copiar, borrar y estado vacío (`ajustes_diagnostico_dragon_night`, `diagnostico_confirmar_borrado_dragon_night`, `diagnostico_vacio_dragon_night`, `ajustes_fila_diagnostico_dragon_night`)
+- [x] Estados vacíos a pantalla completa (dragón, título y acción): `estados_vacios_dragon_night` (Biblioteca, Descubrir, sin resultados)
 - Verif: 🧍 revisión y exportación a `design/stitch/`
+- **Hecho (2026-10-29):** rama `feature/FB2-F30-diagnostics`. Diseños compuestos con `stitch-design-taste` + `ui-ux-pro-max` (confirmación destructiva, vacío con acción) sobre `DESIGN.md` y los tokens, como HTML local (`design/stitch/_shared/dragon-night.css`, fuentes locales, cero CDN) y PNG renderizado con Playwright. Los diseños del humano traen avatar «L», búsqueda inerte y un toast truncado con «…»: se anotan en `DIFFS.md` y entran en F34.
 
 ### F29 Componentes de error: toast, modal y banner `[FE · Intermedia · N3]` ✅
 
@@ -474,13 +475,14 @@ Dep: F06, F10, FB2 · M · `apps/mobile/src/components/*`
 - Verif: Playwright + galería
 - **Hecho (2026-10-28):** rama `feature/F29-error-components`, PR #50. `Toast`, `ErrorBanner`, `ErrorDialog` + `errorNoticeStyles.ts` (lógica pura, 11 tests). Severidad info/warning/error fija el color del borde y del código. Sin diseño en Stitch (P-30, anotado en DIFFS.md): FB2 los rediseñará; el prompt para generarlos está en `design/stitch/PROMPT-FB2-respaldo-errores.md`. La acción «copiar/exportar» del modal queda para F30 (Diagnóstico), cuando exista el informe que copiar. `Button` ganó `testID` (faltaba para los e2e); `ModuleRow` ganó `hint`.
 
-### F30 Ajustes → Diagnóstico `[FE · Baja · N2]`
+### F30 Ajustes → Diagnóstico `[FE · Baja · N2]` ✅
 
 Dep: F20, F29, T36 · S · `apps/mobile/src/screens/settings/diagnostics/*`
 
-- [ ] Ver últimos registros, exportar (JSON + texto), copiar informe y borrar
-- [ ] Estado vacío y confirmación antes de borrar
-- Verif: Playwright · 🧍 compartir el archivo
+- [x] Ver últimos registros, exportar (JSON + texto), copiar informe y borrar
+- [x] Estado vacío y confirmación antes de borrar
+- Verif: [x] Playwright (`tests/e2e/diagnostics.cjs`, 426 y 1440 px, descarga y portapapeles reales) · 🧍 compartir el archivo y copiar en el POCO
+- **Hecho (2026-10-29):** ruta `/diagnostics` (fuera de pestañas, `dismissTo("/settings")`) con la fila «Registro de diagnóstico» en Ajustes. Núcleo: `formatLogEntries` (puro, compartido por la tienda SQLite y el servicio de ejemplo). App: `DiagnosticsService`, flujo (reductor puro) y controlador (fallos con texto fijo, sin detalle técnico), vista pura (nivel, «Hoy/Ayer/Hace N días», detalle), puertos `diagnosticsFiles{,.native}` y `clipboard{,.native}` (dependencia `expo-clipboard ~57.0.2`, autorizada por el humano), componente `LogEventRow` en la galería. Un solo primario («Exportar informe»); confirmación de borrado en `SheetModal`. Chip y EmptyState dejaban de verse en serif: ahora usan `textStyle` (el resto de componentes afectados va a F34). 34 tests nuevos (core 3, mobile 31).
 
 ### F31 Integrar errores en las pantallas `[FE · Intermedia · N3]`
 
@@ -491,6 +493,37 @@ Dep: F15, F16, F21, F29, T36 · M · `apps/mobile/src/screens/*`
 - [ ] Lector muestra un banner estático (sin animación) y registra el fallo
 - [ ] Cada error visible deja una entrada en `log` sin datos sensibles
 - Verif: Playwright por pantalla + tests de integración
+
+### F34 Correcciones UX/UI transversales (móvil, escritorio y TV) `[FE · Alta · N4]`
+
+Dep: F29, F30, FB2 · L (dividir en 3 PRs si pasa de ~5 archivos por corte) · `apps/mobile/src/components/*`, `screens/settings/*`, `tools/eslint-plugin-ryuunest`, `design/stitch/DIFFS.md`
+
+> **Modelo:** N4 `claude-sonnet-5-5` (visión obligatoria: compara cada pantalla contra su `screen.png`); escalar a N5 `claude-opus-5-5` solo tras 2 intentos fallidos o si el token mono (F34.2) cambia el contrato de `ui-tokens`. **Skills:** `ui-ux-pro-max` (`--stack react-native`, dominios `ux` y `web`), `stitch-design-taste` (para regenerar diseños) y `ios-design` solo para la revisión de zonas seguras y tipografía. **Una sola tarea**, pero con cortes TDD pequeños (rojo → verde, un commit por corte). Cada corte lleva su prueba; los visuales, Playwright a 426 y 1440 px. Reúne los hallazgos previos («Hallazgos UX/UI consolidados antes del merge», arriba) con los nuevos de FB2/F30; los previos que ya tienen tarea propia (F14a/b, F17, F22/F23, F24–F27, F28/F33) **no se duplican aquí**.
+
+**F34.1 Bloqueantes (primero; cada uno con su prueba en rojo)**
+- [ ] **Fuentes en serif.** `Badge`, `LibraryCard`/`libraryCardStyles`, `TextField` y la `GalleryScreen` usan `typography.x.fontFamily` en bruto («Inter»/«Manrope» no están registradas: la web cae a serif y el dispositivo a la fuente del sistema; visible en `docs/capturasF16/fuentes-426.png`, insignias «Con error»/«Actualización»). Pasar todo por `textStyle()` y añadir una regla a `tools/eslint-plugin-ryuunest` que prohíba `.fontFamily` de tokens fuera de `textStyle.ts`. (Chip y EmptyState ya se corrigieron en F30.)
+- [ ] **Posible fallo nativo de F21.** `data/backupFiles.native.ts` importa de `./backupFiles`, que en Metro (Android/iOS) resuelve al propio `.native`: `backupFileName` puede quedar `undefined` al compartir. Mover `BackupFiles`, `backupFileName` y tipos a un módulo sin hermano de plataforma (patrón de `diagnosticsReport.ts`), con prueba que impida `import "./x"` desde `x.native.ts`. 🧍 confirmar en el POCO.
+- [ ] **Toast.** El botón de cerrar es un «×» de texto (V4/T5: nada de glifos como iconos) y su `accessibilityLabel` es el propio mensaje; el mensaje se trunca a una línea con «…» (T7). Usar `X` de `icons`, etiqueta «Cerrar aviso», hasta dos líneas y punto de severidad (diseño `banner_inline_de_error_y_toast_dragon_night`).
+- [ ] **Realinear F29 con los diseños de Stitch** (no se hizo en F30): `Toast` con punto de color y acción, `ErrorBanner` con icono de alerta y etiqueta de código, `ErrorDialog` con «Ver detalle técnico» plegable y un único primario. **Sin** avatar «L», sin búsqueda inerte, sin título «Módulo de Fuentes» ni «Última sincronización local» (D4): anotar en `DIFFS.md`.
+
+**F34.2 Importantes**
+- [ ] **Interruptor apagado casi invisible** en Ajustes (pista oscura sobre `bg`, < 3:1 de contraste no textual): borde `border` más claro o relleno `elevated` + marca del estado (icono o texto «Sí/No» accesible, DESIGN «Non-Color Dependent Indicators»).
+- [ ] **Filas de Ajustes.** El botón repite la etiqueta de la fila («Exportar respaldo» / «Exportar respaldo») y aprieta el texto hasta 3 líneas («Caché de imágenes»): botón con verbo corto («Exportar», «Importar», «Vaciar») y apilado bajo el texto por debajo de ~400 px de ancho. La fila entera debe ser pulsable (hoy, en «Registro de diagnóstico», el chevrón queda fuera del área táctil) con mínimo 56 dp.
+- [ ] **Agrupar secciones** como en `ajustes_pantalla/screen.png` (tarjetas `surface` con borde y separadores) en vez de filas sueltas sobre `bg`; mismo patrón para Diagnóstico, Fuentes y Respaldo.
+- [ ] **Escritorio ≥ 1024 px.** Ajustes, Diagnóstico y Fuentes estiran líneas de 130+ caracteres a 1440 px (`DESIGN.md`: medida de lectura cómoda). Contenedor centrado de 720 px (como el lector) hasta que F24 traiga el riel.
+- [ ] **Un solo patrón de confirmación destructiva.** Hoy hay hoja de reemplazo (F21), desinstalar y quitar repo (F16) y borrar registro (F30) cada una a su manera, y los diseños de Stitch usan un diálogo centrado. Extraer `ConfirmSheet` (título, mensaje, cancelar + destructivo) y reutilizarlo; decidir hoja inferior en móvil y diálogo centrado en escritorio/TV.
+- [ ] **Un solo patrón de aviso.** Ajustes y Respaldo muestran un bloque rojo con botón «Cerrar»; Diagnóstico usa `Toast`. Migrar a `Toast` (F31 lo integra con el log) y retirar el bloque ad hoc.
+- [ ] **Zonas seguras.** Las rutas fuera de pestañas (ficha, lector, Diagnóstico) dibujan la cabecera pegada arriba: comprobar muesca, barra de estado y gesto inferior con `react-native-safe-area-context` en el POCO y el S25 (🧍) y ajustar. Añadir `accessibilityLabel`/`role="header"` donde falten.
+- [ ] **Tipografía monoespaciada.** No hay token mono: códigos y detalle técnico (Diagnóstico, `ErrorDetail`, banner) salen en Inter. Proponer `typography.mono` con una fuente local con licencia OFL (🧍 elegir cuál; no se instala nada sin preguntar).
+- [ ] **Puerta de i18n.** La comprobación «ninguna cadena aparece literal» busca subcadenas y obligó a evitar palabras naturales («Error», «Info», «JSON», «versión»). Restringirla a literales entre comillas (`"valor"`) y retirar los rodeos («Fallo», «Nota», «Datos (JSON)», «versión y plataforma»).
+
+**F34.3 Menores y verificación**
+- [ ] Chips de Fuentes recortados a la derecha sin pista de desplazamiento (degradado o `contentInset`); chips de Biblioteca con el mismo patrón.
+- [ ] Anillo de foco 2 px `accent` con separación 2 px en todos los `Pressable` (web y D-pad); hoy solo el navegador pinta su anillo por defecto. Se cierra con F22.
+- [ ] `prefers-reduced-motion` y escala de texto del sistema al 200 %: sin desbordes en Ajustes, Diagnóstico y Fuentes.
+- [ ] Anotar cada diferencia aceptada en `design/stitch/DIFFS.md` y pasar la lista de 20 segundos de `DESIGN_RULES.md` por pantalla tocada.
+- Verif: Vitest por corte · Playwright (`settings.cjs`, `backup.cjs`, `diagnostics.cjs`, `sources.cjs` + nuevo `typography.cjs` que falla si algún texto visible cae a una fuente no registrada) a 426 y 1440 px · lint/typecheck · 🧍 POCO F5 Pro y Galaxy S25 Ultra (zonas seguras, interruptores, copiar/compartir).
+- Alcance máximo por corte: ≤ 5 archivos. Fuera de alcance: F22/F23 (TV), F24–F27 (web), F14/F17 (listas ya registradas).
 
 ---
 

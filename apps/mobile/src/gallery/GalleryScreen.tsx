@@ -63,6 +63,11 @@ import OnboardingSample from "../screens/onboarding/OnboardingSample";
 import Toast from "../components/Toast";
 import ErrorBanner from "../components/ErrorBanner";
 import ErrorDialog from "../components/ErrorDialog";
+import LogEventRow from "../components/LogEventRow";
+import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen";
+import { INITIAL_DIAGNOSTICS_FLOW } from "../screens/settings/diagnostics/diagnosticsFlow";
+import { eventLevel } from "../screens/settings/diagnostics/diagnosticsView";
+import DiagnosticsSample from "../screens/settings/diagnostics/DiagnosticsSample";
 import {
   BADGE_LABEL_KEYS,
   ROW_ACTION_KEYS,
@@ -584,6 +589,39 @@ export default function GalleryScreen() {
             retryLabel={t("actions.retry")}
             onRetry={() => {}}
             onClose={() => {}}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.logEventRow")}</Text>
+        <View style={styles.componentColumn}>
+          {(["error", "warn", "info"] as const).map((level, index) => {
+            const view = eventLevel(level);
+            return (
+              <LogEventRow
+                key={level}
+                levelLabel={view.label}
+                tone={view.tone}
+                code={`gallery.${level}`}
+                message={t("gallery.banner.message")}
+                when={t("diagnostics.when.today", { time: "14:32" })}
+                detailLines={[{ label: "módulo", value: "m-ejemplo" }]}
+                expanded={index === 0}
+                showDetailLabel={t("diagnostics.detail.show")}
+                hideDetailLabel={t("diagnostics.detail.hide")}
+              />
+            );
+          })}
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.diagnosticsScreen")}</Text>
+        <View style={styles.settingsPreview}>
+          <DiagnosticsSample />
+        </View>
+        <View style={styles.settingsPreview}>
+          <DiagnosticsScreen
+            view={{ status: "ready", events: [] }}
+            flow={INITIAL_DIAGNOSTICS_FLOW}
+            controller={null}
           />
         </View>
       </Section>

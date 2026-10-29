@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { ModuleError } from "../../src/contract/errors";
-import { createLogStore, LOG_MAX_ENTRIES, type LogEntry } from "../../src/diagnostics/LogStore";
+import { createLogStore, formatLogEntries, LOG_MAX_ENTRIES, type LogEntry } from "../../src/diagnostics/LogStore";
 import { FixedClock } from "../../src/ports/fakes";
 import { migrate, SCHEMA_VERSION } from "../../src/storage/migrations";
 import { MIGRATION_2 } from "../../src/storage/schema";
@@ -264,5 +264,38 @@ describe("export · JSON y texto legible, sin red", () => {
     expect(lines[0]).toContain("install.failed");
     expect(lines[0]).toContain("Falló la descarga");
     expect(lines[0]).toMatch(/\d{4}-\d{2}-\d{2}T/); // fecha ISO
+  });
+});
+
+describe("formatLogEntries — el mismo formato fuera de SQLite (F30)", () => {
+  const entries: LogEntry[] = [
+    { id: 2, at: 2_000, level: "error", code: "module.timeout", message: "Tardó demasiado", context: { module: "m-ejemplo-a" }, appVersion: "1.2.3", platform: "android" },
+    { id: 1, at: 1_000, level: "info", code: "app.start", message: "arranque", appVersion: "1.2.3", platform: "android" },
+  ];
+
+  it("json: documento ryuunest-log v1 con las entradas tal cual", () => {
+    const value = JSON.parse(formatLogEntries(entries, "json")) as { format: string; version: number; entries: LogEntry[] };
+
+    expect(value.format).toBe("ryuunest-log");
+    expect(value.version).toBe(1);
+    expect(value.entries).toEqual(entries);
+  });
+
+  it("texto: una línea por entrada, con fecha ISO, nivel, código, mensaje y contexto", () => {
+    const lines = formatLogEntries(entries, "text").split("\n");
+
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toBe('1970-01-01T00:00:02.000Z [error] module.timeout: Tardó demasiado {"module":"m-ejemplo-a"}');
+    expect(lines[1]).toBe("1970-01-01T00:00:01.000Z [info] app.start: arranque");
+  });
+
+  it("export de la tienda produce exactamente lo mismo que formatLogEntries", async () => {
+    const store = build();
+    await store.record("warn", "reader.image.retry", "reintento");
+
+    const listed = await store.list();
+
+    expect(await store.export("text")).toBe(formatLogEntries(listed, "text"));
+    expect(await store.export("json")).toBe(formatLogEntries(listed, "json"));
   });
 });

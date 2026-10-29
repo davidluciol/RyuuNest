@@ -10,6 +10,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - **Parte 2 (diseño/front):** F01–F11, F11b, F13, F14a/b/c, F15, F15b, FB1, F16, F16b, F16c, F12, F20, **F29** y **F21a/F21b/F21c** hechos. **Checkpoint P-A** (tras F01–F10) esperando revisión humana. Marcos de F11 y pantallas sin verificar en el POCO.
 - **F18 y F19 (Lector) hechas** en una sola rama (`feature/F18-F19-reader`, por decisión del humano, un PR); la ficha F17 ya lee datos reales. Falta la prueba en el POCO y AC-6 en MiBox (ver §4).
 - **F16 (Fuentes) hecha** (rama `feature/F16-sources`, PR abierto); falta la prueba en el POCO. **F16b** (interruptor de protección, Ajustes mínima), **F16c** (repo oficial por defecto) y **F12** (primer uso) hechas en `feature/F16b-F12-oficial-onboarding`; falta el POCO.
+- **FB2 y F30 hechas** (rama `feature/FB2-F30-diagnostics`, 2026-10-29): diseños de Diagnóstico/vacíos y la pantalla Ajustes → Diagnóstico; queda **F34** (correcciones UX/UI transversales, Alta, N4) y F31 (integrar errores en pantallas).
 - Suite en verde (~800 tests), CI activo, Graphify indexado.
 
 ## 2. Hitos
@@ -35,6 +36,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - **T36 (2026-10-28):** núcleo de diagnóstico (P-72) en rama `feature/T36-diagnostics-log` (PR #49): migración 2 con tabla `log`, `createLogStore` (`record`/`list`/`clear`/`export` JSON+texto, tope 500) y saneado estricto (URLs, cabeceras con credenciales, HTML, rutas locales; truncado). 16 tests; core 419 en verde.
 - **F29 (2026-10-28):** componentes de error (P-72) en rama `feature/F29-error-components` (PR #50): `Toast` (4 s, una línea, acción opcional), `ErrorBanner` (inline, código visible, detalle desplegable) y `ErrorDialog` (nivel 2, detalle expandible, cerrar/reintentar); lógica pura en `errorNoticeStyles.ts` (11 tests). `Button` ganó `testID`; `ModuleRow` ganó `hint`. Sin diseño en Stitch (P-30).
 - **F21 (2026-10-28):** respaldo en Ajustes (RF-37/RF-38) en rama `feature/F21-backup-ui` (un commit, P-102): F21a exportar/compartir, F21b importar (merge/replace con confirmación explícita; «Importar respaldo» habilitado en el paso 2 del primer uso en TV y en la galería/web) y F21c hoja de sugerencias tras importar (repos filtrados, nada se instala solo, AC-8). Dependencias nuevas autorizadas: `expo-sharing`, `expo-file-system`, `expo-document-picker` (SDK 57, P-93). 23 tests nuevos; e2e `backup.cjs` en verde a 426 y 1440 px (capturas en `docs/capturasF21/`); e2e de settings y onboarding ampliados y en verde. Sin diseño en Stitch (P-30); prompt para generarlos en `design/stitch/PROMPT-FB2-respaldo-errores.md`.
+- **FB2 + F30 (2026-10-29):** el humano ya había añadido en Stitch el banner/toast y el diálogo bloqueante (`8c1457c`); esta sesión compuso los que faltaban (Diagnóstico lista/confirmación/vacío, fila de Ajustes y estados vacíos) con `stitch-design-taste` + `ui-ux-pro-max` y los renderizó a PNG. F30: ruta `/diagnostics`, `formatLogEntries` en el núcleo, servicio/flujo/controlador/vista puros, `LogEventRow` en la galería, `expo-clipboard`. e2e `diagnostics.cjs` en verde (426 y 1440 px, capturas en `docs/capturasF30/`). Chip y EmptyState se corrigieron (caían a serif); el resto va a F34.
 
 ## 3. Decisiones vigentes
 
@@ -91,6 +93,10 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - P-100 Ramas de la sesión (decisión del humano 2026-10-28): T36 en `feature/T36-diagnostics-log` (PR #49) y F29 en `feature/F29-error-components` (PR #50), cada una con su PR; F21 en `feature/F21-backup-ui`.
 - P-101 Alcance de la sesión (decisión del humano 2026-10-28): F21 completa (F21a → F21b → F21c) en una sola sesión, una tras otra, con el ciclo TDD en cada una.
 - P-102 F21 en un solo commit (decisión del agente 2026-10-28, anotada para el humano): la división en tres commits (F21a/F21b/F21c) quedó **reemplazada** por un commit único en `feature/F21-backup-ui`, porque las tres sub-tareas comparten capa de datos (`backupData.ts`), flujo (`backupFlow.ts`), controlador (`backupController.ts`) y hojas (`BackupSheets.tsx`); un corte intermedio no compilaría solo ni sería un rollback limpio. La división lógica queda en `tasks/todo.md` y en el mensaje de commit.
+- P-103 Alcance de FB2/F30 (decisión del humano 2026-10-29): FB2 + F30 en una sesión; no se realinea F29 con los nuevos diseños de Stitch (queda en F34). Los diseños nuevos se generan como HTML local (`design/stitch/_shared/dragon-night.css`) + PNG con Playwright, sin Stitch en línea.
+- P-104 `expo-clipboard ~57.0.2` autorizada por el humano (2026-10-29) para «Copiar informe» (docs `docs.expo.dev/versions/latest/sdk/clipboard/` vía Context7 `/websites/expo_dev`; `setStringAsync`). Puerto `data/clipboard{,.native}.ts`; en web, `navigator.clipboard`. Desbloquea también el «pegar» pendiente de P-86.
+- P-105 Diagnóstico (F30, agente): ruta `/diagnostics` fuera de pestañas, con «volver» por `router.dismissTo("/settings")` (un enlace directo no deja historial); confirmación de borrado en `SheetModal`; fallos con texto fijo (el mensaje técnico no se enseña); informe en texto o JSON con el mismo formato que el núcleo (`formatLogEntries`). Un módulo `.native.ts` **no** debe importar de su hermano `.ts` (Metro lo resuelve a sí mismo): los tipos/utilidades compartidos van en un módulo aparte (`diagnosticsReport.ts`).
+- P-106 Una sola tarea de correcciones UX/UI (F34, decisión del humano 2026-10-29): Alta, N4 `claude-sonnet-5-5`, skills `ui-ux-pro-max` + `stitch-design-taste`; agrupa los hallazgos previos y los nuevos (fuentes en serif, toast, interruptor, filas, escritorio, confirmación unificada, zonas seguras, token mono, puerta de i18n).
 - Convenio de pruebas: cada pantalla raíz declara `testID="screen-<id>"`; los e2e esperan ese marcador (`tests/e2e/markers.cjs`) y un guard falla si una ruta de destino no es marco ni lo declara.
 
 **Proceso**
@@ -107,7 +113,9 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - 🧍 Reservar el org npm `@ryuunest`.
 - 🧍 Revisar y fusionar PRs abiertos (F15, F15b, F11b, P-82 y la cadena FB1/F14c/retiro de TMO) y pasar los Checkpoints **G, H y P-A**.
 - 🧍 Verificar que `modules/{AGENTS,README,NOTES}.md` estén copiados al repo `RyuuNest-Models` (están ignorados por git aquí) y ejecutar los módulos reales en el dispositivo (selectores y rutas nunca se contrastaron con los sitios reales desde el entorno del agente).
-- 🧍 **Diseño en Stitch (FB2):** componentes de error, Ajustes → Diagnóstico, estados vacíos, y las pantallas sin diseño (primer uso, confirmación de instalación, hoja de filtros). Falta confirmar el orden.
+- 🧍 **Diseño en Stitch (FB2):** revisar los diseños nuevos de `design/stitch/*_dragon_night/` y, si quieres versiones hechas en Stitch, regenerarlas. Siguen sin diseño: primer uso, confirmación de instalación y hoja de filtros.
+- 🧍 **F30 en el POCO:** exportar el informe (hoja del sistema) y copiarlo al portapapeles; el registro real estará vacío hasta F31.
+- 🧍 **F34:** elegir la fuente monoespaciada local (OFL) para códigos y detalle técnico, y confirmar en el POCO el posible fallo nativo de `backupFiles.native.ts`.
 - 🧍 Encargar el arte final del dragón (FA1). Validar los textos `state.error.library.*` (sin diseño).
 
 - 🧍 **F16 en el POCO:** añadir un repo real, instalar un módulo declarativo y uno `script` (confirmación reforzada y bloqueo del dispositivo con la protección activada a mano en `setting`). Incluir F16b/F16c/F12: el repo oficial debe aparecer al entrar en Fuentes, el interruptor de Ajustes con bloqueo real y el primer uso al arrancar sin nada.
@@ -120,8 +128,8 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 ### Del agente (orden sugerido)
 1. **T32b:** ADR de congelación de la API 1.0 (revisa P-74/P-75/P-76, resuelve las preguntas técnicas de SPEC §17.2 y fija el segundo sitio real, P-21). *Sugerencia:* hacerlo antes de que crezca el repo de módulos externo para no romper módulos publicados.
 2. **Biblioteca (restos de F14):** pasar `reading: true` al núcleo, hoja de filtros real (tipo/fuente son chips placeholder), menú de orden (hoy cicla al pulsar) y nombre visible de la fuente desde `ModuleRegistry`.
-3. **FB2 (diseño en Stitch):** generar con `design/stitch/PROMPT-FB2-respaldo-errores.md` los diseños de la sección Respaldo, las hojas de respaldo, toast/banner/diálogo y Ajustes → Diagnóstico (P-95/P-96).
-4. **Errores y diagnóstico:** F30 (Diagnóstico, sobre T36), F31 (integración de toast/modal/banner en F15/F16/F21/lector; F21 ya usa el diálogo de rechazo).
+3. **F34 (correcciones UX/UI transversales, Alta, N4):** empezar por «fuentes en serif» y el posible fallo nativo de F21 (bloqueantes); ver `tasks/todo.md`.
+4. **Errores y diagnóstico:** F31 (integración de toast/modal/banner en F15/F16/F21/lector con registro en `log`; F21 ya usa el diálogo de rechazo). F30 ya lee el registro real, hoy vacío.
 5. **Lector y ajustes:** F18/F19 hechas; falta F22 (lector en TV, D-pad). Siguen F24 (cliente web/riel), F25 y el resto de Parte 2 (ver `tasks/todo.md`).
 6. **T35:** calibrar políticas del host (`HOST_DEFAULTS`: 15 s, 4, 250 ms) con mediciones y cerrar el checkpoint de la Parte 1.
 7. **Plataforma:** la app nativa aún no rellena `HttpResponse.url` (P-74). Migrar las filas `kv` de repos/módulos a tablas `repo`/`module` y retirar `kv`. Dar a la app un `ScriptLoader` propio para poder listar y montar módulos `script` en el dispositivo (T18, D-5).
@@ -135,6 +143,8 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 ## 5. Avisos operativos
 
 - `pnpm add --filter X` poda los `node_modules` de otros paquetes: correr `pnpm install` completo después.
+- Metro resuelve `@ryuunest/core` por su `dist`: tras tocar `packages/core/src`, `pnpm --filter @ryuunest/core build` y reiniciar Metro (`--clear` si no recoge el cambio), o la web falla con símbolos `undefined`. Playwright está instalado globalmente: `PLAYWRIGHT_MODULE=%APPDATA%\npm\node_modules\playwright`.
+- La puerta de i18n compara subcadenas: un valor de catálogo como «Error», «Info» o «JSON» choca con `ErrorState`, `Info` o `JSON.stringify` (F34 la afina).
 - Tras tocar `ui-tokens`, `pnpm --filter @ryuunest/ui-tokens build` antes de `expo export` (Metro usa `dist`).
 - Con `core.autocrlf` `pnpm format` reescribe todo el repo: usar `prettier --end-of-line auto` por archivo.
 - `typecheck` de mobile usa `--stack-size=32000` (TS 6 agota el stack). Correr export, typecheck, lint y tests pesados **en secuencia**, no en paralelo.
