@@ -45,6 +45,9 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.sourcesScreen",
       "gallery.component.settingsScreen",
       "gallery.component.onboardingScreen",
+      "gallery.component.toast",
+      "gallery.component.errorBanner",
+      "gallery.component.errorDialog",
     ]);
   });
 
