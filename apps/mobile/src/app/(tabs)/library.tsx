@@ -5,12 +5,20 @@ import ErrorState from "../../components/ErrorState";
 import { t } from "../../i18n";
 import LibraryScreen from "../../screens/library/LibraryScreen";
 import { useLibraryData } from "../../screens/library/useLibraryData";
+import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
 
 export default function LibraryRoute() {
   const library = useLibraryData();
+  const settings = useSettingsPreferences();
 
   if (library.status === "ready") {
-    return <LibraryScreen data={library.data} />;
+    return (
+      <LibraryScreen
+        key={`library-${settings.nsfwVisible}`}
+        data={library.data}
+        initialFilters={{ nsfwVisible: settings.nsfwVisible }}
+      />
+    );
   }
 
   return (

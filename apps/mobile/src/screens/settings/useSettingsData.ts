@@ -1,28 +1,89 @@
 import { useCallback, useEffect, useState } from "react";
+import type { ReaderMode } from "@ryuunest/core";
 
 import { openAppDatabase } from "../../data/appDatabase";
 import { createFetchHttp } from "../../data/fetchHttp";
+import { clearImageCache } from "../../data/imageCache";
 import { createAppSecureLock } from "../../data/secureLock";
-import { createSettingsService } from "./settingsData";
+import { createSettingsService, DEFAULT_READER_MODE } from "./settingsData";
 import { createSampleSettingsService } from "./sampleSettingsService";
 import type { SettingsService } from "./settingsData";
 import type { SettingsView } from "./SettingsScreen";
 
 /**
- * F16b — estado de la pantalla Ajustes: en el dispositivo, el núcleo real sobre
+ * F20 — estado de la pantalla Ajustes: en el dispositivo, el núcleo real sobre
  * SQLite; en web y la galería, el servicio de ejemplo en memoria (P-79). Mantiene
  * la vista (`loading`/`error`/`ready`), el aviso y una operación en curso.
  */
 
-export async function resolveSettingsService(): Promise<SettingsService> {
-  const driver = await openAppDatabase();
-  if (driver === null) return createSampleSettingsService();
-  return createSettingsService({
-    driver,
-    http: createFetchHttp(),
-    clock: { now: () => Date.now() },
-    secureLock: createAppSecureLock(),
+let resolvedSettingsService: Promise<SettingsService> | undefined;
+
+export function resolveSettingsService(): Promise<SettingsService> {
+  resolvedSettingsService ??= openAppDatabase().then((driver) => {
+    if (driver === null) return createSampleSettingsService();
+    return createSettingsService({
+      driver,
+      http: createFetchHttp(),
+      clock: { now: () => Date.now() },
+      secureLock: createAppSecureLock(),
+      clearImageCache,
+    });
   });
+  return resolvedSettingsService;
+}
+
+export interface SettingsPreferencesState {
+  status: "loading" | "ready" | "error";
+  nsfwVisible: boolean;
+  defaultReaderMode: ReaderMode;
+}
+
+/** Preferencias que deben reaccionar fuera de la pantalla de Ajustes. */
+export function useSettingsPreferences(): SettingsPreferencesState {
+  const [state, setState] = useState<SettingsPreferencesState>({
+    status: "loading",
+    nsfwVisible: false,
+    defaultReaderMode: DEFAULT_READER_MODE,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    let unsubscribe = () => {};
+
+    const load = async (service: SettingsService) => {
+      try {
+        const data = await service.load();
+        if (!cancelled) {
+          setState({
+            status: "ready",
+            nsfwVisible: data.nsfwVisible,
+            defaultReaderMode: data.defaultReaderMode,
+          });
+        }
+      } catch (error) {
+        console.warn("No se pudieron cargar las preferencias globales:", error);
+        if (!cancelled) setState((current) => ({ ...current, status: "error" }));
+      }
+    };
+
+    resolveSettingsService()
+      .then((service) => {
+        if (cancelled) return;
+        unsubscribe = service.subscribe(() => void load(service));
+        void load(service);
+      })
+      .catch((error: unknown) => {
+        console.warn("No se pudieron abrir las preferencias globales:", error);
+        if (!cancelled) setState((current) => ({ ...current, status: "error" }));
+      });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
+  }, []);
+
+  return state;
 }
 
 export interface SettingsState {
@@ -31,6 +92,9 @@ export interface SettingsState {
   /** Una operación en curso bloquea los controles. */
   busy: boolean;
   toggleProtection: (on: boolean) => void;
+  toggleNsfw: (on: boolean) => void;
+  setDefaultReaderMode: (mode: ReaderMode) => void;
+  clearCache: () => void;
   restoreOfficialRepo: () => void;
   dismissNotice: () => void;
   retry: () => void;
@@ -94,6 +158,27 @@ export function useSettingsData(): SettingsState {
     [service, run],
   );
 
+  const toggleNsfw = useCallback(
+    (on: boolean) => {
+      if (service === null) return;
+      void run(() => service.setNsfwVisible(on));
+    },
+    [service, run],
+  );
+
+  const setDefaultReaderMode = useCallback(
+    (mode: ReaderMode) => {
+      if (service === null) return;
+      void run(() => service.setDefaultReaderMode(mode));
+    },
+    [service, run],
+  );
+
+  const clearCache = useCallback(() => {
+    if (service === null) return;
+    void run(() => service.clearCache());
+  }, [service, run]);
+
   const restoreOfficialRepo = useCallback(() => {
     if (service === null) return;
     void run(() => service.restoreOfficialRepo());
@@ -102,5 +187,16 @@ export function useSettingsData(): SettingsState {
   const dismissNotice = useCallback(() => setNotice(null), []);
   const retry = useCallback(() => setNonce((value) => value + 1), []);
 
-  return { view, notice, busy, toggleProtection, restoreOfficialRepo, dismissNotice, retry };
+  return {
+    view,
+    notice,
+    busy,
+    toggleProtection,
+    toggleNsfw,
+    setDefaultReaderMode,
+    clearCache,
+    restoreOfficialRepo,
+    dismissNotice,
+    retry,
+  };
 }

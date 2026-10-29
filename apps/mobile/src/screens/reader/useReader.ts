@@ -7,8 +7,8 @@ import { readingOrder } from "../../reader/readingOrder";
 import { toDiscoverError } from "../discover/discoverData";
 import type { DiscoverError } from "../discover/discoverFixtures";
 import { chapterState, type ChapterState } from "../series/seriesFixtures";
-import { FALLBACK_READER_MODE } from "./readerModes";
 import { resolveReadingSource, type ReaderImage } from "./readingSource";
+import { resolveSettingsService } from "../settings/useSettingsData";
 import { useReaderPrefetch } from "./useReaderPrefetch";
 
 /**
@@ -74,7 +74,10 @@ export function useReader(target: ReaderTarget): { view: ReaderView; actions: Re
 
     (async () => {
       const source = await resolveReadingSource();
-      const series = await source.loadSeries(moduleId, seriesId);
+      const [series, settings] = await Promise.all([
+        source.loadSeries(moduleId, seriesId),
+        resolveSettingsService().then((service) => service.load()),
+      ]);
       const ordered = readingOrder(series.details.chapters);
       const chapter = ordered.find((item) => item.id === chapterId);
       if (chapter === undefined) {
@@ -100,7 +103,7 @@ export function useReader(target: ReaderTarget): { view: ReaderView; actions: Re
         moduleId,
         seriesId,
         kind: series.details.kind ?? null,
-        defaultMode: FALLBACK_READER_MODE,
+        defaultMode: settings.defaultReaderMode,
         chapters: items.map((item) => ({
           chapterId: item.id,
           title: item.title,

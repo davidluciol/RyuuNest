@@ -1,8 +1,7 @@
-// F16b — Ajustes en web: la sección «Seguridad» con el interruptor de
-// «Protección de instalación» (RF-7). En web no hay bloqueo del dispositivo
-// (SPEC §5.3): la fila avisa y el interruptor queda deshabilitado; la fila de
-// restaurar el repo oficial solo aparece si falta (P-85). Sin errores de
-// consola ni dominios externos (RNF-5).
+// F20 — Ajustes en web: preferencias globales, protección de instalación y
+// acción real de caché. En web no hay bloqueo del dispositivo (SPEC §5.3),
+// pero sí se puede cambiar NSFW y el modo global. Sin errores de consola ni
+// dominios externos (RNF-5).
 // Ejecutar con el cliente servido: node apps/mobile/tests/e2e/settings.cjs
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
@@ -10,7 +9,7 @@ const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
 
 const baseURL = process.env.SETTINGS_URL || "http://127.0.0.1:8082";
-const output = path.resolve(__dirname, "../../../../docs/capturasF16b");
+const output = path.resolve(__dirname, "../../../../docs/capturasF20");
 
 (async () => {
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
@@ -43,6 +42,23 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF16b");
       await page.goto(`${baseURL}/settings`);
       await page.getByTestId("screen-settings").waitFor({ state: "visible" });
 
+      // Ajustes globales: idioma disponible, modo y caché sin cifras inventadas.
+      await page.getByText("Idioma").waitFor({ state: "visible" });
+      await page.getByText("Español").waitFor({ state: "visible" });
+      await page.getByText("Preferencias de lectura").waitFor({ state: "visible" });
+      await page.getByText("Vertical continuo").waitFor({ state: "visible" });
+      await page.getByText("Paginado D → I · Manga").waitFor({ state: "visible" });
+      await page.getByText("Paginado I → D · Cómic").waitFor({ state: "visible" });
+      await page.getByText("Almacenamiento y caché").waitFor({ state: "visible" });
+      await page.getByText("Vaciar caché de imágenes").waitFor({ state: "visible" });
+
+      const nsfwToggle = page.getByTestId("settings-nsfw-switch");
+      const nsfwInput = nsfwToggle.locator("input");
+      assert.equal(await nsfwInput.isChecked(), false, `NSFW no empieza apagado @${width}`);
+      await nsfwToggle.click();
+      await page.waitForTimeout(300);
+      assert.equal(await nsfwInput.isChecked(), true, `NSFW no se pudo activar @${width}`);
+
       // La fila de protección: etiqueta, aviso sin bloqueo e interruptor inerte.
       await page.getByText("Seguridad").waitFor({ state: "visible" });
       await page.getByText("Protección de instalación").waitFor({ state: "visible" });
@@ -66,7 +82,23 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF16b");
       );
 
       // El repo oficial está registrado en el ejemplo: no hay fila de restaurar.
-      assert.equal(await page.getByText("Repositorio oficial").count(), 0, `fila inesperada @${width}`);
+      assert.equal(
+        await page.getByText("Repositorio oficial").count(),
+        0,
+        `fila inesperada @${width}`,
+      );
+
+      // El ajuste se comparte con las pantallas que filtran contenido.
+      await page.goto(`${baseURL}/library`);
+      const libraryScreen = page.getByTestId("screen-library");
+      await libraryScreen.waitFor({ state: "visible" });
+      await libraryScreen.getByText("Draco de jade", { exact: true }).waitFor({ state: "visible" });
+      await page.goto(`${baseURL}/discover`);
+      const discoverScreen = page.getByTestId("screen-discover");
+      await discoverScreen.waitFor({ state: "visible" });
+      await discoverScreen
+        .getByText("Draco de jade", { exact: true })
+        .waitFor({ state: "visible" });
 
       assert.equal(
         await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth),
