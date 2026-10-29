@@ -60,6 +60,9 @@ import {
   SAMPLE_SETTINGS_DATA,
 } from "../screens/settings/settingsFixtures";
 import OnboardingSample from "../screens/onboarding/OnboardingSample";
+import Toast from "../components/Toast";
+import ErrorBanner from "../components/ErrorBanner";
+import ErrorDialog from "../components/ErrorDialog";
 import {
   BADGE_LABEL_KEYS,
   ROW_ACTION_KEYS,
@@ -536,6 +539,53 @@ export default function GalleryScreen() {
         <View style={styles.onboardingPreview}>
           <OnboardingSample />
         </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.toast")}</Text>
+        <View style={styles.componentColumn}>
+          <Toast
+            message={t("gallery.toast.message")}
+            severity="info"
+            actionLabel={t("gallery.toast.action")}
+            onAction={() => {}}
+            onClose={() => {}}
+          />
+          <Toast
+            message={t("gallery.toast.message")}
+            severity="error"
+            onClose={() => {}}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.errorBanner")}</Text>
+        <ErrorBanner
+          title={t("gallery.banner.title")}
+          message={t("gallery.banner.message")}
+          code="NETWORK"
+          detail={{
+            module: "m-ejemplo",
+            url: "https://sitio-falso.test/listado?page=2",
+            code: "NETWORK",
+          }}
+          actionLabel={t("actions.retry")}
+          detailLabel={t("actions.showDetail")}
+          onAction={() => {}}
+        />
+
+        <Text style={styles.groupLabel}>{t("gallery.component.errorDialog")}</Text>
+        <View style={styles.dialogPreview}>
+          <ErrorDialog
+            visible
+            animated={false}
+            title={t("gallery.dialog.title")}
+            message={t("gallery.dialog.message")}
+            code="INVALID"
+            detail={{ code: "INVALID" }}
+            detailLabel={t("actions.showDetail")}
+            retryLabel={t("actions.retry")}
+            onRetry={() => {}}
+            onClose={() => {}}
+          />
+        </View>
       </Section>
     </ScrollView>
   );
@@ -564,6 +614,7 @@ const styles = StyleSheet.create({
   shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
   settingsPreview: { flex: 0, minHeight: spacing["2xl"] * 4 },
   onboardingPreview: { flex: 0, minHeight: spacing["2xl"] * 10 },
+  dialogPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
   shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
     color: colors.textSecondary,
