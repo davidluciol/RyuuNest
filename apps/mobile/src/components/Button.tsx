@@ -25,6 +25,8 @@ export interface ButtonProps {
   /** Etiqueta de accesibilidad del botón (si el label visual no basta). */
   accessibilityLabel?: string;
   style?: StyleProp<ViewStyle>;
+  /** Identificador para pruebas (e2e de Playwright). */
+  testID?: string;
 }
 
 export default function Button({
@@ -36,9 +38,11 @@ export default function Button({
   trailingIcon,
   accessibilityLabel,
   style,
+  testID,
 }: ButtonProps) {
   return (
     <Pressable
+      testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityState={{ disabled }}

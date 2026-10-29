@@ -1,10 +1,12 @@
 import SettingsScreen from "../../screens/settings/SettingsScreen";
 import { useSettingsData } from "../../screens/settings/useSettingsData";
+import { useBackupData } from "../../screens/settings/backup/useBackupData";
 
 /**
- * F16b — ruta Ajustes: solo conecta el estado (useSettingsData) con la
+ * F16b/F20 — ruta Ajustes: solo conecta el estado (useSettingsData) con la
  * pantalla. El título de la sección lo pinta la cabecera del shell (F11); el
- * resto del contenido de Ajustes llega con F20.
+ * resto del contenido de Ajustes llega con F20. F21 añade la sección de
+ * respaldo con su propio estado (useBackupData).
  */
 export default function SettingsRoute() {
   const {
@@ -19,6 +21,7 @@ export default function SettingsRoute() {
     dismissNotice,
     retry,
   } = useSettingsData();
+  const { flow: backupFlow, controller: backupController, notice: backupNotice } = useBackupData();
 
   return (
     <SettingsScreen
@@ -32,6 +35,10 @@ export default function SettingsRoute() {
       onRestoreOfficialRepo={restoreOfficialRepo}
       onDismissNotice={dismissNotice}
       onRetry={retry}
+      backupFlow={backupFlow}
+      backupController={backupController}
+      backupNotice={backupNotice}
+      onDismissBackupNotice={() => backupController?.dismissNotice()}
     />
   );
 }

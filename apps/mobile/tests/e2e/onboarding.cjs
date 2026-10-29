@@ -54,6 +54,32 @@ async function prepare(page) {
       await scope.getByTestId("onboarding-step-2").waitFor({ state: "visible" });
       const urlField = scope.getByLabel("URL del índice");
       assert.match(await urlField.inputValue(), /^https:\/\/.*index\.json$/, `URL sugerida @${width}`);
+
+      // F21b: «Importar respaldo» se ofrece en el paso 2 (en web/galería
+      // siempre; en TV, donde el primer uso lo prioriza, SPEC §11.8).
+      const importButton = scope.getByTestId("onboarding-import-backup");
+      await importButton.waitFor({ state: "visible" });
+      const [chooser] = await Promise.all([
+        page.waitForEvent("filechooser"),
+        importButton.click(),
+      ]);
+      const sampleBackup = path.resolve(output, `respaldo-ejemplo-${width}.json`);
+      await fs.writeFile(
+        sampleBackup,
+        JSON.stringify({ format: "ryuunest-backup", version: 1 }),
+        "utf8",
+      );
+      await chooser.setFiles(sampleBackup);
+      const modeSheet = page.getByTestId("sheet-backup-import-mode");
+      await modeSheet.waitFor({ state: "visible" });
+      await modeSheet.getByTestId("backup-apply-merge").click();
+      // Tras importar se abren las sugerencias (nada se instala solo, AC-8).
+      const suggestions = page.getByTestId("sheet-backup-suggestions");
+      await suggestions.waitFor({ state: "visible" });
+      await suggestions.getByText("Cerrar").click();
+      // El primer uso sigue en el paso 2: importar no lo completa.
+      await scope.getByTestId("onboarding-step-2").waitFor({ state: "visible" });
+
       await page.screenshot({ path: path.join(output, `paso2-${width}.png`), fullPage: true });
       await scope.getByRole("button", { name: "Continuar", exact: true }).click();
       await scope.getByTestId("onboarding-step-3").waitFor({ state: "visible" });

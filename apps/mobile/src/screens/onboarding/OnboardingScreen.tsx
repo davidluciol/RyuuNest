@@ -17,6 +17,9 @@ import InstallSheet from "../sources/InstallSheet";
 import { moduleBadges, moduleRowAction, BADGE_LABEL_KEYS, ROW_ACTION_KEYS } from "../sources/sourcesView";
 import { kindLabel } from "../../components/kindLabel";
 import type { OnboardingController, OnboardingStep } from "./onboardingController";
+import BackupSheets from "../settings/backup/BackupSheets";
+import type { BackupController } from "../settings/backup/backupController";
+import type { BackupFlow } from "../settings/backup/backupFlow";
 
 /**
  * F12 — pantalla del primer uso (SPEC §11.8, sin diseño en Stitch: wireframe;
@@ -25,9 +28,13 @@ import type { OnboardingController, OnboardingStep } from "./onboardingControlle
  * módulo con la confirmación de Fuentes (AC-8). Presentacional: los pasos los
  * lleva la sesión (`useOnboardingSession`), que le pasa controlador y flujo.
  *
+ * F21b: en el paso 2 se ofrece «Importar respaldo» (en web y en TV; en móvil
+ * el respaldo vive en Ajustes). El botón abre el flujo de respaldo de
+ * Ajustes (elegir archivo → fusionar/reemplazar), sin completar el primer
+ * uso.
+ *
  * Anotado en `design/stitch/DIFFS.md`: sin botón de pegar del portapapeles
- * (necesitaría `expo-clipboard`, dependencia nueva) y en TV se omite
- * «Importar respaldo» hasta que exista F21b.
+ * (necesitaría `expo-clipboard`, dependencia nueva).
  */
 
 const colors = dragonNightColors;
@@ -50,6 +57,9 @@ export interface OnboardingScreenProps {
   /** URL con la que empieza el paso 2 (el repo oficial, P-85). */
   suggestedUrl?: string;
   onRetry?: () => void;
+  /** F21b — flujo de respaldo para «Importar respaldo» (paso 2, TV y web). */
+  backupFlow?: BackupFlow;
+  backupController?: BackupController | null;
 }
 
 export default function OnboardingScreen({
@@ -60,6 +70,8 @@ export default function OnboardingScreen({
   notice = null,
   suggestedUrl = "",
   onRetry,
+  backupFlow,
+  backupController = null,
 }: OnboardingScreenProps) {
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
@@ -144,6 +156,14 @@ export default function OnboardingScreen({
                 {stepError}
               </Text>
             ) : null}
+            {backupController !== null ? (
+              <Button
+                variant="secondary"
+                label={t("settings.backup.import")}
+                onPress={() => void backupController.importBackup()}
+                testID="onboarding-import-backup"
+              />
+            ) : null}
             <View style={styles.actions}>
               <Button
                 variant="secondary"
@@ -207,6 +227,10 @@ export default function OnboardingScreen({
           onCancel={controller.close}
           onConfirm={(reinforced) => void controller.confirmInstall(reinforced)}
         />
+      ) : null}
+
+      {backupController !== null && backupFlow !== undefined ? (
+        <BackupSheets flow={backupFlow} controller={backupController} />
       ) : null}
     </View>
   );

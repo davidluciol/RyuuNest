@@ -73,6 +73,7 @@ export interface BannerStyleShape {
   gap: number;
 }
 
+/** Banner inline: nivel `surface`, borde del color de severidad. */
 /** Banner inline: nivel `surface`, borde izquierdo grueso del color de severidad. */
 export function bannerStyle(severity: ErrorSeverity): BannerStyleShape {
   return {
