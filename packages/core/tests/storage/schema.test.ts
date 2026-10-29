@@ -84,6 +84,16 @@ const TABLAS: Readonly<Record<string, readonly ColumnSpec[]>> = {
     ["key", "TEXT", 0, 1, null],
     ["value", "TEXT", 1, 0, null],
   ],
+  log: [
+    ["id", "INTEGER", 0, 1, null],
+    ["at", "INTEGER", 1, 0, null],
+    ["level", "TEXT", 1, 0, null],
+    ["code", "TEXT", 1, 0, null],
+    ["message", "TEXT", 1, 0, null],
+    ["context", "TEXT", 0, 0, null],
+    ["app_version", "TEXT", 1, 0, null],
+    ["platform", "TEXT", 1, 0, null],
+  ],
 };
 
 /** Índices declarados en el SPEC §8.1 (los automáticos de PRIMARY KEY/UNIQUE no cuentan). */
@@ -119,7 +129,7 @@ interface ForeignKeyRow {
 }
 
 describe("esquema · tablas del SPEC §8.1", () => {
-  it("crea las nueve tablas con las columnas, tipos, NOT NULL, claves y valores por defecto del SPEC", async () => {
+  it("crea las diez tablas con las columnas, tipos, NOT NULL, claves y valores por defecto del SPEC", async () => {
     const driver = await openMigratedDriver();
 
     for (const [tabla, esperadas] of Object.entries(TABLAS)) {

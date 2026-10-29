@@ -16,6 +16,8 @@ export * from "./bytes.js";
 export * from "./contract/errors.js";
 export * from "./contract/repoIndex.js";
 export * from "./contract/types.js";
+export * from "./diagnostics/LogStore.js";
+export * from "./diagnostics/sanitize.js";
 export * from "./host/ModuleHost.js";
 export * from "./install/InstallFlow.js";
 export * from "./install/PackageInstaller.js";
