@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aviso y Errores Inline - Dragon Night</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#0B0E14',
+            surface: '#141923',
+            elevated: '#1B2230',
+            border: '#263147',
+            'text-primary': '#F2F0EA',
+            'text-secondary': '#9BA5B5',
+            accent: '#35C98A',
+            progress: '#FF9F43',
+            positive: '#4DD599',
+            warning: '#F5C451',
+            error: '#F06A6A',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Manrope', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0B0E14] text-[#F2F0EA] font-sans antialiased min-h-screen flex justify-center selection:bg-[#35C98A] selection:text-[#0B0E14]">
+  <div class="w-full max-w-[412px] bg-[#0B0E14] min-h-screen flex flex-col relative pb-24 border-x border-[#263147]">
+    
+    <!-- Barra superior unificada -->
+    <header class="sticky top-0 z-30 bg-[#0B0E14]/90 backdrop-blur-md border-b border-[#263147] px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <svg class="w-7 h-7 text-[#35C98A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+        </svg>
+        <span class="font-display font-bold text-lg text-[#F2F0EA] tracking-tight">RyuuNest</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="w-10 h-10 rounded-lg flex items-center justify-center text-[#9BA5B5] hover:text-[#F2F0EA] hover:bg-[#141923]" aria-label="Buscar">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+        </button>
+        <div class="w-9 h-9 rounded-full bg-[#1B2230] border border-[#263147] flex items-center justify-center font-display font-bold text-sm text-[#F2F0EA]">
+          L
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="flex-1 px-4 py-4 space-y-5">
+      <div>
+        <h1 class="font-display font-bold text-2xl text-[#F2F0EA] leading-tight">Módulo de Fuentes</h1>
+        <p class="text-sm text-[#9BA5B5] mt-1">Exploración y estado de conexión de fuentes locales.</p>
+      </div>
+
+      <!-- Banner inline de error (Punto 6 del documento) -->
+      <section aria-labelledby="banner-error-title" class="bg-[#141923] border border-[#F06A6A] rounded-lg p-4 space-y-3">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 id="banner-error-title" class="font-display font-semibold text-base text-[#F2F0EA]">Error de conexión con la fuente</h2>
+            <span class="px-2 py-0.5 rounded text-xs font-semibold bg-[#F06A6A]/15 text-[#F06A6A] border border-[#F06A6A]/30">TIMEOUT</span>
+          </div>
+          <svg class="w-5 h-5 text-[#F06A6A] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"/></svg>
+        </div>
+        
+        <p class="text-sm text-[#9BA5B5] leading-relaxed">
+          El servidor de origen tardó demasiado en responder a la solicitud del listado de capítulos.
+        </p>
+
+        <!-- Acciones: Reintentar y Ver detalle -->
+        <div class="flex items-center gap-4 text-sm font-medium pt-1">
+          <button class="text-[#F06A6A] hover:underline flex items-center gap-1.5 h-10 px-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+            Reintentar
+          </button>
+          <button class="text-[#F06A6A] hover:underline flex items-center gap-1 h-10 px-1">
+            Ver detalle
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+          </button>
+        </div>
+
+        <!-- Detalle desplegado (caja surface con borde) -->
+        <div class="bg-[#0B0E14] border border-[#263147] rounded-lg p-3 text-xs space-y-1 font-mono text-[#9BA5B5]">
+          <div><span class="text-[#F2F0EA]">módulo:</span> m-ejemplo-a</div>
+          <div class="break-all"><span class="text-[#F2F0EA]">URL:</span> https://fuente.ejemplo.org/api/capitulos</div>
+          <div><span class="text-[#F2F0EA]">código:</span> TIMEOUT_504</div>
+          <div><span class="text-[#F2F0EA]">selector:</span> .chapter-container-list</div>
+        </div>
+      </section>
+
+      <!-- Fila de ejemplo del módulo en estado regular -->
+      <section class="bg-[#141923] border border-[#263147] rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="font-display font-semibold text-base text-[#F2F0EA]">El dragón de ceniza</div>
+          <span class="text-xs text-[#9BA5B5] px-2 py-0.5 rounded bg-[#1B2230] border border-[#263147]">Manga · es · v1.0.0</span>
+        </div>
+        <p class="text-xs text-[#9BA5B5]">Última sincronización local: hace 1 hora</p>
+      </section>
+
+      <!-- Toast informativo (Punto 5 del documento) -->
+      <div class="pt-4">
+        <p class="text-xs font-medium text-[#9BA5B5] uppercase tracking-wider mb-2">Aviso transitorio (Toast):</p>
+        <aside aria-label="Notificación del sistema" class="w-full bg-[#1B2230] border border-[#35C98A] rounded-lg p-3 min-h-[48px] flex items-center justify-between gap-3 shadow-none">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-2 h-2 rounded-full bg-[#35C98A] shrink-0"></span>
+            <p class="text-sm text-[#F2F0EA] truncate">Respaldo exportado correctamente a JSON</p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button class="text-sm font-semibold text-[#35C98A] hover:underline px-1 py-1">
+              Abrir
+            </button>
+            <button class="w-8 h-8 rounded flex items-center justify-center text-[#9BA5B5] hover:text-[#F2F0EA]" aria-label="Cerrar aviso">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </aside>
+      </div>
+
+    </main>
+
+    <!-- Barra inferior fija (5 pestañas unificadas) -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[412px] bg-[#1B2230] border-t border-[#263147] h-16 flex items-center justify-around z-40 px-2" aria-label="Navegación principal">
+      <button class="flex flex-col items-center justify-center w-16 h-12 text-[#9BA5B5] hover:text-[#F2F0EA]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+        <span class="text-[11px] mt-1">Inicio</span>
+      </button>
+      <button class="flex flex-col items-center justify-center w-16 h-12 text-[#9BA5B5] hover:text-[#F2F0EA]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>
+        <span class="text-[11px] mt-1">Biblioteca</span>
+      </button>
+      <button class="flex flex-col items-center justify-center w-16 h-12 text-[#9BA5B5] hover:text-[#F2F0EA]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/></svg>
+        <span class="text-[11px] mt-1">Descubrir</span>
+      </button>
+      <button class="flex flex-col items-center justify-center w-16 h-12 text-[#35C98A]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"/></svg>
+        <span class="text-[11px] font-semibold mt-1">Fuentes</span>
+      </button>
+      <button class="flex flex-col items-center justify-center w-16 h-12 text-[#9BA5B5] hover:text-[#F2F0EA]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+        <span class="text-[11px] mt-1">Ajustes</span>
+      </button>
+    </nav>
+  </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diálogo de Error Bloqueante - Dragon Night</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#0B0E14',
+            surface: '#141923',
+            elevated: '#1B2230',
+            border: '#263147',
+            'text-primary': '#F2F0EA',
+            'text-secondary': '#9BA5B5',
+            accent: '#35C98A',
+            progress: '#FF9F43',
+            positive: '#4DD599',
+            warning: '#F5C451',
+            error: '#F06A6A',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Manrope', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0B0E14] text-[#F2F0EA] font-sans antialiased min-h-screen flex justify-center selection:bg-[#35C98A] selection:text-[#0B0E14]">
+  <div class="w-full max-w-[412px] bg-[#0B0E14] min-h-screen flex flex-col relative border-x border-[#263147] overflow-hidden">
+    
+    <!-- Contenido de fondo (pantalla de lectura o biblioteca atenuada) -->
+    <div class="p-4 space-y-4 opacity-30 pointer-events-none select-none filter blur-[1px]">
+      <div class="h-10 bg-[#141923] rounded-lg"></div>
+      <div class="aspect-[2/3] bg-[#141923] rounded-xl border border-[#263147]"></div>
+      <div class="h-6 bg-[#141923] rounded w-2/3"></div>
+      <div class="h-4 bg-[#141923] rounded w-1/2"></div>
+    </div>
+
+    <!-- Velo oscurecido (Backdrop de nivel 2) -->
+    <div class="fixed inset-0 bg-[#0B0E14]/80 backdrop-blur-sm z-40 flex items-center justify-center p-4">
+      
+      <!-- Diálogo de error bloqueante (Punto 7 del documento) -->
+      <section role="alertdialog" aria-labelledby="dialog-title" aria-describedby="dialog-desc" class="w-full max-w-[360px] bg-[#1B2230] border border-[#263147] rounded-xl p-5 space-y-4 shadow-none z-50">
+        
+        <!-- Cabecera del diálogo -->
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 id="dialog-title" class="font-display font-bold text-lg text-[#F2F0EA]">No se pudo cargar el capítulo</h2>
+            <span class="px-2 py-0.5 rounded text-xs font-semibold bg-[#F06A6A]/15 text-[#F06A6A] border border-[#F06A6A]/30">BLOCKED</span>
+          </div>
+          <p id="dialog-desc" class="text-sm text-[#9BA5B5] leading-relaxed">
+            La fuente de lectura no permitió obtener las páginas de esta entrega.
+          </p>
+        </div>
+
+        <!-- Ver detalle desplegado -->
+        <details open class="group bg-[#141923] border border-[#263147] rounded-lg overflow-hidden">
+          <summary class="flex items-center justify-between px-3 py-2.5 cursor-pointer text-xs font-medium text-[#F06A6A] hover:bg-[#1B2230]/50 select-none">
+            <span>Ver detalle técnico</span>
+            <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
+          </summary>
+          <div class="px-3 pb-3 pt-1 text-xs space-y-1 font-mono text-[#9BA5B5] border-t border-[#263147]/60">
+            <div><span class="text-[#F2F0EA]">módulo:</span> m-ejemplo-a</div>
+            <div class="break-all"><span class="text-[#F2F0EA]">URL:</span> https://fuente.ejemplo.org/capitulo-42</div>
+            <div><span class="text-[#F2F0EA]">código:</span> BLOCKED_403</div>
+            <div><span class="text-[#F2F0EA]">selector:</span> img.viewer-img</div>
+          </div>
+        </details>
+
+        <!-- Botones: Un solo botón primario (Reintentar) y Cerrar (Secundario) -->
+        <div class="flex items-center justify-end gap-3 pt-1">
+          <button type="button" class="h-11 px-4 rounded-lg border border-[#263147] bg-[#141923] text-sm font-medium text-[#F2F0EA] hover:bg-[#1B2230]">
+            Cerrar
+          </button>
+          <button type="button" class="h-11 px-5 rounded-lg bg-[#35C98A] text-sm font-bold text-[#0B0E14] hover:bg-[#4DD599]">
+            Reintentar
+          </button>
+        </div>
+
+      </section>
+    </div>
+
+  </div>
+</body>
+</html>
