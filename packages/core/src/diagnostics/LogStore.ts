@@ -96,6 +96,22 @@ function isoDate(at: number): string {
   return new Date(at).toISOString();
 }
 
+/**
+ * Formatea entradas ya saneadas como JSON (`ryuunest-log` v1) o como texto
+ * legible, una línea por entrada. Pura: la tienda SQLite y los servicios de
+ * ejemplo sin base (web, galería) comparten el mismo formato (F30).
+ */
+export function formatLogEntries(entries: readonly LogEntry[], format: LogExportFormat): string {
+  if (format === "json") {
+    return JSON.stringify({ format: "ryuunest-log", version: 1, entries }, null, 2);
+  }
+  return entries
+    .map((entry) => {
+      const context = entry.context === undefined ? "" : ` ${JSON.stringify(entry.context)}`;
+      return `${isoDate(entry.at)} [${entry.level}] ${entry.code}: ${entry.message}${context}`;
+    })
+    .join("\n");
+}
 /** Crea el registro de diagnóstico sobre el driver dado. */
 export function createLogStore(options: LogStoreOptions): LogStore {
   const { driver, clock } = options;
@@ -161,21 +177,7 @@ export function createLogStore(options: LogStoreOptions): LogStore {
     },
 
     async export(format) {
-      const entries = await this.list();
-      if (format === "json") {
-        return JSON.stringify(
-          { format: "ryuunest-log", version: 1, entries },
-          null,
-          2,
-        );
-      }
-      return entries
-        .map((entry) => {
-          const context =
-            entry.context === undefined ? "" : ` ${JSON.stringify(entry.context)}`;
-          return `${isoDate(entry.at)} [${entry.level}] ${entry.code}: ${entry.message}${context}`;
-        })
-        .join("\n");
+      return formatLogEntries(await this.list(), format);
     },
   };
 }
