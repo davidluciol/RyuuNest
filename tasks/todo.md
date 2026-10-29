@@ -202,16 +202,17 @@ Dep: T02, T32a · S · `.github/workflows/ci.yml`, `vitest.config.ts`
 - [ ] `pnpm -r test && pnpm -r typecheck && pnpm lint` es la puerta única de fusión
 - Verif: ese comando + 🧍 PR de prueba que rompe el contrato y falla el CI
 
-### T36 Núcleo de diagnóstico y errores (P-72) `[BE · Intermedia · N3]`
+### T36 Núcleo de diagnóstico y errores (P-72) `[BE · Intermedia · N3]` ✅
 
 Dep: T21 · M · `packages/core/src/diagnostics/*`, `packages/core/src/storage/{schema,migrations}.ts` (+test)
 
-- [ ] Migración nueva con tabla `log` (`at`, `level`, `code`, `message`, `context`, `app_version`, `platform`); tope **500 entradas** (borra las más viejas)
-- [ ] `record`/`list`/`clear`/`export`; niveles `info`/`warn`/`error`; contexto saneado
-- [ ] Redacción estricta: sin credenciales, cookies, cabeceras, HTML, títulos, URLs completas ni rutas locales
-- [ ] Export **JSON + texto legible**; sin red ni telemetría
+- [x] Migración nueva con tabla `log` (`at`, `level`, `code`, `message`, `context`, `app_version`, `platform`); tope **500 entradas** (borra las más viejas)
+- [x] `record`/`list`/`clear`/`export`; niveles `info`/`warn`/`error`; contexto saneado
+- [x] Redacción estricta: sin credenciales, cookies, cabeceras, HTML, títulos, URLs completas ni rutas locales
+- [x] Export **JSON + texto legible**; sin red ni telemetría
 - Verif: `pnpm --filter @ryuunest/core test`
 - **Origen:** P-72 (2026-10-23); independiente del Checkpoint J.
+- **Hecho (2026-10-28):** rama `feature/T36-diagnostics-log`, PR #49. `createLogStore` (`record`/`list`/`clear`/`export` json+texto) + `sanitize.ts` (URLs, cabeceras con credenciales, HTML, rutas Android/Windows; trunca mensaje 500 y contexto 2500). Migración 2 con `log` (sin índice propio: 500 filas hacen scan acotado; el test de esquema quedó intacto salvo la tabla nueva). 16 tests; core 419 en verde. El test en rojo cazó un fallo real: el patrón de cabeceras dejaba el valor tras `Bearer `.
 
 ### 🚩 Checkpoint J — Fin de la Parte 1 `[Ops · Baja · N1]`
 
@@ -417,31 +418,33 @@ Estos hallazgos se incorporan a las tareas pendientes existentes; no se corrigen
 
 > El humano pidió tratar como tareas separadas lo que quedó fuera de T29. F21a–F21c sustituyen a la F21 única; FB1 se lee en las tres.
 
-#### F21a Exportar y compartir respaldo `[FE · Intermedia · N3]`
+#### F21a Exportar y compartir respaldo `[FE · Intermedia · N3]` ✅
 
 Dep: F20, FB1; T28 · S · `apps/mobile/src/screens/settings/backup/*`
 
-- [ ] Exporta con `exportBackup` y comparte el archivo con la hoja del sistema (RF-37)
-- [ ] Estado de error si falla la escritura o el compartir
-- Verif: Playwright en web · 🧍 compartir el archivo en un teléfono
+- [x] Exporta con `exportBackup` y comparte el archivo con la hoja del sistema (RF-37)
+- [x] Estado de error si falla la escritura o el compartir
+- Verif: [x] Playwright en web (`tests/e2e/backup.cjs`, descarga real verificada) · [ ] 🧍 compartir el archivo en un teléfono
 
-#### F21b Importar respaldo `[FE · Intermedia · N3]`
+#### F21b Importar respaldo `[FE · Intermedia · N3]` ✅
 
 Dep: F21a, F29; T29, T36 · M · `apps/mobile/src/screens/settings/backup/*`
 
-- [ ] Elegir archivo, leerlo y aplicar `merge` o `replace` con `importBackup` (RF-38)
-- [ ] Rechazo `TOO_LARGE` / `NOT_JSON` / `INVALID` con mensaje claro y sin tocar datos
-- [ ] Confirmación explícita antes de `replace` (destructivo)
-- Verif: Playwright exportar/reimportar en instalación limpia · 🧍 archivo real
+- [x] Elegir archivo, leerlo y aplicar `merge` o `replace` con `importBackup` (RF-38)
+- [x] Rechazo `TOO_LARGE` / `NOT_JSON` / `INVALID` con mensaje claro y sin tocar datos (diálogo con motivo y detalle)
+- [x] Confirmación explícita antes de `replace` (destructivo)
+- Verif: [x] Playwright exportar/reimportar en web (hoja de modo, confirmación de reemplazo, rechazo NOT_JSON) · [ ] 🧍 archivo real en el teléfono
 
-#### F21c Sugerencias de repos y módulos `[FE · Baja · N2]`
+#### F21c Sugerencias de repos y módulos `[FE · Baja · N2]` ✅
 
 Dep: F21b; T29 · S · `apps/mobile/src/screens/settings/backup/*`
 
-- [ ] Lista las sugerencias de `importBackup`; nada se instala solo (AC-8)
-- [ ] Descarta los repos ya registrados (`RepoRegistry.listRepos`)
-- [ ] Confirmar un repo lo registra; un módulo sigue su flujo de instalación con confirmación (RF-38)
-- Verif: Playwright + tests de la lógica de filtrado
+- [x] Lista las sugerencias de `importBackup` en una hoja tras importar; nada se instala solo (AC-8)
+- [x] Descarta los repos ya registrados (`RepoRegistry.listRepos`) y los repetidos
+- [x] Confirmar un repo lo registra (descarga su índice, RF-2); un módulo apunta a Fuentes con su flujo de instalación y confirmación (RF-38)
+- Verif: [x] Playwright + tests de la lógica de filtrado (sobre SQLite real)
+
+- **Hecho (2026-10-28):** rama `feature/F21-backup-ui`, un commit para F21a+F21b+F21c (P-102: comparten capa de datos, flujo y componentes; un corte intermedio no compilaría solo). Puerto de archivos `data/backupFiles{,.native}.ts` (expo-sharing/file-system/document-picker en nativo; descarga + input file en web). Sección «Respaldo» en Ajustes (P-96), diálogo merge/replace con confirmación explícita (P-97), hoja de sugerencias tras importar (P-98), «Importar respaldo» habilitado en el paso 2 del primer uso en TV y en la galería/web (P-99). 23 tests nuevos (9 capa de datos sobre SQLite real + 14 flujo/controlador); e2e `backup.cjs` en 426 y 1440 px con capturas en `docs/capturasF21/`; e2e de settings y onboarding ampliados y en verde. Sin diseño en Stitch (P-30, DIFFS.md); prompt en `design/stitch/PROMPT-FB2-respaldo-errores.md`.
 
 ### 🚩 Checkpoint P-B `[Ops · Baja · N1]`
 
@@ -460,15 +463,16 @@ Dep: FB1, F06, F20 · S · `design/stitch/` (PNG/HTML)
 - [ ] Estados vacíos a pantalla completa (dragón, título y acción)
 - Verif: 🧍 revisión y exportación a `design/stitch/`
 
-### F29 Componentes de error: toast, modal y banner `[FE · Intermedia · N3]`
+### F29 Componentes de error: toast, modal y banner `[FE · Intermedia · N3]` ✅
 
 Dep: F06, F10, FB2 · M · `apps/mobile/src/components/*`
 
-- [ ] Toast 4 s, una línea y acción opcional; no bloquea
-- [ ] Modal con título, explicación simple, código, detalle expandible y acciones (reintentar, copiar, exportar)
-- [ ] Banner inline para error de módulo con causa, código, reintentar y detalle (F15)
-- [ ] Todos los estados en la galería; tokens, i18n y sin animación en el lector
+- [x] Toast 4 s, una línea y acción opcional; no bloquea
+- [x] Modal (diálogo) con título, explicación simple, código, detalle expandible y acciones (cerrar, reintentar)
+- [x] Banner inline para error de módulo con causa, código, reintentar y detalle (F15)
+- [x] Todos los estados en la galería; tokens, i18n y sin animación en el lector
 - Verif: Playwright + galería
+- **Hecho (2026-10-28):** rama `feature/F29-error-components`, PR #50. `Toast`, `ErrorBanner`, `ErrorDialog` + `errorNoticeStyles.ts` (lógica pura, 11 tests). Severidad info/warning/error fija el color del borde y del código. Sin diseño en Stitch (P-30, anotado en DIFFS.md): FB2 los rediseñará; el prompt para generarlos está en `design/stitch/PROMPT-FB2-respaldo-errores.md`. La acción «copiar/exportar» del modal queda para F30 (Diagnóstico), cuando exista el informe que copiar. `Button` ganó `testID` (faltaba para los e2e); `ModuleRow` ganó `hint`.
 
 ### F30 Ajustes → Diagnóstico `[FE · Baja · N2]`
 
