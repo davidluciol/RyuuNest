@@ -13,6 +13,10 @@ import { textStyle } from "../../components/textStyle";
 import { t } from "../../i18n";
 import type { SettingsData } from "./settingsData";
 import { installProtectionHintKey, READER_MODE_OPTIONS } from "./settingsView";
+import BackupSheets from "./backup/BackupSheets";
+import BackupSection from "./backup/BackupPreview";
+import type { BackupController } from "./backup/backupController";
+import type { BackupFlow } from "./backup/backupFlow";
 
 /**
  * F20 — pantalla de Ajustes (RF-34, RF-39, P-85). Presentacional: recibe la
@@ -47,6 +51,12 @@ export interface SettingsScreenProps {
   /** Una operación en curso bloquea los controles. */
   busy?: boolean;
   onRetry?: () => void;
+  /** F21 — flujo de hojas del respaldo (sección «Respaldo»). */
+  backupFlow?: BackupFlow;
+  backupController?: BackupController | null;
+  /** Aviso transitorio del respaldo (exportar/importar fuera de una hoja). */
+  backupNotice?: string | null;
+  onDismissBackupNotice?: () => void;
 }
 
 export default function SettingsScreen({
@@ -60,6 +70,10 @@ export default function SettingsScreen({
   onDismissNotice,
   busy = false,
   onRetry,
+  backupFlow,
+  backupController = null,
+  backupNotice = null,
+  onDismissBackupNotice,
 }: SettingsScreenProps) {
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
@@ -94,6 +108,13 @@ export default function SettingsScreen({
     defaultReaderMode,
   } = view.data;
 
+  // El aviso del respaldo comparte bloque con el de ajustes: solo uno a la vez.
+  const visibleNotice = notice ?? backupNotice;
+  const dismissNotice = () => {
+    onDismissNotice?.();
+    onDismissBackupNotice?.();
+  };
+
   return (
     <View style={styles.screen} testID="screen-settings">
       <ScrollView
@@ -104,10 +125,10 @@ export default function SettingsScreen({
           gap: spacing.lg,
         }}
       >
-        {notice !== null ? (
+        {visibleNotice !== null ? (
           <View style={styles.notice} accessibilityRole="alert">
-            <Text style={styles.noticeText}>{notice}</Text>
-            <Button variant="secondary" label={t("actions.close")} onPress={onDismissNotice} />
+            <Text style={styles.noticeText}>{visibleNotice}</Text>
+            <Button variant="secondary" label={t("actions.close")} onPress={dismissNotice} />
           </View>
         ) : null}
 
@@ -207,7 +228,18 @@ export default function SettingsScreen({
             }
           />
         </View>
+
+        {backupController !== null ? (
+          <View style={styles.section}>
+            <SectionHeader title={t("settings.section.backup")} />
+            <BackupSection controller={backupController} disabled={busy} />
+          </View>
+        ) : null}
       </ScrollView>
+
+      {backupController !== null && backupFlow !== undefined ? (
+        <BackupSheets flow={backupFlow} controller={backupController} />
+      ) : null}
     </View>
   );
 }

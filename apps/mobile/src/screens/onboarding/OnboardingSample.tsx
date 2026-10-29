@@ -9,12 +9,17 @@ import { createSampleSourcesService } from "../sources/sampleSourcesService";
 import { EMPTY_SOURCES_DATA } from "../sources/sourcesFixtures";
 import OnboardingScreen from "./OnboardingScreen";
 import { useOnboardingSession } from "./useOnboardingData";
+import { useBackupData } from "../settings/backup/useBackupData";
 
 /**
  * F12 — el flujo de primer uso montado sobre el servicio de ejemplo, vacío al
  * empezar (solo galería y e2e; la app usa el servicio real sobre SQLite).
  * Instalar recorre la confirmación real del servicio de ejemplo (AC-8). Al
  * terminar («Saltar» o «Ir a leer») muestra el texto de completado.
+ *
+ * F21b: monta también el flujo de respaldo de Ajustes para el botón
+ * «Importar respaldo» del paso 2 (en la app solo se ofrece en TV; en la
+ * galería se enseña siempre).
  */
 
 export default function OnboardingSample() {
@@ -24,6 +29,7 @@ export default function OnboardingSample() {
     setDone(true);
   }, []);
   const session = useOnboardingSession({ service, complete });
+  const backup = useBackupData();
 
   return (
     <View style={styles.wrap} testID="onboarding-sample">
@@ -38,6 +44,8 @@ export default function OnboardingSample() {
           notice={session.notice}
           suggestedUrl={OFFICIAL_REPO_URL}
           onRetry={session.retry}
+          backupFlow={backup.flow}
+          backupController={backup.controller}
         />
       )}
     </View>

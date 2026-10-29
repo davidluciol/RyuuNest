@@ -43,7 +43,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
       await page.getByTestId("screen-settings").waitFor({ state: "visible" });
 
       // Ajustes globales: idioma disponible, modo y caché sin cifras inventadas.
-      await page.getByText("Idioma").waitFor({ state: "visible" });
+      await page.getByText("Idioma", { exact: true }).waitFor({ state: "visible" });
       await page.getByText("Español").waitFor({ state: "visible" });
       await page.getByText("Preferencias de lectura").waitFor({ state: "visible" });
       await page.getByText("Vertical continuo").waitFor({ state: "visible" });
@@ -51,6 +51,11 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
       await page.getByText("Paginado I → D · Cómic").waitFor({ state: "visible" });
       await page.getByText("Almacenamiento y caché").waitFor({ state: "visible" });
       await page.getByText("Vaciar caché de imágenes").waitFor({ state: "visible" });
+
+      // F21: la sección «Respaldo» aparece con sus dos filas (RF-37, RF-38).
+      await page.getByText("Respaldo", { exact: true }).waitFor({ state: "visible" });
+      await page.getByText("Exportar respaldo", { exact: true }).first().waitFor({ state: "visible" });
+      await page.getByText("Importar respaldo", { exact: true }).first().waitFor({ state: "visible" });
 
       const nsfwToggle = page.getByTestId("settings-nsfw-switch");
       const nsfwInput = nsfwToggle.locator("input");
@@ -92,12 +97,13 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
       await page.goto(`${baseURL}/library`);
       const libraryScreen = page.getByTestId("screen-library");
       await libraryScreen.waitFor({ state: "visible" });
-      await libraryScreen.getByText("Draco de jade", { exact: true }).waitFor({ state: "visible" });
+      await libraryScreen.getByText("El dragón de ceniza").waitFor({ state: "visible" });
       await page.goto(`${baseURL}/discover`);
       const discoverScreen = page.getByTestId("screen-discover");
       await discoverScreen.waitFor({ state: "visible" });
       await discoverScreen
-        .getByText("Draco de jade", { exact: true })
+        .getByText("El dragón de ceniza")
+        .first()
         .waitFor({ state: "visible" });
 
       assert.equal(

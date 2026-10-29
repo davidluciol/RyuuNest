@@ -21,6 +21,8 @@ export interface ModuleRowProps {
   badges?: readonly string[];
   /** Último error del módulo (RF-5). */
   error?: string;
+  /** F21: texto secundario bajo los metadatos (p. ej. «Instálalo desde Fuentes»). */
+  hint?: string;
   actionLabel: string;
   actionVariant?: "primary" | "secondary";
   onAction?: () => void;
@@ -32,6 +34,7 @@ export default function ModuleRow({
   meta,
   badges = [],
   error,
+  hint,
   actionLabel,
   actionVariant = "secondary",
   onAction,
@@ -45,6 +48,7 @@ export default function ModuleRow({
           {name}
         </Text>
         <Text style={[styles.meta, { color: text.meta }]}>{meta}</Text>
+        {hint ? <Text style={[styles.meta, { color: text.meta }]}>{hint}</Text> : null}
         {badges.length > 0 ? (
           <View style={styles.badges}>
             {badges.map((label) => (
