@@ -1,44 +1,14 @@
+import { backupFileName, type BackupFiles } from "./backupFilesPort";
+
 /**
- * F21 — puerto de archivos del respaldo (RF-37/RF-38), solo de plataforma.
- *
- * El núcleo exporta e importa **texto** (`exportBackup`/`importBackup`); aquí
- * vive cómo ese texto llega a un archivo y vuelve de él:
- *
- * - Nativo (Android/iOS): escribe en la caché de la app con `expo-file-system`
- *   y abre la hoja del sistema con `expo-sharing` (F21a); para importar, el
- *   selector del sistema (`expo-document-picker`) entrega una URI que se lee
- *   de vuelta a texto (F21b).
- * - Web (galería, Playwright, cliente web futuro): no hay hoja del sistema ni
- *   selector nativo. Exportar descarga el JSON con un enlace; importar usa un
- *   `input type="file"` oculto.
- *
- * Nada de esto lo sabe la pantalla: le entran y salen textos.
+ * F21 — puerto de archivos del respaldo en web (galería, Playwright, cliente web
+ * futuro): no hay hoja del sistema ni selector nativo. Exportar descarga el JSON
+ * con un enlace; importar usa un `input type="file"` oculto. El dispositivo usa
+ * `backupFiles.native.ts`; Metro elige por plataforma, así que quien lo necesita
+ * importa `createBackupFiles` de aquí sin preguntar dónde corre. Los tipos, el
+ * nombre del archivo y `isNativePlatform` viven en `backupFilesPort.ts`.
  */
-
-/** Resultado de compartir: se abrió la hoja, o el usuario la descartó. */
-export type ShareResult = "shared" | "dismissed";
-
-/** Resultado de elegir un archivo: el texto leído, o `null` si se canceló. */
-export type PickResult = { text: string; name: string } | null;
-
-/** Puerto de archivos del respaldo. */
-export interface BackupFiles {
-  /** Escribe el texto como `ryuunest-respaldo-<fecha>.json` y abre la hoja del sistema. */
-  shareBackup(text: string): Promise<ShareResult>;
-  /** Abre el selector del sistema y devuelve el texto del archivo elegido. */
-  pickBackup(): Promise<PickResult>;
-  /** Descarga el texto como archivo (web: la alternativa a la hoja del sistema). */
-  downloadBackup(text: string, fileName: string): void;
-}
-
-/** Nombre de archivo del respaldo: `ryuunest-respaldo-2026-10-28.json`. */
-export function backupFileName(now: Date = new Date()): string {
-  const fecha = now.toISOString().slice(0, 10);
-  return `ryuunest-respaldo-${fecha}.json`;
-}
-
-/** Implementación de web: descarga por enlace e `input type="file"`. */
-export function createWebBackupFiles(): BackupFiles {
+export function createBackupFiles(): BackupFiles {
   const files: BackupFiles = {
     shareBackup(text) {
       // En web no hay hoja del sistema: compartir es descargar el archivo.
@@ -95,12 +65,4 @@ export function createWebBackupFiles(): BackupFiles {
     },
   };
   return files;
-}
-
-/** En web no hay hoja del sistema: la UI de respaldo usa la descarga directa. */
-export function isNativePlatform(): boolean {
-  // Sin importar `react-native` aquí: este módulo lo usan pruebas sin Metro
-  // (MEMORY §5: Vitest no parsea el `index.js` de RN). La variante `.native`
-  // se resuelve sola en el bundle de la app.
-  return typeof document === "undefined";
 }

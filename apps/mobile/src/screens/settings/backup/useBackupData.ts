@@ -2,8 +2,7 @@ import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { router } from "expo-router";
 
 import { openAppDatabase } from "../../../data/appDatabase";
-import { createWebBackupFiles, isNativePlatform } from "../../../data/backupFiles";
-import type { BackupFiles } from "../../../data/backupFiles";
+import { createBackupFiles } from "../../../data/backupFiles";
 import { createFetchHttp } from "../../../data/fetchHttp";
 import { createBackupService, type BackupService } from "./backupData";
 import { createSampleBackupService } from "./sampleBackupService";
@@ -20,21 +19,22 @@ import {
  * selector); en web y la galería, el servicio de ejemplo sobre la descarga y
  * el `input type="file"` (P-79). La pantalla no pregunta la plataforma.
  *
- * La variante nativa (`backupFiles.native`) se importa de forma dinámica para
- * que Vitest no parsee `expo-file-system`/`expo-sharing` (módulos nativos).
+ * `createBackupFiles` lo elige Metro por plataforma (`backupFiles.ts` en web,
+ * `backupFiles.native.ts` en el dispositivo): aquí no se pregunta la plataforma
+ * ni se importa la variante nativa a mano. Vitest resuelve la de web y no
+ * parsea `expo-file-system`/`expo-sharing`.
  */
 
 let resolvedBackupService: Promise<BackupService> | undefined;
 
-async function createAppBackupService(driver: Awaited<ReturnType<typeof openAppDatabase>> & object): Promise<BackupService> {
-  const files: BackupFiles = isNativePlatform()
-    ? await import("../../../data/backupFiles.native").then((module) => module.createNativeBackupFiles())
-    : createWebBackupFiles();
+function createAppBackupService(
+  driver: Awaited<ReturnType<typeof openAppDatabase>> & object,
+): BackupService {
   return createBackupService({
     driver,
     http: createFetchHttp(),
     clock: { now: () => Date.now() },
-    files,
+    files: createBackupFiles(),
   });
 }
 
@@ -44,7 +44,7 @@ export function resolveBackupService(): Promise<BackupService> {
       // Web (galería, e2e, cliente futuro): servicio de ejemplo con la
       // descarga real; en Vitest no se llama (las pruebas montan el servicio
       // de ejemplo con el puerto inerte a mano).
-      return createSampleBackupService(createWebBackupFiles());
+      return createSampleBackupService(createBackupFiles());
     }
     return createAppBackupService(driver);
   });

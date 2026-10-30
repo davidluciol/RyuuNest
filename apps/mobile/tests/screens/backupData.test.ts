@@ -2,8 +2,8 @@ import { importBackup, StubHttp } from "@ryuunest/core";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { openMigratedDriver } from "../../../../packages/core/tests/support/nodeSqliteDriver";
-import { backupFileName } from "../../src/data/backupFiles";
-import type { BackupFiles } from "../../src/data/backupFiles";
+import { backupFileName } from "../../src/data/backupFilesPort";
+import type { BackupFiles } from "../../src/data/backupFilesPort";
 import {
   createBackupService,
   summarizeImport,
