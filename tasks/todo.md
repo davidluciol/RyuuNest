@@ -161,17 +161,18 @@ Dep: T31 · M · `packages/test-site/fixtures/json-api/**`
 - Verif: `pnpm -r test`
 - **Hecho (2026-10-24):** 8 fixtures JSON estáticos en `packages/test-site/fixtures/json-api/` (`popular-c1/c2`, `latest-c1/c2`, `search-dragon-c1`, `series-dragon-de-ceniza`, `pages-ch-1-r-oficial`, `pages-ch-1-r-alt`) que reproducen las respuestas del sitio JSON dinámico con paginación por cursor. Nuevo test de contrato `packages/core/tests/contract/jsonApi.contract.test.ts` (3 tests) que monta el módulo `EXAMPLE_SCRIPT_JSON` sobre un `StubHttp` con los fixtures estáticos y ejecuta el arnés de contrato completo (`popular`, `latest`, `search`, `details`, `pages`) con `expectImageHeaders`. Verifica que el módulo traduce páginas a cursores (`?cursor=c2`) y que las imágenes llevan las cabeceras exigidas. **Sin ajustes de API nuevos**: los cambios aditivos de T31 (P-74 `HostResponse.url`, P-75 errores tipados, P-76 `estimatedHasNext`) ya cubren la arquitectura JSON + cursor. Suite completa en verde: 787 tests (core 423, +3 nuevos).
 
-### T32b ADR de congelación de API 1.0 `[BE · Alta · N5]`
+### T32b ADR de congelación de API 1.0 `[BE · Alta · N5]` ✅
 
-Dep: T32a · S · `docs/decisions/ADR-000x-congelacion-api-1.0.md`
+Dep: T32a · S · `docs/decisions/ADR-0003-congelacion-api-1.0.md`
 
-- [ ] El ADR marca la API 1.0 como estable o enumera los cambios requeridos; lista candidatos de 2.º sitio real (sin instalarlos)
-- [ ] Resultado anotado en `MEMORY.md` (preguntas abiertas SPEC §17.2)
+- [x] El ADR marca la API 1.0 como estable o enumera los cambios requeridos; lista candidatos de 2.º sitio real (sin instalarlos)
+- [x] Resultado anotado en `MEMORY.md` (preguntas abiertas SPEC §17.2)
 - Verif: 🧍 revisar el ADR con el autor
+- **Hecho (2026-10-29):** ADR-0003 **propuesto** (rama `docs/T32b-adr-congelacion-api-1.0`). Veredicto: la API 1.0 **no se congela todavía**. El modelo de datos y las firmas sí son congelables (3 módulos reales y 2 sitios falsos sin cambios de tipo); antes hay que hacer **R1** (ejecución y empaquetado de `script`: los tres módulos publicados son ES de 11–12 archivos y `ScriptLoader.load(source)` solo recibe la entrada), **R2** (formato declarativo sin documento ni validador; el CLI `test` omite los declarativos), **R3** (índice tolerante por entrada y `minAppVersion` real) y **R4** (semántica escrita y forma validada en ejecución). P-74 y P-75 se congelan; P-76 es herramienta del SDK. Decisiones del autor: **D1** (cómo se ejecutan los `script`), **D2** (cabeceras de imagen en declarativo) y **D3** (2.º sitio real; `m440` recomendado). El estado de SPEC §17.2 está en el ADR. Sin cambios de código ni de SPEC. Las tareas R1–R4 no se crean hasta que el autor acepte el ADR.
 
 ### 🚩 Checkpoint I `[Ops · Baja · N1]`
 
-- [ ] 🧍 `logicTMO` busca, lista capítulos y entrega imágenes en un sitio real · [ ] Contrato pasa con 2 arquitecturas · [ ] API 1.0 congelable · [ ] 🧍 Revisión
+- [ ] 🧍 `logicTMO` busca, lista capítulos y entrega imágenes en un sitio real · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (ADR-0003: aún no; faltan R1–R4 y D3) · [ ] 🧍 Revisión
 
 ---
 
