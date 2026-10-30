@@ -1,6 +1,6 @@
 # ADR-0003: Congelación de la API 1.0 de módulos
 
-- **Estado:** **propuesto**. Pendiente de revisión del autor (`tasks/todo.md` T32b, «Verif: 🧍»). Nada de lo que sigue es una decisión hasta que se acepte.
+- **Estado:** **aceptado** por el autor el 2026-10-29, con D1 = A, D2 = (a) y D3 = `m440` (más `zonatmo`); ver «Decisiones del autor (resueltas)». R1 a R4 son las tareas T37 a T40 y la puerta del 2.º sitio es T41 (`tasks/todo.md`). La API 1.0 sigue **sin congelarse** hasta que se cierren.
 - **Fecha:** 2026-10-29
 - **Tarea:** T32b (Fase 8)
 - **Autoridad:** `docs/SPEC.md` §6, §13, §15, §17; `MEMORY.md` P-21, P-74 a P-76, P-78, P-82, P-83; `tasks/plan.md` §8
@@ -206,7 +206,16 @@ Las filas de los legados sin portar resumen la tabla «Ports pendientes» de `ta
 | 10 | Pantallas sin diseño | Tarea de diseño (FB2, F34); no afecta a la API | `MEMORY.md` §4 |
 | 11 | Verificación de la app nativa | Abierta; decisión del humano | `AGENTS.md` §5 |
 
-## Decisiones que necesito del autor
+## Decisiones del autor (resueltas el 2026-10-29)
+
+| | Decisión |
+| --- | --- |
+| **D1** | **A**: conservar «módulo ES con imports relativos»; el cargador de la app resuelve el paquete. Spike en el POCO como puerta (T40). Si falla, plan C (`script` experimental) y se reabre. |
+| **D2** | **(a)**: `pages.imageHeaders` en el formato declarativo (T39). |
+| **D3** | **`m440`** como 2.º sitio real, junto con `zonatmo` (el 1.º). Habrá más sitios en el futuro; por ahora la puerta usa esos dos (T41). |
+| Valores | Aceptados con el ADR: `page` base 1, `Host.settings` sin persistencia garantizada, `hasNext` estimable, redirecciones seguidas, cookies fuera de garantía, campos desconocidos ignorados e ids opacos. |
+
+Las opciones que se presentaron quedan abajo como registro.
 
 ### D1. Cómo se ejecutan los módulos `script` (R1)
 
@@ -246,11 +255,11 @@ Recomendación: **`m440`** con el criterio de aceptación de la Decisión 5. Alt
 ## Consecuencias
 
 - **Ningún módulo publicado necesita cambios** con lo propuesto. La única opción que obliga a republicar es D1-B.
-- Al aceptar este ADR: `MEMORY.md` pasa P-108 de «propuesto» a vigente; se actualizan SPEC §6.2 a §6.6 y §17.2; y R1 a R4 se convierten en tareas. **El agente no las crea solo**: se piden cuando el autor las quiera.
+- Al aceptarse (hecho): `MEMORY.md` pasa P-108 de «propuesto» a vigente; se actualizan SPEC §6.2 a §6.6 y §17.2; y R1 a R4 se convierten en tareas (T37 a T40; T41 es la puerta del 2.º sitio). Orden: T37 → T38 → T39 → T40 → T41.
 - El Checkpoint I sigue abierto hasta R1 a R4, D3 y la prueba en el POCO.
 - Si se acepta tal cual, conviene hacer R3 y R4 **antes** de que el repo de módulos crezca más allá de los tres módulos actuales.
 - Fuera de este repo: la guía `AGENTS.md` de `RyuuNest-Models` dice que «un campo de más o de menos lo rechaza» y no coincide con el validador.
-- Este ADR no toca código ni SPEC.
+- Este ADR no toca código. Los cambios del SPEC derivados de su aceptación (§6.2 a §6.6 y §17.2) se aplicaron en la misma rama.
 
 ## Anexo A: inventario de la superficie
 
