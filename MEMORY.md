@@ -11,6 +11,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - **F18 y F19 (Lector) hechas** en una sola rama (`feature/F18-F19-reader`, por decisión del humano, un PR); la ficha F17 ya lee datos reales. Falta la prueba en el POCO y AC-6 en MiBox (ver §4).
 - **F16 (Fuentes) hecha** (rama `feature/F16-sources`, PR abierto); falta la prueba en el POCO. **F16b** (interruptor de protección, Ajustes mínima), **F16c** (repo oficial por defecto) y **F12** (primer uso) hechas en `feature/F16b-F12-oficial-onboarding`; falta el POCO.
 - **FB2 y F30 hechas** (rama `feature/FB2-F30-diagnostics`, 2026-10-29): diseños de Diagnóstico/vacíos y la pantalla Ajustes → Diagnóstico; queda **F34** (correcciones UX/UI transversales, Alta, N4) y F31 (integrar errores en pantallas).
+- **Fallo nativo de F21 resuelto** (rama `fix/F34-backup-files-native`, 2026-10-29, P-107): en Android/iOS Inicio caía al renderizar (`isNativePlatform` indefinido) y el respaldo no podía compartir; falta confirmarlo en el POCO (§4).
 - Suite en verde (~800 tests), CI activo, Graphify indexado.
 
 ## 2. Hitos
@@ -97,6 +98,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - P-104 `expo-clipboard ~57.0.2` autorizada por el humano (2026-10-29) para «Copiar informe» (docs `docs.expo.dev/versions/latest/sdk/clipboard/` vía Context7 `/websites/expo_dev`; `setStringAsync`). Puerto `data/clipboard{,.native}.ts`; en web, `navigator.clipboard`. Desbloquea también el «pegar» pendiente de P-86.
 - P-105 Diagnóstico (F30, agente): ruta `/diagnostics` fuera de pestañas, con «volver» por `router.dismissTo("/settings")` (un enlace directo no deja historial); confirmación de borrado en `SheetModal`; fallos con texto fijo (el mensaje técnico no se enseña); informe en texto o JSON con el mismo formato que el núcleo (`formatLogEntries`). Un módulo `.native.ts` **no** debe importar de su hermano `.ts` (Metro lo resuelve a sí mismo): los tipos/utilidades compartidos van en un módulo aparte (`diagnosticsReport.ts`).
 - P-106 Una sola tarea de correcciones UX/UI (F34, decisión del humano 2026-10-29): Alta, N4 `claude-sonnet-5-5`, skills `ui-ux-pro-max` + `stitch-design-taste`; agrupa los hallazgos previos y los nuevos (fuentes en serif, toast, interruptor, filas, escritorio, confirmación unificada, zonas seguras, token mono, puerta de i18n).
+- P-107 Variantes de plataforma (agente, 2026-10-29; amplía P-105): el fallo nativo de F21 era más grave que lo anotado. En Android e iOS Metro resuelve `./x` a `x.native.ts`, así que `isNativePlatform` (Inicio, durante el render) y `createWebBackupFiles` llegaban `undefined` y **Inicio fallaba al abrir**; en el bundle de Android esos símbolos tenían 2 usos y 0 definiciones. Regla: las dos variantes de un módulo exportan **los mismos nombres** (`createBackupFiles`, `createDiagnosticsFiles`, `copyText`, `openAppDatabase`, `createAppSecureLock`) y lo compartido va en un módulo sin hermano de plataforma (`backupFilesPort.ts`, `diagnosticsReport.ts`). La guarda `apps/mobile/tests/platformResolution.test.ts` repite la resolución de Metro sobre `src` y falla si un `x.native.ts` importa `./x` o si se pide un nombre que la variante de Android/iOS no exporta.
 - Convenio de pruebas: cada pantalla raíz declara `testID="screen-<id>"`; los e2e esperan ese marcador (`tests/e2e/markers.cjs`) y un guard falla si una ruta de destino no es marco ni lo declara.
 
 **Proceso**
@@ -115,7 +117,8 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - 🧍 Verificar que `modules/{AGENTS,README,NOTES}.md` estén copiados al repo `RyuuNest-Models` (están ignorados por git aquí) y ejecutar los módulos reales en el dispositivo (selectores y rutas nunca se contrastaron con los sitios reales desde el entorno del agente).
 - 🧍 **Diseño en Stitch (FB2):** revisar los diseños nuevos de `design/stitch/*_dragon_night/` y, si quieres versiones hechas en Stitch, regenerarlas. Siguen sin diseño: primer uso, confirmación de instalación y hoja de filtros.
 - 🧍 **F30 en el POCO:** exportar el informe (hoja del sistema) y copiarlo al portapapeles; el registro real estará vacío hasta F31.
-- 🧍 **F34:** elegir la fuente monoespaciada local (OFL) para códigos y detalle técnico, y confirmar en el POCO el posible fallo nativo de `backupFiles.native.ts`.
+- 🧍 **Fallo nativo de F21 (P-107), rama `fix/F34-backup-files-native`:** con el APK/Expo del POCO, confirmar que Inicio abre sin error y que Ajustes → Respaldo exporta (hoja del sistema) e importa. Antes del arreglo, Inicio caía con «isNativePlatform is not a function»; si algo más falla en nativo, pasar el texto del error.
+- 🧍 **F34:** elegir la fuente monoespaciada local (OFL) para códigos y detalle técnico.
 - 🧍 Encargar el arte final del dragón (FA1). Validar los textos `state.error.library.*` (sin diseño).
 
 - 🧍 **F16 en el POCO:** añadir un repo real, instalar un módulo declarativo y uno `script` (confirmación reforzada y bloqueo del dispositivo con la protección activada a mano en `setting`). Incluir F16b/F16c/F12: el repo oficial debe aparecer al entrar en Fuentes, el interruptor de Ajustes con bloqueo real y el primer uso al arrancar sin nada.
@@ -128,7 +131,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 ### Del agente (orden sugerido)
 1. **T32b:** ADR de congelación de la API 1.0 (revisa P-74/P-75/P-76, resuelve las preguntas técnicas de SPEC §17.2 y fija el segundo sitio real, P-21). *Sugerencia:* hacerlo antes de que crezca el repo de módulos externo para no romper módulos publicados.
 2. **Biblioteca (restos de F14):** pasar `reading: true` al núcleo, hoja de filtros real (tipo/fuente son chips placeholder), menú de orden (hoy cicla al pulsar) y nombre visible de la fuente desde `ModuleRegistry`.
-3. **F34 (correcciones UX/UI transversales, Alta, N4):** empezar por «fuentes en serif» y el posible fallo nativo de F21 (bloqueantes); ver `tasks/todo.md`.
+3. **F34 (correcciones UX/UI transversales, Alta, N4):** empezar por «fuentes en serif» (bloqueante; el fallo nativo de F21 ya está resuelto, P-107); ver `tasks/todo.md`.
 4. **Errores y diagnóstico:** F31 (integración de toast/modal/banner en F15/F16/F21/lector con registro en `log`; F21 ya usa el diálogo de rechazo). F30 ya lee el registro real, hoy vacío.
 5. **Lector y ajustes:** F18/F19 hechas; falta F22 (lector en TV, D-pad). Siguen F24 (cliente web/riel), F25 y el resto de Parte 2 (ver `tasks/todo.md`).
 6. **T35:** calibrar políticas del host (`HOST_DEFAULTS`: 15 s, 4, 250 ms) con mediciones y cerrar el checkpoint de la Parte 1.
@@ -144,6 +147,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 
 - `pnpm add --filter X` poda los `node_modules` de otros paquetes: correr `pnpm install` completo después.
 - Metro resuelve `@ryuunest/core` por su `dist`: tras tocar `packages/core/src`, `pnpm --filter @ryuunest/core build` y reiniciar Metro (`--clear` si no recoge el cambio), o la web falla con símbolos `undefined`. Playwright está instalado globalmente: `PLAYWRIGHT_MODULE=%APPDATA%\npm\node_modules\playwright`.
+- Un `x.native.ts` **nunca** importa `./x` (Metro lo resuelve a sí mismo) y quien importa de un módulo con variantes solo pide nombres que ambas exportan; `tsc` y Vitest no lo ven. Para comprobar el bundle real sin móvil: `npx expo export -p android --no-minify --no-bytecode -s external --output-dir <tmp>` y mirar `sources` del `.map` (¿está el `x.ts` web? no debe estar) y las definiciones de los símbolos en el `.js`.
 - La puerta de i18n compara subcadenas: un valor de catálogo como «Error», «Info» o «JSON» choca con `ErrorState`, `Info` o `JSON.stringify` (F34 la afina).
 - Tras tocar `ui-tokens`, `pnpm --filter @ryuunest/ui-tokens build` antes de `expo export` (Metro usa `dist`).
 - Con `core.autocrlf` `pnpm format` reescribe todo el repo: usar `prettier --end-of-line auto` por archivo.
