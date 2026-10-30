@@ -6,7 +6,7 @@ import OnboardingScreen from "../../screens/onboarding/OnboardingScreen";
 import { useOnboardingData } from "../../screens/onboarding/useOnboardingData";
 import { useBackupData } from "../../screens/settings/backup/useBackupData";
 import { OFFICIAL_REPO_URL } from "../../data/officialRepo";
-import { isNativePlatform } from "../../data/backupFiles";
+import { isNativePlatform } from "../../data/backupFilesPort";
 
 /**
  * F13 — ruta Inicio: pantalla completa con datos de ejemplo coherentes.
@@ -51,7 +51,7 @@ function FirstUseRoute() {
   return <HomeScreen data={SAMPLE_HOME_DATA} />;
 }
 
-/** Heurística de TV sin importar `react-native` en la ruta (ver `backupFiles`). */
+/** Heurística de TV sin importar `react-native` en la ruta (ver `backupFilesPort`). */
 function isTvLike(): boolean {
   return typeof navigator !== "undefined" && /TV|SmartTV|SMART-TV/i.test(navigator.userAgent);
 }

@@ -1,6 +1,6 @@
 import type { ImportResult, MediaKind } from "@ryuunest/core";
 
-import type { BackupFiles } from "../../../data/backupFiles";
+import type { BackupFiles } from "../../../data/backupFilesPort";
 import type {
   BackupImportSummary,
   BackupService,

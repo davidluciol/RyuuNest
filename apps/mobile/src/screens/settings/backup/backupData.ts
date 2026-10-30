@@ -15,7 +15,7 @@ import {
 } from "@ryuunest/core";
 import { validateRepoIndex } from "@ryuunest/module-sdk";
 
-import type { BackupFiles } from "../../../data/backupFiles";
+import type { BackupFiles } from "../../../data/backupFilesPort";
 
 /**
  * F21 — capa de datos del respaldo en Ajustes (RF-37, RF-38; T28/T29 en el

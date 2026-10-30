@@ -2,12 +2,20 @@ import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system/legacy";
 import * as Sharing from "expo-sharing";
 
-import { backupFileName, type BackupFiles, type PickResult, type ShareResult } from "./backupFiles";
+import {
+  backupFileName,
+  type BackupFiles,
+  type PickResult,
+  type ShareResult,
+} from "./backupFilesPort";
 
 /**
  * F21 — implementación nativa del puerto de archivos del respaldo: hoja del
  * sistema con `expo-sharing` y selector con `expo-document-picker`. La web usa
  * `backupFiles.ts` (descarga + `input type="file"`).
+ *
+ * **No importar de `./backupFiles`:** en el dispositivo Metro lo resuelve a este
+ * mismo archivo. Lo compartido vive en `backupFilesPort.ts`.
  *
  * `expo-file-system/legacy`: la API clásica (`cacheDirectory`,
  * `writeAsStringAsync`, `readAsStringAsync`, `makeDirectoryAsync`) vive en el
@@ -15,7 +23,7 @@ import { backupFileName, type BackupFiles, type PickResult, type ShareResult } f
  * recomendada a futuro, pero la clásica es la estable en SDK 57 y la que
  * cubre escribir y leer texto plano.
  */
-export function createNativeBackupFiles(): BackupFiles {
+export function createBackupFiles(): BackupFiles {
   return {
     async shareBackup(text): Promise<ShareResult> {
       const directory = FileSystem.cacheDirectory;
