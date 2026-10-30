@@ -161,17 +161,76 @@ Dep: T31 · M · `packages/test-site/fixtures/json-api/**`
 - Verif: `pnpm -r test`
 - **Hecho (2026-10-24):** 8 fixtures JSON estáticos en `packages/test-site/fixtures/json-api/` (`popular-c1/c2`, `latest-c1/c2`, `search-dragon-c1`, `series-dragon-de-ceniza`, `pages-ch-1-r-oficial`, `pages-ch-1-r-alt`) que reproducen las respuestas del sitio JSON dinámico con paginación por cursor. Nuevo test de contrato `packages/core/tests/contract/jsonApi.contract.test.ts` (3 tests) que monta el módulo `EXAMPLE_SCRIPT_JSON` sobre un `StubHttp` con los fixtures estáticos y ejecuta el arnés de contrato completo (`popular`, `latest`, `search`, `details`, `pages`) con `expectImageHeaders`. Verifica que el módulo traduce páginas a cursores (`?cursor=c2`) y que las imágenes llevan las cabeceras exigidas. **Sin ajustes de API nuevos**: los cambios aditivos de T31 (P-74 `HostResponse.url`, P-75 errores tipados, P-76 `estimatedHasNext`) ya cubren la arquitectura JSON + cursor. Suite completa en verde: 787 tests (core 423, +3 nuevos).
 
-### T32b ADR de congelación de API 1.0 `[BE · Alta · N5]`
+### T32b ADR de congelación de API 1.0 `[BE · Alta · N5]` ✅
 
-Dep: T32a · S · `docs/decisions/ADR-000x-congelacion-api-1.0.md`
+Dep: T32a · S · `docs/decisions/ADR-0003-congelacion-api-1.0.md`
 
-- [ ] El ADR marca la API 1.0 como estable o enumera los cambios requeridos; lista candidatos de 2.º sitio real (sin instalarlos)
-- [ ] Resultado anotado en `MEMORY.md` (preguntas abiertas SPEC §17.2)
+- [x] El ADR marca la API 1.0 como estable o enumera los cambios requeridos; lista candidatos de 2.º sitio real (sin instalarlos)
+- [x] Resultado anotado en `MEMORY.md` (preguntas abiertas SPEC §17.2)
 - Verif: 🧍 revisar el ADR con el autor
+- **Aceptado por el autor (2026-10-29):** D1 = A, D2 = `pages.imageHeaders`, D3 = `m440` (con `zonatmo`); valores propuestos aceptados. R1–R4 son T37–T40 y la puerta del 2.º sitio es T41 (abajo). SPEC §6.2–§6.6 y §17.2 actualizados en la misma rama.
+- **Hecho (2026-10-29):** ADR-0003 (rama `docs/T32b-adr-congelacion-api-1.0`). Veredicto: la API 1.0 **no se congela todavía**. El modelo de datos y las firmas sí son congelables (3 módulos reales y 2 sitios falsos sin cambios de tipo); antes hay que hacer **R1** (ejecución y empaquetado de `script`: los tres módulos publicados son ES de 11–12 archivos y `ScriptLoader.load(source)` solo recibe la entrada), **R2** (formato declarativo sin documento ni validador; el CLI `test` omite los declarativos), **R3** (índice tolerante por entrada y `minAppVersion` real) y **R4** (semántica escrita y forma validada en ejecución). P-74 y P-75 se congelan; P-76 es herramienta del SDK. Decisiones del autor: **D1** (cómo se ejecutan los `script`), **D2** (cabeceras de imagen en declarativo) y **D3** (2.º sitio real; `m440` recomendado). El estado de SPEC §17.2 está en el ADR. Sin cambios de código ni de SPEC.
+
+### Cierre de la API 1.0 (ADR-0003, aceptado 2026-10-29)
+
+Orden: T37 → T38 → T39 → T40 → T41. Cada tarea: TDD (rojo → verde), un commit por corte, rama propia. Todas parten de `docs/decisions/ADR-0003-congelacion-api-1.0.md`; los tres módulos publicados de `RyuuNest-Models` son la regresión (ninguno debe necesitar cambios, salvo que T40 lo decida).
+
+### T37 Contrato escrito y validado en ejecución (R4) `[BE · Intermedia · N3]`
+
+Dep: T32b · M · `docs/SPEC.md` §6.2–§6.5 (ya actualizado), `packages/core/src/contract/types.ts`, `runtimes/ModuleRuntime.ts`, `core/tests/contract/*`
+
+- [ ] Quitar las marcas «⚠️ Provisional» de `HostRequestInit`, `HostResponse`, `HtmlElement` y `HtmlDocument` (sin cambios de forma)
+- [ ] `guardApi` valida la forma **mínima** que exige el contrato (`Page`, `SeriesDetails`, `ChapterPages`: campos obligatorios y tipos básicos) y devuelve `PARSE` si falta; tolera campos extra (`related` de `zonatmo`)
+- [ ] Fixtures de `zonatmo`, `m440` y `yupmanga` como regresión: pasan la validación
+- [ ] Pruebas del arnés y de `guardApi` en rojo antes de implementar
+- Verif: `pnpm --filter @ryuunest/core test`
+
+### T38 Compatibilidad hacia delante ejecutable (R3) `[BE · Intermedia · N4]`
+
+Dep: T37 · M · `packages/module-sdk/src/{repoIndex,manifest,cli}.ts`, `packages/core/src/{contract/repoIndex,repo/RepoRegistry}.ts`, `apps/mobile/{app.json,src/screens/sources/useSourcesData.ts}`
+
+- [ ] Índice tolerante **por entrada**: `apiVersion`, `runtime` o `kinds` desconocidos marcan la entrada «no compatible» y no invalidan el repo; las rotas se descartan con aviso
+- [ ] `minAppVersion?` opcional en `RepoModuleEntry` (aditivo) y la app oculta/etiqueta lo incompatible antes de descargar
+- [ ] `app.json` con versión real y la app la pasa al validador (`Constants.expoConfig?.version`); `minAppVersion` se aplica de verdad
+- [ ] El CLI no comprueba `minAppVersion` salvo con `--app-version`
+- [ ] Pruebas: un índice con un módulo `apiVersion: 2` sigue listando los de v1
+- Verif: `pnpm -r test` + 🧍 corregir en `RyuuNest-Models` la frase «un campo de más o de menos lo rechaza» de su `AGENTS.md`
+
+### T39 Formato declarativo cerrado y comprobable (R2, D2) `[BE · Alta · N4]`
+
+Dep: T38 · L (dividir en 2 PRs si pasa de ~5 archivos por corte) · `docs/declarative-format.md`, `packages/core/src/runtimes/{DeclarativeRuntime,transforms}.ts`, `packages/module-sdk/src/*`, `packages/module-sdk/templates/declarative/*`
+
+- [ ] `pages.imageHeaders` (mapa de cabeceras con `{baseUrl}`, `{chapterId}`, `{releaseId}`) rellena `ImageRef.headers`; el lector ya las aplica
+- [ ] Serie sin capítulos devuelve `chapters: []` en vez de `PARSE` (L2)
+- [ ] `validateDeclarativeConfig` en `module-sdk`, usado por `ryuunest-module validate`
+- [ ] `ryuunest-module test` ejecuta el arnés también con módulos declarativos (retirar la omisión de `cli.test.ts`)
+- [ ] `docs/declarative-format.md` normativo a partir del Anexo B del ADR; SPEC §6.6 lo enlaza
+- [ ] L3–L6 del ADR (extra, fechas, id sin codificar, mapas de `status`/`kind`): decidir aquí cuáles entran; el resto queda como aditivo
+- Verif: `pnpm -r test` + contrato declarativo con `imageHeaders`
+
+### T40 Ejecución y empaquetado de módulos `script` (R1, D1 = A) `[BE · Alta · N4 → N5]`
+
+Dep: T38 · L · `packages/core/src/ports/scriptLoader.ts`, `runtimes/{ScriptRuntime,ModuleRuntime}.ts`, `apps/mobile/src/data/moduleMounter.ts`, cargador de plataforma (nuevo)
+
+- [ ] `ScriptLoader.load` recibe el paquete (ruta → texto) y la ruta de entrada; el montador deja de pasar solo `manifest.entry`
+- [ ] Contrato a autores documentado: módulo ES, `export default create(host)`, solo imports relativos dentro del paquete, sin `import()` ni paquetes, entorno ECMAScript estándar (SPEC §6.5)
+- [ ] 🧍 **Spike en el POCO**: cargar y ejecutar el `script` real de `zonatmo` dentro de la app y llamar a `popular`. P-83 dice que Hermes no admite `eval`/`new Function`: el spike lo confirma o lo corrige
+- [ ] Si el spike falla: marcar `script` como experimental (plan C del ADR), anotar la decisión y reabrir D1; escalar a N5
+- [ ] Desbloquear en la app los módulos `script` (`createInstalledMounter` deja de lanzar `UNSUPPORTED`)
+- Verif: pruebas del cargador con paquetes de varios archivos + 🧍 spike en el POCO
+
+### T41 Puerta del 2.º sitio real: `zonatmo` y `m440` en la app (D3) `[Ops · Baja · N2]` 🧍
+
+Dep: T39, T40 · S · sin código (salvo ajustes que salgan)
+
+- [ ] Ambos módulos pasan su arnés con fixtures propias (repo `RyuuNest-Models`)
+- [ ] Se instalan por `InstallFlow` en el POCO y ejecutan `popular` o `latest`, `search`, `details` y `pages`, y se ve una imagen en el lector (cierra también la casilla 🧍 de F32)
+- [ ] Ningún cambio de tipos del modelo de datos; si hace falta uno, se reabre el ADR
+- Verif: 🧍 prueba en el POCO
 
 ### 🚩 Checkpoint I `[Ops · Baja · N1]`
 
-- [ ] 🧍 `logicTMO` busca, lista capítulos y entrega imágenes en un sitio real · [ ] Contrato pasa con 2 arquitecturas · [ ] API 1.0 congelable · [ ] 🧍 Revisión
+- [ ] 🧍 `logicTMO` busca, lista capítulos y entrega imágenes en un sitio real (= T41) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (ADR-0003 aceptado; faltan T37–T41) · [ ] 🧍 Revisión
 
 ---
 

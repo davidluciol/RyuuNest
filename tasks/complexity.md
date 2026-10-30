@@ -70,6 +70,11 @@ Notas:
 | T31 Port `logicTMO` | BE | **Alta** | N4 | N5 | Python→TS, 8 defectos, sitio real |
 | T32a 2.º sitio falso | BE | Intermedia | N3 | N4 | Fixtures JSON + cursor |
 | T32b ADR congelación API | BE | **Alta** | N5 | — | Congelar API pública es juicio de diseño |
+| T37 Contrato escrito y validado (R4) | BE | Intermedia | N3 | N4 | Validación de forma tolerante; regresión con 3 módulos |
+| T38 Compatibilidad ejecutable (R3) | BE | Intermedia | N4 | N5 | Índice tolerante y `minAppVersion`: toca instalador, SDK y app |
+| T39 Formato declarativo cerrado (R2, D2) | BE | **Alta** | N4 | N5 | Fija un formato público; validador + CLI + documento |
+| T40 Ejecución de `script` (R1, D1 = A) | BE | **Alta** | N4 | N5 | Cargador de plataforma; el spike en Hermes puede cambiar el diseño |
+| T41 Puerta del 2.º sitio real (D3) | Ops | Baja | N2 | — | 🧍 prueba en el POCO con `zonatmo` y `m440` |
 | T33 Seguridad | Sec | **Alta** | N4 | N5 | Pensamiento adversarial |
 | T34 Resiliencia | BE | Intermedia | N3 | N4 | Timers/async, tests inestables |
 | T35 Puertas de CI | Ops | Baja | N2 | N3 | YAML + umbral de cobertura (dep. T32a) |

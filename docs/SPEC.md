@@ -303,6 +303,8 @@ export interface ChapterPages { title?: string; images: ImageRef[] }
 ```
 **Por qué `id` relativo:** los sitios cambian de dominio. Si el identificador fuera una URL absoluta, cada cambio rompería favoritos y progreso. La clave de una serie en la app es `(moduleId, series.id)`.
 
+**Reglas del modelo (ADR-0003).** Los ids (`SeriesSummary.id`, `Chapter.id`, `Release.id`) son cadenas **opacas**: pueden llevar `/`, `?` y `=`, y la app se los devuelve al módulo sin modificarlos. `Release.publishedAt` es ISO 8601 cuando el módulo lo informa. La app **ignora los campos desconocidos** de lo que devuelve un módulo, del manifest, del índice y de `index.json`: añadir un campo opcional no rompe a nadie. En runtime la app valida la forma mínima (campos obligatorios y tipos básicos) y un módulo que devuelve otra cosa recibe `PARSE`.
+
 ### 6.3 Interfaz
 
 ```ts
@@ -314,6 +316,7 @@ export interface ModuleApi {
   pages(chapterId: string, releaseId: string): Promise<ChapterPages>;
 }
 ```
+`page` empieza en **1**. `hasNext` puede ser una **estimación** válida: la app no debe asumir que `hasNext: true` garantiza una página siguiente no vacía. `search(query, page)` queda congelada; los filtros por módulo (§17.2, pregunta 5) serían un parámetro opcional aditivo fuera de la v1.
 
 ### 6.4 Errores
 
@@ -348,6 +351,10 @@ El host aplica por defecto un tiempo límite por petición, un máximo de petici
 
 `HostResponse` trae `status`, `headers`, `text()` y `url`: la URL final tras seguir las redirecciones (la pedida si no hubo ninguna). El puerto `Http` la informa de forma opcional; el host rellena la pedida cuando falta.
 
+**Semántica del host (ADR-0003).** `host.fetch` sigue redirecciones. Solo el cuerpo de texto es parte del contrato (`text()`); el manejo de `Cookie` y `set-cookie` y los temporizadores **no se garantizan** (dependen de la plataforma; anti-bot fuera de la v1, P-8). `host.settings` mantiene su firma **sin garantía de persistencia**; `host.log` también. Los valores del host (tiempo límite, simultáneas, pausa) no son contrato: ningún módulo debe depender de ellos. Todos los tipos de esta sección son definitivos (se retiró la marca «provisional» de T08).
+
+**Formato de un módulo `script` (ADR-0003, D1).** Un módulo ES cuyo `entry` exporta por defecto `create(host)`. Puede importar solo **rutas relativas dentro de su propio paquete**; no admite `import()` dinámico ni paquetes, y el entorno es ECMAScript estándar (sin `setTimeout`, `URL`, `TextDecoder`, `fetch` ni otros globales de plataforma). El cargador de la app recibe el paquete completo y resuelve esos imports. Hasta que un `script` real se ejecute en el dispositivo (spike de T40), «script» se considera **experimental**.
+
 ### 6.6 Módulos declarativos (borrador)
 
 Un módulo declarativo describe con selectores CSS dónde está cada dato; el núcleo implementa la API. Ejemplo reducido:
@@ -365,7 +372,9 @@ Un módulo declarativo describe con selectores CSS dónde está cada dato; el n�
   }
 }
 ```
-Transformaciones previstas: `trim`, `path`, `absoluteUrl`, `regex`, `number`, `join`, `replace`. Cuando un sitio necesita más que esto (redirecciones, lógica condicional), se escribe como módulo script. El formato completo se cierra en un SPEC propio durante la Fase 3.
+Transformaciones previstas: `trim`, `path`, `absoluteUrl`, `regex`, `number`, `join`, `replace`. Cuando un sitio necesita más que esto (redirecciones, lógica condicional), se escribe como módulo script. El formato completo se cierra en `docs/declarative-format.md` (T39); hasta entonces, el punto de partida es el Anexo B de `docs/decisions/ADR-0003-congelacion-api-1.0.md`.
+
+**Decisiones del ADR-0003 sobre el formato.** (D2) `pages.imageHeaders` es un mapa de cabeceras con las variables `{baseUrl}`, `{chapterId}` y `{releaseId}`, y rellena `ImageRef.headers`; un módulo que lo use declara `minAppVersion`. Una serie sin capítulos devuelve `chapters: []` (no `PARSE`). El alcance del declarativo es HTML + CSS por GET: lo demás es `script`.
 
 ### 6.7 Índice de repositorio
 
@@ -819,7 +828,7 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 - **El repo principal no incluye módulos de sitios concretos.** Los módulos del autor viven en un repo público aparte, no afiliado a la app. Repo de módulos decidido el 2026-10-25 (**P-78**): **`https://github.com/davidluciol/RyuuNest-Models.git`**. La estructura de contribución (carpeta `<site>` con `manifest.json` + `module.js` y apoyo en `bin/`) está en el `AGENTS.md` de ese repo.
 - **README:** declara que no está afiliado a ningún sitio, que no aloja ni distribuye contenido, y que cada usuario es responsable de los repos que añade y de respetar los derechos de autor y los términos de cada sitio.
 - **Documentos:** `CONTRIBUTING.md`, guía del SDK de módulos, código de conducta, plantillas de issues y política de seguridad.
-- **API versionada con semver.** Un cambio incompatible sube `apiVersion` y la app informa qué módulos no son compatibles.
+- **API versionada con semver.** Un cambio incompatible sube `apiVersion` y la app informa qué módulos no son compatibles (un módulo o entrada de índice incompatible se lista como «no compatible» y no invalida el repo, T38). Son aditivos, sin subir `apiVersion`: un campo, método o miembro del host opcionales nuevos y un código de error nuevo; son incompatibles quitar o cambiar un campo, volver obligatorio uno opcional y cambiar la semántica (ADR-0003). `minAppVersion` protege a las apps viejas de un módulo que usa algo aditivo.
 - **Nombre:** RyuuNest. Verificado el 2026-10-23 (**P-71**): repo en `davidluciol` (sin org por ahora), scope npm `@ryuunest` (se reservará), sin dominio en la v1 y `applicationId` de Android `io.github.davidluciol.ryuunest` (aplicado en `apps/mobile/app.json`).
 
 ---
@@ -880,6 +889,9 @@ La v2 y la v3 están en `IDEA.md`, sección 9.
 9. **Violeta `accent-alt`:** `DESIGN.md` lo reserva para descubrimiento, pero `DESIGN_RULES.md` V1 limita el color de acento. Regla provisional: no se usa en la v1.
 10. **Pantallas sin diseño (11.5):** decidir cuáles se generan en Stitch antes de la Fase 6b.
 11. **Verificación visual de la app nativa:** Playwright solo cubre el navegador. Decidir si la galería también se compila para web o si las pantallas nativas se verifican con capturas del dispositivo (AC-12).
+
+**Estado según el ADR-0003 (2026-10-29):** resueltas 1 (API 28, ADR-0002), 6 (P-71), 7 (P-29), 8 (P-27) y 9 (P-31); la 2 se cierra con T39 (`docs/declarative-format.md`); la 5 queda fuera de la v1 (parámetro opcional aditivo en `search`); la 3, la 4 (D-12) y la 10 no afectan a la API de módulos; la 11 sigue abierta (decisión del humano).
+
 ---
 
 ## Apéndice A. Port de `logicTMO.py`
