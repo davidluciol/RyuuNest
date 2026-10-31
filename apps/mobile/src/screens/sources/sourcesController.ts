@@ -1,5 +1,7 @@
+import type { ErrorReporter } from "../../data/errorLogPort";
 import { t } from "../../i18n";
 import type { SourcesService } from "./sourcesData";
+import { reportSourcesError } from "./sourcesErrors";
 import type { SourcesFlow, SourcesFlowAction } from "./sourcesFlow";
 import { validateRepoUrl } from "./sourcesView";
 
@@ -19,6 +21,8 @@ export interface SourcesControllerDeps {
   reload: () => Promise<void>;
   /** Aviso transitorio; `null` lo descarta. */
   notify: (message: string | null) => void;
+  /** F31: registro de cada fallo visible en `log` (P-72); opcional para pruebas. */
+  reporter?: ErrorReporter | null;
 }
 
 export interface SourcesController {
@@ -51,16 +55,22 @@ export function messageOf(error: unknown): string {
 }
 
 export function createSourcesController(deps: SourcesControllerDeps): SourcesController {
-  const { service, getFlow, dispatch, reload, notify } = deps;
+  const { service, getFlow, dispatch, reload, notify, reporter = null } = deps;
 
   /** Ejecuta un paso de una hoja: ocupada → hecho (cierra) o fallo (queda abierta). */
-  async function runSheet(work: () => Promise<void>, submit: SourcesFlowAction): Promise<void> {
+  async function runSheet(
+    work: () => Promise<void>,
+    submit: SourcesFlowAction,
+    action: Parameters<typeof reportSourcesError>[1] = "install",
+    context?: Record<string, unknown>,
+  ): Promise<void> {
     dispatch(submit);
     try {
       await work();
       await reload();
       dispatch({ type: "done" });
     } catch (error) {
+      reportSourcesError(reporter, action, error, context);
       dispatch({ type: "fail", message: messageOf(error) });
     }
   }
@@ -74,7 +84,9 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
         dispatch({ type: "fail", message: t(URL_ERROR_KEYS[check.reason]) });
         return;
       }
-      await runSheet(() => service.addRepo(check.url), { type: "submit-add-repo" });
+      await runSheet(() => service.addRepo(check.url), { type: "submit-add-repo" }, "add-repo", {
+        url: check.url,
+      });
     },
 
     async openInstall(repoId, moduleId) {
@@ -82,6 +94,7 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
         const preview = await service.previewInstall(repoId, moduleId);
         dispatch({ type: "open-install", preview });
       } catch (error) {
+        reportSourcesError(reporter, "install", error, { moduleId, repoId });
         notify(messageOf(error));
       }
     },
@@ -93,6 +106,8 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
       await runSheet(
         () => service.install(preview.repoId, preview.id, { confirmed: true, reinforced }),
         { type: "submit-install" },
+        "install",
+        { moduleId: preview.id, repoId: preview.repoId },
       );
     },
 
@@ -103,6 +118,7 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
         await service.setEnabled(moduleId, enabled);
         await reload();
       } catch (error) {
+        reportSourcesError(reporter, "set-enabled", error, { moduleId, enabled });
         notify(messageOf(error));
       }
     },
@@ -116,6 +132,7 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
         }
         dispatch({ type: "open-update", moduleId, preview });
       } catch (error) {
+        reportSourcesError(reporter, "update", error, { moduleId });
         notify(messageOf(error));
       }
     },
@@ -129,6 +146,8 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
           await service.applyUpdate(moduleId, { confirmed: true, reinforced });
         },
         { type: "submit-update" },
+        "update",
+        { moduleId },
       );
     },
 
@@ -138,7 +157,9 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
       const flow = getFlow();
       if (flow.sheet !== "uninstall") return;
       const { moduleId } = flow;
-      await runSheet(() => service.uninstall(moduleId), { type: "submit-uninstall" });
+      await runSheet(() => service.uninstall(moduleId), { type: "submit-uninstall" }, "uninstall", {
+        moduleId,
+      });
     },
 
     async syncRepo(repoId) {
@@ -146,6 +167,7 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
         await service.refreshRepo(repoId);
         await reload();
       } catch (error) {
+        reportSourcesError(reporter, "sync", error, { repoId });
         notify(messageOf(error));
       }
     },
@@ -156,7 +178,9 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
       const flow = getFlow();
       if (flow.sheet !== "remove-repo") return;
       const { repoId } = flow;
-      await runSheet(() => service.removeRepo(repoId), { type: "submit-remove-repo" });
+      await runSheet(() => service.removeRepo(repoId), { type: "submit-remove-repo" }, "remove-repo", {
+        repoId,
+      });
     },
 
     back: () => dispatch({ type: "back" }),
