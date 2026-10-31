@@ -136,6 +136,23 @@ describe("record · redacción estricta (sin credenciales, cookies, cabeceras, H
     expect(entry.message).not.toContain("123");
   });
 
+  it("redacta el valor de claves sensibles del contexto aunque vengan como objeto (JSON)", async () => {
+    const store = build();
+
+    const entry = await store.record("error", "net", "falló la petición", {
+      url: "https://repo.ejemplo.org/index.json",
+      headers: { Authorization: "Bearer secreto", Cookie: "sesion=abc", "X-Api-Key": "123" },
+      nested: { "access-token": "tok123" },
+    });
+
+    const context = JSON.stringify(entry.context ?? {});
+    expect(context).not.toContain("secreto");
+    expect(context).not.toContain("sesion=abc");
+    expect(context).not.toContain("123");
+    expect(context).not.toContain("tok123");
+    expect(context).not.toContain("https://");
+  });
+
   it("retira el HTML del mensaje", async () => {
     const store = build();
 
