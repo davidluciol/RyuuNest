@@ -4,6 +4,7 @@ import ServicesProvider from "./services/ServicesContext";
 import AppShell from "./shell/AppShell";
 import DiscoverScreen from "./screens/discover/DiscoverScreen";
 import EmptyScreen from "./screens/EmptyScreen";
+import SeriesScreen from "./screens/series/SeriesScreen";
 import SourcesScreen from "./screens/sources/SourcesScreen";
 
 /**
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="library" element={<LibraryRoute />} />
           <Route path="discover" element={<DiscoverScreen />} />
           <Route path="sources" element={<SourcesScreen />} />
+          <Route path="series/:moduleId/:seriesId" element={<SeriesScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
