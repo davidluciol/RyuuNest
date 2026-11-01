@@ -77,6 +77,9 @@ export function createInstalledMounter(deps: InstalledMounterDeps): ModuleMounte
           const handle = await createModuleApi({
             manifest: pkg.manifest,
             entry: utf8Decode(fromHex(entry.hex)),
+            // R1: el paquete completo (ruta → texto) viaja al cargador; en el
+            // dispositivo el runtime script sigue sin loader (UNSUPPORTED, T40).
+            files: Object.fromEntries(pkg.files.map((file) => [file.path, utf8Decode(fromHex(file.hex))])),
             host,
           });
           return { handle, manifest: pkg.manifest };

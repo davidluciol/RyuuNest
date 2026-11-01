@@ -62,7 +62,7 @@ function makeRuntime(
   host: ModuleHost = makeHost(),
   source: string = SOURCE,
 ): ScriptRuntime {
-  return new ScriptRuntime({ host, loader, source });
+  return new ScriptRuntime({ host, loader, files: { [source]: source }, entry: source });
 }
 
 describe("ScriptRuntime · carga", () => {

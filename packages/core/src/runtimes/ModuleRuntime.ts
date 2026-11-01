@@ -34,6 +34,11 @@ export interface CreateModuleApiOptions {
    * un módulo declarativo o el código fuente de uno script.
    */
   entry: string;
+  /**
+   * Contenido de **todos** los archivos del paquete (ruta → texto). Solo lo usa
+   * el runtime `script` (R1): si falta, el paquete degenera a solo la entrada.
+   */
+  files?: Record<string, string>;
   host: Host;
   /** Carga de módulos script (SPEC §6.5). Obligatoria si `manifest.runtime === "script"`. */
   loader?: ScriptLoader;
@@ -67,7 +72,12 @@ export function createModuleRuntime(options: CreateModuleApiOptions): ModuleRunt
         "Un módulo script necesita un cargador (ScriptLoader) para montarse",
       );
     }
-    return new ScriptRuntime({ host: options.host, loader, source: options.entry });
+    return new ScriptRuntime({
+      host: options.host,
+      loader,
+      files: options.files ?? { [options.entry]: options.entry },
+      entry: options.entry,
+    });
   }
 
   throw new ModuleError("UNSUPPORTED", `Runtime de módulo desconocido: ${String(runtime)}`);
