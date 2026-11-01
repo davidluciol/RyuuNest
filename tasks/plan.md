@@ -511,11 +511,11 @@ galería).
 ### Fase 8 — Web + extensión
 - [ ] F24 Cliente web (React + Vite): shell y riel de 240 px, rejilla de 8 columnas
 - [ ] F25 Pantallas web reutilizando componentes (densidad compacta)
-- [ ] F26 Extensión: protocolo HTTP con permisos por dominio
-- [ ] F27 Puente web ↔ extensión (el `Host` sobre mensajes)
+- [x] F26 Extensión: protocolo HTTP con permisos por dominio
+- [x] F27 Puente web ↔ extensión (el `Host` sobre mensajes)
 
 ### ✅ Checkpoint P-D (tras F24–F27)
-- [ ] AC-10: se lee un capítulo desde el navegador con la extensión
+- [x] AC-10: se lee un capítulo desde el navegador con la extensión (e2e con la extensión real; falta la prueba humana en tu navegador)
 - [ ] Revisión humana
 
 ### Verificación final (Parte 2)
