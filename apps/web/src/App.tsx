@@ -1,23 +1,28 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router";
 
+import ServicesProvider from "./services/ServicesContext";
 import AppShell from "./shell/AppShell";
 import EmptyScreen from "./screens/EmptyScreen";
+import SourcesScreen from "./screens/sources/SourcesScreen";
 
 /**
- * F24 — rutas del cliente web sobre el marco (`AppShell`). Las pantallas con
- * datos reales llegan por corte en F25; mientras, cada pestaña muestra su estado
- * vacío real (sin datos de ejemplo, P-113).
+ * F24/F25 — rutas del cliente web sobre el marco (`AppShell`), con los
+ * servicios reales (sql.js + IndexedDB) compartidos por contexto. Las
+ * pantallas que faltan muestran su estado vacío real (sin datos de ejemplo).
  */
 export default function App() {
   return (
-    <Routes>
-      <Route element={<AppShell />}>
-        <Route index element={<HomeRoute />} />
-        <Route path="library" element={<LibraryRoute />} />
-        <Route path="discover" element={<DiscoverRoute />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
+    <ServicesProvider>
+      <Routes>
+        <Route element={<AppShell />}>
+          <Route index element={<HomeRoute />} />
+          <Route path="library" element={<LibraryRoute />} />
+          <Route path="discover" element={<DiscoverRoute />} />
+          <Route path="sources" element={<SourcesScreen />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </ServicesProvider>
   );
 }
 

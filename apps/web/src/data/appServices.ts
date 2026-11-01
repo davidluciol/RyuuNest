@@ -3,8 +3,10 @@ import {
   createFetchHttp,
   createFflateArchive,
   createLogStore,
+  createInstalledMounter,
   InstallFlow,
   ModuleRegistry,
+  type ModuleMounter,
   NoopSecureLock,
   PackageInstaller,
   RepoRegistry,
@@ -22,6 +24,7 @@ import { validateManifest, validateRepoIndex } from "@ryuunest/module-sdk";
 
 import { createIdbByteStore, type ByteStore } from "./byteStore";
 import { openWebDatabase } from "./webDatabase";
+import { createWebScriptLoader } from "./webScriptLoader";
 
 /**
  * F25 — composición de los servicios del cliente web sobre la base persistida
@@ -49,6 +52,8 @@ export interface WebServices {
   readonly modules: ModuleRegistry;
   readonly installer: PackageInstaller;
   readonly flow: InstallFlow;
+  /** Monta módulos instalados (declarativos y, con el worker, `script`). */
+  readonly mounter: ModuleMounter;
   flush(): Promise<void>;
 }
 
@@ -100,6 +105,7 @@ export async function openWebServices(options: OpenWebServicesOptions = {}): Pro
   });
   const flow = new InstallFlow({ repos, installer, modules });
   const secureLock = new NoopSecureLock();
+  const mounter = createInstalledMounter({ driver, http, loader: createWebScriptLoader() });
 
   return {
     driver,
@@ -114,6 +120,7 @@ export async function openWebServices(options: OpenWebServicesOptions = {}): Pro
     modules,
     installer,
     flow,
+    mounter,
     flush,
   };
 }

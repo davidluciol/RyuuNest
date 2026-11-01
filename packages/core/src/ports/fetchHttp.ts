@@ -49,5 +49,8 @@ export function createFetchHttp(fetchImpl: FetchLike = defaultFetch): Http {
 }
 
 function defaultFetch(url: string, init?: FetchInitLike): Promise<FetchResponseLike> {
-  return globalThis.fetch(url, init) as Promise<FetchResponseLike>;
+  // `globalThis.fetch` existe en Node 18+, navegadores y React Native; se accede
+  // con cast porque el núcleo compila sin lib DOM.
+  const fetchGlobal = (globalThis as unknown as { fetch: FetchLike }).fetch;
+  return fetchGlobal(url, init);
 }

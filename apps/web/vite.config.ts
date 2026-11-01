@@ -53,6 +53,9 @@ export default defineConfig({
   plugins: [react(), tokensCssPlugin()],
   resolve: {
     alias: {
+      // Lógica pura de pantallas compartida con apps/mobile (sin react-native;
+      // la puerta tests/mobileSharedImports.test.ts lo vigila).
+      "@ryuunest/mobile-src": fileURLToPath(new URL("../mobile/src", import.meta.url)),
       "@ryuunest/core": srcAlias("core"),
       "@ryuunest/i18n": srcAlias("i18n"),
       "@ryuunest/module-sdk": srcAlias("module-sdk"),
