@@ -15,6 +15,9 @@ export default defineConfig({
       "@ryuunest/module-sdk": fileURLToPath(
         new URL("../../packages/module-sdk/src/index.ts", import.meta.url),
       ),
+      "@ryuunest/test-site": fileURLToPath(
+        new URL("../../packages/test-site/src/index.ts", import.meta.url),
+      ),
       "@ryuunest/ui-tokens": fileURLToPath(
         new URL("../../packages/ui-tokens/src/index.ts", import.meta.url),
       ),

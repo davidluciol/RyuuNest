@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { resolveErrorReporter, type ErrorReporter } from "../../data/errorLog";
+import type { ErrorReporter } from "../../data/errorLogPort";
 import {
   resolveDiscoverSource,
   type DiscoverDataSource,
@@ -46,36 +46,46 @@ export interface DiscoverActions {
   retry: () => void;
 }
 
-export function useDiscoverData(): { view: DiscoverView } & DiscoverActions {
+/**
+ * Opcional: en móvil se resuelven solos (fuente de plataforma y reporter del
+ * registro); en `apps/web` se inyectan (servicios reales + loader del worker),
+ * así este módulo nunca importa `expo-*`/`react-native` (P-115).
+ */
+export interface DiscoverDataDeps {
+  source?: DiscoverDataSource | undefined;
+  reporter?: ErrorReporter | null | undefined;
+  resolveReporter?: (() => Promise<ErrorReporter | null>) | undefined;
+}
+
+export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverView } & DiscoverActions {
+  const { source, reporter, resolveReporter } = deps;
   const [boot, setBoot] = useState<Boot | null>(null);
   const [nonce, setNonce] = useState(0);
   const [request, setRequest] = useState<Request>(INITIAL_REQUEST);
   const [view, setView] = useState<DiscoverView>({ status: "loading" });
-  const [reporter, setReporter] = useState<ErrorReporter | null>(null);
   const bootRef = useRef<Boot | null>(null);
   const reporterRef = useRef<ErrorReporter | null>(null);
-  reporterRef.current = reporter;
 
-  // F31: el reporter del registro `log` se resuelve una vez (P-72).
+  // Arranque: fuente (inyectada en apps/web, de plataforma en móvil) + módulos
+  // elegibles + último recordado; el reporter del registro `log` (F31, P-72).
   useEffect(() => {
     let cancelled = false;
-    void resolveErrorReporter().then((resolved) => {
-      if (!cancelled) setReporter(resolved);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  // Arranque: fuente de la plataforma + módulos elegibles + último recordado.
-  useEffect(() => {
-    let cancelled = false;
-    resolveDiscoverSource()
-      .then(async (source) => {
-        const modules = await source.listModules();
-        const remembered = await source.recallLastModule();
+    const sourcePromise = source !== undefined ? Promise.resolve(source) : resolveDiscoverSource();
+    const reporterPromise =
+      reporter !== undefined
+        ? Promise.resolve(reporter)
+        : resolveReporter !== undefined
+          ? resolveReporter()
+          : Promise.resolve(null);
+    sourcePromise
+      .then(async (resolvedSource) => {
+        const resolvedReporter = await reporterPromise;
         if (cancelled) return;
-        const next: Boot = { source, modules };
+        reporterRef.current = resolvedReporter;
+        const modules = await resolvedSource.listModules();
+        const remembered = await resolvedSource.recallLastModule();
+        if (cancelled) return;
+        const next: Boot = { source: resolvedSource, modules };
         bootRef.current = next;
         setBoot(next);
         setRequest((current) =>
@@ -101,7 +111,7 @@ export function useDiscoverData(): { view: DiscoverView } & DiscoverActions {
     return () => {
       cancelled = true;
     };
-  }, [nonce]);
+  }, [nonce, source, reporter, resolveReporter]);
 
   // Carga del módulo elegido (o vacío si no hay ninguno visible).
   useEffect(() => {

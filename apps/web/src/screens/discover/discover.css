@@ -1,0 +1,97 @@
+/* F25 — pantalla Descubrir web. */
+.discover-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.discover-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.discover-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.discover-modules {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.discover-search {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-end;
+}
+
+.discover-search .field {
+  flex: 1;
+  min-width: 0;
+}
+
+.discover-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.discover-section h2 {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.discover-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--space-2xl) * 5), 1fr));
+  gap: var(--space-md);
+}
+
+.discover-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.discover-card-title {
+  font-weight: 600;
+}
+
+.discover-card-meta {
+  display: flex;
+  gap: var(--space-xxs);
+}
+
+.discover-card-hint {
+  color: var(--color-text-secondary);
+}
+
+.discover-empty-results {
+  color: var(--color-text-secondary);
+}
+
+.discover-pager {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.discover-page-label {
+  color: var(--color-text-secondary);
+}

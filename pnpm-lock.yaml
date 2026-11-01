@@ -308,6 +308,9 @@ importers:
       '@ryuunest/module-sdk':
         specifier: workspace:*
         version: link:../../packages/module-sdk
+      '@ryuunest/test-site':
+        specifier: workspace:*
+        version: link:../../packages/test-site
       '@ryuunest/ui-tokens':
         specifier: workspace:*
         version: link:../../packages/ui-tokens

@@ -2,6 +2,7 @@ import { Navigate, Route, Routes, useNavigate } from "react-router";
 
 import ServicesProvider from "./services/ServicesContext";
 import AppShell from "./shell/AppShell";
+import DiscoverScreen from "./screens/discover/DiscoverScreen";
 import EmptyScreen from "./screens/EmptyScreen";
 import SourcesScreen from "./screens/sources/SourcesScreen";
 
@@ -17,7 +18,7 @@ export default function App() {
         <Route element={<AppShell />}>
           <Route index element={<HomeRoute />} />
           <Route path="library" element={<LibraryRoute />} />
-          <Route path="discover" element={<DiscoverRoute />} />
+          <Route path="discover" element={<DiscoverScreen />} />
           <Route path="sources" element={<SourcesScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
@@ -52,15 +53,3 @@ function LibraryRoute() {
   );
 }
 
-function DiscoverRoute() {
-  const navigate = useNavigate();
-  return (
-    <EmptyScreen
-      screenId="discover"
-      titleKey="state.empty.discover.title"
-      messageKey="state.empty.discover.message"
-      actionKey="actions.addRepository"
-      onAction={() => navigate("/sources")}
-    />
-  );
-}

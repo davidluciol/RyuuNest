@@ -16,6 +16,7 @@
     "@ryuunest/core": "workspace:*",
     "@ryuunest/i18n": "workspace:*",
     "@ryuunest/module-sdk": "workspace:*",
+    "@ryuunest/test-site": "workspace:*",
     "@ryuunest/ui-tokens": "workspace:*",
     "fflate": "^0.8.3",
     "lucide-react": "1.66.0",

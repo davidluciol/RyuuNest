@@ -59,6 +59,7 @@ export default defineConfig({
       "@ryuunest/core": srcAlias("core"),
       "@ryuunest/i18n": srcAlias("i18n"),
       "@ryuunest/module-sdk": srcAlias("module-sdk"),
+      "@ryuunest/test-site": srcAlias("test-site"),
       "@ryuunest/ui-tokens": srcAlias("ui-tokens"),
     },
   },

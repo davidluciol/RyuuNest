@@ -8,6 +8,7 @@ import {
   type Http,
   type ModuleApiHandle,
   type ModuleManifest,
+  type ScriptLoader,
   type SeriesSummary,
   type SqlDriver,
 } from "@ryuunest/core";
@@ -242,6 +243,11 @@ export interface InstalledSourceDeps {
   driver: SqlDriver;
   /** La `Http` de la plataforma; inyectable para probar sin red. */
   http: Http;
+  /**
+   * Cargador de módulos `script` (F25, web con Web Worker). Con él se listan
+   * también los módulos script; sin él solo los declarativos (dispositivo, D-5).
+   */
+  loader?: ScriptLoader;
 }
 
 /**
@@ -251,14 +257,18 @@ export interface InstalledSourceDeps {
  * app (D-5): listarlos sin poder montarlos sería prometer lo que no funciona.
  */
 export function createInstalledDiscoverSource(deps: InstalledSourceDeps): DiscoverDataSource {
-  const { driver, http } = deps;
+  const { driver, http, loader } = deps;
   const registry = new ModuleRegistry({ storage: new SqliteStorage(driver) });
-  const mounter = createInstalledMounter({ driver, http });
+  const mounter = createInstalledMounter({
+    driver,
+    http,
+    ...(loader === undefined ? {} : { loader }),
+  });
 
   return {
     async listModules() {
       return (await registry.list())
-        .filter((pkg) => pkg.enabled && pkg.runtime === "declarative")
+        .filter((pkg) => pkg.enabled && (pkg.runtime === "declarative" || loader !== undefined))
         .map((pkg) => ({
           id: pkg.id,
           name: pkg.manifest.name,

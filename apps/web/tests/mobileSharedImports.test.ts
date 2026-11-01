@@ -20,7 +20,13 @@ const SHARED_FILES = [
   "screens/sources/sourcesController.ts",
   "screens/sources/sourcesErrors.ts",
   "screens/sources/sourcesView.ts",
+  "screens/discover/discoverData.ts",
+  "screens/discover/discoverFixtures.ts",
+  "screens/discover/discoverErrors.ts",
+  "screens/discover/useDiscoverData.ts",
   "data/officialRepo.ts",
+  "data/errorLogPort.ts",
+  "data/appDatabase.ts",
   "i18n/index.ts",
   "components/kindLabel.ts",
 ];

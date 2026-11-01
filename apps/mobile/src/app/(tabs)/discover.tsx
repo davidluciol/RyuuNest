@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 
+import { resolveErrorReporter } from "../../data/errorLog";
 import { destinationRoutes } from "../../navigation/routes";
 import DiscoverScreen from "../../screens/discover/DiscoverScreen";
 import { useDiscoverData } from "../../screens/discover/useDiscoverData";
@@ -11,7 +12,9 @@ import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
  * Tocar una serie no navega todavía: la ficha de serie llega con F17.
  */
 export default function DiscoverRoute() {
-  const { view, selectModule, search, nextPage, prevPage, retry } = useDiscoverData();
+  const { view, selectModule, search, nextPage, prevPage, retry } = useDiscoverData({
+    resolveReporter: resolveErrorReporter,
+  });
   const settings = useSettingsPreferences();
 
   return (

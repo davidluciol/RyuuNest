@@ -108,7 +108,7 @@ export function resolveSelectedModuleId(
   if (rememberedId !== null && visibleModules.some((module) => module.id === rememberedId)) {
     return rememberedId;
   }
-  return visibleModules.length > 0 ? visibleModules[0].id : null;
+  return visibleModules.length > 0 ? (visibleModules[0]?.id ?? null) : null;
 }
 
 // — Datos de ejemplo (galería y prueba de la pantalla en web; coherentes con
