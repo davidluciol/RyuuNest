@@ -1,7 +1,9 @@
-import type { ImportMode } from "@ryuunest/core";
+import { ModuleError, type ImportMode } from "@ryuunest/core";
 
+import type { ErrorReporter } from "../../../data/errorLogPort";
 import { t } from "../../../i18n";
 import type { BackupService } from "./backupData";
+import { reportBackupError } from "./backupErrors";
 import type { BackupFlow, BackupFlowAction } from "./backupFlow";
 
 /**
@@ -22,6 +24,8 @@ export interface BackupControllerDeps {
   goToSources: () => void;
   /** Se llamó tras aplicar una importación (recarga las pantallas). */
   onApplied?: () => void;
+  /** F31: registro de cada fallo visible en `log` (P-72); opcional para pruebas. */
+  reporter?: ErrorReporter | null;
 }
 
 export interface BackupController {
@@ -46,7 +50,7 @@ function messageOf(error: unknown): string {
 }
 
 export function createBackupController(deps: BackupControllerDeps): BackupController {
-  const { service, getFlow, dispatch, notify } = deps;
+  const { service, getFlow, dispatch, notify, reporter = null } = deps;
 
   return {
     async exportBackup() {
@@ -58,6 +62,7 @@ export function createBackupController(deps: BackupControllerDeps): BackupContro
         notify(t("settings.backup.exported"));
         await share;
       } catch (error) {
+        reportBackupError(reporter, "export", error);
         notify(`${t("settings.backup.exportFailed")}: ${messageOf(error)}`);
       }
     },
@@ -67,6 +72,7 @@ export function createBackupController(deps: BackupControllerDeps): BackupContro
       try {
         picked = await service.pickText();
       } catch (error) {
+        reportBackupError(reporter, "import", error);
         notify(`${t("settings.backup.importFailed")}: ${messageOf(error)}`);
         return;
       }
@@ -85,12 +91,17 @@ export function createBackupController(deps: BackupControllerDeps): BackupContro
       try {
         result = await service.applyText(flow.text, mode);
       } catch (error) {
+        reportBackupError(reporter, "apply", error, { mode });
         dispatch({ type: "fail", message: messageOf(error) });
         return;
       }
       if (!result.ok) {
         // Un rechazo no toca datos: se muestra como diálogo con el motivo y
         // la hoja de modo queda cerrada (el flujo pasa a `import-error`).
+        reportBackupError(reporter, "apply", new ModuleError("INTERNAL", result.message), {
+          mode,
+          rejection: result.reason,
+        });
         dispatch({
           type: "open-import-error",
           error: result.message,
@@ -118,9 +129,10 @@ export function createBackupController(deps: BackupControllerDeps): BackupContro
       try {
         await service.confirmRepo(url);
         dispatch({ type: "confirm-repo", url });
-      } catch {
+      } catch (error) {
         // El fallo del repo (índice caído, URL inválida) se avisa con la clave
         // fija: el mensaje del núcleo puede traer la URL completa.
+        reportBackupError(reporter, "repo", error, { repoUrl: url });
         dispatch({ type: "fail", message: "" });
       }
     },
