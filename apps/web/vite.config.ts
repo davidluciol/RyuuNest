@@ -24,6 +24,7 @@ function snapshotFromPackage(mod: typeof uiTokens): TokensSnapshot {
     railDesktop: mod.breakpoints.desktopRail,
     margins: mod.breakpoints.margin,
     touchMin: mod.touchTarget.min,
+    readerMaxWidth: mod.readerMaxWidth,
   };
 }
 
@@ -49,7 +50,9 @@ function tokensCssPlugin(): Plugin {
 }
 
 export default defineConfig({
-  base: "./",
+  // Absoluto: con "./" las rutas profundas (/reader/…) resolverían los assets
+  // relativo a la URL y 404. Se sirve por HTTP (preview/PWA), no por file://.
+  base: "/",
   plugins: [react(), tokensCssPlugin()],
   resolve: {
     alias: {

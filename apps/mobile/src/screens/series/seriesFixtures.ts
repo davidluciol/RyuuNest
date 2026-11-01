@@ -1,16 +1,19 @@
 import type { ImageSourcePropType } from "react-native";
-import type { Chapter, Release, SeriesDetails } from "@ryuunest/core";
+import type { SeriesDetails } from "@ryuunest/core";
 import { findSeries } from "@ryuunest/test-site";
 
 import dragonMarker from "../../../assets/placeholder/dragon.svg";
+import type { SeriesProgress } from "./seriesLogic";
 
-export type ChapterState = "unread" | "in-progress" | "completed";
-
-export interface SeriesProgress {
-  chapterId: string;
-  pageIndex: number;
-  pageTotal: number;
-}
+// La lógica pura (sin react-native) vive en `seriesLogic.ts` para compartirla
+// con apps/web; aquí se re-exporta para no tocar los imports existentes.
+export {
+  chapterProgress,
+  chapterState,
+  preferredRelease,
+  type ChapterState,
+  type SeriesProgress,
+} from "./seriesLogic";
 
 export interface SeriesViewData {
   details: SeriesDetails;
@@ -20,34 +23,6 @@ export interface SeriesViewData {
   progress: SeriesProgress | null;
   readChapterIds: ReadonlySet<string>;
   preferredReleaseId: string | null;
-}
-
-export function chapterState(
-  chapterId: string,
-  progress: SeriesProgress | null,
-  readChapterIds: ReadonlySet<string>,
-): ChapterState {
-  if (readChapterIds.has(chapterId)) return "completed";
-  if (progress?.chapterId === chapterId) return "in-progress";
-  return "unread";
-}
-
-export function preferredRelease(
-  releases: readonly Release[],
-  preferredReleaseId: string | null,
-): Release | undefined {
-  return (
-    releases.find((release) => release.id === preferredReleaseId) ??
-    releases[0]
-  );
-}
-
-export function chapterProgress(
-  chapter: Chapter,
-  progress: SeriesProgress | null,
-): number | undefined {
-  if (progress?.chapterId !== chapter.id || progress.pageTotal <= 0) return undefined;
-  return Math.round((progress.pageIndex / progress.pageTotal) * 100);
 }
 
 export function sampleSeriesView(seriesId = "dragon-de-ceniza"): SeriesViewData {

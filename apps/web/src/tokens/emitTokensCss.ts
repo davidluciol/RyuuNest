@@ -1,5 +1,7 @@
 import type { TokensSnapshot } from "./tokensSnapshot";
 
+// `readerMaxWidth` se añade a la foto vía snapshot.ts; aquí solo se emite.
+
 /**
  * F24 — emite el CSS de tokens desde una foto de `@ryuunest/ui-tokens` (única
  * fuente de valores, AC-13): variables de color, espacio, radio y layout, clases
@@ -57,6 +59,7 @@ export function emitTokensCss(s: TokensSnapshot): string {
     `:root {\n${[...colorVars, ...spaceVars, ...radiusVars].join("\n")}\n` +
       `  --rail-desktop: ${s.railDesktop}px;\n` +
       `  --touch-min: ${s.touchMin}px;\n` +
+      `  --reader-max-width: ${s.readerMaxWidth}px;\n` +
       `  --margin-mobile: ${s.margins.mobile}px;\n` +
       `  --margin-tablet: ${s.margins.tablet}px;\n` +
       `  --margin-desktop: ${s.margins.desktop}px;\n` +

@@ -4,6 +4,7 @@ import ServicesProvider from "./services/ServicesContext";
 import AppShell from "./shell/AppShell";
 import DiscoverScreen from "./screens/discover/DiscoverScreen";
 import EmptyScreen from "./screens/EmptyScreen";
+import ReaderScreen from "./screens/reader/ReaderScreen";
 import SeriesScreen from "./screens/series/SeriesScreen";
 import SourcesScreen from "./screens/sources/SourcesScreen";
 
@@ -24,6 +25,8 @@ export default function App() {
           <Route path="series/:moduleId/:seriesId" element={<SeriesScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
+        {/* Lector a pantalla completa, fuera del marco de pestañas (como en móvil). */}
+        <Route path="reader/:moduleId/:seriesId/:chapterId" element={<ReaderScreen />} />
       </Routes>
     </ServicesProvider>
   );

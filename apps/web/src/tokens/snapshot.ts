@@ -3,6 +3,7 @@ import {
   defaultTheme,
   fontFiles,
   radii,
+  readerMaxWidth,
   spacing,
   touchTarget,
   typography,
@@ -27,5 +28,6 @@ export function uiTokensSnapshot(): TokensSnapshot {
     railDesktop: breakpoints.desktopRail,
     margins: breakpoints.margin,
     touchMin: touchTarget.min,
+    readerMaxWidth,
   };
 }

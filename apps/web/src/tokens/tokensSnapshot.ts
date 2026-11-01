@@ -23,4 +23,5 @@ export interface TokensSnapshot {
   readonly railDesktop: number;
   readonly margins: Record<BreakpointName, number>;
   readonly touchMin: number;
+  readonly readerMaxWidth: number;
 }

@@ -16,6 +16,7 @@ export {
   breakpoints,
   coverAspectRatio,
   densities,
+  readerMaxWidth,
   touchTarget,
   type Density,
   type DensityName,
