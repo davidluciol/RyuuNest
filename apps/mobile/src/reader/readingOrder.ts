@@ -1,6 +1,6 @@
 import type { Chapter, ReaderChapter } from "@ryuunest/core";
 
-import { preferredRelease } from "../screens/series/seriesFixtures";
+import { preferredRelease } from "../screens/series/seriesLogic";
 
 /**
  * F18 — capítulos en orden de lectura (del primero al último), como pide `ReaderState`.

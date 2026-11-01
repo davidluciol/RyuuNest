@@ -38,5 +38,14 @@ export const breakpoints = {
 /** Área táctil mínima de todo elemento interactivo (RNF-7); se amplía con hitSlop. */
 export const touchTarget = { min: 48 } as const;
 
+/**
+ * Ancho máximo de la columna del lector (P-90, provisional hasta medir en el
+ * teléfono): el contenido del lector no se estira más allá de este ancho.
+ */
+export const readerMaxWidth = 720 as const;
+
+/** Alto de la barra de progreso de portada (RF-41: 3 px). */
+export const progressBarHeight = 3 as const;
+
 /** Relación de aspecto de las portadas. */
 export const coverAspectRatio = { width: 2, height: 3 } as const;

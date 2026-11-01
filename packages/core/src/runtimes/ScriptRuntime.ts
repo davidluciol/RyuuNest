@@ -31,8 +31,10 @@ import { toModuleError, describeError } from "./errorMapping.js";
 export interface ScriptRuntimeOptions {
   host: Host;
   loader: ScriptLoader;
-  /** Código fuente del archivo de entrada del módulo (`manifest.entry`). */
-  source: string;
+  /** Contenido de todos los archivos del paquete (ruta → texto); R1: el cargador los resuelve. */
+  files: Record<string, string>;
+  /** Ruta del archivo de entrada (`manifest.entry`), dentro de `files`. */
+  entry: string;
 }
 
 /** Métodos que todo módulo debe implementar (SPEC §6.3). */
@@ -41,12 +43,14 @@ const REQUIRED_METHODS = ["search", "details", "pages"] as const;
 export class ScriptRuntime {
   readonly #host: Host;
   readonly #loader: ScriptLoader;
-  readonly #source: string;
+  readonly #files: Record<string, string>;
+  readonly #entry: string;
 
   constructor(options: ScriptRuntimeOptions) {
     this.#host = options.host;
     this.#loader = options.loader;
-    this.#source = options.source;
+    this.#files = options.files;
+    this.#entry = options.entry;
   }
 
   /** Carga el módulo y devuelve su `ModuleApi` envuelta. */
@@ -74,7 +78,7 @@ export class ScriptRuntime {
 
   async #load(): Promise<ScriptFactory> {
     try {
-      return await this.#loader.load(this.#source);
+      return await this.#loader.load(this.#files, this.#entry);
     } catch (error) {
       throw new ModuleError("INTERNAL", `No se pudo cargar el módulo: ${describeError(error)}`);
     }

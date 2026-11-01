@@ -4,6 +4,7 @@ import { BookOpen, Compass, Home, Library, Settings, type LucideIcon } from "../
 import { spacing, typography } from "@ryuunest/ui-tokens";
 
 import { destinationLabel } from "../navigation/routes";
+import { t } from "../i18n";
 import { textStyle } from "./textStyle";
 import {
   BOTTOM_NAV_DESTINATIONS,
@@ -40,7 +41,11 @@ export interface BottomNavProps {
 export default function BottomNav({ active, onSelect, disabled = false }: BottomNavProps) {
   const [focused, setFocused] = useState<BottomNavDestination | null>(null);
   return (
-    <View accessibilityRole="tablist" style={[bottomNavStyle(), styles.container]}>
+    <View
+      accessibilityRole="tablist"
+      accessibilityLabel={t("a11y.mainNav")}
+      style={[bottomNavStyle(), styles.container]}
+    >
       {BOTTOM_NAV_DESTINATIONS.map((destination) => {
         const isActive = destination === active;
         const colors = navItemColors(isActive);

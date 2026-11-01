@@ -82,7 +82,8 @@ describe("errorMapping · errores tipados por forma (T31)", () => {
     const api = await new ScriptRuntime({
       host: noopHost,
       loader,
-      source: "module.js",
+      files: { "module.js": "module.js" },
+      entry: "module.js",
     }).createApi();
 
     const blocked = await api.search("x", 1).catch((reason: unknown) => reason);

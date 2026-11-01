@@ -49,7 +49,8 @@ function makeScriptApi(site: TestSite, factory: ScriptFactory): Promise<ModuleAp
   return new ScriptRuntime({
     host: makeHost(site),
     loader: new FakeScriptLoader({ [EXAMPLE_SCRIPT_ENTRY]: factory }),
-    source: EXAMPLE_SCRIPT_ENTRY,
+    files: { [EXAMPLE_SCRIPT_ENTRY]: EXAMPLE_SCRIPT_ENTRY },
+    entry: EXAMPLE_SCRIPT_ENTRY,
   }).createApi();
 }
 

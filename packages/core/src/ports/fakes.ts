@@ -103,28 +103,33 @@ export class NoopSecureLock implements SecureLock {
 }
 
 /**
- * `ScriptLoader` de prueba: devuelve la fábrica registrada para cada código fuente y
- * apunta las fuentes pedidas. No evalúa nada (el núcleo no toca APIs de plataforma).
+ * `ScriptLoader` de prueba: devuelve la fábrica registrada para cada **ruta de
+ * entrada** y apunta los paquetes pedidos. No evalúa nada (el núcleo no toca APIs
+ * de plataforma).
  */
 export class FakeScriptLoader implements ScriptLoader {
+  /** Rutas de entrada pedidas, en orden. */
   readonly loaded: string[] = [];
+  /** Paquetes completos recibidos (ruta → texto), en el mismo orden. */
+  readonly loadedFiles: Record<string, string>[] = [];
   readonly #factories = new Map<string, ScriptFactory>();
 
   constructor(factories: Record<string, ScriptFactory> = {}) {
-    for (const [source, factory] of Object.entries(factories)) {
-      this.#factories.set(source, factory);
+    for (const [entry, factory] of Object.entries(factories)) {
+      this.#factories.set(entry, factory);
     }
   }
 
-  register(source: string, factory: ScriptFactory): void {
-    this.#factories.set(source, factory);
+  register(entry: string, factory: ScriptFactory): void {
+    this.#factories.set(entry, factory);
   }
 
-  async load(source: string): Promise<ScriptFactory> {
-    this.loaded.push(source);
-    const factory = this.#factories.get(source);
+  async load(files: Record<string, string>, entry: string): Promise<ScriptFactory> {
+    this.loaded.push(entry);
+    this.loadedFiles.push(files);
+    const factory = this.#factories.get(entry);
     if (factory === undefined) {
-      throw new Error(`No hay ninguna fábrica registrada para ese código fuente`);
+      throw new Error(`No hay ninguna fábrica registrada para la entrada «${entry}»`);
     }
     return factory;
   }

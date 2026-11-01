@@ -1,0 +1,37 @@
+/* F24 — botón web: variantes primary/secondary/destructive sobre tokens (SPEC §11.10). */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: var(--touch-min);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-control);
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.btn-destructive {
+  background: var(--color-error);
+  color: var(--color-bg);
+}
+
+.btn-label {
+  font-weight: 600;
+}

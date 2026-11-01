@@ -25,6 +25,9 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      "@ryuunest/i18n": fileURLToPath(
+        new URL("../../packages/i18n/src/index.ts", import.meta.url),
+      ),
       "@ryuunest/ui-tokens": fileURLToPath(
         new URL("../../packages/ui-tokens/src/index.ts", import.meta.url),
       ),

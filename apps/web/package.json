@@ -1,0 +1,37 @@
+{
+  "name": "@ryuunest/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cliente web de RyuuNest (React + Vite + react-router, F24/F25). La red real irá por la extensión (F27); hoy usa fetch directo (P-111, temporal).",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@ryuunest/core": "workspace:*",
+    "@ryuunest/i18n": "workspace:*",
+    "@ryuunest/module-sdk": "workspace:*",
+    "@ryuunest/test-site": "workspace:*",
+    "@ryuunest/ui-tokens": "workspace:*",
+    "fflate": "^0.8.3",
+    "lucide-react": "1.66.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-router": "7.18.5",
+    "sql.js": "1.15.2"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "@types/react-dom": "~19.2.0",
+    "@types/sql.js": "1.4.11",
+    "@vitejs/plugin-react": "6.1.2",
+    "typescript": "~6.0.3",
+    "vite": "8.3.5",
+    "vitest": "5.0.4"
+  }
+}

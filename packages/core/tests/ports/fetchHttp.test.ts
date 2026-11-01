@@ -1,11 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { createFetchHttp, type FetchLike, type FetchResponseLike } from "../../src/data/fetchHttp";
+import {
+  createFetchHttp,
+  type FetchLike,
+  type FetchResponseLike,
+} from "../../src/ports/fetchHttp";
 
 /**
- * F15b — adaptador del puerto `Http` del núcleo (SPEC §5.3) sobre el `fetch` de
- * la plataforma (React Native y web). Se prueba con un `fetch` falso: mapeo de
- * estado, cabeceras en minúsculas, texto, bytes y URL final (P-74).
+ * F15b/F24 — adaptador del puerto `Http` sobre el `fetch` de la plataforma
+ * (Node 18+, navegadores y React Native; compartido por móvil y web). Se prueba
+ * con un `fetch` falso: mapeo de estado, cabeceras en minúsculas, texto, bytes y
+ * URL final (P-74).
  */
 
 function response(overrides: Partial<FetchResponseLike> & { url?: string } = {}): FetchResponseLike {
@@ -23,7 +28,10 @@ function response(overrides: Partial<FetchResponseLike> & { url?: string } = {})
   };
 }
 
-function stubFetch(reply: () => FetchResponseLike): { http: ReturnType<typeof createFetchHttp>; calls: Array<{ url: string; init?: unknown }> } {
+function stubFetch(reply: () => FetchResponseLike): {
+  http: ReturnType<typeof createFetchHttp>;
+  calls: Array<{ url: string; init?: unknown }>;
+} {
   const calls: Array<{ url: string; init?: unknown }> = [];
   const fetchImpl: FetchLike = async (url, init) => {
     calls.push({ url, init });

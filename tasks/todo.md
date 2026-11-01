@@ -616,15 +616,16 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 Dep: P-B (o P-C), F04 · M · `apps/web/{package.json,vite.config.ts,src/**}`
 
-- [ ] Reutiliza tokens/componentes; riel 240 px, rejilla de 8 columnas; fuentes locales, cero peticiones externas (RNF-5)
-- Verif: Playwright en ancho escritorio y móvil
+- [x] Reutiliza tokens/componentes; riel 240 px, rejilla de 8 columnas; fuentes locales, cero peticiones externas (RNF-5) — hecho en `feature/F24-F25-web-client` (P-110 a P-115): tokens como CSS virtual generado en vivo por el plugin de Vite (`emitTokensCss`, puerta `tokensCss.test.ts` contra literales), componentes DOM propios con tokens, fuentes en `apps/web/public/fonts/`, `base: "/"` para rutas profundas, i18n en `@ryuunest/i18n` (P-112). Stack fijado: react-router 7.18.5, vite 8.3.5, sql.js 1.15.2, lucide-react 1.66.0 (P-110).
+- Verif: Playwright en ancho escritorio y móvil — e2e `apps/web/tests/e2e/{shell,sources,discover,reader,settings}.cjs` en verde a 1440/426 px con 0 errores de consola y 0 peticiones externas no autorizadas; capturas en `docs/capturasF24/`.
 
 ### F25 Pantallas web `[FE · Intermedia · N2]`
 
 Dep: F24, FB1, P-B · M · `apps/web/src/screens/*`
 
-- [ ] Pantallas de la v1 con densidad compacta; una etiqueta por concepto; estados carga/vacío/error
-- Verif: Playwright recorriendo pantallas vs los PNG
+- [x] Pantallas de la v1 con densidad compacta; una etiqueta por concepto; estados carga/vacío/error — **todas sobre la base real** (sql.js + IndexedDB, P-113; sin datos de ejemplo): Inicio, Biblioteca, Descubrir, Fuentes (instalar con mantener pulsado, AC-8), Ajustes + Diagnóstico (lógica compartida con móvil vía `@ryuunest/mobile-src`, P-115), ficha, lector a pantalla completa (vertical/paginado) y respaldo exportar/importar. Módulos `script` en Web Worker (P-114, D1-A).
+- Verif: Playwright recorriendo pantallas vs los PNG — e2e por pantalla en verde; Ajustes/Diagnóstico y las hojas de respaldo quedan «sin diseño» (P-30) como en móvil.
+- [ ] **Subir react a 19.3.1+ y react-router a 8** (P-110): ADR-0002 fija react 19.2.3 por Expo SDK 57; al subir react, react-router 8 pasa a ser compatible. Sin tocar Expo: solo `apps/web`.
 
 ### F26 Extensión de navegador (protocolo HTTP) `[Sec · Alta · N4]`
 

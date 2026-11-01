@@ -1,0 +1,41 @@
+/* F25 — Biblioteca web: cuadrícula auto-fill de portadas (rejilla fluida). */
+.library-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.library-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.library-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.library-toolbar .field {
+  max-width: calc(var(--space-2xl) * 10);
+}
+
+.library-chips {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.library-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--space-2xl) * 4), 1fr));
+  gap: var(--space-md);
+}
+
+.library-empty-results {
+  color: var(--color-text-secondary);
+}

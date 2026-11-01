@@ -93,7 +93,8 @@ async function makeJsonApi(): Promise<{ api: ModuleApi; http: StubHttp }> {
   const api = await new ScriptRuntime({
     host,
     loader: new FakeScriptLoader({ [EXAMPLE_SCRIPT_ENTRY]: EXAMPLE_SCRIPT_JSON }),
-    source: EXAMPLE_SCRIPT_ENTRY,
+    files: { [EXAMPLE_SCRIPT_ENTRY]: EXAMPLE_SCRIPT_ENTRY },
+    entry: EXAMPLE_SCRIPT_ENTRY,
   }).createApi();
   return { api, http };
 }

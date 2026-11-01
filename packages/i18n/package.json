@@ -1,0 +1,24 @@
+{
+  "name": "@ryuunest/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Catálogo de traducciones (es.json) y cargador puro de i18n, compartido por apps/mobile y apps/web (F24, P-112).",
+  "license": "GPL-3.0-only",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "test": "vitest run --passWithNoTests"
+  }
+}

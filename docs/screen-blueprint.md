@@ -20,7 +20,7 @@
 
 ## Textos y tokens
 
-- Todo texto sale de `t("clave")` (`apps/mobile/src/i18n/index.ts`, catálogo `apps/mobile/src/i18n/es.json`); una clave nueva debe usarse, y ninguna cadena del catálogo va literal.
+- Todo texto sale de `t("clave")` del paquete compartido `@ryuunest/i18n` (`packages/i18n/src/index.ts`, catálogo `packages/i18n/src/es.json`; `apps/mobile/src/i18n/index.ts` lo re-exporta y `apps/web` lo importa directo, P-112); una clave nueva debe usarse, y ninguna cadena del catálogo va literal.
 - Colores, espacios, radios y tipografía solo de `@ryuunest/ui-tokens`; el ancho decide con `layoutForWidth(width)`. El lint de diseño (F09) rechaza literales.
 - Áreas táctiles mínimas con `touchTarget` (48); títulos a 2 líneas sin «…» (T7).
 

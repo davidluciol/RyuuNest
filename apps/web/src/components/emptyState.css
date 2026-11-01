@@ -1,0 +1,19 @@
+/* F24 — estado vacío: centrado, con dragón y una sola acción (SPEC §11.12). */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-2xl) var(--space-md);
+  text-align: center;
+}
+
+.empty-title {
+  color: var(--color-text-primary);
+  max-width: 32ch;
+}
+
+.empty-message {
+  color: var(--color-text-secondary);
+  max-width: 48ch;
+}

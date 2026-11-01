@@ -19,8 +19,8 @@ código se registran con su licencia en los `package.json` y en `pnpm-lock.yaml`
 
 | Recurso | Versión / pesos | Licencia | Origen | Estado |
 |---|---|---|---|---|
-| **Manrope** | 4.505 (estáticos 600, 700) | SIL Open Font License 1.1 (OFL-1.1) | `github.com/googlefonts/manrope` → `fonts/ttf/` (descarga 2026-10-16; el repo original `sharanda/manrope` fue borrado) | **Incluida** (F03): `apps/mobile/assets/fonts/Manrope-SemiBold.ttf`, `Manrope-Bold.ttf` + `LICENSE-Manrope.txt` |
-| **Inter** | 4.1 (estáticos 400, 500, 600) | SIL Open Font License 1.1 (OFL-1.1) | release oficial `github.com/rsms/inter` v4.1 → `extras/ttf/` (descarga 2026-10-16) | **Incluida** (F03): `apps/mobile/assets/fonts/Inter-Regular.ttf`, `Inter-Medium.ttf`, `Inter-SemiBold.ttf` + `LICENSE-Inter.txt` |
+| **Manrope** | 4.505 (estáticos 600, 700) | SIL Open Font License 1.1 (OFL-1.1) | `github.com/googlefonts/manrope` → `fonts/ttf/` (descarga 2026-10-16; el repo original `sharanda/manrope` fue borrado) | **Incluida** (F03): `apps/mobile/assets/fonts/Manrope-SemiBold.ttf`, `Manrope-Bold.ttf` + `LICENSE-Manrope.txt`; copias servidas como estáticos locales en `apps/web/public/fonts/` (F24, RNF-5) |
+| **Inter** | 4.1 (estáticos 400, 500, 600) | SIL Open Font License 1.1 (OFL-1.1) | release oficial `github.com/rsms/inter` v4.1 → `extras/ttf/` (descarga 2026-10-16) | **Incluida** (F03): `apps/mobile/assets/fonts/Inter-Regular.ttf`, `Inter-Medium.ttf`, `Inter-SemiBold.ttf` + `LICENSE-Inter.txt`; copias servidas como estáticos locales en `apps/web/public/fonts/` (F24, RNF-5) |
 
 Notas: un archivo de fuente por peso, cargado explícitamente; sin pesos sintéticos
 (`docs/SPEC.md` §11.3). Los nombres embebidos llevan el peso integrado (`Manrope-SemiBold`,
@@ -32,7 +32,7 @@ archivo, listado en `packages/ui-tokens/src/fonts.ts` (`fontFiles`). La puerta a
 
 | Recurso | Licencia | Origen | Estado |
 |---|---|---|---|
-| **Lucide** (`lucide-react-native@^1.57.0` en móvil/TV, `lucide-react` en web) | ISC | `github.com/lucide-icons/lucide` (paquete npm, instalado con `npx expo install` para la versión compatible con SDK 57) | **Incluido** (F03): punto de entrada único `apps/mobile/src/icons.ts`; requiere `react-native-svg@15.15.4` (par nativo, mismo origen ISC/MIT de su paquete) |
+| **Lucide** (`lucide-react-native@^1.57.0` en móvil/TV, `lucide-react@1.66.0` en web) | ISC | `github.com/lucide-icons/lucide` (paquete npm, instalado con `npx expo install` para la versión compatible con SDK 57) | **Incluido** (F03): punto de entrada único `apps/mobile/src/icons.ts`; requiere `react-native-svg@15.15.4` (par nativo, mismo origen ISC/MIT de su paquete). **Web (F24):** `lucide-react@1.66.0` con punto de entrada único `apps/web/src/icons.ts`; la puerta `apps/web/tests/sourceGuards.test.ts` prohíbe importar `lucide-react` a mano desde otra fuente |
 
 Notas: un único conjunto de iconos SVG, un icono por significado; sin emojis ni glifos de
 texto (`DESIGN_RULES.md` V4). La puerta `apps/mobile/tests/icons.test.ts` prohíbe emojis en
@@ -46,6 +46,7 @@ texto (`DESIGN_RULES.md` V4). La puerta `apps/mobile/tests/icons.test.ts` prohí
 | `dragon.svg` (dragón marcador de estados, F08) | Silueta vectorial **original** del proyecto (GPL-3.0), dibujada a mano; registro en `apps/mobile/assets/placeholder/README.md` | `apps/mobile/assets/placeholder/` | Temporal — artista pendiente |
 | `page-1.svg`, `page-2.svg`, `page-3.svg` (páginas de ejemplo del lector, F18) | Formas vectoriales **originales** del proyecto (GPL-3.0), sin texto ni obras; registro en `apps/mobile/assets/placeholder/README.md` | `apps/mobile/assets/placeholder/` | Temporal — solo web y pruebas |
 | Portadas, avatar y dragón de `design/` | Marcadores de ejemplo (nunca se enlazan por URL) | `assets/placeholder/` | Temporal |
+| `apps/web/public/favicon.png` | Derivado de la silueta vectorial **original** del dragón (GPL-3.0, F08) | `apps/web/public/` | **Incluido** (F24): favicon local del cliente web, sin recurso remoto |
 
 Reglas de los marcadores (`docs/SPEC.md` §12):
 

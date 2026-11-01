@@ -1,0 +1,98 @@
+/* F24 — marco: riel fijo de 240 px en escritorio; cabecera + barra inferior por debajo. */
+.shell-desktop {
+  display: grid;
+  grid-template-columns: var(--rail-desktop) 1fr;
+  min-height: 100vh;
+}
+
+.rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+}
+
+.rail-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.brand-name {
+  color: var(--color-text-primary);
+}
+
+.rail-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: var(--touch-min);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-control);
+  color: var(--color-text-secondary);
+}
+
+.rail-item.active {
+  background: var(--color-badge-bg);
+  color: var(--color-accent);
+}
+
+.shell-compact {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.shell-compact .content {
+  flex: 1;
+  padding: var(--margin-mobile);
+  padding-bottom: calc(var(--space-2xl) * 2);
+}
+
+.bottom-nav {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  background: var(--color-elevated);
+  border-top: 1px solid var(--color-border);
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--space-xxs) / 2);
+  min-height: var(--touch-min);
+  padding: var(--space-xxs) 0;
+  color: var(--color-text-secondary);
+}
+
+.tab-item.active {
+  color: var(--color-accent);
+}
+
+.shell-desktop .content {
+  padding: var(--margin-desktop);
+  min-width: 0;
+}
+
+.screen {
+  min-width: 0;
+}
