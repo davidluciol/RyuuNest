@@ -390,6 +390,11 @@
   "extension.options.revokeFailed": "No se pudo quitar el permiso.",
   "extension.options.error.title": "No se pudo abrir la extensión",
   "extension.options.error.message": "Algo falló al leer los dominios de este navegador.",
+  "extension.notice.missing": "No se encuentra la extensión de RyuuNest en este navegador. Instálala y recarga la página para poder leer.",
+  "extension.notice.reload": "Recargar",
+  "extension.notice.domain": "Autoriza «{domain}» en la extensión para continuar.",
+  "extension.notice.domains": "Autoriza {count} dominios en la extensión para continuar.",
+  "extension.notice.open": "Abrir extensión",
   "gallery.dialog.title": "No se pudo importar el respaldo",
   "gallery.dialog.message": "El archivo no es un respaldo válido de RyuuNest."
 }

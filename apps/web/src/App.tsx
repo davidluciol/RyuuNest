@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router";
 
 import ServicesProvider from "./services/ServicesContext";
 import AppShell from "./shell/AppShell";
+import ExtensionNotice from "./shell/ExtensionNotice";
 import DiagnosticsScreen from "./screens/diagnostics/DiagnosticsScreen";
 import DiscoverScreen from "./screens/discover/DiscoverScreen";
 import HomeScreen from "./screens/home/HomeScreen";
@@ -19,6 +20,7 @@ import SourcesScreen from "./screens/sources/SourcesScreen";
 export default function App() {
   return (
     <ServicesProvider>
+      <ExtensionNotice />
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<HomeScreen />} />
