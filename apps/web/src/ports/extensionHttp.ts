@@ -97,9 +97,15 @@ export function createWindowChannel(win: WindowLike): ExtensionChannel {
   };
 }
 
-/** Canal sobre `window` del navegador. */
+/** Canal sobre `window` del navegador; no lo toca hasta que se usa (en Node no hay ventana). */
 export function createBrowserChannel(): ExtensionChannel {
-  return createWindowChannel(window as unknown as WindowLike);
+  let channel: ExtensionChannel | undefined;
+  const resolve = (): ExtensionChannel =>
+    (channel ??= createWindowChannel(window as unknown as WindowLike));
+  return {
+    post: (message) => resolve().post(message),
+    subscribe: (listener) => resolve().subscribe(listener),
+  };
 }
 
 export interface ExtensionHttpOptions {

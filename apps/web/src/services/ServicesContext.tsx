@@ -30,6 +30,8 @@ export default function ServicesProvider({ children }: { children: ReactNode }) 
         if (cancelled) return;
         setServices(opened);
         window.addEventListener("beforeunload", () => void opened.flush());
+        // La web depende de la extensión (SPEC §10): se comprueba al arrancar para avisar de inmediato.
+        void opened.extension.detect();
       })
       .catch(() => {
         if (!cancelled) setFailed(true);

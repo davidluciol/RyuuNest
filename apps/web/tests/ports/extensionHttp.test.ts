@@ -11,6 +11,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   ExtensionHttpError,
+  createBrowserChannel,
   createExtensionHttp,
   createWindowChannel,
   type ExtensionChannel,
@@ -323,6 +324,13 @@ describe("openOptions", () => {
     const { http } = make(() => null);
     const error = await http.openOptions().catch((e: unknown) => e);
     expect(error).toMatchObject({ reason: "EXTENSION_MISSING" });
+  });
+});
+
+describe("createBrowserChannel", () => {
+  it("no toca `window` hasta que se usa (las pruebas en Node no tienen ventana)", () => {
+    expect(typeof window).toBe("undefined");
+    expect(() => createBrowserChannel()).not.toThrow();
   });
 });
 

@@ -1,6 +1,5 @@
 import {
   createErrorReporter,
-  createFetchHttp,
   createFflateArchive,
   createLogStore,
   createInstalledMounter,
@@ -22,6 +21,12 @@ import {
 } from "@ryuunest/core";
 import { validateManifest, validateRepoIndex } from "@ryuunest/module-sdk";
 
+import {
+  createBrowserChannel,
+  createExtensionHttp,
+  type ExtensionHttpOptions,
+} from "../ports/extensionHttp";
+import { createExtensionStatus, type ExtensionStatusStore } from "../ports/extensionStatus";
 import { createIdbByteStore, type ByteStore } from "./byteStore";
 import { openWebDatabase } from "./webDatabase";
 import { createWebScriptLoader } from "./webScriptLoader";
@@ -32,16 +37,22 @@ import { createWebScriptLoader } from "./webScriptLoader";
  * instalación con confirmación manual (AC-8), registro de diagnóstico (T36) y
  * reporter de errores de pantallas (F31, P-72).
  *
- * La red usa `fetch` directo **de forma temporal** (P-111): hasta que F27
- * conecte el puente a la extensión (SPEC §10), la descarga de repos/módulos
- * funciona donde el CORS lo permite (p. ej. GitHub raw) y el resto de dominios
- * puede quedar bloqueado; entonces el puerto `Http` se sustituye por el de la
- * extensión sin tocar las pantallas.
+ * F27 — **toda** la red pasa por la extensión de navegador (SPEC §10): el puerto
+ * `Http` por defecto son mensajes a la extensión (`ports/extensionHttp`), sin
+ * `fetch` directo. Esto retira el TEMPORARY de P-111. Las pantallas no cambian:
+ * leen el estado de la extensión (`extension.status`) para avisar de lo accionable.
  */
 export interface WebServices {
   readonly driver: SqlDriver;
   readonly storage: Storage;
   readonly http: Http;
+  /** Estado de la extensión de navegador y acceso a su página de opciones. */
+  readonly extension: {
+    readonly status: ExtensionStatusStore;
+    /** Comprueba que la extensión está (actualiza `status`). */
+    detect(): Promise<boolean>;
+    openOptions(domain?: string): Promise<void>;
+  };
   readonly archive: Archive;
   readonly clock: Clock;
   /** En web no hay bloqueo del dispositivo (SPEC §5.3): nunca disponible. */
@@ -59,8 +70,12 @@ export interface WebServices {
 
 export interface OpenWebServicesOptions {
   readonly byteStore?: ByteStore;
-  /** Inyectable para pruebas (StubHttp) y para el puente a la extensión en F27. */
+  /** Inyectable en pruebas (StubHttp); por defecto, la red va por la extensión. */
   readonly http?: Http;
+  /** Canal y tiempos del puente a la extensión (inyectables en pruebas). */
+  readonly extension?: Partial<
+    Pick<ExtensionHttpOptions, "channel" | "detectTimeoutMs" | "requestTimeoutMs" | "newId">
+  >;
   readonly locateFile?: (file: string) => string;
   readonly appVersion?: string;
   readonly platform?: string;
@@ -76,8 +91,19 @@ export async function openWebServices(options: OpenWebServicesOptions = {}): Pro
   });
 
   const storage = new SqliteStorage(driver);
-  // TEMPORARY (P-111): fetch directo hasta el puente a la extensión (F27, SPEC §10).
-  const http = options.http ?? createFetchHttp();
+  const extensionStatus = createExtensionStatus();
+  const extensionHttp = createExtensionHttp({
+    channel: options.extension?.channel ?? createBrowserChannel(),
+    status: extensionStatus,
+    ...(options.extension?.detectTimeoutMs === undefined
+      ? {}
+      : { detectTimeoutMs: options.extension.detectTimeoutMs }),
+    ...(options.extension?.requestTimeoutMs === undefined
+      ? {}
+      : { requestTimeoutMs: options.extension.requestTimeoutMs }),
+    ...(options.extension?.newId === undefined ? {} : { newId: options.extension.newId }),
+  });
+  const http = options.http ?? extensionHttp;
   const archive = createFflateArchive();
   const clock: Clock = { now: () => Date.now() };
   const appVersion = options.appVersion;
@@ -111,6 +137,11 @@ export async function openWebServices(options: OpenWebServicesOptions = {}): Pro
     driver,
     storage,
     http,
+    extension: {
+      status: extensionStatus,
+      detect: () => extensionHttp.detect(),
+      openOptions: (domain) => extensionHttp.openOptions(domain),
+    },
     archive,
     clock,
     secureLock,
