@@ -23,6 +23,7 @@ export default defineConfig({
       // la puerta tests/mobileSharedImports.test.ts lo vigila).
       "@ryuunest/mobile-src": fileURLToPath(new URL("../mobile/src", import.meta.url)),
       "@ryuunest/core": srcAlias("core"),
+      "@ryuunest/extension-protocol": srcAlias("extension-protocol"),
       "@ryuunest/i18n": srcAlias("i18n"),
       "@ryuunest/module-sdk": srcAlias("module-sdk"),
       "@ryuunest/test-site": srcAlias("test-site"),

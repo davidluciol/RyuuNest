@@ -345,6 +345,9 @@ importers:
       '@ryuunest/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@ryuunest/extension-protocol':
+        specifier: workspace:*
+        version: link:../../packages/extension-protocol
       '@ryuunest/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

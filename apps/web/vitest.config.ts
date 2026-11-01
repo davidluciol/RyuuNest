@@ -11,6 +11,9 @@ export default defineConfig({
     alias: {
       "@ryuunest/mobile-src": fileURLToPath(new URL("../mobile/src", import.meta.url)),
       "@ryuunest/core": fileURLToPath(new URL("../../packages/core/src/index.ts", import.meta.url)),
+      "@ryuunest/extension-protocol": fileURLToPath(
+        new URL("../../packages/extension-protocol/src/index.ts", import.meta.url),
+      ),
       "@ryuunest/i18n": fileURLToPath(new URL("../../packages/i18n/src/index.ts", import.meta.url)),
       "@ryuunest/module-sdk": fileURLToPath(
         new URL("../../packages/module-sdk/src/index.ts", import.meta.url),
