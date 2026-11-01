@@ -3,6 +3,7 @@ import { originPatternFor, parseRequest } from "@ryuunest/extension-protocol";
 import { ext } from "../browser";
 import { APP_ORIGINS, REQUEST_TIMEOUT_MS } from "../config";
 import { createPendingHosts } from "../domains";
+import { localStore } from "../storage";
 import { handleMessage, type HandlerDeps } from "./handler";
 import { createHeaderRules, type SessionRulesApi } from "./headers";
 
@@ -12,10 +13,7 @@ import { createHeaderRules, type SessionRulesApi } from "./headers";
  * lógica y sus invariantes están probadas en `handler.ts`.
  */
 
-const pending = createPendingHosts({
-  get: async (key) => (await ext.storage.local.get(key))[key],
-  set: (key, value) => ext.storage.local.set({ [key]: value }),
-});
+const pending = createPendingHosts(localStore);
 
 // Los tipos de `chrome` modelan acciones y tipos de recurso como enums; en el cable son las mismas cadenas.
 const sessionRules: SessionRulesApi = {

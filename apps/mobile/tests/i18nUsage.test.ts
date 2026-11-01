@@ -44,10 +44,23 @@ function usedKeys(): Set<string> {
   return found;
 }
 
+/**
+ * El catálogo es compartido (P-112): también lo consumen `apps/web` y
+ * `apps/extension` (F26), así que una clave no está «muerta» si la cita
+ * cualquiera de ellos.
+ */
+const OTHER_CONSUMERS = ["../../web/src", "../../extension/src"].map((dir) =>
+  path.resolve(SRC, dir),
+);
+
+function consumerSourceFiles(): string[] {
+  return [...sourceFiles(), ...OTHER_CONSUMERS.flatMap((dir) => sourceFiles(dir))];
+}
+
 /** Claves citadas en las fuentes como literal (registro, mapas de etiquetas…). */
 function referencedKeys(): Set<string> {
   const found = new Set<string>();
-  for (const file of sourceFiles()) {
+  for (const file of consumerSourceFiles()) {
     const text = readFileSync(file, "utf8");
     for (const key of catalogKeys()) {
       if (text.includes(`"${key}"`) || text.includes(`'${key}'`)) found.add(key);

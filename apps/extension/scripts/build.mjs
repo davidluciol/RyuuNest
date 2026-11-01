@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, readFileSync } from "node:fs";
+import { copyFileSync, cpSync, existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { build } from "vite";
@@ -41,16 +41,11 @@ function script(entry, name, file, emptyOutDir) {
 await script("src/background/index.ts", "RyuuNestBackground", "background.js", true);
 await script("src/content/index.ts", "RyuuNestContent", "content.js", false);
 
-await build({
-  ...shared,
-  base: "./",
-  build: {
-    outDir: "dist",
-    emptyOutDir: false,
-    minify: false,
-    rollupOptions: { input: { options: at("options.html") } },
-  },
-});
+// La página de opciones lleva React y los tokens: su propia configuración (TS).
+await build({ configFile: at("vite.options.config.ts"), root, logLevel: "warn" });
+
+// Fuentes locales de la web (RNF-5: cero recursos remotos); el CSS de tokens las pide en /fonts/.
+cpSync(at("../web/public/fonts"), at("dist/fonts"), { recursive: true });
 
 copyFileSync(at("manifest.json"), at("dist/manifest.json"));
 

@@ -1,0 +1,51 @@
+/* F26 — página de opciones: una columna con tarjetas, solo tokens (sin literales). */
+.options-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-width: calc(var(--space-2xl) * 15);
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md);
+}
+
+.options-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.options-header h1 {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.options-intro,
+.options-hint,
+.options-empty {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.options-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.options-card h2 {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.domain-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
