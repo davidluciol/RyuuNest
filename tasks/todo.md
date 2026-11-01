@@ -547,11 +547,12 @@ Dep: F20, F29, T36 · S · `apps/mobile/src/screens/settings/diagnostics/*`
 
 Dep: F15, F16, F21, F29, T36 · M · `apps/mobile/src/screens/*`
 
-- [ ] Descubrir y Fuentes usan banner/modal con causa, código, reintentar y detalle
-- [ ] Respaldo (F21) muestra rechazos y errores con modal/toast y registra el evento
-- [ ] Lector muestra un banner estático (sin animación) y registra el fallo
-- [ ] Cada error visible deja una entrada en `log` sin datos sensibles
-- Verif: Playwright por pantalla + tests de integración
+- [x] Descubrir y Fuentes mantienen `ErrorState` a pantalla completa en la carga inicial y registran cada fallo en `log` (decisión del humano 2026-10-31); los errores de acciones puntuales en Fuentes usan el aviso transitorio (`notice`) y también se registran
+- [x] Respaldo (F21) muestra rechazos con `ErrorDialog` y errores con aviso, y registra cada evento en `log` (`backup.<acción>.<código>`, con el motivo del rechazo en los `apply`)
+- [x] Lector muestra `ErrorBanner` estático inline (sin animación) al fallar el capítulo, con reintentar y Volver; cada imagen fallida (RF-23) también se registra (`reader.image.<código>`)
+- [x] Cada error visible deja una entrada en `log` saneada (P-72): `createErrorReporter` en `src/data/errorLog{,Port}.ts`, fire-and-forget, no-op en web
+- [x] **Hallazgo y arreglo en el núcleo:** `sanitizeContextValue` no redactaba claves sensibles del contexto en formato objeto (`{ Authorization: "Bearer …" }`); ahora redonta por nombre de clave (test en rojo en `packages/core/tests/diagnostics/log.test.ts`)
+- Verif: [x] tests de integración (errorLog 5, discoverErrors 3, sourcesErrors 4, backupErrors 5, readerErrors 3) · [ ] Playwright por pantalla (en curso)
 
 ### F34 Correcciones UX/UI transversales (móvil, escritorio y TV) `[FE · Alta · N4]`
 
