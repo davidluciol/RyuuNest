@@ -53,6 +53,8 @@ const DECLARATIVE_ENTRY = JSON.stringify({
 });
 
 const SOURCE = "export default function create(host) { /* … */ }";
+/** Ruta de entrada de los manifests script de estas pruebas (el loader se indexa por ella, R1). */
+const SCRIPT_ENTRY = "index.js";
 
 function makeHost(http: StubHttp = new StubHttp()): ModuleHost {
   return new ModuleHost({
@@ -119,7 +121,7 @@ describe("createModuleRuntime · selección por manifest.runtime", () => {
       manifest: makeManifest({ runtime: "script", entry: "index.js" }),
       entry: SOURCE,
       host: makeHost(makeHttp()),
-      loader: new FakeScriptLoader({ [SOURCE]: sampleApi }),
+      loader: new FakeScriptLoader({ [SCRIPT_ENTRY]: sampleApi }),
     });
 
     expect(runtime).toBeInstanceOf(ScriptRuntime);
@@ -129,10 +131,10 @@ describe("createModuleRuntime · selección por manifest.runtime", () => {
     const runtimes: ModuleRuntime[] = [
       createModuleRuntime({ manifest: makeManifest(), entry: DECLARATIVE_ENTRY, host: makeHost() }),
       createModuleRuntime({
-        manifest: makeManifest({ runtime: "script" }),
+        manifest: makeManifest({ runtime: "script", entry: SCRIPT_ENTRY }),
         entry: SOURCE,
         host: makeHost(),
-        loader: new FakeScriptLoader({ [SOURCE]: sampleApi }),
+        loader: new FakeScriptLoader({ [SCRIPT_ENTRY]: sampleApi }),
       }),
     ];
 
@@ -191,7 +193,7 @@ describe("createModuleApi · montaje y contención de fallos", () => {
   });
 
   it("devuelve la API del módulo script cargada con el cargador", async () => {
-    const loader = new FakeScriptLoader({ [SOURCE]: sampleApi });
+    const loader = new FakeScriptLoader({ [SCRIPT_ENTRY]: sampleApi });
     const handle = await createModuleApi({
       manifest: makeManifest({ runtime: "script", entry: "index.js" }),
       entry: SOURCE,
@@ -202,7 +204,7 @@ describe("createModuleApi · montaje y contención de fallos", () => {
     await expect(handle.api.pages("ch-1", "r-1")).resolves.toEqual({
       images: [{ url: "https://sitio.test/1.svg" }],
     });
-    expect(loader.loaded).toEqual([SOURCE]);
+    expect(loader.loaded).toEqual([SCRIPT_ENTRY]);
     expect(handle.lastError()).toBeUndefined();
   });
 
@@ -217,7 +219,7 @@ describe("createModuleApi · montaje y contención de fallos", () => {
       manifest: makeManifest({ runtime: "script", entry: "index.js" }),
       entry: SOURCE,
       host: makeHost(makeHttp()),
-      loader: new FakeScriptLoader({ [SOURCE]: factory }),
+      loader: new FakeScriptLoader({ [SCRIPT_ENTRY]: factory }),
     });
 
     const error = await handle.api.details("serie-uno").then(
@@ -257,7 +259,7 @@ describe("createModuleApi · montaje y contención de fallos", () => {
       manifest: makeManifest({ runtime: "script", entry: "index.js" }),
       entry: SOURCE,
       host: makeHost(makeHttp()),
-      loader: new FakeScriptLoader({ [SOURCE]: broken }),
+      loader: new FakeScriptLoader({ [SCRIPT_ENTRY]: broken }),
     }).then(
       () => undefined,
       (thrown: unknown) => thrown,

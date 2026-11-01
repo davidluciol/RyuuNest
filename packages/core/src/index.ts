@@ -29,6 +29,7 @@ export * from "./library/removeSeriesFromLibrary.js";
 export * from "./library/SeriesPrefs.js";
 export * from "./library/SeriesStore.js";
 export * from "./modules/ModuleRegistry.js";
+export * from "./modules/installedMounter.js";
 export * from "./ports/index.js";
 export * from "./progress/ChapterReadStore.js";
 export * from "./progress/ProgressStore.js";

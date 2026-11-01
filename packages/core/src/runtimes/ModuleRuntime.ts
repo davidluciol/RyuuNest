@@ -75,8 +75,9 @@ export function createModuleRuntime(options: CreateModuleApiOptions): ModuleRunt
     return new ScriptRuntime({
       host: options.host,
       loader,
-      files: options.files ?? { [options.entry]: options.entry },
-      entry: options.entry,
+      // `entry` es el contenido del archivo de entrada; la ruta es `manifest.entry`.
+      files: options.files ?? { [options.manifest.entry]: options.entry },
+      entry: options.manifest.entry,
     });
   }
 
