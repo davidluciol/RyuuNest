@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["chrome"],
+    "resolveJsonModule": true,
+    "paths": {
+      "@ryuunest/extension-protocol": ["../../packages/extension-protocol/src/index.ts"]
+    }
+  },
+  "include": ["src", "tests"]
+}

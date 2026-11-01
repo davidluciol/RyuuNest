@@ -1,0 +1,21 @@
+{
+  "name": "@ryuunest/extension",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Extensión de navegador de RyuuNest (F26, SPEC §10): hace las peticiones de la web a los dominios que el usuario autoriza. Chrome/Edge y Firefox (MV3).",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@ryuunest/extension-protocol": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.3.7",
+    "typescript": "~6.0.3",
+    "vite": "8.3.5",
+    "vitest": "5.0.4"
+  }
+}
