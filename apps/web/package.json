@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Cliente web de RyuuNest (React + Vite + react-router, F24/F25). La red real irá por la extensión (F27); hoy usa fetch directo (P-111, temporal).",
+  "description": "Cliente web de RyuuNest (React + Vite + react-router, F24/F25). Toda la red pasa por la extensión de navegador (F27, SPEC §10), sin fetch directo.",
   "license": "GPL-3.0-only",
   "scripts": {
     "dev": "vite",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@ryuunest/core": "workspace:*",
+    "@ryuunest/extension-protocol": "workspace:*",
     "@ryuunest/i18n": "workspace:*",
     "@ryuunest/module-sdk": "workspace:*",
     "@ryuunest/test-site": "workspace:*",

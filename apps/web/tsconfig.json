@@ -8,6 +8,7 @@
     "paths": {
       "@ryuunest/mobile-src/*": ["../mobile/src/*"],
       "@ryuunest/core": ["../../packages/core/src/index.ts"],
+      "@ryuunest/extension-protocol": ["../../packages/extension-protocol/src/index.ts"],
       "@ryuunest/i18n": ["../../packages/i18n/src/index.ts"],
       "@ryuunest/module-sdk": ["../../packages/module-sdk/src/index.ts"],
       "@ryuunest/test-site": ["../../packages/test-site/src/index.ts"],

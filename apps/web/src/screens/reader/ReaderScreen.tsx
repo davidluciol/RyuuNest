@@ -11,6 +11,7 @@ import { readerPath } from "../../routes";
 import { useServices } from "../../services/ServicesContext";
 import "./reader.css";
 import { type ReaderPageImage } from "./readerData";
+import { fetchImageBlob } from "./readerImage";
 import { useReader, type ReaderReadyView } from "./useReader";
 
 /**
@@ -225,7 +226,7 @@ function PagedCanvas({
   );
 }
 
-/** Imagen del lector: con cabeceras va por fetch→blob (CORS lo permite o no, P-111); si no, <img> directo. */
+/** Imagen del lector: con cabeceras va por el puerto Http (la extensión, F27) → blob; si no, <img> directo. */
 function ReaderImageView({ image, index }: { image: ReaderPageImage; index: number }) {
   const services = useServices();
   const [src, setSrc] = useState<string | null>(image.headers === undefined ? image.url : null);
@@ -243,9 +244,7 @@ function ReaderImageView({ image, index }: { image: ReaderPageImage; index: numb
     let cancelled = false;
     void (async () => {
       try {
-        const response = await fetch(image.url, { headers });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const blob = await response.blob();
+        const blob = await fetchImageBlob(services.http, image);
         if (cancelled) return;
         objectUrl = URL.createObjectURL(blob);
         setSrc(objectUrl);
@@ -257,7 +256,7 @@ function ReaderImageView({ image, index }: { image: ReaderPageImage; index: numb
       cancelled = true;
       if (objectUrl !== null) URL.revokeObjectURL(objectUrl);
     };
-  }, [image.url, image.headers, nonce]);
+  }, [image.url, image.headers, nonce, services.http]);
 
 
   if (failed) {

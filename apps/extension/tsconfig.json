@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["chrome", "vite/client"],
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "paths": {
+      "@ryuunest/extension-protocol": ["../../packages/extension-protocol/src/index.ts"],
+      "@ryuunest/i18n": ["../../packages/i18n/src/index.ts"],
+      "@ryuunest/ui-tokens": ["../../packages/ui-tokens/src/index.ts"],
+      "@ryuunest/mobile-src/*": ["../mobile/src/*"],
+      "@ryuunest/web/*": ["../web/src/*"]
+    }
+  },
+  "include": ["src", "tests", "vite.options.config.ts"]
+}

@@ -175,6 +175,7 @@ ryuunest/
   packages/core         TS puro: contrato, runtimes, instalador, biblioteca, lector (estado)
   packages/module-sdk   tipos públicos, validador de manifest, CLI y plantilla de módulos
   packages/ui-tokens    tokens derivados de DESIGN.md (colores, tipografía, espaciado, radios)
+  packages/extension-protocol  mensajes web ↔ extensión (tipos, validación estricta y base64; SPEC §10)
   apps/mobile           React Native (Expo) para móvil y variante TV
   apps/web              React + Vite + puente a la extensión
   apps/extension        extensión de navegador (realiza las peticiones de la web)

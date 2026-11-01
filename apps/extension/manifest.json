@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "RyuuNest",
+  "description": "Hace las peticiones de la web de RyuuNest a los dominios que tú autorices.",
+  "version": "0.0.0",
+  "minimum_chrome_version": "121",
+  "permissions": ["storage", "declarativeNetRequestWithHostAccess"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
+  "background": {
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost:5173/*", "http://localhost:4173/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "action": {
+    "default_title": "RyuuNest"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ryuunest@io.github.davidluciol",
+      "strict_min_version": "128.0"
+    }
+  }
+}

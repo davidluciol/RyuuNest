@@ -13,6 +13,7 @@ const fs = require("node:fs/promises");
 const os = require("node:os");
 const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { installFakeExtension } = require("./fakeExtension.cjs");
 
 const baseURL = process.env.WEB_URL || "http://127.0.0.1:4173";
 const REPO_HOST = "raw.githubusercontent.com";
@@ -27,6 +28,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF24");
         acceptDownloads: true,
         permissions: ["clipboard-read", "clipboard-write"],
       });
+      await installFakeExtension(context);
       const page = await context.newPage();
       page.setDefaultTimeout(30000);
       const errors = [];

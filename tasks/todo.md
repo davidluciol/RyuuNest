@@ -631,15 +631,16 @@ Dep: F24, FB1, P-B · M · `apps/web/src/screens/*`
 
 Dep: F24 · M · `apps/extension/{manifest.json,src/background.ts}`
 
-- [ ] Recibe `{id,url,method,headers,body?}`; responde solo al origen de la app; sin dominio autorizado no hay petición (SPEC §7.2)
-- Verif: pruebas del manifiesto/permisos · 🧍 cargar la extensión y autorizar un dominio
+- [x] Recibe `{id,url,method,headers,body?}`; responde solo al origen de la app; sin dominio autorizado no hay petición (SPEC §7.2) — hecho en `feature/F26-F27-extension-bridge` (un PR con F27, decisión del humano; commits etiquetados `F26`/`F27`). Paquete compartido `@ryuunest/extension-protocol` (mensajes estrictos + base64); `apps/extension` (Vite 8.3.5 + `@types/chrome`): manifiesto MV3 único para Chrome/Edge y Firefox (`service_worker` + `scripts`), `optional_host_permissions`, content script solo en `localhost:5173/4173` (P-116), fondo con `handleMessage` (origen → host exacto autorizado → `fetch` sin credenciales → texto con charset o base64), `Referer`/`Origin`/`User-Agent` con reglas `declarativeNetRequest` de sesión por URL exacta, y página de opciones React con los componentes de la web (autorizar varios hosts con un solo gesto/aviso, quitar permiso). P-116 a P-120.
+- Verif: pruebas del manifiesto/permisos (9) + lógica del fondo, puente y opciones (~120 en total) · e2e en Chromium con la extensión real (`apps/extension/tests/e2e/{extension,options}.cjs`, capturas en `docs/capturasF26/`) · 🧍 cargar la extensión **en Chrome y en Firefox** y autorizar un dominio con el aviso real del navegador (ver `apps/extension/README.md`; Playwright no puede pulsar ese aviso)
 
 ### F27 Puente web ↔ extensión `[FE/BE · Alta · N4]`
 
 Dep: F25, F26 · M · `apps/web/src/{ports/http.ts,worker/*}`
 
-- [ ] Módulos en Web Worker sin DOM; `Http` web solo vía extensión; se lee un capítulo en el navegador (AC-10)
-- Verif: Playwright (peticiones salen por la extensión) · 🧍 leer un capítulo con la extensión instalada
+- [x] Módulos en Web Worker sin DOM (ya desde F25); `Http` web solo vía extensión; se lee un capítulo en el navegador (AC-10) — `createExtensionHttp` (ping compartido, validación previa, correlación por id, errores → `ExtensionHttpError`), `openWebServices` sin `fetch` directo (**retira el TEMPORARY P-111**), aviso `Banner`/`ExtensionNotice` (falta la extensión → Recargar; dominio por autorizar → Abrir extensión), y las imágenes del lector con cabeceras por la extensión (`fetchImageBlob`); sin cabeceras siguen en `<img>` directo (decisión del humano, P-118).
+- Verif: e2e `bridge.cjs` con **todo real** (web construida + extensión real + servidor HTTPS local con módulo `script`, `Referer` exigido y `.zip` verificado por SHA-256; la página no habla con el sitio; control negativo comprobado) · e2e `extensionNotice.cjs` y los cinco e2e previos con un doble de la extensión (`fakeExtension.cjs`) a 1440/426 px · 🧍 leer un capítulo con la extensión instalada en tu navegador y con un sitio real
+- [ ] Pendiente (no bloquea el PR): iconos de la extensión (no hay arte; el manifiesto va sin `icons`), origen de producción de la PWA (hoy solo `localhost`, P-116) y ficha de publicación en las tiendas.
 
 ### 🚩 Checkpoint P-D `[Ops · Baja · N1]`
 

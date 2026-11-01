@@ -6,6 +6,7 @@
 // Ejecutar con la build servida: WEB_URL=http://127.0.0.1:4173 node apps/web/tests/e2e/shell.cjs
 const assert = require("node:assert/strict");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { installFakeExtension } = require("./fakeExtension.cjs");
 
 const baseURL = process.env.WEB_URL || "http://127.0.0.1:4173";
 
@@ -14,6 +15,7 @@ const baseURL = process.env.WEB_URL || "http://127.0.0.1:4173";
   try {
     for (const width of [1440, 426]) {
       const context = await browser.newContext({ viewport: { width, height: 900 } });
+      await installFakeExtension(context);
       const page = await context.newPage();
       page.setDefaultTimeout(15000);
       const errors = [];

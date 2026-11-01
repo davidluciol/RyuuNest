@@ -8,6 +8,7 @@
 const assert = require("node:assert/strict");
 const crypto = require("node:crypto");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { installFakeExtension } = require("./fakeExtension.cjs");
 const { zipSync, strToU8 } = require("fflate");
 
 const baseURL = process.env.WEB_URL || "http://127.0.0.1:4173";
@@ -104,6 +105,7 @@ async function installDemo(page, index, zip) {
   try {
     for (const width of (process.env.WIDTHS || "1440,426").split(",").map(Number)) {
       const context = await browser.newContext({ viewport: { width, height: 900 } });
+      await installFakeExtension(context);
       const page = await context.newPage();
       page.setDefaultTimeout(30000);
       const errors = [];
