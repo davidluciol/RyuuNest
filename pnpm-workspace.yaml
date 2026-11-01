@@ -2,3 +2,5 @@ packages:
   - "packages/*"
   - "apps/*"
   - "tools/*"
+minimumReleaseAgeExclude:
+  - lucide-react@1.66.0
