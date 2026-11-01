@@ -107,7 +107,7 @@ function DiscoverReady({
   return (
     <div className="discover-content">
       <div className="discover-toolbar">
-        {view.modules.length > 1 && (
+        {view.modules.length > 0 && (
           <div className="discover-modules" role="tablist" aria-label={t("discover.sheet.title")}>
             {view.modules.map((module) => (
               <Chip
