@@ -3,6 +3,7 @@ import { router } from "expo-router";
 
 import { openAppDatabase } from "../../../data/appDatabase";
 import { createBackupFiles } from "../../../data/backupFiles";
+import { resolveErrorReporter, type ErrorReporter } from "../../../data/errorLog";
 import { createFetchHttp } from "../../../data/fetchHttp";
 import { createBackupService, type BackupService } from "./backupData";
 import { createSampleBackupService } from "./sampleBackupService";
@@ -63,6 +64,7 @@ export function useBackupData(): BackupState {
   const [service, setService] = useState<BackupService | null>(null);
   const [flow, dispatch] = useReducer(backupFlowReducer, INITIAL_BACKUP_FLOW);
   const [notice, setNotice] = useState<string | null>(null);
+  const [reporter, setReporter] = useState<ErrorReporter | null>(null);
   const flowRef = useRef(flow);
   flowRef.current = flow;
 
@@ -70,6 +72,10 @@ export function useBackupData(): BackupState {
     let cancelled = false;
     resolveBackupService().then((resolved) => {
       if (!cancelled) setService(resolved);
+    });
+    // F31: el reporter del registro `log` se resuelve una vez (P-72).
+    void resolveErrorReporter().then((resolved) => {
+      if (!cancelled) setReporter(resolved);
     });
     return () => {
       cancelled = true;
@@ -84,8 +90,9 @@ export function useBackupData(): BackupState {
       dispatch,
       notify: setNotice,
       goToSources: () => router.navigate("/sources"),
+      reporter,
     });
-  }, [service]);
+  }, [service, reporter]);
 
   return { flow, controller, notice };
 }

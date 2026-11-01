@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { resolveErrorReporter, type ErrorReporter } from "../../data/errorLog";
 import {
   resolveDiscoverSource,
-  toDiscoverError,
   type DiscoverDataSource,
 } from "./discoverData";
+import { reportDiscoverError } from "./discoverErrors";
 import {
   resolveSelectedModuleId,
   visibleDiscoverModules,
@@ -50,7 +51,21 @@ export function useDiscoverData(): { view: DiscoverView } & DiscoverActions {
   const [nonce, setNonce] = useState(0);
   const [request, setRequest] = useState<Request>(INITIAL_REQUEST);
   const [view, setView] = useState<DiscoverView>({ status: "loading" });
+  const [reporter, setReporter] = useState<ErrorReporter | null>(null);
   const bootRef = useRef<Boot | null>(null);
+  const reporterRef = useRef<ErrorReporter | null>(null);
+  reporterRef.current = reporter;
+
+  // F31: el reporter del registro `log` se resuelve una vez (P-72).
+  useEffect(() => {
+    let cancelled = false;
+    void resolveErrorReporter().then((resolved) => {
+      if (!cancelled) setReporter(resolved);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Arranque: fuente de la plataforma + módulos elegibles + último recordado.
   useEffect(() => {
@@ -76,7 +91,12 @@ export function useDiscoverData(): { view: DiscoverView } & DiscoverActions {
         );
       })
       .catch((error: unknown) => {
-        if (!cancelled) setView({ status: "error", error: toDiscoverError(error, "") });
+        if (!cancelled) {
+          setView({
+            status: "error",
+            error: reportDiscoverError(reporterRef.current, error, ""),
+          });
+        }
       });
     return () => {
       cancelled = true;
@@ -113,7 +133,10 @@ export function useDiscoverData(): { view: DiscoverView } & DiscoverActions {
       .catch((error: unknown) => {
         if (cancelled) return;
         const name = boot.modules.find((module) => module.id === moduleId)?.name ?? "";
-        setView({ status: "error", error: toDiscoverError(error, name) });
+        setView({
+          status: "error",
+          error: reportDiscoverError(reporterRef.current, error, name, { moduleId }),
+        });
       });
 
     return () => {

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "r
 import type { SqlDriver } from "@ryuunest/core";
 import { createFetchHttp } from "../../data/fetchHttp";
 import { openAppDatabase } from "../../data/appDatabase";
+import { resolveErrorReporter, type ErrorReporter } from "../../data/errorLog";
 import { createFflateArchive } from "../../data/fflateArchive";
 import { createAppSecureLock } from "../../data/secureLock";
 import { t } from "../../i18n";
@@ -13,6 +14,7 @@ import {
   loadSourcesWithOfficialRepo,
   type SourcesService,
 } from "./sourcesData";
+import { reportSourcesError } from "./sourcesErrors";
 import { INITIAL_SOURCES_FLOW, sourcesFlowReducer, type SourcesFlow } from "./sourcesFlow";
 import type { SourcesView } from "./sourcesFixtures";
 
@@ -57,8 +59,22 @@ export function useSourcesData(): SourcesState {
   const [flow, dispatch] = useReducer(sourcesFlowReducer, INITIAL_SOURCES_FLOW);
   const [notice, setNotice] = useState<string | null>(null);
   const [nonce, setNonce] = useState(0);
+  const [reporter, setReporter] = useState<ErrorReporter | null>(null);
   const flowRef = useRef(flow);
   flowRef.current = flow;
+  const reporterRef = useRef<ErrorReporter | null>(null);
+  reporterRef.current = reporter;
+
+  // F31: el reporter del registro `log` se resuelve una vez (P-72).
+  useEffect(() => {
+    let cancelled = false;
+    void resolveErrorReporter().then((resolved) => {
+      if (!cancelled) setReporter(resolved);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -70,10 +86,14 @@ export function useSourcesData(): SourcesState {
         if (cancelled) return;
         setService(resolved);
         setView({ status: "ready", data });
-        if (officialRepoFailed) setNotice(t("sources.officialRepo.failedNotice"));
+        if (officialRepoFailed) {
+          reportSourcesError(reporterRef.current, "load", new Error("official repo failed"));
+          setNotice(t("sources.officialRepo.failedNotice"));
+        }
       })
       .catch((error: unknown) => {
         console.warn("No se pudieron abrir las fuentes:", error);
+        reportSourcesError(reporterRef.current, "load", error);
         if (!cancelled) setView({ status: "error" });
       });
     return () => {
@@ -96,8 +116,9 @@ export function useSourcesData(): SourcesState {
             dispatch,
             reload,
             notify: setNotice,
+            reporter: reporterRef.current,
           }),
-    [service, reload],
+    [service, reload, reporter],
   );
 
   const retry = useCallback(() => setNonce((value) => value + 1), []);

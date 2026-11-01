@@ -21,6 +21,15 @@ const HTML_TAG_PATTERN = /<\/?[a-zA-Z][^>]*>/g;
 const ANDROID_PATH_PATTERN = /\/(?:data|storage\/emulated)\/[^\s"'`<>]*/g;
 const WINDOWS_PATH_PATTERN = /\b[a-zA-Z]:\\[^\s"'`<>]*/g;
 
+/**
+ * Claves de objeto cuyo valor siempre se redonta: si un contexto trae
+ * cabeceras como objeto (`{ Authorization: "Bearer …" }`), el patrón de
+ * texto no las alcanza (en JSON la clave y el valor van entre comillas), así
+ * que se detectan por nombre de clave, no por contenido.
+ */
+const SENSITIVE_KEY_PATTERN =
+  /^(authorization|cookie|set-cookie|x-api-key|api-key|access[_-]?token|refresh[_-]?token|proxy-authorization)$/i;
+
 /** Reemplaza un valor sensible por un marcador, sin revelar nada. */
 function redact(_match: string, name: string): string {
   return `[${name.toLowerCase()}]`;
@@ -60,7 +69,9 @@ export function sanitizeContextValue(value: unknown, depth = 0): unknown {
   if (typeof value === "object" && value !== null) {
     const out: Record<string, unknown> = {};
     for (const [key, item] of Object.entries(value).slice(0, 20)) {
-      out[sanitizeText(key)] = sanitizeContextValue(item, depth + 1);
+      const cleanKey = sanitizeText(key);
+      // Una clave sensible redonta todo su valor, sea string u objeto.
+      out[cleanKey] = SENSITIVE_KEY_PATTERN.test(key) ? "[redacted]" : sanitizeContextValue(item, depth + 1);
     }
     return out;
   }

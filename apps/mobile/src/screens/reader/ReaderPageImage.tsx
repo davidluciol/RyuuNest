@@ -1,13 +1,15 @@
 // single-use: imagen de una página del lector; solo existe dentro de él (F18/F19).
-import { useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { View } from "react-native";
 import { Image } from "expo-image";
 
 import ErrorState from "../../components/ErrorState";
+import { resolveErrorReporter, type ErrorReporter } from "../../data/errorLog";
 import { t } from "../../i18n";
 import { pageAspect } from "../../reader/readerLayout";
 import { INITIAL_PAGE_LOAD, pageImageSource, pageLoadReducer } from "../../reader/pageImage";
 import type { ReaderImage } from "./readingSource";
+import { reportReaderError } from "./readerErrors";
 
 /**
  * F18/F19 — una página del lector. La imagen se pide con las cabeceras que dio el módulo (RF-24)
@@ -38,7 +40,27 @@ export default function ReaderPageImage({
   onAspect,
 }: ReaderPageImageProps) {
   const [load, dispatch] = useReducer(pageLoadReducer, INITIAL_PAGE_LOAD);
+  const [reporter, setReporter] = useState<ErrorReporter | null>(null);
   const label = t("reader.page.label", { number: pageNumber });
+
+  // F31: cada imagen que falla queda registrada en `log` (P-72, RF-23).
+  useEffect(() => {
+    let cancelled = false;
+    void resolveErrorReporter().then((resolved) => {
+      if (!cancelled) setReporter(resolved);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (load.status === "error") {
+      reportReaderError(reporter, "image", new Error(load.message), { page: pageNumber });
+    }
+    // Solo cuando cambia a error: no en cada render.
+    // load.message queda fuera a propósito: solo nos interesa el paso a error.
+  }, [load.status, reporter, pageNumber]);
 
   if (load.status === "error") {
     return (

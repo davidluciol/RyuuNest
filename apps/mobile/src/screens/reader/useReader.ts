@@ -2,10 +2,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
 import { ModuleError, type ReaderMode, type ReaderSnapshot } from "@ryuunest/core";
 
+import { resolveErrorReporter, type ErrorReporter } from "../../data/errorLog";
 import { ReaderController } from "../../reader/readerController";
 import { readingOrder } from "../../reader/readingOrder";
 import { toDiscoverError } from "../discover/discoverData";
 import type { DiscoverError } from "../discover/discoverFixtures";
+import { reportReaderError } from "./readerErrors";
 import { chapterState, type ChapterState } from "../series/seriesFixtures";
 import { resolveReadingSource, type ReaderImage } from "./readingSource";
 import { resolveSettingsService } from "../settings/useSettingsData";
@@ -64,7 +66,21 @@ export function useReader(target: ReaderTarget): { view: ReaderView; actions: Re
   const { moduleId, seriesId, chapterId, releaseId } = target;
   const [view, setView] = useState<ReaderView>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
+  const [reporter, setReporter] = useState<ErrorReporter | null>(null);
   const controllerRef = useRef<ReaderController | null>(null);
+  const reporterRef = useRef<ErrorReporter | null>(null);
+  reporterRef.current = reporter;
+
+  // F31: el reporter del registro `log` se resuelve una vez (P-72).
+  useEffect(() => {
+    let cancelled = false;
+    void resolveErrorReporter().then((resolved) => {
+      if (!cancelled) setReporter(resolved);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -147,7 +163,10 @@ export function useReader(target: ReaderTarget): { view: ReaderView; actions: Re
       unsubscribe = controller.subscribe((snapshot) => setView(build(snapshot)));
       setView(build(controller.snapshot));
     })().catch((error: unknown) => {
-      if (!cancelled) setView({ status: "error", error: toDiscoverError(error, moduleId) });
+      if (!cancelled) {
+        reportReaderError(reporterRef.current, "open", error, { moduleId, seriesId, chapterId });
+        setView({ status: "error", error: toDiscoverError(error, moduleId) });
+      }
     });
 
     return () => {
