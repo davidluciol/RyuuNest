@@ -11,13 +11,14 @@ import {
   setLocale,
   supportedLocales,
   t,
-} from "../src/i18n";
+} from "../src/index";
 
 /**
  * F10 — internacionalización (RF-40, RNF-11): las cadenas visibles viven en el
  * catálogo (`es.json`) y se leen por clave; los números y las fechas se formatean
  * en la localidad activa. La estructura está lista para añadir inglés: hoy el
- * único catálogo es `es`.
+ * único catálogo es `es`. El paquete `@ryuunest/i18n` es la fuente única del
+ * catálogo, compartida por `apps/mobile` y `apps/web` (P-112).
  */
 describe("catálogo de traducciones (RF-40)", () => {
   it("lee las cadenas por clave, en español por defecto", () => {

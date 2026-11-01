@@ -193,6 +193,9 @@ importers:
       '@noble/hashes':
         specifier: ^2.4.0
         version: 2.4.0
+      '@ryuunest/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@ryuunest/module-sdk':
         specifier: workspace:*
         version: link:../../packages/module-sdk
@@ -312,6 +315,8 @@ importers:
       '@types/node':
         specifier: ^22.20.5
         version: 22.20.5
+
+  packages/i18n: {}
 
   packages/module-sdk:
     dependencies:
