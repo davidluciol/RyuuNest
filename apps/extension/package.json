@@ -6,6 +6,7 @@
   "description": "Extensión de navegador de RyuuNest (F26, SPEC §10): hace las peticiones de la web a los dominios que el usuario autoriza. Chrome/Edge y Firefox (MV3).",
   "license": "GPL-3.0-only",
   "scripts": {
+    "build": "node scripts/build.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run --passWithNoTests"
   },

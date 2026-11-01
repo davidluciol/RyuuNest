@@ -8,3 +8,10 @@
  * producción; el origen publicado se añade cuando se decida dónde alojar la PWA.
  */
 export const APP_ORIGINS: readonly string[] = ["http://localhost:5173", "http://localhost:4173"];
+
+/**
+ * Tiempo límite de cada petición del fondo, en ms. Provisional (P-90, mismo
+ * criterio): holgado frente a los 15 s del `ModuleHost`, que corta antes; se
+ * ajusta con mediciones reales.
+ */
+export const REQUEST_TIMEOUT_MS = 30_000;
