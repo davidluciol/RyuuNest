@@ -112,8 +112,14 @@ window.rpc = (message, timeoutMs = 3000) => new Promise((resolve, reject) => {
 });
 </script></body></html>`;
 
-/** Arranca todo; `cleanup()` lo deja limpio. */
-async function setup({ grantHosts = ["*://127.0.0.1/*"] } = {}) {
+/**
+ * Arranca todo; `cleanup()` lo deja limpio.
+ *  - `grantHosts`: patrones concedidos de antemano en la COPIA de la extensión.
+ *  - `stubApp`: sirve una página mínima en http://localhost:5173 (por defecto sí). Con
+ *    `false` no se intercepta nada: la «app» es la web real servida aparte (bridge.cjs).
+ *  - `extraArgs`: flags extra para Chromium (p. ej. --ignore-certificate-errors).
+ */
+async function setup({ grantHosts = ["*://127.0.0.1/*"], stubApp = true, extraArgs = [] } = {}) {
   const extDir = fs.mkdtempSync(path.join(os.tmpdir(), "ryuunest-ext-"));
   fs.cpSync(dist, extDir, { recursive: true });
   const manifestPath = path.join(extDir, "manifest.json");
@@ -126,19 +132,21 @@ async function setup({ grantHosts = ["*://127.0.0.1/*"] } = {}) {
   const context = await chromium.launchPersistentContext(userDataDir, {
     executablePath: findChromium(),
     headless: true,
-    args: [`--disable-extensions-except=${extDir}`, `--load-extension=${extDir}`],
+    args: [`--disable-extensions-except=${extDir}`, `--load-extension=${extDir}`, ...extraArgs],
   });
 
   let [worker] = context.serviceWorkers();
   if (!worker) worker = await context.waitForEvent("serviceworker", { timeout: 15000 });
   const extensionId = new URL(worker.url()).host;
 
-  await context.route(`${APP}/**`, (route) =>
-    route.fulfill({ contentType: "text/html", body: APP_PAGE }),
-  );
-  await context.route("http://localhost:9999/**", (route) =>
-    route.fulfill({ contentType: "text/html", body: APP_PAGE }),
-  );
+  if (stubApp) {
+    await context.route(`${APP}/**`, (route) =>
+      route.fulfill({ contentType: "text/html", body: APP_PAGE }),
+    );
+    await context.route("http://localhost:9999/**", (route) =>
+      route.fulfill({ contentType: "text/html", body: APP_PAGE }),
+    );
+  }
 
   return {
     context,
