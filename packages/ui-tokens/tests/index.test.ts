@@ -33,6 +33,7 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
         "scaleSize",
         "scaleStyle",
         "scaleTypography",
+        "progressBarHeight",
         "readerMaxWidth",
         "spacing",
         "themes",

@@ -25,6 +25,7 @@ function snapshotFromPackage(mod: typeof uiTokens): TokensSnapshot {
     margins: mod.breakpoints.margin,
     touchMin: mod.touchTarget.min,
     readerMaxWidth: mod.readerMaxWidth,
+    progressBarHeight: mod.progressBarHeight,
   };
 }
 

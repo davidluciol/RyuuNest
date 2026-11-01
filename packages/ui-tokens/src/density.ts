@@ -44,5 +44,8 @@ export const touchTarget = { min: 48 } as const;
  */
 export const readerMaxWidth = 720 as const;
 
+/** Alto de la barra de progreso de portada (RF-41: 3 px). */
+export const progressBarHeight = 3 as const;
+
 /** Relación de aspecto de las portadas. */
 export const coverAspectRatio = { width: 2, height: 3 } as const;

@@ -1,9 +1,10 @@
-import { Navigate, Route, Routes, useNavigate } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 
 import ServicesProvider from "./services/ServicesContext";
 import AppShell from "./shell/AppShell";
 import DiscoverScreen from "./screens/discover/DiscoverScreen";
-import EmptyScreen from "./screens/EmptyScreen";
+import HomeScreen from "./screens/home/HomeScreen";
+import LibraryScreen from "./screens/library/LibraryScreen";
 import ReaderScreen from "./screens/reader/ReaderScreen";
 import SeriesScreen from "./screens/series/SeriesScreen";
 import SourcesScreen from "./screens/sources/SourcesScreen";
@@ -18,8 +19,8 @@ export default function App() {
     <ServicesProvider>
       <Routes>
         <Route element={<AppShell />}>
-          <Route index element={<HomeRoute />} />
-          <Route path="library" element={<LibraryRoute />} />
+          <Route index element={<HomeScreen />} />
+          <Route path="library" element={<LibraryScreen />} />
           <Route path="discover" element={<DiscoverScreen />} />
           <Route path="sources" element={<SourcesScreen />} />
           <Route path="series/:moduleId/:seriesId" element={<SeriesScreen />} />
@@ -32,29 +33,4 @@ export default function App() {
   );
 }
 
-function HomeRoute() {
-  const navigate = useNavigate();
-  return (
-    <EmptyScreen
-      screenId="home"
-      titleKey="state.empty.home.title"
-      messageKey="state.empty.home.message"
-      actionKey="actions.addRepository"
-      onAction={() => navigate("/sources")}
-    />
-  );
-}
-
-function LibraryRoute() {
-  const navigate = useNavigate();
-  return (
-    <EmptyScreen
-      screenId="library"
-      titleKey="state.empty.library.title"
-      messageKey="state.empty.library.message"
-      actionKey="actions.addRepository"
-      onAction={() => navigate("/sources")}
-    />
-  );
-}
 

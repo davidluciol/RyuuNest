@@ -16,6 +16,7 @@ export {
   breakpoints,
   coverAspectRatio,
   densities,
+  progressBarHeight,
   readerMaxWidth,
   touchTarget,
   type Density,

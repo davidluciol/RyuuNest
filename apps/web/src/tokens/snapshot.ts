@@ -2,6 +2,7 @@ import {
   breakpoints,
   defaultTheme,
   fontFiles,
+  progressBarHeight,
   radii,
   readerMaxWidth,
   spacing,
@@ -29,5 +30,6 @@ export function uiTokensSnapshot(): TokensSnapshot {
     margins: breakpoints.margin,
     touchMin: touchTarget.min,
     readerMaxWidth,
+    progressBarHeight,
   };
 }

@@ -24,4 +24,5 @@ export interface TokensSnapshot {
   readonly margins: Record<BreakpointName, number>;
   readonly touchMin: number;
   readonly readerMaxWidth: number;
+  readonly progressBarHeight: number;
 }

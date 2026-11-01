@@ -60,6 +60,7 @@ export function emitTokensCss(s: TokensSnapshot): string {
       `  --rail-desktop: ${s.railDesktop}px;\n` +
       `  --touch-min: ${s.touchMin}px;\n` +
       `  --reader-max-width: ${s.readerMaxWidth}px;\n` +
+      `  --progress-bar-height: ${s.progressBarHeight}px;\n` +
       `  --margin-mobile: ${s.margins.mobile}px;\n` +
       `  --margin-tablet: ${s.margins.tablet}px;\n` +
       `  --margin-desktop: ${s.margins.desktop}px;\n` +
