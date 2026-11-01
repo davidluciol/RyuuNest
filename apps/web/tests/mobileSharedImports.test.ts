@@ -27,8 +27,21 @@ const SHARED_FILES = [
   "data/officialRepo.ts",
   "data/errorLogPort.ts",
   "data/appDatabase.ts",
+  "data/backupFilesPort.ts",
+  "data/diagnosticsReport.ts",
   "i18n/index.ts",
   "components/kindLabel.ts",
+  "components/errorNoticeStyles.ts",
+  "screens/settings/settingsData.ts",
+  "screens/settings/settingsView.ts",
+  "screens/settings/backup/backupData.ts",
+  "screens/settings/backup/backupFlow.ts",
+  "screens/settings/backup/backupController.ts",
+  "screens/settings/backup/backupErrors.ts",
+  "screens/settings/diagnostics/diagnosticsData.ts",
+  "screens/settings/diagnostics/diagnosticsFlow.ts",
+  "screens/settings/diagnostics/diagnosticsController.ts",
+  "screens/settings/diagnostics/diagnosticsView.ts",
 ];
 
 describe("imports compartidos desde apps/mobile", () => {

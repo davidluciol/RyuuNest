@@ -15,6 +15,14 @@
   z-index: 40;
 }
 
+.toast-info {
+  border-left-color: var(--color-accent);
+}
+
+.toast-warning {
+  border-left-color: var(--color-warning);
+}
+
 .toast-message {
   color: var(--color-text-primary);
   overflow: hidden;
