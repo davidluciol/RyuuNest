@@ -5,10 +5,7 @@ import type { Host, ModuleApi } from "../../src/contract/types";
 import { FakeScriptLoader } from "../../src/ports/fakes";
 import type { ScriptFactory } from "../../src/ports/scriptLoader";
 import { createModuleApi } from "../../src/runtimes/ModuleRuntime";
-import {
-  publishedModules,
-  type PublishedModuleOutputs,
-} from "./publishedModuleFixtures";
+import { publishedModules, type PublishedModuleOutputs } from "./publishedModuleFixtures";
 
 /**
  * Regresión de la validación de forma del contrato con los tres módulos publicados
@@ -69,54 +66,57 @@ function withoutKey(value: object, key: string): Record<string, unknown> {
   return copy;
 }
 
-describe.each(publishedModules)("módulo publicado $id ($version) · regresión de forma", (module) => {
-  it("sus cinco métodos pasan la validación y devuelven las salidas intactas", async () => {
-    const handle = await mountPublishedModule(module);
+describe.each(publishedModules)(
+  "módulo publicado $id ($version) · regresión de forma",
+  (module) => {
+    it("sus cinco métodos pasan la validación y devuelven las salidas intactas", async () => {
+      const handle = await mountPublishedModule(module);
 
-    await expect(handle.api.popular?.(1)).resolves.toEqual(module.popular);
-    await expect(handle.api.latest?.(1)).resolves.toEqual(module.latest);
-    await expect(handle.api.search("ejemplo", 1)).resolves.toEqual(module.search);
-    await expect(handle.api.details(module.details.id)).resolves.toEqual(module.details);
-    await expect(handle.api.pages("capitulo", "release")).resolves.toEqual(module.chapterPages);
-    expect(handle.lastError()).toBeUndefined();
-  });
+      await expect(handle.api.popular?.(1)).resolves.toEqual(module.popular);
+      await expect(handle.api.latest?.(1)).resolves.toEqual(module.latest);
+      await expect(handle.api.search("ejemplo", 1)).resolves.toEqual(module.search);
+      await expect(handle.api.details(module.details.id)).resolves.toEqual(module.details);
+      await expect(handle.api.pages("capitulo", "release")).resolves.toEqual(module.chapterPages);
+      expect(handle.lastError()).toBeUndefined();
+    });
 
-  it("una imagen sin url cae en PARSE (la validación está activa en pages())", async () => {
-    const roto = {
-      images: module.chapterPages.images.map((imagen) => ({ headers: imagen.headers })),
-    };
-    const handle = await mountPublishedModule(module, { pages: async () => roto });
+    it("una imagen sin url cae en PARSE (la validación está activa en pages())", async () => {
+      const roto = {
+        images: module.chapterPages.images.map((imagen) => ({ headers: imagen.headers })),
+      };
+      const handle = await mountPublishedModule(module, { pages: async () => roto });
 
-    const error = (await rejection(handle.api.pages("capitulo", "release"))) as ModuleError;
+      const error = (await rejection(handle.api.pages("capitulo", "release"))) as ModuleError;
 
-    expect(error).toBeInstanceOf(ModuleError);
-    expect(error.code).toBe("PARSE");
-    expect(error.message).toContain("«images[0].url»");
-    expect(handle.lastError()).toBe(error);
-  });
+      expect(error).toBeInstanceOf(ModuleError);
+      expect(error.code).toBe("PARSE");
+      expect(error.message).toContain("«images[0].url»");
+      expect(handle.lastError()).toBe(error);
+    });
 
-  it("una ficha sin un campo obligatorio cae en PARSE (la validación está activa en details())", async () => {
-    const roto = withoutKey(module.details, "genres");
-    const handle = await mountPublishedModule(module, { details: async () => roto });
+    it("una ficha sin un campo obligatorio cae en PARSE (la validación está activa en details())", async () => {
+      const roto = withoutKey(module.details, "genres");
+      const handle = await mountPublishedModule(module, { details: async () => roto });
 
-    const error = (await rejection(handle.api.details(module.details.id))) as ModuleError;
+      const error = (await rejection(handle.api.details(module.details.id))) as ModuleError;
 
-    expect(error).toBeInstanceOf(ModuleError);
-    expect(error.code).toBe("PARSE");
-    expect(error.message).toContain("«genres»");
-  });
+      expect(error).toBeInstanceOf(ModuleError);
+      expect(error.code).toBe("PARSE");
+      expect(error.message).toContain("«genres»");
+    });
 
-  it("un resumen sin título cae en PARSE (la validación está activa en search())", async () => {
-    const roto = {
-      items: module.search.items.map((item) => withoutKey(item, "title")),
-      hasNext: module.search.hasNext,
-    };
-    const handle = await mountPublishedModule(module, { search: async () => roto });
+    it("un resumen sin título cae en PARSE (la validación está activa en search())", async () => {
+      const roto = {
+        items: module.search.items.map((item) => withoutKey(item, "title")),
+        hasNext: module.search.hasNext,
+      };
+      const handle = await mountPublishedModule(module, { search: async () => roto });
 
-    const error = (await rejection(handle.api.search("ejemplo", 1))) as ModuleError;
+      const error = (await rejection(handle.api.search("ejemplo", 1))) as ModuleError;
 
-    expect(error).toBeInstanceOf(ModuleError);
-    expect(error.code).toBe("PARSE");
-    expect(error.message).toContain("«items[0].title»");
-  });
-});
+      expect(error).toBeInstanceOf(ModuleError);
+      expect(error.code).toBe("PARSE");
+      expect(error.message).toContain("«items[0].title»");
+    });
+  },
+);
