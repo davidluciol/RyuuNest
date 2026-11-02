@@ -175,7 +175,10 @@ export class ModuleHost implements Host {
     const previous = this.domainChains.get(domain) ?? Promise.resolve();
     const next = previous.then(() => this.waitForSlot(domain));
     // La cadena nunca se rompe aunque una espera falle.
-    this.domainChains.set(domain, next.catch(() => {}));
+    this.domainChains.set(
+      domain,
+      next.catch(() => {}),
+    );
     return next;
   }
 

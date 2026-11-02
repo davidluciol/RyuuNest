@@ -53,7 +53,10 @@ class InstantHttp implements Http {
   }
 }
 
-function makeHost(http: Http, overrides: Partial<ConstructorParameters<typeof ModuleHost>[0]> = {}): ModuleHost {
+function makeHost(
+  http: Http,
+  overrides: Partial<ConstructorParameters<typeof ModuleHost>[0]> = {},
+): ModuleHost {
   return new ModuleHost({
     http,
     clock: realClock,
@@ -248,10 +251,7 @@ describe("resiliencia · rate-limit por dominio bajo carga (T34)", () => {
     });
 
     const inicio = Date.now();
-    await Promise.all([
-      host.fetch("https://ejemplo.com/a"),
-      host.fetch("https://otro.test/b"),
-    ]);
+    await Promise.all([host.fetch("https://ejemplo.com/a"), host.fetch("https://otro.test/b")]);
     const transcurrido = Date.now() - inicio;
 
     expect(http.starts).toHaveLength(2);
