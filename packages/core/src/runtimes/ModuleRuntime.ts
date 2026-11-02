@@ -14,6 +14,7 @@ import type { Host, ModuleApi, ModuleManifest } from "../contract/types.js";
 import { ModuleError } from "../contract/errors.js";
 import type { ScriptLoader } from "../ports/scriptLoader.js";
 import { DeclarativeRuntime, type DeclarativeConfig } from "./DeclarativeRuntime.js";
+import { detailsShapeViolation, pageShapeViolation, pagesShapeViolation } from "./contractShape.js";
 import { describeError, toModuleError } from "./errorMapping.js";
 import { ScriptRuntime } from "./ScriptRuntime.js";
 
@@ -118,12 +119,27 @@ function parseDeclarativeConfig(entry: string): DeclarativeConfig {
 /**
  * Envuelve la API para que todo fallo salga como `ModuleError` y quede anotado. Los
  * runtime ya contienen lo suyo; esto es la última red: cubre un runtime que lance algo
- * suelto y deja el error listo para `module.last_error`.
+ * suelto, deja el error listo para `module.last_error` y valida la **forma mínima**
+ * del contrato (SPEC §6.2) en lo que devuelve cada método: otra cosa es `PARSE`, no
+ * una pantalla rota (T37, R4 del ADR-0003). La validación tolera campos extra y solo
+ * exige los obligatorios, para no romper módulos publicados.
  */
 function guardApi(api: ModuleApi, record: (error: ModuleError) => void): ModuleApi {
-  const run = async <R>(call: () => Promise<R>): Promise<R> => {
+  const run = async <R>(
+    name: string,
+    call: () => Promise<R>,
+    violation?: (value: R) => string | undefined,
+  ): Promise<R> => {
     try {
-      return await call();
+      const value = await call();
+      const problem = violation?.(value);
+      if (problem !== undefined) {
+        throw new ModuleError(
+          "PARSE",
+          `${name}() devolvió una forma fuera del contrato (SPEC §6.2): ${problem}`,
+        );
+      }
+      return value;
     } catch (error) {
       const moduleError = toModuleError(error);
       record(moduleError);
@@ -132,18 +148,19 @@ function guardApi(api: ModuleApi, record: (error: ModuleError) => void): ModuleA
   };
 
   const guarded: ModuleApi = {
-    search: (query, page) => run(() => api.search(query, page)),
-    details: (seriesId) => run(() => api.details(seriesId)),
-    pages: (chapterId, releaseId) => run(() => api.pages(chapterId, releaseId)),
+    search: (query, page) => run("search", () => api.search(query, page), pageShapeViolation),
+    details: (seriesId) => run("details", () => api.details(seriesId), detailsShapeViolation),
+    pages: (chapterId, releaseId) =>
+      run("pages", () => api.pages(chapterId, releaseId), pagesShapeViolation),
   };
 
   const popular = api.popular;
   if (popular !== undefined) {
-    guarded.popular = (page) => run(() => popular(page));
+    guarded.popular = (page) => run("popular", () => popular(page), pageShapeViolation);
   }
   const latest = api.latest;
   if (latest !== undefined) {
-    guarded.latest = (page) => run(() => latest(page));
+    guarded.latest = (page) => run("latest", () => latest(page), pageShapeViolation);
   }
 
   return guarded;

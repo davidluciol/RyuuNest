@@ -39,8 +39,22 @@ const details = {
   extra: {},
   releases: [{ id: "r-oficial", group: "Oficial" }],
   chapters: [
-    { id: "ch-1", title: "Cap. 1", number: 1, date: null, read: false },
-    { id: "ch-2", title: "Cap. 2", number: 2, date: null, read: false },
+    {
+      id: "ch-1",
+      title: "Cap. 1",
+      number: 1,
+      date: null,
+      read: false,
+      releases: [{ id: "r-oficial", group: "Oficial" }],
+    },
+    {
+      id: "ch-2",
+      title: "Cap. 2",
+      number: 2,
+      date: null,
+      read: false,
+      releases: [{ id: "r-oficial", group: "Oficial" }],
+    },
   ],
 } as never;
 
@@ -106,7 +120,11 @@ describe("seriesData web (ficha sobre base real)", () => {
       pageIndex: 3,
       pageTotal: 10,
     });
-    await new ChapterReadStore({ driver, clock }).markRead({ moduleId: "demo", seriesId: "s-1", chapterId: "ch-1" });
+    await new ChapterReadStore({ driver, clock }).markRead({
+      moduleId: "demo",
+      seriesId: "s-1",
+      chapterId: "ch-1",
+    });
     await new SeriesPrefs({ driver, clock }).setPreferredGroup("demo", "s-1", "r-oficial");
 
     const data: WebSeriesData = await loadSeries(services, "demo", "s-1");
@@ -141,7 +159,11 @@ describe("seriesData web (ficha sobre base real)", () => {
     void driver;
     const badServices = {
       driver: services.driver,
-      mounter: createInstalledMounter({ driver: services.driver, http: new StubHttp(), loader: badLoader }),
+      mounter: createInstalledMounter({
+        driver: services.driver,
+        http: new StubHttp(),
+        loader: badLoader,
+      }),
       reporter: null,
     };
     // El ModuleError del módulo se propaga con su código (NETWORK), contenido.
