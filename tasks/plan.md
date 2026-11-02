@@ -519,7 +519,7 @@ galería).
 - [ ] Revisión humana
 
 ### Verificación final (Parte 2)
-- [ ] F28 Playwright por pantalla + `design/stitch/DIFFS.md` + lista de 20 s (**AC-12**)
+- [~] F28 Playwright por pantalla + `design/stitch/DIFFS.md` + lista de 20 s (**AC-12**): parte web hecha (2026-11-02, `f28Screens.cjs` + `docs/capturasF28/` + `F28-verificacion.md`); 🧍 queda POCO F5 Pro / MiBox 4
 
 ### ✅ Checkpoint P-E — Fin de la Parte 2
 - [ ] Todas las pantallas verificadas; diferencias registradas

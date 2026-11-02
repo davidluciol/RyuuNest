@@ -657,9 +657,11 @@ Dep: F25, F26 · M · `apps/web/src/{ports/http.ts,worker/*}`
 
 Dep: P-D · M · `apps/web/tests/e2e/*`, `design/stitch/DIFFS.md`
 
-- [ ] Cada pantalla v1 vs su `screen.png` sin diferencias de color, tipografía, radio ni espaciado; diferencias aceptadas en `DIFFS.md`
-- [ ] Comprobaciones automáticas de `AGENTS.md` §5 en verde
-- Verif: Playwright sobre la galería web · 🧍 capturas en POCO F5 Pro y MiBox 4; lista de 20 s (`DESIGN_RULES.md` §6)
+- [x] Cada pantalla v1 vs su `screen.png` (parte web): e2e `apps/web/tests/e2e/f28Screens.cjs`, 34 capturas en `docs/capturasF28/` a cada ancho de referencia del PNG + 1440/1600 px, comparadas a mano con su `screen.png`; diferencias aceptadas en `DIFFS.md` (filas 2026-11-02) · 🧍 falta el POCO F5 Pro / MiBox 4 (AC-12 no se cierra)
+- [x] Comprobaciones automáticas de `AGENTS.md` §5 en verde en las 34 capturas (overflow 0, sin «…», áreas ≥48, colores dentro de tokens, tinta `bg` sobre accent/progress, Manrope/Inter locales, foco con teclado, consola limpia, cero externas). En rojo cazaron y se arreglaron 4 cosas: URL de repo, mensaje de diagnóstico y toast recortados con «…» (T7) y overflow de 48 px en la barra del lector a 273 px (`flex-wrap`)
+- [x] Lista de 20 s (`DESIGN_RULES.md` §6) pasada por pantalla e informe en `design/stitch/F28-verificacion.md`
+- Verif: `f28Screens.cjs` en verde (2 contextos: con datos vía módulo demo + respaldo sembrado, y vacío) · 🧍 capturas en POCO F5 Pro y MiBox 4 pendientes
+- Hallazgos anotados para tareas siguientes: «Favorito» no crea la fila `series` (QAw1 bloqueado), «1 instalados» sin plural, búsqueda de Biblioteca con clave `series.search`, Descubrir web sin portadas, Inicio web sin sección Carpetas
 
 ### 🚩 Checkpoint P-E — Fin de la Parte 2 `[Ops · Baja · N1]`
 
