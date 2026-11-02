@@ -74,6 +74,12 @@ export class ModuleHost implements Host {
   private readonly minDelayMs: number;
   private readonly logger: HostLogger;
   private readonly lastRequestAt = new Map<string, number>();
+  /**
+   * Cadena por dominio para que la comprobación y la espera de `respectDelay`
+   * sean atómicas: bajo carga, varias peticiones al mismo dominio no pueden
+   * pasar la pausa mínima a la vez (T34).
+   */
+  private readonly domainChains = new Map<string, Promise<void>>();
   private active = 0;
   private readonly waiters: Array<() => void> = [];
 
@@ -160,8 +166,20 @@ export class ModuleHost implements Host {
     }
   }
 
-  /** Espera, si hace falta, para respetar la pausa mínima del dominio. */
-  private async respectDelay(domain: string): Promise<void> {
+  /**
+   * Espera, si hace falta, para respetar la pausa mínima del dominio. La
+   * comprobación y la espera van encadenadas por dominio, así que bajo carga
+   * concurrente los inicios reales también quedan espaciados (T34).
+   */
+  private respectDelay(domain: string): Promise<void> {
+    const previous = this.domainChains.get(domain) ?? Promise.resolve();
+    const next = previous.then(() => this.waitForSlot(domain));
+    // La cadena nunca se rompe aunque una espera falle.
+    this.domainChains.set(domain, next.catch(() => {}));
+    return next;
+  }
+
+  private async waitForSlot(domain: string): Promise<void> {
     const last = this.lastRequestAt.get(domain);
     if (last !== undefined) {
       const wait = this.minDelayMs - (this.clock.now() - last);
