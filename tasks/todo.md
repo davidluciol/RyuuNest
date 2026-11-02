@@ -175,15 +175,16 @@ Dep: T32a · S · `docs/decisions/ADR-0003-congelacion-api-1.0.md`
 
 Orden: T37 → T38 → T39 → T40 → T41. Cada tarea: TDD (rojo → verde), un commit por corte, rama propia. Todas parten de `docs/decisions/ADR-0003-congelacion-api-1.0.md`; los tres módulos publicados de `RyuuNest-Models` son la regresión (ninguno debe necesitar cambios, salvo que T40 lo decida).
 
-### T37 Contrato escrito y validado en ejecución (R4) `[BE · Intermedia · N3]`
+### T37 Contrato escrito y validado en ejecución (R4) `[BE · Intermedia · N3]` ✅
 
 Dep: T32b · M · `docs/SPEC.md` §6.2–§6.5 (ya actualizado), `packages/core/src/contract/types.ts`, `runtimes/ModuleRuntime.ts`, `core/tests/contract/*`
 
-- [ ] Quitar las marcas «⚠️ Provisional» de `HostRequestInit`, `HostResponse`, `HtmlElement` y `HtmlDocument` (sin cambios de forma)
-- [ ] `guardApi` valida la forma **mínima** que exige el contrato (`Page`, `SeriesDetails`, `ChapterPages`: campos obligatorios y tipos básicos) y devuelve `PARSE` si falta; tolera campos extra (`related` de `zonatmo`)
-- [ ] Fixtures de `zonatmo`, `m440` y `yupmanga` como regresión: pasan la validación
-- [ ] Pruebas del arnés y de `guardApi` en rojo antes de implementar
+- [x] Quitar las marcas «⚠️ Provisional» de `HostRequestInit`, `HostResponse`, `HtmlElement` y `HtmlDocument` (sin cambios de forma)
+- [x] `guardApi` valida la forma **mínima** que exige el contrato (`Page`, `SeriesDetails`, `ChapterPages`: campos obligatorios y tipos básicos) y devuelve `PARSE` si falta; tolera campos extra (`related` de `zonatmo`)
+- [x] Fixtures de `zonatmo`, `m440` y `yupmanga` como regresión: pasan la validación
+- [x] Pruebas del arnés y de `guardApi` en rojo antes de implementar
 - Verif: `pnpm --filter @ryuunest/core test`
+- **Hecho (2026-11-01):** rama `feature/T37-guardapi-contract-shape`. `contractShape.ts` (validadores puros) aplicado en `guardApi` por método; reglas de forma (ADR-0003): `items` vacía válida (m440/yupmanga paginan a una sola página), `chapters` vacía válida (T39 L2), `images` nunca vacía (la app ya lo trataba como `PARSE` en `ReadingSource`) y `releases` con al menos una edición por capítulo. Fixtures con las **formas** leídas del código publicado (zonatmo 0.2.0, m440 0.1.0, yupmanga 0.1.0; valores inventados, sin red) montadas por el camino real (`createModuleApi` + módulo script), más un daño mínimo por módulo que la validación debe cazar. TDD: 17 casos en rojo primero. La validación cazó un fixture de web fuera de contrato (`seriesData.test.ts`, capítulos sin releases) y se corrigió el fixture. **Hallazgo para T41:** `runContract` exige «al menos un capítulo con dos releases» y m440/yupmanga nunca la cumplen (una release por capítulo por construcción): T41 debe relajar esa regla del arnés o ambos módulos no pueden pasar su puerta.
 
 ### T38 Compatibilidad hacia delante ejecutable (R3) `[BE · Intermedia · N4]`
 
@@ -223,7 +224,7 @@ Dep: T38 · L · `packages/core/src/ports/scriptLoader.ts`, `runtimes/{ScriptRun
 
 Dep: T39, T40 · S · sin código (salvo ajustes que salgan)
 
-- [ ] Ambos módulos pasan su arnés con fixtures propias (repo `RyuuNest-Models`)
+- [ ] Ambos módulos pasan su arnés con fixtures propias (repo `RyuuNest-Models`) — **ojo (T37):** `runContract` exige «al menos un capítulo con dos releases» y m440/yupmanga nunca la cumplen (una release por capítulo por construcción); relajar esa regla del arnés antes de esta puerta
 - [ ] Se instalan por `InstallFlow` en el POCO y ejecutan `popular` o `latest`, `search`, `details` y `pages`, y se ve una imagen en el lector (cierra también la casilla 🧍 de F32)
 - [ ] Ningún cambio de tipos del modelo de datos; si hace falta uno, se reabre el ADR
 - Verif: 🧍 prueba en el POCO
@@ -687,3 +688,41 @@ Dep: F20, F21, F22, F28, F32 · S · pantallas móviles, escritorio y TV disponi
 - [ ] Revisar la navegación con teclado/D-pad y la legibilidad a 426 px, 1440 px y la densidad TV; anotar toda diferencia aceptada en `design/stitch/DIFFS.md`.
 - [ ] Clasificar cada hallazgo como bloqueante, importante o menor; cada bloqueante/importante debe enlazar a una tarea existente o generar una nueva antes del merge.
 - Verif: lista de 20 segundos de `DESIGN_RULES.md` y revisión humana con capturas; F28 cierra la comparación formal con Stitch y F33 cierra la revisión transversal observable.
+
+---
+
+## QA del cliente web — rutas de aceptación
+
+> Añadidas el 2026-11-01 a petición del humano. Recorridos de extremo a extremo sobre el cliente web (`apps/web`) con datos reales: cubren instalación → descubrir → guardar/leer → biblioteca/inicio, y el cambio de módulo en Descubrir. Pueden ejecutarse con Playwright (con el doble de la extensión, `fakeExtension.cjs`) o a mano en el navegador.
+
+### QAw1 Ruta guardado: instalar → descubrir → guardar → biblioteca `[FE/QA · Intermedia · N3]`
+
+- [ ] Abrir la aplicación web.
+- [ ] Ir a **Fuentes** e instalar un módulo.
+- [ ] Moverse a **Descubrir**.
+- [ ] Seleccionar algún manga o cómic al azar.
+- [ ] Guardarlo en alguna carpeta o en favoritos.
+- [ ] Buscarlo en **Biblioteca**.
+- [ ] Seleccionarlo y **debería mostrar de nuevo la pantalla de detalle** para ese manga o cómic.
+- Verif: la obra guardada aparece en Biblioteca y al abrirla se ve su ficha (detalle) completa.
+
+### QAw2 Ruta Inicio: vacío → instalar → leer → continuar leyendo `[FE/QA · Intermedia · N3]`
+
+- [ ] Al abrir la aplicación web, **Inicio debería estar vacío** (sin historial de lectura).
+- [ ] Ir a **Fuentes** e instalar un módulo en caso de que no exista ninguno.
+- [ ] Ir a la sección **Descubrir**.
+- [ ] Seleccionar un manga al azar.
+- [ ] Abrir un capítulo al azar y avanzar un poco en la lectura, para que quede registro de progreso.
+- [ ] Salir del lector y regresar a **Inicio**.
+- [ ] Verificar que el manga aparece para **continuar leyendo**.
+- Verif: Inicio muestra la obra con el progreso guardado y reanuda en el punto de lectura.
+
+### QAw3 Intercalar entre servidores: dos módulos y cambio de fuente `[FE/QA · Intermedia · N3]`
+
+- [ ] Abrir la aplicación web; aparece la sección de Inicio.
+- [ ] Instalar **2 módulos** en caso de que no haya ninguno (los módulos necesarios para la prueba).
+- [ ] Navegar a la sección **Descubrir**.
+- [ ] Por defecto se debe cargar un módulo si hay alguno instalado.
+- [ ] Seleccionar en los filtros para cambiar de módulo.
+- [ ] Verificar que cargan correctamente los mangas del **segundo** módulo.
+- Verif: el filtro de módulo cambia la fuente y la rejilla muestra series del módulo elegido, sin errores y sin mezclar resultados del anterior.

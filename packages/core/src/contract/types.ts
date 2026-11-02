@@ -124,10 +124,8 @@ export interface ModuleApi {
 }
 
 /**
- * Inicio de petición del host.
- *
- * ⚠️ Provisional: el SPEC §6.5 solo nombra el tipo; su forma completa se cierra en
- * T08 (`ModuleHost`).
+ * Inicio de petición del host (SPEC §6.5). Definitivo desde T37 (ADR-0003, R4): el
+ * uso real de los módulos publicados lo avala sin cambios de forma.
  */
 export interface HostRequestInit {
   method?: string;
@@ -136,9 +134,7 @@ export interface HostRequestInit {
 }
 
 /**
- * Respuesta del host.
- *
- * ⚠️ Provisional: se cierra en T08 (`ModuleHost`).
+ * Respuesta del host (SPEC §6.5). Definitivo desde T37 (ADR-0003, R4).
  */
 export interface HostResponse {
   status: number;
@@ -149,9 +145,8 @@ export interface HostResponse {
 }
 
 /**
- * Elemento de un documento HTML parseado (selectores CSS tipo jQuery).
- *
- * ⚠️ Provisional: se cierra en T08 (`ModuleHost`).
+ * Elemento de un documento HTML parseado (selectores CSS tipo jQuery). Definitivo
+ * desde T37 (ADR-0003, R4).
  */
 export interface HtmlElement {
   attr(name: string): string | undefined;
@@ -160,9 +155,7 @@ export interface HtmlElement {
 }
 
 /**
- * Documento HTML con selectores CSS.
- *
- * ⚠️ Provisional: se cierra en T08 (`ModuleHost`).
+ * Documento HTML con selectores CSS (SPEC §6.5). Definitivo desde T37 (ADR-0003, R4).
  */
 export interface HtmlDocument {
   select(selector: string): HtmlElement[];
