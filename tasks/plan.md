@@ -280,8 +280,8 @@ El detalle (criterios de aceptación, verificación, dependencias, archivos y ta
 
 ### Fase 9 — Endurecimiento
 - [ ] T33 Pruebas de seguridad
-- [ ] T34 Pruebas de resiliencia
-- [ ] T35 Puertas de CI / contrato / cobertura (**AC-11 núcleo**)
+- [x] T34 Pruebas de resiliencia
+- [x] T35 Puertas de CI / contrato / cobertura (**AC-11 núcleo**)
 - [ ] T36 Núcleo de diagnóstico (tabla `log`, redacción, export **JSON + texto**) — P-72; independiente del Checkpoint J
 
 ### ✅ Checkpoint J — Fin de la Parte 1 (tras T33–T35)

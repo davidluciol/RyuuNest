@@ -23,14 +23,24 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm lint
+      # AC-11 (T35): puerta única de fusión — falla el job entero si falla
+      # cualquiera de las tres comprobaciones.
+      - name: "Gate (puerta única: tests + tipos estrictos + lint)"
+        run: pnpm -r test && pnpm -r typecheck && pnpm lint
 
-      - name: Typecheck
-        run: pnpm typecheck
+      # AC-11 (T35): puerta nombrada del contrato — los tests de
+      # tests/contract (gate incluido) cubren los cinco métodos del contrato
+      # en ambos runtimes (declarativo y script) sobre los dos sitios falsos.
+      - name: "Contrato (ambos runtimes)"
+        run: pnpm --filter @ryuunest/core test -- contract
 
-      - name: Test
-        run: pnpm test
-
-      - name: Build
+      - name: Build (paquetes del monorepo)
         run: pnpm build
+
+      # AC-11 (T35): compilación del cliente Android — `expo export` genera el
+      # bundle nativo con Metro y falla si el cliente no compila para Android.
+      - name: "Bundle Android (apps/mobile)"
+        working-directory: apps/mobile
+        env:
+          CI: "true"
+        run: npx expo export -p android --no-minify --output-dir "$RUNNER_TEMP/ryuunest-android"
