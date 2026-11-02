@@ -246,21 +246,23 @@ Dep: T13 · M · `core/tests/security/*.test.ts`
 - [ ] Límites de tamaño/archivos cubiertos
 - Verif: `pnpm --filter @ryuunest/core test -- security` + revisar correspondencia amenaza↔prueba
 
-### T34 Pruebas de resiliencia `[BE · Intermedia · N3]`
+### T34 Pruebas de resiliencia `[BE · Intermedia · N3]` ✅
 
 Dep: T08, T14 · S · `core/tests/resilience/*.test.ts`
 
-- [ ] Módulo que cuelga → `TIMEOUT` sin bloquear el núcleo; excepciones contenidas con `last_error`
-- [ ] Reintento manual sin reiniciar; rate-limit por dominio respetado bajo carga
-- Verif: `pnpm --filter @ryuunest/core test -- resilience`
+- [x] Módulo que cuelga → `TIMEOUT` sin bloquear el núcleo (con `maxConcurrent: 1`, la siguiente petición solo funciona si el slot se liberó); excepciones contenidas con `last_error` (error tipado → su código; error suelto → `INTERNAL`)
+- [x] Reintento manual sin reiniciar (falla la 1.ª llamada, la 2.ª resuelve); rate-limit por dominio respetado bajo carga (6 peticiones concurrentes, inicios espaciados ≥ `minDelayMs` − holgura) y dominios distintos no se bloquean entre sí
+- Verif: `pnpm --filter @ryuunest/core test -- resilience` (467 en verde)
+- **Hecho (2026-11-01, rama `feature/T34-T35-resilience-ci-gates`):** el test en rojo cazó que `respectDelay` no era atómico (bajo carga, dos inicios con 1 ms de diferencia); arreglo en `ModuleHost` con cadena de promesas por dominio. Mutaciones verificadas: quitar `release()` o `record()` hace fallar los tests. Timers: retardos reales cortos (decisión del humano).
 
-### T35 Puertas de CI / contrato / cobertura (AC-11) `[Ops · Baja · N2]`
+### T35 Puertas de CI / contrato / cobertura (AC-11) `[Ops · Baja · N2]` ✅
 
-Dep: T02, T32a · S · `.github/workflows/ci.yml`, `vitest.config.ts`
+Dep: T02, T32a · S · `.github/workflows/ci.yml`, `core/tests/contract/gate.test.ts`
 
-- [ ] CI falla si la cobertura del contrato baja del umbral; contratos de ambos runtimes corren en CI
-- [ ] `pnpm -r test && pnpm -r typecheck && pnpm lint` es la puerta única de fusión
-- Verif: ese comando + 🧍 PR de prueba que rompe el contrato y falla el CI
+- [x] CI falla si la cobertura del contrato baja: cobertura **funcional** (decisión del humano 2026-11-01, sin paquete de coverage nuevo) — `core/tests/contract/gate.test.ts` recorre la matriz runtime (declarativo-HTML, script-HTML, script-JSON) × 5 métodos vía `createModuleApi` y falla si falta alguno; corre en el paso «Contrato» del CI (`vitest run contract`). Mutación verificada: exigir un método extra hace caer los 4 tests del gate
+- [x] `pnpm -r test && pnpm -r typecheck && pnpm lint` es la puerta única de fusión (un paso del job `ci` en `.github/workflows/ci.yml`); contratos de ambos runtimes corren en CI en el paso «Contrato»
+- [x] AC-11 «compilación del APK»: paso «Bundle Android» con `expo export -p android` en `apps/mobile` (decisión del humano 2026-11-01; bundle nativo sin APK firmado ni credenciales)
+- Verif: `pnpm -r test && pnpm -r typecheck && pnpm lint` en verde + 🧍 PR de prueba que rompe el contrato y falla el CI (pendiente del humano)
 
 ### T36 Núcleo de diagnóstico y errores (P-72) `[BE · Intermedia · N3]` ✅
 
