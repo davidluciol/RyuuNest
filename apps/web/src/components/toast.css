@@ -25,9 +25,8 @@
 
 .toast-message {
   color: var(--color-text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* T7: el aviso se muestra completo; antes se recortaba con «…» (F28, antes F34). */
+  overflow-wrap: anywhere;
 }
 
 .toast-close {

@@ -131,9 +131,8 @@
 .diag-message {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* T7: el mensaje del evento se envuelve completo, sin «…» (F28). */
+  overflow-wrap: anywhere;
 }
 
 .diag-when {
