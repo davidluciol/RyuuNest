@@ -18,7 +18,6 @@ import {
   dialogTitleStyle,
   severityColor,
   TOAST_DURATION_MS,
-  TOAST_MESSAGE_LINES,
   toastActionStyle,
   toastDotStyle,
   toastStyle,
@@ -74,11 +73,7 @@ describe("toast (aviso transitorio)", () => {
   });
 });
 
-describe("toast: punto de severidad, dos líneas y cierre accesible (F34.1)", () => {
-  it("el mensaje admite dos líneas (T7: completo, sin «…»)", () => {
-    expect(TOAST_MESSAGE_LINES).toBe(2);
-  });
-
+describe("toast: punto de severidad y cierre accesible (F34.1)", () => {
   it("el punto de severidad es un círculo de 8 con el color de la severidad", () => {
     expect(toastDotStyle("info")).toEqual({
       width: 8,

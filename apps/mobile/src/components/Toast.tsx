@@ -7,7 +7,6 @@ import {
   type ErrorSeverity,
   severityColor,
   TOAST_DURATION_MS,
-  TOAST_MESSAGE_LINES,
   toastActionStyle,
   toastDotStyle,
   toastStyle,
@@ -17,7 +16,7 @@ import { X } from "../icons";
 import { t } from "../i18n";
 
 /**
- * F29 — toast (P-72): aviso transitorio de 4 s, hasta dos líneas y acción opcional.
+ * F29 — toast (P-72): aviso transitorio de 4 s con el mensaje completo y acción opcional.
  * No bloquea la pantalla (se posiciona encima, pero no es modal) y desaparece
  * solo; si el usuario lo cierra antes, se cancela el temporizador.
  *
@@ -28,7 +27,7 @@ import { t } from "../i18n";
 const colors = dragonNightColors;
 
 export interface ToastProps {
-  /** Mensaje del aviso (hasta dos líneas, completo: T7). */
+  /** Mensaje del aviso, completo y sin «…» (T7). */
   message: string;
   /** Severidad: fija el color del borde y de la acción. */
   severity?: ErrorSeverity;
@@ -58,12 +57,7 @@ export default function Toast({
   return (
     <View style={[styles.toast, toastStyle(severity)]} testID={testID} accessibilityRole="alert">
       <View testID="toast-dot" style={toastDotStyle(severity)} />
-      <Text
-        style={[styles.message, { color: colors.textPrimary }]}
-        numberOfLines={TOAST_MESSAGE_LINES}
-      >
-        {message}
-      </Text>
+      <Text style={[styles.message, { color: colors.textPrimary }]}>{message}</Text>
       {actionLabel !== undefined ? (
         <Pressable
           accessibilityRole="button"

@@ -336,7 +336,7 @@
   "gallery.holdToConfirm.label": "Mantén pulsado",
   "gallery.toast.message": "Se vació la caché de imágenes",
   "gallery.toast.action": "Deshacer",
-  "gallery.toast.long": "Se vació la caché de imágenes de este dispositivo",
+  "gallery.toast.long": "Se vació la caché de imágenes y se liberó el espacio de las portadas descargadas en este dispositivo",
   "gallery.banner.title": "El módulo falló",
   "gallery.banner.message": "No se pudo leer el listado de obras.",
   "gallery.component.diagnosticsScreen": "pantalla Diagnóstico",
