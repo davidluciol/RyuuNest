@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { typography } from "@ryuunest/ui-tokens";
 
+import { textStyle } from "../../src/components/textStyle";
+
 import {
   LIBRARY_CARD_TITLE_LINES,
   libraryCardStyle,
@@ -73,6 +75,21 @@ describe("libraryCardMetaStyle (cuarta línea de datos, F15)", () => {
       color: "#9BA5B5",
       numberOfLines: 2,
     });
+  });
+});
+
+describe("tipografía de la tarjeta (F34.1: textStyle resuelve la fuente empaquetada)", () => {
+  it("el título y el dato llevan el token completo, con peso y tracking", () => {
+    expect(libraryCardTitleStyle()).toMatchObject(typography.labelLg);
+    expect(libraryCardMetaStyle()).toMatchObject(typography.labelMd);
+  });
+
+  it("textStyle(título) y textStyle(dato) producen fuentes registradas, no «Inter»", () => {
+    for (const style of [libraryCardTitleStyle(), libraryCardMetaStyle()]) {
+      const resolved = textStyle(style);
+      expect(resolved.fontFamily).not.toBe("Inter");
+      expect(resolved.fontFamily).toMatch(/^Inter-/);
+    }
   });
 });
 

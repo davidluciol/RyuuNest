@@ -34,6 +34,8 @@ export default tseslint.config(
     plugins: { ryuunest },
     rules: {
       "ryuunest/no-design-literals": "error",
+      // F34.1 — los estilos de texto salen de `textStyle(token)`.
+      "ryuunest/no-raw-font-family": "error",
     },
   },
 );

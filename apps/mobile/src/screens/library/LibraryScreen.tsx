@@ -22,6 +22,7 @@ import {
   type LibraryData,
   type LibraryFilters,
 } from "./libraryFixtures";
+import { textStyle } from "../../components/textStyle";
 
 /**
  * F14a/F14b — pantalla Biblioteca (RF-26 a RF-30, RF-35, SPEC §11.5):
@@ -284,16 +285,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   foldersTitle: {
-    fontFamily: typography.titleLg.fontFamily,
-    fontSize: typography.titleLg.fontSize,
-    lineHeight: typography.titleLg.lineHeight,
-    fontWeight: "600",
+    ...textStyle(typography.titleLg),
     color: colors.textPrimary,
   },
   foldersManage: {
-    fontFamily: typography.labelMd.fontFamily,
-    fontSize: typography.labelMd.fontSize,
-    lineHeight: typography.labelMd.lineHeight,
+    ...textStyle(typography.labelMd),
     color: colors.accent,
   },
   foldersRow: {

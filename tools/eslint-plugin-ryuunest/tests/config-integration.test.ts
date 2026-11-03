@@ -53,3 +53,23 @@ describe("lint de diseño en la interfaz (F09, AC-13)", () => {
     expect(messages.filter((message) => message.ruleId === RULE)).toHaveLength(0);
   });
 });
+
+describe("fuentes registradas en la interfaz (F34.1)", () => {
+  const FONT_RULE = "ryuunest/no-raw-font-family";
+  const probe = `export const s = { fontFamily: typography.bodyMd.fontFamily };`;
+
+  it("asignar token.fontFamily en bruto en apps/*/src falla", async () => {
+    for (const file of [
+      "apps/mobile/src/components/__lint_probe__.ts",
+      "apps/web/src/components/__lint_probe__.ts",
+    ]) {
+      const messages = await lintAt(file, probe);
+      expect(messages.filter((message) => message.ruleId === FONT_RULE)).toHaveLength(1);
+    }
+  });
+
+  it("los tests no se marcan (afirman la familia del token)", async () => {
+    const messages = await lintAt("apps/mobile/tests/__lint_probe__.test.ts", probe);
+    expect(messages.filter((message) => message.ruleId === FONT_RULE)).toHaveLength(0);
+  });
+});

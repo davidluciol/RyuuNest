@@ -641,16 +641,11 @@ const styles = StyleSheet.create({
   content: { paddingVertical: spacing.lg, gap: spacing.lg },
   title: {
     color: colors.textPrimary,
-    fontFamily: typography.headlineLg.fontFamily,
-    fontSize: typography.headlineLg.fontSize,
-    lineHeight: typography.headlineLg.lineHeight,
-    fontWeight: "700",
+    ...textStyle(typography.headlineLg),
   },
   subtitle: {
     color: colors.textSecondary,
-    fontFamily: typography.bodyMd.fontFamily,
-    fontSize: typography.bodyMd.fontSize,
-    lineHeight: typography.bodyMd.lineHeight,
+    ...textStyle(typography.bodyMd),
   },
   section: { gap: spacing.sm },
   componentColumn: { gap: spacing.sm, alignItems: "stretch" },
@@ -662,17 +657,12 @@ const styles = StyleSheet.create({
   shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
     color: colors.textSecondary,
-    fontFamily: typography.labelSm.fontFamily,
-    fontSize: typography.labelSm.fontSize,
-    lineHeight: typography.labelSm.lineHeight,
+    ...textStyle(typography.labelSm),
     marginTop: spacing.sm,
   },
   sectionTitle: {
     color: colors.textPrimary,
-    fontFamily: typography.headlineSm.fontFamily,
-    fontSize: typography.headlineSm.fontSize,
-    lineHeight: typography.headlineSm.lineHeight,
-    fontWeight: "600",
+    ...textStyle(typography.headlineSm),
   },
   row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   swatch: {
@@ -684,14 +674,12 @@ const styles = StyleSheet.create({
   },
   itemName: {
     color: colors.textPrimary,
-    fontFamily: typography.bodyMd.fontFamily,
-    fontSize: typography.bodyMd.fontSize,
+    ...textStyle(typography.bodyMd),
     flex: 1,
   },
   itemValue: {
     color: colors.textSecondary,
-    fontFamily: typography.bodySm.fontFamily,
-    fontSize: typography.bodySm.fontSize,
+    ...textStyle(typography.bodySm),
   },
   spacingBar: { height: spacing.xs, backgroundColor: colors.accent, borderRadius: radii.control },
   cover: {
@@ -705,13 +693,12 @@ const styles = StyleSheet.create({
   coverText: { flex: 1, gap: spacing.xxs },
   body: {
     color: colors.textPrimary,
-    fontFamily: typography.bodyMd.fontFamily,
-    fontSize: typography.bodyMd.fontSize,
+    ...textStyle(typography.bodyMd),
   },
   muted: {
     color: colors.textSecondary,
-    fontFamily: typography.bodySm.fontFamily,
-    fontSize: typography.bodySm.fontSize,
+    ...textStyle(typography.bodySm),
   },
 });
 import { useState } from "react";
+import { textStyle } from "../components/textStyle";

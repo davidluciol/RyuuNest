@@ -94,30 +94,14 @@ export default function LibraryCard({
         ) : null}
       </View>
       <Text
-        style={[
-          styles.title,
-          {
-            fontFamily: titleStyle.fontFamily,
-            fontSize: titleStyle.fontSize,
-            lineHeight: titleStyle.lineHeight,
-            color: titleStyle.color,
-          },
-        ]}
+        style={[styles.title, { ...textStyle(titleStyle), color: titleStyle.color }]}
         numberOfLines={LIBRARY_CARD_TITLE_LINES}
       >
         {title}
       </Text>
       {meta ? (
         <Text
-          style={[
-            styles.meta,
-            {
-              fontFamily: metaStyle.fontFamily,
-              fontSize: metaStyle.fontSize,
-              lineHeight: metaStyle.lineHeight,
-              color: metaStyle.color,
-            },
-          ]}
+          style={[styles.meta, { ...textStyle(metaStyle), color: metaStyle.color }]}
           numberOfLines={metaStyle.numberOfLines}
         >
           {meta}

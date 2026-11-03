@@ -26,6 +26,7 @@ import {
   type DiscoverEntry,
   type DiscoverView,
 } from "./discoverFixtures";
+import { textStyle } from "../../components/textStyle";
 
 /**
  * F15 — pantalla Descubrir (RF-9 a RF-11, RF-35, SPEC §11.5): selector de
@@ -372,9 +373,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   pageLabel: {
-    fontFamily: typography.labelMd.fontFamily,
-    fontSize: typography.labelMd.fontSize,
-    lineHeight: typography.labelMd.lineHeight,
+    ...textStyle(typography.labelMd),
     color: colors.textSecondary,
   },
 });

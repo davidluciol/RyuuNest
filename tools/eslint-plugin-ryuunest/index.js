@@ -149,8 +149,53 @@ const noDesignLiterals = {
   },
 };
 
+/** Nombre de la propiedad leída en un acceso `a.b` o `a["b"]`, si es simple. */
+function memberName(node) {
+  if (!node.computed && node.property.type === "Identifier") return node.property.name;
+  if (
+    node.computed &&
+    node.property.type === "Literal" &&
+    typeof node.property.value === "string"
+  ) {
+    return node.property.value;
+  }
+  return null;
+}
+
+/**
+ * Regla `no-raw-font-family` (F34.1): «Inter» y «Manrope» no están registradas
+ * como fuentes; un estilo de texto sale de `textStyle(token)`, que resuelve el
+ * archivo empaquetado. Solo se marca la propiedad de estilo
+ * `fontFamily: <algo>.fontFamily`; leer la familia para mostrarla no se marca.
+ */
+const noRawFontFamily = {
+  meta: {
+    type: "problem",
+    docs: {
+      description:
+        "Prohíbe asignar la familia de un token tipográfico como fontFamily: usa textStyle() (F34.1).",
+    },
+    schema: [],
+    messages: {
+      rawFontFamily:
+        "«fontFamily» tomado de un token no es una fuente registrada: usa textStyle(token) (F34.1).",
+    },
+  },
+  create(context) {
+    return {
+      Property(node) {
+        if (keyName(node) !== "fontFamily") return;
+        if (node.value.type !== "MemberExpression") return;
+        if (memberName(node.value) !== "fontFamily") return;
+        context.report({ node: node.value, messageId: "rawFontFamily" });
+      },
+    };
+  },
+};
+
 export default {
   rules: {
     "no-design-literals": noDesignLiterals,
+    "no-raw-font-family": noRawFontFamily,
   },
 };
