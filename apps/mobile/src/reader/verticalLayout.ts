@@ -7,6 +7,15 @@ import { pageAspect } from "./readerLayout";
  * que decide este módulo y lo que declara `ReaderState.window` (T27).
  */
 
+/**
+ * Altura de una página al ancho dado, **entera**: el desplazamiento del navegador va a píxeles
+ * enteros, y un borde de página fraccionario (p. ej. 1331,25) dejaba el scroll en 1331 y el lector
+ * en la página anterior.
+ */
+export function pageHeightFor(width: number, aspect: number): number {
+  return Math.round(width / aspect);
+}
+
 /** Altura de cada página al ancho dado; las no medidas usan la relación típica 2:3. */
 export function pageHeights(
   width: number,
@@ -14,7 +23,7 @@ export function pageHeights(
   aspects: Readonly<Record<number, number>>,
 ): number[] {
   return Array.from({ length: count }, (_value, index) =>
-    width <= 0 ? 0 : width / (aspects[index] ?? pageAspect(undefined, undefined)),
+    width <= 0 ? 0 : pageHeightFor(width, aspects[index] ?? pageAspect(undefined, undefined)),
   );
 }
 

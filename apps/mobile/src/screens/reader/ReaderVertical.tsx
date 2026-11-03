@@ -20,6 +20,7 @@ import {
   anchorDelta,
   createScrollAnchor,
   pageAtOffset,
+  pageHeightFor,
   pageHeights,
   pageOffset,
   shouldMountImage,
@@ -111,7 +112,7 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
         changedIndex: index,
         currentPage: currentPage.current,
         previousHeight: heightsRef.current[index] ?? 0,
-        nextHeight: width / aspect,
+        nextHeight: pageHeightFor(width, aspect),
       });
       aspectsRef.current = { ...aspectsRef.current, [index]: aspect };
       setAspects(aspectsRef.current);

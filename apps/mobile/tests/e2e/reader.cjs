@@ -175,7 +175,8 @@ async function tapAt(page, canvasTestId, fx, fy) {
 
       // 9. Una imagen que falla ofrece reintentar solo esa imagen, sin descartar el capítulo (RF-23).
       breakingImage = true;
-      await page.route("**/*page-2.svg*", (route) => route.abort());
+      // El export estático renombra los assets con hash (page-2.<hash>.svg): el patrón admite ambos.
+      await page.route("**/*page-2*.svg*", (route) => route.abort());
       await page.goto(`${READER}/ch-2?release=r-oficial`);
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
       await page.getByText("No se pudo cargar la página 2").waitFor({ state: "visible" });
@@ -184,7 +185,7 @@ async function tapAt(page, canvasTestId, fx, fy) {
       await page.getByTestId("reader-page-2").waitFor({ state: "visible" });
       await page.getByRole("button", { name: "Ver detalle" }).click();
       await page.getByText(/dragon-de-ceniza-ch-2-r-oficial-2\.svg/).first().waitFor({ state: "visible" });
-      await page.unroute("**/*page-2.svg*");
+      await page.unroute("**/*page-2*.svg*");
       await page.getByRole("button", { name: "Reintentar" }).click();
       await page.getByTestId("reader-page-1").waitFor({ state: "visible" });
       await page.getByText("No se pudo cargar la página 2").waitFor({ state: "detached" });
