@@ -62,6 +62,7 @@ import {
 import OnboardingSample from "../screens/onboarding/OnboardingSample";
 import Toast from "../components/Toast";
 import ErrorBanner from "../components/ErrorBanner";
+import CodeChip from "../components/CodeChip";
 import ErrorDialog from "../components/ErrorDialog";
 import LogEventRow from "../components/LogEventRow";
 import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen";
@@ -570,6 +571,13 @@ export default function GalleryScreen() {
           />
         </View>
 
+        <Text style={styles.groupLabel}>{t("gallery.component.codeChip")}</Text>
+        <View style={styles.row}>
+          <CodeChip code="TIMEOUT" severity="error" />
+          <CodeChip code="BLOCKED" severity="warning" />
+          <CodeChip code="OK" severity="info" />
+        </View>
+
         <Text style={styles.groupLabel}>{t("gallery.component.errorBanner")}</Text>
         <ErrorBanner
           title={t("gallery.banner.title")}
@@ -594,13 +602,14 @@ export default function GalleryScreen() {
             onPress={() => setDialogOpen(true)}
           />
           <ErrorDialog
+            testID="gallery-error-dialog"
             visible={dialogOpen}
             animated={false}
             title={t("gallery.dialog.title")}
             message={t("gallery.dialog.message")}
             code="INVALID"
             detail={{ code: "INVALID" }}
-            detailLabel={t("actions.showDetail")}
+            detailLabel={t("actions.showTechnicalDetail")}
             retryLabel={t("actions.retry")}
             onRetry={() => {}}
             onClose={() => setDialogOpen(false)}

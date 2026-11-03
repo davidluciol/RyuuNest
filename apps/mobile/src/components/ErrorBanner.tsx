@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { ChevronDown, ChevronUp } from "lucide-react-native";
-import { dragonNightColors, touchTarget } from "@ryuunest/ui-tokens";
+import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
+
+import CodeChip from "./CodeChip";
+import { ChevronDown, ChevronUp, CircleAlert, RefreshCw } from "../icons";
 
 import {
   type ErrorDetail,
@@ -11,7 +13,7 @@ import { textStyle } from "./textStyle";
 import {
   type ErrorSeverity,
   bannerActionMinHeight,
-  bannerCodeStyle,
+  bannerActionTextStyle,
   bannerMessageStyle,
   bannerStyle,
   bannerTitleStyle,
@@ -65,18 +67,15 @@ export default function ErrorBanner({
 
   return (
     <View style={[styles.banner, bannerStyle(severity)]} testID={testID} accessibilityRole="alert">
-      <Text style={[styles.title, { color: colors.textPrimary }]} numberOfLines={2}>
-        {title}
-      </Text>
-      {code !== undefined ? (
-        <Text style={[styles.code, { color: accent }]} numberOfLines={1}>
-          {code}
+      <View style={styles.header}>
+        <Text accessibilityRole="header" style={[styles.title, { color: colors.textPrimary }]}>
+          {title}
         </Text>
-      ) : null}
+        <CircleAlert size={spacing.lg} color={accent} />
+      </View>
+      {code !== undefined ? <CodeChip code={code} severity={severity} testID="error-code-chip" /> : null}
       {message ? (
-        <Text style={[styles.message, { color: colors.textSecondary }]} numberOfLines={3}>
-          {message}
-        </Text>
+        <Text style={[styles.message, { color: colors.textSecondary }]}>{message}</Text>
       ) : null}
       <View style={styles.actions}>
         <Pressable
@@ -86,9 +85,8 @@ export default function ErrorBanner({
           onPress={onAction}
           style={styles.action}
         >
-          <Text style={[styles.actionText, { color: accent }]} numberOfLines={1}>
-            {actionLabel}
-          </Text>
+          <RefreshCw size={spacing.md} color={accent} />
+          <Text style={[styles.actionText, { color: accent }]}>{actionLabel}</Text>
         </Pressable>
         {hasDetail ? (
           <Pressable
@@ -99,9 +97,7 @@ export default function ErrorBanner({
             onPress={() => setExpanded((value) => !value)}
             style={styles.action}
           >
-            <Text style={[styles.actionText, { color: accent }]} numberOfLines={1}>
-              {detailLabel}
-            </Text>
+            <Text style={[styles.actionText, { color: accent }]}>{detailLabel}</Text>
             {expanded ? (
               <ChevronUp size={16} color={accent} />
             ) : (
@@ -113,11 +109,7 @@ export default function ErrorBanner({
       {expanded ? (
         <View style={styles.detailBox}>
           {lines.map((line) => (
-            <Text
-              key={line}
-              style={[styles.detailLine, { color: colors.textSecondary }]}
-              numberOfLines={1}
-            >
+            <Text key={line} style={[styles.detailLine, { color: colors.textSecondary }]}>
               {line}
             </Text>
           ))}
@@ -129,12 +121,16 @@ export default function ErrorBanner({
 
 const styles = StyleSheet.create({
   banner: {},
+  header: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: spacing.sm,
+  },
   title: {
     ...textStyle(bannerTitleStyle()),
-  },
-  code: {
-    ...textStyle(bannerCodeStyle()),
-    fontWeight: "600",
+    flex: 1,
+    minWidth: 0,
   },
   message: {
     ...textStyle(bannerMessageStyle()),
@@ -151,8 +147,7 @@ const styles = StyleSheet.create({
     minHeight: bannerActionMinHeight(),
   },
   actionText: {
-    ...textStyle(bannerCodeStyle()),
-    fontWeight: "600",
+    ...textStyle(bannerActionTextStyle()),
   },
   detailBox: dialogDetailBoxStyle(),
   detailLine: {

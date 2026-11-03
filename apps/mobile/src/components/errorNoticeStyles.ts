@@ -116,9 +116,38 @@ export function bannerMessageStyle(): TypeStyle {
   return typography.bodyMd;
 }
 
-/** Código del error, en mono del color de severidad (nunca es el único aviso: RF-43). */
+/** Texto de la etiqueta de código del error (nunca es el único aviso: RF-43). */
 export function bannerCodeStyle(): TypeStyle {
-  return typography.labelMd;
+  return typography.labelSm;
+}
+
+/** Texto de las acciones del banner («Reintentar», «Ver detalle»), semibold. */
+export function bannerActionTextStyle(): TypeStyle {
+  return typography.labelLg;
+}
+
+export interface CodeChipStyleShape {
+  alignSelf: "flex-start";
+  borderWidth: number;
+  borderColor: string;
+  borderRadius: number;
+  backgroundColor: string;
+  paddingHorizontal: number;
+  paddingVertical: number;
+}
+
+/** Etiqueta de código: pastilla con borde y tinte del color de severidad (Stitch). */
+export function codeChipStyle(severity: ErrorSeverity): CodeChipStyleShape {
+  const color = severityColor(severity);
+  return {
+    alignSelf: "flex-start",
+    borderWidth: 1,
+    borderColor: color,
+    borderRadius: spacing.xxs,
+    backgroundColor: withAlpha(color, 0.14),
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.xxs,
+  };
 }
 
 /** Botón de acción del banner: área táctil mínima (48 dp, RNF-7). */
@@ -147,9 +176,26 @@ export function dialogStyle(): DialogStyleShape {
   };
 }
 
-/** Velo del diálogo: oscurece el contenido (mismo patrón que la hoja modal). */
-export function dialogBackdropStyle(): { flex: number; backgroundColor: string } {
-  return { flex: 1, backgroundColor: withAlpha(colors.bg, 0.64) };
+/** Velo del diálogo: oscurece el contenido y centra el diálogo con márgenes. */
+export function dialogBackdropStyle(): {
+  flex: number;
+  justifyContent: "center";
+  alignItems: "center";
+  padding: number;
+  backgroundColor: string;
+} {
+  return {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: spacing.md,
+    backgroundColor: withAlpha(colors.bg, 0.64),
+  };
+}
+
+/** Marco del diálogo: ancho completo hasta un máximo legible (480). */
+export function dialogFrameStyle(): { width: "100%"; maxWidth: number } {
+  return { width: "100%", maxWidth: spacing["2xl"] * 10 };
 }
 
 /** Título del diálogo, en Manrope. */
@@ -180,6 +226,25 @@ export function dialogDetailBoxStyle(): {
     padding: spacing.sm,
     shadowOpacity: 0,
     elevation: 0,
+  };
+}
+
+export interface DialogDisclosureStyleShape {
+  borderWidth: number;
+  borderColor: string;
+  borderRadius: number;
+  backgroundColor: string;
+  overflow: "hidden";
+}
+
+/** Caja plegable del detalle técnico: borde `border`, `surface`, cabecera y cuerpo dentro. */
+export function dialogDisclosureStyle(): DialogDisclosureStyleShape {
+  return {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radii.control,
+    backgroundColor: colors.surface,
+    overflow: "hidden",
   };
 }
 

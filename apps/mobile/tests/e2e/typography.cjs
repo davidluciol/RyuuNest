@@ -2,7 +2,9 @@
 // «Manrope» en bruto no existen como familias (web → serif, dispositivo →
 // fuente del sistema); lo registrado son los archivos empaquetados
 // («Inter-Regular», «Manrope-Bold»…). Recorre la galería y las pantallas a
-// 426 y 1440 px y falla con el texto y la familia de cada infractor.
+// 426 y 1440 px y falla con el texto y la familia de cada infractor. Cada peso
+// va en su propio archivo (`textStyle` fija `fontWeight: normal`): un peso
+// calculado distinto de 400 pide negrita sintética sobre un archivo Regular.
 // Corre contra Metro: node apps/mobile/tests/e2e/typography.cjs
 const assert = require("node:assert/strict");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
@@ -28,6 +30,9 @@ function unregisteredTexts() {
     if (style.visibility === "hidden" || style.display === "none") continue;
     const family = style.fontFamily.split(",")[0].trim().replace(/^["']|["']$/g, "");
     if (!registered.has(family)) offenders.push({ text: own.slice(0, 40), family });
+    else if (style.fontWeight !== "400") {
+      offenders.push({ text: own.slice(0, 40), family, weight: style.fontWeight });
+    }
   }
   return offenders;
 }

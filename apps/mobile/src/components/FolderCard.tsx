@@ -98,8 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
   },
   countText: {
-    ...textStyle(typography.labelSm),
-    fontWeight: "500",
+    ...textStyle(typography.labelMd),
   },
   textBlock: {
     minWidth: 0,

@@ -66,7 +66,7 @@ export default function ModuleRow({
 const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   texts: { flex: 1, minWidth: 0, gap: spacing.xxs },
-  name: { ...textStyle(typography.labelLg), fontWeight: "700" },
+  name: { ...textStyle(typography.labelLg) },
   meta: { ...textStyle(typography.bodySm) },
   badges: { flexDirection: "row", flexWrap: "wrap", gap: spacing.xs },
 });

@@ -222,7 +222,7 @@ export default function BackupSheets({ flow, controller }: BackupSheetsProps) {
         message={flow.error}
         code={flow.reason}
         severity="error"
-        detailLabel={t("actions.showDetail")}
+        detailLabel={t("actions.showTechnicalDetail")}
         detail={flow.issues.length > 0 ? { code: flow.issues.map((issue) => issue.path).join(", ") } : undefined}
         retryLabel={t("actions.retry")}
         onRetry={controller.close}

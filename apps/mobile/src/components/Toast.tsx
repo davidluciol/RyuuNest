@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { X } from "lucide-react-native";
 import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import { textStyle } from "./textStyle";
@@ -14,6 +13,7 @@ import {
   toastStyle,
   toastTextStyle,
 } from "./errorNoticeStyles";
+import { X } from "../icons";
 import { t } from "../i18n";
 
 /**

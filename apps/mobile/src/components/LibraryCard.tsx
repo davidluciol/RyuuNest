@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...textStyle(typography.labelMd),
-    fontWeight: "600",
     marginTop: spacing.xs,
   },
   meta: {

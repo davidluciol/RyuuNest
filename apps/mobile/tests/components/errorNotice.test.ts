@@ -2,12 +2,16 @@ import { describe, expect, it } from "vitest";
 
 import {
   bannerActionMinHeight,
+  bannerActionTextStyle,
   bannerCodeStyle,
   bannerMessageStyle,
   bannerStyle,
   bannerTitleStyle,
+  codeChipStyle,
   dialogBackdropStyle,
+  dialogFrameStyle,
   dialogDetailBoxStyle,
+  dialogDisclosureStyle,
   dialogDetailTextStyle,
   dialogMessageStyle,
   dialogStyle,
@@ -91,6 +95,37 @@ describe("toast: punto de severidad, dos líneas y cierre accesible (F34.1)", ()
   });
 });
 
+describe("etiqueta de código y acciones alineadas con Stitch (F34.1)", () => {
+  it("la etiqueta de código es una pastilla con borde y tinte del color de severidad", () => {
+    expect(codeChipStyle("error")).toMatchObject({
+      borderColor: "#F06A6A",
+      borderWidth: 1,
+      borderRadius: 4,
+      backgroundColor: "rgba(240, 106, 106, 0.14)",
+    });
+    expect(codeChipStyle("warning").borderColor).toBe(severityColor("warning"));
+  });
+
+  it("el código y las acciones usan el peso semibold del token, sin negrita sintética", () => {
+    expect(bannerCodeStyle().fontWeight).toBe(600);
+    expect(bannerActionTextStyle()).toMatchObject({ fontFamily: "Inter", fontWeight: 600 });
+  });
+
+  it("el detalle del diálogo es una caja plegable con borde y sin padding propio", () => {
+    expect(dialogDisclosureStyle()).toMatchObject({
+      borderWidth: 1,
+      borderColor: "#263147",
+      backgroundColor: "#141923",
+      borderRadius: 8,
+      overflow: "hidden",
+    });
+  });
+
+  it("el desplegable del diálogo dice «Ver detalle técnico»", () => {
+    expect(t("actions.showTechnicalDetail")).toBe("Ver detalle técnico");
+  });
+});
+
 describe("banner (aviso inline)", () => {
   it("estilo: nivel surface, borde del color de severidad, dentro de la pantalla", () => {
     expect(bannerStyle("error")).toMatchObject({
@@ -124,6 +159,15 @@ describe("diálogo de error (bloqueante, nivel 2)", () => {
 
   it("el velo oscurece el contenido (mismo patrón que la hoja modal)", () => {
     expect(dialogBackdropStyle().backgroundColor).toBe("rgba(11, 14, 20, 0.64)");
+  });
+
+  it("el diálogo va centrado, con márgenes y un ancho máximo legible (Stitch)", () => {
+    expect(dialogBackdropStyle()).toMatchObject({
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 16,
+    });
+    expect(dialogFrameStyle()).toEqual({ width: "100%", maxWidth: 480 });
   });
 
   it("título en Manrope, mensaje en Inter, detalle en caja surface sin sombra", () => {

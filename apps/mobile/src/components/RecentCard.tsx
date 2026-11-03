@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...textStyle(typography.labelLg),
-    fontWeight: "600",
   },
   metaRow: {
     flexDirection: "row",
@@ -131,8 +130,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   chapter: {
-    ...textStyle(typography.labelMd),
-    fontWeight: "600",
+    ...textStyle(typography.labelSm),
   },
   percent: {
     ...textStyle(typography.labelSm),
