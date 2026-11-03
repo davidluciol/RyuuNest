@@ -5,7 +5,7 @@
  * El título se guarda tal cual y además normalizado (`title_norm`), que es por lo que se
  * busca (SPEC §8.1: minúsculas y sin acentos).
  */
-import type { MediaKind, SeriesStatus } from "../contract/types.js";
+import type { MediaKind, SeriesDetails, SeriesStatus } from "../contract/types.js";
 import type { Clock } from "../ports/clock.js";
 import {
   fromSqlBoolean,
@@ -111,6 +111,23 @@ export class SeriesStore {
          updated_at = excluded.updated_at`,
       params,
     );
+  }
+
+  /**
+   * Guarda la serie tal como la describe `details()` del módulo. Es lo que debe ocurrir antes
+   * de marcarla como favorita: la biblioteca une `favorite` con `series` por título y portada,
+   * y un favorito sin fila en `series` no se lista (P-126).
+   */
+  async saveFromDetails(moduleId: string, detalles: SeriesDetails): Promise<void> {
+    await this.upsert({
+      moduleId,
+      seriesId: detalles.id,
+      title: detalles.title,
+      coverUrl: detalles.cover?.url,
+      kind: detalles.kind,
+      nsfw: detalles.nsfw ?? false,
+      status: detalles.status,
+    });
   }
 
   async get(moduleId: string, seriesId: string): Promise<SeriesRecord | undefined> {

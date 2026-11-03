@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import {
   ChapterReadStore,
+  browseLibrary,
   ModuleError,
   ProgressStore,
   type ModuleApi,
@@ -94,6 +95,23 @@ describe("createReadingSource · loadSeries", () => {
 
     expect(view.progress).toEqual({ chapterId: "ch-2", pageIndex: 3, pageTotal: 12 });
     expect([...view.readChapterIds]).toEqual(["ch-1"]);
+  });
+
+  it("el favorito se guarda con su serie, la biblioteca lo lista y sobrevive a recargar (P-126)", async () => {
+    const source = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    expect((await source.loadSeries("m-a", "serie-1")).favorite).toBe(false);
+
+    expect(await source.toggleFavorite("m-a", "serie-1", DETAILS)).toBe(true);
+
+    const page = await browseLibrary(driver, { limit: 10 });
+    expect(page.items.map((item) => [item.moduleId, item.seriesId, item.title])).toEqual([
+      ["m-a", "serie-1", "La serie"],
+    ]);
+    const reloaded = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    expect((await reloaded.loadSeries("m-a", "serie-1")).favorite).toBe(true);
+
+    expect(await source.toggleFavorite("m-a", "serie-1", DETAILS)).toBe(false);
+    expect((await browseLibrary(driver, { limit: 10 })).items).toEqual([]);
   });
 
   it("un fallo del módulo llega tal cual, con su código", async () => {

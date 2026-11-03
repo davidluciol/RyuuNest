@@ -66,7 +66,7 @@ export default function SeriesScreen() {
           data={view.data}
           onOpenChapter={(chapterId, releaseId) => navigate(readerPath(moduleId, seriesId, chapterId, releaseId))}
           onToggleFavorite={async () => {
-            await toggleFavorite(services, moduleId, seriesId);
+            await toggleFavorite(services, moduleId, seriesId, view.data.details);
             retry();
           }}
           onSelectRelease={async (releaseId) => {

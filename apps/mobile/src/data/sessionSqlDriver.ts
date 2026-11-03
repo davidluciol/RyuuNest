@@ -3,7 +3,7 @@ import type { SqlDriver, SqlRow, SqlRunResult, SqlValue } from "@ryuunest/core";
 /**
  * F18 — `SqlDriver` en memoria para la web, donde no hay SQLite (P-79). Atiende solo las
  * sentencias que la ficha y el lector necesitan (progreso, capítulos leídos y preferencias de
- * serie, T24–T26) y **rechaza cualquier otra** en vez de devolver vacío: si el núcleo cambia una
+ * serie, T24–T26; series y favoritos, P-126) y **rechaza cualquier otra** en vez de devolver vacío: si el núcleo cambia una
  * sentencia, el fallo se ve en las pruebas y no como datos que «desaparecen».
  *
  * Dura lo que dure la sesión del navegador; en el dispositivo se usa `ryuunest.db` (expo-sqlite).
@@ -24,6 +24,8 @@ export function createSessionSqlDriver(): SqlDriver {
   const progress = new Map<string, SqlRow>();
   const chaptersRead = new Map<string, { chapter_id: string; scope: string }>();
   const prefs = new Map<string, SqlRow>();
+  const series = new Map<string, SqlRow>();
+  const favorites = new Map<string, SqlRow>();
 
   function upsertPref(params: readonly SqlValue[], column: "reader_mode" | "preferred_group") {
     const [moduleId, seriesId, value, updatedAt] = params as [string, string, string | null, number];
@@ -43,6 +45,37 @@ export function createSessionSqlDriver(): SqlDriver {
     },
 
     async run(sql, params = []) {
+      if (sql.includes("INSERT INTO series (module_id, series_id, title")) {
+        const [moduleId, seriesId, title, titleNorm, coverUrl, kind, nsfw, status, updatedAt] = params;
+        series.set(key(moduleId as string, seriesId as string), {
+          module_id: moduleId,
+          series_id: seriesId,
+          title,
+          title_norm: titleNorm,
+          cover_url: coverUrl,
+          kind,
+          nsfw,
+          status,
+          updated_at: updatedAt,
+        });
+        return ONE_CHANGE;
+      }
+      if (sql.includes("INSERT INTO favorite")) {
+        const [moduleId, seriesId, folderId, addedAt, updatedAt] = params;
+        const id = key(moduleId as string, seriesId as string);
+        const current = favorites.get(id);
+        favorites.set(id, {
+          module_id: moduleId,
+          series_id: seriesId,
+          folder_id: folderId,
+          added_at: current?.added_at ?? addedAt,
+          updated_at: updatedAt,
+        });
+        return ONE_CHANGE;
+      }
+      if (sql.includes("DELETE FROM favorite WHERE module_id = ? AND series_id = ?")) {
+        return favorites.delete(key(params[0] as string, params[1] as string)) ? ONE_CHANGE : NO_CHANGES;
+      }
       if (sql.includes("INSERT INTO progress")) {
         const [moduleId, seriesId, chapterId, releaseId, chapterTitle, pageIndex, pageTotal, updatedAt] =
           params;
@@ -94,6 +127,12 @@ export function createSessionSqlDriver(): SqlDriver {
     },
 
     async get<T = SqlRow>(sql: string, params: readonly SqlValue[] = []): Promise<T | undefined> {
+      if (sql.includes("FROM series WHERE module_id = ? AND series_id = ?")) {
+        return series.get(key(params[0] as string, params[1] as string)) as T | undefined;
+      }
+      if (sql.includes("FROM favorite WHERE module_id = ? AND series_id = ?")) {
+        return favorites.get(key(params[0] as string, params[1] as string)) as T | undefined;
+      }
       if (sql.includes("FROM progress WHERE module_id = ? AND series_id = ?")) {
         return progress.get(key(params[0] as string, params[1] as string)) as T | undefined;
       }

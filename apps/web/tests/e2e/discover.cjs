@@ -22,7 +22,7 @@ export default function create(host) {
     },
     popular: async () => ({ items: [{ id: "pop-1", title: "Popular de prueba", kind: "manga" }], hasNext: false }),
     latest: async () => ({ items: [{ id: "lat-1", title: "Lo último", kind: "manhwa" }], hasNext: false }),
-    details: async (id) => ({ id, title: "Serie " + id, genres: ["Aventura"], status: "ongoing", altTitles: [], extra: {}, chapters: [{ id: "ch-1", title: "Cap. 1", number: 1 }] }),
+    details: async (id) => ({ id, title: "Serie " + id, genres: ["Aventura"], status: "ongoing", altTitles: [], extra: {}, chapters: [{ id: "ch-1", title: "Cap. 1", number: 1, releases: [{ id: "r-1", group: "Oficial" }] }] }),
     pages: async () => ({ images: [{ url: "https://sitio.test/img/1.png" }] }),
   };
 }
@@ -158,6 +158,16 @@ function corsJson(body) {
       await page.getByTestId("discover-search-submit").click();
       await page.getByTestId("discover-entry-s-dragon").waitFor({ state: "visible" });
       await page.getByText("Dragón de prueba").waitFor({ state: "visible" });
+
+      // 3) P-126: «Guardar» en la ficha crea la serie y la Biblioteca la lista, también tras recargar.
+      await page.getByTestId("discover-entry-s-dragon").click();
+      await page.getByTestId("screen-series").waitFor({ state: "visible" });
+      await page.getByTestId("series-favorite").click();
+      await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
+      await page.goto(`${baseURL}/library`);
+      await page.getByTestId("library-card-s-dragon").waitFor({ state: "visible" });
+      await page.reload();
+      await page.getByTestId("library-card-s-dragon").waitFor({ state: "visible" });
 
       assert.deepEqual(errors, [], `errores de consola/página a ${width} px: ${errors}`);
       assert.deepEqual(external, [], `peticiones externas no interceptadas a ${width} px: ${external}`);

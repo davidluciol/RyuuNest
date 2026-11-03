@@ -74,6 +74,48 @@ describe("SeriesStore · alta y actualización", () => {
     });
   });
 
+  it("saveFromDetails guarda la serie tal como la describe el módulo (P-126)", async () => {
+    await series.saveFromDetails(MODULO, {
+      id: "s-9",
+      title: "Dragón de Ceniza",
+      cover: { url: "https://sitio.test/9.jpg" },
+      kind: "manhwa",
+      nsfw: true,
+      genres: [],
+      status: "completed",
+      altTitles: [],
+      extra: {},
+      chapters: [],
+    });
+
+    expect(await series.get(MODULO, "s-9")).toEqual({
+      moduleId: MODULO,
+      seriesId: "s-9",
+      title: "Dragón de Ceniza",
+      titleNorm: "dragon de ceniza",
+      coverUrl: "https://sitio.test/9.jpg",
+      kind: "manhwa",
+      nsfw: true,
+      status: "completed",
+      updatedAt: 1_000,
+    });
+  });
+
+  it("saveFromDetails tolera una ficha sin portada, tipo ni marca NSFW", async () => {
+    await series.saveFromDetails(MODULO, {
+      id: "s-10",
+      title: "Sin datos",
+      genres: [],
+      status: "ongoing",
+      altTitles: [],
+      extra: {},
+      chapters: [],
+    });
+
+    const guardada = await series.get(MODULO, "s-10");
+    expect(guardada).toMatchObject({ coverUrl: null, kind: null, nsfw: false, status: "ongoing" });
+  });
+
   it("volver a subir la misma serie actualiza los datos en lugar de duplicar", async () => {
     await series.upsert({ moduleId: MODULO, seriesId: "s-1", title: "Viejo", nsfw: false });
     clock.set(2_000);
