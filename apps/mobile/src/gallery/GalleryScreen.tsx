@@ -125,6 +125,7 @@ function TypeSample({ name }: { name: keyof typeof typography }) {
 
 export default function GalleryScreen() {
   const [previewDestination, setPreviewDestination] = useState<BottomNavDestination>("home");
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { width } = useWindowDimensions();
   const screen = layoutForWidth(width);
   const density = densityLayout("comfortable", width);
@@ -577,9 +578,15 @@ export default function GalleryScreen() {
         />
 
         <Text style={styles.groupLabel}>{t("gallery.component.errorDialog")}</Text>
-        <View style={styles.dialogPreview}>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.dialog.show")}
+            testID="gallery-show-error-dialog"
+            onPress={() => setDialogOpen(true)}
+          />
           <ErrorDialog
-            visible
+            visible={dialogOpen}
             animated={false}
             title={t("gallery.dialog.title")}
             message={t("gallery.dialog.message")}
@@ -588,7 +595,7 @@ export default function GalleryScreen() {
             detailLabel={t("actions.showDetail")}
             retryLabel={t("actions.retry")}
             onRetry={() => {}}
-            onClose={() => {}}
+            onClose={() => setDialogOpen(false)}
           />
         </View>
 
@@ -652,7 +659,6 @@ const styles = StyleSheet.create({
   shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
   settingsPreview: { flex: 0, minHeight: spacing["2xl"] * 4 },
   onboardingPreview: { flex: 0, minHeight: spacing["2xl"] * 10 },
-  dialogPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
   shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
     color: colors.textSecondary,

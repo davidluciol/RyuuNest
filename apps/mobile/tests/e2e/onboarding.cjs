@@ -44,6 +44,13 @@ async function prepare(page) {
       const scope = page.getByTestId("onboarding-sample");
       await scope.waitFor({ state: "visible", timeout: 120000 });
 
+      // La muestra del ErrorDialog (F29) no monta su Modal hasta pulsarla: un
+      // portal fijo a pantalla completa interceptaba los clics de la página.
+      await page.getByTestId("gallery-show-error-dialog").click();
+      await page.getByText("No se pudo importar el respaldo").waitFor({ state: "visible" });
+      await page.getByText("Cerrar", { exact: true }).click();
+      await page.getByText("No se pudo importar el respaldo").waitFor({ state: "detached" });
+
       // Paso 1: bienvenida con el dragón grande.
       await scope.getByTestId("onboarding-step-1").waitFor({ state: "visible" });
       await page.waitForTimeout(600);

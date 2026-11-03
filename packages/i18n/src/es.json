@@ -396,5 +396,6 @@
   "extension.notice.domains": "Autoriza {count} dominios en la extensión para continuar.",
   "extension.notice.open": "Abrir extensión",
   "gallery.dialog.title": "No se pudo importar el respaldo",
-  "gallery.dialog.message": "El archivo no es un respaldo válido de RyuuNest."
+  "gallery.dialog.message": "El archivo no es un respaldo válido de RyuuNest.",
+  "gallery.dialog.show": "Mostrar diálogo de error"
 }
