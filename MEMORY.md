@@ -136,6 +136,9 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - P-17 pnpm + Vitest. P-18 `test-site` como paquete reutilizable. P-24 Tracker `bd` local, migrar a GitHub Issues. P-28 Verificación visual: galería web + Playwright, y capturas en dispositivo para AC-12.
 - P-34 Tooling: `typescript@6` fijado (`typescript-eslint` no soporta 7), `eslint@10`, `prettier@3`, `vitest@5`. P-36 Host: `htmlparser2@12`, `css-select@7`, `domhandler@6`. P-42 `@types/node` como devDependency en `module-sdk`.
 
+**Verificación**
+- **P-127 Verificación nativa con agent-device (decisión del humano, 2026-11-03):** la app nativa (móvil, Android TV) se verifica con el MCP **agent-device** (CLI `agent-device` 0.21.36; servidor MCP `agent-device mcp` ya en `~/.config/opencode/opencode.jsonc`; repo `callstack/agent-device`, fuente: su README en GitHub). Playwright queda para el cliente web y la galería; así se resuelve la decisión pendiente de Regla 5 en `AGENTS.md`. Regla 5b nueva con el flujo (`open` → `snapshot` → `press`/`fill` con `settle` → verificar con `wait`/`diff`; `close` libera el claim), la instalación del CLI/MCP si faltan (siempre preguntando antes) y las advertencias probadas en este PC: emulador parado por falta de hipervisor (AEHD/WHPX), firma de `press` con `target.kind: "ref"`, refs solo en la última salida y catálogo de Code Mode volátil tras reiniciar el servidor. **Pendiente de probar:** que los `testID` de RN (`screen-<id>`) se ven en el snapshot con la app corrienda.
+
 ## 4. Pendientes y sugerencias
 
 ### Del humano
@@ -160,6 +163,8 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - 🧍 **`app.json` está en `0.0.0`**: por eso `useSourcesData` no pasa `appVersion` al validador; un módulo con `minAppVersion` mayor se rechazaría entero. Fijar la versión de la app antes de publicar módulos con `minAppVersion`.
 - 🧰 El script e2e de F20 quedó preparado, pero no se ejecutó con Playwright porque el entorno no incluye el paquete y no se añadió una dependencia. La auditoría interactiva del export web sí comprobó la pantalla, el cambio NSFW, Biblioteca/Descubrir, overflow, consola y red.
 - 🧍 Antes de fusionar el PR de F20, ejecutar F32 con un módulo declarativo real y completar F33 con la revisión general UX/UI; no dar por suficiente la verificación sobre fixtures o el export web.
+
+- 🧍 **Emulador Android sin usar (postergado por el humano, 2026-11-03):** el AVD `Medium_Phone_API_37.0` existe, pero falta el hipervisor de Windows (AEHD no instalado, WHPX no activo) y el emulador no arranca (`x86_64 emulation currently requires hardware acceleration!`). Si se quiere recuperarlo: instalar AEHD (vía SDK Manager o instalador del SDK) o habilitar WHPX; ambas tocar el sistema con permisos de administrador. Mientras tanto, la verificación nativa va por teléfono físico con agent-device (Regla 5b de `AGENTS.md`, P-127).
 
 ### Del agente (orden sugerido)
 0. **Bug de favorito (P-126, F28):** tarea nueva con prueba en rojo — `toggleFavorite` debe hacer upsert de la fila `series` (y el lector al abrir capítulo), o la biblioteca queda vacía; bloquea QAw1.

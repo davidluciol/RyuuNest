@@ -52,7 +52,7 @@ Se prefieren detalles de movimiento sutiles que den vida a la interfaz, dentro d
 
 Cada pantalla o componente de interfaz se verifica con **Playwright** antes de darse por terminado, comparándolo con su `screen.png`.
 
-**Alcance honesto.** Playwright controla un navegador: sirve para el cliente web y para la galería de componentes cuando corre en web. No controla la app nativa de Android. Cómo verificar la app nativa (por ejemplo, con la galería también compilada para web, o con capturas desde el dispositivo) es una **decisión pendiente**: pregúntala al humano (ver `MEMORY.md`) y mientras tanto no des por verificada una pantalla nativa solo por haber pasado en web.
+**Alcance honesto.** Playwright controla un navegador: sirve para el cliente web y para la galería de componentes cuando corre en web. No controla la app nativa de Android: esa se verifica con **agent-device** (MCP) según la Regla 5b (decisión del humano, P-127). No des por verificada una pantalla nativa solo por haber pasado en web: Playwright no la cubre.
 
 **Procedimiento**
 
@@ -70,6 +70,33 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
    - **sin peticiones a dominios externos** (CDN de fuentes, Tailwind, imágenes remotas): RNF-5.
 5. Un diff de píxeles contra `screen.png` no sirve: los datos de ejemplo son otros. Solo se usa contra capturas base propias para detectar regresiones.
 6. Registra las diferencias aceptadas en `design/stitch/DIFFS.md` y pasa la lista de 20 segundos de `DESIGN_RULES.md` (§6).
+
+## 5b. Regla 5b: verificar la app nativa con agent-device (MCP)
+
+La app nativa (móvil, Android TV) se verifica con **agent-device**: CLI y servidor MCP que abren la app en el dispositivo real o en el emulador, leen el árbol de accesibilidad y actúan por refs. Reparto: **Playwright para el web, agent-device para lo nativo** (P-127). Documentación: `agent-device.dev/docs` (repo `callstack/agent-device`); guarda en `MEMORY.md` la fuente si la consultas de nuevo.
+
+**Si el MCP o el CLI no existen en el PC** (compruébalo antes de asumir que están):
+
+1. ¿Está el CLI? `agent-device --version` (requiere Node ≥ 22.12, que el monorepo ya exige). ¿Está el MCP? Aparece como servidor `agent-device` con sus herramientas en el catálogo de Code Mode; si no lo ves, búscalo con `search("agent-device")` antes de creer que falta.
+2. Si falta el CLI o el MCP no carga, **pregunta al humano (Regla 1)** antes de ejecutar `npm install -g agent-device@latest` y `agent-device doctor`. La entrada del servidor ya vive en `~/.config/opencode/opencode.jsonc` (`"command": ["agent-device", "mcp"]`); si hay que añadirla o repararla, propón el cambio exacto y reinicia la sesión.
+
+**Flujo (inspect → act → verify):**
+
+1. `devices` lista dispositivos (teléfono, emulador, TV, `kind`); `open` con `foreground: true` devuelve el snapshot inicial con refs `@eN`. App desconocida: `devices` → `apps` → `open`; nunca inventes identificadores.
+2. Lee el `snapshot` (árbol de accesibilidad con roles y etiquetas) y actúa con `press`/`fill`/`scroll` y `settle: true`; cada acción devuelve un diff con los cambios y los refs nuevos.
+3. Verifica: `wait` (texto o selector), `is`, `get` o `find`. La captura (`screenshot`) es **evidencia**, no el medio primario de inspección.
+4. `close` al terminar: libera el claim exclusivo del dispositivo. Si un claim queda huérfano, `agent-device device release --stale`.
+
+**Advertencias encontradas en este PC (2026-11-03):**
+
+- En bash de Windows, `emulator` no está en PATH: usa `"$LOCALAPPDATA/Android/Sdk/emulator/emulator.exe"` (`-list-avds` para los AVD).
+- El emulador Android no arranca sin aceleración de hardware: error `x86_64 emulation currently requires hardware acceleration!` («Android Emulator hypervisor driver is not installed on this machine»). En este PC falta el hipervisor (no hay AEHD instalado ni WHPX activo); instalar AEHD o habilitar WHPX toca el sistema con permisos de administrador → **pregunta al humano (Regla 1)** y no ejecutes instaladores silenciosos por tu cuenta. Mientras tanto, usa el teléfono físico.
+- Firma de `press` en el MCP: `press({ target: { kind: "ref", ref: "@eN", label: "…" }, settle: true, verify: true })`. No pases el ref plano: falla.
+- Tras reiniciar el servidor de OpenCode cambia el catálogo de Code Mode y las herramientas del MCP pueden no estar listadas: búscalas con `search(...)` antes de llamarlas; no asumas rutas de la sesión anterior.
+- Los refs `@eN` solo valen en la última salida: haz snapshot de nuevo si el diff no trae lo que necesitas.
+- Estado y logs de sesión viven en `~/.agent-device/sessions/`, acotados a la sesión y al workspace (worktree) que reclama el dispositivo.
+
+**Pendiente de probar (no lo des por válido):** que los `testID` de React Native (p. ej. `screen-home`) aparecen en el snapshot de agent-device con la app corriendo. Hasta verificarlo, no construyas aserciones sobre el marcado de pantallas apoyado en este MCP.
 
 ## 6. Reglas de alcance y diseño
 
@@ -94,7 +121,8 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
 ## 8. Lista de cierre de sesión
 
 - [ ] Lint, tipos y pruebas en verde.
-- [ ] Pantallas tocadas verificadas con Playwright (o anotado que falta la verificación nativa).
+- [ ] App nativa tocada verificada con agent-device (Regla 5b): sesión cerrada con `close` y dispositivo liberado (o anotado que falta la verificación).
+- [ ] Pantallas tocadas verificadas con Playwright (cliente web y galería).
 - [ ] Componentes nuevos en la galería; ningún valor literal.
 - [ ] Diferencias aceptadas en `design/stitch/DIFFS.md`.
 - [ ] Entrada nueva en `MEMORY.md`: qué se hizo, decisiones, siguiente paso.
