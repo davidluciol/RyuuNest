@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { X } from "lucide-react-native";
 import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import { textStyle } from "./textStyle";
@@ -7,13 +8,16 @@ import {
   type ErrorSeverity,
   severityColor,
   TOAST_DURATION_MS,
+  TOAST_MESSAGE_LINES,
   toastActionStyle,
+  toastDotStyle,
   toastStyle,
   toastTextStyle,
 } from "./errorNoticeStyles";
+import { t } from "../i18n";
 
 /**
- * F29 — toast (P-72): aviso transitorio de 4 s, una línea y acción opcional.
+ * F29 — toast (P-72): aviso transitorio de 4 s, hasta dos líneas y acción opcional.
  * No bloquea la pantalla (se posiciona encima, pero no es modal) y desaparece
  * solo; si el usuario lo cierra antes, se cancela el temporizador.
  *
@@ -24,7 +28,7 @@ import {
 const colors = dragonNightColors;
 
 export interface ToastProps {
-  /** Mensaje del aviso (una línea; se trunca con «…»). */
+  /** Mensaje del aviso (hasta dos líneas, completo: T7). */
   message: string;
   /** Severidad: fija el color del borde y de la acción. */
   severity?: ErrorSeverity;
@@ -53,7 +57,11 @@ export default function Toast({
 
   return (
     <View style={[styles.toast, toastStyle(severity)]} testID={testID} accessibilityRole="alert">
-      <Text style={[styles.message, { color: colors.textPrimary }]} numberOfLines={1}>
+      <View testID="toast-dot" style={toastDotStyle(severity)} />
+      <Text
+        style={[styles.message, { color: colors.textPrimary }]}
+        numberOfLines={TOAST_MESSAGE_LINES}
+      >
         {message}
       </Text>
       {actionLabel !== undefined ? (
@@ -71,12 +79,12 @@ export default function Toast({
       ) : null}
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={message}
+        accessibilityLabel={t("toast.close")}
         hitSlop={touchTarget.min / 4}
         onPress={onClose}
         style={styles.close}
       >
-        <Text style={[styles.closeText, { color: accent }]}>×</Text>
+        <X size={spacing.md} color={colors.textSecondary} />
       </Pressable>
     </View>
   );
@@ -105,9 +113,5 @@ const styles = StyleSheet.create({
     minWidth: touchTarget.min,
     alignItems: "center",
     justifyContent: "center",
-  },
-  closeText: {
-    fontSize: spacing.lg,
-    lineHeight: spacing.lg,
   },
 });

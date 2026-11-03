@@ -135,7 +135,17 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF24");
       assert.match(reportJson.suggestedFilename(), /^ryuunest-diagnostico-.*\.json$/);
 
       await page.getByTestId("diagnostics-copy").click();
-      await page.getByTestId("diagnostics-toast").waitFor({ state: "visible" });
+      const toast = page.getByTestId("diagnostics-toast");
+      await toast.waitFor({ state: "visible" });
+      // F34.1: punto de severidad y cierre «Cerrar aviso» (no el texto del mensaje).
+      assert.equal(await toast.locator(".toast-dot").count(), 1, `punto del toast a ${width} px`);
+      assert.equal(
+        await toast.getByRole("button", { name: "Cerrar aviso", exact: true }).count(),
+        1,
+        `cierre accesible del toast a ${width} px`,
+      );
+      await fs.mkdir(path.resolve(output, "../capturasF34"), { recursive: true });
+      await toast.screenshot({ path: path.resolve(output, `../capturasF34/toast-web-${width}.png`) });
 
       await page.getByTestId("diagnostics-clear").click();
       await page.getByTestId("diagnostics-confirm").waitFor({ state: "visible" });

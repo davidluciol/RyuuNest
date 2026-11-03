@@ -14,6 +14,7 @@
   "actions.retry": "Reintentar",
   "actions.showDetail": "Ver detalle",
   "actions.close": "Cerrar",
+  "toast.close": "Cerrar aviso",
   "actions.back": "Volver",
 
   "series.title": "Ficha",
@@ -333,6 +334,7 @@
   "gallery.holdToConfirm.label": "Mantén pulsado",
   "gallery.toast.message": "Se vació la caché de imágenes",
   "gallery.toast.action": "Deshacer",
+  "gallery.toast.long": "Se vació la caché de imágenes de este dispositivo",
   "gallery.banner.title": "El módulo falló",
   "gallery.banner.message": "No se pudo leer el listado de obras.",
   "gallery.component.diagnosticsScreen": "pantalla Diagnóstico",

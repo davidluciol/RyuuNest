@@ -20,6 +20,9 @@ export type ErrorSeverity = "info" | "warning" | "error";
 /** Duración del toast en milisegundos (4 s). */
 export const TOAST_DURATION_MS = 4_000;
 
+/** Líneas del mensaje del toast: dos, completo y sin «…» (T7). */
+export const TOAST_MESSAGE_LINES = 2;
+
 const colors = dragonNightColors;
 
 /** Color del borde y del icono por severidad. */
@@ -54,7 +57,24 @@ export function toastStyle(severity: ErrorSeverity): ToastStyleShape {
   };
 }
 
-/** Texto del toast: una línea (se trunca con «…», nunca crece en alto). */
+export interface ToastDotStyleShape {
+  width: number;
+  height: number;
+  borderRadius: number;
+  backgroundColor: string;
+}
+
+/** Punto de severidad del toast (diseño `banner_inline_de_error_y_toast`). */
+export function toastDotStyle(severity: ErrorSeverity): ToastDotStyleShape {
+  return {
+    width: spacing.xs,
+    height: spacing.xs,
+    borderRadius: spacing.xxs,
+    backgroundColor: severityColor(severity),
+  };
+}
+
+/** Texto del toast: hasta `TOAST_MESSAGE_LINES` líneas. */
 export function toastTextStyle(): TypeStyle {
   return typography.bodyMd;
 }

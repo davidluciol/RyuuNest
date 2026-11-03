@@ -14,10 +14,13 @@ import {
   dialogTitleStyle,
   severityColor,
   TOAST_DURATION_MS,
+  TOAST_MESSAGE_LINES,
   toastActionStyle,
+  toastDotStyle,
   toastStyle,
   toastTextStyle,
 } from "../../src/components/errorNoticeStyles";
+import { t } from "../../src/i18n";
 
 /**
  * F29 — aviso transitorio (toast), aviso inline (banner) y diálogo de error
@@ -64,6 +67,27 @@ describe("toast (aviso transitorio)", () => {
     expect(toastTextStyle().fontFamily).toBe("Inter");
     expect(toastActionStyle().fontFamily).toBe("Inter");
     expect(toastActionStyle().fontSize).toBeLessThanOrEqual(toastTextStyle().fontSize);
+  });
+});
+
+describe("toast: punto de severidad, dos líneas y cierre accesible (F34.1)", () => {
+  it("el mensaje admite dos líneas (T7: completo, sin «…»)", () => {
+    expect(TOAST_MESSAGE_LINES).toBe(2);
+  });
+
+  it("el punto de severidad es un círculo de 8 con el color de la severidad", () => {
+    expect(toastDotStyle("info")).toEqual({
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: "#35C98A",
+    });
+    expect(toastDotStyle("error").backgroundColor).toBe(severityColor("error"));
+    expect(toastDotStyle("warning").backgroundColor).toBe(severityColor("warning"));
+  });
+
+  it("el cierre se anuncia «Cerrar aviso», no con el texto del mensaje", () => {
+    expect(t("toast.close")).toBe("Cerrar aviso");
   });
 });
 

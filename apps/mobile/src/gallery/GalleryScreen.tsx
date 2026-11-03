@@ -560,6 +560,14 @@ export default function GalleryScreen() {
             severity="error"
             onClose={() => {}}
           />
+          <Toast
+            testID="gallery-toast-long"
+            message={t("gallery.toast.long")}
+            severity="warning"
+            actionLabel={t("gallery.toast.action")}
+            onAction={() => {}}
+            onClose={() => {}}
+          />
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.errorBanner")}</Text>
