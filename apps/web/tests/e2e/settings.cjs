@@ -149,6 +149,20 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF24");
 
       await page.getByTestId("diagnostics-clear").click();
       await page.getByTestId("diagnostics-confirm").waitFor({ state: "visible" });
+      // F34.2: confirmación única (confirmar_accion_dragon_night): acción en amarillo; hoja anclada abajo
+      // en pantallas estrechas y diálogo centrado en las anchas.
+      const confirmBox = await page.getByTestId("diagnostics-confirm").boundingBox();
+      const submitColor = await page
+        .getByTestId("diagnostics-confirm-submit")
+        .evaluate((el) => getComputedStyle(el).color);
+      assert.equal(submitColor, "rgb(245, 196, 81)", `la acción de confirmar es amarilla a ${width} px`);
+      assert.ok(confirmBox, `caja de la confirmación a ${width} px`);
+      if (width < 600) {
+        assert.ok(confirmBox.y + confirmBox.height >= 900 - 2, `hoja anclada abajo a ${width} px`);
+      } else {
+        assert.ok(Math.abs(confirmBox.x + confirmBox.width / 2 - width / 2) <= 2, `diálogo centrado a ${width} px`);
+        assert.ok(confirmBox.width <= 481, `ancho máximo a ${width} px`);
+      }
       await page.getByTestId("diagnostics-confirm-submit").click();
       await page.getByTestId("diagnostics-empty").waitFor({ state: "visible" });
 

@@ -63,6 +63,7 @@ import OnboardingSample from "../screens/onboarding/OnboardingSample";
 import Toast from "../components/Toast";
 import ErrorBanner from "../components/ErrorBanner";
 import CodeChip from "../components/CodeChip";
+import ConfirmSheet from "../components/ConfirmSheet";
 import ErrorDialog from "../components/ErrorDialog";
 import LogEventRow from "../components/LogEventRow";
 import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen";
@@ -127,6 +128,7 @@ function TypeSample({ name }: { name: keyof typeof typography }) {
 export default function GalleryScreen() {
   const [previewDestination, setPreviewDestination] = useState<BottomNavDestination>("home");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const { width } = useWindowDimensions();
   const screen = layoutForWidth(width);
   const density = densityLayout("comfortable", width);
@@ -613,6 +615,29 @@ export default function GalleryScreen() {
             retryLabel={t("actions.retry")}
             onRetry={() => {}}
             onClose={() => setDialogOpen(false)}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.confirmSheet")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.confirm.show")}
+            testID="gallery-show-confirm"
+            onPress={() => setConfirmOpen(true)}
+          />
+          <ConfirmSheet
+            visible={confirmOpen}
+            animated={false}
+            title={t("settings.backup.replace.title")}
+            message={t("settings.backup.replace.message")}
+            subject={t("gallery.confirm.subject")}
+            confirmLabel={t("settings.backup.replace.confirm")}
+            onConfirm={() => setConfirmOpen(false)}
+            onCancel={() => setConfirmOpen(false)}
+            testID="gallery-confirm"
+            confirmTestID="gallery-confirm-submit"
+            cancelTestID="gallery-confirm-cancel"
           />
         </View>
 

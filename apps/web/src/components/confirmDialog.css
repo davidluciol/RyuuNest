@@ -1,0 +1,84 @@
+/* F34.2 — confirmación única: diálogo centrado y, en pantallas estrechas, hoja anclada abajo. */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  z-index: 30;
+}
+
+.confirm {
+  background: var(--color-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sheet);
+  width: min(100%, calc(var(--space-2xl) * 10));
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.confirm-grab {
+  display: none;
+}
+
+.confirm-title {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.confirm-subject {
+  align-self: flex-start;
+  padding: var(--space-xxs) var(--space-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  color: var(--color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.confirm-message {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+/* Diálogo: «Cancelar» a la izquierda y la acción a la derecha. */
+.confirm-actions {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  gap: var(--space-sm);
+}
+
+/* Hoja (móvil, `confirmPresentation`): anclada abajo, acciones apiladas con la acción primero y a ancho completo. */
+.confirm-overlay.confirm-sheet {
+  align-items: flex-end;
+  padding: 0;
+}
+
+.confirm-sheet .confirm {
+  width: 100%;
+  border-bottom: 0;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  padding: var(--space-sm) var(--space-md) var(--space-lg);
+}
+
+.confirm-sheet .confirm-grab {
+  display: block;
+  align-self: center;
+  width: calc(var(--space-xl) + var(--space-xs));
+  height: var(--space-xxs);
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+}
+
+.confirm-sheet .confirm-actions {
+  flex-direction: column;
+}
+
+.confirm-sheet .confirm-actions .btn {
+  width: 100%;
+}

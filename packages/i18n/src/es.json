@@ -16,6 +16,7 @@
   "actions.showTechnicalDetail": "Ver detalle técnico",
   "actions.close": "Cerrar",
   "toast.close": "Cerrar aviso",
+  "confirm.cancel": "Cancelar",
   "actions.back": "Volver",
 
   "series.title": "Ficha",
@@ -331,6 +332,7 @@
   "gallery.component.sheetModal": "hoja modal",
   "gallery.component.toast": "aviso transitorio (toast)",
   "gallery.component.codeChip": "etiqueta de código",
+  "gallery.component.confirmSheet": "confirmación (hoja y diálogo)",
   "gallery.component.errorBanner": "aviso inline (banner)",
   "gallery.component.errorDialog": "diálogo de error",
   "gallery.holdToConfirm.label": "Mantén pulsado",
@@ -401,5 +403,7 @@
   "extension.notice.open": "Abrir extensión",
   "gallery.dialog.title": "No se pudo importar el respaldo",
   "gallery.dialog.message": "El archivo no es un respaldo válido de RyuuNest.",
-  "gallery.dialog.show": "Mostrar diálogo de error"
+  "gallery.dialog.show": "Mostrar diálogo de error",
+  "gallery.confirm.show": "Mostrar confirmación",
+  "gallery.confirm.subject": "respaldo-2026-11-01.json"
 }

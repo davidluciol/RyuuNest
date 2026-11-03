@@ -5,7 +5,7 @@ import { eventDetailLines, eventLevel, eventWhen, confirmClearMessage } from "@r
 
 import Button from "../../components/Button";
 import Chip from "../../components/Chip";
-import Dialog from "../../components/Dialog";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import EmptyState from "../../components/EmptyState";
 import ErrorState from "../../components/ErrorState";
 import LoadingState from "../../components/LoadingState";
@@ -168,18 +168,17 @@ export default function DiagnosticsScreen() {
       </div>
 
       {controller !== null && flow.confirmClear && (
-        <Dialog title={t("diagnostics.confirm.title")} onClose={controller.cancelClear} testID="diagnostics-confirm">
-          <p className="t-body-md diag-confirm-text">{confirmClearMessage(events.length)}</p>
-          <div className="diag-pair">
-            <Button variant="secondary" label={t("diagnostics.confirm.cancel")} onClick={controller.cancelClear} testID="diagnostics-confirm-cancel" />
-            <Button
-              variant="destructive"
-              label={t("diagnostics.confirm.submit")}
-              onClick={() => void controller.confirmClear()}
-              testID="diagnostics-confirm-submit"
-            />
-          </div>
-        </Dialog>
+        <ConfirmDialog
+          title={t("diagnostics.confirm.title")}
+          message={confirmClearMessage(events.length)}
+          confirmLabel={t("diagnostics.confirm.submit")}
+          cancelLabel={t("diagnostics.confirm.cancel")}
+          onConfirm={() => void controller.confirmClear()}
+          onCancel={controller.cancelClear}
+          testID="diagnostics-confirm"
+          confirmTestID="diagnostics-confirm-submit"
+          cancelTestID="diagnostics-confirm-cancel"
+        />
       )}
 
       {notice !== null && controller !== null && (
