@@ -18,6 +18,7 @@ import type { PageWindow } from "@ryuunest/core";
 
 import {
   anchorDelta,
+  createScrollAnchor,
   pageAtOffset,
   pageHeights,
   pageOffset,
@@ -60,6 +61,8 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
     const currentPage = useRef(initialPage);
     const placed = useRef(false);
     const [aspects, setAspects] = useState<Record<number, number>>({});
+    const aspectsRef = useRef(aspects);
+    const anchor = useRef(createScrollAnchor());
     const heights = useMemo(
       () => pageHeights(width, images.length, aspects),
       [width, images.length, aspects],
@@ -72,7 +75,8 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
       () => ({
         scrollToPage: (index) => {
           const clamped = Math.max(0, Math.min(index, images.length - 1));
-          scrollRef.current?.scrollTo({ y: pageOffset(heightsRef.current, clamped), animated: false });
+          offsetY.current = pageOffset(heightsRef.current, clamped);
+          scrollRef.current?.scrollTo({ y: offsetY.current, animated: false });
         },
         scrollToEnd: () => scrollRef.current?.scrollToEnd({ animated: false }),
       }),
@@ -83,10 +87,8 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
     const placeInitialPage = useCallback(() => {
       if (placed.current || width <= 0) return;
       placed.current = true;
-      scrollRef.current?.scrollTo({
-        y: pageOffset(heightsRef.current, initialPage),
-        animated: false,
-      });
+      offsetY.current = pageOffset(heightsRef.current, initialPage);
+      scrollRef.current?.scrollTo({ y: offsetY.current, animated: false });
     }, [width, initialPage]);
 
     useEffect(() => {
@@ -104,20 +106,22 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
     };
 
     const onAspect = (index: number, aspect: number) => {
-      setAspects((previous) => {
-        if (previous[index] === aspect) return previous;
-        const delta = anchorDelta({
-          changedIndex: index,
-          currentPage: currentPage.current,
-          previousHeight: heightsRef.current[index] ?? 0,
-          nextHeight: width / aspect,
-        });
-        if (delta !== 0) {
-          requestAnimationFrame(() =>
-            scrollRef.current?.scrollTo({ y: offsetY.current + delta, animated: false }),
-          );
-        }
-        return { ...previous, [index]: aspect };
+      if (aspectsRef.current[index] === aspect) return;
+      const delta = anchorDelta({
+        changedIndex: index,
+        currentPage: currentPage.current,
+        previousHeight: heightsRef.current[index] ?? 0,
+        nextHeight: width / aspect,
+      });
+      aspectsRef.current = { ...aspectsRef.current, [index]: aspect };
+      setAspects(aspectsRef.current);
+      if (delta === 0) return;
+      anchor.current.add(delta);
+      requestAnimationFrame(() => {
+        const pending = anchor.current.take();
+        if (pending === 0) return;
+        offsetY.current += pending;
+        scrollRef.current?.scrollTo({ y: offsetY.current, animated: false });
       });
     };
 

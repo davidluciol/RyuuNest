@@ -42,6 +42,26 @@ export function shouldMountImage(index: number, window: PageWindow | null): bool
 }
 
 /**
+ * Acumula las compensaciones de desplazamiento hasta el siguiente cuadro. Si dos páginas de
+ * arriba terminan de cargar antes de que el navegador entregue el evento de scroll, cada una
+ * calcularía su compensación sobre un desplazamiento viejo y una se perdería: aquí se suman y se
+ * aplican juntas, una sola vez.
+ */
+export function createScrollAnchor(): { add: (delta: number) => void; take: () => number } {
+  let pending = 0;
+  return {
+    add(delta) {
+      pending += delta;
+    },
+    take() {
+      const delta = pending;
+      pending = 0;
+      return delta;
+    },
+  };
+}
+
+/**
  * Cuánto hay que mover el desplazamiento cuando una página **por encima** de la visible cambia de
  * alto al terminar de cargar, para que lo que se está leyendo no se mueva.
  */

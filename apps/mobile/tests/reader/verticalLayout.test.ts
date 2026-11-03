@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   anchorDelta,
+  createScrollAnchor,
   pageAtOffset,
   pageHeights,
   pageOffset,
@@ -74,5 +75,31 @@ describe("anchorDelta", () => {
   it("si cambia la visible o una posterior no se compensa nada", () => {
     expect(anchorDelta({ changedIndex: 3, currentPage: 3, previousHeight: 600, nextHeight: 450 })).toBe(0);
     expect(anchorDelta({ changedIndex: 5, currentPage: 3, previousHeight: 600, nextHeight: 450 })).toBe(0);
+  });
+});
+
+describe("createScrollAnchor (compensaciones que no se pierden)", () => {
+  it("varias páginas de arriba que cargan antes del siguiente cuadro suman sus compensaciones", () => {
+    const anchor = createScrollAnchor();
+    anchor.add(26.625);
+    anchor.add(26.625);
+
+    expect(anchor.take()).toBe(53.25);
+  });
+
+  it("tras tomarla queda en cero: el segundo cuadro no compensa dos veces", () => {
+    const anchor = createScrollAnchor();
+    anchor.add(10);
+    anchor.take();
+
+    expect(anchor.take()).toBe(0);
+  });
+
+  it("una compensación negativa (una página de arriba que encoge) resta", () => {
+    const anchor = createScrollAnchor();
+    anchor.add(30);
+    anchor.add(-12);
+
+    expect(anchor.take()).toBe(18);
   });
 });
