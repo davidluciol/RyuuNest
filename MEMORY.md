@@ -163,9 +163,6 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - 🧍 **`app.json` está en `0.0.0`**: por eso `useSourcesData` no pasa `appVersion` al validador; un módulo con `minAppVersion` mayor se rechazaría entero. Fijar la versión de la app antes de publicar módulos con `minAppVersion`.
 - 🧰 El script e2e de F20 quedó preparado, pero no se ejecutó con Playwright porque el entorno no incluye el paquete y no se añadió una dependencia. La auditoría interactiva del export web sí comprobó la pantalla, el cambio NSFW, Biblioteca/Descubrir, overflow, consola y red.
 - 🧍 Antes de fusionar el PR de F20, ejecutar F32 con un módulo declarativo real y completar F33 con la revisión general UX/UI; no dar por suficiente la verificación sobre fixtures o el export web.
-
-- 🧍 **Emulador Android sin usar (postergado por el humano, 2026-11-03):** el AVD `Medium_Phone_API_37.0` existe, pero falta el hipervisor de Windows (AEHD no instalado, WHPX no activo) y el emulador no arranca (`x86_64 emulation currently requires hardware acceleration!`). Si se quiere recuperarlo: instalar AEHD (vía SDK Manager o instalador del SDK) o habilitar WHPX; ambas tocar el sistema con permisos de administrador. Mientras tanto, la verificación nativa va por teléfono físico con agent-device (Regla 5b de `AGENTS.md`, P-127).
-
 ### Del agente (orden sugerido)
 0. **Bug de favorito (P-126, F28):** tarea nueva con prueba en rojo — `toggleFavorite` debe hacer upsert de la fila `series` (y el lector al abrir capítulo), o la biblioteca queda vacía; bloquea QAw1.
 1. **Cierre de la API 1.0 (ADR-0003, `tasks/todo.md`):** T37 ✅ → T38 (compatibilidad, R3) → T39 (formato declarativo, `pages.imageHeaders`, R2) → T40 (ejecución de `script`, R1, con spike 🧍) → T41 (puerta `zonatmo` + `m440`, 🧍; relajar antes la regla «dos releases» del arnés, P-121). T38 es núcleo y SDK, sin UI y sin dependencias del humano: seguir por ahí.
