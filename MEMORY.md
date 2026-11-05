@@ -139,9 +139,12 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 **Verificación**
 - **P-127 Verificación nativa con agent-device (decisión del humano, 2026-11-03):** la app nativa (móvil, Android TV) se verifica con el MCP **agent-device** (CLI `agent-device` 0.21.36; servidor MCP `agent-device mcp` ya en `~/.config/opencode/opencode.jsonc`; repo `callstack/agent-device`, fuente: su README en GitHub). Playwright queda para el cliente web y la galería; así se resuelve la decisión pendiente de Regla 5 en `AGENTS.md`. Regla 5b nueva con el flujo (`open` → `snapshot` → `press`/`fill` con `settle` → verificar con `wait`/`diff`; `close` libera el claim), la instalación del CLI/MCP si faltan (siempre preguntando antes) y las advertencias probadas en este PC: emulador parado por falta de hipervisor (AEHD/WHPX), firma de `press` con `target.kind: "ref"`, refs solo en la última salida y catálogo de Code Mode volátil tras reiniciar el servidor. **Pendiente de probar:** que los `testID` de RN (`screen-<id>`) se ven en el snapshot con la app corrienda.
 
+- **P-129 Reglas de AGENTS.md (2026-11-04):** reescritura con autoridad documental, alcance, TDD, intentos/escalado, UI/animaciones, Playwright/agent-device, skills por categoría, Graphify, Git, DoD/cierre y «Evitar». Se añade Scrum como proceso pendiente de definir; `tasks/plan.md` y `tasks/todo.md` siguen siendo la fuente de trabajo.
+
 ## 4. Pendientes y sugerencias
 
 ### Del humano
+- 🧍 **Definir el proceso Scrum** (ceremonias, artefactos, duraciones, roles y métricas) en una sesión aparte; a partir de ahora el proyecto se gestiona con Scrum.
 - 🧍 **Prueba y captura en el POCO F5 Pro** (cierra F11/AC-12; también F13, F14c con base vacía y F15/F15b; la prueba de Descubrir con un módulo instalado necesita F16). *Sugerencia:* una sola sesión con el APK compilado para todas las pantallas. **F28 ya hizo la parte web** (`docs/capturasF28/` + `F28-verificacion.md`): AC-12 solo falta en dispositivo (P-124).
 - 🧍 **Medir el tope de imágenes** (P-45) con el panel de `apps/mobile` y **revalidar RNF-1 (<3 s)** con APK compilado; las mediciones previas son de la app en desarrollo (POCO 4580 ms, S25 1940 ms, MiBox 5600 ms). Con eso se cierra T05 y se ajustan las constantes de P-63.
 - 🧍 Reservar el org npm `@ryuunest`.

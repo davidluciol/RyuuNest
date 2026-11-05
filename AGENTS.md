@@ -1,58 +1,118 @@
 # AGENTS.md: reglas para quien trabaje en RyuuNest
 
-> Lo leen todos los agentes (Opencode u otros) al empezar. Si cambias de agente o de herramienta, estas reglas siguen igual.
-> Proyecto: lector personal y de código abierto de manga, manhua, manhwa y cómics con módulos de scraping instalables (GPL-3.0).
+> Lo leen todos los agentes (OpenCode u otros) al empezar. Si cambias de agente o de herramienta, estas reglas siguen igual.
+> Proyecto: lector personal y de código abierto (GPL-3.0) de manga, manhua, manhwa y cómics con módulos de scraping instalables. Monorepo pnpm + TypeScript estricto.
 
-## 0. Al empezar cada sesión
+## 0. Autoridad y arranque de sesión
 
-1. Lee `MEMORY.md` completo: estado actual, decisiones y preguntas abiertas.
-2. Lee de `SPEC.md` las secciones que toca tu tarea (el orden de autoridad está en su cabecera).
-3. Si tocas interfaz, lee `DESIGN_RULES.md` y `DESIGN.md`, y abre el `screen.png` y el `code.html` de la pantalla en `design/stitch/`.
-4. No uses documentos fuera de ese orden de autoridad para decidir nada.
-5. Manten el desarollo actuaizado cualquier herramienta, libreria o framework que uses para el proyecto. usando Context7 para obtener la documentacion mas actualizada. Si ctx7 no tiene la documentacion, busca en internet y anota en `MEMORY.md` la fuente.
+**Orden de autoridad** (si dos documentos se contradicen):
 
-## 1. Regla 1: ante la duda, pregunta al humano
+1. `docs/SPEC.md`: **qué** hace la app.
+2. `DESIGN_RULES.md`: **qué se toma del diseño y cómo se usa el color**.
+3. `DESIGN.md`: **cómo se ve** cada componente.
+4. Los `screen.png` de `design/stitch/`: composición.
+5. Los `code.html`: solo referencia de estructura.
+6. `docs/IDEA.md`: contexto.
+
+- Lee `MEMORY.md`, `tasks/todo.md` y las secciones del SPEC que toques. Si tocas UI, lee además `DESIGN_RULES.md`, `DESIGN.md` y el `screen.png`/`code.html` de esa pantalla.
+- **SPEC:** `docs/SPEC.md`. **PLAN:** `tasks/plan.md`. **TODO:** `tasks/todo.md`. `tasks/complexity.md` §1 fija el tamaño de sesión y el escalado.
+- Antes de buscar código, consulta Graphify (§10); después lee solo los archivos y rangos localizados.
+- Para APIs de librerías, frameworks o CLI usa **Context7**: `npx ctx7@latest library <nombre> "<tema>"` y luego `npx ctx7@latest docs <id> "<tema>"`. Si no tiene la documentación, busca en internet y anota la fuente en `MEMORY.md`.
+- Si el humano escribe `/graphify`, usa la skill o instrucciones de Graphify antes de hacer otra cosa.
+- No uses documentos fuera de este orden para decidir nada.
+
+## 1. Ante la duda, pregunta (Regla 1)
 
 **Preguntar es mejor que inventar.** No rellenes huecos con suposiciones.
 
-- Pregunta cuando falte un dato, un requisito sea ambiguo, el SPEC no cubra el caso, dos documentos se contradigan o una decisión tenga consecuencias que no se puedan deshacer fácilmente.
-- No inventes: datos de ejemplo con obras reales, versiones de librerías (se fijan en la Fase 0), URLs, textos de la interfaz que el diseño no tenga, cifras, nombres de módulos o licencias.
+- Pregunta cuando falte un dato, un requisito sea ambiguo, el SPEC no cubra el caso, dos documentos se contradigan o una decisión tenga consecuencias difíciles de deshacer.
+- No inventes: datos de ejemplo con obras reales, versiones de librerías (se fijan en la Fase 0), URLs, textos de interfaz que el diseño no tenga, cifras, nombres de módulos o licencias.
 - Una buena pregunta es concreta: di qué necesitas, da 2 o 3 opciones con tu recomendación y el efecto de cada una. Una pregunta por tema.
 - Mientras esperas respuesta, sigue con lo que no dependa de ella y deja claro qué quedó bloqueado.
-- Cuando el humano responda, anota la decisión en `MEMORY.md`.
+- Cuando el humano responda, anota la decisión en `MEMORY.md` (§3) y, si cambia el alcance, actualiza `tasks/todo.md`.
 
-## 2. Regla 2: `MEMORY.md` se actualiza en cada sesión
+## 2. MEMORY.md (Regla 2)
 
-- **Cada sesión agrega al menos una entrada** en la bitácora de `MEMORY.md`, aunque solo sea «sin cambios relevantes; se avanzó en X».
-- `MEMORY.md` guarda solo lo importante: decisiones, elecciones del humano, recomendaciones aceptadas o descartadas, hitos y preguntas abiertas. No es un registro de comandos ni de cambios menores.
-- Si una decisión cambia, no borres la anterior: marca la vieja como reemplazada y enlaza la nueva.
-- Antes de terminar, repasa la lista de cierre (sección 8).
+- `MEMORY.md` guarda solo lo importante: decisiones, elecciones del humano, recomendaciones aceptadas o descartadas, hitos y preguntas abiertas. **No es un registro de comandos ni de cambios menores.**
+- Cada sesión lo actualiza si hay algo importante: al cerrar un hito, añade o edita su línea en §2; las decisiones nuevas o cambiadas van en §3; las preguntas respondidas pasan de §4 a §3.
+- No borres una decisión: marca la anterior como reemplazada y enlaza la nueva.
+- Las preguntas sin resolver se listan en §4 y se dicen al humano al cerrar.
+- Antes de terminar, repasa la lista de cierre (§13).
 
-## 3. Regla 3: todo en componentes reutilizables
+## 3. Alcance (Regla 3)
+
+- **Una tarea por sesión** y **~5 archivos como máximo**. Si hace falta más, para y propón dividir la tarea.
+- Antes de editar, ten claro: objetivo, archivos permitidos, pruebas que debes ejecutar y criterios de aceptación. Si no están claros, pregunta.
+- No arregles «de paso» nada fuera del alcance: anótalo en `tasks/todo.md` o `MEMORY.md` y sigue.
+- No añadas dependencias, cambies versiones, hagas refactors masivos ni migraciones no pedidas. Las versiones se fijan en la Fase 0.
+- **El SPEC manda sobre la funcionalidad.** Si el diseño muestra algo fuera de la v1, se omite (RF-44) y se anota en `design/stitch/DIFFS.md`.
+- `tasks/plan.md` es el PLAN; `tasks/todo.md` es el TODO. Al cerrar, marca `[x]` y deja el siguiente paso.
+- Si el humano pide algo que contradice el SPEC, pregunta antes de implementarlo.
+
+## 4. TDD y calidad (Regla 4)
+
+- **Rojo → verde → limpio.** Cada tarea de código empieza por una prueba que **falla**; sin test rojo no se implementa. No edites un test para que pase salvo que el criterio de aceptación lo exija.
+- La regla anterior aplica a código ejecutable. En tareas solo de documentación o configuración, valida enlaces, JSON y formato, y pasa el gate; no inventes un test artificial.
+- Avanza por cortes pequeños (rojo → verde) y verifica la suite en cada corte. Cada tarea termina con su commit.
+- Gate final: `pnpm lint`, `pnpm -r typecheck`, `pnpm -r test`, `pnpm -r build`. En Windows, si Vitest falla con `.vitest-cache` o workers, repite con `pnpm -r --workspace-concurrency=1 test`; no es un fallo del código.
+- Las pruebas del contrato de módulos usan fixtures HTML/JSON guardados, **nunca sitios reales**.
+- TypeScript en modo estricto; sin `any` sin justificar; sin código muerto.
+- Dispositivos de prueba: POCO F5 Pro, Galaxy S25 Ultra y Xiaomi MiBox 4 (Android 9, 2 GB), que fija el piso de rendimiento.
+
+## 5. Intentos, bloqueos y escalado (Regla 5)
+
+- Cada intento debe probar una **hipótesis distinta**. No repitas el mismo comando, cambio o parche esperando otro resultado.
+- **Máximo 2 intentos por el mismo error o test.** Si el segundo falla, **detente** y entrega:
+  1. qué falla (error o test exacto);
+  2. qué probaste en cada intento;
+  3. archivos tocados;
+  4. estado de lint, tipos y tests;
+  5. tu siguiente hipótesis o la decisión que necesitas del humano.
+
+  Escribe exactamente: **«modelo con poca potencia cambiar.»**
+- **Detente de inmediato, sin esperar al segundo intento**, si:
+  - hay un bloqueo de arquitectura o de contrato público;
+  - la decisión es irreversible o toca seguridad/permisos;
+  - falta un dato que solo el humano puede dar (mediciones, versiones, diseño, licencia);
+  - el coste se sale del límite asignado.
+- Escala de uno en uno (N1 → N2 → N3…). No saltes niveles ni uses modelos de reserva sin permiso.
+- Si el primer intento pasa y los criterios se cumplen, **no escales** ni pidas otra revisión completa sin una razón concreta.
+- No ocultes un fallo: si un test queda en rojo, dilo y no lo marques como terminado.
+
+## 6. Componentes, UI y animaciones (Regla 6)
+
+**Componentes reutilizables**
 
 - Todo elemento de interfaz que se use o pueda usarse más de una vez es un **componente reutilizable** con props tipadas: botones, chips, insignias, tarjetas de portada, filas de capítulo, campos, hojas, diálogos, barras, estados vacíos y de error, etiquetas de sección.
 - Antes de crear uno, busca si ya existe uno igual o parecido y amplíalo. No dupliques.
-- Los componentes no llevan colores, tamaños, radios ni espacios literales: solo tokens de `ui-tokens`.
+- Los componentes no llevan colores, tamaños, radios ni espacios literales: solo tokens de `packages/ui-tokens`.
 - Cada componente nuevo se añade a la **galería de componentes** con todos sus estados (normal, presionado, foco, deshabilitado, cargando, error si aplica).
-- **Excepción:** un elemento individual solo se permite con una razón real (es único de una pantalla y no tiene sentido fuera de ella). Márcalo con un comentario `// single-use: <razón>` y si dudas, pregunta (Regla 1).
-- La carpeta exacta de los componentes se define en la Fase 0 y queda en `MEMORY.md`.
+- **Excepción:** un elemento individual solo se permite con una razón real (es único de una pantalla y no tiene sentido fuera de ella). Márcalo con `// single-use: <razón>` y, si dudas, pregunta (Regla 1).
+- Los textos de interfaz van al catálogo de traducciones; **ninguno literal** en los componentes.
+- **Nunca copies el HTML de `design/stitch/`.** Es referencia de estructura; se traduce a React Native con tokens (SPEC §11.3).
 
-## 4. Regla 4: animaciones ligeras
+**Animaciones**
 
-Se prefieren detalles de movimiento sutiles que den vida a la interfaz, dentro de los límites del diseño:
-
-- **Sí:** estados al presionar y al enfocar, selección de chips, entrada y salida de hojas y diálogos, cambio de pestaña, aparición de la barra de progreso. Duración de 150 a 200 ms con `ease-out`.
+- Se prefieren detalles sutiles: estados al presionar/enfocar, selección de chips, entrada/salida de hojas y diálogos, cambio de pestaña, aparición de la barra de progreso. Duración de **150 a 200 ms** con `ease-out`.
 - **Solo `transform` y `opacity`.** Nada que fuerce recalcular el diseño de listas largas.
-- **Nunca en el lector** (ni animaciones ambientales, ni decorativas).
+- **Nunca en el lector** (ni animaciones ambientales ni decorativas).
 - Se respeta `prefers-reduced-motion` y el ajuste equivalente del sistema.
 - En la Xiaomi MiBox 4 (2 GB) se miden; si algo se nota lento, se desactiva en TV y se anota en `MEMORY.md`.
 - Las animaciones son componentes o hooks compartidos (por ejemplo, un `Pressable` animado), no código repetido en cada pantalla.
 
-## 5. Regla 5: verificar las pantallas con Playwright
+**Diseño**
+
+- Ningún hexadecimal ni medida literal fuera de `ui-tokens`. Solo los tokens de SPEC §11.9.
+- Datos de ejemplo: un único conjunto de fixtures coherente, con series inventadas y portadas sin texto (`DESIGN_RULES.md` D1 a D5).
+- Una etiqueta por concepto, sin tarjetas-mascota ni promesas que la v1 no cumple (`DESIGN_RULES.md`).
+- Sin telemetría, sin cuentas, sin servicios de terceros, sin CDN.
+- Nada se instala de forma automática: toda instalación de módulos pasa por confirmación manual (SPEC §7).
+
+## 7. Verificación web y galería con Playwright (Regla 7)
 
 Cada pantalla o componente de interfaz se verifica con **Playwright** antes de darse por terminado, comparándolo con su `screen.png`.
 
-**Alcance honesto.** Playwright controla un navegador: sirve para el cliente web y para la galería de componentes cuando corre en web. No controla la app nativa de Android: esa se verifica con **agent-device** (MCP) según la Regla 5b (decisión del humano, P-127). No des por verificada una pantalla nativa solo por haber pasado en web: Playwright no la cubre.
+**Alcance honesto.** Playwright controla un navegador: sirve para el cliente web y para la galería de componentes cuando corre en web. No controla la app nativa de Android: esa se verifica con **agent-device** (MCP) según la Regla 8. No des por verificada una pantalla nativa solo por haber pasado en web: Playwright no la cubre.
 
 **Procedimiento**
 
@@ -71,7 +131,9 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
 5. Un diff de píxeles contra `screen.png` no sirve: los datos de ejemplo son otros. Solo se usa contra capturas base propias para detectar regresiones.
 6. Registra las diferencias aceptadas en `design/stitch/DIFFS.md` y pasa la lista de 20 segundos de `DESIGN_RULES.md` (§6).
 
-## 5b. Regla 5b: verificar la app nativa con agent-device (MCP)
+La verificación web es automática: no pidas al humano que repita a mano lo que Playwright puede comprobar.
+
+## 8. Verificación nativa con agent-device (Regla 8)
 
 La app nativa (móvil, Android TV) se verifica con **agent-device**: CLI y servidor MCP que abren la app en el dispositivo real o en el emulador, leen el árbol de accesibilidad y actúan por refs. Reparto: **Playwright para el web, agent-device para lo nativo** (P-127). Documentación: `agent-device.dev/docs` (repo `callstack/agent-device`); guarda en `MEMORY.md` la fuente si la consultas de nuevo.
 
@@ -96,101 +158,97 @@ La app nativa (móvil, Android TV) se verifica con **agent-device**: CLI y servi
 - Los refs `@eN` solo valen en la última salida: haz snapshot de nuevo si el diff no trae lo que necesitas.
 - Estado y logs de sesión viven en `~/.agent-device/sessions/`, acotados a la sesión y al workspace (worktree) que reclama el dispositivo.
 
-**Pendiente de probar (no lo des por válido):** que los `testID` de React Native (p. ej. `screen-home`) aparecen en el snapshot de agent-device con la app corriendo. Hasta verificarlo, no construyas aserciones sobre el marcado de pantallas apoyado en este MCP.
+## 9. Skills por categoría (Regla 9)
 
-## 6. Reglas de alcance y diseño
+Carga **solo** las skills de la categoría de la tarea. Empieza por el `*-category-pointer` y luego la skill concreta que indique; si no existe o no basta, pide permiso antes de instalar. Máximo 2–3 skills por tarea y no cargues skills de diseño/marketing para tests, tokens o backend.
 
-- **El SPEC manda sobre la funcionalidad.** Si el diseño muestra algo fuera de la v1, se omite (RF-44) y se anota en `DIFFS.md`.
-- **Nunca copies el HTML de `design/stitch/`.** Es referencia de estructura; se traduce a React Native con tokens (SPEC §11.3).
-- Ningún hexadecimal ni medida literal fuera de `ui-tokens`. Solo los tokens de SPEC §11.9.
-- Datos de ejemplo: un único conjunto de fixtures coherente, con series inventadas y portadas sin texto (`DESIGN_RULES.md` D1 a D5).
-- Una etiqueta por concepto, sin tarjetas-mascota ni promesas que la v1 no cumple (`DESIGN_RULES.md`).
-- Los textos de la interfaz van al archivo de traducciones; ninguno literal en los componentes.
-- Sin telemetría, sin cuentas, sin servicios de terceros, sin CDN.
-- Nada se instala de forma automática: toda instalación de módulos pasa por confirmación manual (SPEC §7).
+| Categoría | Skills recomendadas |
+|---|---|
+| UI/UX web | `ui-ux-pro-max`, `ui-taste`, `design-system`, `ui-styling`, `web-dev-category-pointer` |
+| UI móvil/Android/TV | `ui-ux-pro-max`, `ui-taste`, `design-system`; `ios-design` solo si es iPhone (no es el objetivo) |
+| Diseño visual, logo, banner, social, slides | `design-category-pointer` → `design`, `design-system`, `banner-design`, `brand`, `slides`; solo si el encargo es visual |
+| Tests y verificación | `testing-category-pointer` → skill concreta; Playwright/agent-device según §7/§8 |
+| Backend / núcleo | `backend-dev-category-pointer` |
+| Base de datos | `database-category-pointer` |
+| Seguridad | `security-category-pointer` |
+| DevOps / CI | `devops-category-pointer` |
+| Git / PR | `git-category-pointer` |
+| Revisión de código | `code-review-category-pointer` |
+| Explorar código | `codebase-memory` + Graphify (§10) |
+| Documentación / textos | `writing-category-pointer` |
+| OpenCode / agentes / tooling | `opencode`, `agents-category-pointer`, `tooling-category-pointer`, `report` |
+| Marketing | `marketing-category-pointer`; solo si el humano lo pide |
 
-## 7. Calidad y dependencias
+- Si dos skills se solapan, quédate con la más específica.
+- No cargues una skill solo porque su nombre suene relacionado; lee su descripción y disparadores.
+- Si la skill requiere una dependencia o instalación, pregunta antes.
 
-- TypeScript en modo estricto. Lint, tipos y pruebas deben pasar antes de dar una tarea por terminada.
-- **Desarrollo guiado por pruebas (obligatorio).** Cada tarea empieza por una prueba que **falla** (rojo); después se implementa lo mínimo para pasarla (verde) y se limpia. Si no hay ningún test en rojo, la tarea todavía no ha empezado: **nunca se implementa antes de tener su prueba**. Se avanza por cortes pequeños (rojo → verde) dentro de la misma tarea, verificando la suite en cada corte, y cada tarea termina con su commit.
-- Las pruebas del contrato de módulos usan HTML guardado (fixtures), no sitios reales.
-- **No añadas dependencias sin preguntar.** Las versiones de Expo, React Native y librerías se fijan en la Fase 0 (Regla 1).
-- Dispositivos de prueba: POCO F5 Pro, Galaxy S25 Ultra y Xiaomi MiBox 4 (Android 9, 2 GB), que fija el piso de rendimiento.
-- Convenciones por defecto (el humano puede cambiarlas): identificadores de código en inglés, igual que el contrato del SPEC; documentos, mensajes de commit y respuestas al humano en español.
+## 10. Graphify (Regla 10)
 
-## 8. Lista de cierre de sesión
+- `graphify-out/graph.json` es la vía para explorar código. **Antes del primer grep, búsqueda o lectura de código**, ejecuta `graphify query "<pregunta>"`; usa `graphify path "A" "B"` para relaciones y `graphify explain "X"` para conceptos.
+- Si existe `graphify-out/wiki/index.md`, úsalo para navegación amplia. `GRAPH_REPORT.md` solo para arquitectura general o cuando query/path/explain no den contexto.
+- Tras modificar código, ejecuta `graphify update .` (AST, sin coste de API). Un `graph.json` sucio o un diff grande es esperado; no lo descartes ni lo marques como churn.
+- Indexa todos los paquetes del monorepo. Si el grafo no existe, créalo antes de explorar.
+- Si falta el CLI: `uv tool install "graphifyy[mcp]"` (aporta `graphify` y `graphify-mcp`); si falta la skill de Claude: `graphify install --platform claude --project`. Si la instalación toca el sistema, pide permiso.
+- El MCP puede configurarse en `.mcp.json` (`graphify-mcp --graph graphify-out/graph.json`) o en la configuración del agente; si no está disponible, usa el CLI.
+- Si el humano escribe `/graphify`, usa la skill o instrucciones de Graphify antes de otra cosa.
 
-- [ ] Lint, tipos y pruebas en verde.
-- [ ] App nativa tocada verificada con agent-device (Regla 5b): sesión cerrada con `close` y dispositivo liberado (o anotado que falta la verificación).
+## 11. Git (Regla 11)
+
+- Antes de empezar: `git pull origin master` (rama principal actual; si cambia, usa la que indique el repo). Trabaja en una rama propia: `feature/<Tarea>-<slug>`, `fix/<slug>` o `docs/<slug>`.
+- **Nunca** hagas push directo a `master`.
+- Commits atómicos y descriptivos: `<tipo>: <descripción breve>` (`feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `style`, `chore`). Documentos, commits y respuestas al humano en español; identificadores de código en inglés.
+- Antes de commit: `pnpm lint`, `pnpm -r typecheck`, `pnpm -r test` (y `pnpm -r build` si toca). Si algo falla, arréglalo antes de hacer push.
+- Al terminar: `gh pr create` con título, qué/por qué, criterios de aceptación, capturas si hay UI y evidencia del gate. **No fusiones el PR**: lo revisa y lo fusiona el humano.
+- No dejes ramas huérfanas. Si una tarea se cancela, borra su rama.
+
+## 12. Definición de terminado (Regla 12)
+
+Una tarea está terminada solo si:
+
+- [ ] Build, lint, tipos y pruebas en verde.
+- [ ] Criterios de aceptación cumplidos y verificaciones de la tarea ejecutadas.
+- [ ] Sin cambios fuera del alcance ni dependencias innecesarias.
+- [ ] Sin regresiones; sin `any` sin justificar ni código muerto.
+- [ ] Revisión visual cuando corresponda (Playwright/agent-device).
+- [ ] Componentes nuevos en la galería; sin valores literales; textos traducidos.
+- [ ] Diferencias aceptadas en `design/stitch/DIFFS.md`.
+- [ ] `MEMORY.md` actualizado (hito/decisiones) y preguntas abiertas comunicadas.
+- [ ] Intervención manual registrada, si la hubo.
+- [ ] Coste y número de iteraciones documentados en la tarea o en `MEMORY.md`.
+
+**Criterio económico:** `coste por éxito = coste total de las ejecuciones / tareas completadas correctamente`.
+
+## 13. Cierre de sesión (Regla 13)
+
+- [ ] Gate en verde (`pnpm lint`, `pnpm -r typecheck`, `pnpm -r test`; `pnpm -r build` si toca).
+- [ ] App nativa tocada verificada con agent-device: sesión cerrada con `close` y dispositivo liberado (o anotado que falta).
 - [ ] Pantallas tocadas verificadas con Playwright (cliente web y galería).
 - [ ] Componentes nuevos en la galería; ningún valor literal.
 - [ ] Diferencias aceptadas en `design/stitch/DIFFS.md`.
-- [ ] Entrada nueva en `MEMORY.md`: qué se hizo, decisiones, siguiente paso.
-- [ ] Preguntas sin resolver listadas en `MEMORY.md` y dichas al humano.
+- [ ] `MEMORY.md` actualizado y preguntas sin resolver listadas y comunicadas.
+- [ ] Rama y PR listos; sin cambios sin confirmar del trabajo de la tarea.
 
-## 9. Regla 9: Git
-- Cada tarea debe tener su branch riênga, por ejemplo: `feature/T16-declarative-runtime`.
-- Antes de empezar a trabajar en una tarea, asegúrate de que tu branch local esté actualizado con la rama principal (generalmente `main` o `master`). Usa `git pull origin main`.
-- Cada commit debe ser atómico y descriptivo. Sigue el formato: `<tipo>: <descripción breve>`.
-    - Ejemplos de tipos: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `style`, `chore`.
-- Antes de subir tus cambios, corre `pnpm lint`, `pnpm -r typecheck` y `pnpm -r test`. Si algo falla, arréglalo antes de hacer push.
-- Cuando una tarea esté terminada, crea un Pull Request (PR) para fusionarla con la rama principal. El PR debe incluir:
-    - Un título claro que resuma los cambios.
-    - Una descripción detallada de lo que se implementó y por qué.
-    - Los criterios de aceptación de la tarea cumplidos.
-    - Capturas de pantalla o GIFs si la tarea incluye cambios visuales.
-    - Cualquier nota adicional para el revisor.
-- No hagas push directo a la rama principal. Siempre pasa por un PR y revisión.
-- No dejes branches huérfanos en el repositorio.
-- Crea el Pull Request automáticamente con `gh pr create` en cuanto la tarea esté terminada y el gate (`pnpm lint`, `pnpm -r typecheck`, `pnpm -r test`) esté en verde; no esperes a que el humano lo pida. Incluye en el cuerpo la evidencia del gate. **No fusiones el PR**: lo revisa y lo fusiona el humano.
+## 14. Evitar (Regla 14)
 
-## 10. Evitar
+- Repetir una auditoría o un gate que ya está en verde.
+- Rehacer una implementación anterior sin una regresión concreta.
+- Refactors, renombres o formateos masivos fuera del alcance.
+- Añadir dependencias, cambiar versiones o instalar herramientas sin permiso.
+- Generar ADRs, planes de fase, capturas o documentación que nadie pidió.
+- Ofrecer opciones de diseño cuando el encargo es una corrección técnica.
+- Cargar todas las skills o skills de diseño/marketing en tareas de tokens, tests o backend.
+- Copiar HTML de `design/stitch/` o usar valores literales fuera de `ui-tokens`.
+- Meter `fetch` directo a dominios externos, CDN, telemetría, cuentas o servicios de terceros.
+- Inventar datos, versiones, URLs, textos, licencias o mediciones.
+- Hacer push a `master`, fusionar el PR o dejar ramas huérfanas.
+- Implementar antes de tener un test en rojo.
+- Ignorar un fallo de test o saltarte el gate «porque solo es documentación».
+- Usar `any` sin justificar, código muerto o tests tautológicos.
+- Ocultar un bloqueo o un test en rojo.
 
-- Evitar auditorías repetidas de todo el repositorio. Si `F<numbertask>` ya dejó pruebas y build correctos, `F<numbertask+1>` debería reutilizar ese resultado, no rehacer la implementación.
-- Evita si ya hiciste una auditoria del repositorio, no la repitas.
-- Seleccionar las skills por tarea. No cargar todas las skills de diseño y marketing en una tarea de tokens o pruebas unitarias.
-- Limitar el alcance de los cambios. Una tarea debe especificar qué archivos puede modificar y qué pruebas debe ejecutar.
-- Separar implementación y revisión. Una segunda revisión puede ser valiosa para componentes críticos, pero no necesitas pagar una revisión frontier de cada archivo trivial.
-- Evitar costos innecesarios. No generes planes de fases, ADRs ni capturas de pantalla para tareas de mantenimiento o corrección de errores menores. El humano decidirá si vale la pena documentarlas a fondo.
-- No ofrezcas opciones de diseño si el usuario solo pide una corrección técnica.
-- No propongas tareas de documentación o planificación a menos que el usuario las solicite explícitamente.
-- No generes ADRs o “planes de fase” como respuesta automática a una tarea de implementación. Esos documentos se crean solo cuando el humano lo pide de forma explícita.
-- Escalar por fallos concretos. Si el modelo no consigue pasar una prueba después de una corrección razonable, entonces se escala. No se escala solamente porque el trabajo parezca grande.
-- **Escalar si despues de 2 intentos fallidos, detente para escalar al siguiente modelo.**
-   - **Caso 1: Primer fallo recuperable**
-   - **Caso 2: Segundo fallo relevante o bloqueo de arquitectura**
-   - **Caso 3: Coste inesperado. Detén la ejecución al alcanzar el límite asignado.**
-   - **Caso 4 Exitoso: Primera ejecución correcta. Si pasan las pruebas y se cumplen los criterios de aceptación, no escales ni solicites otra revisión completa sin una razón concreta.**
+## 15. Scrum (pendiente de definir)
 
-## 11. Qué debe significar **tarea completada**
-- Build y pruebas obligatorias en verde.
-- Criterios de aceptación cumplidos.
-- Sin cambios fuera del alcance.
-- Sin regresiones ni dependencias innecesarias.
-- Revisión visual cuando corresponda.
-- Intervención manual registrada.
-- Coste y número de iteraciones documentados.
-El criterio económico principal sería:
-coste por exito = coste total de las ejecuciones / tareas completadas correctamente
-
-## 12. Sugerencias
-- Mide la tarea por complejidad, mira la categoria de skills si se requiere mas informacion para una area especifica usa skill-find y si esta no es suficiente pide permiso al humano para instalar la skill necesaria.
-- No des por sentado que el humano sabe lo que quiere, siempre pregunta y confirma.
-- Cuando tengas que trabajar con alguna tecnologia primero asegurate que estas trabajando con la informacion mas reciente con Context7 (ctx7).
-- Si la tarea requiere el desarrollo de front-end, las verificaciones tienes que hacerlas de forma automatica con playwright, no es necesario que el humano las verifique de forma manual.
-- Ya que el proyecto se ha hecho bastante grande, indexa el proyecto en Grafify en caso de que no este, si ya esa indexado usa la SKILL de Grafify para obtener contexto del proyecto.
-- indexar todos los paquetes de monorepo en Grafify.
-
-## graphify
-
-This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
-
-When the user types `/graphify`, use the installed graphify skill or instructions before doing anything else.
-
-Rules:
-- When graphify-out/graph.json exists, run `graphify query "<question>"` before your first grep, search or source-file read for a codebase question, and put this rule in every subagent prompt that explores code. Read raw files only for lines the graph or an earlier read already located. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- Dirty graphify-out/ files are expected after hooks or incremental updates; dirty graph files are not a reason to skip graphify. Only skip graphify if the task is about stale or incorrect graph output, or the user explicitly says not to use it.
-- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
-- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
-- A committed graphify-out/graph.json is rewritten whole on every build, so a large diff to it in a pull request is expected. Do not flag it as churn or suggest skipping the graph rebuild or its hooks.
+- A partir de ahora el proyecto se gestiona con **Scrum**. Las ceremonias, artefactos, duraciones, roles y métricas se definirán en una sesión aparte; **no los inventes**.
+- Mientras se define, `tasks/plan.md` (PLAN) y `tasks/todo.md` (TODO) siguen siendo la fuente de trabajo, y `MEMORY.md` la de decisiones.
+- Cuando el humano cierre el proceso, actualiza esta sección y `MEMORY.md` con la decisión.
