@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { spacing, typography, dragonNightColors } from "@ryuunest/ui-tokens";
 
 import { settingsRowLayout, settingsRowStyle } from "./sheetStyles";
@@ -52,14 +53,14 @@ export default function SettingsRow({
   return onPress === undefined ? (
     <View style={settingsRowStyle()}>{row}</View>
   ) : (
-    <Pressable
+    <FocusPressable
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
       style={settingsRowStyle()}
     >
       {row}
-    </Pressable>
+    </FocusPressable>
   );
 }
 

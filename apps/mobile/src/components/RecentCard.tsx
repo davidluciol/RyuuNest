@@ -1,12 +1,10 @@
-import { Image, Pressable, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { Image, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 import { spacing, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "./Badge";
 import { progressBarStyle } from "./coverCardStyles";
-import {
-  recentCardColors,
-  recentCardStyle,
-} from "./recentCardStyles";
+import { recentCardColors, recentCardStyle } from "./recentCardStyles";
 import { textStyle } from "./textStyle";
 
 /**
@@ -48,7 +46,7 @@ export default function RecentCard({
   const percent = Math.round(progress * 100);
 
   return (
-    <Pressable
+    <FocusPressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
       onPress={onPress}
@@ -77,10 +75,7 @@ export default function RecentCard({
         ) : null}
       </View>
       <View style={[styles.textBlock, { marginTop: shape.gapCoverText }]}>
-        <Text
-          style={[styles.title, { color: colors.title }]}
-          numberOfLines={shape.titleMaxLines}
-        >
+        <Text style={[styles.title, { color: colors.title }]} numberOfLines={shape.titleMaxLines}>
           {title}
         </Text>
         {chapter ? (
@@ -92,7 +87,7 @@ export default function RecentCard({
           </View>
         ) : null}
       </View>
-    </Pressable>
+    </FocusPressable>
   );
 }
 
