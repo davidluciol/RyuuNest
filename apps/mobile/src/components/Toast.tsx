@@ -1,5 +1,6 @@
+import FocusPressable from "./FocusPressable";
 import { useEffect } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import { textStyle } from "./textStyle";
@@ -59,7 +60,7 @@ export default function Toast({
       <View testID="toast-dot" style={toastDotStyle(severity)} />
       <Text style={[styles.message, { color: colors.textPrimary }]}>{message}</Text>
       {actionLabel !== undefined ? (
-        <Pressable
+        <FocusPressable
           accessibilityRole="button"
           accessibilityLabel={actionLabel}
           hitSlop={touchTarget.min / 4}
@@ -69,9 +70,9 @@ export default function Toast({
           <Text style={[styles.actionText, { color: accent }]} numberOfLines={1}>
             {actionLabel}
           </Text>
-        </Pressable>
+        </FocusPressable>
       ) : null}
-      <Pressable
+      <FocusPressable
         accessibilityRole="button"
         accessibilityLabel={t("toast.close")}
         hitSlop={touchTarget.min / 4}
@@ -79,7 +80,7 @@ export default function Toast({
         style={styles.close}
       >
         <X size={spacing.md} color={colors.textSecondary} />
-      </Pressable>
+      </FocusPressable>
     </View>
   );
 }

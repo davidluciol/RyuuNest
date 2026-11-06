@@ -8,11 +8,7 @@ import { describe, expect, it } from "vitest";
  * `Pressable` crudo: la lista solo puede menguar, y un componente nuevo con
  * `Pressable` crudo rompe esta prueba.
  */
-const PENDING = [
-  "SheetModal.tsx",
-  "Switch.tsx",
-  "Toast.tsx",
-];
+const PENDING: string[] = [];
 
 /** Ya pintan el anillo con `focusRingStyle` por su cuenta (`navItemStyle`). */
 const OWN_RING = ["BottomNav.tsx"];
