@@ -295,6 +295,19 @@ export const DEFAULT_LIBRARY_FILTERS: LibraryFilters = {
 };
 
 /**
+ * F34 — filas de la cuadrícula de Biblioteca cuando la pantalla se muestra dentro de otro
+ * contenedor con scroll (galería): se dibuja sin `FlatList` para no anidar listas virtualizadas.
+ * Conserva el orden y no muta la entrada.
+ */
+export function libraryGridRows<T>(items: readonly T[], columns: number): T[][] {
+  const rows: T[][] = [];
+  for (let index = 0; index < items.length; index += columns) {
+    rows.push(items.slice(index, index + columns));
+  }
+  return rows;
+}
+
+/**
  * Aplica los filtros a la lista de series (lógica de presentación; el
  * núcleo hace la consulta real con SQL en T23).
  */

@@ -4,6 +4,7 @@ import {
   DEFAULT_LIBRARY_FILTERS,
   SAMPLE_LIBRARY_DATA,
   filterLibrarySeries,
+  libraryGridRows,
   type LibraryFilters,
 } from "../../src/screens/library/libraryFixtures";
 
@@ -12,6 +13,19 @@ import {
  * Prueba la función `filterLibrarySeries` que usa la pantalla; el núcleo
  * hará la consulta real con SQL (T23).
  */
+describe("libraryGridRows (F34: cuadrícula de Biblioteca sin lista virtualizada)", () => {
+  it("parte las series en filas de 3 sin perder ni desordenar ninguna", () => {
+    expect(libraryGridRows(["a", "b", "c", "d", "e"], 3)).toEqual([
+      ["a", "b", "c"],
+      ["d", "e"],
+    ]);
+  });
+
+  it("sin series no devuelve filas", () => {
+    expect(libraryGridRows([], 3)).toEqual([]);
+  });
+});
+
 describe("filterLibrarySeries (F14a/F14b)", () => {
   const all = SAMPLE_LIBRARY_DATA.series;
 

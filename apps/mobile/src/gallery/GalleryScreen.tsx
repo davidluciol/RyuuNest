@@ -431,7 +431,7 @@ export default function GalleryScreen() {
 
         <Text style={styles.groupLabel}>{t("gallery.component.libraryScreen")}</Text>
         <View style={styles.shellPreview}>
-          <LibraryScreen data={SAMPLE_LIBRARY_DATA} />
+          <LibraryScreen data={SAMPLE_LIBRARY_DATA} virtualize={false} />
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.modulePicker")}</Text>
