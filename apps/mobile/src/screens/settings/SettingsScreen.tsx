@@ -224,7 +224,7 @@ export default function SettingsScreen({
             right={
               <Button
                 variant="secondary"
-                label={t("settings.cache.clear")}
+                label={t("settings.cache.clearAction")}
                 disabled={busy}
                 onPress={onClearCache}
                 accessibilityLabel={t("settings.cache.clear")}

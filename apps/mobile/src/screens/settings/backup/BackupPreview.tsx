@@ -28,7 +28,7 @@ export default function BackupSection({ controller, disabled = false }: BackupSe
         right={
           <Button
             variant="secondary"
-            label={t("settings.backup.export")}
+            label={t("settings.backup.exportAction")}
             disabled={disabled}
             onPress={() => void controller.exportBackup()}
             accessibilityLabel={t("settings.backup.export")}
@@ -42,7 +42,7 @@ export default function BackupSection({ controller, disabled = false }: BackupSe
         right={
           <Button
             variant="secondary"
-            label={t("settings.backup.import")}
+            label={t("settings.backup.importAction")}
             disabled={disabled}
             onPress={() => void controller.importBackup()}
             accessibilityLabel={t("settings.backup.import")}

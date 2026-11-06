@@ -50,7 +50,8 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
       await page.getByText("Paginado D → I · Manga").waitFor({ state: "visible" });
       await page.getByText("Paginado I → D · Cómic").waitFor({ state: "visible" });
       await page.getByText("Almacenamiento y caché").waitFor({ state: "visible" });
-      await page.getByText("Vaciar caché de imágenes").waitFor({ state: "visible" });
+      await page.getByText("Caché de imágenes", { exact: true }).first().waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Vaciar caché de imágenes" }).waitFor({ state: "visible" });
 
       // F21: la sección «Respaldo» aparece con sus dos filas (RF-37, RF-38).
       await page.getByText("Respaldo", { exact: true }).waitFor({ state: "visible" });

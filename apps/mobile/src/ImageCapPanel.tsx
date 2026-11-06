@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 import paginaCalibracion from "../assets/pagina-calibracion.png";
+import { t } from "./i18n";
 import { clampCount, decodedBytes, toMB } from "./imageBudget";
 
 /**
@@ -41,7 +42,7 @@ export default function ImageCapPanel() {
           <Text style={styles.buttonLabel}>+1</Text>
         </Pressable>
         <Pressable style={styles.button} onPress={() => setCount(0)} hitSlop={8}>
-          <Text style={styles.buttonLabel}>Vaciar</Text>
+          <Text style={styles.buttonLabel}>{t("settings.cache.clearAction")}</Text>
         </Pressable>
       </View>
 

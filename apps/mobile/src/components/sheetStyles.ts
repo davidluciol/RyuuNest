@@ -10,6 +10,16 @@ const colors = dragonNightColors;
 
 export const SETTINGS_ROW_MIN_HEIGHT = 56;
 
+/** Por debajo de este ancho el control baja bajo el texto (F34.2). */
+export const SETTINGS_ROW_STACK_BELOW = 400;
+
+export type SettingsRowLayout = "inline" | "stacked";
+
+/** Control a la derecha o apilado bajo el texto, según el ancho disponible. */
+export function settingsRowLayout(width: number): SettingsRowLayout {
+  return width < SETTINGS_ROW_STACK_BELOW ? "stacked" : "inline";
+}
+
 export interface SettingsRowStyleShape {
   minHeight: number;
   paddingHorizontal: number;
