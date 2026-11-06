@@ -18,6 +18,7 @@ import Button from "../components/Button";
 import ChapterRow from "../components/ChapterRow";
 import Checkbox from "../components/Checkbox";
 import Chip from "../components/Chip";
+import ChipScroller from "../components/ChipScroller";
 import ContinueCard from "../components/ContinueCard";
 import CoverCard from "../components/CoverCard";
 import EmptyState from "../components/EmptyState";
@@ -235,6 +236,13 @@ export default function GalleryScreen() {
           <Chip label={t("gallery.chip.selected")} selected />
         </View>
 
+        <Text style={styles.groupLabel}>{t("gallery.component.chipScroller")}</Text>
+        <ChipScroller contentContainerStyle={styles.chipScrollerRow}>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+            <Chip key={n} label={t("gallery.chipScroller.item", { n })} selected={n === 1} />
+          ))}
+        </ChipScroller>
+
         <Text style={styles.groupLabel}>{t("gallery.component.badge")}</Text>
         <View style={styles.row}>
           <Badge label={t("gallery.badge.manhwa")} />
@@ -283,11 +291,7 @@ export default function GalleryScreen() {
             accessibilityLabel={t("gallery.switch.off")}
             onValueChange={() => {}}
           />
-          <Switch
-            value
-            accessibilityLabel={t("gallery.switch.on")}
-            onValueChange={() => {}}
-          />
+          <Switch value accessibilityLabel={t("gallery.switch.on")} onValueChange={() => {}} />
           <Switch
             value
             disabled
@@ -558,11 +562,7 @@ export default function GalleryScreen() {
             onAction={() => {}}
             onClose={() => {}}
           />
-          <Toast
-            message={t("gallery.toast.message")}
-            severity="error"
-            onClose={() => {}}
-          />
+          <Toast message={t("gallery.toast.message")} severity="error" onClose={() => {}} />
           <Toast
             testID="gallery-toast-long"
             message={t("gallery.toast.long")}
@@ -707,6 +707,7 @@ const styles = StyleSheet.create({
     ...textStyle(typography.headlineSm),
   },
   row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  chipScrollerRow: { gap: spacing.xs },
   swatch: {
     width: spacing.xl,
     height: spacing.xl,

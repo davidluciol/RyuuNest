@@ -338,6 +338,8 @@
   "gallery.component.sheetModal": "hoja modal",
   "gallery.component.toast": "aviso transitorio (toast)",
   "gallery.component.codeChip": "etiqueta de código",
+  "gallery.component.chipScroller": "fila de chips con pista de desplazamiento",
+  "gallery.chipScroller.item": "Filtro {n}",
   "gallery.component.confirmSheet": "confirmación (hoja y diálogo)",
   "gallery.component.errorBanner": "aviso inline (banner)",
   "gallery.component.errorDialog": "diálogo de error",
