@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import type { LogEntry } from "@ryuunest/core";
 import {
   dragonNightColors,
@@ -24,6 +24,7 @@ import { t } from "../../../i18n";
 import type { DiagnosticsController } from "./diagnosticsController";
 import type { DiagnosticsFlow, DiagnosticsNotice } from "./diagnosticsFlow";
 import { confirmClearMessage, eventDetailLines, eventLevel, eventWhen } from "./diagnosticsView";
+import FocusPressable from "../../../components/FocusPressable";
 
 /**
  * F30 — pantalla Ajustes → Diagnóstico (FB2, P-72; diseño en
@@ -66,7 +67,7 @@ export default function DiagnosticsScreen({
 
   const header = (
     <View style={styles.header}>
-      <Pressable
+      <FocusPressable
         onPress={onBack}
         hitSlop={touchTarget.min / 4}
         accessibilityRole="button"
@@ -75,7 +76,7 @@ export default function DiagnosticsScreen({
         testID="diagnostics-back"
       >
         <ChevronLeft size={24} color={colors.textPrimary} />
-      </Pressable>
+      </FocusPressable>
       <Text accessibilityRole="header" style={styles.headerTitle}>
         {t("diagnostics.title")}
       </Text>

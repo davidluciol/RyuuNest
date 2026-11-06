@@ -1,5 +1,5 @@
 // single-use: barras superior e inferior del lector (RF-22); no tienen sentido fuera de él.
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
@@ -8,6 +8,7 @@ import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, List, Rows3 } from "
 import { t } from "../../i18n";
 import { percentOf } from "../../reader/readerLayout";
 import { readerBarStyle, readerIconButtonStyle } from "./readerStyles";
+import FocusPressable from "../../components/FocusPressable";
 
 /**
  * F18 — controles mínimos del lector (RF-22): cerrar, título, selector de capítulo y modo de
@@ -38,14 +39,14 @@ export function ReaderTopBar({
       testID="reader-top-bar"
       style={[styles.bar, styles.top, readerBarStyle(), { paddingTop: insets.top + spacing.xs }]}
     >
-      <Pressable
+      <FocusPressable
         accessibilityRole="button"
         accessibilityLabel={t("reader.close")}
         onPress={onClose}
         style={readerIconButtonStyle()}
       >
         <ArrowLeft size={spacing.lg} color={colors.textPrimary} />
-      </Pressable>
+      </FocusPressable>
       <View style={styles.titles}>
         <Text style={styles.title} numberOfLines={2}>
           {title}
@@ -55,7 +56,7 @@ export function ReaderTopBar({
           <Text style={styles.subtitle}>{subtitle}</Text>
         </View>
       </View>
-      <Pressable
+      <FocusPressable
         accessibilityRole="button"
         accessibilityLabel={t("reader.chapters.select")}
         onPress={onOpenChapters}
@@ -64,7 +65,7 @@ export function ReaderTopBar({
         <List size={spacing.md} color={colors.accent} />
         <Text style={styles.pillLabel}>{chapterShort}</Text>
         <ChevronDown size={spacing.md} color={colors.textSecondary} />
-      </Pressable>
+      </FocusPressable>
     </View>
   );
 }
@@ -96,10 +97,15 @@ export function ReaderBottomBar({
   return (
     <View
       testID="reader-bottom-bar"
-      style={[styles.bar, styles.bottom, readerBarStyle(), { paddingBottom: insets.bottom + spacing.sm }]}
+      style={[
+        styles.bar,
+        styles.bottom,
+        readerBarStyle(),
+        { paddingBottom: insets.bottom + spacing.sm },
+      ]}
     >
       <View style={styles.pageRow}>
-        <Pressable
+        <FocusPressable
           accessibilityRole="button"
           accessibilityLabel={t("reader.page.previous")}
           accessibilityState={{ disabled: pageIndex === 0 }}
@@ -108,7 +114,7 @@ export function ReaderBottomBar({
           style={[readerIconButtonStyle(), styles.pageButton, pageIndex === 0 && styles.disabled]}
         >
           <ChevronLeft size={spacing.lg} color={colors.textPrimary} />
-        </Pressable>
+        </FocusPressable>
         <View style={styles.progress}>
           <View style={styles.progressLabels}>
             <Text style={styles.pageLabel}>
@@ -124,17 +130,17 @@ export function ReaderBottomBar({
             <View style={[styles.fill, { width: `${percent ?? 0}%` }]} />
           </View>
         </View>
-        <Pressable
+        <FocusPressable
           accessibilityRole="button"
           accessibilityLabel={t("reader.page.next")}
           onPress={onNext}
           style={[readerIconButtonStyle(), styles.pageButton]}
         >
           <ChevronRight size={spacing.lg} color={colors.textPrimary} />
-        </Pressable>
+        </FocusPressable>
       </View>
       <View style={styles.actionRow}>
-        <Pressable
+        <FocusPressable
           accessibilityRole="button"
           accessibilityLabel={t("reader.mode.open")}
           onPress={onOpenMode}
@@ -142,9 +148,9 @@ export function ReaderBottomBar({
         >
           <Rows3 size={spacing.md} color={colors.accent} />
           <Text style={styles.modeLabel}>{modeLabel}</Text>
-        </Pressable>
+        </FocusPressable>
         {next === null ? null : (
-          <Pressable
+          <FocusPressable
             accessibilityRole="button"
             accessibilityLabel={t("reader.nextChapter")}
             onPress={onOpenNextChapter}
@@ -156,7 +162,7 @@ export function ReaderBottomBar({
                 : t("reader.chapter.short", { number: next.number })}
             </Text>
             <ChevronRight size={spacing.md} color={colors.progress} />
-          </Pressable>
+          </FocusPressable>
         )}
       </View>
     </View>
@@ -216,7 +222,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   fill: { height: spacing.xxs, backgroundColor: colors.progress },
-  actionRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: spacing.xs },
+  actionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: spacing.xs,
+  },
   modePill: {
     flexDirection: "row",
     alignItems: "center",

@@ -30,3 +30,27 @@ describe("FocusPressable en components/", () => {
     expect(readdirSync(dir)).toContain("FocusPressable.tsx");
   });
 });
+
+/** Pantallas y paneles fuera de `components/`: tampoco admiten `Pressable` crudo. */
+function rawPressableFiles(root: string): string[] {
+  const found: string[] = [];
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
+    const full = join(root, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name !== "components") found.push(...rawPressableFiles(full));
+    } else if (entry.name.endsWith(".tsx") && /<Pressable[\s>]/.test(readFileSync(full, "utf8"))) {
+      found.push(full);
+    }
+  }
+  return found;
+}
+
+describe("FocusPressable fuera de components/", () => {
+  it("ninguna pantalla ni panel usa Pressable crudo", () => {
+    const srcRoot = join(__dirname, "../../src");
+    const files = rawPressableFiles(srcRoot).map((f) =>
+      f.slice(srcRoot.length + 1).replaceAll("\\", "/"),
+    );
+    expect(files.sort()).toEqual([]);
+  });
+});
