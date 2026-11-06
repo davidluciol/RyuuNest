@@ -1,7 +1,8 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import { chipColors, chipStyle } from "./chipStyles";
+import FocusPressable from "./FocusPressable";
 import { textStyle } from "./textStyle";
 
 /**
@@ -19,7 +20,7 @@ export interface ChipProps {
 export default function Chip({ label, selected = false, onPress }: ChipProps) {
   const colors = chipColors(selected);
   return (
-    <Pressable
+    <FocusPressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
       onPress={onPress}
@@ -27,7 +28,7 @@ export default function Chip({ label, selected = false, onPress }: ChipProps) {
       style={({ pressed }) => [chipStyle(selected), styles.content, pressed && styles.pressed]}
     >
       <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
-    </Pressable>
+    </FocusPressable>
   );
 }
 

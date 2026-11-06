@@ -1,7 +1,8 @@
-import { Pressable, StyleSheet, Text, type StyleProp, type ViewStyle } from "react-native";
+import { StyleSheet, Text, type StyleProp, type ViewStyle } from "react-native";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import { type ButtonVariant, buttonStyle, buttonTextColor } from "./buttonStyles";
+import FocusPressable from "./FocusPressable";
 import { textStyle } from "./textStyle";
 
 /**
@@ -41,7 +42,7 @@ export default function Button({
   testID,
 }: ButtonProps) {
   return (
-    <Pressable
+    <FocusPressable
       testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
@@ -49,12 +50,16 @@ export default function Button({
       disabled={disabled}
       onPress={onPress}
       hitSlop={touchTarget.min / 4}
-      style={({ pressed }) => [styles.container, buttonStyle(variant, { pressed, disabled }), style]}
+      style={({ pressed }) => [
+        styles.container,
+        buttonStyle(variant, { pressed, disabled }),
+        style,
+      ]}
     >
       {icon}
       <Text style={[styles.label, { color: buttonTextColor(variant) }]}>{label}</Text>
       {trailingIcon}
-    </Pressable>
+    </FocusPressable>
   );
 }
 

@@ -1,5 +1,7 @@
 import { radii, spacing, touchTarget, withAlpha, dragonNightColors } from "@ryuunest/ui-tokens";
 
+import { focusRingStyle } from "./focusRing";
+
 /**
  * F07 — reglas de la cabecera y la barra inferior (SPEC §11.10, T1, V5,
  * RNF-12). Una cabecera y una barra inferior iguales en todas las pantallas.
@@ -80,10 +82,7 @@ export function navItemStyle({
     minWidth: touchTarget.min,
     minHeight: touchTarget.min,
     borderRadius: radii.control,
-    outlineColor: focused ? colors.accent : "transparent",
-    outlineWidth: spacing.xxs / 2,
-    outlineOffset: spacing.xxs / 2,
-    outlineStyle: "solid" as const,
+    ...focusRingStyle(focused),
     backgroundColor: pressed ? withAlpha(colors.accent, 0.1) : "transparent",
     opacity: disabled ? 0.5 : 1,
   };
