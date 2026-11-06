@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: spacing.md,
     minHeight: HEADER_HEIGHT,
+    height: "auto", // crece con el texto del sistema al 200 % en vez de recortar el título
     paddingVertical: spacing.xs,
   },
   left: { flexDirection: "row", alignItems: "center", gap: spacing.sm, flex: 1 },

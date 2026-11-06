@@ -39,11 +39,7 @@ export default function EmptyState({
       <Text style={[styles.title, { color: colors.title }]} numberOfLines={2}>
         {title}
       </Text>
-      {message ? (
-        <Text style={[styles.message, { color: colors.message }]} numberOfLines={3}>
-          {message}
-        </Text>
-      ) : null}
+      {message ? <Text style={[styles.message, { color: colors.message }]}>{message}</Text> : null}
       <Button label={actionLabel} onPress={onAction} />
     </View>
   );

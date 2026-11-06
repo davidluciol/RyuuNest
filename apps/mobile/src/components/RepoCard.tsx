@@ -54,9 +54,7 @@ export default function RepoCard({
           <Text style={[styles.name, { color: text.name }]} numberOfLines={2}>
             {name}
           </Text>
-          <Text style={[styles.url, { color: text.url }]} numberOfLines={2}>
-            {url}
-          </Text>
+          <Text style={[styles.url, { color: text.url }]}>{url}</Text>
           {meta ? <Text style={[styles.url, { color: text.url }]}>{meta}</Text> : null}
         </View>
       </FocusPressable>

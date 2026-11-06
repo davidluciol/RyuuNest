@@ -10,6 +10,7 @@ import {
   BOTTOM_NAV_DESTINATIONS,
   type BottomNavDestination,
   bottomNavStyle,
+  NAV_LABEL_MAX_FONT_SCALE,
   navItemColors,
   navItemStyle,
 } from "./shellStyles";
@@ -68,7 +69,11 @@ export default function BottomNav({ active, onSelect, disabled = false }: Bottom
             ]}
           >
             <Icon size={spacing.lg} color={colors.icon} />
-            <Text testID="nav-label" style={[styles.label, { color: colors.text }]}>
+            <Text
+              testID="nav-label"
+              maxFontSizeMultiplier={NAV_LABEL_MAX_FONT_SCALE}
+              style={[styles.label, { color: colors.text }]}
+            >
               {destinationLabel(destination)}
             </Text>
           </Pressable>

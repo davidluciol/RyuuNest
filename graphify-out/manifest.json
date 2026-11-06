@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1793994689.9489896,
-    "seen": 1793994718.7009668,
-    "ast_hash": "fb8d37b771ae1485123e40e505f36f98",
+    "mtime": 1793997507.9520452,
+    "seen": 1793997608.1800735,
+    "ast_hash": "6b5fc7e9af6f4adf070dc02ff6981be7",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -834,9 +834,9 @@
     "semantic_hash": "31ce8bf94955be983830a4396cfa546d"
   },
   "design/stitch/DIFFS.md": {
-    "mtime": 1793994675.1525662,
-    "seen": 1793994718.70101,
-    "ast_hash": "0dd8128a5f91e0bb4ad1821935aa727c",
+    "mtime": 1793997507.9412725,
+    "seen": 1793997608.1800983,
+    "ast_hash": "7742df1356378de2f8f11097a7840f72",
     "semantic_hash": ""
   },
   "design/stitch/ajustes_pantalla/code.html": {
@@ -966,9 +966,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793994663.9993598,
-    "seen": 1793994718.701123,
-    "ast_hash": "5b4caeb6d08a896c88b32b4398a11336",
+    "mtime": 1793997515.86507,
+    "seen": 1793997608.1801722,
+    "ast_hash": "920754798171fb979ace6c72c17bb227",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -1074,9 +1074,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/components/BottomNav.tsx": {
-    "mtime": 1793553964.1017606,
-    "seen": 1793557663.9147584,
-    "ast_hash": "ee3cf78bbd18ae30aaa430a84a732857",
+    "mtime": 1793996753.0529902,
+    "seen": 1793997608.1787908,
+    "ast_hash": "3fef18b5f159b623528e85b1b7d9b509",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/Button.tsx": {
@@ -1116,9 +1116,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/components/EmptyState.tsx": {
-    "mtime": 1793404168.1932356,
-    "seen": 1793495545.75895,
-    "ast_hash": "3faaeb13eb4275c2e5f4462cf54bbfed",
+    "mtime": 1793996752.973819,
+    "seen": 1793997608.1788125,
+    "ast_hash": "e331619e13aca92f54a33c66b440ca78",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/ErrorState.tsx": {
@@ -1128,9 +1128,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/components/Header.tsx": {
-    "mtime": 1792776990.2247617,
-    "seen": 1793495545.75895,
-    "ast_hash": "c738fdfdac5de83782f6bb93470330a2",
+    "mtime": 1793996752.9485588,
+    "seen": 1793997608.1788228,
+    "ast_hash": "fb994a87131798bea5b66db53c4eef18",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/LoadingState.tsx": {
@@ -1200,9 +1200,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/components/shellStyles.ts": {
-    "mtime": 1793993330.907869,
-    "seen": 1793994718.698816,
-    "ast_hash": "0216ec264b462edd9ebf4d6d673f5502",
+    "mtime": 1793996752.1637328,
+    "seen": 1793997608.1789002,
+    "ast_hash": "1bffc2eab93adc206bb1435c6db06774",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/stateStyles.ts": {
@@ -1776,74 +1776,74 @@
     "semantic_hash": ""
   },
   "docs/capturasF11/discover-1440.png": {
-    "mtime": 1793994625.1675818,
-    "seen": 1793994718.701408,
+    "mtime": 1793997592.1760023,
+    "seen": 1793997608.180242,
     "ast_hash": "7c28060f00c7fca78a63a6f747f73efe",
     "semantic_hash": ""
   },
   "docs/capturasF11/discover-426.png": {
-    "mtime": 1793994625.168589,
-    "seen": 1793994718.7014115,
+    "mtime": 1793997592.1770034,
+    "seen": 1793997608.1802437,
     "ast_hash": "b4ed37e8701baea25c0db8167c3587a8",
     "semantic_hash": ""
   },
   "docs/capturasF11/galeria-shell-error.png": {
-    "mtime": 1793994625.1695995,
-    "seen": 1793994718.7014155,
+    "mtime": 1793997592.1783476,
+    "seen": 1793997608.1802452,
     "ast_hash": "530361cb9973d934f94bad5aaf49a50d",
     "semantic_hash": ""
   },
   "docs/capturasF11/galeria-shell-foco.png": {
-    "mtime": 1793994625.1711407,
-    "seen": 1793994718.7014556,
+    "mtime": 1793997592.1793528,
+    "seen": 1793997608.180247,
     "ast_hash": "059e45a3c109fc8f28f349ed86d15eb6",
     "semantic_hash": ""
   },
   "docs/capturasF11/home-1440.png": {
-    "mtime": 1793994625.173664,
-    "seen": 1793994718.7014596,
+    "mtime": 1793997592.180537,
+    "seen": 1793997608.1802487,
     "ast_hash": "7fea27c057c2409e7a26efa9291978aa",
     "semantic_hash": ""
   },
   "docs/capturasF11/home-426.png": {
-    "mtime": 1793994625.175854,
-    "seen": 1793994718.7014635,
+    "mtime": 1793997592.180537,
+    "seen": 1793997608.1802502,
     "ast_hash": "4b6ac804f326270af94f3441ecfa94cf",
     "semantic_hash": ""
   },
   "docs/capturasF11/library-1440.png": {
-    "mtime": 1793994625.1782217,
-    "seen": 1793994718.7014666,
+    "mtime": 1793997592.1816945,
+    "seen": 1793997608.1802514,
     "ast_hash": "d1f5bb15840f209c46f609fde05bb1e7",
     "semantic_hash": ""
   },
   "docs/capturasF11/library-426.png": {
-    "mtime": 1793994625.179224,
-    "seen": 1793994718.7014697,
+    "mtime": 1793997592.1826892,
+    "seen": 1793997608.1802528,
     "ast_hash": "ac2d71a26eda7cb0e9884cc69bb11a2f",
     "semantic_hash": ""
   },
   "docs/capturasF11/settings-1440.png": {
-    "mtime": 1793994625.181312,
-    "seen": 1793994718.7014723,
+    "mtime": 1793997592.1838605,
+    "seen": 1793997608.180254,
     "ast_hash": "26b288ad31f0120970653a0a55c2e67f",
     "semantic_hash": ""
   },
   "docs/capturasF11/settings-426.png": {
-    "mtime": 1793994625.181312,
-    "seen": 1793994718.7014751,
+    "mtime": 1793997592.1848607,
+    "seen": 1793997608.1802552,
     "ast_hash": "b830a6655f280f2805547c17b241dcad",
     "semantic_hash": ""
   },
   "docs/capturasF11/sources-1440.png": {
-    "mtime": 1793994625.183849,
-    "seen": 1793994718.7014782,
+    "mtime": 1793997592.185364,
+    "seen": 1793997608.1802566,
     "ast_hash": "cbcabd57105b90f35cacff8e632d9c97",
     "semantic_hash": ""
   },
   "docs/capturasF11/sources-426.png": {
-    "mtime": 1793994625.1863651,
-    "seen": 1793994718.7014809,
+    "mtime": 1793997592.1868677,
+    "seen": 1793997608.1802576,
     "ast_hash": "db78ac7ef7b939283e9178bb4a510bea",
     "semantic_hash": ""
   },
@@ -1890,9 +1890,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/components/libraryCardStyles.ts": {
-    "mtime": 1793987145.5167284,
-    "seen": 1793990149.5179217,
-    "ast_hash": "0f1fc780bff672c106f1f37f2d315b1a",
+    "mtime": 1793995415.7700837,
+    "seen": 1793997608.1788807,
+    "ast_hash": "a519404c5c8cd327e01c34895c230649",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/recentCardStyles.ts": {
@@ -1920,9 +1920,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/library/LibraryScreen.tsx": {
-    "mtime": 1793993047.4592416,
-    "seen": 1793994718.6989934,
-    "ast_hash": "a104a31e3749dc4c5d3b6af46291c477",
+    "mtime": 1793995415.1171472,
+    "seen": 1793997608.1789842,
+    "ast_hash": "3ce2d732cb9ef1f22119fc08abd2f19d",
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/library/libraryFixtures.ts": {
@@ -1974,14 +1974,14 @@
     "semantic_hash": ""
   },
   "docs/capturasF13/home-1440.png": {
-    "mtime": 1793994625.2015133,
-    "seen": 1793994718.7015011,
+    "mtime": 1793997592.200462,
+    "seen": 1793997608.1802685,
     "ast_hash": "a32bc8035ab2ac7a449a9238698b55d9",
     "semantic_hash": ""
   },
   "docs/capturasF13/home-426.png": {
-    "mtime": 1793994625.202584,
-    "seen": 1793994718.7015042,
+    "mtime": 1793997592.2014627,
+    "seen": 1793997608.1802702,
     "ast_hash": "e0e1f25f2de5da76da67158c6f909a6e",
     "semantic_hash": ""
   },
@@ -2214,14 +2214,14 @@
     "semantic_hash": ""
   },
   "docs/capturasF15/descubrir-1440.png": {
-    "mtime": 1793994625.2037835,
-    "seen": 1793994718.7015076,
+    "mtime": 1793997592.202463,
+    "seen": 1793997608.1802719,
     "ast_hash": "63e9d7e11246b753cca2083716da612c",
     "semantic_hash": ""
   },
   "docs/capturasF15/descubrir-426.png": {
-    "mtime": 1793994625.205055,
-    "seen": 1793994718.7015104,
+    "mtime": 1793997592.2039673,
+    "seen": 1793997608.1802733,
     "ast_hash": "d69c02be51a34437220378f3c0e4b0cf",
     "semantic_hash": ""
   },
@@ -2262,9 +2262,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/components/RepoCard.tsx": {
-    "mtime": 1793993542.7921934,
-    "seen": 1793994718.6986983,
-    "ast_hash": "dee91957f484f250aec5461e5e6a2757",
+    "mtime": 1793996753.0041282,
+    "seen": 1793997608.1788387,
+    "ast_hash": "1d3237403009cc457e96c584b451c008",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/SheetModal.tsx": {
@@ -2448,98 +2448,98 @@
     "semantic_hash": ""
   },
   "docs/capturasF16/actualizar-1440.png": {
-    "mtime": 1793994625.2083633,
-    "seen": 1793994718.7015133,
+    "mtime": 1793997592.20949,
+    "seen": 1793997608.1802754,
     "ast_hash": "46f6999fa4dd881ba1be634701538511",
     "semantic_hash": ""
   },
   "docs/capturasF16/actualizar-426.png": {
-    "mtime": 1793994625.2093642,
-    "seen": 1793994718.7015157,
+    "mtime": 1793997592.2114904,
+    "seen": 1793997608.180277,
     "ast_hash": "356ea25bcc47ee5cf8e4b0d4f5d1a672",
     "semantic_hash": ""
   },
   "docs/capturasF16/anadir-repositorio-1440.png": {
-    "mtime": 1793994625.2120883,
-    "seen": 1793994718.701519,
+    "mtime": 1793997592.2134914,
+    "seen": 1793997608.1802788,
     "ast_hash": "3486e5fcc40cddbe26973261ee413bba",
     "semantic_hash": ""
   },
   "docs/capturasF16/anadir-repositorio-426.png": {
-    "mtime": 1793994625.2131126,
-    "seen": 1793994718.7015219,
+    "mtime": 1793997592.2149954,
+    "seen": 1793997608.18028,
     "ast_hash": "05df6aa8862116296bd7028d1290ec28",
     "semantic_hash": ""
   },
   "docs/capturasF16/desinstalar-1440.png": {
-    "mtime": 1793994625.2155879,
-    "seen": 1793994718.701525,
+    "mtime": 1793997592.216512,
+    "seen": 1793997608.1802816,
     "ast_hash": "cef58c9d812ee8fead0f94ab34798e50",
     "semantic_hash": ""
   },
   "docs/capturasF16/desinstalar-426.png": {
-    "mtime": 1793994625.216588,
-    "seen": 1793994718.7015283,
+    "mtime": 1793997592.2175262,
+    "seen": 1793997608.180283,
     "ast_hash": "f0726a6be9b6e4f712d3ddcdd1f75663",
     "semantic_hash": ""
   },
   "docs/capturasF16/fuentes-1440.png": {
-    "mtime": 1793994625.2179775,
-    "seen": 1793994718.7015314,
+    "mtime": 1793997592.2185264,
+    "seen": 1793997608.1802847,
     "ast_hash": "5b81bea675aab05a589f5bcb8e32e9f6",
     "semantic_hash": ""
   },
   "docs/capturasF16/fuentes-426.png": {
-    "mtime": 1793994625.2179775,
-    "seen": 1793994718.7015343,
+    "mtime": 1793997592.2205272,
+    "seen": 1793997608.1802864,
     "ast_hash": "0f2ffca3d93ca60444e437c8afe2cfb4",
     "semantic_hash": ""
   },
   "docs/capturasF16/gestionar-1440.png": {
-    "mtime": 1793994625.2200577,
-    "seen": 1793994718.7015367,
+    "mtime": 1793997592.221527,
+    "seen": 1793997608.1802878,
     "ast_hash": "a758cc63fe40b7ec51a298dcdca0eec3",
     "semantic_hash": ""
   },
   "docs/capturasF16/gestionar-426.png": {
-    "mtime": 1793994625.2215612,
-    "seen": 1793994718.7015393,
+    "mtime": 1793997592.2230344,
+    "seen": 1793997608.180289,
     "ast_hash": "5bdc769568d919c1f9abd8d1dacbf5bd",
     "semantic_hash": ""
   },
   "docs/capturasF16/instalar-1440.png": {
-    "mtime": 1793994625.2260015,
-    "seen": 1793994718.701542,
+    "mtime": 1793997592.2250514,
+    "seen": 1793997608.1802902,
     "ast_hash": "b77d4d9ce482f7010b1faac1a29f9863",
     "semantic_hash": ""
   },
   "docs/capturasF16/instalar-426.png": {
-    "mtime": 1793994625.2281241,
-    "seen": 1793994718.7015445,
+    "mtime": 1793997592.2255542,
+    "seen": 1793997608.1802917,
     "ast_hash": "1c89de855cd23d3293519de6eed6248b",
     "semantic_hash": ""
   },
   "docs/capturasF16/instalar-script-1440.png": {
-    "mtime": 1793994625.2293508,
-    "seen": 1793994718.7015476,
+    "mtime": 1793997592.2275577,
+    "seen": 1793997608.1802928,
     "ast_hash": "4e2f5b23aa940b373faacb8bc4174b2c",
     "semantic_hash": ""
   },
   "docs/capturasF16/instalar-script-426.png": {
-    "mtime": 1793994625.2320342,
-    "seen": 1793994718.7015505,
+    "mtime": 1793997592.2295587,
+    "seen": 1793997608.1802945,
     "ast_hash": "7d226b569a0280f00fa8898f7fb15fc5",
     "semantic_hash": ""
   },
   "docs/capturasF16/quitar-repositorio-1440.png": {
-    "mtime": 1793994625.2330334,
-    "seen": 1793994718.7015533,
+    "mtime": 1793997592.231558,
+    "seen": 1793997608.180296,
     "ast_hash": "2b209e5111b6f062a35e3bb67b80c35a",
     "semantic_hash": ""
   },
   "docs/capturasF16/quitar-repositorio-426.png": {
-    "mtime": 1793994625.234033,
-    "seen": 1793994718.701556,
+    "mtime": 1793997592.2325585,
+    "seen": 1793997608.1802976,
     "ast_hash": "329004cdbfb760dd5a628bf55c3fa530",
     "semantic_hash": ""
   },
@@ -2682,38 +2682,38 @@
     "semantic_hash": ""
   },
   "docs/capturasF12/bienvenida-1440.png": {
-    "mtime": 1793994625.1897511,
-    "seen": 1793994718.701484,
+    "mtime": 1793997592.1904323,
+    "seen": 1793997608.180259,
     "ast_hash": "ba365d9f7dfeca42cf1f05d6ec6ea84a",
     "semantic_hash": ""
   },
   "docs/capturasF12/bienvenida-426.png": {
-    "mtime": 1793994625.1929042,
-    "seen": 1793994718.701487,
+    "mtime": 1793997592.1939547,
+    "seen": 1793997608.1802607,
     "ast_hash": "6f90a62ace07bb2df8e171e6be5e0295",
     "semantic_hash": ""
   },
   "docs/capturasF12/paso2-1440.png": {
-    "mtime": 1793994625.194922,
-    "seen": 1793994718.7014897,
+    "mtime": 1793997592.1954577,
+    "seen": 1793997608.1802619,
     "ast_hash": "3de71c2327c5c244cd9c0536d36ddb3c",
     "semantic_hash": ""
   },
   "docs/capturasF12/paso2-426.png": {
-    "mtime": 1793994625.197045,
-    "seen": 1793994718.7014925,
+    "mtime": 1793997592.1964598,
+    "seen": 1793997608.1802635,
     "ast_hash": "d6cae80d51fdb9e6cc1715e7152403dc",
     "semantic_hash": ""
   },
   "docs/capturasF12/paso3-1440.png": {
-    "mtime": 1793994625.1985507,
-    "seen": 1793994718.7014956,
+    "mtime": 1793997592.1974616,
+    "seen": 1793997608.180265,
     "ast_hash": "8892fb1e2700843321a865244c543844",
     "semantic_hash": ""
   },
   "docs/capturasF12/paso3-426.png": {
-    "mtime": 1793994625.2000563,
-    "seen": 1793994718.7014978,
+    "mtime": 1793997592.1984615,
+    "seen": 1793997608.1802664,
     "ast_hash": "9c63d65eaf0c72219ff7c949a0f7e7c3",
     "semantic_hash": ""
   },
@@ -3156,74 +3156,74 @@
     "semantic_hash": ""
   },
   "docs/capturasF20/ajustes-1440.png": {
-    "mtime": 1793994625.2355356,
-    "seen": 1793994718.7015936,
+    "mtime": 1793997592.234012,
+    "seen": 1793997608.180318,
     "ast_hash": "5831c336ed6438b1f91f5a24434c7012",
     "semantic_hash": ""
   },
   "docs/capturasF20/ajustes-426.png": {
-    "mtime": 1793994625.2365446,
-    "seen": 1793994718.7015967,
+    "mtime": 1793997592.2355163,
+    "seen": 1793997608.1803198,
     "ast_hash": "10295f8445c8f7038319f7c812702def",
     "semantic_hash": ""
   },
   "docs/capturasF21/ajustes-respaldo-1440.png": {
-    "mtime": 1793994625.2402132,
-    "seen": 1793994718.7015996,
+    "mtime": 1793997592.2375183,
+    "seen": 1793997608.180321,
     "ast_hash": "8a72c22b0c9c82ac6f678dc43d1cb9b6",
     "semantic_hash": ""
   },
   "docs/capturasF21/ajustes-respaldo-426.png": {
-    "mtime": 1793994625.2423086,
-    "seen": 1793994718.701602,
+    "mtime": 1793997592.2385187,
+    "seen": 1793997608.1803226,
     "ast_hash": "b9fc853e91ca0ba18d722cc665ed95d2",
     "semantic_hash": ""
   },
   "docs/capturasF21/dialogo-rechazo-1440.png": {
-    "mtime": 1793994625.243812,
-    "seen": 1793994718.7016048,
+    "mtime": 1793997592.2402942,
+    "seen": 1793997608.180324,
     "ast_hash": "0197f49df91067db971fe56d97c27eba",
     "semantic_hash": ""
   },
   "docs/capturasF21/dialogo-rechazo-426.png": {
-    "mtime": 1793994625.2451026,
-    "seen": 1793994718.7016075,
+    "mtime": 1793997592.2413192,
+    "seen": 1793997608.1803257,
     "ast_hash": "26a57bbac85692352d8d1126e9f80afb",
     "semantic_hash": ""
   },
   "docs/capturasF21/hoja-modo-1440.png": {
-    "mtime": 1793994625.2474232,
-    "seen": 1793994718.7016103,
+    "mtime": 1793997592.2428236,
+    "seen": 1793997608.1803272,
     "ast_hash": "3c24781e8477541363655f7a1cae5fde",
     "semantic_hash": ""
   },
   "docs/capturasF21/hoja-modo-426.png": {
-    "mtime": 1793994625.2484515,
-    "seen": 1793994718.7016127,
+    "mtime": 1793997592.2449076,
+    "seen": 1793997608.1803284,
     "ast_hash": "109339402e0d72b4650067af40e77b0b",
     "semantic_hash": ""
   },
   "docs/capturasF21/hoja-reemplazar-1440.png": {
-    "mtime": 1793994625.249452,
-    "seen": 1793994718.7016156,
+    "mtime": 1793997592.2464125,
+    "seen": 1793997608.1803303,
     "ast_hash": "a639f093cdd727a66af7e2b0fbcb4ce6",
     "semantic_hash": ""
   },
   "docs/capturasF21/hoja-reemplazar-426.png": {
-    "mtime": 1793994625.2509556,
-    "seen": 1793994718.7016184,
+    "mtime": 1793997592.2475245,
+    "seen": 1793997608.1803317,
     "ast_hash": "9667a1b71763ee71293f77ba485e6de1",
     "semantic_hash": ""
   },
   "docs/capturasF21/hoja-sugerencias-1440.png": {
-    "mtime": 1793994625.2519774,
-    "seen": 1793994718.7016215,
+    "mtime": 1793997592.2496068,
+    "seen": 1793997608.1803331,
     "ast_hash": "e00313859d1a53730d3dfe132044ace2",
     "semantic_hash": ""
   },
   "docs/capturasF21/hoja-sugerencias-426.png": {
-    "mtime": 1793994625.2537744,
-    "seen": 1793994718.7016242,
+    "mtime": 1793997592.250607,
+    "seen": 1793997608.1803343,
     "ast_hash": "99f73fc8ded47015006337bea9d045d8",
     "semantic_hash": ""
   },
@@ -3474,62 +3474,62 @@
     "semantic_hash": ""
   },
   "docs/capturasF30/ajustes-fila-diagnostico-1440.png": {
-    "mtime": 1793994625.2572625,
-    "seen": 1793994718.7017546,
+    "mtime": 1793997592.2517004,
+    "seen": 1793997608.1804097,
     "ast_hash": "96fc7443844b29575609dcb1777cb459",
     "semantic_hash": ""
   },
   "docs/capturasF30/ajustes-fila-diagnostico-426.png": {
-    "mtime": 1793994625.2592623,
-    "seen": 1793994718.7017572,
+    "mtime": 1793997592.2530243,
+    "seen": 1793997608.1804109,
     "ast_hash": "e810d7a7252d3bf8b55b36744422a95b",
     "semantic_hash": ""
   },
   "docs/capturasF30/diagnostico-confirmar-1440.png": {
-    "mtime": 1793994625.2627714,
-    "seen": 1793994718.7017598,
+    "mtime": 1793997592.2554102,
+    "seen": 1793997608.1804128,
     "ast_hash": "ed8d1522703130e69081d7b5cb11c717",
     "semantic_hash": ""
   },
   "docs/capturasF30/diagnostico-confirmar-426.png": {
-    "mtime": 1793994625.263971,
-    "seen": 1793994718.7017622,
+    "mtime": 1793997592.2554102,
+    "seen": 1793997608.1804142,
     "ast_hash": "6cf666c62f5082d9e84c15ffbeb895a2",
     "semantic_hash": ""
   },
   "docs/capturasF30/diagnostico-detalle-1440.png": {
-    "mtime": 1793994625.264973,
-    "seen": 1793994718.7017653,
+    "mtime": 1793997592.2579827,
+    "seen": 1793997608.180416,
     "ast_hash": "98f49afea91f2d0b7a806b22a58d2ce6",
     "semantic_hash": ""
   },
   "docs/capturasF30/diagnostico-detalle-426.png": {
-    "mtime": 1793994625.2664769,
-    "seen": 1793994718.7017677,
+    "mtime": 1793997592.2591288,
+    "seen": 1793997608.1804173,
     "ast_hash": "5955d7b645718a5f83d8f68ab451c1a0",
     "semantic_hash": ""
   },
   "docs/capturasF30/diagnostico-lista-1440.png": {
-    "mtime": 1793994625.2674909,
-    "seen": 1793994718.7017703,
+    "mtime": 1793997592.260574,
+    "seen": 1793997608.1804187,
     "ast_hash": "85c3055c3f380316d98864901681b6aa",
     "semantic_hash": ""
   },
   "docs/capturasF30/diagnostico-lista-426.png": {
-    "mtime": 1793994625.2685058,
-    "seen": 1793994718.7017725,
+    "mtime": 1793997592.2616003,
+    "seen": 1793997608.1804202,
     "ast_hash": "6622fae5e3de2def3e698c9f8d519372",
     "semantic_hash": ""
   },
   "docs/capturasF30/diagnostico-vacio-1440.png": {
-    "mtime": 1793994625.2695904,
-    "seen": 1793994718.7017753,
+    "mtime": 1793997592.2626004,
+    "seen": 1793997608.1804216,
     "ast_hash": "4f6b188f21f8624a86444d6bc1110844",
     "semantic_hash": ""
   },
   "docs/capturasF30/diagnostico-vacio-426.png": {
-    "mtime": 1793994625.271094,
-    "seen": 1793994718.7017782,
+    "mtime": 1793997592.2636232,
+    "seen": 1793997608.180423,
     "ast_hash": "53e0f551b5bc0fb9607fcde4d7d880c5",
     "semantic_hash": ""
   },
@@ -4890,39 +4890,39 @@
     "semantic_hash": ""
   },
   "docs/capturasF34/banner-1440.png": {
-    "mtime": 1793994625.2733488,
-    "seen": 1793994718.7017815,
-    "ast_hash": "a406ebcc2a81d33f22ed9cbbe040973f",
+    "mtime": 1793997142.5858345,
+    "seen": 1793997608.1804245,
+    "ast_hash": "039536418d3b9a09b93f3ae76f77cf92",
     "semantic_hash": ""
   },
   "docs/capturasF34/banner-426.png": {
-    "mtime": 1793994625.274853,
-    "seen": 1793994718.7017848,
-    "ast_hash": "c11946550f44bf5589bda0999621fc66",
+    "mtime": 1793997123.2470226,
+    "seen": 1793997608.180426,
+    "ast_hash": "bd7372bea0503a71bc307178a2ffa98b",
     "semantic_hash": ""
   },
   "docs/capturasF34/dialogo-1440.png": {
-    "mtime": 1793994625.281039,
-    "seen": 1793994718.7017975,
-    "ast_hash": "b30a127a18f5cb5302f5832842430aa1",
+    "mtime": 1793997142.955507,
+    "seen": 1793997608.1804323,
+    "ast_hash": "e698654c7a8ebcd79bd4decce70d685f",
     "semantic_hash": ""
   },
   "docs/capturasF34/dialogo-426.png": {
-    "mtime": 1793994625.2830546,
-    "seen": 1793994718.7018,
-    "ast_hash": "89e0323d74e7b806c3d8a2971f8df8e9",
+    "mtime": 1793997123.5343268,
+    "seen": 1793997608.180434,
+    "ast_hash": "c3c6fbd490f00bbf15f5cfcc3afa321a",
     "semantic_hash": ""
   },
   "docs/capturasF34/toast-1440.png": {
-    "mtime": 1793994625.2850564,
-    "seen": 1793994718.701804,
-    "ast_hash": "93fce91ad6bbb6525bfba33b77f39d4b",
+    "mtime": 1793997581.2328832,
+    "seen": 1793997608.1804428,
+    "ast_hash": "4484bbf0ad55efb03d1efa2388202ed8",
     "semantic_hash": ""
   },
   "docs/capturasF34/toast-426.png": {
-    "mtime": 1793994625.2860558,
-    "seen": 1793994718.701807,
-    "ast_hash": "36b75b9f04995a0c402fcf45a869d190",
+    "mtime": 1793997558.6715846,
+    "seen": 1793997608.180445,
+    "ast_hash": "7a628f66589b72284606d8da6053743c",
     "semantic_hash": ""
   },
   "docs/capturasF34/toast-web-1440.png": {
@@ -4992,15 +4992,15 @@
     "semantic_hash": ""
   },
   "docs/capturasF34/confirmacion-1440.png": {
-    "mtime": 1793994625.2766607,
-    "seen": 1793994718.7017913,
-    "ast_hash": "e6e89f587fb4e5b970f3b7b887b34473",
+    "mtime": 1793997535.074711,
+    "seen": 1793997608.1804292,
+    "ast_hash": "6fb863330c88e023eb1fba10964592c6",
     "semantic_hash": ""
   },
   "docs/capturasF34/confirmacion-426.png": {
-    "mtime": 1793994625.2792723,
-    "seen": 1793994718.7017941,
-    "ast_hash": "000c714054068ee2b7b3c21f1baa1353",
+    "mtime": 1793997507.6654909,
+    "seen": 1793997608.1804307,
+    "ast_hash": "168da8fdac8df258568981aa3e4f529b",
     "semantic_hash": ""
   },
   ".mcp.json": {
@@ -5154,15 +5154,75 @@
     "semantic_hash": ""
   },
   "design/stitch/F34-3-verificacion.md": {
-    "mtime": 1793994647.5721922,
-    "seen": 1793994718.7010171,
-    "ast_hash": "32a71bef2630f528e8736a3ad35d45bc",
+    "mtime": 1793997492.8039777,
+    "seen": 1793997608.1801026,
+    "ast_hash": "56abe7eaba41223d60b58d02d6f5dbcd",
     "semantic_hash": ""
   },
   "docs/capturasF34/chips-biblioteca-273.png": {
-    "mtime": 1793994536.6382072,
-    "seen": 1793994718.7017875,
+    "mtime": 1793996014.7013159,
+    "seen": 1793997608.1804276,
     "ast_hash": "f2e19a7a32c8eb4059ea12467de0fb27",
+    "semantic_hash": ""
+  },
+  "apps/mobile/tests/components/fontScale.test.ts": {
+    "mtime": 1793996743.4518738,
+    "seen": 1793997608.1791127,
+    "ast_hash": "d0f88a08103e4eec33e14cb6e46b6074",
+    "semantic_hash": ""
+  },
+  "apps/mobile/tests/components/libraryColumns.test.ts": {
+    "mtime": 1793995397.8998744,
+    "seen": 1793997608.1791449,
+    "ast_hash": "625e43855d358ff2d366064dda85dae4",
+    "semantic_hash": ""
+  },
+  "apps/mobile/tests/e2e/narrow273.cjs": {
+    "mtime": 1793995551.9286418,
+    "seen": 1793997608.1792777,
+    "ast_hash": "fd265984dda223b9b9d2209028826b62",
+    "semantic_hash": ""
+  },
+  "docs/capturasF12/respaldo-ejemplo-1440.json": {
+    "mtime": 1793997081.190194,
+    "seen": 1793997608.1796505,
+    "ast_hash": "07e0422081e857ab744eac1d9d0cb83d",
+    "semantic_hash": ""
+  },
+  "docs/capturasF12/respaldo-ejemplo-426.json": {
+    "mtime": 1793997033.0635028,
+    "seen": 1793997608.1796527,
+    "ast_hash": "07e0422081e857ab744eac1d9d0cb83d",
+    "semantic_hash": ""
+  },
+  "docs/capturasF34/nativo-chips-fuentes-final.png": {
+    "mtime": 1793997492.761395,
+    "seen": 1793997608.1804354,
+    "ast_hash": "f9f9dd499666897d8a702d7e904cb297",
+    "semantic_hash": ""
+  },
+  "docs/capturasF34/nativo-chips-fuentes.png": {
+    "mtime": 1793997492.7196271,
+    "seen": 1793997608.1804364,
+    "ast_hash": "2045cc33328cd9c36c2bb9f00d817bfc",
+    "semantic_hash": ""
+  },
+  "docs/capturasF34/nativo-diagnostico-200.png": {
+    "mtime": 1793996787.994224,
+    "seen": 1793997608.180438,
+    "ast_hash": "65174e836837f54ff019fb560fe1d8fd",
+    "semantic_hash": ""
+  },
+  "docs/capturasF34/nativo-foco-tab.png": {
+    "mtime": 1793996844.5922592,
+    "seen": 1793997608.1804397,
+    "ast_hash": "2db3ab4c028aebf9201bfe44158b1fe6",
+    "semantic_hash": ""
+  },
+  "docs/capturasF34/nativo-fuentes-200.png": {
+    "mtime": 1793996803.6467817,
+    "seen": 1793997608.1804411,
+    "ast_hash": "90153ce9740f86f5e06f477c5b0469e3",
     "semantic_hash": ""
   },
   "pnpm-lock.yaml": {
