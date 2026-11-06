@@ -138,6 +138,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 
 **Verificación**
 - **P-127 Verificación nativa con agent-device (decisión del humano, 2026-11-03):** la app nativa (móvil, Android TV) se verifica con el MCP **agent-device** (CLI `agent-device` 0.21.36; servidor MCP `agent-device mcp` ya en `~/.config/opencode/opencode.jsonc`; repo `callstack/agent-device`, fuente: su README en GitHub). Playwright queda para el cliente web y la galería; así se resuelve la decisión pendiente de Regla 5 en `AGENTS.md`. Regla 5b nueva con el flujo (`open` → `snapshot` → `press`/`fill` con `settle` → verificar con `wait`/`diff`; `close` libera el claim), la instalación del CLI/MCP si faltan (siempre preguntando antes) y las advertencias probadas en este PC: emulador parado por falta de hipervisor (AEHD/WHPX), firma de `press` con `target.kind: "ref"`, refs solo en la última salida y catálogo de Code Mode volátil tras reiniciar el servidor. **Pendiente de probar:** que los `testID` de RN (`screen-<id>`) se ven en el snapshot con la app corrienda.
+- **P-128 Reglas para Claude Code (2026-11-04):** `CLAUDE.md` en la raíz (≤2000 tokens) con autoridad documental, TDD, Playwright/agent-device, Context7, Graphify, MEMORY y Git (rama propia, gate y PR sin fusionar). El MCP de Graphify queda en `.mcp.json`; CLI `graphify` y `graphify-mcp` ya instalados.
 
 ## 4. Pendientes y sugerencias
 
