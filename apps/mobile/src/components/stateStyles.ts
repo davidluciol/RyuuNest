@@ -101,7 +101,7 @@ export function detailBoxStyle(): {
   };
 }
 
-/** Texto de cada línea del detalle, en Inter pequeño. */
+/** Texto de cada línea del detalle técnico, en mono (F34.2). */
 export function detailTextStyle(): TypeStyle {
-  return typography.labelMd;
+  return typography.mono;
 }

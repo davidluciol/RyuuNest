@@ -4,6 +4,9 @@ import { dragonNightColors, layoutForWidth, spacing, typography } from "@ryuunes
 
 import Button from "../../components/Button";
 import Chip from "../../components/Chip";
+import { contentColumnStyle } from "../../components/cardStyles";
+import NoticeToast from "../../components/NoticeToast";
+import SettingsCard from "../../components/SettingsCard";
 import ErrorState from "../../components/ErrorState";
 import LoadingState from "../../components/LoadingState";
 import SectionHeader from "../../components/SectionHeader";
@@ -127,110 +130,114 @@ export default function SettingsScreen({
           paddingTop: spacing.sm,
           paddingBottom: spacing.xl,
           gap: spacing.lg,
+          ...contentColumnStyle(),
         }}
       >
-        {visibleNotice !== null ? (
-          <View style={styles.notice} accessibilityRole="alert">
-            <Text style={styles.noticeText}>{visibleNotice}</Text>
-            <Button variant="secondary" label={t("actions.close")} onPress={dismissNotice} />
-          </View>
-        ) : null}
-
         <View style={styles.section}>
           <SectionHeader title={t("settings.section.language")} />
-          <SettingsRow
-            label={t("settings.language.label")}
-            hint={t("settings.language.hint")}
-            right={
-              <Text style={styles.value}>
-                {language === "es" ? t("settings.language.es") : language}
-              </Text>
-            }
-          />
+          <SettingsCard>
+            <SettingsRow
+              label={t("settings.language.label")}
+              hint={t("settings.language.hint")}
+              right={
+                <Text style={styles.value}>
+                  {language === "es" ? t("settings.language.es") : language}
+                </Text>
+              }
+            />
+          </SettingsCard>
         </View>
 
         <View style={styles.section}>
           <SectionHeader title={t("settings.section.reading")} />
-          <SettingsRow
-            label={t("settings.reading.defaultMode")}
-            hint={t("settings.reading.defaultModeHint")}
-          />
-          <View style={styles.options}>
-            {READER_MODE_OPTIONS.map((option) => (
-              <Chip
-                key={option.mode}
-                label={t(option.labelKey)}
-                selected={defaultReaderMode === option.mode}
-                onPress={() => onDefaultReaderModeChange?.(option.mode)}
-              />
-            ))}
-          </View>
+          <SettingsCard>
+            <SettingsRow
+              label={t("settings.reading.defaultMode")}
+              hint={t("settings.reading.defaultModeHint")}
+            />
+            <View style={styles.options}>
+              {READER_MODE_OPTIONS.map((option) => (
+                <Chip
+                  key={option.mode}
+                  label={t(option.labelKey)}
+                  selected={defaultReaderMode === option.mode}
+                  onPress={() => onDefaultReaderModeChange?.(option.mode)}
+                />
+              ))}
+            </View>
+          </SettingsCard>
         </View>
 
         <View style={styles.section}>
           <SectionHeader title={t("settings.section.security")} />
-          <SettingsRow
-            label={t("settings.security.nsfw")}
-            hint={t("settings.security.nsfwHint")}
-            right={
-              <Switch
-                value={nsfwVisible}
-                disabled={busy}
-                onValueChange={(value) => onToggleNsfw?.(value)}
-                accessibilityLabel={t("settings.security.nsfw")}
-                testID="settings-nsfw-switch"
-              />
-            }
-          />
-          <SettingsRow
-            label={t("settings.security.installProtection")}
-            hint={t(installProtectionHintKey(lockAvailable))}
-            hintTone={lockAvailable ? "default" : "warning"}
-            right={
-              <Switch
-                value={installProtection}
-                disabled={!lockAvailable || busy}
-                onValueChange={(value) => onToggleProtection?.(value)}
-                accessibilityLabel={t("settings.security.installProtection")}
-                testID="settings-protection-switch"
-              />
-            }
-          />
+          <SettingsCard>
+            <SettingsRow
+              label={t("settings.security.nsfw")}
+              hint={t("settings.security.nsfwHint")}
+              right={
+                <Switch
+                  value={nsfwVisible}
+                  disabled={busy}
+                  onValueChange={(value) => onToggleNsfw?.(value)}
+                  accessibilityLabel={t("settings.security.nsfw")}
+                  testID="settings-nsfw-switch"
+                />
+              }
+            />
+            <SettingsRow
+              label={t("settings.security.installProtection")}
+              hint={t(installProtectionHintKey(lockAvailable))}
+              hintTone={lockAvailable ? "default" : "warning"}
+              right={
+                <Switch
+                  value={installProtection}
+                  disabled={!lockAvailable || busy}
+                  onValueChange={(value) => onToggleProtection?.(value)}
+                  accessibilityLabel={t("settings.security.installProtection")}
+                  testID="settings-protection-switch"
+                />
+              }
+            />
+          </SettingsCard>
         </View>
 
         {officialRepoRegistered ? null : (
           <View style={styles.section}>
             <SectionHeader title={t("settings.section.sources")} />
-            <SettingsRow
-              label={t("settings.official.title")}
-              hint={t("settings.official.hint")}
-              right={
-                <Button
-                  variant="secondary"
-                  label={t("settings.official.restore")}
-                  disabled={busy}
-                  onPress={onRestoreOfficialRepo}
-                />
-              }
-            />
+            <SettingsCard>
+              <SettingsRow
+                label={t("settings.official.title")}
+                hint={t("settings.official.hint")}
+                right={
+                  <Button
+                    variant="secondary"
+                    label={t("settings.official.restore")}
+                    disabled={busy}
+                    onPress={onRestoreOfficialRepo}
+                  />
+                }
+              />
+            </SettingsCard>
           </View>
         )}
 
         <View style={styles.section}>
           <SectionHeader title={t("settings.section.cache")} />
-          <SettingsRow
-            label={t("settings.cache.images")}
-            hint={t("settings.cache.hint")}
-            right={
-              <Button
-                variant="secondary"
-                label={t("settings.cache.clear")}
-                disabled={busy}
-                onPress={onClearCache}
-                accessibilityLabel={t("settings.cache.clear")}
-              />
-            }
-          />
+          <SettingsCard>
+            <SettingsRow
+              label={t("settings.cache.images")}
+              hint={t("settings.cache.hint")}
+              right={
+                <Button
+                  variant="secondary"
+                  label={t("settings.cache.clearAction")}
+                  disabled={busy}
+                  onPress={onClearCache}
+                  accessibilityLabel={t("settings.cache.clear")}
+                />
+              }
+            />
+          </SettingsCard>
         </View>
 
         {backupController !== null ? (
@@ -242,14 +249,22 @@ export default function SettingsScreen({
 
         <View style={styles.section}>
           <SectionHeader title={t("settings.section.diagnostics")} />
-          <SettingsRow
-            label={t("settings.diagnostics.row")}
-            hint={t("settings.diagnostics.rowHint")}
-            onPress={onOpenDiagnostics}
-            right={<ChevronRight size={spacing.lg} color={colors.textSecondary} />}
-          />
+          <SettingsCard>
+            <SettingsRow
+              label={t("settings.diagnostics.row")}
+              hint={t("settings.diagnostics.rowHint")}
+              onPress={onOpenDiagnostics}
+              right={<ChevronRight size={spacing.lg} color={colors.textSecondary} />}
+            />
+          </SettingsCard>
         </View>
       </ScrollView>
+
+      <NoticeToast
+        notice={visibleNotice === null ? null : { message: visibleNotice, severity: "error" }}
+        onClose={dismissNotice}
+        testID="settings-toast"
+      />
 
       {backupController !== null && backupFlow !== undefined ? (
         <BackupSheets flow={backupFlow} controller={backupController} />
@@ -267,16 +282,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bg,
   },
   section: { gap: spacing.xs },
-  options: { flexDirection: "row", flexWrap: "wrap", gap: spacing.xs },
+  options: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
+  },
   value: {
     ...textStyle(typography.labelLg),
     color: colors.accent,
   },
-  notice: {
-    gap: spacing.xs,
-    padding: spacing.sm,
-    borderRadius: spacing.xs,
-    backgroundColor: colors.surface,
-  },
-  noticeText: { ...textStyle(typography.bodyMd), color: colors.error },
 });

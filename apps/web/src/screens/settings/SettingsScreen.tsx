@@ -129,7 +129,8 @@ export default function SettingsScreen() {
               </div>
               <Button
                 variant="secondary"
-                label={t("settings.cache.clear")}
+                label={t("settings.cache.clearAction")}
+                ariaLabel={t("settings.cache.clear")}
                 onClick={state.clearCache}
                 disabled={busy}
                 testID="settings-clear-cache"
@@ -146,7 +147,8 @@ export default function SettingsScreen() {
               </div>
               <Button
                 variant="secondary"
-                label={t("settings.backup.export")}
+                label={t("settings.backup.exportAction")}
+                ariaLabel={t("settings.backup.export")}
                 onClick={() => void controller.exportBackup()}
                 disabled={busy}
                 testID="settings-backup-export"
@@ -159,7 +161,8 @@ export default function SettingsScreen() {
               </div>
               <Button
                 variant="secondary"
-                label={t("settings.backup.import")}
+                label={t("settings.backup.importAction")}
+                ariaLabel={t("settings.backup.import")}
                 onClick={() => void controller.importBackup()}
                 disabled={busy}
                 testID="settings-backup-import"

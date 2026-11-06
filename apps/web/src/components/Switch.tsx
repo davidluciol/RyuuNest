@@ -1,3 +1,6 @@
+import { t } from "@ryuunest/i18n";
+import { switchLabelKey } from "@ryuunest/mobile-src/components/switchStyles";
+
 import "./switch.css";
 
 /** F25 — interruptor web (área táctil mínima 48 px, RNF-7; estado no solo por color). */
@@ -24,12 +27,15 @@ export default function Switch({ checked, onChange, label, disabled, hint, hintT
         onChange={(event) => onChange(event.target.checked)}
         data-testid={testID}
       />
-      <span className="switch-track" aria-hidden>
-        <span className="switch-thumb" />
-      </span>
       <span className="switch-texts">
         <span className="t-body-md switch-label">{label}</span>
         {hint !== undefined && <span className={`t-body-sm switch-hint${hintTone === "warning" ? " switch-hint-warning" : ""}`}>{hint}</span>}
+      </span>
+      <span className="t-label-md switch-state" aria-hidden>
+        {t(switchLabelKey(checked))}
+      </span>
+      <span className="switch-track" aria-hidden>
+        <span className="switch-thumb" />
       </span>
     </label>
   );

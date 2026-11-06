@@ -10,11 +10,11 @@ import { galleryFontSources } from "../src/gallery/fontSources";
  * llevan el peso en la familia).
  */
 describe("galleryFontSources (mapa para useFonts)", () => {
-  it("cubre exactamente los 5 archivos del manifiesto, con su nombre PostScript", () => {
+  it("cubre exactamente los 7 archivos del manifiesto, con su nombre PostScript", () => {
     expect(Object.keys(galleryFontSources).sort()).toEqual(
       fontFiles.map((file) => file.postScriptName).sort(),
     );
-    expect(Object.keys(galleryFontSources)).toHaveLength(5);
+    expect(Object.keys(galleryFontSources)).toHaveLength(7);
   });
 
   it("cada entrada es un asset require() de Metro (número) del archivo del manifiesto", () => {

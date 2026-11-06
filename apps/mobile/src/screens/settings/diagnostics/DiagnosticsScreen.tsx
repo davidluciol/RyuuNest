@@ -10,13 +10,14 @@ import {
 } from "@ryuunest/ui-tokens";
 
 import Button from "../../../components/Button";
+import { contentColumnStyle } from "../../../components/cardStyles";
+import NoticeToast from "../../../components/NoticeToast";
 import Chip from "../../../components/Chip";
 import EmptyState from "../../../components/EmptyState";
 import ErrorState from "../../../components/ErrorState";
 import LoadingState from "../../../components/LoadingState";
 import LogEventRow from "../../../components/LogEventRow";
 import ConfirmSheet from "../../../components/ConfirmSheet";
-import Toast from "../../../components/Toast";
 import { textStyle } from "../../../components/textStyle";
 import { ChevronLeft, Copy, Trash2, Upload } from "../../../icons";
 import { t } from "../../../i18n";
@@ -38,9 +39,7 @@ const colors = dragonNightColors;
 
 /** Estado de la pantalla, como lo ve la ruta. */
 export type DiagnosticsView =
-  | { status: "loading" }
-  | { status: "error" }
-  | { status: "ready"; events: LogEntry[] };
+  { status: "loading" } | { status: "error" } | { status: "ready"; events: LogEntry[] };
 
 export interface DiagnosticsScreenProps {
   view: DiagnosticsView;
@@ -124,7 +123,11 @@ export default function DiagnosticsScreen({
             onAction={onBack}
           />
         </View>
-        <NoticeToast notice={notice} onClose={controller?.dismissNotice} />
+        <NoticeToast
+          notice={notice}
+          onClose={controller?.dismissNotice}
+          testID="diagnostics-toast"
+        />
       </View>
     );
   }
@@ -140,6 +143,7 @@ export default function DiagnosticsScreen({
           paddingTop: spacing.md,
           paddingBottom: spacing.xl,
           gap: spacing.md,
+          ...contentColumnStyle(),
         }}
       >
         <Text style={styles.intro}>{t("diagnostics.intro")}</Text>
@@ -227,27 +231,7 @@ export default function DiagnosticsScreen({
         cancelTestID="diagnostics-confirm-cancel"
       />
 
-      <NoticeToast notice={notice} onClose={controller?.dismissNotice} />
-    </View>
-  );
-}
-
-function NoticeToast({
-  notice,
-  onClose,
-}: {
-  notice: DiagnosticsNotice | null;
-  onClose?: () => void;
-}) {
-  if (notice === null) return null;
-  return (
-    <View style={styles.toastWrap} pointerEvents="box-none">
-      <Toast
-        message={notice.message}
-        severity={notice.severity}
-        onClose={onClose ?? (() => {})}
-        testID="diagnostics-toast"
-      />
+      <NoticeToast notice={notice} onClose={controller?.dismissNotice} testID="diagnostics-toast" />
     </View>
   );
 }
@@ -264,11 +248,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  back: { width: touchTarget.min, height: touchTarget.min, alignItems: "center", justifyContent: "center" },
+  back: {
+    width: touchTarget.min,
+    height: touchTarget.min,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   headerTitle: { ...textStyle(typography.headlineSm), color: colors.textPrimary },
   intro: { ...textStyle(typography.bodyMd), color: colors.textSecondary },
   group: { gap: spacing.xs },
-  label: { ...textStyle(typography.labelMd), color: colors.textSecondary, textTransform: "uppercase" },
+  label: {
+    ...textStyle(typography.labelMd),
+    color: colors.textSecondary,
+    textTransform: "uppercase",
+  },
   chips: { flexDirection: "row", gap: spacing.xs },
   pair: { flexDirection: "row", gap: spacing.xs },
   half: { flex: 1 },
@@ -280,10 +273,4 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   divider: { borderTopWidth: 1, borderTopColor: colors.border },
-  toastWrap: {
-    position: "absolute",
-    left: spacing.md,
-    right: spacing.md,
-    bottom: spacing.lg,
-  },
 });

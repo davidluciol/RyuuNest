@@ -111,10 +111,10 @@ const styles = StyleSheet.create({
   body: { flex: 1, minWidth: 0, gap: spacing.xxs },
   head: { flexDirection: "row", alignItems: "baseline", flexWrap: "wrap", gap: spacing.xs },
   level: { ...textStyle(typography.labelMd) },
-  code: { ...textStyle(typography.bodySm), color: colors.textPrimary },
+  code: { ...textStyle(typography.mono), color: colors.textPrimary },
   message: { ...textStyle(typography.bodyMd), color: colors.textPrimary },
   when: { ...textStyle(typography.labelMd), color: colors.textSecondary },
-  detailLine: { ...textStyle(typography.labelMd), color: colors.textSecondary },
+  detailLine: { ...textStyle(typography.mono), color: colors.textSecondary },
   detailLabel: { color: colors.textPrimary },
   toggle: {
     flexDirection: "row",

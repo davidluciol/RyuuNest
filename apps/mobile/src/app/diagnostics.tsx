@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 
+import SafeScreen from "../components/SafeScreen";
 import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen";
 import { useDiagnosticsData } from "../screens/settings/diagnostics/useDiagnosticsData";
 
@@ -13,13 +14,15 @@ export default function DiagnosticsRoute() {
   const { view, flow, controller, notice, retry } = useDiagnosticsData();
 
   return (
-    <DiagnosticsScreen
-      view={view}
-      flow={flow}
-      controller={controller}
-      notice={notice}
-      onBack={() => router.dismissTo("/settings")}
-      onRetry={retry}
-    />
+    <SafeScreen>
+      <DiagnosticsScreen
+        view={view}
+        flow={flow}
+        controller={controller}
+        notice={notice}
+        onBack={() => router.dismissTo("/settings")}
+        onRetry={retry}
+      />
+    </SafeScreen>
   );
 }

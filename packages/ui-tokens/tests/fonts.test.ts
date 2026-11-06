@@ -11,7 +11,7 @@ import { fonts } from "../src/typography";
  * `fontFamily` en React Native con archivos por peso.
  */
 describe("manifiesto de fuentes (F03, P2-3)", () => {
-  it("empaqueta exactamente los cinco archivos de pesos reales", () => {
+  it("empaqueta exactamente los siete archivos de pesos reales", () => {
     expect(fontFiles).toEqual([
       {
         family: "Manrope",
@@ -48,6 +48,20 @@ describe("manifiesto de fuentes (F03, P2-3)", () => {
         postScriptName: "Inter-SemiBold",
         license: "LICENSE-Inter.txt",
       },
+      {
+        family: "JetBrains Mono",
+        weight: 400,
+        file: "JetBrainsMono-Regular.ttf",
+        postScriptName: "JetBrainsMono-Regular",
+        license: "LICENSE-JetBrainsMono.txt",
+      },
+      {
+        family: "JetBrains Mono",
+        weight: 500,
+        file: "JetBrainsMono-Medium.ttf",
+        postScriptName: "JetBrainsMono-Medium",
+        license: "LICENSE-JetBrainsMono.txt",
+      },
     ]);
   });
 
@@ -60,6 +74,7 @@ describe("manifiesto de fuentes (F03, P2-3)", () => {
     }
     expect(weightsByFamily.get("Manrope")?.sort()).toEqual([...fonts.headingWeights].sort());
     expect(weightsByFamily.get("Inter")?.sort()).toEqual([...fonts.bodyWeights].sort());
+    expect(weightsByFamily.get("JetBrains Mono")?.sort()).toEqual([...fonts.monoWeights].sort());
   });
 
   it("no repite archivos ni nombres PostScript", () => {
@@ -73,6 +88,7 @@ describe("manifiesto de fuentes (F03, P2-3)", () => {
     expect(fontLicenses).toEqual({
       Manrope: { file: "LICENSE-Manrope.txt", spdx: "OFL-1.1" },
       Inter: { file: "LICENSE-Inter.txt", spdx: "OFL-1.1" },
+      "JetBrains Mono": { file: "LICENSE-JetBrainsMono.txt", spdx: "OFL-1.1" },
     });
   });
 });

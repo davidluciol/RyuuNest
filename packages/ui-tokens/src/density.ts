@@ -44,6 +44,13 @@ export const touchTarget = { min: 48 } as const;
  */
 export const readerMaxWidth = 720 as const;
 
+/**
+ * Ancho máximo de la columna de contenido de las pantallas de lista (Ajustes,
+ * Diagnóstico, Fuentes) en escritorio: mantiene una medida de lectura cómoda
+ * (DESIGN.md). Mismo valor que la columna del lector, token aparte.
+ */
+export const contentMaxWidth = 720 as const;
+
 /** Alto de la barra de progreso de portada (RF-41: 3 px). */
 export const progressBarHeight = 3 as const;
 
