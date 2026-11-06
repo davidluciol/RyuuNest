@@ -6,7 +6,7 @@ import { radii, spacing, touchTarget, withAlpha, dragonNightColors } from "@ryuu
  * vive aquí; `Button.tsx` solo la monta con `Pressable`.
  */
 
-export type ButtonVariant = "primary" | "secondary" | "destructive";
+export type ButtonVariant = "primary" | "secondary" | "destructive" | "caution";
 
 /** Alto mínimo de botón = área táctil (48 dp, RNF-7). */
 export const BUTTON_MIN_HEIGHT = touchTarget.min;
@@ -48,7 +48,7 @@ export function buttonStyle(variant: ButtonVariant, state: ButtonState = {}): Bu
   } else {
     variantStyle = {
       backgroundColor: "transparent",
-      borderColor: colors.error,
+      borderColor: variant === "caution" ? colors.warning : colors.error,
       borderWidth: 1,
     };
   }
@@ -63,6 +63,7 @@ export function buttonStyle(variant: ButtonVariant, state: ButtonState = {}): Bu
 export function buttonTextColor(variant: ButtonVariant): string {
   if (variant === "primary") return colors.bg;
   if (variant === "secondary") return colors.textPrimary;
+  if (variant === "caution") return colors.warning;
   return colors.error;
 }
 

@@ -13,7 +13,10 @@
   "actions.exploreAgain": "Explorar de nuevo",
   "actions.retry": "Reintentar",
   "actions.showDetail": "Ver detalle",
+  "actions.showTechnicalDetail": "Ver detalle técnico",
   "actions.close": "Cerrar",
+  "toast.close": "Cerrar aviso",
+  "confirm.cancel": "Cancelar",
   "actions.back": "Volver",
 
   "series.title": "Ficha",
@@ -328,11 +331,14 @@
   "gallery.component.holdToConfirm": "botón de mantener pulsado",
   "gallery.component.sheetModal": "hoja modal",
   "gallery.component.toast": "aviso transitorio (toast)",
+  "gallery.component.codeChip": "etiqueta de código",
+  "gallery.component.confirmSheet": "confirmación (hoja y diálogo)",
   "gallery.component.errorBanner": "aviso inline (banner)",
   "gallery.component.errorDialog": "diálogo de error",
   "gallery.holdToConfirm.label": "Mantén pulsado",
   "gallery.toast.message": "Se vació la caché de imágenes",
   "gallery.toast.action": "Deshacer",
+  "gallery.toast.long": "Se vació la caché de imágenes y se liberó el espacio de las portadas descargadas en este dispositivo",
   "gallery.banner.title": "El módulo falló",
   "gallery.banner.message": "No se pudo leer el listado de obras.",
   "gallery.component.diagnosticsScreen": "pantalla Diagnóstico",
@@ -396,5 +402,8 @@
   "extension.notice.domains": "Autoriza {count} dominios en la extensión para continuar.",
   "extension.notice.open": "Abrir extensión",
   "gallery.dialog.title": "No se pudo importar el respaldo",
-  "gallery.dialog.message": "El archivo no es un respaldo válido de RyuuNest."
+  "gallery.dialog.message": "El archivo no es un respaldo válido de RyuuNest.",
+  "gallery.dialog.show": "Mostrar diálogo de error",
+  "gallery.confirm.show": "Mostrar confirmación",
+  "gallery.confirm.subject": "respaldo-2026-11-01.json"
 }

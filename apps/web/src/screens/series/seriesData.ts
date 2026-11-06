@@ -3,6 +3,7 @@ import {
   Favorites,
   ProgressStore,
   SeriesPrefs,
+  SeriesStore,
   type ModuleMounter,
   type SeriesDetails,
   type SqlDriver,
@@ -86,15 +87,22 @@ export async function loadSeries(
   };
 }
 
-/** Un toque: añade o quita de favoritos (persistente en la base web). */
+/**
+ * Un toque: añade o quita de favoritos (persistente en la base web). Al añadir guarda antes la
+ * serie en `series`: la biblioteca une `favorite` con `series` y sin esa fila el favorito no se
+ * listaría (P-126).
+ */
 export async function toggleFavorite(
   services: SeriesServices,
   moduleId: string,
   seriesId: string,
+  details: SeriesDetails,
 ): Promise<boolean> {
-  const favorites = new Favorites({ driver: services.driver, clock: { now: () => Date.now() } });
+  const clock = { now: () => Date.now() };
+  const favorites = new Favorites({ driver: services.driver, clock });
   const current = await favorites.get(moduleId, seriesId);
   if (current === undefined) {
+    await new SeriesStore({ driver: services.driver, clock }).saveFromDetails(moduleId, { ...details, id: seriesId });
     await favorites.add(moduleId, seriesId, null);
     return true;
   }

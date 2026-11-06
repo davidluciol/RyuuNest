@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmar acción destructiva · diálogo centrado (escritorio y TV) — Dragon Night (F34)</title>
+  <link rel="stylesheet" href="../_shared/dragon-night.css">
+  <style>
+    body { display: block; }
+    .page { min-height: 100vh; display: grid; grid-template-columns: 240px 1fr; }
+    .rail { border-right: 1px solid var(--border); background: var(--surface); padding: 24px 16px; font: 700 18px/24px "Manrope", sans-serif; }
+    .content { padding: 32px; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+    .col { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: 16px; }
+    .row { display: flex; align-items: center; gap: 12px; padding: 16px; border-top: 1px solid var(--border); font-size: 14px; }
+    .row:first-child { border-top: 0; }
+    .scrim { position: fixed; }
+    .dialog { max-width: 480px; }
+    .subject { align-self: flex-start; display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); font: 500 14px/20px "Inter", sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="page" aria-hidden="true">
+    <nav class="rail">RyuuNest</nav>
+    <div class="content">
+      <div class="col">
+        <h1 style="font:700 28px/36px Manrope,sans-serif">Ajustes</h1>
+        <p class="label">Respaldo</p>
+        <div class="card">
+          <div class="row">Exportar respaldo</div>
+          <div class="row">Importar respaldo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scrim">
+    <section class="dialog" role="alertdialog" aria-labelledby="t" aria-describedby="d">
+      <h2 id="t">Reemplazar el estado actual</h2>
+      <span class="subject">respaldo-2026-11-01.json</span>
+      <p id="d">Se borrará tu biblioteca, progreso y ajustes actuales y se restaurarán los del respaldo. Esta acción no se puede deshacer.</p>
+      <div class="actions">
+        <button class="btn">Cancelar</button>
+        <button class="btn caution">
+          <svg class="i sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+          Reemplazar
+        </button>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

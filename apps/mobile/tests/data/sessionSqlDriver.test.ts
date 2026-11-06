@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ChapterReadStore, ProgressStore, SeriesPrefs } from "@ryuunest/core";
+import { ChapterReadStore, Favorites, ProgressStore, SeriesPrefs, SeriesStore } from "@ryuunest/core";
 
 import { createSessionSqlDriver } from "../../src/data/sessionSqlDriver";
 
@@ -20,6 +20,8 @@ function stores() {
     progress: new ProgressStore({ driver, clock }),
     read: new ChapterReadStore({ driver, clock }),
     prefs: new SeriesPrefs({ driver, clock }),
+    series: new SeriesStore({ driver, clock }),
+    favorites: new Favorites({ driver, clock }),
   };
 }
 
@@ -52,6 +54,19 @@ describe("createSessionSqlDriver", () => {
 
     await read.unmarkRead({ moduleId: "m-a", seriesId: "s-1", chapterId: "ch-1" });
     expect(await read.isRead("m-a", "s-1", "ch-1")).toBe(false);
+  });
+
+  it("guarda la serie y su favorito, y los quita (P-126)", async () => {
+    const { series, favorites } = stores();
+    await series.upsert({ moduleId: "m-a", seriesId: "s-1", title: "Una serie", nsfw: false });
+    await favorites.add("m-a", "s-1", null);
+
+    expect(await series.get("m-a", "s-1")).toMatchObject({ title: "Una serie", titleNorm: "una serie" });
+    expect(await favorites.get("m-a", "s-1")).toMatchObject({ moduleId: "m-a", seriesId: "s-1" });
+    expect(await favorites.get("m-a", "s-2")).toBeUndefined();
+
+    await favorites.remove("m-a", "s-1");
+    expect(await favorites.get("m-a", "s-1")).toBeUndefined();
   });
 
   it("recuerda el modo y el grupo preferido de la serie sin que uno pise al otro", async () => {

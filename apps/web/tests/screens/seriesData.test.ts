@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   ChapterReadStore,
+  browseLibrary,
   ModuleError,
   ProgressStore,
   SeriesPrefs,
@@ -29,7 +30,7 @@ import {
 const details = {
   id: "s-1",
   title: "Dragón de prueba",
-  cover: "https://sitio.test/cover.png",
+  cover: { url: "https://sitio.test/cover.png" },
   kind: "manga",
   nsfw: false,
   description: "Una serie de prueba.",
@@ -140,12 +141,30 @@ describe("seriesData web (ficha sobre base real)", () => {
 
   it("toggleFavorite y setPreferredRelease persisten en la base", async () => {
     const { driver, services } = await setup();
-    expect(await toggleFavorite(services, "demo", "s-1")).toBe(true);
-    expect(await toggleFavorite(services, "demo", "s-1")).toBe(false);
+    expect(await toggleFavorite(services, "demo", "s-1", details)).toBe(true);
+    expect(await toggleFavorite(services, "demo", "s-1", details)).toBe(false);
     await setPreferredRelease(services, "demo", "s-1", "r-oficial");
     const again = await loadSeries(services, "demo", "s-1");
     expect(again.preferredReleaseId).toBe("r-oficial");
     expect(driver).toBeDefined();
+  });
+
+  it("marcar favorito guarda la serie y la biblioteca la lista; quitarlo la saca (P-126)", async () => {
+    const { driver, services } = await setup();
+    await toggleFavorite(services, "demo", "s-1", details);
+
+    const page = await browseLibrary(driver, { limit: 10 });
+    expect(page.items).toHaveLength(1);
+    expect(page.items[0]).toMatchObject({
+      moduleId: "demo",
+      seriesId: "s-1",
+      title: "Dragón de prueba",
+      coverUrl: "https://sitio.test/cover.png",
+      kind: "manga",
+    });
+
+    await toggleFavorite(services, "demo", "s-1", details);
+    expect((await browseLibrary(driver, { limit: 10 })).items).toEqual([]);
   });
 
   it("un módulo que falla da el error contenido (RF-11)", async () => {

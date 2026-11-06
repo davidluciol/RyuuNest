@@ -1,26 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { dragonNightColors } from "@ryuunest/ui-tokens";
 
 import ErrorState from "../../../components/ErrorState";
+import { resolveErrorReporter } from "../../../data/errorLog";
 import LoadingState from "../../../components/LoadingState";
 import { t } from "../../../i18n";
 import { readingOrder } from "../../../reader/readingOrder";
 import SeriesScreen from "../../../screens/series/SeriesScreen";
+import { resolveReadingSource } from "../../../screens/reader/readingSource";
 import { preferredRelease } from "../../../screens/series/seriesFixtures";
 import { useSeriesData } from "../../../screens/series/useSeriesData";
 
 /**
  * F17/F18 — ruta de la ficha de serie: lee `details()` del módulo con su progreso (useSeriesData)
- * y abre el lector desde «Continuar/Empezar» o desde un capítulo. Favorito, carpeta y edición
- * preferida siguen en el estado de la pantalla hasta que se conecten (F20).
+ * y abre el lector desde «Continuar/Empezar» o desde un capítulo. El favorito se guarda en la base
+ * junto con su serie (P-126); carpeta y edición preferida siguen en el estado de la pantalla hasta
+ * que se conecten (F20).
  */
 export default function SeriesRoute() {
   const { moduleId, seriesId } = useLocalSearchParams<{ moduleId: string; seriesId: string }>();
   const { view, retry } = useSeriesData(moduleId, seriesId);
   const [favorite, setFavorite] = useState(false);
   const [preferredReleaseId, setPreferredReleaseId] = useState<string | null>(null);
+  const savedFavorite = view.status === "ready" ? view.data.favorite : undefined;
+
+  useEffect(() => {
+    if (savedFavorite !== undefined) setFavorite(savedFavorite);
+  }, [savedFavorite]);
 
   if (view.status === "loading") {
     return (
@@ -75,7 +83,20 @@ export default function SeriesRoute() {
           data.progress?.chapterId ?? readingOrder(data.details.chapters)[0]?.id ?? null;
         if (target !== null) openChapter(target);
       }}
-      onFavoriteToggle={() => setFavorite((value) => !value)}
+      onFavoriteToggle={() => {
+        resolveReadingSource()
+          .then((source) => source.toggleFavorite(moduleId, seriesId, data.details))
+          .then(setFavorite)
+          .catch(async (error: unknown) => {
+            const reporter = await resolveErrorReporter();
+            reporter.report(
+              "error",
+              "series.favorite.internal",
+              error instanceof Error ? error.message : String(error),
+              { moduleId, seriesId },
+            );
+          });
+      }}
       onFolderLongPress={() => undefined}
       onReleaseSelect={(chapterId, releaseId) => {
         const chapter = data.details.chapters.find((item) => item.id === chapterId);

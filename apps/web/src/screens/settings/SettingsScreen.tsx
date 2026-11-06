@@ -9,6 +9,7 @@ import {
 
 import Button from "../../components/Button";
 import Chip from "../../components/Chip";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import Dialog from "../../components/Dialog";
 import ErrorState from "../../components/ErrorState";
 import LoadingState from "../../components/LoadingState";
@@ -218,24 +219,19 @@ export default function SettingsScreen() {
         </Dialog>
       )}
       {controller !== null && flow.sheet === "replace-confirm" && (
-        <Dialog title={t("settings.backup.replace.title")} onClose={controller.close} testID="backup-replace-dialog">
-          <p className="t-body-md settings-hint">{t("settings.backup.replace.message")}</p>
-          {flow.error !== null && (
-            <p className="t-body-sm field-error" role="alert">
-              {flow.error}
-            </p>
-          )}
-          <div className="settings-dialog-actions">
-            <Button variant="secondary" label={t("settings.backup.sheet.cancel")} onClick={controller.close} testID="backup-replace-cancel" />
-            <Button
-              variant="destructive"
-              label={t("settings.backup.replace.confirm")}
-              onClick={() => void controller.applyImport("replace")}
-              disabled={flow.busy}
-              testID="backup-replace-confirm"
-            />
-          </div>
-        </Dialog>
+        <ConfirmDialog
+          title={t("settings.backup.replace.title")}
+          message={t("settings.backup.replace.message")}
+          confirmLabel={t("settings.backup.replace.confirm")}
+          cancelLabel={t("settings.backup.sheet.cancel")}
+          onConfirm={() => void controller.applyImport("replace")}
+          onCancel={controller.close}
+          busy={flow.busy}
+          error={flow.error}
+          testID="backup-replace-dialog"
+          confirmTestID="backup-replace-confirm"
+          cancelTestID="backup-replace-cancel"
+        />
       )}
       {controller !== null && flow.sheet === "suggestions" && (
         <Dialog title={t("settings.backup.suggestions.title")} onClose={controller.close} testID="backup-suggestions">

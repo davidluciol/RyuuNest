@@ -40,6 +40,15 @@ describe("buttonStyle (variantes, SPEC §11.10)", () => {
     });
   });
 
+  it("precaución (F34): borde y texto warning, sin relleno; avisa sin asustar", () => {
+    expect(buttonStyle("caution")).toMatchObject({
+      backgroundColor: "transparent",
+      borderColor: "#F5C451",
+      borderWidth: 1,
+    });
+    expect(buttonTextColor("caution")).toBe("#F5C451");
+  });
+
   it("el relleno accent/progress lleva texto bg (inversión, SPEC §11.9)", () => {
     expect(buttonTextColor("primary")).toBe("#0B0E14");
     expect(buttonTextColor("secondary")).toBe("#F2F0EA");
@@ -59,7 +68,7 @@ describe("buttonStyle (variantes, SPEC §11.10)", () => {
   });
 
   it("buttonColors expone los pares para la puerta de contraste", () => {
-    const variants: ButtonVariant[] = ["primary", "secondary", "destructive"];
+    const variants: ButtonVariant[] = ["primary", "secondary", "destructive", "caution"];
     for (const variant of variants) {
       const pair = buttonColors(variant);
       expect(pair.bg).toBeTruthy();

@@ -32,6 +32,12 @@
   color: var(--color-bg);
 }
 
+.btn-caution {
+  background: transparent;
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
 .btn-label {
   font-weight: 600;
 }

@@ -17,6 +17,7 @@ import { Plus, RefreshCw, Trash2 } from "../../icons";
 import Badge from "../../components/Badge";
 import Button from "../../components/Button";
 import Chip from "../../components/Chip";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import Dialog from "../../components/Dialog";
 import EmptyState from "../../components/EmptyState";
 import ErrorState from "../../components/ErrorState";
@@ -79,26 +80,34 @@ export default function SourcesScreen() {
       )}
       {controller !== null && flow.sheet === "uninstall" && (
         <ConfirmDialog
-          titleKey="sources.uninstall.title"
-          messageKey="sources.uninstall.message"
-          submitKey="sources.uninstall.submit"
+          title={t("sources.uninstall.title")}
+          message={t("sources.uninstall.message")}
+          subject={view.status === "ready" ? view.data.modules.find((module) => module.id === flow.moduleId)?.name : undefined}
+          confirmLabel={t("sources.uninstall.submit")}
+          cancelLabel={t("sources.sheet.cancel")}
           busy={flow.busy}
           error={flow.error}
-          onSubmit={() => void controller.confirmUninstall()}
-          onClose={controller.back}
+          onConfirm={() => void controller.confirmUninstall()}
+          onCancel={controller.back}
           testID="uninstall-dialog"
+          confirmTestID="uninstall-dialog-submit"
+          cancelTestID="uninstall-dialog-cancel"
         />
       )}
       {controller !== null && flow.sheet === "remove-repo" && (
         <ConfirmDialog
-          titleKey="sources.removeRepo.title"
-          messageKey="sources.removeRepo.message"
-          submitKey="sources.removeRepo.submit"
+          title={t("sources.removeRepo.title")}
+          message={t("sources.removeRepo.message")}
+          subject={flow.repoId}
+          confirmLabel={t("sources.removeRepo.submit")}
+          cancelLabel={t("sources.sheet.cancel")}
           busy={flow.busy}
           error={flow.error}
-          onSubmit={() => void controller.confirmRemoveRepo()}
-          onClose={controller.close}
+          onConfirm={() => void controller.confirmRemoveRepo()}
+          onCancel={controller.close}
           testID="remove-repo-dialog"
+          confirmTestID="remove-repo-dialog-submit"
+          cancelTestID="remove-repo-dialog-cancel"
         />
       )}
     </div>
@@ -431,33 +440,3 @@ function UpdateDialog({
   );
 }
 
-function ConfirmDialog({
-  titleKey,
-  messageKey,
-  submitKey,
-  busy,
-  error,
-  onSubmit,
-  onClose,
-  testID,
-}: {
-  titleKey: string;
-  messageKey: string;
-  submitKey: string;
-  busy: boolean;
-  error: string | null;
-  onSubmit: () => void;
-  onClose: () => void;
-  testID: string;
-}) {
-  return (
-    <Dialog title={t(titleKey)} onClose={onClose} testID={testID}>
-      <p className="t-body-md sources-dialog-text">{t(messageKey)}</p>
-      {error !== null && <p className="t-body-sm field-error" role="alert">{error}</p>}
-      <div className="sources-dialog-actions">
-        <Button variant="secondary" label={t("sources.sheet.cancel")} onClick={onClose} testID={`${testID}-cancel`} />
-        <Button variant="destructive" label={t(submitKey)} onClick={onSubmit} disabled={busy} testID={`${testID}-submit`} />
-      </div>
-    </Dialog>
-  );
-}

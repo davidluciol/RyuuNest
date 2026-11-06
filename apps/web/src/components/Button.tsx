@@ -2,11 +2,12 @@ import "./button.css";
 
 /**
  * F24 — botón web (DOM) con las mismas variantes que el móvil (SPEC §11.10):
- * primario / secundario / destructivo. Un primario por pantalla; el relleno
+ * primario / secundario / destructivo / precaución (confirmar una acción con consecuencias, en
+ * amarillo: avisa sin asustar, F34). Un primario por pantalla; el relleno
  * `accent`/`progress` lleva texto en `bg` (inversión, SPEC §11.9). Los estilos
  * viven en `button.css` con variables de tokens; aquí no hay literales (AC-13).
  */
-export type ButtonVariant = "primary" | "secondary" | "destructive";
+export type ButtonVariant = "primary" | "secondary" | "destructive" | "caution";
 
 export interface ButtonProps {
   variant?: ButtonVariant | undefined;

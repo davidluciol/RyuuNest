@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../../components/Button";
+import ConfirmSheet from "../../../components/ConfirmSheet";
 import ErrorDialog from "../../../components/ErrorDialog";
 import { kindLabel } from "../../../components/kindLabel";
 import ModuleRow from "../../../components/ModuleRow";
@@ -103,30 +104,19 @@ function ReplaceConfirmSheet({
   controller: BackupController;
 }) {
   return (
-    <SheetModal
+    <ConfirmSheet
       visible
       title={t("settings.backup.replace.title")}
-      onClose={controller.close}
+      message={t("settings.backup.replace.message")}
+      confirmLabel={t("settings.backup.replace.confirm")}
+      cancelLabel={t("settings.backup.sheet.cancel")}
+      onConfirm={() => void controller.applyImport("replace")}
+      onCancel={controller.close}
       busy={flow.busy}
+      error={flow.error}
       testID="sheet-backup-replace"
-    >
-      <Text style={styles.body}>{t("settings.backup.replace.message")}</Text>
-      {flow.error !== null ? (
-        <Text accessibilityRole="alert" style={styles.error}>
-          {flow.error}
-        </Text>
-      ) : null}
-      <View style={styles.actions}>
-        <Button variant="secondary" label={t("settings.backup.sheet.cancel")} onPress={controller.close} />
-        <Button
-          variant="destructive"
-          label={t("settings.backup.replace.confirm")}
-          disabled={flow.busy}
-          onPress={() => void controller.applyImport("replace")}
-          testID="backup-apply-replace"
-        />
-      </View>
-    </SheetModal>
+      confirmTestID="backup-apply-replace"
+    />
   );
 }
 
@@ -222,7 +212,7 @@ export default function BackupSheets({ flow, controller }: BackupSheetsProps) {
         message={flow.error}
         code={flow.reason}
         severity="error"
-        detailLabel={t("actions.showDetail")}
+        detailLabel={t("actions.showTechnicalDetail")}
         detail={flow.issues.length > 0 ? { code: flow.issues.map((issue) => issue.path).join(", ") } : undefined}
         retryLabel={t("actions.retry")}
         onRetry={controller.close}

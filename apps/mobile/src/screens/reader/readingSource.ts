@@ -1,9 +1,12 @@
 import type { ImageSourcePropType } from "react-native";
 import {
   ChapterReadStore,
+  Favorites,
   ModuleError,
   ProgressStore,
+  SeriesStore,
   type ImageRef,
+  type SeriesDetails,
   type SqlDriver,
 } from "@ryuunest/core";
 
@@ -41,6 +44,11 @@ export interface ReadingSource {
   readonly driver: SqlDriver;
   /** Ficha de la serie con el progreso y los capítulos leídos (F17). */
   loadSeries(moduleId: string, seriesId: string): Promise<SeriesViewData>;
+  /**
+   * Marca o desmarca la serie como favorita y devuelve el estado nuevo. Al marcar guarda antes la
+   * serie en `series`: la biblioteca une `favorite` con `series` (P-126).
+   */
+  toggleFavorite(moduleId: string, seriesId: string, details: SeriesDetails): Promise<boolean>;
   /** Páginas de un capítulo en una edición, con las cabeceras del módulo (RF-24). */
   loadPages(moduleId: string, chapterId: string, releaseId: string): Promise<ReaderPages>;
 }
@@ -61,6 +69,8 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
   const clock = { now: () => Date.now() };
   const progress = new ProgressStore({ driver, clock });
   const chaptersRead = new ChapterReadStore({ driver, clock });
+  const favorites = new Favorites({ driver, clock });
+  const seriesStore = new SeriesStore({ driver, clock });
   // Se arranca ya: la primera escritura del sembrado ocurre antes de que nadie más escriba.
   const seeded = deps.seed?.(driver) ?? Promise.resolve();
 
@@ -71,9 +81,10 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
       await seeded;
       const { handle, manifest } = await mounter.mount(moduleId);
       const details = await handle.api.details(seriesId);
-      const [saved, read] = await Promise.all([
+      const [saved, read, favorite] = await Promise.all([
         progress.get(moduleId, seriesId),
         chaptersRead.readIn(moduleId, seriesId),
+        favorites.get(moduleId, seriesId),
       ]);
       return {
         details,
@@ -85,7 +96,18 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
             : { chapterId: saved.chapterId, pageIndex: saved.pageIndex, pageTotal: saved.pageTotal ?? 0 },
         readChapterIds: read,
         preferredReleaseId: null,
+        favorite: favorite !== undefined,
       };
+    },
+
+    async toggleFavorite(moduleId, seriesId, details) {
+      if ((await favorites.get(moduleId, seriesId)) !== undefined) {
+        await favorites.remove(moduleId, seriesId);
+        return false;
+      }
+      await seriesStore.saveFromDetails(moduleId, { ...details, id: seriesId });
+      await favorites.add(moduleId, seriesId, null);
+      return true;
     },
 
     async loadPages(moduleId, chapterId, releaseId) {

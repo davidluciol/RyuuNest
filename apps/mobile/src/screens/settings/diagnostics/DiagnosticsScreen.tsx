@@ -15,7 +15,7 @@ import EmptyState from "../../../components/EmptyState";
 import ErrorState from "../../../components/ErrorState";
 import LoadingState from "../../../components/LoadingState";
 import LogEventRow from "../../../components/LogEventRow";
-import SheetModal from "../../../components/SheetModal";
+import ConfirmSheet from "../../../components/ConfirmSheet";
 import Toast from "../../../components/Toast";
 import { textStyle } from "../../../components/textStyle";
 import { ChevronLeft, Copy, Trash2, Upload } from "../../../icons";
@@ -214,30 +214,18 @@ export default function DiagnosticsScreen({
         </View>
       </ScrollView>
 
-      <SheetModal
+      <ConfirmSheet
         visible={flow.confirmClear}
         title={t("diagnostics.confirm.title")}
-        onClose={() => controller?.cancelClear()}
+        message={confirmClearMessage(events.length)}
+        confirmLabel={t("diagnostics.confirm.submit")}
+        cancelLabel={t("diagnostics.confirm.cancel")}
+        onConfirm={() => void controller?.confirmClear()}
+        onCancel={() => controller?.cancelClear()}
         testID="diagnostics-confirm"
-      >
-        <Text style={styles.confirmText}>{confirmClearMessage(events.length)}</Text>
-        <View style={styles.pair}>
-          <Button
-            variant="secondary"
-            label={t("diagnostics.confirm.cancel")}
-            onPress={() => controller?.cancelClear()}
-            style={styles.half}
-            testID="diagnostics-confirm-cancel"
-          />
-          <Button
-            variant="destructive"
-            label={t("diagnostics.confirm.submit")}
-            onPress={() => void controller?.confirmClear()}
-            style={styles.half}
-            testID="diagnostics-confirm-submit"
-          />
-        </View>
-      </SheetModal>
+        confirmTestID="diagnostics-confirm-submit"
+        cancelTestID="diagnostics-confirm-cancel"
+      />
 
       <NoticeToast notice={notice} onClose={controller?.dismissNotice} />
     </View>
@@ -292,7 +280,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   divider: { borderTopWidth: 1, borderTopColor: colors.border },
-  confirmText: { ...textStyle(typography.bodyMd), color: colors.textSecondary },
   toastWrap: {
     position: "absolute",
     left: spacing.md,

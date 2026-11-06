@@ -135,10 +135,34 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF24");
       assert.match(reportJson.suggestedFilename(), /^ryuunest-diagnostico-.*\.json$/);
 
       await page.getByTestId("diagnostics-copy").click();
-      await page.getByTestId("diagnostics-toast").waitFor({ state: "visible" });
+      const toast = page.getByTestId("diagnostics-toast");
+      await toast.waitFor({ state: "visible" });
+      // F34.1: punto de severidad y cierre «Cerrar aviso» (no el texto del mensaje).
+      assert.equal(await toast.locator(".toast-dot").count(), 1, `punto del toast a ${width} px`);
+      assert.equal(
+        await toast.getByRole("button", { name: "Cerrar aviso", exact: true }).count(),
+        1,
+        `cierre accesible del toast a ${width} px`,
+      );
+      await fs.mkdir(path.resolve(output, "../capturasF34"), { recursive: true });
+      await toast.screenshot({ path: path.resolve(output, `../capturasF34/toast-web-${width}.png`) });
 
       await page.getByTestId("diagnostics-clear").click();
       await page.getByTestId("diagnostics-confirm").waitFor({ state: "visible" });
+      // F34.2: confirmación única (confirmar_accion_dragon_night): acción en amarillo; hoja anclada abajo
+      // en pantallas estrechas y diálogo centrado en las anchas.
+      const confirmBox = await page.getByTestId("diagnostics-confirm").boundingBox();
+      const submitColor = await page
+        .getByTestId("diagnostics-confirm-submit")
+        .evaluate((el) => getComputedStyle(el).color);
+      assert.equal(submitColor, "rgb(245, 196, 81)", `la acción de confirmar es amarilla a ${width} px`);
+      assert.ok(confirmBox, `caja de la confirmación a ${width} px`);
+      if (width < 600) {
+        assert.ok(confirmBox.y + confirmBox.height >= 900 - 2, `hoja anclada abajo a ${width} px`);
+      } else {
+        assert.ok(Math.abs(confirmBox.x + confirmBox.width / 2 - width / 2) <= 2, `diálogo centrado a ${width} px`);
+        assert.ok(confirmBox.width <= 481, `ancho máximo a ${width} px`);
+      }
       await page.getByTestId("diagnostics-confirm-submit").click();
       await page.getByTestId("diagnostics-empty").waitFor({ state: "visible" });
 

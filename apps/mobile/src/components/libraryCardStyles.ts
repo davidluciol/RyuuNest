@@ -5,6 +5,7 @@ import {
   spacing,
   typography,
   dragonNightColors,
+  type TypeStyle,
 } from "@ryuunest/ui-tokens";
 
 import { BADGE_HEIGHT } from "./badgeStyles";
@@ -44,11 +45,8 @@ export function libraryCardStyle(): LibraryCardStyleShape {
   };
 }
 
-export interface LibraryCardTitleStyleShape {
+export interface LibraryCardTitleStyleShape extends TypeStyle {
   numberOfLines: number;
-  fontFamily: string;
-  fontSize: number;
-  lineHeight: number;
   color: string;
 }
 
@@ -56,9 +54,7 @@ export interface LibraryCardTitleStyleShape {
 export function libraryCardTitleStyle(): LibraryCardTitleStyleShape {
   return {
     numberOfLines: LIBRARY_CARD_TITLE_LINES,
-    fontFamily: typography.labelLg.fontFamily,
-    fontSize: typography.labelLg.fontSize,
-    lineHeight: typography.labelLg.lineHeight,
+    ...typography.labelLg,
     color: colors.textPrimary,
   };
 }
@@ -100,11 +96,8 @@ export function libraryCardProgressStyle(progress: number): LibraryCardProgressS
   };
 }
 
-export interface LibraryCardMetaStyleShape {
+export interface LibraryCardMetaStyleShape extends TypeStyle {
   numberOfLines: number;
-  fontFamily: string;
-  fontSize: number;
-  lineHeight: number;
   color: string;
 }
 
@@ -112,9 +105,7 @@ export interface LibraryCardMetaStyleShape {
 export function libraryCardMetaStyle(): LibraryCardMetaStyleShape {
   return {
     numberOfLines: 2,
-    fontFamily: typography.labelMd.fontFamily,
-    fontSize: typography.labelMd.fontSize,
-    lineHeight: typography.labelMd.lineHeight,
+    ...typography.labelMd,
     color: colors.textSecondary,
   };
 }

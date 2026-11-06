@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
+import ConfirmSheet from "../../components/ConfirmSheet";
 import HoldToConfirm from "../../components/HoldToConfirm";
 import SheetModal from "../../components/SheetModal";
 import TextField from "../../components/TextField";
@@ -180,59 +181,38 @@ export default function SourcesSheets({ flow, controller, modules }: SourcesShee
   }
 
   if (flow.sheet === "uninstall") {
+    const subject = modules.find((candidate) => candidate.id === flow.moduleId)?.name;
     return (
-      <SheetModal
+      <ConfirmSheet
         visible
         title={t("sources.uninstall.title")}
-        onClose={controller.close}
+        message={t("sources.uninstall.message")}
+        {...(subject === undefined ? {} : { subject })}
+        confirmLabel={t("sources.uninstall.submit")}
+        cancelLabel={t("sources.sheet.back")}
+        onConfirm={() => void controller.confirmUninstall()}
+        onCancel={controller.back}
         busy={flow.busy}
+        error={flow.error}
         testID="sheet-uninstall"
-      >
-        <Text style={styles.body}>{t("sources.uninstall.message")}</Text>
-        <SheetError message={flow.error} />
-        <View style={styles.actions}>
-          <Button
-            variant="secondary"
-            label={t("sources.sheet.back")}
-            disabled={flow.busy}
-            onPress={controller.back}
-          />
-          <Button
-            variant="destructive"
-            label={t("sources.uninstall.submit")}
-            disabled={flow.busy}
-            onPress={() => void controller.confirmUninstall()}
-          />
-        </View>
-      </SheetModal>
+      />
     );
   }
 
   return (
-    <SheetModal
+    <ConfirmSheet
       visible
       title={t("sources.removeRepo.title")}
-      onClose={controller.close}
+      message={t("sources.removeRepo.message")}
+      subject={flow.repoId}
+      confirmLabel={t("sources.removeRepo.submit")}
+      cancelLabel={t("sources.sheet.back")}
+      onConfirm={() => void controller.confirmRemoveRepo()}
+      onCancel={controller.back}
       busy={flow.busy}
+      error={flow.error}
       testID="sheet-remove-repo"
-    >
-      <Text style={styles.body}>{t("sources.removeRepo.message")}</Text>
-      <SheetError message={flow.error} />
-      <View style={styles.actions}>
-        <Button
-          variant="secondary"
-          label={t("sources.sheet.back")}
-          disabled={flow.busy}
-          onPress={controller.back}
-        />
-        <Button
-          variant="destructive"
-          label={t("sources.removeRepo.submit")}
-          disabled={flow.busy}
-          onPress={() => void controller.confirmRemoveRepo()}
-        />
-      </View>
-    </SheetModal>
+    />
   );
 }
 

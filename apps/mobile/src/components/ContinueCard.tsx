@@ -153,7 +153,6 @@ const styles = StyleSheet.create({
   },
   chapter: {
     ...textStyle(typography.labelLg),
-    fontWeight: "600",
   },
   page: {
     ...textStyle(typography.bodySm),

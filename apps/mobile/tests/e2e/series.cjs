@@ -40,6 +40,15 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
       await page.getByRole("button", { name: "Carpeta" }).waitFor({ state: "visible" });
 
+      // P-126: el favorito se guarda (con su serie) y no se pierde al salir de la ficha y volver.
+      await page.getByText("Capítulo 1: Capítulo 1").click();
+      await page.getByTestId("screen-reader").waitFor({ state: "visible" });
+      await page.goBack();
+      await page.getByTestId("screen-series").waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Guardada" }).click();
+      await page.getByRole("button", { name: "Guardar" }).waitFor({ state: "visible" });
+
       assert.equal(
         await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth),
         false,

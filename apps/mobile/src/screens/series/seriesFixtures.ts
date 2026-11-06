@@ -23,6 +23,8 @@ export interface SeriesViewData {
   progress: SeriesProgress | null;
   readChapterIds: ReadonlySet<string>;
   preferredReleaseId: string | null;
+  /** Si la serie es favorita (persistido en `favorite`; ausente = no). */
+  favorite?: boolean;
 }
 
 export function sampleSeriesView(seriesId = "dragon-de-ceniza"): SeriesViewData {

@@ -62,6 +62,8 @@ import {
 import OnboardingSample from "../screens/onboarding/OnboardingSample";
 import Toast from "../components/Toast";
 import ErrorBanner from "../components/ErrorBanner";
+import CodeChip from "../components/CodeChip";
+import ConfirmSheet from "../components/ConfirmSheet";
 import ErrorDialog from "../components/ErrorDialog";
 import LogEventRow from "../components/LogEventRow";
 import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen";
@@ -125,6 +127,8 @@ function TypeSample({ name }: { name: keyof typeof typography }) {
 
 export default function GalleryScreen() {
   const [previewDestination, setPreviewDestination] = useState<BottomNavDestination>("home");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const { width } = useWindowDimensions();
   const screen = layoutForWidth(width);
   const density = densityLayout("comfortable", width);
@@ -559,6 +563,21 @@ export default function GalleryScreen() {
             severity="error"
             onClose={() => {}}
           />
+          <Toast
+            testID="gallery-toast-long"
+            message={t("gallery.toast.long")}
+            severity="warning"
+            actionLabel={t("gallery.toast.action")}
+            onAction={() => {}}
+            onClose={() => {}}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.codeChip")}</Text>
+        <View style={styles.row}>
+          <CodeChip code="TIMEOUT" severity="error" />
+          <CodeChip code="BLOCKED" severity="warning" />
+          <CodeChip code="OK" severity="info" />
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.errorBanner")}</Text>
@@ -577,18 +596,48 @@ export default function GalleryScreen() {
         />
 
         <Text style={styles.groupLabel}>{t("gallery.component.errorDialog")}</Text>
-        <View style={styles.dialogPreview}>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.dialog.show")}
+            testID="gallery-show-error-dialog"
+            onPress={() => setDialogOpen(true)}
+          />
           <ErrorDialog
-            visible
+            testID="gallery-error-dialog"
+            visible={dialogOpen}
             animated={false}
             title={t("gallery.dialog.title")}
             message={t("gallery.dialog.message")}
             code="INVALID"
             detail={{ code: "INVALID" }}
-            detailLabel={t("actions.showDetail")}
+            detailLabel={t("actions.showTechnicalDetail")}
             retryLabel={t("actions.retry")}
             onRetry={() => {}}
-            onClose={() => {}}
+            onClose={() => setDialogOpen(false)}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.confirmSheet")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.confirm.show")}
+            testID="gallery-show-confirm"
+            onPress={() => setConfirmOpen(true)}
+          />
+          <ConfirmSheet
+            visible={confirmOpen}
+            animated={false}
+            title={t("settings.backup.replace.title")}
+            message={t("settings.backup.replace.message")}
+            subject={t("gallery.confirm.subject")}
+            confirmLabel={t("settings.backup.replace.confirm")}
+            onConfirm={() => setConfirmOpen(false)}
+            onCancel={() => setConfirmOpen(false)}
+            testID="gallery-confirm"
+            confirmTestID="gallery-confirm-submit"
+            cancelTestID="gallery-confirm-cancel"
           />
         </View>
 
@@ -634,16 +683,11 @@ const styles = StyleSheet.create({
   content: { paddingVertical: spacing.lg, gap: spacing.lg },
   title: {
     color: colors.textPrimary,
-    fontFamily: typography.headlineLg.fontFamily,
-    fontSize: typography.headlineLg.fontSize,
-    lineHeight: typography.headlineLg.lineHeight,
-    fontWeight: "700",
+    ...textStyle(typography.headlineLg),
   },
   subtitle: {
     color: colors.textSecondary,
-    fontFamily: typography.bodyMd.fontFamily,
-    fontSize: typography.bodyMd.fontSize,
-    lineHeight: typography.bodyMd.lineHeight,
+    ...textStyle(typography.bodyMd),
   },
   section: { gap: spacing.sm },
   componentColumn: { gap: spacing.sm, alignItems: "stretch" },
@@ -652,21 +696,15 @@ const styles = StyleSheet.create({
   shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
   settingsPreview: { flex: 0, minHeight: spacing["2xl"] * 4 },
   onboardingPreview: { flex: 0, minHeight: spacing["2xl"] * 10 },
-  dialogPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
   shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
     color: colors.textSecondary,
-    fontFamily: typography.labelSm.fontFamily,
-    fontSize: typography.labelSm.fontSize,
-    lineHeight: typography.labelSm.lineHeight,
+    ...textStyle(typography.labelSm),
     marginTop: spacing.sm,
   },
   sectionTitle: {
     color: colors.textPrimary,
-    fontFamily: typography.headlineSm.fontFamily,
-    fontSize: typography.headlineSm.fontSize,
-    lineHeight: typography.headlineSm.lineHeight,
-    fontWeight: "600",
+    ...textStyle(typography.headlineSm),
   },
   row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   swatch: {
@@ -678,14 +716,12 @@ const styles = StyleSheet.create({
   },
   itemName: {
     color: colors.textPrimary,
-    fontFamily: typography.bodyMd.fontFamily,
-    fontSize: typography.bodyMd.fontSize,
+    ...textStyle(typography.bodyMd),
     flex: 1,
   },
   itemValue: {
     color: colors.textSecondary,
-    fontFamily: typography.bodySm.fontFamily,
-    fontSize: typography.bodySm.fontSize,
+    ...textStyle(typography.bodySm),
   },
   spacingBar: { height: spacing.xs, backgroundColor: colors.accent, borderRadius: radii.control },
   cover: {
@@ -699,13 +735,12 @@ const styles = StyleSheet.create({
   coverText: { flex: 1, gap: spacing.xxs },
   body: {
     color: colors.textPrimary,
-    fontFamily: typography.bodyMd.fontFamily,
-    fontSize: typography.bodyMd.fontSize,
+    ...textStyle(typography.bodyMd),
   },
   muted: {
     color: colors.textSecondary,
-    fontFamily: typography.bodySm.fontFamily,
-    fontSize: typography.bodySm.fontSize,
+    ...textStyle(typography.bodySm),
   },
 });
 import { useState } from "react";
+import { textStyle } from "../components/textStyle";

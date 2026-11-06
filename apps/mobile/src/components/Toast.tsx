@@ -8,12 +8,15 @@ import {
   severityColor,
   TOAST_DURATION_MS,
   toastActionStyle,
+  toastDotStyle,
   toastStyle,
   toastTextStyle,
 } from "./errorNoticeStyles";
+import { X } from "../icons";
+import { t } from "../i18n";
 
 /**
- * F29 — toast (P-72): aviso transitorio de 4 s, una línea y acción opcional.
+ * F29 — toast (P-72): aviso transitorio de 4 s con el mensaje completo y acción opcional.
  * No bloquea la pantalla (se posiciona encima, pero no es modal) y desaparece
  * solo; si el usuario lo cierra antes, se cancela el temporizador.
  *
@@ -24,7 +27,7 @@ import {
 const colors = dragonNightColors;
 
 export interface ToastProps {
-  /** Mensaje del aviso (una línea; se trunca con «…»). */
+  /** Mensaje del aviso, completo y sin «…» (T7). */
   message: string;
   /** Severidad: fija el color del borde y de la acción. */
   severity?: ErrorSeverity;
@@ -53,9 +56,8 @@ export default function Toast({
 
   return (
     <View style={[styles.toast, toastStyle(severity)]} testID={testID} accessibilityRole="alert">
-      <Text style={[styles.message, { color: colors.textPrimary }]} numberOfLines={1}>
-        {message}
-      </Text>
+      <View testID="toast-dot" style={toastDotStyle(severity)} />
+      <Text style={[styles.message, { color: colors.textPrimary }]}>{message}</Text>
       {actionLabel !== undefined ? (
         <Pressable
           accessibilityRole="button"
@@ -71,12 +73,12 @@ export default function Toast({
       ) : null}
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={message}
+        accessibilityLabel={t("toast.close")}
         hitSlop={touchTarget.min / 4}
         onPress={onClose}
         style={styles.close}
       >
-        <Text style={[styles.closeText, { color: accent }]}>×</Text>
+        <X size={spacing.md} color={colors.textSecondary} />
       </Pressable>
     </View>
   );
@@ -105,9 +107,5 @@ const styles = StyleSheet.create({
     minWidth: touchTarget.min,
     alignItems: "center",
     justifyContent: "center",
-  },
-  closeText: {
-    fontSize: spacing.lg,
-    lineHeight: spacing.lg,
   },
 });

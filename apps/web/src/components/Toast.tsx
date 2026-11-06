@@ -7,10 +7,10 @@ import "./toast.css";
 import { t } from "@ryuunest/i18n";
 
 /**
- * F25 — aviso transitorio (P-72): una línea, se cierra solo a los 4 s y no
- * bloquea. Para errores de acciones puntuales (F31: también se registran en
- * `log` desde quien los produce). El color del borde izquierdo marca la
- * severidad (nunca solo el color: el mensaje también lo dice).
+ * F25 — aviso transitorio (P-72): se cierra solo a los 4 s y no bloquea. Para
+ * errores de acciones puntuales (F31: también se registran en `log` desde
+ * quien los produce). El punto de color marca la severidad (nunca solo el
+ * color: el mensaje también lo dice); el mensaje se muestra completo (T7).
  */
 export interface ToastProps {
   message: string;
@@ -28,9 +28,10 @@ export default function Toast({ message, severity = "error", onClose, testID }: 
 
   return (
     <div className={`toast toast-${severity}`} role="status" data-testid={testID}>
+      <span className="toast-dot" aria-hidden />
       <span className="t-body-md toast-message">{message}</span>
       {onClose !== undefined && (
-        <button type="button" className="toast-close" onClick={onClose} aria-label={t("actions.close")}>
+        <button type="button" className="toast-close" onClick={onClose} aria-label={t("toast.close")}>
           <X size={16} aria-hidden />
         </button>
       )}

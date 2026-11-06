@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { spacing, typography } from "@ryuunest/ui-tokens";
 
 import { badgeColors, badgeStyle } from "./badgeStyles";
+import { textStyle } from "./textStyle";
 
 /**
  * F06 — insignia de tipo/estado (SPEC §11.10): pill de 24 px, **neutra**
@@ -28,10 +29,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: spacing.sm,
   },
-  label: {
-    fontFamily: typography.labelSm.fontFamily,
-    fontSize: typography.labelSm.fontSize,
-    lineHeight: typography.labelSm.lineHeight,
-    fontWeight: "600",
-  },
+  label: textStyle(typography.labelSm),
 });

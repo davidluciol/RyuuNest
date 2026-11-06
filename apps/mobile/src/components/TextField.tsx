@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, View, type TextInputProps } from "react-native";
 import { spacing, typography } from "@ryuunest/ui-tokens";
 
 import { textFieldColors, textFieldStyle } from "./fieldStyles";
+import { textStyle } from "./textStyle";
 
 /**
  * F06 — campo de texto y búsqueda (SPEC §11.10): `surface`, borde `border`,
@@ -47,8 +48,6 @@ const styles = StyleSheet.create({
   icon: { marginRight: spacing.xs },
   input: {
     flex: 1,
-    fontFamily: typography.bodyMd.fontFamily,
-    fontSize: typography.bodyMd.fontSize,
-    lineHeight: typography.bodyMd.lineHeight,
+    ...textStyle(typography.bodyMd),
   },
 });

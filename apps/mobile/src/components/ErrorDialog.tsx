@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { ChevronDown, ChevronUp, X } from "lucide-react-native";
 import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import Button from "./Button";
+import CodeChip from "./CodeChip";
+import { ChevronDown, ChevronUp } from "../icons";
 import {
   type ErrorDetail,
   detailLines,
@@ -12,9 +13,9 @@ import { textStyle } from "./textStyle";
 import {
   type ErrorSeverity,
   dialogBackdropStyle,
-  dialogCodeColor,
-  dialogDetailBoxStyle,
   dialogDetailTextStyle,
+  dialogDisclosureStyle,
+  dialogFrameStyle,
   dialogMessageStyle,
   dialogStyle,
   dialogTitleStyle,
@@ -23,10 +24,11 @@ import {
 import { t } from "../i18n";
 
 /**
- * F29 — diálogo de error bloqueante (P-72): nivel 2, título, explicación
- * simple, código, detalle expandible y acciones (reintentar, cerrar). Con
- * `busy` no se puede cerrar a medias (el velo y la X no responden), igual
- * que `SheetModal`.
+ * F29 — diálogo de error bloqueante (P-72): nivel 2, título, etiqueta de código,
+ * explicación simple, «Ver detalle técnico» plegable y acciones (cerrar,
+ * reintentar: el único primario). Con `busy` no se puede cerrar a medias (el
+ * velo y «Cerrar» no responden), igual que `SheetModal`. Alineado con
+ * `di_logo_de_error_bloqueante_dragon_night` (F34.1).
  *
  * Sin animación de entrada en el lector (Regla 4: nada anima allí); fuera
  * del lector entra con `fade` (solo `opacity`).
@@ -92,58 +94,37 @@ export default function ErrorDialog({
     >
       <Pressable style={dialogBackdropStyle()} accessibilityLabel={t("actions.close")} onPress={close}>
         {/* Pressable vacío: traga el toque del contenido y no cierra el diálogo. */}
-        <Pressable testID={testID}>
+        <Pressable testID={testID} style={styles.frame}>
           <View style={styles.dialog}>
-            <View style={styles.header}>
-              <Text accessibilityRole="header" style={styles.title}>
-                {title}
-              </Text>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={t("actions.close")}
-                accessibilityState={{ disabled: busy }}
-                disabled={busy}
-                onPress={close}
-                style={styles.close}
-              >
-                <X size={spacing.md} color={colors.textSecondary} />
-              </Pressable>
-            </View>
+            <Text accessibilityRole="header" style={styles.title}>
+              {title}
+            </Text>
             {code !== undefined ? (
-              <Text style={[styles.code, { color: dialogCodeColor(severity) }]} numberOfLines={1}>
-                {code}
-              </Text>
+              <CodeChip code={code} severity={severity} testID="error-code-chip" />
             ) : null}
             {message ? (
-              <Text style={[styles.message, { color: colors.textSecondary }]} numberOfLines={4}>
-                {message}
-              </Text>
+              <Text style={[styles.message, { color: colors.textSecondary }]}>{message}</Text>
             ) : null}
             {hasDetail ? (
-              <View>
+              <View style={styles.disclosure}>
                 <Pressable
                   accessibilityRole="button"
                   accessibilityState={{ expanded }}
                   accessibilityLabel={detailLabel}
-                  hitSlop={touchTarget.min / 4}
                   onPress={() => setExpanded((value) => !value)}
                   style={styles.detailToggle}
                 >
                   <Text style={[styles.detailToggleText, { color: accent }]}>{detailLabel}</Text>
                   {expanded ? (
-                    <ChevronUp size={16} color={accent} />
+                    <ChevronUp size={spacing.md} color={accent} />
                   ) : (
-                    <ChevronDown size={16} color={accent} />
+                    <ChevronDown size={spacing.md} color={accent} />
                   )}
                 </Pressable>
                 {expanded ? (
-                  <View style={styles.detailBox}>
+                  <View style={styles.detailBody}>
                     {lines.map((line) => (
-                      <Text
-                        key={line}
-                        style={[styles.detailLine, { color: colors.textSecondary }]}
-                        numberOfLines={1}
-                      >
+                      <Text key={line} style={[styles.detailLine, { color: colors.textSecondary }]}>
                         {line}
                       </Text>
                     ))}
@@ -165,43 +146,32 @@ export default function ErrorDialog({
 }
 
 const styles = StyleSheet.create({
+  frame: dialogFrameStyle(),
   dialog: dialogStyle(),
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: spacing.sm,
-  },
   title: {
     ...textStyle(dialogTitleStyle()),
-    flex: 1,
-    minWidth: 0,
     color: colors.textPrimary,
-  },
-  close: {
-    width: spacing["2xl"],
-    height: spacing["2xl"],
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  code: {
-    ...textStyle(dialogDetailTextStyle()),
-    fontWeight: "600",
   },
   message: {
     ...textStyle(dialogMessageStyle()),
   },
+  disclosure: dialogDisclosureStyle(),
   detailToggle: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.xxs,
+    justifyContent: "space-between",
     minHeight: touchTarget.min,
+    paddingHorizontal: spacing.sm,
   },
   detailToggleText: {
     ...textStyle(dialogDetailTextStyle()),
-    fontWeight: "600",
   },
-  detailBox: dialogDetailBoxStyle(),
+  detailBody: {
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    padding: spacing.sm,
+    gap: spacing.xxs,
+  },
   detailLine: {
     ...textStyle(dialogDetailTextStyle()),
   },

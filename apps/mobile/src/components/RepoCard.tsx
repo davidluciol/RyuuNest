@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   texts: { flex: 1, minWidth: 0, gap: spacing.xxs },
-  name: { ...textStyle(typography.labelLg), fontWeight: "700" },
+  name: { ...textStyle(typography.labelLg) },
   url: { ...textStyle(typography.bodySm) },
   sync: { alignItems: "center", justifyContent: "center" },
   syncing: { opacity: 0.5 },
