@@ -19,8 +19,10 @@ import {
   DEFAULT_LIBRARY_FILTERS,
   EMPTY_LIBRARY_DATA,
   filterLibrarySeries,
+  libraryGridRows,
   type LibraryData,
   type LibraryFilters,
+  type LibrarySeries,
 } from "./libraryFixtures";
 import { textStyle } from "../../components/textStyle";
 
@@ -56,6 +58,12 @@ export interface LibraryScreenProps {
   onEmptyAction?: () => void;
   /** Callback al cambiar los filtros (para persistir estado). */
   onFiltersChange?: (filters: LibraryFilters) => void;
+  /**
+   * F34: `false` cuando la pantalla se incrusta en otro contenedor con scroll (galería). La
+   * cuadrícula se dibuja sin `FlatList` para no anidar listas virtualizadas (aviso de React
+   * Native y windowing roto); el scroll lo lleva el contenedor padre.
+   */
+  virtualize?: boolean;
 }
 
 export default function LibraryScreen({
@@ -66,6 +74,7 @@ export default function LibraryScreen({
   onManageFolders,
   onEmptyAction,
   onFiltersChange,
+  virtualize = true,
 }: LibraryScreenProps) {
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
@@ -90,6 +99,20 @@ export default function LibraryScreen({
     (s) => s.progress !== null && (!s.nsfw || filters.nsfwVisible),
   ).length;
   const foldersCount = data.folders.length;
+
+  const renderCard = (item: LibrarySeries) => (
+    <LibraryCard
+      kind={item.kind === null ? undefined : kindLabel(item.kind)}
+      title={item.title}
+      progress={
+        item.progress && item.progress.pageTotal > 0
+          ? item.progress.pageIndex / item.progress.pageTotal
+          : 0
+      }
+      accessibilityLabel={item.title}
+      onPress={() => onSeriesPress?.(item.seriesId, item.moduleId)}
+    />
+  );
 
   // Estado vacío: sin favoritos.
   if (data.series.length === 0) {
@@ -202,7 +225,7 @@ export default function LibraryScreen({
         </View>
       ) : null}
 
-      {/* Cuadrícula virtualizada (RF-26, AC-4). */}
+      {/* Cuadrícula virtualizada (RF-26, AC-4); sin virtualizar cuando la incrusta la galería (F34). */}
       {visibleSeries.length === 0 ? (
         <View style={styles.emptySearchWrap}>
           <EmptyState
@@ -213,7 +236,7 @@ export default function LibraryScreen({
             scale="sm"
           />
         </View>
-      ) : (
+      ) : virtualize ? (
         <FlatList
           style={styles.grid}
           contentContainerStyle={{
@@ -225,25 +248,36 @@ export default function LibraryScreen({
           keyExtractor={(item) => `${item.moduleId}:${item.seriesId}`}
           numColumns={3}
           columnWrapperStyle={{ gap: layout.gap }}
-          renderItem={({ item }) => (
-            <View style={styles.gridItem}>
-              <LibraryCard
-                kind={item.kind === null ? undefined : kindLabel(item.kind)}
-                title={item.title}
-                progress={
-                  item.progress && item.progress.pageTotal > 0
-                    ? item.progress.pageIndex / item.progress.pageTotal
-                    : 0
-                }
-                accessibilityLabel={item.title}
-                onPress={() => onSeriesPress?.(item.seriesId, item.moduleId)}
-              />
-            </View>
-          )}
+          renderItem={({ item }) => <View style={styles.gridItem}>{renderCard(item)}</View>}
           initialNumToRender={12}
           windowSize={5}
           removeClippedSubviews
         />
+      ) : (
+        <View
+          testID="library-grid"
+          style={[
+            styles.gridStatic,
+            {
+              paddingHorizontal: layout.margin,
+              paddingBottom: spacing.xl,
+              gap: layout.gap,
+            },
+          ]}
+        >
+          {libraryGridRows(visibleSeries, 3).map((row) => (
+            <View
+              key={`${row[0]?.moduleId}:${row[0]?.seriesId ?? ""}`}
+              style={[styles.gridRow, { gap: layout.gap }]}
+            >
+              {row.map((item) => (
+                <View key={`${item.moduleId}:${item.seriesId}`} style={styles.gridItem}>
+                  {renderCard(item)}
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
       )}
     </View>
   );
@@ -301,6 +335,12 @@ const styles = StyleSheet.create({
   },
   grid: {
     flex: 1,
+  },
+  gridStatic: {
+    flex: 0,
+  },
+  gridRow: {
+    flexDirection: "row",
   },
   gridItem: {
     flex: 1 / 3,

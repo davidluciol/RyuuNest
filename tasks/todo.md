@@ -585,6 +585,7 @@ Dep: F29, F30, FB2 · L (dividir en 3 PRs si pasa de ~5 archivos por corte) · `
 - [ ] Anillo de foco 2 px `accent` con separación 2 px en todos los `Pressable` (web y D-pad); hoy solo el navegador pinta su anillo por defecto. Se cierra con F22.
 - [ ] `prefers-reduced-motion` y escala de texto del sistema al 200 %: sin desbordes en Ajustes, Diagnóstico y Fuentes.
 - [x] **El e2e de primer uso (`onboarding.cjs`) falla en `master`** (hecho 2026-11-03: la muestra del `ErrorDialog` se monta al pulsar «Mostrar diálogo de error») (comprobado sin los cambios del arreglo nativo de F21): el `ErrorDialog` de muestra de la galería (`visible`, F29) es un `Modal` de react-native-web, un portal `position: fixed` a pantalla completa con fondo «Cerrar», e intercepta los clics de toda la página. Mostrar la muestra en línea (sin `Modal`) o tras un interruptor y volver a pasar `onboarding.cjs` en 426 y 1440 px.
+- [x] **Avisos operativos de Expo Go** (hecho 2026-11-05): `"scheme": "ryuunest"` en `apps/mobile/app.json` (Expo SDK 57; `expo config` lo lee) y «VirtualizedLists should never be nested» resuelto con `virtualize={false}` en la muestra de Biblioteca de la galería (cuadrícula sin `FlatList` con `libraryGridRows`, prueba unitaria y guarda en `gallery-shell.cjs`). Verificado en el S25 Ultra (Expo Go 57.0.9, agent-device): arranque sin el aviso de `scheme` y galería sin «VirtualizedLists»; `logcat` sin avisos de `ReactNativeJS`.
 - [ ] Anotar cada diferencia aceptada en `design/stitch/DIFFS.md` y pasar la lista de 20 segundos de `DESIGN_RULES.md` por pantalla tocada.
 - Verif: Vitest por corte · Playwright (`settings.cjs`, `backup.cjs`, `diagnostics.cjs`, `sources.cjs` + nuevo `typography.cjs` que falla si algún texto visible cae a una fuente no registrada) a 426 y 1440 px · lint/typecheck · 🧍 POCO F5 Pro y Galaxy S25 Ultra (zonas seguras, interruptores, copiar/compartir).
 - Alcance máximo por corte: ≤ 5 archivos. Fuera de alcance: F22/F23 (TV), F24–F27 (web), F14/F17 (listas ya registradas).
@@ -730,3 +731,13 @@ Dep: F20, F21, F22, F28, F32 · S · pantallas móviles, escritorio y TV disponi
 - [ ] Seleccionar en los filtros para cambiar de módulo.
 - [ ] Verificar que cargan correctamente los mangas del **segundo** módulo.
 - Verif: el filtro de módulo cambia la fuente y la rejilla muestra series del módulo elegido, sin errores y sin mezclar resultados del anterior.
+
+---
+
+## Deudas detectadas en la prueba nativa (2026-11-05)
+
+- [x] **Parches de Expo SDK 57 actualizados** (hecho 2026-11-05, autorizado por el humano; misma rama/PR): `expo` 57.0.32, `@expo/metro-runtime` 57.0.18, `expo-constants` 57.0.23, `expo-router` 57.0.30 y `expo-sharing` 57.0.25. `npx expo install --check` y `expo-doctor` en **21/21**; gate completo en verde (lint, typecheck, 1534 tests, build) y e2e web `shell`/`library` en verde. `pnpm-workspace.yaml` recibió los `minimumReleaseAgeExclude` de los paquetes nuevos (política de suministro de pnpm 12).
+- [ ] **Configurar `expo-updates` (OTA) en tarea aparte** (decisión del humano, 2026-11-05): añadir `updates.url`, política de `runtimeVersion`, proyecto/canal de EAS, build de prueba y verificación de una actualización real. Mientras no exista, Expo Go avisa «expo-updates system is disabled…»; no afecta al desarrollo.
+- [ ] **URGENTE — Fuentes no lista los módulos del repo instalado.** Con el repo de `RyuuNest-Models` instalado, la pantalla Fuentes se ve vacía: debería listar al menos los 3 módulos publicados (`zonatmo`, `yupmanga`, `m440`) para poder usarlos en Descubrir. Sin fuentes la app no sirve para leer. Reproducir con el repo real, revisar índice/`ModuleRegistry`/filtro de compatibilidad y escribir la prueba en rojo antes del arreglo.
+- [ ] **Renombrar las secciones con el mundo dragón** (decisión del humano, pendiente de implementar): Inicio → **Guarida**, Biblioteca → **Tesoros**, Descubrir → **Aventuras**, Fuentes → **Portales**. Aplicar en navegación, títulos, textos y claves i18n; mantener las rutas internas y actualizar SPEC/DESIGN/capturas cuando se haga. No implementar en esta PR.
+

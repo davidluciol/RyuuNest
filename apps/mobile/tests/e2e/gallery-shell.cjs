@@ -88,6 +88,9 @@ const baseURL = process.env.GALLERY_URL || "http://localhost:8081";
       await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
       false,
     );
+    // F34: la muestra de Biblioteca va dentro del ScrollView de la galería; su cuadrícula debe
+    // dibujarse sin `FlatList` (si no, React Native avisa de listas virtualizadas anidadas).
+    assert.equal(await page.getByTestId("library-grid").count(), 1);
     assert.deepEqual(external, []);
     assert.deepEqual(errors, []);
     console.log("F11: galería con selección, foco, carga deshabilitada y error expandido OK.");
