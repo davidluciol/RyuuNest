@@ -4,6 +4,10 @@
       "type": "stdio",
       "command": "graphify-mcp",
       "args": ["--graph", "graphify-out/graph.json"]
+    },
+    "agent-device": {
+      "command": "agent-device",
+      "args": ["mcp"]
     }
   }
 }
