@@ -1,9 +1,9 @@
+import FocusPressable from "./FocusPressable";
 import { useEffect, useRef, useState } from "react";
 import {
   AccessibilityInfo,
   Animated,
   Easing,
-  Pressable,
   StyleSheet,
   Text,
   type LayoutChangeEvent,
@@ -88,7 +88,7 @@ export default function HoldToConfirm({
   });
 
   return (
-    <Pressable
+    <FocusPressable
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
@@ -106,7 +106,7 @@ export default function HoldToConfirm({
       <Text style={[styles.label, { color: holdToConfirmTextColor(holding) }]}>
         {holding ? holdingLabel : label}
       </Text>
-    </Pressable>
+    </FocusPressable>
   );
 }
 

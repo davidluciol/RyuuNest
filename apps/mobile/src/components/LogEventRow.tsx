@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import { ChevronDown, ChevronUp, CircleAlert, Info, TriangleAlert } from "../icons";
@@ -87,7 +88,7 @@ export default function LogEventRow({
             ))}
           </View>
         ) : null}
-        <Pressable
+        <FocusPressable
           accessibilityRole="button"
           accessibilityState={{ expanded }}
           accessibilityLabel={toggleLabel}
@@ -100,7 +101,7 @@ export default function LogEventRow({
           ) : (
             <ChevronDown size={spacing.md} color={colors.textPrimary} />
           )}
-        </Pressable>
+        </FocusPressable>
       </View>
     </View>
   );

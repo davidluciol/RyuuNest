@@ -1,4 +1,5 @@
-import { Image, Pressable, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { Image, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "./Badge";
@@ -52,7 +53,7 @@ export default function LibraryCard({
   const hasProgress = progress > 0;
 
   return (
-    <Pressable
+    <FocusPressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
       onPress={onPress}
@@ -107,7 +108,7 @@ export default function LibraryCard({
           {meta}
         </Text>
       ) : null}
-    </Pressable>
+    </FocusPressable>
   );
 }
 

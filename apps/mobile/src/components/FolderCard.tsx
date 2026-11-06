@@ -1,12 +1,9 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { StyleSheet, Text, View } from "react-native";
 import { Folder } from "../icons";
 import { radii, spacing, typography } from "@ryuunest/ui-tokens";
 
-import {
-  FOLDER_CARD_ICON_SIZE,
-  folderCardColors,
-  folderCardStyle,
-} from "./folderCardStyles";
+import { FOLDER_CARD_ICON_SIZE, folderCardColors, folderCardStyle } from "./folderCardStyles";
 import { textStyle } from "./textStyle";
 
 /**
@@ -41,7 +38,7 @@ export default function FolderCard({
   const countLabel = `${count} obras`;
 
   return (
-    <Pressable
+    <FocusPressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? `${name}, ${countLabel}`}
       onPress={onPress}
@@ -75,7 +72,7 @@ export default function FolderCard({
           </Text>
         ) : null}
       </View>
-    </Pressable>
+    </FocusPressable>
   );
 }
 

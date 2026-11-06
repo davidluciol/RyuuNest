@@ -9,11 +9,6 @@ import { describe, expect, it } from "vitest";
  * `Pressable` crudo rompe esta prueba.
  */
 const PENDING = [
-  "ErrorState.tsx",
-  "FolderCard.tsx",
-  "HoldToConfirm.tsx",
-  "LibraryCard.tsx",
-  "LogEventRow.tsx",
   "ModulePicker.tsx",
   "RecentCard.tsx",
   "RepoCard.tsx",
