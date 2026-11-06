@@ -1,14 +1,12 @@
+import FocusPressable from "./FocusPressable";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import CodeChip from "./CodeChip";
 import { ChevronDown, ChevronUp, CircleAlert, RefreshCw } from "../icons";
 
-import {
-  type ErrorDetail,
-  detailLines,
-} from "./stateStyles";
+import { type ErrorDetail, detailLines } from "./stateStyles";
 import { textStyle } from "./textStyle";
 import {
   type ErrorSeverity,
@@ -73,12 +71,14 @@ export default function ErrorBanner({
         </Text>
         <CircleAlert size={spacing.lg} color={accent} />
       </View>
-      {code !== undefined ? <CodeChip code={code} severity={severity} testID="error-code-chip" /> : null}
+      {code !== undefined ? (
+        <CodeChip code={code} severity={severity} testID="error-code-chip" />
+      ) : null}
       {message ? (
         <Text style={[styles.message, { color: colors.textSecondary }]}>{message}</Text>
       ) : null}
       <View style={styles.actions}>
-        <Pressable
+        <FocusPressable
           accessibilityRole="button"
           accessibilityLabel={actionLabel}
           hitSlop={touchTarget.min / 4}
@@ -87,9 +87,9 @@ export default function ErrorBanner({
         >
           <RefreshCw size={spacing.md} color={accent} />
           <Text style={[styles.actionText, { color: accent }]}>{actionLabel}</Text>
-        </Pressable>
+        </FocusPressable>
         {hasDetail ? (
-          <Pressable
+          <FocusPressable
             accessibilityRole="button"
             accessibilityState={{ expanded }}
             accessibilityLabel={detailLabel}
@@ -103,7 +103,7 @@ export default function ErrorBanner({
             ) : (
               <ChevronDown size={16} color={accent} />
             )}
-          </Pressable>
+          </FocusPressable>
         ) : null}
       </View>
       {expanded ? (

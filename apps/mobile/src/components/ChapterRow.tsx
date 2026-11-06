@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { StyleSheet, Text, View } from "react-native";
 import { Check } from "lucide-react-native";
 import { spacing, typography, dragonNightColors } from "@ryuunest/ui-tokens";
 
@@ -33,7 +34,7 @@ export default function ChapterRow({
 }: ChapterRowProps) {
   const rowColors = chapterRowColors(state);
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} style={chapterRowStyle(state)}>
+    <FocusPressable accessibilityRole="button" onPress={onPress} style={chapterRowStyle(state)}>
       <View style={styles.row}>
         <View style={styles.textBlock}>
           <Text style={[styles.title, { color: rowColors.text }]} numberOfLines={1}>
@@ -49,7 +50,7 @@ export default function ChapterRow({
         </View>
         {state === "completed" ? <Check size={20} color={colors.positive} /> : null}
       </View>
-    </Pressable>
+    </FocusPressable>
   );
 }
 

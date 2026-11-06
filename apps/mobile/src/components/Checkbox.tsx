@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { StyleSheet, View } from "react-native";
 import { Check } from "lucide-react-native";
 import { touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
 
@@ -22,7 +23,7 @@ export interface CheckboxProps {
 export default function Checkbox({ checked = false, onChange, radio = false }: CheckboxProps) {
   const style = radio ? radioStyle(checked) : checkboxStyle(checked);
   return (
-    <Pressable
+    <FocusPressable
       accessibilityRole={radio ? "radio" : "checkbox"}
       accessibilityState={{ checked }}
       onPress={() => onChange?.(!checked)}
@@ -31,7 +32,7 @@ export default function Checkbox({ checked = false, onChange, radio = false }: C
       <View style={[style, styles.center]}>
         {checked ? <Check size={14} color={colors.bg} strokeWidth={3} /> : null}
       </View>
-    </Pressable>
+    </FocusPressable>
   );
 }
 
