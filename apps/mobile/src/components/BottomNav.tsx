@@ -83,10 +83,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "stretch",
     justifyContent: "space-around",
-    padding: spacing.xxs,
+    // Sin relleno horizontal: a 273 px las cinco pestañas (mín. 48 dp) ocupan 268 px.
+    paddingVertical: spacing.xxs,
   },
   item: {
-    flex: 1,
+    // Ancho por contenido y reparto del sobrante: «Biblioteca» no cabe en 1/5 de 273 px.
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: "auto",
     alignItems: "center",
     justifyContent: "center",
     gap: spacing.xxs,

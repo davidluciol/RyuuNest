@@ -9,6 +9,7 @@ import {
 } from "@ryuunest/ui-tokens";
 
 import LibraryCard from "../../components/LibraryCard";
+import { libraryColumnsFor } from "../../components/libraryCardStyles";
 import Chip from "../../components/Chip";
 import ChipScroller from "../../components/ChipScroller";
 import EmptyState from "../../components/EmptyState";
@@ -79,6 +80,7 @@ export default function LibraryScreen({
 }: LibraryScreenProps) {
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
+  const columns = libraryColumnsFor(width);
   const [filters, setFilters] = useState<LibraryFilters>({
     ...DEFAULT_LIBRARY_FILTERS,
     ...initialFilters,
@@ -235,9 +237,12 @@ export default function LibraryScreen({
           }}
           data={visibleSeries}
           keyExtractor={(item) => `${item.moduleId}:${item.seriesId}`}
-          numColumns={3}
+          key={`grid-${columns}`}
+          numColumns={columns}
           columnWrapperStyle={{ gap: layout.gap }}
-          renderItem={({ item }) => <View style={styles.gridItem}>{renderCard(item)}</View>}
+          renderItem={({ item }) => (
+            <View style={[styles.gridItem, { flex: 1 / columns }]}>{renderCard(item)}</View>
+          )}
           initialNumToRender={12}
           windowSize={5}
           removeClippedSubviews
@@ -254,13 +259,16 @@ export default function LibraryScreen({
             },
           ]}
         >
-          {libraryGridRows(visibleSeries, 3).map((row) => (
+          {libraryGridRows(visibleSeries, columns).map((row) => (
             <View
               key={`${row[0]?.moduleId}:${row[0]?.seriesId ?? ""}`}
               style={[styles.gridRow, { gap: layout.gap }]}
             >
               {row.map((item) => (
-                <View key={`${item.moduleId}:${item.seriesId}`} style={styles.gridItem}>
+                <View
+                  key={`${item.moduleId}:${item.seriesId}`}
+                  style={[styles.gridItem, { flex: 1 / columns }]}
+                >
                   {renderCard(item)}
                 </View>
               ))}
