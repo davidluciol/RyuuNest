@@ -35,6 +35,13 @@
   flex-wrap: wrap;
 }
 
+/* Filas de una misma tarjeta: separadas por una línea border (F34.2). */
+.settings-card > .settings-row + .settings-row,
+.settings-card > .switch-row + .switch-row {
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+}
+
 .settings-row-label {
   margin: 0;
   color: var(--color-text-primary);
