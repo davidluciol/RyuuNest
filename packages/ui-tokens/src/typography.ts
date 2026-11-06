@@ -15,10 +15,13 @@ export const fonts = {
   body: "Inter",
   headingWeights: [600, 700],
   bodyWeights: [400, 500, 600],
+  /** F34.2: códigos y detalle técnico (JetBrains Mono, OFL, local). */
+  mono: "JetBrains Mono",
+  monoWeights: [400, 500],
 } as const;
 
 /** Familias tipográficas del sistema (P2-3). */
-export type FontFamily = "Manrope" | "Inter";
+export type FontFamily = "Manrope" | "Inter" | "JetBrains Mono";
 
 /** Estilo completo de un token de texto. */
 export interface TypeStyle {
@@ -91,6 +94,14 @@ export const typography = {
     letterSpacing: 0.02,
   },
   // V12: 12 px en vez de 11 px (diferencia aceptada).
+  /** F34.2: códigos, rutas y detalle técnico; hereda el cuerpo de `bodySm` (13/20). */
+  mono: {
+    fontFamily: "JetBrains Mono",
+    fontSize: 13,
+    lineHeight: 20,
+    fontWeight: 400,
+    letterSpacing: 0,
+  },
   labelSm: {
     fontFamily: "Inter",
     fontSize: 12,

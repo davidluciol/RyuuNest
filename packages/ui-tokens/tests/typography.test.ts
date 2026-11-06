@@ -8,7 +8,7 @@ import { fonts, typography } from "../src/typography";
  * a 12 px, no a los 11 px de la tabla.
  */
 describe("tipografía (SPEC §11.9)", () => {
-  it("expone exactamente los 12 tokens del SPEC", () => {
+  it("expone los 12 tokens del SPEC más el token mono (F34.2)", () => {
     expect(Object.keys(typography).sort()).toEqual(
       [
         "bodyLg",
@@ -22,6 +22,7 @@ describe("tipografía (SPEC §11.9)", () => {
         "labelLg",
         "labelMd",
         "labelSm",
+        "mono",
         "titleLg",
       ].sort(),
     );
@@ -41,6 +42,8 @@ describe("tipografía (SPEC §11.9)", () => {
     ["labelMd", "Inter", 12, 16, 500, 0.02],
     // V12: 12 px en vez de 11 px (diferencia aceptada).
     ["labelSm", "Inter", 12, 14, 600, 0.04],
+    // F34.2: códigos y detalle técnico (JetBrains Mono, OFL, local).
+    ["mono", "JetBrains Mono", 13, 20, 400, 0],
   ] as const)(
     "%s: %s %s/%s peso %s tracking %s em",
     (token, family, size, lineHeight, weight, tracking) => {
@@ -54,12 +57,14 @@ describe("tipografía (SPEC §11.9)", () => {
     },
   );
 
-  it("las familias son solo Manrope e Inter, con los pesos del diseño (P2-3)", () => {
+  it("las familias son Manrope, Inter y JetBrains Mono (mono), con los pesos del diseño (P2-3)", () => {
     expect(fonts).toEqual({
       heading: "Manrope",
       body: "Inter",
       headingWeights: [600, 700],
       bodyWeights: [400, 500, 600],
+      mono: "JetBrains Mono",
+      monoWeights: [400, 500],
     });
   });
 

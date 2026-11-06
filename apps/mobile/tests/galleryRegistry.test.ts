@@ -34,14 +34,14 @@ describe("registro de la galería (F05)", () => {
     ]);
   });
 
-  it("toda entrada tiene id, título y tipo; la de tipografía muestra los 12 estilos", () => {
+  it("toda entrada tiene id, título y tipo; la de tipografía muestra los 13 estilos (12 del SPEC + mono)", () => {
     for (const entry of galleryEntries) {
       expect(entry.id.length).toBeGreaterThan(0);
       expect(entry.title.length).toBeGreaterThan(0);
       expect(["tokens", "componentes"]).toContain(entry.kind);
     }
     const tipografia = galleryEntries.find((entry) => entry.id === "tipografia");
-    expect(tipografia?.items).toHaveLength(12);
+    expect(tipografia?.items).toHaveLength(13);
   });
 
   it("F08: la sección de componentes lista los tres estados (vacío, error, carga)", () => {

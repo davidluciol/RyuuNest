@@ -26,7 +26,7 @@ export interface FontFile {
   readonly license: string;
 }
 
-/** Manrope 600/700 e Inter 400/500/600 (P2-3). */
+/** Manrope 600/700, Inter 400/500/600 (P2-3) y JetBrains Mono 400/500 (F34.2). */
 export const fontFiles: readonly FontFile[] = [
   {
     family: "Manrope",
@@ -63,10 +63,25 @@ export const fontFiles: readonly FontFile[] = [
     postScriptName: "Inter-SemiBold",
     license: "LICENSE-Inter.txt",
   },
+  {
+    family: "JetBrains Mono",
+    weight: 400,
+    file: "JetBrainsMono-Regular.ttf",
+    postScriptName: "JetBrainsMono-Regular",
+    license: "LICENSE-JetBrainsMono.txt",
+  },
+  {
+    family: "JetBrains Mono",
+    weight: 500,
+    file: "JetBrainsMono-Medium.ttf",
+    postScriptName: "JetBrainsMono-Medium",
+    license: "LICENSE-JetBrainsMono.txt",
+  },
 ];
 
 /** Licencia por familia (registro en `ASSETS.md`, GPL-3.0 compatible). */
 export const fontLicenses = {
   Manrope: { file: "LICENSE-Manrope.txt", spdx: "OFL-1.1" },
   Inter: { file: "LICENSE-Inter.txt", spdx: "OFL-1.1" },
+  "JetBrains Mono": { file: "LICENSE-JetBrainsMono.txt", spdx: "OFL-1.1" },
 } as const satisfies Record<FontFamily, { file: string; spdx: string }>;

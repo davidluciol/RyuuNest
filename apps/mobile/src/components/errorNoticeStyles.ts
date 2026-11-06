@@ -116,7 +116,7 @@ export function bannerMessageStyle(): TypeStyle {
 
 /** Texto de la etiqueta de código del error (nunca es el único aviso: RF-43). */
 export function bannerCodeStyle(): TypeStyle {
-  return typography.labelSm;
+  return typography.mono;
 }
 
 /** Texto de las acciones del banner («Reintentar», «Ver detalle»), semibold. */
@@ -248,7 +248,7 @@ export function dialogDisclosureStyle(): DialogDisclosureStyleShape {
 
 /** Texto de cada línea del detalle, en Inter pequeño. */
 export function dialogDetailTextStyle(): TypeStyle {
-  return typography.labelMd;
+  return typography.mono;
 }
 
 /** Color del texto del código en el diálogo. */

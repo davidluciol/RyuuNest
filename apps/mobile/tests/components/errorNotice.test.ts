@@ -101,8 +101,8 @@ describe("etiqueta de código y acciones alineadas con Stitch (F34.1)", () => {
     expect(codeChipStyle("warning").borderColor).toBe(severityColor("warning"));
   });
 
-  it("el código y las acciones usan el peso semibold del token, sin negrita sintética", () => {
-    expect(bannerCodeStyle().fontWeight).toBe(600);
+  it("el código va en mono (F34.2) y las acciones en semibold, sin negrita sintética", () => {
+    expect(bannerCodeStyle()).toMatchObject({ fontFamily: "JetBrains Mono", fontWeight: 400 });
     expect(bannerActionTextStyle()).toMatchObject({ fontFamily: "Inter", fontWeight: 600 });
   });
 
@@ -131,10 +131,10 @@ describe("banner (aviso inline)", () => {
     });
   });
 
-  it("título en Manrope, mensaje en Inter y código en etiqueta", () => {
+  it("título en Manrope, mensaje en Inter y código en mono", () => {
     expect(bannerTitleStyle().fontFamily).toBe("Manrope");
     expect(bannerMessageStyle().fontFamily).toBe("Inter");
-    expect(bannerCodeStyle().fontFamily).toBe("Inter");
+    expect(bannerCodeStyle().fontFamily).toBe("JetBrains Mono");
   });
 
   it("la acción principal respeta el área táctil mínima (48, RNF-7)", () => {
@@ -165,10 +165,10 @@ describe("diálogo de error (bloqueante, nivel 2)", () => {
     expect(dialogFrameStyle()).toEqual({ width: "100%", maxWidth: 480 });
   });
 
-  it("título en Manrope, mensaje en Inter, detalle en caja surface sin sombra", () => {
+  it("título en Manrope, mensaje en Inter, detalle en mono en caja surface sin sombra", () => {
     expect(dialogTitleStyle().fontFamily).toBe("Manrope");
     expect(dialogMessageStyle().fontFamily).toBe("Inter");
-    expect(dialogDetailTextStyle().fontFamily).toBe("Inter");
+    expect(dialogDetailTextStyle().fontFamily).toBe("JetBrains Mono");
     expect(dialogDetailBoxStyle()).toMatchObject({
       backgroundColor: "#141923",
       borderColor: "#263147",

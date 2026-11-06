@@ -3,6 +3,8 @@ import type { FontSource } from "expo-font";
 import interMedium from "../../assets/fonts/Inter-Medium.ttf";
 import interRegular from "../../assets/fonts/Inter-Regular.ttf";
 import interSemiBold from "../../assets/fonts/Inter-SemiBold.ttf";
+import jetBrainsMonoMedium from "../../assets/fonts/JetBrainsMono-Medium.ttf";
+import jetBrainsMonoRegular from "../../assets/fonts/JetBrainsMono-Regular.ttf";
 import manropeBold from "../../assets/fonts/Manrope-Bold.ttf";
 import manropeSemiBold from "../../assets/fonts/Manrope-SemiBold.ttf";
 
@@ -18,4 +20,6 @@ export const galleryFontSources: Record<string, FontSource> = {
   "Inter-Regular": interRegular,
   "Inter-Medium": interMedium,
   "Inter-SemiBold": interSemiBold,
+  "JetBrainsMono-Regular": jetBrainsMonoRegular,
+  "JetBrainsMono-Medium": jetBrainsMonoMedium,
 };
