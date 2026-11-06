@@ -6,6 +6,7 @@ import { dragonNightColors } from "@ryuunest/ui-tokens";
 import ErrorState from "../../../components/ErrorState";
 import { resolveErrorReporter } from "../../../data/errorLog";
 import LoadingState from "../../../components/LoadingState";
+import SafeScreen from "../../../components/SafeScreen";
 import { t } from "../../../i18n";
 import { readingOrder } from "../../../reader/readingOrder";
 import SeriesScreen from "../../../screens/series/SeriesScreen";
@@ -20,6 +21,14 @@ import { useSeriesData } from "../../../screens/series/useSeriesData";
  * que se conecten (F20).
  */
 export default function SeriesRoute() {
+  return (
+    <SafeScreen>
+      <SeriesRouteContent />
+    </SafeScreen>
+  );
+}
+
+function SeriesRouteContent() {
   const { moduleId, seriesId } = useLocalSearchParams<{ moduleId: string; seriesId: string }>();
   const { view, retry } = useSeriesData(moduleId, seriesId);
   const [favorite, setFavorite] = useState(false);

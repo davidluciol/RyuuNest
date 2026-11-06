@@ -77,7 +77,9 @@ export default function SeriesScreen({
         <Pressable onPress={onBack} hitSlop={touchTarget.min / 4} accessibilityRole="button" accessibilityLabel={t("actions.back")}>
           <ChevronLeft size={24} color={colors.textPrimary} />
         </Pressable>
-        <Text style={styles.headerTitle}>{t("series.title")}</Text>
+        <Text accessibilityRole="header" style={styles.headerTitle}>
+          {t("series.title")}
+        </Text>
       </View>
 
       <View style={styles.hero}>
