@@ -34,11 +34,13 @@ button {
   outline-offset: 2px;
 }
 
+/* `!important`: `*` tiene especificidad 0 y cualquier `.clase` con su propia
+   transición ganaría (p. ej. el interruptor). */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0s;
-    transition-duration: 0s;
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
   }
 }
