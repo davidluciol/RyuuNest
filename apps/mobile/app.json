@@ -2,6 +2,7 @@
   "expo": {
     "name": "RyuuNest",
     "slug": "ryuunest",
+    "scheme": "ryuunest",
     "version": "0.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
