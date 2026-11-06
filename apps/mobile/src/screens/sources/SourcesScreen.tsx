@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-n
 import { dragonNightColors, layoutForWidth, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
+import { contentColumnStyle } from "../../components/cardStyles";
 import Chip from "../../components/Chip";
 import EmptyState from "../../components/EmptyState";
 import ErrorState from "../../components/ErrorState";
@@ -120,6 +121,7 @@ export default function SourcesScreen({
           paddingTop: spacing.sm,
           paddingBottom: spacing.xl,
           gap: spacing.lg,
+          ...contentColumnStyle(),
         }}
       >
         <View style={styles.header}>

@@ -22,6 +22,7 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
         "dragonNight",
         "dragonNightColors",
         "fontFiles",
+        "contentMaxWidth",
         "fontLicenses",
         "fonts",
         "getTheme",

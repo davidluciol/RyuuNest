@@ -14,6 +14,7 @@ export { markers, type MarkerToken } from "./markers";
 export { radii, type RadiusToken } from "./radii";
 export {
   breakpoints,
+  contentMaxWidth,
   coverAspectRatio,
   densities,
   progressBarHeight,
