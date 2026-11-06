@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Pressable, View, type LayoutChangeEvent } from "react-native";
+import { View, type LayoutChangeEvent } from "react-native";
 import { useKeepAwake } from "expo-keep-awake";
 import type { ReaderMode } from "@ryuunest/core";
 import { spacing } from "@ryuunest/ui-tokens";
@@ -15,6 +15,7 @@ import { FALLBACK_READER_MODE, modeLabel } from "./readerModes";
 import { readerCanvasStyle } from "./readerStyles";
 import type { ReaderActions, ReaderReady } from "./useReader";
 import ZoomableView from "./ZoomableView";
+import FocusPressable from "../../components/FocusPressable";
 
 /**
  * F18 — pantalla del lector (RF-18 a RF-22): lienzo con el contenido y nada más; el centro
@@ -34,7 +35,12 @@ export interface ReaderScreenProps {
 
 type Sheet = "mode" | "chapters" | null;
 
-export default function ReaderScreen({ ready, actions, onClose, onOpenChapter }: ReaderScreenProps) {
+export default function ReaderScreen({
+  ready,
+  actions,
+  onClose,
+  onOpenChapter,
+}: ReaderScreenProps) {
   const { snapshot, images, chapter, next } = ready;
   const mode: ReaderMode = snapshot.mode ?? FALLBACK_READER_MODE;
   const total = snapshot.pageTotal ?? images.length;
@@ -98,8 +104,9 @@ export default function ReaderScreen({ ready, actions, onClose, onOpenChapter }:
   return (
     <View testID="screen-reader" style={readerCanvasStyle()}>
       <ZoomableView resetKey={mode === "vertical" ? chapter.id : snapshot.pageIndex}>
-        <Pressable
+        <FocusPressable
           testID="reader-canvas"
+          focusable={false}
           accessible={false}
           style={readerCanvasStyle()}
           onLayout={onLayout}
@@ -128,7 +135,7 @@ export default function ReaderScreen({ ready, actions, onClose, onOpenChapter }:
               />
             )}
           </View>
-        </Pressable>
+        </FocusPressable>
       </ZoomableView>
 
       {controls ? (

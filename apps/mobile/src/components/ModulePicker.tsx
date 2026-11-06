@@ -1,12 +1,17 @@
+import FocusPressable from "./FocusPressable";
 import { useState } from "react";
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Modal, ScrollView, StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, withAlpha } from "@ryuunest/ui-tokens";
 
 import { Check, ChevronDown, Layers } from "../icons";
 import { t } from "../i18n";
 import Button from "./Button";
 import Sheet from "./Sheet";
-import { modulePickerRowStyle, modulePickerRowTextStyle, modulePickerTitleStyle } from "./modulePickerStyles";
+import {
+  modulePickerRowStyle,
+  modulePickerRowTextStyle,
+  modulePickerTitleStyle,
+} from "./modulePickerStyles";
 import { textStyle } from "./textStyle";
 
 /**
@@ -49,22 +54,20 @@ export default function ModulePicker({ modules, selectedId, onSelect }: ModulePi
       />
 
       <Modal visible={open} transparent animationType="slide" onRequestClose={() => setOpen(false)}>
-        <Pressable
+        <FocusPressable
           style={styles.backdrop}
           accessibilityLabel={t("discover.sheet.close")}
           onPress={() => setOpen(false)}
         >
           {/* Pressable vacío: traga el toque del contenido y no cierra la hoja. */}
-          <Pressable>
+          <FocusPressable focusable={false}>
             <Sheet>
-              <Text
-                style={[styles.sheetTitle, textStyle(titleStyle), { color: titleStyle.color }]}
-              >
+              <Text style={[styles.sheetTitle, textStyle(titleStyle), { color: titleStyle.color }]}>
                 {t("discover.sheet.title")}
               </Text>
               <ScrollView style={styles.sheetList}>
                 {modules.map((module) => (
-                  <Pressable
+                  <FocusPressable
                     key={module.id}
                     accessibilityRole="button"
                     accessibilityState={{ selected: module.id === selectedId }}
@@ -76,7 +79,11 @@ export default function ModulePicker({ modules, selectedId, onSelect }: ModulePi
                     }}
                   >
                     <Text
-                      style={[styles.rowText, textStyle(rowTextStyle), { color: rowTextStyle.color }]}
+                      style={[
+                        styles.rowText,
+                        textStyle(rowTextStyle),
+                        { color: rowTextStyle.color },
+                      ]}
                       numberOfLines={1}
                     >
                       {module.name}
@@ -84,12 +91,12 @@ export default function ModulePicker({ modules, selectedId, onSelect }: ModulePi
                     {module.id === selectedId ? (
                       <Check size={spacing.md} color={colors.accent} />
                     ) : null}
-                  </Pressable>
+                  </FocusPressable>
                 ))}
               </ScrollView>
             </Sheet>
-          </Pressable>
-        </Pressable>
+          </FocusPressable>
+        </FocusPressable>
       </Modal>
     </View>
   );

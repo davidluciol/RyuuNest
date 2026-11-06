@@ -1,5 +1,7 @@
 import { radii, spacing, touchTarget, withAlpha, dragonNightColors } from "@ryuunest/ui-tokens";
 
+import { focusRingStyle } from "./focusRing";
+
 /**
  * F07 — reglas de la cabecera y la barra inferior (SPEC §11.10, T1, V5,
  * RNF-12). Una cabecera y una barra inferior iguales en todas las pantallas.
@@ -48,6 +50,13 @@ export type BottomNavDestination = (typeof BOTTOM_NAV_DESTINATIONS)[number];
 
 export const NAV_BAR_HEIGHT = 64;
 
+/**
+ * F34.3 — tope de la escala de texto del sistema para las etiquetas de la barra
+ * inferior: al 200 % «Biblioteca» no cabe en 1/5 del ancho y se partía a mitad
+ * de palabra. Provisional: se afina en el dispositivo (P-45).
+ */
+export const NAV_LABEL_MAX_FONT_SCALE = 1.3;
+
 /** Barra inferior: `elevated` al 95 %, borde superior `border`, sin sombra. */
 export function bottomNavStyle(): ShellStyleShape {
   return {
@@ -80,10 +89,7 @@ export function navItemStyle({
     minWidth: touchTarget.min,
     minHeight: touchTarget.min,
     borderRadius: radii.control,
-    outlineColor: focused ? colors.accent : "transparent",
-    outlineWidth: spacing.xxs / 2,
-    outlineOffset: spacing.xxs / 2,
-    outlineStyle: "solid" as const,
+    ...focusRingStyle(focused),
     backgroundColor: pressed ? withAlpha(colors.accent, 0.1) : "transparent",
     opacity: disabled ? 0.5 : 1,
   };

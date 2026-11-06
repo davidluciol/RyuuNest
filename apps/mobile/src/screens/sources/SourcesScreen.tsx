@@ -5,6 +5,7 @@ import { dragonNightColors, layoutForWidth, spacing, typography } from "@ryuunes
 import Button from "../../components/Button";
 import { contentColumnStyle } from "../../components/cardStyles";
 import Chip from "../../components/Chip";
+import ChipScroller from "../../components/ChipScroller";
 import EmptyState from "../../components/EmptyState";
 import ErrorState from "../../components/ErrorState";
 import LoadingState from "../../components/LoadingState";
@@ -196,11 +197,7 @@ export default function SourcesScreen({
 
             <View style={styles.section}>
               <SectionHeader title={t("sources.section.modules")} />
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.chips}
-              >
+              <ChipScroller contentContainerStyle={styles.chips}>
                 {SOURCE_KIND_FILTERS.map((option) => (
                   <Chip
                     key={option}
@@ -209,7 +206,7 @@ export default function SourcesScreen({
                     onPress={() => setFilter(option)}
                   />
                 ))}
-              </ScrollView>
+              </ChipScroller>
 
               {shown.length === 0 ? (
                 <EmptyState

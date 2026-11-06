@@ -1,14 +1,12 @@
+import FocusPressable from "./FocusPressable";
 import { useState } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import Button from "./Button";
 import CodeChip from "./CodeChip";
 import { ChevronDown, ChevronUp } from "../icons";
-import {
-  type ErrorDetail,
-  detailLines,
-} from "./stateStyles";
+import { type ErrorDetail, detailLines } from "./stateStyles";
 import { textStyle } from "./textStyle";
 import {
   type ErrorSeverity,
@@ -92,9 +90,13 @@ export default function ErrorDialog({
       animationType={animated ? "fade" : "none"}
       onRequestClose={close}
     >
-      <Pressable style={dialogBackdropStyle()} accessibilityLabel={t("actions.close")} onPress={close}>
+      <FocusPressable
+        style={dialogBackdropStyle()}
+        accessibilityLabel={t("actions.close")}
+        onPress={close}
+      >
         {/* Pressable vacío: traga el toque del contenido y no cierra el diálogo. */}
-        <Pressable testID={testID} style={styles.frame}>
+        <FocusPressable testID={testID} style={styles.frame} focusable={false}>
           <View style={styles.dialog}>
             <Text accessibilityRole="header" style={styles.title}>
               {title}
@@ -107,7 +109,7 @@ export default function ErrorDialog({
             ) : null}
             {hasDetail ? (
               <View style={styles.disclosure}>
-                <Pressable
+                <FocusPressable
                   accessibilityRole="button"
                   accessibilityState={{ expanded }}
                   accessibilityLabel={detailLabel}
@@ -120,7 +122,7 @@ export default function ErrorDialog({
                   ) : (
                     <ChevronDown size={spacing.md} color={accent} />
                   )}
-                </Pressable>
+                </FocusPressable>
                 {expanded ? (
                   <View style={styles.detailBody}>
                     {lines.map((line) => (
@@ -133,14 +135,19 @@ export default function ErrorDialog({
               </View>
             ) : null}
             <View style={styles.actions}>
-              <Button variant="secondary" label={t("actions.close")} onPress={close} disabled={busy} />
+              <Button
+                variant="secondary"
+                label={t("actions.close")}
+                onPress={close}
+                disabled={busy}
+              />
               {retryLabel !== undefined ? (
                 <Button label={retryLabel} onPress={onRetry} disabled={busy} />
               ) : null}
             </View>
           </View>
-        </Pressable>
-      </Pressable>
+        </FocusPressable>
+      </FocusPressable>
     </Modal>
   );
 }

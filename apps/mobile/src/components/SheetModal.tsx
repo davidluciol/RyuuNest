@@ -1,4 +1,5 @@
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { Modal, ScrollView, StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { X } from "../icons";
@@ -48,19 +49,19 @@ export default function SheetModal({
       animationType={sheetAnimation(animated)}
       onRequestClose={close}
     >
-      <Pressable
+      <FocusPressable
         style={sheetBackdropStyle()}
         accessibilityLabel={t("sources.sheet.close")}
         onPress={close}
       >
         {/* Pressable vacío: traga el toque del contenido y no cierra la hoja. */}
-        <Pressable testID={testID}>
+        <FocusPressable testID={testID} focusable={false}>
           <Sheet>
             <View style={styles.header}>
               <Text accessibilityRole="header" style={styles.title}>
                 {title}
               </Text>
-              <Pressable
+              <FocusPressable
                 accessibilityRole="button"
                 accessibilityLabel={t("sources.sheet.close")}
                 accessibilityState={{ disabled: busy }}
@@ -69,14 +70,14 @@ export default function SheetModal({
                 style={styles.close}
               >
                 <X size={spacing.md} color={colors.textSecondary} />
-              </Pressable>
+              </FocusPressable>
             </View>
             <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}>
               {children}
             </ScrollView>
           </Sheet>
-        </Pressable>
-      </Pressable>
+        </FocusPressable>
+      </FocusPressable>
     </Modal>
   );
 }

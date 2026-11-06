@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { t } from "../i18n";
@@ -31,10 +32,12 @@ export default function Switch({
 }: SwitchProps) {
   const s = switchStyle(value, disabled);
   return (
-    <Pressable
+    <FocusPressable
       accessibilityRole="switch"
       accessibilityLabel={accessibilityLabel}
       accessibilityState={{ checked: value, disabled }}
+      aria-checked={value}
+      aria-disabled={disabled}
       disabled={disabled}
       onPress={() => onValueChange(!value)}
       testID={testID}
@@ -54,7 +57,7 @@ export default function Switch({
           }}
         />
       </View>
-    </Pressable>
+    </FocusPressable>
   );
 }
 

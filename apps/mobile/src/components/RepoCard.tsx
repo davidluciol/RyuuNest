@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { Network, RefreshCw } from "../icons";
@@ -40,7 +41,7 @@ export default function RepoCard({
     // La fila no puede ser un botón: en web anidaría el botón de sincronizar
     // (HTML inválido). El cuerpo (icono y textos) es el botón de quitar.
     <View style={[repoCardStyle(), styles.card]}>
-      <Pressable
+      <FocusPressable
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel ?? name}
         onPress={onPress}
@@ -53,13 +54,11 @@ export default function RepoCard({
           <Text style={[styles.name, { color: text.name }]} numberOfLines={2}>
             {name}
           </Text>
-          <Text style={[styles.url, { color: text.url }]} numberOfLines={2}>
-            {url}
-          </Text>
+          <Text style={[styles.url, { color: text.url }]}>{url}</Text>
           {meta ? <Text style={[styles.url, { color: text.url }]}>{meta}</Text> : null}
         </View>
-      </Pressable>
-      <Pressable
+      </FocusPressable>
+      <FocusPressable
         accessibilityRole="button"
         accessibilityLabel={syncLabel}
         accessibilityState={{ busy: syncing, disabled: syncing }}
@@ -68,7 +67,7 @@ export default function RepoCard({
         style={[repoSyncButtonStyle(), styles.sync, syncing && styles.syncing]}
       >
         <RefreshCw size={spacing.md + spacing.xxs} color={colors.textSecondary} />
-      </Pressable>
+      </FocusPressable>
     </View>
   );
 }

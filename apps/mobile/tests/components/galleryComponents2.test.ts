@@ -52,6 +52,7 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.confirmSheet",
       "gallery.component.logEventRow",
       "gallery.component.diagnosticsScreen",
+      "gallery.component.chipScroller",
     ]);
   });
 

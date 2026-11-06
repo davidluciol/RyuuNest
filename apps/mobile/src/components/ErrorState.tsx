@@ -1,5 +1,6 @@
+import FocusPressable from "./FocusPressable";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 import { ChevronDown, ChevronUp } from "lucide-react-native";
 
@@ -65,7 +66,7 @@ export default function ErrorState({
       <Button label={retryLabel} onPress={onRetry} />
       {hasDetail ? (
         <View style={styles.detailArea}>
-          <Pressable
+          <FocusPressable
             accessibilityRole="button"
             accessibilityState={{ expanded }}
             accessibilityLabel={detailLabel}
@@ -79,7 +80,7 @@ export default function ErrorState({
             ) : (
               <ChevronDown size={16} color={colors.action} />
             )}
-          </Pressable>
+          </FocusPressable>
           {expanded ? (
             <View style={styles.detailBox}>
               {lines.map((line) => (

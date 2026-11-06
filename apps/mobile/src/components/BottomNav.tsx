@@ -10,6 +10,7 @@ import {
   BOTTOM_NAV_DESTINATIONS,
   type BottomNavDestination,
   bottomNavStyle,
+  NAV_LABEL_MAX_FONT_SCALE,
   navItemColors,
   navItemStyle,
 } from "./shellStyles";
@@ -68,7 +69,11 @@ export default function BottomNav({ active, onSelect, disabled = false }: Bottom
             ]}
           >
             <Icon size={spacing.lg} color={colors.icon} />
-            <Text testID="nav-label" style={[styles.label, { color: colors.text }]}>
+            <Text
+              testID="nav-label"
+              maxFontSizeMultiplier={NAV_LABEL_MAX_FONT_SCALE}
+              style={[styles.label, { color: colors.text }]}
+            >
               {destinationLabel(destination)}
             </Text>
           </Pressable>
@@ -83,10 +88,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "stretch",
     justifyContent: "space-around",
-    padding: spacing.xxs,
+    // Sin relleno horizontal: a 273 px las cinco pestañas (mín. 48 dp) ocupan 268 px.
+    paddingVertical: spacing.xxs,
   },
   item: {
-    flex: 1,
+    // Ancho por contenido y reparto del sobrante: «Biblioteca» no cabe en 1/5 de 273 px.
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: "auto",
     alignItems: "center",
     justifyContent: "center",
     gap: spacing.xxs,

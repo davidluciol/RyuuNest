@@ -118,3 +118,16 @@ export function libraryCardGridColumns(width: number): number {
   const layout = layoutForWidth(width);
   return layout.columns.max;
 }
+
+/**
+ * F34.3 — ancho mínimo de la tarjeta para que el título (2 líneas) quepa sin
+ * «…» (T7). Provisional: se mide en el teléfono (P-45).
+ */
+export const LIBRARY_CARD_MIN_WIDTH = 96;
+
+/** Columnas de la cuadrícula de Biblioteca: 3 si la tarjeta conserva su ancho mínimo; si no, 2. */
+export function libraryColumnsFor(width: number): 2 | 3 {
+  const { margin, gap } = layoutForWidth(width);
+  const cardWidth = (width - 2 * margin - 2 * gap) / 3;
+  return cardWidth >= LIBRARY_CARD_MIN_WIDTH ? 3 : 2;
+}

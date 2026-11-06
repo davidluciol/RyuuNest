@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FlatList, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { FlatList, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import {
   dragonNightColors,
   layoutForWidth,
@@ -9,7 +9,9 @@ import {
 } from "@ryuunest/ui-tokens";
 
 import LibraryCard from "../../components/LibraryCard";
+import { libraryColumnsFor } from "../../components/libraryCardStyles";
 import Chip from "../../components/Chip";
+import ChipScroller from "../../components/ChipScroller";
 import EmptyState from "../../components/EmptyState";
 import TextField from "../../components/TextField";
 import { Search } from "../../icons";
@@ -78,6 +80,7 @@ export default function LibraryScreen({
 }: LibraryScreenProps) {
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
+  const columns = libraryColumnsFor(width);
   const [filters, setFilters] = useState<LibraryFilters>({
     ...DEFAULT_LIBRARY_FILTERS,
     ...initialFilters,
@@ -143,11 +146,7 @@ export default function LibraryScreen({
 
       {/* Chips Todo · Leyendo · Carpetas (RF-26). */}
       <View style={[styles.chipsWrap, { paddingHorizontal: layout.margin }]}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chipsRow}
-        >
+        <ChipScroller contentContainerStyle={styles.chipsRow}>
           <Chip
             label={t("library.chip.all", { count: totalCount })}
             selected={filters.chip === "all"}
@@ -163,16 +162,12 @@ export default function LibraryScreen({
             selected={filters.chip === "folders"}
             onPress={() => updateFilters({ chip: "folders" })}
           />
-        </ScrollView>
+        </ChipScroller>
       </View>
 
       {/* Filtros secundarios: tipo, fuente, orden, NSFW (RF-27, RF-28). */}
       <View style={[styles.filtersWrap, { paddingHorizontal: layout.margin }]}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filtersRow}
-        >
+        <ChipScroller contentContainerStyle={styles.filtersRow}>
           <Chip label={t("library.filter.kind")} selected={filters.kinds.length > 0} />
           <Chip label={t("library.filter.source")} selected={filters.moduleIds.length > 0} />
           <Chip
@@ -190,7 +185,7 @@ export default function LibraryScreen({
             selected={filters.nsfwVisible}
             onPress={() => updateFilters({ nsfwVisible: !filters.nsfwVisible })}
           />
-        </ScrollView>
+        </ChipScroller>
       </View>
 
       {/* Sección de carpetas (F14b, V6: un solo acceso). */}
@@ -202,11 +197,7 @@ export default function LibraryScreen({
               {t("library.folder.manage")}
             </Text>
           </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.foldersRow}
-          >
+          <ChipScroller contentContainerStyle={styles.foldersRow}>
             {data.folders.map((folder) => (
               <View key={folder.id} style={styles.folderChip}>
                 <Chip
@@ -221,7 +212,7 @@ export default function LibraryScreen({
                 />
               </View>
             ))}
-          </ScrollView>
+          </ChipScroller>
         </View>
       ) : null}
 
@@ -246,9 +237,12 @@ export default function LibraryScreen({
           }}
           data={visibleSeries}
           keyExtractor={(item) => `${item.moduleId}:${item.seriesId}`}
-          numColumns={3}
+          key={`grid-${columns}`}
+          numColumns={columns}
           columnWrapperStyle={{ gap: layout.gap }}
-          renderItem={({ item }) => <View style={styles.gridItem}>{renderCard(item)}</View>}
+          renderItem={({ item }) => (
+            <View style={[styles.gridItem, { flex: 1 / columns }]}>{renderCard(item)}</View>
+          )}
           initialNumToRender={12}
           windowSize={5}
           removeClippedSubviews
@@ -265,13 +259,16 @@ export default function LibraryScreen({
             },
           ]}
         >
-          {libraryGridRows(visibleSeries, 3).map((row) => (
+          {libraryGridRows(visibleSeries, columns).map((row) => (
             <View
               key={`${row[0]?.moduleId}:${row[0]?.seriesId ?? ""}`}
               style={[styles.gridRow, { gap: layout.gap }]}
             >
               {row.map((item) => (
-                <View key={`${item.moduleId}:${item.seriesId}`} style={styles.gridItem}>
+                <View
+                  key={`${item.moduleId}:${item.seriesId}`}
+                  style={[styles.gridItem, { flex: 1 / columns }]}
+                >
                   {renderCard(item)}
                 </View>
               ))}

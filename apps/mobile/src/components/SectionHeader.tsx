@@ -1,11 +1,9 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { StyleSheet, Text, View } from "react-native";
 import { ChevronRight, type LucideIcon } from "../icons";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
-import {
-  sectionHeaderColors,
-  sectionHeaderStyle,
-} from "./sectionHeaderStyles";
+import { sectionHeaderColors, sectionHeaderStyle } from "./sectionHeaderStyles";
 import { textStyle } from "./textStyle";
 
 /**
@@ -44,7 +42,7 @@ export default function SectionHeader({
         </Text>
       </View>
       {actionLabel ? (
-        <Pressable
+        <FocusPressable
           accessibilityRole="button"
           accessibilityLabel={actionLabel}
           onPress={onAction}
@@ -53,7 +51,7 @@ export default function SectionHeader({
         >
           <Text style={[styles.actionText, { color: colors.action }]}>{actionLabel}</Text>
           <ChevronRight size={16} color={colors.action} />
-        </Pressable>
+        </FocusPressable>
       ) : null}
     </View>
   );

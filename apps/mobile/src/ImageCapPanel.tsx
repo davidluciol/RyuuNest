@@ -4,11 +4,12 @@
 // single-use: panel de medición del tope de imágenes en memoria (T05) — no forma parte
 // de la app de lectura; vive solo en la app de calibración.
 import { useMemo, useState } from "react";
-import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { Image, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 import paginaCalibracion from "../assets/pagina-calibracion.png";
 import { t } from "./i18n";
 import { clampCount, decodedBytes, toMB } from "./imageBudget";
+import FocusPressable from "./components/FocusPressable";
 
 /**
  * Red de seguridad del panel: 30 imágenes a 1440×3200 son ~528 MB decodificados, más que
@@ -35,15 +36,15 @@ export default function ImageCapPanel() {
       </Text>
 
       <View style={styles.controls}>
-        <Pressable style={styles.button} onPress={() => step(-1)} hitSlop={8}>
+        <FocusPressable style={styles.button} onPress={() => step(-1)} hitSlop={8}>
           <Text style={styles.buttonLabel}>−1</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={() => step(1)} hitSlop={8}>
+        </FocusPressable>
+        <FocusPressable style={styles.button} onPress={() => step(1)} hitSlop={8}>
           <Text style={styles.buttonLabel}>+1</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={() => setCount(0)} hitSlop={8}>
+        </FocusPressable>
+        <FocusPressable style={styles.button} onPress={() => setCount(0)} hitSlop={8}>
           <Text style={styles.buttonLabel}>{t("settings.cache.clearAction")}</Text>
-        </Pressable>
+        </FocusPressable>
       </View>
 
       <Text style={styles.hint}>

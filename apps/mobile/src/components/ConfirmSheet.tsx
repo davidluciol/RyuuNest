@@ -1,9 +1,14 @@
-import { Modal, Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import FocusPressable from "./FocusPressable";
+import { Modal, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "./Button";
 import Sheet from "./Sheet";
-import { confirmActionsLayout, confirmPresentation, confirmSubjectStyle } from "./confirmSheetStyles";
+import {
+  confirmActionsLayout,
+  confirmPresentation,
+  confirmSubjectStyle,
+} from "./confirmSheetStyles";
 import {
   dialogBackdropStyle,
   dialogFrameStyle,
@@ -121,16 +126,22 @@ export default function ConfirmSheet({
     <Modal
       visible={visible}
       transparent
-      animationType={presentation === "sheet" ? sheetAnimation(animated) : animated ? "fade" : "none"}
+      animationType={
+        presentation === "sheet" ? sheetAnimation(animated) : animated ? "fade" : "none"
+      }
       onRequestClose={cancel}
     >
-      <Pressable
+      <FocusPressable
         style={presentation === "sheet" ? sheetBackdropStyle() : dialogBackdropStyle()}
         accessibilityLabel={cancelLabel}
         onPress={cancel}
       >
         {/* Pressable vacío: traga el toque del contenido y no cierra la confirmación. */}
-        <Pressable testID={testID} style={presentation === "sheet" ? styles.sheetFrame : styles.dialogFrame}>
+        <FocusPressable
+          testID={testID}
+          focusable={false}
+          style={presentation === "sheet" ? styles.sheetFrame : styles.dialogFrame}
+        >
           {presentation === "sheet" ? (
             <Sheet>
               <View style={styles.content}>{body}</View>
@@ -138,8 +149,8 @@ export default function ConfirmSheet({
           ) : (
             <View style={[styles.dialog, styles.content]}>{body}</View>
           )}
-        </Pressable>
-      </Pressable>
+        </FocusPressable>
+      </FocusPressable>
     </Modal>
   );
 }
