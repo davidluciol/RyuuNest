@@ -1,7 +1,7 @@
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
 import { zipSync } from "fflate";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ModuleError, StubHttp, type SecureLock } from "@ryuunest/core";
 
@@ -55,11 +55,32 @@ function manifestOf(v: Version) {
 
 function zipOf(v: Version): Uint8Array {
   const manifest = manifestOf(v);
-  return zipSync({
-    "manifest.json": text(JSON.stringify(manifest)),
-    [manifest.entry]: text(manifest.runtime === "script" ? "export default {}" : "{}"),
-  });
+  // `mtime` fijo: sin él fflate estampa la hora actual y el hash del índice
+  // y el del paquete pueden diferir si el reloj cruza un límite de 2 s.
+  return zipSync(
+    {
+      "manifest.json": text(JSON.stringify(manifest)),
+      [manifest.entry]: text(manifest.runtime === "script" ? "export default {}" : "{}"),
+    },
+    { mtime: new Date("2026-01-01T00:00:00Z") },
+  );
 }
+
+describe("zipOf · determinista (evita un hash distinto entre índice y paquete)", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("produce los mismos bytes aunque pase el tiempo entre dos llamadas", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-11-06T19:02:30Z"));
+    const first = zipOf({ id: "uno", version: "1.0.0" });
+    vi.setSystemTime(new Date("2026-11-06T19:02:35Z"));
+    const second = zipOf({ id: "uno", version: "1.0.0" });
+
+    expect(bytesToHex(sha256(second))).toBe(bytesToHex(sha256(first)));
+  });
+});
 
 class Repo {
   readonly http: StubHttp;
