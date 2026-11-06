@@ -50,20 +50,32 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
       await page.getByText("Paginado D → I · Manga").waitFor({ state: "visible" });
       await page.getByText("Paginado I → D · Cómic").waitFor({ state: "visible" });
       await page.getByText("Almacenamiento y caché").waitFor({ state: "visible" });
-      await page.getByText("Caché de imágenes", { exact: true }).first().waitFor({ state: "visible" });
-      await page.getByRole("button", { name: "Vaciar caché de imágenes" }).waitFor({ state: "visible" });
+      await page
+        .getByText("Caché de imágenes", { exact: true })
+        .first()
+        .waitFor({ state: "visible" });
+      await page
+        .getByRole("button", { name: "Vaciar caché de imágenes" })
+        .waitFor({ state: "visible" });
 
       // F21: la sección «Respaldo» aparece con sus dos filas (RF-37, RF-38).
       await page.getByText("Respaldo", { exact: true }).waitFor({ state: "visible" });
-      await page.getByText("Exportar respaldo", { exact: true }).first().waitFor({ state: "visible" });
-      await page.getByText("Importar respaldo", { exact: true }).first().waitFor({ state: "visible" });
+      await page
+        .getByText("Exportar respaldo", { exact: true })
+        .first()
+        .waitFor({ state: "visible" });
+      await page
+        .getByText("Importar respaldo", { exact: true })
+        .first()
+        .waitFor({ state: "visible" });
 
       const nsfwToggle = page.getByTestId("settings-nsfw-switch");
-      const nsfwInput = nsfwToggle.locator("input");
-      assert.equal(await nsfwInput.isChecked(), false, `NSFW no empieza apagado @${width}`);
+      // F34.2: interruptor propio (Pressable con role="switch" y «Sí/No»), no un input nativo.
+      const isOn = async (toggle) => (await toggle.getAttribute("aria-checked")) === "true";
+      assert.equal(await isOn(nsfwToggle), false, `NSFW no empieza apagado @${width}`);
       await nsfwToggle.click();
       await page.waitForTimeout(300);
-      assert.equal(await nsfwInput.isChecked(), true, `NSFW no se pudo activar @${width}`);
+      assert.equal(await isOn(nsfwToggle), true, `NSFW no se pudo activar @${width}`);
 
       // La fila de protección: etiqueta, aviso sin bloqueo e interruptor inerte.
       await page.getByText("Seguridad").waitFor({ state: "visible" });
@@ -73,19 +85,19 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
         .waitFor({ state: "visible" });
       const toggle = page.getByTestId("settings-protection-switch");
       await toggle.waitFor({ state: "visible" });
-      // react-native-web marca el disabled en el input nativo del interruptor.
-      const toggleInput = toggle.locator("input");
-      assert.ok(await toggleInput.isDisabled(), `interruptor activo @${width}`);
+      // react-native-web marca el disabled del Pressable con aria-disabled.
+      assert.equal(
+        await toggle.getAttribute("aria-disabled"),
+        "true",
+        `interruptor activo @${width}`,
+      );
       await shot("ajustes");
 
       // Sin bloqueo, tocar el interruptor no lo activa (falla cerrado, RF-7).
-      await toggle.click();
+      // `force`: el interruptor lleva aria-disabled y Playwright no pulsa lo deshabilitado.
+      await toggle.click({ force: true });
       await page.waitForTimeout(300);
-      assert.equal(
-        await toggleInput.isChecked(),
-        false,
-        `el interruptor se activó sin bloqueo @${width}`,
-      );
+      assert.equal(await isOn(toggle), false, `el interruptor se activó sin bloqueo @${width}`);
 
       // El repo oficial está registrado en el ejemplo: no hay fila de restaurar.
       assert.equal(
@@ -102,10 +114,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
       await page.goto(`${baseURL}/discover`);
       const discoverScreen = page.getByTestId("screen-discover");
       await discoverScreen.waitFor({ state: "visible" });
-      await discoverScreen
-        .getByText("El dragón de ceniza")
-        .first()
-        .waitFor({ state: "visible" });
+      await discoverScreen.getByText("El dragón de ceniza").first().waitFor({ state: "visible" });
 
       assert.equal(
         await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth),
