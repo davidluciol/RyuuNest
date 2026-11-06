@@ -70,7 +70,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF30");
       for (const id of [1, 2, 3, 4]) {
         await page.getByTestId(`diagnostics-event-${id}`).waitFor({ state: "visible" });
       }
-      for (const text of ["Fallo", "Aviso", "Nota", "module.timeout", "reader.image.retry", "backup.import.rejected", "install.completed", "Últimos eventos · 4"]) {
+      for (const text of ["Error", "Aviso", "Info", "module.timeout", "reader.image.retry", "backup.import.rejected", "install.completed", "Últimos eventos · 4"]) {
         await screen.getByText(text, { exact: true }).first().waitFor({ state: "visible" });
       }
       const truncated = await page.evaluate(() =>
@@ -83,7 +83,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF30");
 
       // Detalle desplegable con contexto y versión.
       await page.getByTestId("diagnostics-event-4").getByRole("button", { name: "Ver detalle" }).click();
-      await page.getByTestId("diagnostics-event-4").getByText("versión y plataforma:").waitFor({ state: "visible" });
+      await page.getByTestId("diagnostics-event-4").getByText("Versión y plataforma:").waitFor({ state: "visible" });
       await shot("diagnostico-detalle");
 
       // Áreas táctiles de 48 dp en las tres acciones.
@@ -99,7 +99,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF30");
       assert.match(text.text, /\[error\] module\.timeout/);
       await page.getByTestId("diagnostics-toast").getByText("Informe exportado").waitFor({ state: "visible" });
 
-      await screen.getByRole("button", { name: "Datos (JSON)" }).click();
+      await screen.getByRole("button", { name: "JSON" }).click();
       const json = await exportFile();
       assert.match(json.name, /^ryuunest-diagnostico-\d{4}-\d{2}-\d{2}\.json$/);
       const parsed = JSON.parse(json.text);

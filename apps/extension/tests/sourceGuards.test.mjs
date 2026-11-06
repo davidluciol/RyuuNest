@@ -64,9 +64,11 @@ describe("puertas de apps/extension/src", () => {
     for (const file of sourceFiles().filter((f) => f.endsWith(".tsx"))) {
       const text = stripComments(readFileSync(file, "utf8"));
       for (const [key, value] of literals) {
-        expect(text.includes(value), `la cadena de «${key}» está escrita a mano en ${file}`).toBe(
-          false,
-        );
+        // F34.2: solo cuenta un literal entero entre comillas o texto JSX (`>valor<`),
+        // igual que la puerta de apps/mobile (`isWrittenAsCopy`).
+        const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const asCopy = new RegExp(`(["'\`])${escaped}\\1|>\\s*${escaped}\\s*<`).test(text);
+        expect(asCopy, `la cadena de «${key}» está escrita a mano en ${file}`).toBe(false);
       }
     }
   });

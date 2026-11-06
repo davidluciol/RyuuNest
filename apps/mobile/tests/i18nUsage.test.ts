@@ -74,6 +74,33 @@ function stripComments(text: string): string {
   return text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/.*$/gm, "$1");
 }
 
+/**
+ * F34.2 — ¿está `value` escrito como texto visible? Solo cuenta un literal
+ * entero entre comillas (`"valor"`, `'valor'`, `` `valor` ``) o como texto JSX
+ * (`>valor<`). Una subcadena dentro de otra palabra o de una frase de código
+ * («No» en `NoSuchKey`, «Error» en `ErrorState`) no es copy escrito a mano.
+ */
+export function isWrittenAsCopy(text: string, value: string): boolean {
+  const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(["'\`])${escaped}\\1|>\\s*${escaped}\\s*<`).test(text);
+}
+
+describe("isWrittenAsCopy (F34.2)", () => {
+  it("detecta literales entre comillas y texto JSX", () => {
+    expect(isWrittenAsCopy(`const a = "Sí";`, "Sí")).toBe(true);
+    expect(isWrittenAsCopy(`const a = 'Sí';`, "Sí")).toBe(true);
+    expect(isWrittenAsCopy("const a = `Sí`;", "Sí")).toBe(true);
+    expect(isWrittenAsCopy(`<Text>Sí</Text>`, "Sí")).toBe(true);
+  });
+
+  it("ignora palabras naturales dentro de identificadores y frases de código", () => {
+    expect(isWrittenAsCopy(`import ErrorState from "./ErrorState";`, "Error")).toBe(false);
+    expect(isWrittenAsCopy(`JSON.stringify(x)`, "JSON")).toBe(false);
+    expect(isWrittenAsCopy(`if (a) { No(); } // No`, "No")).toBe(false);
+    expect(isWrittenAsCopy(`const a = "Error al cargar";`, "Error")).toBe(false);
+  });
+});
+
 describe("puerta de i18n (RF-40)", () => {
   it("toda clave usada en las fuentes existe en el catálogo", () => {
     const keys = catalogKeys();
@@ -96,7 +123,7 @@ describe("puerta de i18n (RF-40)", () => {
       const text = stripComments(readFileSync(file, "utf8"));
       for (const [key, value] of literals) {
         expect(
-          text.includes(value),
+          isWrittenAsCopy(text, value),
           `la cadena de «${key}» está escrita a mano en ${path.relative(SRC, file)}`,
         ).toBe(false);
       }
