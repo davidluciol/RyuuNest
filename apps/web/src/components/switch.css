@@ -28,11 +28,12 @@
 
 .switch-track {
   flex: 0 0 auto;
-  width: calc(var(--touch-min) - var(--space-md));
-  height: calc(var(--space-lg));
+  width: calc(var(--touch-min) + var(--space-xxs));
+  height: var(--space-xl);
+  box-sizing: border-box;
   border-radius: var(--radius-pill);
-  background: var(--color-border);
-  border: 1px solid var(--color-border);
+  background: var(--color-elevated);
+  border: 2px solid var(--color-text-secondary);
   display: inline-flex;
   align-items: center;
   padding: 2px;
@@ -50,16 +51,24 @@
 }
 
 .switch-thumb {
-  width: calc(var(--space-md));
-  height: calc(var(--space-md));
+  width: calc(var(--space-md) + var(--space-xxs));
+  height: calc(var(--space-md) + var(--space-xxs));
   border-radius: var(--radius-pill);
-  background: var(--color-text-primary);
+  background: var(--color-text-secondary);
   transform: translateX(0);
   transition: transform 150ms ease-out;
 }
 
 .switch-input:checked + .switch-track .switch-thumb {
-  transform: translateX(calc(var(--touch-min) - var(--space-md) - var(--space-md) - var(--space-xxs)));
+  background: var(--color-bg);
+  transform: translateX(var(--space-lg));
+}
+
+/* Texto Sí/No: el estado no depende solo del color. */
+.switch-state {
+  flex: 0 0 auto;
+  min-width: var(--space-lg);
+  color: var(--color-text-secondary);
 }
 
 .switch-texts {
