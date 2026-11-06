@@ -30,7 +30,7 @@ describe("Switch web (F34.2)", () => {
 
   it("pomo apagado text-secondary y encendido bg", () => {
     expect(rule(".switch-thumb")).toContain("background: var(--color-text-secondary)");
-    expect(rule(".switch-input:checked + .switch-track .switch-thumb")).toContain(
+    expect(rule(".switch-input:checked ~ .switch-track .switch-thumb")).toContain(
       "background: var(--color-bg)",
     );
   });
