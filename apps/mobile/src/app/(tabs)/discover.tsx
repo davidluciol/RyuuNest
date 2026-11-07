@@ -12,10 +12,11 @@ import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
  * Tocar una serie no navega todavía: la ficha de serie llega con F17.
  */
 export default function DiscoverRoute() {
+  const settings = useSettingsPreferences();
   const { view, selectModule, search, nextPage, prevPage, retry } = useDiscoverData({
     resolveReporter: resolveErrorReporter,
+    nsfwVisible: settings.nsfwVisible,
   });
-  const settings = useSettingsPreferences();
 
   return (
     <DiscoverScreen
@@ -33,6 +34,7 @@ export default function DiscoverRoute() {
         })
       }
       onEmptyAction={() => router.push(destinationRoutes.sources)}
+      onOpenSettings={() => router.push(destinationRoutes.settings)}
     />
   );
 }

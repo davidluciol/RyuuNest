@@ -62,8 +62,6 @@ export interface SourcesScreenProps {
   controller: SourcesController | null;
   /** Aviso transitorio (errores del servicio fuera de una hoja). */
   notice?: string | null;
-  /** Filtro NSFW global (RF-35): apagado por defecto. */
-  nsfwVisible?: boolean;
   onRetry?: () => void;
 }
 
@@ -72,7 +70,6 @@ export default function SourcesScreen({
   flow,
   controller,
   notice = null,
-  nsfwVisible = false,
   onRetry,
 }: SourcesScreenProps) {
   const { width } = useWindowDimensions();
@@ -80,15 +77,8 @@ export default function SourcesScreen({
   const [filter, setFilter] = useState<SourceKindFilter>("all");
 
   const data = view.status === "ready" ? view.data : null;
-  const visibleByNsfw = useMemo(
-    () => (data?.modules ?? []).filter((module) => nsfwVisible || !module.nsfw),
-    [data, nsfwVisible],
-  );
-  const counts = useMemo(() => kindFilterCounts(visibleByNsfw), [visibleByNsfw]);
-  const shown = useMemo(
-    () => filterSourceModules(data?.modules ?? [], filter, nsfwVisible),
-    [data, filter, nsfwVisible],
-  );
+  const counts = useMemo(() => kindFilterCounts(data?.modules ?? []), [data]);
+  const shown = useMemo(() => filterSourceModules(data?.modules ?? [], filter), [data, filter]);
 
   if (view.status === "loading") {
     return (
@@ -112,7 +102,7 @@ export default function SourcesScreen({
   }
 
   const { repos, modules } = view.data;
-  const summary = sourcesSummary(visibleByNsfw);
+  const summary = sourcesSummary(modules);
 
   return (
     <View style={styles.screen} testID="screen-sources">

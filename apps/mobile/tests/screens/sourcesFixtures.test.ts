@@ -12,7 +12,7 @@ import type { SourceModule } from "../../src/screens/sources/sourcesData";
 
 /**
  * F16 — lógica pura de la pantalla Fuentes: contadores de los chips por tipo,
- * resumen «N instalados · M disponibles» y el filtro NSFW (RF-35), sin montar
+ * resumen «N instalados · M disponibles» y el filtro por tipo, sin montar
  * la app. Los datos de ejemplo siguen el conjunto único de fixtures (D1–D5).
  */
 
@@ -63,7 +63,7 @@ describe("filterSourceModules", () => {
   ];
 
   it("«Todos» devuelve todos los visibles", () => {
-    expect(filterSourceModules(modules, "all", true).map((m) => m.id)).toEqual([
+    expect(filterSourceModules(modules, "all").map((m) => m.id)).toEqual([
       "manga-sfw",
       "manhwa-sfw",
       "manga-nsfw",
@@ -73,13 +73,14 @@ describe("filterSourceModules", () => {
   it("filtra por tipo", () => {
     const filter: SourceKindFilter = "manhwa";
 
-    expect(filterSourceModules(modules, filter, true).map((m) => m.id)).toEqual(["manhwa-sfw"]);
+    expect(filterSourceModules(modules, filter).map((m) => m.id)).toEqual(["manhwa-sfw"]);
   });
 
-  it("con el filtro NSFW apagado oculta los módulos NSFW (RF-35)", () => {
-    expect(filterSourceModules(modules, "all", false).map((m) => m.id)).toEqual([
+  it("no oculta los módulos NSFW: Fuentes gestiona e instala, y RF-35 solo oculta en Inicio, Biblioteca y Descubrir", () => {
+    expect(filterSourceModules(modules, "all").map((m) => m.id)).toEqual([
       "manga-sfw",
       "manhwa-sfw",
+      "manga-nsfw",
     ]);
   });
 
@@ -91,7 +92,7 @@ describe("filterSourceModules", () => {
       row({ id: "inst-2", status: "installed" }),
     ];
 
-    expect(filterSourceModules(mixed, "all", true).map((m) => m.id)).toEqual([
+    expect(filterSourceModules(mixed, "all").map((m) => m.id)).toEqual([
       "inst-1",
       "inst-2",
       "disp-1",

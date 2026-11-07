@@ -3,6 +3,7 @@ import {
   ModuleHost,
   ModuleRegistry,
   SqliteStorage,
+  createFunctionScriptLoader,
   createModuleApi,
   type DeclarativeConfig,
   type Http,
@@ -316,5 +317,9 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
 export async function resolveDiscoverSource(): Promise<DiscoverDataSource> {
   const driver = await openAppDatabase();
   if (driver === null) return createSampleDiscoverSource();
-  return createInstalledDiscoverSource({ driver, http: createFetchHttp() });
+  return createInstalledDiscoverSource({
+    driver,
+    http: createFetchHttp(),
+    loader: createFunctionScriptLoader(),
+  });
 }

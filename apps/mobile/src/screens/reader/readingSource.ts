@@ -3,6 +3,7 @@ import {
   ChapterReadStore,
   Favorites,
   ModuleError,
+  createFunctionScriptLoader,
   ProgressStore,
   SeriesStore,
   type ImageRef,
@@ -179,7 +180,11 @@ export function resolveReadingSource(): Promise<ReadingSource> {
       ? createSampleReadingSource()
       : createReadingSource({
           driver,
-          mounter: createInstalledMounter({ driver, http: createFetchHttp() }),
+          mounter: createInstalledMounter({
+            driver,
+            http: createFetchHttp(),
+            loader: createFunctionScriptLoader(),
+          }),
         }),
   );
   return resolved;

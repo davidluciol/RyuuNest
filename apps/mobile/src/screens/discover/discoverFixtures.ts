@@ -70,7 +70,8 @@ export interface DiscoverReady {
 
 /** Estado de la pantalla, como lo ve la ruta. */
 export type DiscoverView =
-  | { status: "empty" }
+  /** `hiddenByNsfw`: módulos instalados que el filtro NSFW apagado oculta (RF-35). */
+  | { status: "empty"; hiddenByNsfw?: number }
   | { status: "loading" }
   | { status: "error"; error: DiscoverError }
   | { status: "ready"; ready: DiscoverReady };
@@ -109,6 +110,29 @@ export function resolveSelectedModuleId(
     return rememberedId;
   }
   return visibleModules.length > 0 ? (visibleModules[0]?.id ?? null) : null;
+}
+
+/** Cuántos módulos oculta el filtro NSFW apagado (para avisar en el estado vacío). */
+export function countHiddenNsfwModules(
+  modules: readonly DiscoverModule[],
+  nsfwVisible: boolean,
+): number {
+  return modules.length - visibleDiscoverModules(modules, nsfwVisible).length;
+}
+
+/**
+ * Módulo elegido tras un cambio de módulos o del ajuste NSFW (RF-35): conserva
+ * el actual si sigue visible; si no, el recordado o el primero visible.
+ */
+export function reconcileSelectedModuleId(
+  modules: readonly DiscoverModule[],
+  nsfwVisible: boolean,
+  currentId: string | null,
+  rememberedId: string | null,
+): string | null {
+  const visible = visibleDiscoverModules(modules, nsfwVisible);
+  if (currentId !== null && visible.some((module) => module.id === currentId)) return currentId;
+  return resolveSelectedModuleId(visible, rememberedId);
 }
 
 // — Datos de ejemplo (galería y prueba de la pantalla en web; coherentes con
