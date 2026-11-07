@@ -111,6 +111,21 @@ export function resolveSelectedModuleId(
   return visibleModules.length > 0 ? (visibleModules[0]?.id ?? null) : null;
 }
 
+/**
+ * Módulo elegido tras un cambio de módulos o del ajuste NSFW (RF-35): conserva
+ * el actual si sigue visible; si no, el recordado o el primero visible.
+ */
+export function reconcileSelectedModuleId(
+  modules: readonly DiscoverModule[],
+  nsfwVisible: boolean,
+  currentId: string | null,
+  rememberedId: string | null,
+): string | null {
+  const visible = visibleDiscoverModules(modules, nsfwVisible);
+  if (currentId !== null && visible.some((module) => module.id === currentId)) return currentId;
+  return resolveSelectedModuleId(visible, rememberedId);
+}
+
 // — Datos de ejemplo (galería y prueba de la pantalla en web; coherentes con
 //   el conjunto único, D1–D5). «B» es NSFW para poder probar RF-35.
 

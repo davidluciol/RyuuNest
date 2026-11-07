@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   EMPTY_DISCOVER_PAGE,
+  reconcileSelectedModuleId,
   resolveSelectedModuleId,
   SAMPLE_DISCOVER_MODULES,
   visibleDiscoverEntries,
@@ -83,5 +84,28 @@ describe("página del catálogo", () => {
     const ids = new Set(SAMPLE_DISCOVER_MODULES.map((m) => m.id));
     expect(ids.has("m-ejemplo-a")).toBe(true);
     expect(ids.has("m-ejemplo-b")).toBe(true);
+  });
+});
+
+describe("reconcileSelectedModuleId (RF-35: el selector sigue al ajuste NSFW)", () => {
+  const ONLY_NSFW: DiscoverModule[] = [
+    { id: "m-x", name: "Solo adultos", nsfw: true, hasPopular: true, hasLatest: true },
+  ];
+
+  it("con solo módulos NSFW y el filtro apagado no hay selección", () => {
+    expect(reconcileSelectedModuleId(ONLY_NSFW, false, null, null)).toBeNull();
+  });
+
+  it("al encender NSFW elige el módulo que antes estaba oculto", () => {
+    expect(reconcileSelectedModuleId(ONLY_NSFW, true, null, null)).toBe("m-x");
+  });
+
+  it("conserva la selección actual mientras siga visible", () => {
+    expect(reconcileSelectedModuleId(MODULES, false, "m-b", "m-a")).toBe("m-b");
+  });
+
+  it("si la selección actual queda oculta al apagar NSFW, cae al recordado o al primero visible", () => {
+    expect(reconcileSelectedModuleId(MODULES, false, "m-x", "m-b")).toBe("m-b");
+    expect(reconcileSelectedModuleId(MODULES, false, "m-x", null)).toBe("m-a");
   });
 });
