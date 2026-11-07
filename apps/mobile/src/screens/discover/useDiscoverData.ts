@@ -7,6 +7,7 @@ import {
 } from "./discoverData";
 import { reportDiscoverError } from "./discoverErrors";
 import {
+  countHiddenNsfwModules,
   reconcileSelectedModuleId,
   type DiscoverModule,
   type DiscoverView,
@@ -125,7 +126,10 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     if (boot === null) return;
     const { moduleId, query, page } = request;
     if (moduleId === null) {
-      setView({ status: "empty" });
+      setView({
+        status: "empty",
+        hiddenByNsfw: countHiddenNsfwModules(boot.modules, nsfwVisible),
+      });
       return;
     }
 
@@ -159,7 +163,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     return () => {
       cancelled = true;
     };
-  }, [boot, request]);
+  }, [boot, request, nsfwVisible]);
 
   const selectModule = useCallback((id: string) => {
     setRequest((current) => ({ moduleId: id, query: "", page: 1, attempt: current.attempt }));

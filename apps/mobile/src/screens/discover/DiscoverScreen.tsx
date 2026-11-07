@@ -74,6 +74,8 @@ export interface DiscoverScreenProps {
   onSeriesPress?: (entry: DiscoverEntry) => void;
   /** Acción del vacío: ir a añadir un repositorio. */
   onEmptyAction?: () => void;
+  /** Abre Ajustes (aviso de módulos ocultos por el filtro NSFW). */
+  onOpenSettings?: () => void;
 }
 
 export default function DiscoverScreen({
@@ -86,11 +88,24 @@ export default function DiscoverScreen({
   onRetry,
   onSeriesPress,
   onEmptyAction,
+  onOpenSettings,
 }: DiscoverScreenProps) {
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
 
   if (view.status === "empty") {
+    if ((view.hiddenByNsfw ?? 0) > 0) {
+      return (
+        <View style={styles.stateWrap} testID="screen-discover">
+          <EmptyState
+            title={t("state.empty.discover.hiddenTitle")}
+            message={t("state.empty.discover.hiddenMessage")}
+            actionLabel={t("actions.openSettings")}
+            onAction={onOpenSettings}
+          />
+        </View>
+      );
+    }
     return (
       <View style={styles.stateWrap} testID="screen-discover">
         <EmptyState

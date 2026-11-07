@@ -34,6 +34,7 @@ export default function DiscoverRoute() {
         })
       }
       onEmptyAction={() => router.push(destinationRoutes.sources)}
+      onOpenSettings={() => router.push(destinationRoutes.settings)}
     />
   );
 }

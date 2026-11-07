@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   EMPTY_DISCOVER_PAGE,
+  countHiddenNsfwModules,
   reconcileSelectedModuleId,
   resolveSelectedModuleId,
   SAMPLE_DISCOVER_MODULES,
@@ -107,5 +108,15 @@ describe("reconcileSelectedModuleId (RF-35: el selector sigue al ajuste NSFW)", 
   it("si la selección actual queda oculta al apagar NSFW, cae al recordado o al primero visible", () => {
     expect(reconcileSelectedModuleId(MODULES, false, "m-x", "m-b")).toBe("m-b");
     expect(reconcileSelectedModuleId(MODULES, false, "m-x", null)).toBe("m-a");
+  });
+});
+
+describe("countHiddenNsfwModules (aviso de módulos ocultos por NSFW)", () => {
+  it("con el filtro apagado cuenta los módulos NSFW instalados", () => {
+    expect(countHiddenNsfwModules(MODULES, false)).toBe(1);
+  });
+
+  it("con el filtro encendido no hay ninguno oculto", () => {
+    expect(countHiddenNsfwModules(MODULES, true)).toBe(0);
   });
 });
