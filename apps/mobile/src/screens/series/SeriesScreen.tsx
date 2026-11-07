@@ -101,17 +101,17 @@ export default function SeriesScreen({
 
       <View style={styles.hero}>
         {details.cover ? (
-          <Image source={data.coverSource ?? { uri: details.cover.url }} style={styles.cover} />
+          <Image source={data.coverSource ?? { uri: details.cover.url, headers: details.cover.headers }} style={styles.cover} />
         ) : null}
         <View style={styles.heroText}>
           <View style={styles.badges}>
             {details.kind ? <Badge label={kindLabel(details.kind)} /> : null}
             <Badge label={statusLabel(details.status)} />
           </View>
-          <Text style={styles.title} numberOfLines={2}>
+          <Text style={styles.title}>
             {details.title}
           </Text>
-          <Text style={styles.meta} numberOfLines={2}>
+          <Text style={styles.meta}>
             {details.altTitles.join(" · ")}
           </Text>
           <Text style={styles.source}>{data.moduleName}</Text>

@@ -35,6 +35,8 @@ export interface DiscoverEntry {
   nsfw: boolean;
   /** Texto secundario del módulo (p. ej. «hace 2 h»); `null` si no trae. */
   hint: string | null;
+  /** Portada del módulo (URI absoluta y cabeceras opcionales); ausente si no trae. */
+  cover?: { uri: string; headers?: Record<string, string> };
 }
 
 /** Página del catálogo (búsqueda con paginación, RF-10). `page` empieza en 1. */

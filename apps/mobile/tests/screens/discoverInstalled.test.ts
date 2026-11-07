@@ -138,6 +138,18 @@ describe("createInstalledDiscoverSource · load", () => {
     ]);
   });
 
+  it("cada entrada conserva la portada del módulo (URI absoluta) para pintarla en la lista", async () => {
+    await seed(packageFor(INSTALADO));
+    const source = createInstalledDiscoverSource({ driver, http: siteHttp() });
+
+    const data = await source.load({ moduleId: "m-instalado", query: "dragon", page: 1 });
+
+    expect(data.catalog.entries[0]?.cover?.uri).toBe(`${HTML_SITE_BASE_URL}/img/dragon-de-ceniza.svg`);
+    for (const entry of [...data.popular, ...data.latest]) {
+      expect(entry.cover?.uri).toMatch(/\/img\/.+\.svg$/);
+    }
+  });
+
   it("un módulo sin `popular` declarada trae la fila vacía", async () => {
     await seed(packageFor(ADULTO, CONFIG_SIN_POPULAR));
     const source = createInstalledDiscoverSource({ driver, http: siteHttp() });
