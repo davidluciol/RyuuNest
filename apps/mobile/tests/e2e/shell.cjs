@@ -14,10 +14,10 @@ const { destinationMarker } = require("./markers.cjs");
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
 const output = path.resolve(__dirname, "../../../../docs/capturasF11");
 const destinations = [
-  ["Inicio", "/", "home"],
-  ["Biblioteca", "/library", "library"],
-  ["Descubrir", "/discover", "discover"],
-  ["Fuentes", "/sources", "sources"],
+  ["Guarida", "/", "home"],
+  ["Tesoros", "/library", "library"],
+  ["Aventuras", "/discover", "discover"],
+  ["Portales", "/sources", "sources"],
   ["Ajustes", "/settings", "settings"],
 ];
 
@@ -89,14 +89,14 @@ const destinations = [
     // Historial real del navegador y entrada directa, no solo cambio de color.
     await page.goto(`${baseURL}/library`);
     await page.getByTestId(destinationMarker("library")).waitFor();
-    await page.getByRole("tab", { name: "Fuentes", exact: true }).click();
+    await page.getByRole("tab", { name: "Portales", exact: true }).click();
     await page.waitForURL("**/sources");
     await page.goBack();
     await page.getByTestId(destinationMarker("library")).waitFor({ state: "visible" });
     await page.reload();
-    await page.getByRole("tab", { name: "Biblioteca", selected: true }).waitFor();
-    await page.getByRole("tab", { name: "Inicio", exact: true }).focus();
-    const focus = await page.getByRole("tab", { name: "Inicio", exact: true }).evaluate((el) => ({
+    await page.getByRole("tab", { name: "Tesoros", selected: true }).waitFor();
+    await page.getByRole("tab", { name: "Guarida", exact: true }).focus();
+    const focus = await page.getByRole("tab", { name: "Guarida", exact: true }).evaluate((el) => ({
       color: getComputedStyle(el).outlineColor,
       width: getComputedStyle(el).outlineWidth,
     }));

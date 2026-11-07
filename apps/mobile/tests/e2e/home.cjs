@@ -109,9 +109,9 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF13");
 
     // Verificar prefers-reduced-motion
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.getByRole("tab", { name: "Biblioteca", exact: true }).click();
+    await page.getByRole("tab", { name: "Tesoros", exact: true }).click();
     await page.getByTestId(destinationMarker("library")).waitFor();
-    await page.getByRole("tab", { name: "Inicio", exact: true }).click();
+    await page.getByRole("tab", { name: "Guarida", exact: true }).click();
     await page.getByText("Continuar la Aventura").waitFor();
 
     // Verificaciones finales
