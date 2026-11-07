@@ -89,6 +89,14 @@ function toEntry(moduleId: string, series: SeriesSummary): DiscoverEntry {
     kind: series.kind ?? null,
     nsfw: series.nsfw ?? false,
     hint: series.hint ?? null,
+    ...(series.cover === undefined
+      ? {}
+      : {
+          cover: {
+            uri: series.cover.url,
+            ...(series.cover.headers === undefined ? {} : { headers: series.cover.headers }),
+          },
+        }),
   };
 }
 

@@ -335,6 +335,7 @@ function DiscoverCard({
 }) {
   return (
     <LibraryCard
+      cover={entry.cover}
       kind={entry.kind === null ? undefined : kindLabel(entry.kind)}
       title={entry.title}
       meta={entryMeta(entry)}

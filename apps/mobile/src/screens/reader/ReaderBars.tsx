@@ -48,7 +48,7 @@ export function ReaderTopBar({
         <ArrowLeft size={spacing.lg} color={colors.textPrimary} />
       </FocusPressable>
       <View style={styles.titles}>
-        <Text style={styles.title} numberOfLines={2}>
+        <Text style={styles.title}>
           {title}
         </Text>
         <View style={styles.subtitleRow}>

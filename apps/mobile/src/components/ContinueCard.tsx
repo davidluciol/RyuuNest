@@ -73,10 +73,10 @@ export default function ContinueCard({
       </View>
       <View style={[styles.content, { gap: shape.gap }]}>
         <View style={styles.textBlock}>
-          <Text style={[styles.meta, { color: colors.meta }]} numberOfLines={1}>
+          <Text style={[styles.meta, { color: colors.meta }]}>
             {meta}
           </Text>
-          <Text style={[styles.title, { color: colors.title }]} numberOfLines={2}>
+          <Text style={[styles.title, { color: colors.title }]}>
             {title}
           </Text>
           <View style={styles.chapterRow}>
