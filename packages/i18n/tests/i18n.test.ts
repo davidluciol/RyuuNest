@@ -24,8 +24,8 @@ describe("catálogo de traducciones (RF-40)", () => {
   it("lee las cadenas por clave, en español por defecto", () => {
     expect(defaultLocale).toBe("es");
     expect(getLocale()).toBe("es");
-    expect(t("nav.home")).toBe("Inicio");
-    expect(t("state.empty.library.title")).toBe("Tu biblioteca está vacía");
+    expect(t("nav.home")).toBe("Guarida");
+    expect(t("state.empty.library.title")).toBe("Tus tesoros están vacíos");
   });
 
   it("interpola parámetros entre llaves", () => {

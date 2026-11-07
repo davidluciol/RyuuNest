@@ -90,7 +90,7 @@ describe("galería con componentes base 2 (F07)", () => {
       "tarjeta hero (continuar)",
       "tarjeta de recientes",
       "tarjeta de carpeta",
-      "pantalla Inicio",
+      "pantalla Guarida",
     ]) {
       expect(out, `falta ${name}`).toContain(name);
     }

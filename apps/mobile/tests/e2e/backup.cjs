@@ -84,7 +84,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF21");
       const replaceSheet = page.getByTestId("sheet-backup-replace");
       await replaceSheet.waitFor({ state: "visible" });
       await replaceSheet
-        .getByText("Se borrará tu biblioteca, progreso y ajustes actuales")
+        .getByText("Se borrarán tus tesoros, progreso y ajustes actuales")
         .waitFor({ state: "visible" });
       await shot("hoja-reemplazar");
       await replaceSheet.getByTestId("backup-apply-replace").click();
@@ -96,7 +96,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF21");
       await suggestions.getByText("Repositorio de ejemplo").waitFor({ state: "visible" });
       await suggestions.getByTestId("backup-confirm-repo-https://repositorio-ejemplo.test/index.json").waitFor({ state: "visible" });
       await suggestions.getByText("m-ejemplo-a").waitFor({ state: "visible" });
-      await suggestions.getByText("Ir a Fuentes").waitFor({ state: "visible" });
+      await suggestions.getByText("Ir a Portales").waitFor({ state: "visible" });
       await shot("hoja-sugerencias");
 
       // Confirmar el repo lo registra (en el ejemplo, queda «Añadido»).

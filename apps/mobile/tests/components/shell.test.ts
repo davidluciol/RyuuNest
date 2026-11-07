@@ -35,10 +35,10 @@ describe("barra inferior de 5 destinos (T1)", () => {
     expect(BOTTOM_NAV_DESTINATIONS).toEqual(["home", "library", "discover", "sources", "settings"]);
     // Las etiquetas visibles viven en el catálogo, no en el componente.
     expect(BOTTOM_NAV_DESTINATIONS.map((id) => t(`nav.${id}`))).toEqual([
-      "Inicio",
-      "Biblioteca",
-      "Descubrir",
-      "Fuentes",
+      "Guarida",
+      "Tesoros",
+      "Aventuras",
+      "Portales",
       "Ajustes",
     ]);
   });

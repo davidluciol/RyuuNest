@@ -27,13 +27,13 @@ const baseURL = process.env.GALLERY_URL || "http://localhost:8081";
     await shells.first().waitFor();
     assert.equal(await shells.count(), 3);
     const normal = shells.nth(0);
-    await normal.getByRole("tab", { name: "Fuentes", exact: true }).click();
+    await normal.getByRole("tab", { name: "Portales", exact: true }).click();
     await normal.getByTestId("destination-sources").waitFor();
-    assert.equal(await normal.getByRole("tab", { name: "Fuentes", selected: true }).count(), 1);
-    await normal.getByRole("tab", { name: "Biblioteca", exact: true }).focus();
+    assert.equal(await normal.getByRole("tab", { name: "Portales", selected: true }).count(), 1);
+    await normal.getByRole("tab", { name: "Tesoros", exact: true }).focus();
     assert.equal(
       await normal
-        .getByRole("tab", { name: "Biblioteca", exact: true })
+        .getByRole("tab", { name: "Tesoros", exact: true })
         .evaluate((el) => getComputedStyle(el).outlineColor),
       "rgb(53, 201, 138)",
     );

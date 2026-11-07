@@ -17,10 +17,10 @@ describe("destinos del shell (F11)", () => {
       "/settings",
     ]);
     expect(BOTTOM_NAV_DESTINATIONS.map(destinationLabel)).toEqual([
-      "Inicio",
-      "Biblioteca",
-      "Descubrir",
-      "Fuentes",
+      "Guarida",
+      "Tesoros",
+      "Aventuras",
+      "Portales",
       "Ajustes",
     ]);
   });

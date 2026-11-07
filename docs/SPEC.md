@@ -13,6 +13,8 @@
 
 ## 1. Resumen
 
+> **Nombres de sección (decisión del humano, 2026-11-06):** en la interfaz las secciones se llaman **Guarida** (antes Inicio), **Tesoros** (Biblioteca), **Aventuras** (Descubrir) y **Portales** (Fuentes). Este documento y el código conservan los nombres antiguos y las rutas internas (`/`, `/library`, `/discover`, `/sources`) por claridad; cuando un requisito diga «Biblioteca» o «Fuentes», se refiere a Tesoros o Portales.
+
 ### 1.1 Problema
 
 Las apps de lectura que usaba el autor dejan de funcionar cuando los sitios cambian o la app deja de mantenerse, y los sitios están llenos de anuncios.
