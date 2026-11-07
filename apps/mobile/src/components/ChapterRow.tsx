@@ -37,13 +37,13 @@ export default function ChapterRow({
     <FocusPressable accessibilityRole="button" onPress={onPress} style={chapterRowStyle(state)}>
       <View style={styles.row}>
         <View style={styles.textBlock}>
-          <Text style={[styles.title, { color: rowColors.text }]} numberOfLines={1}>
+          <Text style={[styles.title, { color: rowColors.text }]}>
             {title}
           </Text>
           {state === "in-progress" && typeof percent === "number" ? (
             <Text style={[styles.progress, { color: rowColors.accent }]}>● {percent}%</Text>
           ) : hint ? (
-            <Text style={[styles.hint, { color: colors.textSecondary }]} numberOfLines={1}>
+            <Text style={[styles.hint, { color: colors.textSecondary }]}>
               {hint}
             </Text>
           ) : null}
