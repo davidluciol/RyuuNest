@@ -7,8 +7,8 @@ import {
 } from "./discoverData";
 import { reportDiscoverError } from "./discoverErrors";
 import {
-  resolveSelectedModuleId,
-  visibleDiscoverModules,
+  countHiddenNsfwModules,
+  reconcileSelectedModuleId,
   type DiscoverModule,
   type DiscoverView,
 } from "./discoverFixtures";
@@ -55,16 +55,19 @@ export interface DiscoverDataDeps {
   source?: DiscoverDataSource | undefined;
   reporter?: ErrorReporter | null | undefined;
   resolveReporter?: (() => Promise<ErrorReporter | null>) | undefined;
+  /** Ajuste global NSFW (RF-35): decide qué módulos se pueden elegir. Apagado por defecto. */
+  nsfwVisible?: boolean | undefined;
 }
 
 export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverView } & DiscoverActions {
-  const { source, reporter, resolveReporter } = deps;
+  const { source, reporter, resolveReporter, nsfwVisible = false } = deps;
   const [boot, setBoot] = useState<Boot | null>(null);
   const [nonce, setNonce] = useState(0);
   const [request, setRequest] = useState<Request>(INITIAL_REQUEST);
   const [view, setView] = useState<DiscoverView>({ status: "loading" });
   const bootRef = useRef<Boot | null>(null);
   const reporterRef = useRef<ErrorReporter | null>(null);
+  const rememberedRef = useRef<string | null>(null);
 
   // Arranque: fuente (inyectada en apps/web, de plataforma en móvil) + módulos
   // elegibles + último recordado; el reporter del registro `log` (F31, P-72).
@@ -87,18 +90,8 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
         if (cancelled) return;
         const next: Boot = { source: resolvedSource, modules };
         bootRef.current = next;
+        rememberedRef.current = remembered;
         setBoot(next);
-        setRequest((current) =>
-          current.moduleId === null
-            ? {
-                ...current,
-                moduleId: resolveSelectedModuleId(
-                  visibleDiscoverModules(modules, false),
-                  remembered,
-                ),
-              }
-            : current,
-        );
       })
       .catch((error: unknown) => {
         if (!cancelled) {
@@ -113,12 +106,30 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     };
   }, [nonce, source, reporter, resolveReporter]);
 
+  // Selección (RF-9/RF-35): sigue a los módulos instalados y al ajuste NSFW; con
+  // solo módulos NSFW y el filtro apagado no hay selección hasta encenderlo.
+  useEffect(() => {
+    if (boot === null) return;
+    setRequest((current) => {
+      const moduleId = reconcileSelectedModuleId(
+        boot.modules,
+        nsfwVisible,
+        current.moduleId,
+        rememberedRef.current,
+      );
+      return moduleId === current.moduleId ? current : { ...current, moduleId };
+    });
+  }, [boot, nsfwVisible]);
+
   // Carga del módulo elegido (o vacío si no hay ninguno visible).
   useEffect(() => {
     if (boot === null) return;
     const { moduleId, query, page } = request;
     if (moduleId === null) {
-      setView({ status: "empty" });
+      setView({
+        status: "empty",
+        hiddenByNsfw: countHiddenNsfwModules(boot.modules, nsfwVisible),
+      });
       return;
     }
 
@@ -152,7 +163,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     return () => {
       cancelled = true;
     };
-  }, [boot, request]);
+  }, [boot, request, nsfwVisible]);
 
   const selectModule = useCallback((id: string) => {
     setRequest((current) => ({ moduleId: id, query: "", page: 1, attempt: current.attempt }));

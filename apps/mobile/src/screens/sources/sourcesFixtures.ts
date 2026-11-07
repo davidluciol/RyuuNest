@@ -49,18 +49,15 @@ export function kindFilterCounts(
 }
 
 /**
- * Módulos visibles: con el filtro NSFW apagado se ocultan los NSFW (RF-35),
- * se filtra por tipo y los instalados van primero (orden estable).
+ * Módulos visibles: se filtra por tipo y los instalados van primero (orden
+ * estable). Fuentes no oculta los NSFW (RF-35 solo cubre Inicio, Biblioteca y
+ * Descubrir): es donde se instalan, y la insignia NSFW ya los marca.
  */
 export function filterSourceModules(
   modules: readonly SourceModule[],
   filter: SourceKindFilter,
-  nsfwVisible: boolean,
 ): SourceModule[] {
-  const visible = modules.filter(
-    (module) =>
-      (nsfwVisible || !module.nsfw) && (filter === "all" || module.kinds.includes(filter)),
-  );
+  const visible = modules.filter((module) => filter === "all" || module.kinds.includes(filter));
   return [
     ...visible.filter((module) => module.status === "installed"),
     ...visible.filter((module) => module.status !== "installed"),
