@@ -688,16 +688,22 @@ Dep: F16, F17, F18, F19 · M · dispositivo Android con red real y un módulo de
 - [x] Registrar módulo, obra, dispositivo, versión de la app, resultado y capturas (ver MEMORY.md, hito F32).
 - Verif: recorrido manual en S25 Ultra (SM-S938B, Expo Go 57.0.9, app 0.0.0) el 2026-11-07/08. POCO F5 Pro: sustituido por el S25 Ultra (decisión del humano). MiBox 4: fuera por ahora. Este recorrido cubre AC-2, AC-3 y AC-8 con datos reales y no se sustituye por fixtures.
 
-### F33 Revisión general UX/UI observable `[FE/QA · Intermedia · N3]` 🧍
+### F33 Revisión general UX/UI observable `[FE/QA · Intermedia · N3]` ✅ 🧍
 
 Dep: F20, F21, F22, F28, F32 · S · pantallas móviles, escritorio y TV disponibles
 
-- [ ] Recorrer Inicio, Biblioteca, Descubrir, Fuentes, Ajustes, ficha y lector con datos vacíos, datos normales y error cuando aplique.
-- [ ] Revisar copy y jerarquía: una etiqueta por concepto, sin jerga técnica, sin funciones v2 anunciadas y sin títulos truncados.
-- [ ] Revisar visualmente tokens, contraste, foco, áreas táctiles, overflow, estados no dependientes solo del color, fuentes locales y ausencia de peticiones externas.
-- [ ] Revisar la navegación con teclado/D-pad y la legibilidad a 426 px, 1440 px y la densidad TV; anotar toda diferencia aceptada en `design/stitch/DIFFS.md`.
-- [ ] Clasificar cada hallazgo como bloqueante, importante o menor; cada bloqueante/importante debe enlazar a una tarea existente o generar una nueva antes del merge.
-- Verif: lista de 20 segundos de `DESIGN_RULES.md` y revisión humana con capturas; F28 cierra la comparación formal con Stitch y F33 cierra la revisión transversal observable.
+> **Entregable (decisión del humano, 2026-11-08):** solo el análisis, sin desarrollar. Vive en `tasks/Analisis.md` (separado de este archivo) con 64 hallazgos clasificados, capturas en `docs/capturasF33/` y las tareas propuestas F40 a F45.
+
+- [x] Recorrer Inicio, Biblioteca, Descubrir, Fuentes, Ajustes, ficha y lector con datos vacíos, datos normales y error cuando aplique. (Web 273 a 1600 px con Playwright y nativo en el S25 Ultra; primer uso real tras borrar los datos de Expo Go.)
+- [x] Revisar copy y jerarquía: una etiqueta por concepto, sin jerga técnica, sin funciones v2 anunciadas y sin títulos truncados.
+- [x] Revisar visualmente tokens, contraste, foco, áreas táctiles, overflow, estados no dependientes solo del color, fuentes locales y ausencia de peticiones externas.
+- [ ] Revisar la navegación con teclado/D-pad y la legibilidad a 426 px, 1440 px y la densidad TV; anotar toda diferencia aceptada en `design/stitch/DIFFS.md`. (426 y 1440 px hechos; **TV y D-pad siguen en F22/F23/F37**.)
+- [x] Clasificar cada hallazgo como bloqueante, importante o menor; cada bloqueante/importante enlaza a una tarea existente o propuesta (F40 a F45, F35, F38).
+- Verif: lista de 20 segundos pasada en `tasks/Analisis.md` §9. 🧍 Pendiente (R1): hoja «Actualizar módulo» (a la espera de una actualización real de un módulo), hojas de Respaldo, diálogos de error nativos y modo paginado I → D.
+
+### Tareas propuestas por F33 (pendientes de aprobar; detalle en `tasks/Analisis.md` §7). Orden decidido: F40 → F45 → F41/F42 → F43 → F44
+
+- **F40** Inicio con datos reales, estado vacío propio (instalar un módulo + botón a Fuentes) y paridad web/nativo. **F45** Dos avisos NSFW (al instalar y al abrir por primera vez, explicando qué es NSFW) y primer uso sin jerga. **F41** Descubrir, Biblioteca y ficha (web con portada y sinopsis). **F42** Portales y Ajustes (permisos con icono de aviso, «disponibles» visible). **F43** Lector, Diagnóstico y escritorio. **F44** «Recomendados» como índice remoto (requiere actualizar RNF-5 en el SPEC).
 
 ### Pendientes que dejó F32 (2026-11-08, para una sesión nueva)
 
