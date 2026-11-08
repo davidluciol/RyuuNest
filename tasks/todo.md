@@ -699,6 +699,60 @@ Dep: F20, F21, F22, F28, F32 · S · pantallas móviles, escritorio y TV disponi
 - [ ] Clasificar cada hallazgo como bloqueante, importante o menor; cada bloqueante/importante debe enlazar a una tarea existente o generar una nueva antes del merge.
 - Verif: lista de 20 segundos de `DESIGN_RULES.md` y revisión humana con capturas; F28 cierra la comparación formal con Stitch y F33 cierra la revisión transversal observable.
 
+### Pendientes que dejó F32 (2026-11-08, para una sesión nueva)
+
+> Origen: recorrido real en el S25 Ultra (P-139, P-140). Ya resueltos en `fix/F32-hallazgos-descubrir-lector`: selector de módulo en el error de Descubrir, releer módulos al volver a Aventuras y mensaje en español del error de imagen del lector. Lo que sigue **no** está hecho.
+
+### F35 Portadas en blanco de M440 y YupManga `[FE/Ops · Intermedia · N3]`
+
+Dep: F32 · S · S25 Ultra con red real
+
+- [ ] Reproducir con prueba en rojo: la `imageRef` de la portada llega a `LibraryCard` con `Referer`/`User-Agent` (P-137), ZonaTMO sí carga y M440/YupManga no; averiguar si falla el módulo (cabeceras o dominio no declarado en `permissions.domains`) o la app (expo-image con cabeceras).
+- [ ] Si es del módulo, corregir en `RyuuNest-Models` (otro repo) y subir versión; si es de la app, arreglar con test y verificar en el teléfono.
+- [ ] Comprobar portadas en Descubrir (listas y catálogo), ficha y Guarida/Tesoros.
+- Verif: 🧍 S25 Ultra (portadas visibles en M440 y YupManga).
+
+### T42 YupManga: el «reto del lector» cambió de formato `[Ops · Intermedia · N3]` 🧍
+
+Dep: T40 · S · repo `RyuuNest-Models`
+
+- [ ] El capítulo falla con `UNSUPPORTED` («el reto del lector cambió de formato»; selector `\[([0-9,]+)\];var [\w$]+=String\.fromCharCode\(([0-9,]+)\);`). Guardar una fixture HTML del reto actual (nunca el sitio real en pruebas), ajustar el módulo y subir versión + índice con SHA-256.
+- [ ] Abrir un capítulo de YupManga en el teléfono y ver al menos una imagen.
+- [ ] Revisar `m440.in`: dio `TIMEOUT` durante la sesión (sitio intermitente); decidir si el módulo necesita reintentos o un mensaje mejor.
+- Verif: 🧍 S25 Ultra; el arnés del módulo en verde.
+
+### F36 Detalle de error sin «…» en la URL `[FE · Baja · N2]`
+
+Dep: F29 · XS
+
+- [ ] En «Ver detalle» de `ErrorState` la URL se corta con «…» (`https://storage2.zonatmo.org/ch…`). Mostrarla completa partiéndola en líneas (T7: un dato importante que cabe no se corta), en móvil y web; añadir test sobre `detailLines`/estilo y revisar `LogEventRow`.
+- Verif: S25 Ultra con el error de imagen del lector (red cortada).
+
+### F37 Repetir F32 en la MiBox 4 y el POCO F5 Pro `[FE/QA · Baja · N2]` 🧍
+
+Dep: F32 · S · dispositivos
+
+- [ ] Repetir el recorrido de F32 en la MiBox 4 (piso de rendimiento, Android 9, 2 GB) y en el POCO F5 Pro cuando haya módulo y red; anotar diferencias frente al S25 Ultra.
+- [ ] Medir la memoria del lector con `adb shell dumpsys meminfo` durante la precarga (fija `READER_IMAGE_BUDGET_MB`, P-90) y AC-6 (60 páginas verticales sin cierres) en la MiBox 4.
+- Verif: 🧍 dispositivos.
+
+### F38 Búsqueda y estados de Descubrir: pulido `[FE · Baja · N2]`
+
+Dep: F32 · XS
+
+- [ ] La búsqueda solo se envía con la tecla «buscar» del teclado y los resultados salen en «Catálogo», al fondo, bajo «Más recientes/Populares»: valorar mostrar el catálogo primero o ocultar las filas cuando hay consulta, y un botón de buscar visible.
+- [ ] Al volver a Aventuras sin cambios no hay recarga (`refreshModules`); confirmar que instalar o desinstalar en Portales también se refleja sin Reintentar.
+- [ ] El botón «Activar/Desactivar» de la hoja de módulo no cierra la hoja: confirmar si es intencional (dos toques seguidos llegaron a «Desinstalar») y, si no, cerrarla o separar la acción destructiva.
+- Verif: S25 Ultra.
+
+### F39 Equivalencias web de los arreglos de F32 `[FE · Baja · N2]`
+
+Dep: F32 · XS
+
+- [ ] La web ya muestra los chips de módulo en el error de Descubrir, pero no tiene prueba ni e2e (`discover.cjs`): añadir el caso «el módulo falla → elegir otro».
+- [ ] La web no relee módulos al entrar en Descubrir si cambian en Fuentes (cada ruta monta de nuevo, comprobar que es así) y su error de imagen del lector solo muestra el título: valorar el mismo mensaje por tipo.
+- Verif: Playwright a 1440/426 px.
+
 ---
 
 ## QA del cliente web — rutas de aceptación
