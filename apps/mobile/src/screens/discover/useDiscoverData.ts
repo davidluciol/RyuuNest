@@ -8,6 +8,7 @@ import {
 import { reportDiscoverError } from "./discoverErrors";
 import {
   countHiddenNsfwModules,
+  moduleErrorView,
   reconcileSelectedModuleId,
   type DiscoverModule,
   type DiscoverView,
@@ -154,10 +155,13 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
       .catch((error: unknown) => {
         if (cancelled) return;
         const name = boot.modules.find((module) => module.id === moduleId)?.name ?? "";
-        setView({
-          status: "error",
-          error: reportDiscoverError(reporterRef.current, error, name, { moduleId }),
-        });
+        setView(
+          moduleErrorView(
+            reportDiscoverError(reporterRef.current, error, name, { moduleId }),
+            boot.modules,
+            moduleId,
+          ),
+        );
       });
 
     return () => {

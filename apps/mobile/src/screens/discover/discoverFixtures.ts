@@ -75,8 +75,29 @@ export type DiscoverView =
   /** `hiddenByNsfw`: módulos instalados que el filtro NSFW apagado oculta (RF-35). */
   | { status: "empty"; hiddenByNsfw?: number }
   | { status: "loading" }
-  | { status: "error"; error: DiscoverError }
+  /** Con `modules`, el error de un módulo deja elegir otro sin pasar por Fuentes. */
+  | {
+      status: "error";
+      error: DiscoverError;
+      modules?: DiscoverModule[];
+      selectedModuleId?: string;
+    }
   | { status: "ready"; ready: DiscoverReady };
+
+/** Vista de error de un módulo: conserva el selector si hay módulos que ofrecer. */
+export function moduleErrorView(
+  error: DiscoverError,
+  modules: readonly DiscoverModule[],
+  selectedModuleId: string | null,
+): Extract<DiscoverView, { status: "error" }> {
+  if (modules.length === 0) return { status: "error", error };
+  return {
+    status: "error",
+    error,
+    modules: [...modules],
+    ...(selectedModuleId === null ? {} : { selectedModuleId }),
+  };
+}
 
 /** Página vacía: primera, sin entradas ni siguiente. */
 export const EMPTY_DISCOVER_PAGE: DiscoverPage = { page: 1, entries: [], hasNext: false };

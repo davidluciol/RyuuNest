@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   EMPTY_DISCOVER_PAGE,
   countHiddenNsfwModules,
+  moduleErrorView,
   reconcileSelectedModuleId,
   resolveSelectedModuleId,
   SAMPLE_DISCOVER_MODULES,
@@ -118,5 +119,22 @@ describe("countHiddenNsfwModules (aviso de módulos ocultos por NSFW)", () => {
 
   it("con el filtro encendido no hay ninguno oculto", () => {
     expect(countHiddenNsfwModules(MODULES, true)).toBe(0);
+  });
+});
+
+describe("moduleErrorView · el error de un módulo conserva el selector (F32)", () => {
+  const error = { moduleName: "Módulo A", cause: "Tiempo agotado", code: "TIMEOUT" };
+
+  it("lleva los módulos y el elegido para poder cambiar de módulo", () => {
+    expect(moduleErrorView(error, MODULES, "m-a")).toEqual({
+      status: "error",
+      error,
+      modules: MODULES,
+      selectedModuleId: "m-a",
+    });
+  });
+
+  it("sin módulos (fallo de arranque) no añade selector", () => {
+    expect(moduleErrorView(error, [], null)).toEqual({ status: "error", error });
   });
 });

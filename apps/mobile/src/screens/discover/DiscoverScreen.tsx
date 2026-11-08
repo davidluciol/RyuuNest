@@ -127,21 +127,33 @@ export default function DiscoverScreen({
   }
 
   if (view.status === "error") {
+    const pickable = visibleDiscoverModules(view.modules ?? [], nsfwVisible);
     return (
-      <View style={styles.stateWrap} testID="screen-discover">
-        <ErrorState
-          title={t("state.error.module.title")}
-          message={view.error.cause}
-          detail={{
-            ...(view.error.moduleName === "" ? {} : { module: view.error.moduleName }),
-            url: view.error.url,
-            code: view.error.code,
-            selector: view.error.selector,
-          }}
-          retryLabel={t("actions.retry")}
-          onRetry={onRetry}
-          detailLabel={t("actions.showDetail")}
-        />
+      <View style={styles.errorScreen} testID="screen-discover">
+        {pickable.length > 0 ? (
+          <View style={[styles.errorPicker, { paddingHorizontal: layout.margin }]}>
+            <ModulePicker
+              modules={pickable.map((module) => ({ id: module.id, name: module.name }))}
+              selectedId={view.selectedModuleId ?? pickable[0]?.id ?? ""}
+              onSelect={(id) => onModuleSelect?.(id)}
+            />
+          </View>
+        ) : null}
+        <View style={styles.stateWrap}>
+          <ErrorState
+            title={t("state.error.module.title")}
+            message={view.error.cause}
+            detail={{
+              ...(view.error.moduleName === "" ? {} : { module: view.error.moduleName }),
+              url: view.error.url,
+              code: view.error.code,
+              selector: view.error.selector,
+            }}
+            retryLabel={t("actions.retry")}
+            onRetry={onRetry}
+            detailLabel={t("actions.showDetail")}
+          />
+        </View>
       </View>
     );
   }
@@ -362,6 +374,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingTop: spacing.sm,
   },
+  errorScreen: { flex: 1, backgroundColor: colors.bg },
+  errorPicker: { alignSelf: "stretch", alignItems: "flex-end", paddingTop: spacing.md },
   searchWrap: {
     flex: 1,
     minWidth: 0,
