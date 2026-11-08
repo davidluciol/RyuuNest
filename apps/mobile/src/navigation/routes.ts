@@ -18,6 +18,18 @@ export function destinationForPath(path: string): BottomNavDestination | null {
   );
 }
 
+/**
+ * Destino que muestra el shell: el de la URL si es una pestaña; si la URL es una
+ * pantalla encima (ficha, lector), se conserva el último. Así el navegador de
+ * pestañas no se desmonta y «atrás» vuelve a la pestaña de origen.
+ */
+export function shellDestination(
+  path: string,
+  previous: BottomNavDestination | null,
+): BottomNavDestination | null {
+  return destinationForPath(path) ?? previous;
+}
+
 export function destinationLabel(destination: BottomNavDestination): string {
   const labels: Record<BottomNavDestination, string> = {
     home: t("nav.home"),

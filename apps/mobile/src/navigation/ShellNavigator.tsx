@@ -1,15 +1,18 @@
 import { Tabs, usePathname } from "expo-router";
+import { useRef } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { dragonNightColors } from "@ryuunest/ui-tokens";
 
 import BottomNav from "../components/BottomNav";
-import { BOTTOM_NAV_DESTINATIONS } from "../components/shellStyles";
+import { BOTTOM_NAV_DESTINATIONS, type BottomNavDestination } from "../components/shellStyles";
 import AppShell from "../shell/AppShell";
-import { destinationForPath, destinationLabel } from "./routes";
+import { destinationLabel, shellDestination } from "./routes";
 
 export default function ShellNavigator() {
-  const destination = destinationForPath(usePathname());
+  const lastDestination = useRef<BottomNavDestination | null>(null);
+  const destination = shellDestination(usePathname(), lastDestination.current);
+  lastDestination.current = destination;
   if (destination === null) return null;
   return (
     <SafeAreaView edges={["top", "left", "right", "bottom"]} style={styles.screen}>
