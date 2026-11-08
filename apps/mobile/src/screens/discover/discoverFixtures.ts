@@ -84,6 +84,27 @@ export type DiscoverView =
     }
   | { status: "ready"; ready: DiscoverReady };
 
+/** ¿Es la misma lista de módulos (orden y datos)? Decide si hay que recargar al volver. */
+export function sameDiscoverModules(
+  a: readonly DiscoverModule[],
+  b: readonly DiscoverModule[],
+): boolean {
+  return (
+    a.length === b.length &&
+    a.every((module, index) => {
+      const other = b[index];
+      return (
+        other !== undefined &&
+        module.id === other.id &&
+        module.name === other.name &&
+        module.nsfw === other.nsfw &&
+        module.hasLatest === other.hasLatest &&
+        module.hasPopular === other.hasPopular
+      );
+    })
+  );
+}
+
 /** Vista de error de un módulo: conserva el selector si hay módulos que ofrecer. */
 export function moduleErrorView(
   error: DiscoverError,

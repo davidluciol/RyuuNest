@@ -4,6 +4,7 @@ import {
   EMPTY_DISCOVER_PAGE,
   countHiddenNsfwModules,
   moduleErrorView,
+  sameDiscoverModules,
   reconcileSelectedModuleId,
   resolveSelectedModuleId,
   SAMPLE_DISCOVER_MODULES,
@@ -136,5 +137,23 @@ describe("moduleErrorView · el error de un módulo conserva el selector (F32)",
 
   it("sin módulos (fallo de arranque) no añade selector", () => {
     expect(moduleErrorView(error, [], null)).toEqual({ status: "error", error });
+  });
+});
+
+describe("sameDiscoverModules · releer los módulos al volver a Aventuras (F32)", () => {
+  it("la misma lista (mismo orden y datos) no cuenta como cambio", () => {
+    expect(sameDiscoverModules(MODULES, [...MODULES])).toBe(true);
+  });
+
+  it("un módulo desactivado, instalado o desinstalado sí cuenta como cambio", () => {
+    expect(sameDiscoverModules(MODULES, MODULES.slice(1))).toBe(false);
+    expect(sameDiscoverModules(MODULES.slice(1), MODULES)).toBe(false);
+  });
+
+  it("cambiar el nombre o los indicadores del módulo también cuenta", () => {
+    const renamed = MODULES.map((m, i) => (i === 0 ? { ...m, name: "Otro nombre" } : m));
+    const noLatest = MODULES.map((m, i) => (i === 0 ? { ...m, hasLatest: false } : m));
+    expect(sameDiscoverModules(MODULES, renamed)).toBe(false);
+    expect(sameDiscoverModules(MODULES, noLatest)).toBe(false);
   });
 });
