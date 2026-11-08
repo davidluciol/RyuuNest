@@ -4,6 +4,8 @@ import {
   INITIAL_PAGE_LOAD,
   pageImageSource,
   pageLoadReducer,
+  PAGE_ERROR_MESSAGE_KEYS,
+  pageErrorKind,
 } from "../../src/reader/pageImage";
 
 /**
@@ -66,5 +68,41 @@ describe("pageLoadReducer", () => {
     expect(pageLoadReducer(INITIAL_PAGE_LOAD, { type: "retry" })).toBe(INITIAL_PAGE_LOAD);
     const loaded = pageLoadReducer(INITIAL_PAGE_LOAD, { type: "loaded" });
     expect(pageLoadReducer(loaded, { type: "retry" })).toBe(loaded);
+  });
+});
+
+describe("pageErrorKind · mensaje comprensible para el error de una imagen (F32)", () => {
+  it("sin red o sitio caído (texto crudo de Android/iOS/fetch)", () => {
+    expect(
+      pageErrorKind(
+        "Failed to load resource there was 1 root cause: java.net.UnknownHostException(Unable to resolve host x.org)"),
+    ).toBe("network");
+    expect(pageErrorKind("java.net.SocketTimeoutException: timeout")).toBe("network");
+    expect(pageErrorKind("Network request failed")).toBe("network");
+    expect(pageErrorKind("Failed to connect to /1.2.3.4:443")).toBe("network");
+  });
+
+  it("el sitio rechaza la imagen (401/403)", () => {
+    expect(pageErrorKind("HTTP 403")).toBe("denied");
+    expect(pageErrorKind("Server returned HTTP response code: 401")).toBe("denied");
+    expect(pageErrorKind("Forbidden")).toBe("denied");
+  });
+
+  it("la imagen ya no existe (404/410)", () => {
+    expect(pageErrorKind("HTTP 404")).toBe("missing");
+    expect(pageErrorKind("Not Found")).toBe("missing");
+  });
+
+  it("no confunde números o palabras parecidas", () => {
+    expect(pageErrorKind("ongoing request 14031")).toBe("unknown");
+  });
+
+  it("cualquier otro fallo cae en un mensaje general", () => {
+    expect(pageErrorKind("algo raro")).toBe("unknown");
+    expect(pageErrorKind("")).toBe("unknown");
+  });
+
+  it("cada tipo tiene su clave de traducción", () => {
+    expect(Object.keys(PAGE_ERROR_MESSAGE_KEYS).sort()).toEqual(["denied", "missing", "network", "unknown"]);
   });
 });

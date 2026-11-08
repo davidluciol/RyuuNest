@@ -23,6 +23,32 @@ export function pageImageSource(image: PageImageRef): PageImageSource {
     : { uri: image.url, headers: image.headers };
 }
 
+/** Por qué falló una imagen, en palabras que entiende quien lee (el texto crudo va al registro). */
+export type PageErrorKind = "network" | "denied" | "missing" | "unknown";
+
+/** Clave de traducción del mensaje de cada tipo; citadas aquí, la puerta de i18n las ve usadas. */
+export const PAGE_ERROR_MESSAGE_KEYS: Record<PageErrorKind, string> = {
+  network: "reader.image.error.network",
+  denied: "reader.image.error.denied",
+  missing: "reader.image.error.missing",
+  unknown: "reader.image.error.unknown",
+};
+
+/** Clasifica el texto técnico que entrega el motor de imágenes (Android, iOS o web). */
+export function pageErrorKind(raw: string): PageErrorKind {
+  const text = raw.toLowerCase();
+  if (/\b(401|403)\b|forbidden|unauthori[sz]ed/.test(text)) return "denied";
+  if (/\b(404|410)\b|not found|\bgone\b/.test(text)) return "missing";
+  if (
+    /unknownhost|unable to resolve|timeout|timed out|failed to connect|connection (reset|refused)|network|offline|enotfound|econn/.test(
+      text,
+    )
+  ) {
+    return "network";
+  }
+  return "unknown";
+}
+
 export type PageLoad =
   | { status: "loading"; attempt: number }
   | { status: "loaded"; attempt: number }
