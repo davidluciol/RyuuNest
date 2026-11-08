@@ -55,13 +55,28 @@ export default function DiscoverScreen() {
       {view.status === "loading" && <LoadingState label={t("state.loading.title")} testID="discover-loading" />}
 
       {view.status === "error" && (
-        <ErrorState
-          title={t("state.error.module.title")}
-          message={t("state.error.module.message")}
-          actionLabel={t("actions.retry")}
-          onAction={retry}
-          testID="discover-error"
-        />
+        <>
+          {(view.modules?.length ?? 0) > 0 && (
+            <div className="discover-modules" role="tablist" aria-label={t("discover.sheet.title")}>
+              {view.modules?.map((module) => (
+                <Chip
+                  key={module.id}
+                  label={module.name}
+                  active={module.id === view.selectedModuleId}
+                  onClick={() => selectModule(module.id)}
+                  testID={`discover-module-${module.id}`}
+                />
+              ))}
+            </div>
+          )}
+          <ErrorState
+            title={t("state.error.module.title")}
+            message={t("state.error.module.message")}
+            actionLabel={t("actions.retry")}
+            onAction={retry}
+            testID="discover-error"
+          />
+        </>
       )}
 
       {view.status === "empty" && (

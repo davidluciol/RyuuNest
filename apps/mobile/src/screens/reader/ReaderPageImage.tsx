@@ -7,7 +7,13 @@ import ErrorState from "../../components/ErrorState";
 import { resolveErrorReporter, type ErrorReporter } from "../../data/errorLog";
 import { t } from "../../i18n";
 import { pageAspect } from "../../reader/readerLayout";
-import { INITIAL_PAGE_LOAD, pageImageSource, pageLoadReducer } from "../../reader/pageImage";
+import {
+  INITIAL_PAGE_LOAD,
+  PAGE_ERROR_MESSAGE_KEYS,
+  pageErrorKind,
+  pageImageSource,
+  pageLoadReducer,
+} from "../../reader/pageImage";
 import type { ReaderImage } from "./readingSource";
 import { reportReaderError } from "./readerErrors";
 
@@ -63,12 +69,13 @@ export default function ReaderPageImage({
   }, [load.status, reporter, pageNumber]);
 
   if (load.status === "error") {
+    const kind = pageErrorKind(load.message);
     return (
       <View testID={testID === undefined ? undefined : `${testID}-error`} style={{ width, height, justifyContent: "center", overflow: "hidden" }}>
         <ErrorState
           title={t("reader.image.error", { number: pageNumber })}
-          message={load.message}
-          detail={{ url: image.url }}
+          message={t(PAGE_ERROR_MESSAGE_KEYS[kind])}
+          detail={{ url: image.url, code: kind.toUpperCase() }}
           retryLabel={t("actions.retry")}
           onRetry={() => dispatch({ type: "retry" })}
           detailLabel={t("actions.showDetail")}

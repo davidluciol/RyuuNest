@@ -8,7 +8,9 @@ import {
 import { reportDiscoverError } from "./discoverErrors";
 import {
   countHiddenNsfwModules,
+  moduleErrorView,
   reconcileSelectedModuleId,
+  sameDiscoverModules,
   type DiscoverModule,
   type DiscoverView,
 } from "./discoverFixtures";
@@ -44,6 +46,8 @@ export interface DiscoverActions {
   nextPage: () => void;
   prevPage: () => void;
   retry: () => void;
+  /** Relee los módulos activos (al volver a la pestaña); recarga solo si cambiaron. */
+  refreshModules: () => void;
 }
 
 /**
@@ -154,10 +158,13 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
       .catch((error: unknown) => {
         if (cancelled) return;
         const name = boot.modules.find((module) => module.id === moduleId)?.name ?? "";
-        setView({
-          status: "error",
-          error: reportDiscoverError(reporterRef.current, error, name, { moduleId }),
-        });
+        setView(
+          moduleErrorView(
+            reportDiscoverError(reporterRef.current, error, name, { moduleId }),
+            boot.modules,
+            moduleId,
+          ),
+        );
       });
 
     return () => {
@@ -189,10 +196,27 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     [],
   );
 
+  const refreshModules = useCallback(() => {
+    const current = bootRef.current;
+    if (current === null) return;
+    void current.source
+      .listModules()
+      .then((modules) => {
+        const latest = bootRef.current;
+        if (latest === null || sameDiscoverModules(latest.modules, modules)) return;
+        const next: Boot = { source: latest.source, modules };
+        bootRef.current = next;
+        setBoot(next);
+      })
+      .catch((error: unknown) => {
+        console.warn("No se pudieron releer los módulos:", error);
+      });
+  }, []);
+
   const retry = useCallback(() => {
     setNonce((value) => value + 1); // reintenta también el arranque (fuente y registro)
     setRequest((current) => ({ ...current, attempt: current.attempt + 1 }));
   }, []);
 
-  return { view, selectModule, search, nextPage, prevPage, retry };
+  return { view, selectModule, search, nextPage, prevPage, retry, refreshModules };
 }

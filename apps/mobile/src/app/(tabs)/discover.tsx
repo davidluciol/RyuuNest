@@ -1,4 +1,5 @@
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 
 import { resolveErrorReporter } from "../../data/errorLog";
 import { destinationRoutes } from "../../navigation/routes";
@@ -13,10 +14,18 @@ import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
  */
 export default function DiscoverRoute() {
   const settings = useSettingsPreferences();
-  const { view, selectModule, search, nextPage, prevPage, retry } = useDiscoverData({
+  const { view, selectModule, search, nextPage, prevPage, retry, refreshModules } = useDiscoverData({
     resolveReporter: resolveErrorReporter,
     nsfwVisible: settings.nsfwVisible,
   });
+
+  // Las pestañas siguen montadas: al volver se releen los módulos por si se
+  // activó, desactivó, instaló o desinstaló alguno en Portales (F32).
+  useFocusEffect(
+    useCallback(() => {
+      refreshModules();
+    }, [refreshModules]),
+  );
 
   return (
     <DiscoverScreen

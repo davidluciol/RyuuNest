@@ -75,8 +75,50 @@ export type DiscoverView =
   /** `hiddenByNsfw`: módulos instalados que el filtro NSFW apagado oculta (RF-35). */
   | { status: "empty"; hiddenByNsfw?: number }
   | { status: "loading" }
-  | { status: "error"; error: DiscoverError }
+  /** Con `modules`, el error de un módulo deja elegir otro sin pasar por Fuentes. */
+  | {
+      status: "error";
+      error: DiscoverError;
+      modules?: DiscoverModule[];
+      selectedModuleId?: string;
+    }
   | { status: "ready"; ready: DiscoverReady };
+
+/** ¿Es la misma lista de módulos (orden y datos)? Decide si hay que recargar al volver. */
+export function sameDiscoverModules(
+  a: readonly DiscoverModule[],
+  b: readonly DiscoverModule[],
+): boolean {
+  return (
+    a.length === b.length &&
+    a.every((module, index) => {
+      const other = b[index];
+      return (
+        other !== undefined &&
+        module.id === other.id &&
+        module.name === other.name &&
+        module.nsfw === other.nsfw &&
+        module.hasLatest === other.hasLatest &&
+        module.hasPopular === other.hasPopular
+      );
+    })
+  );
+}
+
+/** Vista de error de un módulo: conserva el selector si hay módulos que ofrecer. */
+export function moduleErrorView(
+  error: DiscoverError,
+  modules: readonly DiscoverModule[],
+  selectedModuleId: string | null,
+): Extract<DiscoverView, { status: "error" }> {
+  if (modules.length === 0) return { status: "error", error };
+  return {
+    status: "error",
+    error,
+    modules: [...modules],
+    ...(selectedModuleId === null ? {} : { selectedModuleId }),
+  };
+}
 
 /** Página vacía: primera, sin entradas ni siguiente. */
 export const EMPTY_DISCOVER_PAGE: DiscoverPage = { page: 1, entries: [], hasNext: false };
