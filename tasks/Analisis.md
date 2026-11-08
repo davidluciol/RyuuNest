@@ -167,7 +167,75 @@ Cobertura que **sigue sin verse** (R1, parcial): hoja «Actualizar módulo» (no
 |---|---|---|
 | 🔴 Bloqueante | 11 filas (8 problemas: N1, N19 y V1 son el mismo; R3 y V2 también) | N1, N19, V1, W1, W2, W3, W4, R1, R2, R3, V2 |
 | 🟠 Importante | 27 | N2, N3, N7, N8, N9, N12, N14, N17, W5–W16, R4, R6, R10, R11, R13, V3, V4 |
-| 🟡 Menor | 25 | N4–N6, N10, N11, N13, N15, N16, N18, N20–N22, W17–W20, R5, R7, R8, R9, R12, R14, V5–V8 (N10, N11 y R14 no requieren cambio) |
+| 🟡 Menor | 26 | N4–N6, N10, N11, N13, N15, N16, N18, N20–N22, W17–W20, R5, R7, R8, R9, R12, R14, V5–V8 (N10, N11 y R14 no requieren cambio) |
+
+### 7.1 Índice de todos los hallazgos por nivel
+
+Total: **64 filas** (22 nativas N, 20 web W, 14 del recorrido ampliado R, 8 del recorrido real V). Los hallazgos de la primera versión del análisis (borrador web con ids D, I, B, P, S, L, A, E y T) quedaron integrados en estas series: D1→W1, D2/D4→W9, D3→W9/F35, D5→W18, I1/I5→W7, I2→W8, I3→W17, I4→N4, B1→W2, B2→W11, B3→W10, B4/T1→W18, P1→W3, P2→W12, P3→N9, P4→W19, P5→N8, S1→W5, S2→W6, S3→W4, S4→N16, L2→W15, L3→W14, A1→N21, A2→W16, E1→N20/W20, T2→W13, T5→W17.
+
+| Nivel | Id | Pantalla | Resumen | Tarea |
+|---|---|---|---|---|
+| 🔴 | N1 / N19 / V1 | Inicio | Inicio nativo muestra datos de ejemplo, incluso en una instalación limpia | F40 |
+| 🔴 | V2 / R3 | Instalar / abrir módulo NSFW | Sin aviso de contenido para adultos; dos avisos con definición de NSFW | F45 |
+| 🔴 | R1 | Cobertura | Faltan en el teléfono: actualizar módulo, Respaldo, diálogos de error, paginado I → D | F33 (cont.) |
+| 🔴 | R2 | Portales | Falta «Recomendados» (índice remoto) | F44 |
+| 🔴 | W1 | Descubrir (web) | Etiqueta, placeholder y botón de búsqueda repiten «Buscar obras…» | F41 |
+| 🔴 | W2 | Biblioteca (web) | Búsqueda con la clave `series.search` («capítulo o título») | F41 |
+| 🔴 | W3 | Portales (web) | «1 instalados», acciones apiladas, «Quitar» como bloque rojo | F42 |
+| 🔴 | W4 | Ficha (web) | Sin portada, sinopsis ni acción principal | F41 |
+| 🟠 | N2 | Inicio | Carpetas con nombre cortado («Favorito…») | F40 |
+| 🟠 | N3 | Inicio | Portadas en blanco sin marcador | F35 + F40 |
+| 🟠 | N7 | Portales | Título duplicado con la cabecera | F42 |
+| 🟠 | N8 | Portales | «disponibles» en verde y subfrase con jerga | F42 |
+| 🟠 | N9 | Portales | «Ejecuta código» y NSFW como insignias neutras | F42 |
+| 🟠 | N12 | Aventuras | Tipo repetido en insignia y texto | F41 |
+| 🟠 | N14 | Ficha | Fila de capítulo con tres líneas repetidas | F41 |
+| 🟠 | N17 | Lector | Barras y píldora de modo tapan arte; página y % duplicados | F43 |
+| 🟠 | W5 | Ficha (web) | «Guardada» no se ve como acción; dos nombres | F41 |
+| 🟠 | W6 | Ficha (web) | Búsqueda de capítulos y orden desordenados | F41 |
+| 🟠 | W7 | Inicio (web) | Tarjeta sin botón «Continuar» y sin «Carpetas» | F40 |
+| 🟠 | W8 | Inicio (web) | Barra verde suelta junto a la primera tarjeta | F40 |
+| 🟠 | W9 | Descubrir (web) | Tres listas con la obra repetida; «Anterior» siempre activo | F38 + F35 |
+| 🟠 | W10 | Biblioteca (web) | Tarjetas de distinto tamaño | F41 |
+| 🟠 | W11 | Biblioteca (web) | Chips mezclan estado y tipo | F41 |
+| 🟠 | W12 | Portales (web) | Contadores de tipo no suman | F42 |
+| 🟠 | W13 | Portales (web) | Dos botones primarios verdes | F42 |
+| 🟠 | W14 | Lector (web) | Banner de error sin código ni detalle | F43 |
+| 🟠 | W15 | Lector (web) | Barra sin selector de capítulo visible | F43 |
+| 🟠 | W16 | Ajustes (web, 273 px) | Barra inferior tapa texto; copy de «Protección» | F42 |
+| 🟠 | R4 | Gestionar módulo | «Con código propio» vs «Ejecuta código»; faltan permisos y NSFW | F42 |
+| 🟠 | R6 | Diagnóstico | Texto técnico en inglés en la lista, 45 repetidos | F43 |
+| 🟠 | R10 | Lector (hoja de modo) | ✓ en otra línea; nombres con flechas | F43 |
+| 🟠 | R11 | Lector (paginado) | Barras fijas y bandas negras | F43 |
+| 🟠 | R13 | Primer uso | Copy temático («nido», «portales») | F45 |
+| 🟠 | V3 | Instalar módulo | Botón principal sin énfasis ni progreso; sin aviso al terminar | F42 |
+| 🟠 | V4 | Primer uso | Repositorio oculto, barra inferior activa, «Ir a leer» siempre verde | F45 |
+| 🟡 | N4 | Inicio | Títulos en Title Case | F40 |
+| 🟡 | N5 | Inicio | «Tesoros Guardados» vs «Tesoros» | F40 |
+| 🟡 | N6 | Inicio | «Retomar» y «Ver todas» ambiguos | F40 |
+| 🟡 | N10 | Portales | Chip cortado a la derecha (aceptable) | — |
+| 🟡 | N11 | Todas | Botón «Tools» de Expo Go (no es de la app) | — |
+| 🟡 | N13 | Aventuras | Sin botón de buscar; placeholder con «…» | F38 |
+| 🟡 | N15 | Ficha | Título «Ficha» y falta de pestañas | F41 |
+| 🟡 | N16 | Ficha | «En curso» con dos significados | F41 |
+| 🟡 | N18 | Lector | Imagen sugerente sin aviso (resuelto por R3) | F45 |
+| 🟡 | N20 | Tesoros | CTA «Añadir repositorio» con módulos ya instalados | F40 |
+| 🟡 | N21 | Ajustes | «Idioma» duplicado y «Español» sin forma de control | F42 |
+| 🟡 | N22 | Ajustes | Chips de modo de lectura en 3 filas desiguales | F42 |
+| 🟡 | W17 | Escritorio | Vacío a 1440 px y riel casi vacío | F43 |
+| 🟡 | W18 | Descubrir (web) | Selector con un solo módulo y foco residual | F41 |
+| 🟡 | W19 | Portales (web) | Trazo verde en la pestaña «Guarida» | F43 |
+| 🟡 | W20 | Estados vacíos | Textos casi iguales y dragón de más del 40 % | F40 |
+| 🟡 | R5 | Añadir repositorio | «(index.json)» y URL recortada | F42 |
+| 🟡 | R7 | Diagnóstico | «JSON» y «Texto plano» como jerga | F43 |
+| 🟡 | R8 | Ajustes | Chevron bajo el texto, no a la derecha | F42 |
+| 🟡 | R9 | Ajustes | «archivo JSON» en Respaldo | F42 |
+| 🟡 | R12 | Lector | Título en 2 líneas aprieta el selector | F43 |
+| 🟡 | R14 | Primer uso (galería) | Sin cambio | — |
+| 🟡 | V5 | Primer uso | Mitad inferior vacía | F45 |
+| 🟡 | V6 | Primer uso | Primera pulsación de «Ir a leer» sin respuesta (no reproducido) | F45 |
+| 🟡 | V7 | Portales | Tocar la tarjeta del repo abre «Quitar»; sincronizar sin etiqueta | F42 |
+| 🟡 | V8 | Desinstalar | Sin aviso al terminar | F42 |
 
 **Tareas nuevas propuestas** (pendientes de que el humano las apruebe y las pase a `todo.md`):
 

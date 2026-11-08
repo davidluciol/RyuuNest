@@ -692,7 +692,7 @@ Dep: F16, F17, F18, F19 · M · dispositivo Android con red real y un módulo de
 
 Dep: F20, F21, F22, F28, F32 · S · pantallas móviles, escritorio y TV disponibles
 
-> **Entregable (decisión del humano, 2026-11-08):** solo el análisis, sin desarrollar. Vive en `tasks/Analisis.md` (separado de este archivo) con 63 hallazgos clasificados, capturas en `docs/capturasF33/` y las tareas propuestas F40 a F45.
+> **Entregable (decisión del humano, 2026-11-08):** solo el análisis, sin desarrollar. Vive en `tasks/Analisis.md` (separado de este archivo) con 64 hallazgos clasificados, capturas en `docs/capturasF33/` y las tareas propuestas F40 a F45.
 
 - [x] Recorrer Inicio, Biblioteca, Descubrir, Fuentes, Ajustes, ficha y lector con datos vacíos, datos normales y error cuando aplique. (Web 273 a 1600 px con Playwright y nativo en el S25 Ultra; primer uso real tras borrar los datos de Expo Go.)
 - [x] Revisar copy y jerarquía: una etiqueta por concepto, sin jerga técnica, sin funciones v2 anunciadas y sin títulos truncados.
