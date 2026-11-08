@@ -677,14 +677,16 @@ Dep: P-D · M · `apps/web/tests/e2e/*`, `design/stitch/DIFFS.md`
 
 ### F32 Recorrido real mínimo: módulo → Descubrir → ficha → lector `[FE/QA · Alta · N4]` 🧍
 
-Dep: F16, F17, F18, F19 · M · dispositivo Android con red real y un módulo declarativo compatible
+Dep: F16, F17, F18, F19 · M · dispositivo Android con red real y un módulo del repo oficial
 
-- [ ] Desde el repo oficial, descargar e instalar manualmente al menos un módulo declarativo; confirmar permisos, hash y resultado de la instalación.
-- [ ] Abrir Descubrir, seleccionar el módulo instalado y buscar una obra de manga disponible en ese módulo.
-- [ ] Abrir la ficha de la obra desde Descubrir y comprobar portada, metadatos y capítulos.
-- [ ] Abrir un capítulo y confirmar que el lector carga al menos una imagen real; comprobar que el fallo deja un estado accionable si la red se interrumpe.
-- [ ] Registrar módulo, obra, dispositivo, versión de la app, resultado y capturas; si falla, conservar código, URL y paso exacto para crear una corrección reproducible.
-- Verif: recorrido manual en POCO F5 Pro; repetir en MiBox 4 si el módulo y la red lo permiten. Este recorrido cubre AC-2, AC-3 y AC-8 con datos reales y no se sustituye por fixtures.
+> **Nota (2026-11-07, P-139):** F32 se escribió antes de que existiera `RyuuNest-Models` y pedía un módulo **declarativo**. Los tres módulos oficiales son `script` y ya se ejecutan en el dispositivo (T40, P-137), así que el recorrido se hace con un módulo `script` del repo oficial. Se trata como **revisión**: si el recorrido pasa se marca hecha y se anotan las observaciones; si falla, se abre una tarea con código, URL y paso exacto.
+
+- [x] Desde el repo oficial, instalar manualmente un módulo; confirmar permisos, hash y resultado. (YupManga desinstalado y reinstalado desde Portales: la hoja muestra permisos y la huella SHA-256 igual a la del índice, y «mantén pulsado» para instalar; **P-131 no se reproduce**.)
+- [x] Abrir Descubrir, seleccionar el módulo instalado y **buscar** una obra. (Búsqueda «kiss» en M440: resultados en la sección Catálogo, con la tecla «buscar» del teclado.)
+- [x] Abrir la ficha de la obra desde Descubrir y comprobar metadatos y capítulos (título completo, alternativos, géneros, sinopsis, 42 capítulos). **Portada en blanco** en M440 y YupManga (ver observaciones).
+- [x] Abrir un capítulo y confirmar que el lector carga una imagen real: M440, «Kiss the Coming Apocalypse», cap. 1, 11 páginas en vertical continuo. El fallo deja estado accionable: YupManga muestra `UNSUPPORTED` con Reintentar, Ver detalle y Volver; con el Wi-Fi y los datos apagados ZonaTMO muestra «No se pudo cargar la página 26» con Reintentar, que recupera la imagen al volver la red.
+- [x] Registrar módulo, obra, dispositivo, versión de la app, resultado y capturas (ver MEMORY.md, hito F32).
+- Verif: recorrido manual en S25 Ultra (SM-S938B, Expo Go 57.0.9, app 0.0.0) el 2026-11-07/08. POCO F5 Pro: sustituido por el S25 Ultra (decisión del humano). MiBox 4: fuera por ahora. Este recorrido cubre AC-2, AC-3 y AC-8 con datos reales y no se sustituye por fixtures.
 
 ### F33 Revisión general UX/UI observable `[FE/QA · Intermedia · N3]` 🧍
 

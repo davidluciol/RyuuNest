@@ -121,7 +121,7 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
 3. Toma la captura y ponla junto a `screen.png`. Revisa composición, jerarquía, espaciado, tipografía y color.
 4. Ejecuta comprobaciones automáticas:
    - sin desbordamiento horizontal de la página;
-   - ningún título o dato importante cortado con «…» (`DESIGN_RULES.md` T7);
+   - ningún texto que quepa cortado con «…»; en tarjetas, el título solo se corta pasadas 3 líneas (`DESIGN_RULES.md` T7);
    - áreas interactivas de al menos 48 × 48 (con `hitSlop` o equivalente);
    - colores calculados dentro de los tokens; texto oscuro sobre `accent` y `progress`;
    - Manrope e Inter cargadas desde archivos locales;

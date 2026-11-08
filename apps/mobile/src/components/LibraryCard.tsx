@@ -26,7 +26,7 @@ export interface LibraryCardProps {
   cover?: ImageSourcePropType;
   /** Tipo de obra para el badge (p. ej. «Manhwa»); sin él no hay insignia. */
   kind?: string;
-  /** Título de la serie (máx. 2 líneas, T7). */
+  /** Título de la serie (completo si cabe; máx. 3 líneas, T7). */
   title: string;
   /** Avance 0–1; si > 0 muestra la barra de progreso (RF-41). */
   progress?: number;

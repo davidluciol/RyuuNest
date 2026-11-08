@@ -29,7 +29,7 @@
 | T4 | **Prohibida la tarjeta-mascota al pie.** Ejemplos vistos: "Modo Santuario disponible", "Guardián del Nido · OLED Ready", "El Dragón de RyuuNest vigila…", "Seguridad del Nido". | Aparece al final de 5 de 7 pantallas con el mismo patrón: es relleno de plantilla. |
 | T5 | Ninguna jerga técnica ni identificador interno en la interfaz: `RF-34`, "blur 16px", "SQLite", "Ryuu Core v1.4", "OLED Ready", "Arquitectura Nativa". | `RF-34` aparece como insignia en Ajustes: el generador copió el SPEC a la interfaz. |
 | T6 | **No afirmar lo que la v1 no hace.** "Sandbox activado" (D-5: sin aislamiento), "paquete cifrado" (el respaldo es JSON legible), "Oficial", "tus datos jamás viajan a servidores ajenos" junto a sincronización con Google Drive. | Son promesas falsas de seguridad y privacidad. |
-| T7 | Nada importante termina en "…". Títulos de serie a dos líneas; si aun así no caben, se rediseña la tarjeta. | En Biblioteca casi todos los títulos aparecen cortados ("Solo Leveli…", "Chainsaw …"). |
+| T7 | Un texto que cabe se muestra completo; solo se corta con "…" si es realmente largo. Títulos de serie en tarjeta: hasta 3 líneas y, pasadas esas, "…" (decisión 2026-11-08, P-140). Ficha, avisos, toasts y lector: sin tope. | En Biblioteca casi todos los títulos aparecen cortados ("Solo Leveli…", "Chainsaw …"). |
 | T8 | Las cadenas van al archivo de traducciones. Ninguna en inglés suelta. | La pantalla de Serie se titula "Manga Detail". |
 
 ---

@@ -33,8 +33,8 @@ describe("recentCardStyle (tarjeta de recientes)", () => {
     expect(style.gapTextMeta).toBe(4);
   });
 
-  it("título limitado a 2 líneas (T7: sin «…»)", () => {
-    expect(recentCardStyle().titleMaxLines).toBe(2);
+  it("título completo si cabe y corte solo pasadas 3 líneas (T7)", () => {
+    expect(recentCardStyle().titleMaxLines).toBe(3);
   });
 });
 

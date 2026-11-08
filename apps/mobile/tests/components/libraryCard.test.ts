@@ -30,10 +30,10 @@ describe("libraryCardStyle (tarjeta de serie, cuadrícula)", () => {
     });
   });
 
-  it("título a 2 líneas sin «…» (T7)", () => {
-    expect(LIBRARY_CARD_TITLE_LINES).toBe(2);
+  it("título completo si cabe y corte con «…» solo pasadas 3 líneas (T7)", () => {
+    expect(LIBRARY_CARD_TITLE_LINES).toBe(3);
     expect(libraryCardTitleStyle()).toMatchObject({
-      numberOfLines: 2,
+      numberOfLines: 3,
     });
   });
 

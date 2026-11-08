@@ -20,8 +20,11 @@ import { BADGE_HEIGHT } from "./badgeStyles";
 
 const colors = dragonNightColors;
 
-/** Título a 2 líneas sin «…» (T7). */
-export const LIBRARY_CARD_TITLE_LINES = 2;
+/**
+ * Título de tarjeta (T7): se muestra completo si cabe; solo pasadas 3 líneas se
+ * corta con «…». La ficha, los avisos y el lector no tienen tope.
+ */
+export const LIBRARY_CARD_TITLE_LINES = 3;
 
 /** Alto de la barra de progreso (RF-41). */
 export const LIBRARY_CARD_PROGRESS_HEIGHT = 3;
@@ -50,7 +53,7 @@ export interface LibraryCardTitleStyleShape extends TypeStyle {
   color: string;
 }
 
-/** Estilo del título: 2 líneas, Manrope 600, texto principal (T7). */
+/** Estilo del título: hasta 3 líneas, Manrope 600, texto principal (T7). */
 export function libraryCardTitleStyle(): LibraryCardTitleStyleShape {
   return {
     numberOfLines: LIBRARY_CARD_TITLE_LINES,

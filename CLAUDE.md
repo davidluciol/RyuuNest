@@ -27,7 +27,7 @@
 - **Rojo → verde → limpio.** Toda tarea empieza por una prueba que falla; sin test rojo no se implementa. No edites un test para que pase salvo que el criterio de aceptación lo exija.
 - Gate final: `pnpm lint`, `pnpm -r typecheck`, `pnpm -r test`, `pnpm -r build`.
 - Contrato de módulos: fixtures HTML/JSON guardados, nunca sitios reales.
-- **Web y galería:** verifica con Playwright en ancho móvil y escritorio. Comprueba: sin overflow horizontal, sin títulos cortados (T7), áreas interactivas ≥48×48, foco visible, consola sin errores y **cero peticiones externas** (RNF-5). Compara con `screen.png`; registra diferencias en `design/stitch/DIFFS.md`.
+- **Web y galería:** verifica con Playwright en ancho móvil y escritorio. Comprueba: sin overflow horizontal, sin textos cortados que quepan (T7: tarjetas, 3 líneas), áreas interactivas ≥48×48, foco visible, consola sin errores y **cero peticiones externas** (RNF-5). Compara con `screen.png`; registra diferencias en `design/stitch/DIFFS.md`.
 - **App nativa:** Playwright no la cubre. Usa **agent-device** (MCP) con `open` → `snapshot` → `press`/`fill` → `wait`; cierra con `close` y libera el dispositivo.
 - No añadas dependencias ni instales nada sin preguntar. Las versiones se fijan en la Fase 0.
 - En Windows, si Vitest falla con `.vitest-cache` o workers, repite con `pnpm -r --workspace-concurrency=1 test`; no es un fallo del código.
