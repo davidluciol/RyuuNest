@@ -20,7 +20,7 @@ export interface RecentCardProps {
   cover?: ImageSourcePropType;
   /** Tipo de obra para el badge (p. ej. «Manhwa»). */
   kind: string;
-  /** Título de la serie (máx. 2 líneas, T7). */
+  /** Título de la serie (completo si cabe; máx. 3 líneas, T7). */
   title: string;
   /** Capítulo en curso (p. ej. «Cap. 24»). */
   chapter?: string;

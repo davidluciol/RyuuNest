@@ -1,4 +1,5 @@
 import { coverAspectRatio, radii, spacing, dragonNightColors } from "@ryuunest/ui-tokens";
+import { LIBRARY_CARD_TITLE_LINES } from "./libraryCardStyles";
 
 /**
  * F13 — reglas de la tarjeta de portada para la fila horizontal "Lecturas
@@ -36,7 +37,7 @@ export function recentCardStyle(): RecentCardStyleShape {
     coverBackgroundColor: colors.surface,
     gapCoverText: spacing.xs,
     gapTextMeta: spacing.xxs,
-    titleMaxLines: 2,
+    titleMaxLines: LIBRARY_CARD_TITLE_LINES,
   };
 }
 
