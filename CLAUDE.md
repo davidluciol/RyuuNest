@@ -1,7 +1,53 @@
-# CLAUDE.md — RyuuNest
+# CLAUDE.md - RyuuNest
 
 > Reglas para Claude Code. Léelas al inicio de cada sesión. Límite: 2000 tokens.
 > Lector local y open source (GPL-3.0) de manga, manhua, manhwa y cómic; monorepo pnpm, TypeScript estricto. Sin servidor, cuentas, telemetría ni CDN.
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+RyuuNest: local, open-source (GPL-3.0) reader for manga/manhua/manhwa/comics with installable scraping modules. pnpm monorepo, strict TypeScript, Node ≥ 22. No server, accounts, telemetry, CDN or third-party services.
+
+**`AGENTS.md` is the authoritative rule set (in Spanish) and applies to Claude Code too — read it at session start.** It is not repeated here. Key points: document authority order is `docs/SPEC.md` > `DESIGN_RULES.md` > `DESIGN.md` > `design/stitch/*/screen.png`; also read `MEMORY.md` (decisions) and `tasks/todo.md`; strict red→green TDD; one task per session (~5 files); max 2 attempts on the same error, then stop and escalate; ask rather than invent; work on a branch (`feature/…`, `fix/…`, `docs/…`), never push to `master`, don't merge PRs. Docs, commits and replies to the user are in Spanish; code identifiers in English.
+
+## Commands
+
+```bash
+pnpm install
+pnpm lint                      # eslint . (includes the custom @ryuunest/eslint-plugin)
+pnpm -r typecheck
+pnpm -r test                   # vitest in every workspace
+pnpm -r build
+pnpm format:check              # prettier
+```
+
+Final gate = `pnpm lint`, `pnpm -r typecheck`, `pnpm -r test`, `pnpm -r build`. On Windows, if Vitest fails with `.vitest-cache`/worker errors, rerun with `pnpm -r --workspace-concurrency=1 test` (not a code failure).
+
+Single test: `pnpm --filter @ryuunest/core exec vitest run path/to/file.test.ts` (add `-t "name"` to filter by test name).
+
+Per app: `pnpm --filter @ryuunest/web dev` (Vite), `pnpm --filter @ryuunest/mobile start|android|web` (Expo; its typecheck needs `--stack-size`, so use the package script), `pnpm --filter @ryuunest/extension build`.
+
+## Architecture
+
+Workspaces: `apps/*`, `packages/*`, `tools/*`.
+
+- `packages/core` — platform-agnostic domain logic (library, reader, progress, backup, diagnostics, module install/runtimes, repo index, storage, `ports` for platform I/O). Apps depend on it; it must not depend on apps.
+- `packages/module-sdk` — module manifest/validation/semver/repo index plus a CLI for authors of scraping modules. Module contract tests use saved HTML/JSON fixtures, never real sites (`packages/test-site` provides the fake site).
+- `packages/extension-protocol` — messages shared between the browser extension and the app.
+- `packages/ui-tokens` — the only place for colors, sizes, radii and spacing. `packages/i18n` — translation catalog; no literal UI strings in components.
+- `apps/mobile` (Expo / React Native, Android phone + Android TV) — Expo Router in `src/app/(tabs)`, screens in `src/screens/<area>`, reusable components in `src/components` (each must also appear in `src/gallery`, the component gallery, with all states). Also runs on web via Expo.
+- `apps/web` (Vite client), `apps/extension` (browser extension; options page under `src/options`).
+- `tools/eslint-plugin-ryuunest` — custom lint rules enforcing project conventions (e.g. no literal values outside `ui-tokens`); lint failures here usually mean a convention violation, not style.
+- `modules/` holds module-related material; `legacyModulos/*.py` are old Python scrapers kept for reference only.
+
+Docs: `docs/SPEC.md` (v1 scope; anything outside is omitted and logged in `design/stitch/DIFFS.md`), `tasks/plan.md`, `tasks/todo.md`, `tasks/complexity.md`, `docs/definition-of-done.md`.
+
+## Project-specific gotchas
+
+- Never copy HTML from `design/stitch/` (reference only); translate to React Native using tokens. Animations: only `transform`/`opacity`, 150–200 ms, never in the reader.
+- UI verification: Playwright for web/gallery; **agent-device** (MCP in `.mcp.json`) for the native app — web passing does not verify native. The Android emulator doesn't start on this PC (no hypervisor); use the physical phone.
+- Code exploration: query Graphify first (`graphify query "<question>"`, `graphify-out/graph.json`), and run `graphify update .` after modifying code.
+- Library API docs: use Context7 (`npx ctx7@latest library <name> "<topic>"`), not memory.
+- Versions are pinned (Phase 0); don't add dependencies or bump versions without asking. The pnpm workspace uses `minimumReleaseAgeExclude` for specific Expo pins.
 
 ## 0. Autoridad, alcance y dudas
 
