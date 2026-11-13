@@ -158,7 +158,7 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 ### F25 Pantallas web — restante `[FE · Baja · N2]`
 
 - [x] Pantallas de la v1 sobre base real (sql.js + IndexedDB, P-113), módulos `script` en Web Worker (P-114) — hecho en `feature/F24-F25-web-client`; detalle en `todo.archive.md`
-- [ ] **Subir react a 19.3.1+ y react-router a 8** (P-110): ADR-0002 fija react 19.2.3 por Expo SDK 57; al subir react, react-router 8 pasa a ser compatible. Sin tocar Expo: solo `apps/web`.
+- [x] **Subir react a 19.3.1+ y react-router a 8** (P-110): ADR-0002 fija react 19.2.3 por Expo SDK 57; al subir react, react-router 8 pasa a ser compatible. Sin tocar Expo: solo `apps/web`. — hecho: react/react-dom 19.3.1 en `apps/web` y `apps/extension`, react-router 8.5.1, `resolve.dedupe` de react en la web (mobile-src sigue en 19.2.3). Lint, typecheck, tests y e2e web en verde salvo `reader.cjs` a 426 px, intermitente también en `HEAD` (preexistente).
 - Verif: `pnpm -r test` + e2e web en verde
 
 ### F26/F27 Extensión y puente — restante `[FE/BE · Baja · N2]`
@@ -234,16 +234,14 @@ Dep: F32 · XS
 
 ### QAw1 Ruta guardado: instalar → descubrir → guardar → biblioteca `[FE/QA · Intermedia · N3]`
 
-> Bloqueada parcialmente (hallazgo de F28): «Favorito» no crea la fila `series`; usar carpeta hasta que se arregle (relacionado con F17).
-
-- [ ] Abrir la aplicación web.
-- [ ] Ir a **Fuentes** e instalar un módulo.
-- [ ] Moverse a **Descubrir**.
-- [ ] Seleccionar algún manga o cómic al azar.
-- [ ] Guardarlo en alguna carpeta o en favoritos.
-- [ ] Buscarlo en **Biblioteca**.
-- [ ] Seleccionarlo y **debería mostrar de nuevo la pantalla de detalle** para ese manga o cómic.
-- Verif: la obra guardada aparece en Biblioteca y al abrirla se ve su ficha (detalle) completa.
+- [x] Abrir la aplicación web.
+- [x] Ir a **Fuentes** e instalar un módulo.
+- [x] Moverse a **Descubrir**.
+- [x] Seleccionar algún manga o cómic al azar.
+- [x] Guardarlo en alguna carpeta o en favoritos.
+- [x] Buscarlo en **Biblioteca**.
+- [x] Seleccionarlo y **debería mostrar de nuevo la pantalla de detalle** para ese manga o cómic.
+- Verif: la obra guardada aparece en Biblioteca y al abrirla se ve su ficha (detalle) completa. — verificado por e2e `apps/web/tests/e2e/discover.cjs` (paso 4: busca en Biblioteca, abre la ficha con capítulos y «Guardada») a 1440/426 px; el bloqueo de «Favorito» ya lo resolvió P-126. Sin cambios nativos, no hay verificación en el teléfono.
 
 ### QAw2 Ruta Inicio: vacío → instalar → leer → continuar leyendo `[FE/QA · Intermedia · N3]`
 

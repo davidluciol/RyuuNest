@@ -15,8 +15,8 @@
     "@ryuunest/i18n": "workspace:*",
     "@ryuunest/ui-tokens": "workspace:*",
     "lucide-react": "1.66.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "@types/chrome": "0.3.7",
