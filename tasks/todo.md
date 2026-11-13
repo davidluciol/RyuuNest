@@ -767,14 +767,14 @@ Dep: F32 · XS
 
 ### QAw1 Ruta guardado: instalar → descubrir → guardar → biblioteca `[FE/QA · Intermedia · N3]`
 
-- [ ] Abrir la aplicación web.
-- [ ] Ir a **Fuentes** e instalar un módulo.
-- [ ] Moverse a **Descubrir**.
-- [ ] Seleccionar algún manga o cómic al azar.
-- [ ] Guardarlo en alguna carpeta o en favoritos.
-- [ ] Buscarlo en **Biblioteca**.
-- [ ] Seleccionarlo y **debería mostrar de nuevo la pantalla de detalle** para ese manga o cómic.
-- Verif: la obra guardada aparece en Biblioteca y al abrirla se ve su ficha (detalle) completa.
+- [x] Abrir la aplicación web.
+- [x] Ir a **Fuentes** e instalar un módulo.
+- [x] Moverse a **Descubrir**.
+- [x] Seleccionar algún manga o cómic al azar.
+- [x] Guardarlo en alguna carpeta o en favoritos.
+- [x] Buscarlo en **Biblioteca**.
+- [x] Seleccionarlo y **debería mostrar de nuevo la pantalla de detalle** para ese manga o cómic.
+- Verif: la obra guardada aparece en Biblioteca y al abrirla se ve su ficha (detalle) completa. — verificado por e2e `apps/web/tests/e2e/discover.cjs` (paso 4: busca en Biblioteca, abre la ficha con capítulos y «Guardada») a 1440/426 px; el bloqueo de «Favorito» ya lo resolvió P-126. Sin cambios nativos, no hay verificación en el teléfono.
 
 ### QAw2 Ruta Inicio: vacío → instalar → leer → continuar leyendo `[FE/QA · Intermedia · N3]`
 

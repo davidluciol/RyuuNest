@@ -108,7 +108,9 @@ function corsJson(body) {
         if (url.host === "sitio.test" && url.pathname === "/api/search") {
           return route.fulfill(
             corsJson({
-              items: [{ id: "s-dragon", title: "Dragón de prueba", kind: "manga", hint: "4 capítulos" }],
+              items: [
+                { id: "s-dragon", title: "Dragón de prueba", kind: "manga", hint: "4 capítulos" },
+              ],
             }),
           );
         }
@@ -143,7 +145,10 @@ function corsJson(body) {
       await page.waitForTimeout(1700);
       await page.mouse.up();
       await page.waitForFunction(
-        () => document.querySelector('[data-testid="module-action-demo"]')?.textContent?.includes("Gestionar"),
+        () =>
+          document
+            .querySelector('[data-testid="module-action-demo"]')
+            ?.textContent?.includes("Gestionar"),
         { timeout: 30000 },
       );
 
@@ -169,8 +174,24 @@ function corsJson(body) {
       await page.reload();
       await page.getByTestId("library-card-s-dragon").waitFor({ state: "visible" });
 
+      // 4) QAw1: buscarla en Biblioteca, abrirla y volver a ver su ficha completa.
+      await page.getByTestId("library-search").fill("dragon");
+      await page.getByTestId("library-card-s-dragon").waitFor({ state: "visible" });
+      await page.getByTestId("library-search").fill("zzz");
+      await page.getByTestId("library-card-s-dragon").waitFor({ state: "detached" });
+      await page.getByTestId("library-search").fill("dragon");
+      await page.getByTestId("library-card-s-dragon").click();
+      await page.getByTestId("screen-series").waitFor({ state: "visible" });
+      await page.getByText("Serie s-dragon").first().waitFor({ state: "visible" });
+      await page.getByTestId("series-chapter-ch-1").waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
+
       assert.deepEqual(errors, [], `errores de consola/página a ${width} px: ${errors}`);
-      assert.deepEqual(external, [], `peticiones externas no interceptadas a ${width} px: ${external}`);
+      assert.deepEqual(
+        external,
+        [],
+        `peticiones externas no interceptadas a ${width} px: ${external}`,
+      );
       await context.close();
       console.log(`OK ${width} px`);
     }
