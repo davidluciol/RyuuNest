@@ -18,6 +18,8 @@ export default defineConfig({
   // con la página de opciones de la extensión, F26).
   plugins: [react(), tokensCssPlugin()],
   resolve: {
+    // Una sola copia de React: mobile-src (react 19.2.3 por Expo) comparte hooks con la web.
+    dedupe: ["react", "react-dom"],
     alias: {
       // Lógica pura de pantallas compartida con apps/mobile (sin react-native;
       // la puerta tests/mobileSharedImports.test.ts lo vigila).

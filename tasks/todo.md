@@ -632,7 +632,7 @@ Dep: F24, FB1, P-B · M · `apps/web/src/screens/*`
 
 - [x] Pantallas de la v1 con densidad compacta; una etiqueta por concepto; estados carga/vacío/error — **todas sobre la base real** (sql.js + IndexedDB, P-113; sin datos de ejemplo): Inicio, Biblioteca, Descubrir, Fuentes (instalar con mantener pulsado, AC-8), Ajustes + Diagnóstico (lógica compartida con móvil vía `@ryuunest/mobile-src`, P-115), ficha, lector a pantalla completa (vertical/paginado) y respaldo exportar/importar. Módulos `script` en Web Worker (P-114, D1-A).
 - Verif: Playwright recorriendo pantallas vs los PNG — e2e por pantalla en verde; Ajustes/Diagnóstico y las hojas de respaldo quedan «sin diseño» (P-30) como en móvil.
-- [ ] **Subir react a 19.3.1+ y react-router a 8** (P-110): ADR-0002 fija react 19.2.3 por Expo SDK 57; al subir react, react-router 8 pasa a ser compatible. Sin tocar Expo: solo `apps/web`.
+- [x] **Subir react a 19.3.1+ y react-router a 8** (P-110): ADR-0002 fija react 19.2.3 por Expo SDK 57; al subir react, react-router 8 pasa a ser compatible. Sin tocar Expo: solo `apps/web`. — hecho: react/react-dom 19.3.1 en `apps/web` y `apps/extension`, react-router 8.5.1, `resolve.dedupe` de react en la web (mobile-src sigue en 19.2.3). Lint, typecheck, tests y e2e web en verde salvo `reader.cjs` a 426 px, intermitente también en `HEAD` (preexistente).
 
 ### F26 Extensión de navegador (protocolo HTTP) `[Sec · Alta · N4]`
 
