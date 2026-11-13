@@ -160,6 +160,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 - **P-128 Reglas para Claude Code (2026-11-04):** `CLAUDE.md` en la raíz (≤2000 tokens) con autoridad documental, TDD, Playwright/agent-device, Context7, Graphify, MEMORY y Git (rama propia, gate y PR sin fusionar). El MCP de Graphify queda en `.mcp.json`; CLI `graphify` y `graphify-mcp` ya instalados.
 
 - **P-129 Reglas de AGENTS.md (2026-11-04):** reescritura con autoridad documental, alcance, TDD, intentos/escalado, UI/animaciones, Playwright/agent-device, skills por categoría, Graphify, Git, DoD/cierre y «Evitar». Se añade Scrum como proceso pendiente de definir; `tasks/plan.md` y `tasks/todo.md` siguen siendo la fuente de trabajo.
+- **P-142 Poda de contexto (2026-11-12):** `tasks/todo.md` queda con **solo tareas pendientes**; los bloques completados (T05b, T25–T27, T28–T30b, T31–T32b, T34–T37, F11b, F13–F16c, F12, F18–F21, FB2/F29/F30, F24, F26/F27, F32/F33 y deudas hechas) se movieron a `tasks/todo.archive.md` (sección «Archivo 2»). Los **identificadores no se renumeran** (decisión del humano): T38–T41, F17/F22/F23/F28/F31/F34/F35–F39/F40–F45, T42 y QAw1–3 conservan su código y sus referencias en `MEMORY.md`, `Analisis.md`, ADR-0003 y el SPEC. `tasks/plan.md` se condensó y sus estados quedaron sincronizados con lo hecho hasta hoy; las verificaciones 🧍 que quedaban dentro de los bloques archivados se consolidaron en «🧍 Verificaciones humanas pendientes» de `todo.md`.
 
 ## 4. Pendientes y sugerencias
 
