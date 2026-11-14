@@ -16,6 +16,7 @@ export {
   validateModuleFields,
 } from "./manifest.js";
 export type { ValidateOptions } from "./manifest.js";
+export { validateDeclarativeConfig } from "./declarativeConfig.js";
 export { REPO_INDEX_FORMAT, REPO_INDEX_VERSION, validateRepoIndex } from "./repoIndex.js";
 export type { RepoIndex, RepoModuleEntry } from "./repoIndex.js";
 export { compareSemver, isSemver } from "./semver.js";

@@ -268,6 +268,81 @@ describe("DeclarativeRuntime · details", () => {
 
     expect((await runtime.createApi().details("dragon-de-ceniza")).status).toBe("unknown");
   });
+
+  it("una serie sin capítulos devuelve chapters: [] (L2, ADR-0003)", async () => {
+    const body = DETAIL_HTML.replace(/<ul class="capitulos">[\s\S]*?<\/ul>\s*<\/li>\s*<\/ul>/u, "");
+    const { runtime } = makeRuntime(makeConfig(), {
+      ...ROUTES,
+      [`${BASE_URL}/serie/dragon-de-ceniza`]: { body },
+    });
+
+    const details = await runtime.createApi().details("dragon-de-ceniza");
+    expect(details.chapters).toEqual([]);
+    expect(details.title).toBe("El dragón de ceniza");
+  });
+
+  it("details.extra rellena SeriesDetails.extra y omite las claves vacías (L3)", async () => {
+    const base = makeConfig();
+    const config: DeclarativeConfig = {
+      ...base,
+      details: {
+        ...base.details,
+        extra: {
+          Estado: { selector: "span.detalle-estado", transform: ["trim"] },
+          Géneros: {
+            selector: "ul.detalle-generos > li.genero",
+            all: true,
+            transform: [["join", ", "]],
+          },
+          Autor: { selector: "span.no-existe" },
+        },
+      },
+    };
+    const { runtime } = makeRuntime(config);
+
+    const details = await runtime.createApi().details("dragon-de-ceniza");
+    expect(details.extra).toEqual({ Estado: "En curso", Géneros: "Fantasía, Aventura" });
+  });
+
+  it("{id:raw} pone el id sin codificar en la URL (L5)", async () => {
+    const base = makeConfig();
+    const config: DeclarativeConfig = {
+      ...base,
+      details: { ...base.details, url: "{baseUrl}{id:raw}" },
+    };
+    const { runtime, http } = makeRuntime(config, {
+      [`${BASE_URL}/serie/dragon-de-ceniza`]: { body: DETAIL_HTML },
+    });
+
+    await runtime.createApi().details("/serie/dragon-de-ceniza");
+    expect(http.requests.map((request) => request.url)).toEqual([
+      `${BASE_URL}/serie/dragon-de-ceniza`,
+    ]);
+  });
+
+  it("un modificador de variable desconocido da UNSUPPORTED", async () => {
+    const base = makeConfig();
+    const config: DeclarativeConfig = {
+      ...base,
+      details: { ...base.details, url: "{baseUrl}/serie/{id:crudo}" },
+    };
+    const { runtime } = makeRuntime(config);
+
+    const error = await rejection(runtime.createApi().details("dragon-de-ceniza"));
+    expect((error as ModuleError).code).toBe("UNSUPPORTED");
+  });
+
+  it("un capítulo sin releases sigue siendo PARSE (el contrato exige una)", async () => {
+    const body = DETAIL_HTML.replace(/<ul class="releases">[\s\S]*?<\/ul>/u, "");
+    const { runtime } = makeRuntime(makeConfig(), {
+      ...ROUTES,
+      [`${BASE_URL}/serie/dragon-de-ceniza`]: { body },
+    });
+
+    const error = await rejection(runtime.createApi().details("dragon-de-ceniza"));
+    expect((error as ModuleError).code).toBe("PARSE");
+    expect((error as ModuleError).details?.selector).toBe("ul.releases > li.release");
+  });
 });
 
 describe("DeclarativeRuntime · pages", () => {
@@ -301,6 +376,43 @@ describe("DeclarativeRuntime · pages", () => {
 
     const pages = await runtime.createApi().pages("ch-1", "r-oficial");
     expect(pages.images).toEqual([{ url: "/img/a.png" }]);
+  });
+
+  it("imageHeaders rellena ImageRef.headers con las variables de la URL (L1, D2)", async () => {
+    const base = makeConfig();
+    const config: DeclarativeConfig = {
+      ...base,
+      pages: {
+        ...base.pages,
+        url: "{baseUrl}/leer/{chapterId}/{releaseId}",
+        imageHeaders: {
+          Referer: "{baseUrl}/leer/{chapterId}/{releaseId}",
+          "User-Agent": "RyuuNest",
+        },
+      },
+    };
+    const { runtime } = makeRuntime(config, {
+      [`${BASE_URL}/leer/ch%201/r-oficial`]: { body: PAGES_HTML },
+    });
+
+    const pages = await runtime.createApi().pages("ch 1", "r-oficial");
+    const headers = { Referer: `${BASE_URL}/leer/ch%201/r-oficial`, "User-Agent": "RyuuNest" };
+    expect(pages.images).toEqual([
+      { url: `${BASE_URL}/img/ch-1-1.svg`, headers },
+      { url: `${BASE_URL}/img/ch-1-2.svg`, headers },
+    ]);
+  });
+
+  it("una variable desconocida en imageHeaders da UNSUPPORTED", async () => {
+    const base = makeConfig();
+    const config: DeclarativeConfig = {
+      ...base,
+      pages: { ...base.pages, imageHeaders: { Referer: "{baseUrl}/{id}" } },
+    };
+    const { runtime } = makeRuntime(config);
+
+    const error = await rejection(runtime.createApi().pages("ch-1", "r-oficial"));
+    expect((error as ModuleError).code).toBe("UNSUPPORTED");
   });
 });
 

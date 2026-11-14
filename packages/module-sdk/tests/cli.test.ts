@@ -6,7 +6,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { HTML_SITE_BASE_URL } from "@ryuunest/test-site";
+import { DeclarativeRuntime, ModuleHost, type DeclarativeConfig } from "@ryuunest/core";
+import { createHtmlSite, createSiteHttp, HTML_SITE_BASE_URL } from "@ryuunest/test-site";
 
 import { main, type CliIo } from "../src/cli.js";
 import { validateManifest } from "../src/index.js";
@@ -159,6 +160,28 @@ describe("cli · create", () => {
     expect(config["pages"]).toMatchObject({ images: expect.anything() });
   });
 
+  it("los ejemplos de la plantilla declarativa (map, date, extra, imageHeaders) funcionan", async () => {
+    await main(["create", "demo"], createTestIo(scratch));
+    const config = (await readJson(join(scratch, "demo", "index.json"))) as DeclarativeConfig;
+    const host = new ModuleHost({
+      http: createSiteHttp(createHtmlSite()),
+      clock: { now: () => 0 },
+      permissions: { domains: ["sitio-html.test"] },
+      minDelayMs: 0,
+    });
+    const api = new DeclarativeRuntime({ config, host, baseUrl: HTML_SITE_BASE_URL }).createApi();
+
+    const details = await api.details("dragon-de-ceniza");
+    expect(details.status).toBe("ongoing");
+    expect(details.extra).toEqual({ Origen: expect.any(String) });
+    expect(details.chapters[0]?.releases[0]?.publishedAt).toBe("2026-09-01T10:00:00Z");
+
+    const pages = await api.pages("ch-1", "r-oficial");
+    expect(pages.images[0]?.headers).toEqual({
+      Referer: `${HTML_SITE_BASE_URL}/leer/ch-1/r-oficial`,
+    });
+  });
+
   it("la plantilla script usa solo host.*", async () => {
     expect(await main(["create", "demo", "--template", "script"], createTestIo(scratch))).toBe(0);
 
@@ -222,6 +245,26 @@ describe("cli · validate", () => {
     );
   });
 
+  it("valida el index.json de un módulo declarativo (T39)", async () => {
+    await main(["create", "demo"], createTestIo(scratch));
+    const config = await readJson(join(scratch, "demo", "index.json"));
+    const search = config["search"] as Record<string, unknown>;
+    await writeFile(
+      join(scratch, "demo", "index.json"),
+      JSON.stringify({ ...config, search: { ...search, url: "{baseUrl}/buscar/{id}" } }),
+      "utf8",
+    );
+
+    const io = createTestIo(scratch);
+    expect(await main(["validate", "demo"], io)).toBe(1);
+    expect(io.errText()).toContain("search.url");
+
+    await writeFile(join(scratch, "demo", "index.json"), "{ roto", "utf8");
+    const broken = createTestIo(scratch);
+    expect(await main(["validate", "demo"], broken)).toBe(1);
+    expect(broken.errText()).toContain("index.json");
+  });
+
   it("avisa si falta el manifest o el JSON está roto", async () => {
     const missing = createTestIo(scratch);
     expect(await main(["validate", "no-existe"], missing)).toBe(1);
@@ -275,12 +318,28 @@ describe("cli · test", () => {
     expect(io.errText()).toContain("create(host)");
   });
 
-  it("omite los módulos declarativos hasta que exista el runtime (T16)", async () => {
+  it("ejecuta el arnés también con módulos declarativos (T39)", async () => {
     await main(["create", "demo"], createTestIo(scratch));
 
     const io = createTestIo(scratch);
     expect(await main(["test", "demo"], io)).toBe(0);
-    expect(io.outText()).toContain("T16");
+    expect(io.outText()).toContain("Contrato OK");
+    expect(io.outText()).toContain("pages");
+  });
+
+  it("informa cuando un módulo declarativo no cumple el contrato", async () => {
+    await main(["create", "demo"], createTestIo(scratch));
+    const config = await readJson(join(scratch, "demo", "index.json"));
+    const pages = config["pages"] as Record<string, unknown>;
+    await writeFile(
+      join(scratch, "demo", "index.json"),
+      JSON.stringify({ ...config, pages: { ...pages, images: { selector: "img.no-existe" } } }),
+      "utf8",
+    );
+
+    const io = createTestIo(scratch);
+    expect(await main(["test", "demo"], io)).toBe(1);
+    expect(io.errText()).toContain("Contrato fallido");
   });
 });
 

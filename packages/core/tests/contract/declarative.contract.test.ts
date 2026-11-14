@@ -71,7 +71,7 @@ describe("declarative · contrato contra el sitio falso (T17)", () => {
     expect((error as ModuleError).details?.selector).toBe("h1.no-existe");
   });
 
-  it("un selector de capítulos roto corta la ficha con PARSE", async () => {
+  it("un selector de capítulos que no coincide da una ficha sin capítulos (L2)", async () => {
     const base = EXAMPLE_DECLARATIVE;
     const details = base.details;
     const chapters = details.chapters;
@@ -81,16 +81,26 @@ describe("declarative · contrato contra el sitio falso (T17)", () => {
     };
     const broken: DeclarativeConfig = { ...base, details: brokenChapters };
 
-    const error = await makeApi(broken)
-      .details("dragon-de-ceniza")
-      .then(
-        () => undefined,
-        (thrown: unknown) => thrown,
-      );
+    const series = await makeApi(broken).details("dragon-de-ceniza");
 
-    expect(error).toBeInstanceOf(ModuleError);
-    expect((error as ModuleError).code).toBe("PARSE");
-    expect((error as ModuleError).details?.selector).toBe("ul.no-existe > li");
+    expect(series.chapters).toEqual([]);
+  });
+
+  it("con imageHeaders, cada imagen lleva sus cabeceras en el arnés (L1, D2)", async () => {
+    const config: DeclarativeConfig = {
+      ...EXAMPLE_DECLARATIVE,
+      pages: {
+        ...EXAMPLE_DECLARATIVE.pages,
+        imageHeaders: { Referer: "{baseUrl}/" },
+      },
+    };
+
+    const report = await runContract(makeApi(config), {
+      capabilities: ["popular", "latest", "search"],
+      expectImageHeaders: { Referer: `${HTML_SITE_BASE_URL}/` },
+    });
+
+    expect(report.methods).toContain("pages");
   });
 
   it("las imágenes llevan URL absoluta del sitio", async () => {

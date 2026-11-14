@@ -7,7 +7,12 @@
  */
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
-import { ModuleHost, type ModuleManifest } from "@ryuunest/core";
+import {
+  DeclarativeRuntime,
+  ModuleHost,
+  type DeclarativeConfig,
+  type ModuleManifest,
+} from "@ryuunest/core";
 import {
   createHtmlSite,
   createSiteHttp,
@@ -19,6 +24,7 @@ import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises"
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import { validateDeclarativeConfig } from "./declarativeConfig.js";
 import { validateManifest } from "./manifest.js";
 import { ID_PATTERN } from "./validation.js";
 
@@ -50,7 +56,8 @@ Comandos:
                   --template declarative|script (por defecto: declarative)
                   --dir <ruta>  --name <nombre>  --base-url <url>
                   --domain <dominio>  --force
-  validate <dir>  Valida el manifest.json (SPEC §6.1). --app-version <versión>
+  validate <dir>  Valida el manifest.json (SPEC §6.1) y, si es declarativo, su
+                  index.json (docs/declarative-format.md). --app-version <versión>
   test <dir>      Ejecuta el arnés de contrato contra el sitio falso de pruebas.
   pack <dir>      Empaqueta el módulo en .zip y calcula sha256 y tamaño.
                   --out <archivo.zip>
@@ -212,6 +219,13 @@ async function validateCommand(argv: readonly string[], io: CliIo): Promise<numb
   }
 
   const manifest = loaded.manifest;
+  if (manifest.runtime === "declarative") {
+    const config = await loadDeclarativeConfig(dir, manifest);
+    if (!config.ok) {
+      io.err(`${config.message}\n`);
+      return 1;
+    }
+  }
   io.out(`Manifest válido: ${manifest.id} ${manifest.version} (${manifest.runtime}).\n`);
   return 0;
 }
@@ -226,22 +240,29 @@ async function testCommand(argv: readonly string[], io: CliIo): Promise<number> 
   }
 
   const manifest = loaded.manifest;
+  let config: DeclarativeConfig | undefined;
   if (manifest.runtime === "declarative") {
-    io.out(
-      "Módulo declarativo: el runtime declarativo llega en T16; se omite la ejecución del contrato.\n",
-    );
-    return 0;
+    const loadedConfig = await loadDeclarativeConfig(dir, manifest);
+    if (!loadedConfig.ok) {
+      io.err(`${loadedConfig.message}\n`);
+      return 1;
+    }
+    config = loadedConfig.config;
   }
 
   try {
-    const create = await loadScriptFactory(join(dir, manifest.entry), dir);
     const host = new ModuleHost({
       http: createSiteHttp(createHtmlSite()),
       clock: { now: () => Date.now() },
       permissions: manifest.permissions,
       minDelayMs: 0,
     });
-    const api = await create(host);
+    const api =
+      config === undefined
+        ? await (
+            await loadScriptFactory(join(dir, manifest.entry), dir)
+          )(host)
+        : new DeclarativeRuntime({ config, host, baseUrl: manifest.baseUrl }).createApi();
     const report = await runContract(api, { capabilities: manifest.capabilities });
 
     io.out(`Contrato OK (${report.seriesId}): ${report.methods.join(", ")}\n`);
@@ -328,6 +349,28 @@ async function loadManifest(
   }
 
   return { ok: true, manifest: result.value };
+}
+
+type LoadedConfig = { ok: true; config: DeclarativeConfig } | { ok: false; message: string };
+
+/** Lee y valida el `index.json` (`manifest.entry`) de un módulo declarativo (T39). */
+async function loadDeclarativeConfig(dir: string, manifest: ModuleManifest): Promise<LoadedConfig> {
+  const path = join(dir, manifest.entry);
+  let value: unknown;
+  try {
+    value = JSON.parse(await readFile(path, "utf8")) as unknown;
+  } catch (error) {
+    return { ok: false, message: `No se pudo leer ${path} como JSON: ${describe(error)}` };
+  }
+
+  const result = validateDeclarativeConfig(value);
+  if (!result.ok) {
+    const lines = result.issues.map(
+      (issue) => `  ${issue.path === "" ? "(raíz)" : issue.path}: ${issue.message}`,
+    );
+    return { ok: false, message: `index.json inválido (${path}):\n${lines.join("\n")}` };
+  }
+  return { ok: true, config: result.value };
 }
 
 function describe(error: unknown): string {

@@ -10,12 +10,13 @@
  *   `dragon-de-ceniza`), que es el `id` estable de una serie.
  * - `absoluteUrl` resuelve una URL relativa contra la `baseUrl` del módulo.
  * - `join` solo vale cuando el campo se extrae con `all: true` (une la lista).
+ * - `date` (L4) y `map` (L6) los añade T39: ver `docs/declarative-format.md`.
  */
 import { ModuleError } from "../contract/errors.js";
 
 /** Nombres de transformación admitidos (SPEC §6.6). */
 export type TransformName =
-  "trim" | "path" | "absoluteUrl" | "regex" | "number" | "join" | "replace";
+  "trim" | "path" | "absoluteUrl" | "regex" | "number" | "join" | "replace" | "date" | "map";
 
 /** Todos los nombres, en el orden del SPEC §6.6. */
 export const TRANSFORM_NAMES = [
@@ -26,13 +27,18 @@ export const TRANSFORM_NAMES = [
   "number",
   "join",
   "replace",
+  "date",
+  "map",
 ] as const satisfies readonly TransformName[];
+
+/** Argumento de una transformación; el objeto solo lo usa `map`. */
+export type TransformArg = string | number | Readonly<Record<string, string>>;
 
 /**
  * Una transformación: su nombre a secas (`"trim"`) o su nombre con argumentos
- * (`["replace", "mundo", "dragón"]`).
+ * (`["replace", "mundo", "dragón"]`, `["map", { "En emisión": "ongoing" }]`).
  */
-export type TransformSpec = TransformName | readonly [TransformName, ...Array<string | number>];
+export type TransformSpec = TransformName | readonly [TransformName, ...TransformArg[]];
 
 /** Contexto que necesita alguna transformación (por ejemplo la `baseUrl`). */
 export interface TransformContext {
@@ -49,7 +55,7 @@ export function transformName(spec: TransformSpec): TransformName {
 }
 
 /** Argumentos de una transformación (sin el nombre). */
-export function transformArgs(spec: TransformSpec): readonly (string | number)[] {
+export function transformArgs(spec: TransformSpec): readonly TransformArg[] {
   return typeof spec === "string" ? [] : spec.slice(1);
 }
 
@@ -102,6 +108,79 @@ function replaceAll(value: string, search: string, replacement: string): string 
   return value.replace(compile(search, "g"), replacement);
 }
 
+/** Partes de un formato de `date`: tokens (`YYYY`, `MM`, `DD`, `HH`, `mm`, `ss`) o literales. */
+const DATE_TOKEN = /YYYY|MM|DD|HH|mm|ss/gu;
+
+function escapeRegex(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+}
+
+/**
+ * `["date", "DD/MM/YYYY"]` (L4): fecha del sitio → ISO 8601. Sin hora, solo fecha
+ * (`2026-05-27`); con hora, UTC (`2026-05-27T18:30:00Z`). Si el valor no encaja con
+ * el formato o la fecha no existe, devuelve `""` (el campo se omite). No usa
+ * `Date.parse`, que interpreta distinto en Hermes y en V8.
+ */
+function toIsoDate(value: string, format: string): string {
+  const order: string[] = [];
+  let pattern = "";
+  let last = 0;
+  for (const match of format.matchAll(DATE_TOKEN)) {
+    pattern += escapeRegex(format.slice(last, match.index));
+    pattern += match[0] === "YYYY" ? "(\\d{4})" : "(\\d{1,2})";
+    order.push(match[0]);
+    last = match.index + match[0].length;
+  }
+  pattern += escapeRegex(format.slice(last));
+  if (!["YYYY", "MM", "DD"].every((token) => order.includes(token))) {
+    throw new ModuleError("UNSUPPORTED", `El formato de «date» necesita YYYY, MM y DD: ${format}`);
+  }
+
+  const match = new RegExp(`^${pattern}$`, "u").exec(value.trim());
+  if (match === null) {
+    return "";
+  }
+  const part = (token: string): number => {
+    const index = order.indexOf(token);
+    return index === -1 ? 0 : Number(match[index + 1]);
+  };
+  const [year, month, day] = [part("YYYY"), part("MM"), part("DD")];
+  const [hour, minute, second] = [part("HH"), part("mm"), part("ss")];
+  const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+  // Date.UTC desborda (31/02 → 02/03): si no coincide al volver, la fecha no existe.
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day ||
+    hour > 23 ||
+    minute > 59 ||
+    second > 59
+  ) {
+    return "";
+  }
+  const iso = date.toISOString();
+  return order.includes("HH") ? `${iso.slice(0, 19)}Z` : iso.slice(0, 10);
+}
+
+/**
+ * `["map", { "En emisión": "ongoing" }]` (L6): traduce el valor (recortado y sin
+ * distinguir mayúsculas). Sin coincidencia, el valor sigue igual. El mapa viene de
+ * un `index.json` descargado: se recorre con `Object.entries`, nunca `objeto[valor]`,
+ * para que `constructor` o `__proto__` no resuelvan nada.
+ */
+function mapValue(value: string, table: TransformArg | undefined): string {
+  if (typeof table !== "object" || table === null || Array.isArray(table)) {
+    throw new ModuleError("UNSUPPORTED", "La transformación «map» necesita un objeto");
+  }
+  const key = value.trim().toLowerCase();
+  for (const [from, to] of Object.entries(table)) {
+    if (from.trim().toLowerCase() === key && typeof to === "string") {
+      return to;
+    }
+  }
+  return value;
+}
+
 /** Une los valores no vacíos con `separator` (para campos `all: true`). */
 export function joinValues(values: readonly string[], separator = ""): string {
   return values.filter((value) => value !== "").join(separator);
@@ -109,13 +188,13 @@ export function joinValues(values: readonly string[], separator = ""): string {
 
 function applyOne(
   name: Exclude<TransformName, "join">,
-  args: readonly (string | number)[],
+  args: readonly TransformArg[],
   value: string,
   context: TransformContext,
 ): string {
   const arg = (index: number, fallback?: string): string => {
     const raw = args[index];
-    if (raw !== undefined) {
+    if (typeof raw === "string" || typeof raw === "number") {
       return String(raw);
     }
     if (fallback !== undefined) {
@@ -137,6 +216,10 @@ function applyOne(
       return firstNumber(value);
     case "replace":
       return replaceAll(value, arg(0), arg(1, ""));
+    case "date":
+      return toIsoDate(value, arg(0));
+    case "map":
+      return mapValue(value, args[0]);
   }
 }
 

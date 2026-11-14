@@ -6,7 +6,7 @@
  * exterior es el `Host` (permisos de dominio, tiempo límite y concurrencia, SPEC
  * §6.5), así que el runtime no hace red por su cuenta.
  *
- * El formato se cierra en esta fase (ver `tasks/plan.md` y la decisión P-50).
+ * Formato normativo: `docs/declarative-format.md` (T39); decisiones previas en P-50.
  */
 import type {
   Chapter,
@@ -77,6 +77,8 @@ export interface DeclarativeDetailsMethod {
   url: string;
   fields: Record<string, DeclarativeFieldSpec>;
   chapters: DeclarativeChaptersSpec;
+  /** L3 (ADR-0003): cada clave rellena `SeriesDetails.extra` con su primer valor. */
+  extra?: Record<string, DeclarativeFieldSpec>;
 }
 
 /** El método `pages`. */
@@ -84,6 +86,11 @@ export interface DeclarativePagesMethod {
   url: string;
   images: DeclarativeFieldSpec;
   title?: DeclarativeFieldSpec;
+  /**
+   * Cabeceras de cada imagen (RF-24, D2 del ADR-0003): mismas variables que `url`
+   * (`{baseUrl}`, `{chapterId}`, `{releaseId}`). Rellena `ImageRef.headers`.
+   */
+  imageHeaders?: Record<string, string>;
 }
 
 /** Configuración declarativa completa (`index.json`). */
@@ -94,6 +101,18 @@ export interface DeclarativeConfig {
   details?: DeclarativeDetailsMethod;
   pages?: DeclarativePagesMethod;
 }
+
+/**
+ * Variables de plantilla que admite cada método, además de `{baseUrl}` (B.7 y D2 del
+ * ADR-0003); `pages` las comparte con `imageHeaders`. Lo usa el validador del SDK.
+ */
+export const DECLARATIVE_VARIABLES = {
+  popular: ["page"],
+  latest: ["page"],
+  search: ["page", "query"],
+  details: ["id"],
+  pages: ["chapterId", "releaseId"],
+} as const satisfies Record<keyof DeclarativeConfig, readonly string[]>;
 
 /** Opciones del runtime. */
 export interface DeclarativeRuntimeOptions {
@@ -202,7 +221,7 @@ export class DeclarativeRuntime {
   ): Promise<Page<SeriesSummary>> {
     const url = this.#fill(config.url, {
       page: String(page),
-      ...(vars.query === undefined ? {} : { query: encodeURIComponent(vars.query) }),
+      ...(vars.query === undefined ? {} : { query: vars.query }),
     });
     const document = await this.#document(url);
     const options: ReadOptions = { scopeSelector: config.list, url };
@@ -213,7 +232,7 @@ export class DeclarativeRuntime {
   }
 
   async #details(config: DeclarativeDetailsMethod, seriesId: string): Promise<SeriesDetails> {
-    const url = this.#fill(config.url, { id: encodeURIComponent(seriesId) });
+    const url = this.#fill(config.url, { id: seriesId });
     const document = await this.#document(url);
     const options: ReadOptions = { url };
     const value = (name: string): string => this.#read(document, config.fields[name]);
@@ -226,10 +245,8 @@ export class DeclarativeRuntime {
     const kind = value("kind");
     const nsfw = parseBoolean(value("nsfw"));
 
+    // L2 (ADR-0003): una serie sin capítulos es contenido válido, no `PARSE`.
     const chapterElements = this.#select(document, config.chapters.list);
-    if (chapterElements.length === 0) {
-      throw parseError("No se encontró ningún capítulo", config.chapters.list, url);
-    }
 
     const details: SeriesDetails = {
       id: seriesId,
@@ -237,7 +254,7 @@ export class DeclarativeRuntime {
       genres: list("genres"),
       altTitles: list("altTitles"),
       status: isSeriesStatus(rawStatus) ? rawStatus : "unknown",
-      extra: {},
+      extra: this.#extra(document, config.extra),
       chapters: chapterElements.map((element) => this.#chapter(element, config.chapters, url)),
       ...(coverUrl === "" ? {} : { cover: { url: coverUrl } }),
       ...(description === "" ? {} : { description }),
@@ -252,10 +269,8 @@ export class DeclarativeRuntime {
     chapterId: string,
     releaseId: string,
   ): Promise<ChapterPages> {
-    const url = this.#fill(config.url, {
-      chapterId: encodeURIComponent(chapterId),
-      releaseId: encodeURIComponent(releaseId),
-    });
+    const vars = { chapterId, releaseId };
+    const url = this.#fill(config.url, vars);
     const document = await this.#document(url);
     const imagesSpec: DeclarativeFieldSpec = { ...config.images, all: true };
     const urls = this.#readList(document, imagesSpec);
@@ -264,7 +279,18 @@ export class DeclarativeRuntime {
     }
 
     const title = this.#read(document, config.title);
-    const images: ImageRef[] = urls.map((imageUrl) => ({ url: imageUrl }));
+    const headers =
+      config.imageHeaders === undefined
+        ? undefined
+        : Object.fromEntries(
+            Object.entries(config.imageHeaders).map(([name, value]) => [
+              name,
+              this.#fill(value, vars),
+            ]),
+          );
+    const images: ImageRef[] = urls.map((imageUrl) =>
+      headers === undefined ? { url: imageUrl } : { url: imageUrl, headers },
+    );
     return { ...(title === "" ? {} : { title }), images };
   }
 
@@ -336,6 +362,21 @@ export class DeclarativeRuntime {
       ...(group === "" ? {} : { group }),
       ...(publishedAt === "" ? {} : { publishedAt }),
     };
+  }
+
+  /** `SeriesDetails.extra`: primer valor de cada clave (o la lista unida con `join`); sin vacíos. */
+  #extra(
+    document: HtmlDocument,
+    specs: Record<string, DeclarativeFieldSpec> | undefined,
+  ): Record<string, string> {
+    const extra: Record<string, string> = {};
+    for (const [key, spec] of Object.entries(specs ?? {})) {
+      const value = this.#read(document, spec);
+      if (value !== "") {
+        extra[key] = value;
+      }
+    }
+    return extra;
   }
 
   /** Primer valor de un campo (cadena vacía si el campo no está o no coincide). */
@@ -433,19 +474,26 @@ export class DeclarativeRuntime {
     );
   }
 
+  /**
+   * Rellena `{variable}` con su valor codificado (`encodeURIComponent`), o tal cual con
+   * `{variable:raw}` (L5). `{baseUrl}` nunca se codifica.
+   */
   #fill(template: string, vars: Record<string, string>): string {
-    return template.replace(/\{(\w+)\}/gu, (match, key: string) => {
+    return template.replace(/\{(\w+)(?::(\w+))?\}/gu, (match, key: string, modifier?: string) => {
+      if (modifier !== undefined && modifier !== "raw") {
+        throw new ModuleError("UNSUPPORTED", `Modificador desconocido en la plantilla: ${match}`);
+      }
       if (key === "baseUrl") {
         return this.#context.baseUrl;
       }
-      const value = vars[key];
+      const value = Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : undefined;
       if (value === undefined) {
         throw new ModuleError(
           "UNSUPPORTED",
           `Variable desconocida en la plantilla de URL: ${match}`,
         );
       }
-      return value;
+      return modifier === "raw" ? value : encodeURIComponent(value);
     });
   }
 }
