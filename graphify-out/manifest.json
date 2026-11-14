@@ -294,9 +294,9 @@
     "semantic_hash": ""
   },
   "packages/core/src/repo/RepoRegistry.ts": {
-    "mtime": 1794673578.2903903,
-    "seen": 1794673720.7268014,
-    "ast_hash": "f04fc097e9360031480789a48e048889",
+    "mtime": 1794674117.224767,
+    "seen": 1794674185.2865021,
+    "ast_hash": "208b3134c370bcd51ca82ffb25bf6849",
     "semantic_hash": ""
   },
   "packages/core/src/runtimes/DeclarativeRuntime.ts": {
@@ -540,9 +540,9 @@
     "semantic_hash": ""
   },
   "packages/module-sdk/tests/repoRegistry.test.ts": {
-    "mtime": 1794673459.05916,
-    "seen": 1794673720.7269516,
-    "ast_hash": "85e80f450bf3faf8e8154afbad8be788",
+    "mtime": 1794674098.371919,
+    "seen": 1794674185.2867818,
+    "ast_hash": "dc64c3f5da639abe49309c91945336de",
     "semantic_hash": ""
   },
   "packages/module-sdk/tsconfig.json": {
@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1794673706.0305643,
-    "seen": 1794673720.7270591,
-    "ast_hash": "fb8b42d2dc4db3e8d707b32f1d01b364",
+    "mtime": 1794674175.3001657,
+    "seen": 1794674185.286899,
+    "ast_hash": "91009b677b2a78187782fa2fb3e07460",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
