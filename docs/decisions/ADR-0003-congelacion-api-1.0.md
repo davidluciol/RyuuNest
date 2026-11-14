@@ -282,6 +282,7 @@ Recomendación: **`m440`** con el criterio de aceptación de la Decisión 5. Alt
 ## Anexo B: formato declarativo tal como está construido
 
 > Descripción del **código a fecha de hoy**, no una especificación. R2 la convierte en normativa tras decidir los huecos de B.9.
+> **Reemplazado (T39, 2026-11-14):** la norma vigente es `docs/declarative-format.md` (entraron L1 a L6). Este anexo queda como registro.
 
 **B.1 Estructura.** `index.json` es un objeto con las claves opcionales `popular`, `latest`, `search`, `details` y `pages`. Si falta `popular` o `latest`, ese método no existe en la `ModuleApi`; si falta `search`, `details` o `pages`, llamarlos da `UNSUPPORTED`. Las claves desconocidas se ignoran. `index.json` se interpreta con `JSON.parse` sin validación de esquema.
 

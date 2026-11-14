@@ -54,7 +54,7 @@ Las claves marcadas **0.2.0** llegan con la app 0.2.0. Un módulo que use alguna
 - Con el modificador **`:raw`** (`{id:raw}`, `{releaseId:raw}`…) se inserta **tal cual**. Sirve cuando el id es una ruta del sitio con `/`, `?` o `=` (los ids son opacos: la app los devuelve sin tocar).
 - Una variable que el método no tiene, o un modificador distinto de `raw`, es un error de `validate` y, en ejecución, `UNSUPPORTED`.
 
-Ejemplo (`zonatmo` guarda como id la ruta relativa de la ficha, `/library/manga/123/titulo`):
+Ejemplo (`zonatmo` guarda como id la ruta relativa de la ficha, como `/library/manhwa/9001/serie-falsa-uno` en sus fixtures):
 
 ```json
 "details": { "url": "{baseUrl}{id:raw}" }
@@ -73,6 +73,9 @@ Cada dato se describe con un objeto:
 | `transform` | lista | Transformaciones, en orden (§9). |
 
 Un campo que no coincide vale `""` (o `[]` si es lista). Los **obligatorios** vacíos dan `PARSE` con `details.selector`; los opcionales vacíos se omiten.
+
+- **`selector` es obligatorio** en los campos que se leen sobre el documento entero, sin elemento como ámbito: `details.fields.*`, `details.extra.*`, `pages.images` y `pages.title`. Solo los campos de una tarjeta, un capítulo o una release pueden omitirlo.
+- En cada sitio solo se leen los nombres de campo que lista este documento (§5, §6); cualquier otro nombre se ignora. `details.extra` es la excepción: lee todas sus claves.
 
 ## 5. Listados: `popular`, `latest`, `search`
 
@@ -213,7 +216,7 @@ Se escriben como nombre (`"trim"`) o como lista con argumentos (`["replace", "a"
 | `date` (0.2.0) | formato | Fecha del sitio → ISO 8601 (ver abajo). |
 | `map` (0.2.0) | objeto | Traduce el valor (ver abajo). |
 
-**`date`.** El formato combina los tokens `YYYY` (4 dígitos), `MM`, `DD`, `HH`, `mm` y `ss` (1 o 2 dígitos) con texto literal. `YYYY`, `MM` y `DD` son obligatorios. El valor (recortado) tiene que encajar **entero** con el formato; si no encaja o la fecha no existe (`31/02/2024`), el resultado es `""` y el campo se omite. Sin hora devuelve solo la fecha (`2026-05-27`); con hora devuelve UTC (`2026-05-27T18:30:00Z`, segundos `00` si faltan). No interpreta fechas relativas («hace 2 h»); para eso hace falta un `script`.
+**`date`.** El formato combina los tokens `YYYY` (4 dígitos), `MM`, `DD`, `HH`, `mm` y `ss` (1 o 2 dígitos) con texto literal. `YYYY`, `MM` y `DD` son obligatorios. El valor (recortado) tiene que encajar **entero** con el formato; si no encaja o la fecha no existe (`31/02/2024`), el resultado es `""` y el campo se omite. Sin hora devuelve solo la fecha (`2026-05-27`); con hora devuelve UTC (`2026-05-27T18:30:00Z`, segundos `00` si faltan). No interpreta fechas relativas («hace 2 h»); para eso hace falta un `script`. No hay forma de escapar un token: `MM`, `DD`, `HH`, `mm` o `ss` dentro del texto literal se leen siempre como tokens (si el sitio los escribe, recorta antes con `regex`).
 
 ```json
 ["date", "DD/MM/YYYY"]            "27/05/2026"        → "2026-05-27"
