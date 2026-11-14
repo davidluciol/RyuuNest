@@ -97,6 +97,31 @@ describe("validateDeclarativeConfig", () => {
     ]);
   });
 
+  it("exige selector en los campos que se leen sobre el documento", () => {
+    const config = example();
+    config["details"] = {
+      ...config["details"],
+      fields: { ...(config["details"]?.["fields"] as object), title: { attr: "data-t" } },
+      extra: { Autor: { attr: "data-autor" } },
+    };
+    config["pages"] = { ...config["pages"], images: { attr: "src" }, title: {} };
+    expect(paths(config)).toEqual([
+      "details.fields.title.selector",
+      "details.extra.Autor.selector",
+      "pages.images.selector",
+      "pages.title.selector",
+    ]);
+  });
+
+  it("ignora los nombres de campo que el runtime no lee", () => {
+    const config = example();
+    config["popular"] = {
+      ...config["popular"],
+      fields: { ...(config["popular"]?.["fields"] as object), comentario: "no es un campo" },
+    };
+    expect(paths(config)).toEqual([]);
+  });
+
   it("valida details.extra como campos", () => {
     const config = example();
     config["details"] = {

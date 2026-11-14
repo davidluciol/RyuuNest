@@ -486,7 +486,7 @@ export class DeclarativeRuntime {
       if (key === "baseUrl") {
         return this.#context.baseUrl;
       }
-      const value = Object.hasOwn(vars, key) ? vars[key] : undefined;
+      const value = Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : undefined;
       if (value === undefined) {
         throw new ModuleError(
           "UNSUPPORTED",

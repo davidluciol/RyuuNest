@@ -55,7 +55,12 @@ function validateList(value: unknown, name: MethodName, issues: IssueCollector):
   }
   validateTemplate(value["url"], childPath(name, "url"), name, issues);
   requireString(value["list"], childPath(name, "list"), issues);
-  validateFields(value["fields"], childPath(name, "fields"), ["id", "title"], issues);
+  validateFields(
+    value["fields"],
+    childPath(name, "fields"),
+    { known: LIST_FIELDS, required: ["id", "title"] },
+    issues,
+  );
 
   const hasNext = value["hasNext"];
   if (hasNext !== undefined) {
@@ -77,25 +82,40 @@ function validateDetails(value: unknown, issues: IssueCollector): void {
     return;
   }
   validateTemplate(value["url"], "details.url", "details", issues);
-  validateFields(value["fields"], "details.fields", ["title"], issues);
+  validateFields(
+    value["fields"],
+    "details.fields",
+    { known: DETAILS_FIELDS, required: ["title"], documentScope: true },
+    issues,
+  );
 
   const chapters = value["chapters"];
   if (!isRecord(chapters)) {
     issues.add("details.chapters", "Requerido: objeto { list, fields, releases }");
   } else {
     requireString(chapters["list"], "details.chapters.list", issues);
-    validateFields(chapters["fields"], "details.chapters.fields", ["id", "title"], issues);
+    validateFields(
+      chapters["fields"],
+      "details.chapters.fields",
+      { known: ["id", "title", "number"], required: ["id", "title"] },
+      issues,
+    );
     const releases = chapters["releases"];
     if (!isRecord(releases)) {
       issues.add("details.chapters.releases", "Requerido: objeto { list, fields }");
     } else {
       requireString(releases["list"], "details.chapters.releases.list", issues);
-      validateFields(releases["fields"], "details.chapters.releases.fields", ["id"], issues);
+      validateFields(
+        releases["fields"],
+        "details.chapters.releases.fields",
+        { known: ["id", "group", "publishedAt"], required: ["id"] },
+        issues,
+      );
     }
   }
 
   if (value["extra"] !== undefined) {
-    validateFields(value["extra"], "details.extra", [], issues);
+    validateFields(value["extra"], "details.extra", { required: [], documentScope: true }, issues);
   }
 }
 
@@ -108,10 +128,10 @@ function validatePages(value: unknown, issues: IssueCollector): void {
   if (value["images"] === undefined) {
     issues.add("pages.images", "Requerido: campo de las imágenes");
   } else {
-    validateField(value["images"], "pages.images", issues);
+    validateField(value["images"], "pages.images", issues, true);
   }
   if (value["title"] !== undefined) {
-    validateField(value["title"], "pages.title", issues);
+    validateField(value["title"], "pages.title", issues, true);
   }
 
   const headers = value["imageHeaders"];
@@ -127,11 +147,33 @@ function validatePages(value: unknown, issues: IssueCollector): void {
   }
 }
 
-/** Un mapa de campos; `required` son los que el contrato exige. */
+/** Qué campos de un mapa se comprueban. */
+interface FieldsRule {
+  /** Nombres que lee el runtime; los demás se ignoran. Sin lista, se leen todos (`extra`). */
+  known?: readonly string[];
+  /** Los que exige el contrato. */
+  required: readonly string[];
+  /** Se leen sobre el documento entero: sin elemento como ámbito, `selector` es obligatorio. */
+  documentScope?: boolean;
+}
+
+/** Nombres de campo que lee el runtime en cada sitio (`docs/declarative-format.md` §5–§6). */
+const LIST_FIELDS = ["id", "title", "cover", "kind", "nsfw", "badges", "hint"];
+const DETAILS_FIELDS = [
+  "title",
+  "cover",
+  "description",
+  "status",
+  "kind",
+  "nsfw",
+  "genres",
+  "altTitles",
+];
+
 function validateFields(
   value: unknown,
   path: string,
-  required: readonly string[],
+  rule: FieldsRule,
   issues: IssueCollector,
 ): void {
   if (!isRecord(value)) {
@@ -139,19 +181,29 @@ function validateFields(
     return;
   }
   for (const [name, spec] of Object.entries(value)) {
-    validateField(spec, childPath(path, name), issues);
+    if (rule.known === undefined || rule.known.includes(name)) {
+      validateField(spec, childPath(path, name), issues, rule.documentScope === true);
+    }
   }
-  for (const name of required) {
+  for (const name of rule.required) {
     if (value[name] === undefined) {
       issues.add(childPath(path, name), "Campo obligatorio");
     }
   }
 }
 
-function validateField(value: unknown, path: string, issues: IssueCollector): void {
+function validateField(
+  value: unknown,
+  path: string,
+  issues: IssueCollector,
+  documentScope = false,
+): void {
   if (!isRecord(value)) {
     issues.add(path, "Debe ser un objeto { selector?, attr?, regex?, all?, transform? }");
     return;
+  }
+  if (documentScope && value["selector"] === undefined) {
+    issues.add(childPath(path, "selector"), "Requerido: se lee sobre el documento entero");
   }
   for (const key of ["selector", "attr"] as const) {
     if (value[key] !== undefined && !isNonEmptyString(value[key])) {
