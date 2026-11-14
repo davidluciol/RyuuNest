@@ -6,7 +6,7 @@
  * vive en `module-sdk` (SPEC §5.1) y el núcleo no puede importarlo (P-37).
  */
 import { ModuleError } from "../contract/errors.js";
-import type { RepoIndex } from "../contract/repoIndex.js";
+import type { IncompatibleModuleEntry, RepoIndex } from "../contract/repoIndex.js";
 import type { MediaKind } from "../contract/types.js";
 import type { Clock } from "../ports/clock.js";
 import type { Http } from "../ports/http.js";
@@ -44,6 +44,12 @@ export interface RepoModuleSummary {
   package: string;
   sha256: string;
   size: number;
+  minAppVersion?: string;
+}
+
+/** Módulo de un repo que esta app no puede usar (T38, R3). */
+export interface RepoIncompatibleSummary extends IncompatibleModuleEntry {
+  repoId: string;
 }
 
 /** Opciones del registro. */
@@ -103,7 +109,7 @@ export class RepoRegistry {
   /** Añade (o refresca) un repo a partir de su `index.json` (RF-2). */
   async addRepo(url: string): Promise<RepoRecord> {
     const id = canonicalHttpsUrl(url);
-    const index = await this.fetchIndex(id);
+    const { index, text } = await this.fetchIndex(id);
     const now = this.clock.now();
     const previous = await this.getRepo(id);
 
@@ -116,7 +122,8 @@ export class RepoRegistry {
     };
 
     await this.storage.set(repoKey(id), JSON.stringify(record));
-    await this.storage.set(repoIndexKey(id), JSON.stringify(index));
+    // T38: se guarda el índice tal cual llegó; se reclasifica al leer con la versión actual de la app.
+    await this.storage.set(repoIndexKey(id), text);
     return record;
   }
 
@@ -145,11 +152,10 @@ export class RepoRegistry {
     const modules: RepoModuleSummary[] = [];
 
     for (const id of ids) {
-      const raw = await this.storage.get(repoIndexKey(id));
-      if (raw === undefined) {
+      const index = await this.readIndex(id);
+      if (index === undefined) {
         continue;
       }
-      const index = JSON.parse(raw) as RepoIndex;
       for (const entry of index.modules) {
         modules.push({ repoId: id, ...entry });
       }
@@ -160,14 +166,40 @@ export class RepoRegistry {
     );
   }
 
+  /** Módulos «no compatibles» del índice (T38): de un repo o de todos. */
+  async listIncompatible(repoId?: string): Promise<RepoIncompatibleSummary[]> {
+    const ids = repoId === undefined ? (await this.listRepos()).map((repo) => repo.id) : [repoId];
+    const entries: RepoIncompatibleSummary[] = [];
+
+    for (const id of ids) {
+      const index = await this.readIndex(id);
+      if (index === undefined) continue;
+      for (const entry of index.incompatible ?? []) {
+        entries.push({ repoId: id, ...entry });
+      }
+    }
+
+    return entries.sort((a, b) =>
+      a.repoId === b.repoId ? a.id.localeCompare(b.id) : a.repoId.localeCompare(b.repoId),
+    );
+  }
+
   /** Elimina un repo y su índice (RF-8). No toca los módulos instalados. */
   async removeRepo(id: string): Promise<void> {
     await this.storage.delete(repoKey(id));
     await this.storage.delete(repoIndexKey(id));
   }
 
-  /** Descarga, parsea y valida el `index.json`. */
-  private async fetchIndex(url: string): Promise<RepoIndex> {
+  /** Índice guardado, validado otra vez con la versión actual de la app (T38). */
+  private async readIndex(id: string): Promise<RepoIndex | undefined> {
+    const raw = await this.storage.get(repoIndexKey(id));
+    if (raw === undefined) return undefined;
+    const result = this.validateIndex(JSON.parse(raw));
+    return result.ok ? result.value : undefined;
+  }
+
+  /** Descarga, parsea y valida el `index.json`; devuelve también el texto original. */
+  private async fetchIndex(url: string): Promise<{ index: RepoIndex; text: string }> {
     const response = await this.http.request(url);
     if (response.status < 200 || response.status >= 300) {
       throw new ModuleError(
@@ -195,6 +227,6 @@ export class RepoRegistry {
       });
     }
 
-    return result.value;
+    return { index: result.value, text };
   }
 }

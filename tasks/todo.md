@@ -30,11 +30,12 @@ Orden: ~~T37~~ ✅ → T38 → T39 → T40 → T41. Cada tarea: TDD (rojo → ve
 
 Dep: T37 · M · `packages/module-sdk/src/{repoIndex,manifest,cli}.ts`, `packages/core/src/{contract/repoIndex,repo/RepoRegistry}.ts`, `apps/mobile/{app.json,src/screens/sources/useSourcesData.ts}`
 
-- [ ] Índice tolerante **por entrada**: `apiVersion`, `runtime` o `kinds` desconocidos marcan la entrada «no compatible» y no invalidan el repo; las rotas se descartan con aviso
-- [ ] `minAppVersion?` opcional en `RepoModuleEntry` (aditivo) y la app oculta/etiqueta lo incompatible antes de descargar
-- [ ] `app.json` con versión real y la app la pasa al validador (`Constants.expoConfig?.version`); `minAppVersion` se aplica de verdad
-- [ ] El CLI no comprueba `minAppVersion` salvo con `--app-version`
-- [ ] Pruebas: un índice con un módulo `apiVersion: 2` sigue listando los de v1
+- [x] Índice tolerante **por entrada**: `apiVersion`, `runtime` o `kinds` desconocidos marcan la entrada «no compatible» y no invalidan el repo; las rotas se descartan con aviso
+- [x] `minAppVersion?` opcional en `RepoModuleEntry` (aditivo) y la app oculta/etiqueta lo incompatible antes de descargar
+- [x] `app.json` con versión real y la app la pasa al validador (`Constants.expoConfig?.version`); `minAppVersion` se aplica de verdad
+- [x] El CLI no comprueba `minAppVersion` salvo con `--app-version`
+- [x] Pruebas: un índice con un módulo `apiVersion: 2` sigue listando los de v1
+> **Hecho (2026-11-14, `feature/T38-compatibilidad-hacia-delante`):** `app.json` en 0.1.0; `validateRepoIndex` devuelve `modules` (compatibles) + `incompatible` + `warnings`; `RepoRegistry.listIncompatible`; `SourcesData.incompatible` (sin etiqueta visual: queda para una tarea de UI).
 - Verif: `pnpm -r test` + 🧍 corregir en `RyuuNest-Models` la frase «un campo de más o de menos lo rechaza» de su `AGENTS.md`
 
 ### T39 Formato declarativo cerrado y comprobable (R2, D2) `[BE · Alta · N4]`

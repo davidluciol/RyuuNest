@@ -66,6 +66,47 @@ describe("T12 · RepoRegistry con el validador real (T09)", () => {
     expect(modules[0]).toMatchObject({ id: "ejemplo", runtime: "declarative", size: 2048 });
   });
 
+  it("T38: un módulo de apiVersion 2 no inutiliza el repo y se lista como incompatible", async () => {
+    const future = { ...validIndex.modules[0], id: "futuro", name: "Futuro", apiVersion: 2 };
+    const registry = makeRegistry(
+      JSON.stringify({ ...validIndex, modules: [...validIndex.modules, future] }),
+    );
+
+    const repo = await registry.addRepo(REPO_URL);
+
+    expect((await registry.listModules(repo.id)).map((m) => m.id)).toEqual(["ejemplo"]);
+    expect(await registry.listIncompatible()).toEqual([
+      { repoId: repo.id, id: "futuro", name: "Futuro", reason: expect.stringContaining("apiVersion") },
+    ]);
+  });
+
+  it("T38: al cambiar la versión de la app se reclasifica sin refrescar el repo", async () => {
+    const body = JSON.stringify({
+      ...validIndex,
+      modules: [{ ...validIndex.modules[0], minAppVersion: "1.2.0" }],
+    });
+    const storage = new MemoryStorage();
+    const withApp = (appVersion: string) =>
+      new RepoRegistry({
+        storage,
+        http: new StubHttp({ [REPO_URL]: { body } }),
+        clock: new FixedClock(1_000),
+        validateIndex: (value) => validateRepoIndex(value, { appVersion }),
+      });
+
+    const old = withApp("1.0.0");
+    const repo = await old.addRepo(REPO_URL);
+    expect(await old.listModules(repo.id)).toEqual([]);
+    expect((await old.listIncompatible()).map((m) => m.id)).toEqual(["ejemplo"]);
+
+    const updated = withApp("1.2.0");
+    expect((await updated.listModules(repo.id)).map((m) => m.id)).toEqual(["ejemplo"]);
+    expect(await updated.listIncompatible()).toEqual([]);
+
+    // Y a la inversa: lo que era compatible deja de serlo al bajar la versión.
+    expect(await withApp("1.0.0").listModules(repo.id)).toEqual([]);
+  });
+
   it("rechaza un índice inválido con la ruta y el motivo", async () => {
     const registry = makeRegistry(JSON.stringify({ ...validIndex, version: 2 }));
 

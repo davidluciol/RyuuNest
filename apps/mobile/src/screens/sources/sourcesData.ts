@@ -62,9 +62,18 @@ export interface SourceModule {
   lastError?: string;
 }
 
+export interface IncompatibleSource {
+  id: string;
+  name: string;
+  repoId: string;
+  reason: string;
+}
+
 export interface SourcesData {
   repos: RepoRow[];
   modules: SourceModule[];
+  /** Módulos de los repos que esta app no puede usar (T38): no se ofrecen para instalar. */
+  incompatible?: IncompatibleSource[];
   /**
    * El usuario quitó el repo oficial (P-85): no se vuelve a añadir solo y la
    * pantalla avisa de cómo recuperarlo.
@@ -160,10 +169,11 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
 
   return {
     async load() {
-      const [repoRecords, offered, installed] = await Promise.all([
+      const [repoRecords, offered, installed, notCompatible] = await Promise.all([
         repos.listRepos(),
         repos.listModules(),
         modules.list(),
+        repos.listIncompatible(),
       ]);
       const repoIds = new Set(repoRecords.map((repo) => repo.id));
       const rows: SourceModule[] = [];
@@ -217,6 +227,16 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
           moduleCount: offered.filter((o) => o.repoId === repo.id).length,
         })),
         modules: rows,
+        ...(notCompatible.length === 0
+          ? {}
+          : {
+              incompatible: notCompatible.map(({ repoId, id, name, reason }) => ({
+                id,
+                name: name ?? id,
+                repoId,
+                reason,
+              })),
+            }),
         officialRepoDismissed: await officialDismissed(),
       };
     },

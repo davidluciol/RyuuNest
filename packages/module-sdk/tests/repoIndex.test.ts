@@ -56,24 +56,93 @@ describe("índice de repo · inválido", () => {
     expect(pathsOf(validateRepoIndex({ ...validIndex, modules: "no" }))).toContain("modules");
   });
 
-  it("valida cada módulo con la ruta indexada", () => {
+  it("descarta la entrada rota con aviso (ruta indexada) y conserva el resto", () => {
     const bad = { ...validIndex, modules: [validEntry, { ...validEntry, id: "MAYÚSCULAS" }] };
-    expect(pathsOf(validateRepoIndex(bad))).toContain("modules[1].id");
+    const result = validateRepoIndex(bad);
+
+    expect(result.ok && result.value.modules).toHaveLength(1);
+    expect(result.ok && result.value.warnings?.[0]).toContain("modules[1].id");
   });
 
-  it("valida package, sha256 y size", () => {
-    expect(
-      pathsOf(validateRepoIndex({ ...validIndex, modules: [{ ...validEntry, package: "" }] })),
-    ).toContain("modules[0].package");
-    expect(
-      pathsOf(validateRepoIndex({ ...validIndex, modules: [{ ...validEntry, sha256: "abc" }] })),
-    ).toContain("modules[0].sha256");
-    expect(
-      pathsOf(validateRepoIndex({ ...validIndex, modules: [{ ...validEntry, size: -1 }] })),
-    ).toContain("modules[0].size");
+  it("valida package, sha256 y size de cada entrada", () => {
+    for (const [field, value] of [["package", ""], ["sha256", "abc"], ["size", -1]] as const) {
+      const result = validateRepoIndex({
+        ...validIndex,
+        modules: [{ ...validEntry, [field]: value }],
+      });
+      expect(result.ok && result.value.warnings?.[0]).toContain(`modules[0].${field}`);
+    }
   });
 
   it("rechaza un índice que no es objeto", () => {
     expect(pathsOf(validateRepoIndex(42))).toEqual([""]);
+  });
+});
+
+describe("índice de repo · tolerancia por entrada (T38, R3)", () => {
+  const v2 = { ...validEntry, id: "futuro", name: "Futuro", apiVersion: 2 };
+
+  function valueOf(index: unknown, options = {}) {
+    const result = validateRepoIndex(index, options);
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error("índice rechazado");
+    return result.value;
+  }
+
+  it("un módulo con apiVersion 2 no invalida los de v1: queda «no compatible»", () => {
+    const value = valueOf({ ...validIndex, modules: [validEntry, v2] });
+
+    expect(value.modules.map((m) => m.id)).toEqual(["ejemplo"]);
+    expect(value.incompatible).toEqual([
+      { id: "futuro", name: "Futuro", reason: expect.stringContaining("apiVersion") },
+    ]);
+  });
+
+  it("runtime o kinds desconocidos también son «no compatible»", () => {
+    const value = valueOf({
+      ...validIndex,
+      modules: [
+        { ...validEntry, id: "a", runtime: "wasm" },
+        { ...validEntry, id: "b", kinds: ["manga", "novela"] },
+      ],
+    });
+
+    expect(value.modules).toEqual([]);
+    expect(value.incompatible?.map((m) => m.id)).toEqual(["a", "b"]);
+  });
+
+  it("una entrada rota se descarta con aviso y el resto sigue", () => {
+    const value = valueOf({
+      ...validIndex,
+      modules: [{ ...validEntry, sha256: "abc" }, "no soy objeto", validEntry],
+    });
+
+    expect(value.modules).toHaveLength(1);
+    expect(value.warnings).toHaveLength(2);
+    expect(value.warnings?.[0]).toContain("modules[0].sha256");
+  });
+
+  it("acepta `minAppVersion` en la entrada y la oculta si la app es más vieja", () => {
+    const entry = { ...validEntry, minAppVersion: "1.2.0" };
+
+    expect(valueOf({ ...validIndex, modules: [entry] }).modules[0]?.minAppVersion).toBe("1.2.0");
+    expect(valueOf({ ...validIndex, modules: [entry] }, { appVersion: "1.2.0" }).modules).toHaveLength(1);
+
+    const old = valueOf({ ...validIndex, modules: [entry] }, { appVersion: "1.0.0" });
+    expect(old.modules).toEqual([]);
+    expect(old.incompatible?.[0]?.reason).toContain("1.2.0");
+  });
+
+  it("un `minAppVersion` que no es semver es una entrada rota", () => {
+    const value = valueOf({ ...validIndex, modules: [{ ...validEntry, minAppVersion: "uno" }] });
+
+    expect(value.modules).toEqual([]);
+    expect(value.warnings?.[0]).toContain("minAppVersion");
+  });
+
+  it("los errores de la cabecera siguen invalidando el índice", () => {
+    expect(pathsOf(validateRepoIndex({ ...validIndex, version: 2, modules: [v2] }))).toContain(
+      "version",
+    );
   });
 });

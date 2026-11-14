@@ -210,8 +210,11 @@ describe("cli · validate", () => {
       "utf8",
     );
 
+    // T38: sin `--app-version` no se comprueba (el SDK no es la app).
+    expect(await main(["validate", "demo"], createTestIo(scratch))).toBe(0);
+
     const tooNew = createTestIo(scratch);
-    expect(await main(["validate", "demo"], tooNew)).toBe(1);
+    expect(await main(["validate", "demo", "--app-version", "1.0.0"], tooNew)).toBe(1);
     expect(tooNew.errText()).toContain("minAppVersion");
 
     expect(await main(["validate", "demo", "--app-version", "99.0.0"], createTestIo(scratch))).toBe(

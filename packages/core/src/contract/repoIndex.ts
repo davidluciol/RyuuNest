@@ -23,6 +23,16 @@ export interface RepoModuleEntry {
   sha256: string;
   /** Tamaño del paquete en bytes. */
   size: number;
+  /** Versión mínima de la app (aditivo, T38): permite ocultar lo incompatible antes de descargar. */
+  minAppVersion?: string;
+}
+
+/** Entrada que esta app no puede usar (T38, R3): se lista aparte, no invalida el repo. */
+export interface IncompatibleModuleEntry {
+  id: string;
+  name?: string;
+  /** Motivo legible: `apiVersion`, `runtime`, `kinds` o `minAppVersion`. */
+  reason: string;
 }
 
 /** Índice de un repositorio de módulos (SPEC §6.7). */
@@ -32,7 +42,12 @@ export interface RepoIndex {
   name: string;
   /** ISO 8601. */
   updatedAt: string;
+  /** Solo las entradas compatibles con esta app. */
   modules: RepoModuleEntry[];
+  /** Entradas que esta app no entiende (T38). Ausente en índices guardados antes de T38. */
+  incompatible?: IncompatibleModuleEntry[];
+  /** Entradas rotas descartadas, con ruta y motivo (T38). */
+  warnings?: string[];
 }
 
 export const REPO_INDEX_FORMAT = "ryuunest-repo";

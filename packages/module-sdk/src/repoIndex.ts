@@ -8,12 +8,19 @@
  * Cada entrada se valida como el manifest, más los campos del paquete
  * (`package`, `sha256`, `size`).
  */
-import type { RepoIndex } from "@ryuunest/core";
-import { REPO_INDEX_FORMAT, REPO_INDEX_VERSION } from "@ryuunest/core";
+import type { IncompatibleModuleEntry, RepoIndex, RepoModuleEntry } from "@ryuunest/core";
+import { describeIssues, REPO_INDEX_FORMAT, REPO_INDEX_VERSION } from "@ryuunest/core";
 
-import { validateModuleFields, type ValidateOptions } from "./manifest.js";
+import {
+  MEDIA_KINDS,
+  MODULE_RUNTIMES,
+  validateModuleFields,
+  type ValidateOptions,
+} from "./manifest.js";
+import { compareSemver, isSemver } from "./semver.js";
 import {
   childPath,
+  ID_PATTERN,
   isIsoDate,
   isNonEmptyString,
   isRecord,
@@ -55,25 +62,87 @@ export function validateRepoIndex(
     return issues.result<RepoIndex>(value);
   }
 
+  // T38 (R3): la tolerancia es por entrada. Las incompatibles se listan aparte y las
+  // rotas se descartan con aviso; solo la cabecera invalida el índice entero.
+  const compatible: RepoModuleEntry[] = [];
+  const incompatible: IncompatibleModuleEntry[] = [];
+  const warnings: string[] = [];
+
   modules.forEach((entry, index) => {
-    validateRepoModule(entry, `modules[${index}]`, issues, options);
+    const prefix = `modules[${index}]`;
+    const reason = incompatibility(entry, options);
+    if (reason !== undefined) {
+      const id = isRecord(entry) ? entry["id"] : undefined;
+      if (isRecord(entry) && isNonEmptyString(id) && ID_PATTERN.test(id)) {
+        const name = isNonEmptyString(entry["name"]) ? { name: entry["name"] } : {};
+        incompatible.push({ id, ...name, reason });
+        return;
+      }
+      warnings.push(`${prefix}.id: Requerido para listar un módulo no compatible`);
+      return;
+    }
+
+    const entryIssues = new IssueCollector();
+    validateRepoModule(entry, prefix, entryIssues);
+    if (entryIssues.issues.length > 0) {
+      warnings.push(describeIssues(entryIssues.issues, 1));
+    } else {
+      compatible.push(entry as RepoModuleEntry);
+    }
   });
 
-  return issues.result<RepoIndex>(value);
+  if (issues.issues.length > 0) {
+    return issues.result<RepoIndex>(value);
+  }
+  return {
+    ok: true,
+    value: { ...(value as unknown as RepoIndex), modules: compatible, incompatible, warnings },
+  };
+}
+
+/**
+ * Motivo por el que esta app no puede usar la entrada, o `undefined` si es de la 1.x.
+ * Solo mira lo que cambiaría en una versión futura: `apiVersion`, `runtime`, `kinds`
+ * (valores desconocidos) y `minAppVersion` frente a la app.
+ */
+function incompatibility(entry: unknown, options: ValidateOptions): string | undefined {
+  if (!isRecord(entry)) return undefined;
+  const { apiVersion, runtime, kinds, minAppVersion } = entry;
+
+  if (typeof apiVersion === "number" && Number.isInteger(apiVersion) && apiVersion !== 1) {
+    return `apiVersion ${apiVersion} (esta app entiende la 1)`;
+  }
+  if (typeof runtime === "string" && !(MODULE_RUNTIMES as readonly string[]).includes(runtime)) {
+    return `runtime "${runtime}" desconocido`;
+  }
+  if (Array.isArray(kinds)) {
+    const unknown = kinds.find(
+      (kind) => typeof kind === "string" && !(MEDIA_KINDS as readonly string[]).includes(kind),
+    );
+    if (unknown !== undefined) return `kinds "${String(unknown)}" desconocido`;
+  }
+  if (
+    isSemver(minAppVersion) &&
+    options.appVersion !== undefined &&
+    compareSemver(options.appVersion, minAppVersion) < 0
+  ) {
+    return `Requiere la app ${minAppVersion} y la app instalada es ${options.appVersion}`;
+  }
+  return undefined;
 }
 
 function validateRepoModule(
   value: unknown,
   prefix: string,
   issues: IssueCollector,
-  options: ValidateOptions,
 ): void {
   if (!isRecord(value)) {
     issues.add(prefix, "Cada módulo debe ser un objeto");
     return;
   }
 
-  validateModuleFields(value, prefix, issues, options);
+  // Sin `appVersion`: la compatibilidad con la app ya se decidió en `incompatibility`.
+  validateModuleFields(value, prefix, issues, {});
 
   if (!isNonEmptyString(value["package"])) {
     issues.add(childPath(prefix, "package"), "Requerido: ruta del paquete .zip");
