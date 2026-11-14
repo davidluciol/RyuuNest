@@ -9,7 +9,7 @@
 
 **Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37), endurecimiento T34/T35/T36, Fase 6a completa (F01–F10), móvil F11–F21 y F29/F30/FB2 hechas (F34 casi completa), web F24/F25 y extensión F26/F27 hechas, F28 parte web, recorridos F32/F33 hechos. Detalle en `todo.archive.md`.
 
-**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → T40 → T41 (cierre API 1.0) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · verificaciones 🧍 al final de cada tarea.
+**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → T41 (cierre API 1.0) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · verificaciones 🧍 al final de cada tarea.
 
 ---
 
@@ -24,7 +24,7 @@
 
 ## Cierre de la API 1.0 (ADR-0003, aceptado 2026-10-29)
 
-Orden: ~~T37~~ ✅ → ~~T38~~ ✅ → ~~T39~~ ✅ → T40 → T41. Cada tarea: TDD (rojo → verde), un commit por corte, rama propia. Todas parten de `docs/decisions/ADR-0003-congelacion-api-1.0.md`; los tres módulos publicados de `RyuuNest-Models` son la regresión (ninguno debe necesitar cambios, salvo que T40 lo decida).
+Orden: ~~T37~~ ✅ → ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → T41. Cada tarea: TDD (rojo → verde), un commit por corte, rama propia. Todas parten de `docs/decisions/ADR-0003-congelacion-api-1.0.md`; los tres módulos publicados de `RyuuNest-Models` son la regresión (ninguno debe necesitar cambios, salvo que T40 lo decida).
 
 ### T38 Compatibilidad hacia delante ejecutable (R3) `[BE · Intermedia · N4]`
 
@@ -57,11 +57,13 @@ Dep: T38 · L · `packages/core/src/ports/scriptLoader.ts`, `runtimes/{ScriptRun
 
 > **Ya hecho (2026-11-06, `fix/urgente-fuentes-modulos-repo`):** el spike de dispositivo con `zonatmo` confirma que Hermes admite `new Function` (P-83 corregido); la app móvil tiene `createFunctionScriptLoader` y Descubrir lista módulos `script`. Falta lo de abajo.
 
-- [ ] `ScriptLoader.load` recibe el paquete (ruta → texto) y la ruta de entrada; el montador deja de pasar solo `manifest.entry`
-- [ ] Contrato a autores documentado: módulo ES, `export default create(host)`, solo imports relativos dentro del paquete, sin `import()` ni paquetes, entorno ECMAScript estándar (SPEC §6.5)
-- [ ] 🧍 **Spike de `m440` y `yupmanga`** en el dispositivo (el de `zonatmo` ya pasó); si falla: marcar `script` como experimental (plan C del ADR), anotar la decisión y reabrir D1; escalar a N5
-- [ ] Desbloquear en la app los módulos `script` (`createInstalledMounter` deja de lanzar `UNSUPPORTED`)
+- [x] `ScriptLoader.load` recibe el paquete (ruta → texto) y la ruta de entrada; el montador deja de pasar solo `manifest.entry`
+- [x] Contrato a autores documentado: módulo ES, `export default create(host)`, solo imports relativos dentro del paquete, sin `import()` ni paquetes, entorno ECMAScript estándar (SPEC §6.5) → SPEC §6.5 con las formas admitidas + README de la plantilla `script`
+- [x] 🧍 **Spike de `m440` y `yupmanga`** en el dispositivo (el de `zonatmo` ya pasó); si falla: marcar `script` como experimental (plan C del ADR), anotar la decisión y reabrir D1; escalar a N5 → **hecho (2026-11-14, S25 Ultra, Expo Go, agent-device):** M440 0.1.0 (listas, ficha de 378 capítulos con la lista cifrada, capítulo de 18 páginas con imágenes) y YupManga 0.1.1 instalado por `InstallFlow` (listas, ficha de 7 capítulos, capítulo de 152 páginas con imágenes). Portadas en blanco en ambos (F35).
+- [x] Desbloquear en la app los módulos `script` (`createInstalledMounter` deja de lanzar `UNSUPPORTED`): Descubrir y Lector montan con `createFunctionScriptLoader`
+- [x] `ryuunest-module test` carga los `script` con el mismo cargador que la app (decisión del humano)
 - Verif: pruebas del cargador con paquetes de varios archivos + 🧍 spike en el dispositivo
+> **Hecho (2026-11-14, `feature/T40-modulos-script`):** CLI con el cargador de la app; los tres módulos publicados (zonatmo 0.3.0, m440 0.2.0, yupmanga 0.1.1) cargan con `createFunctionScriptLoader` en Node. «script» deja de ser experimental (decisión del humano); el spike de M440/YupManga pasó en el dispositivo. Detalle en `MEMORY.md` P-145.
 
 ### T41 Puerta del 2.º sitio real: `zonatmo` y `m440` en la app (D3) `[Ops · Baja · N2]` 🧍
 
@@ -74,7 +76,7 @@ Dep: T39, T40 · S · sin código (salvo ajustes que salgan)
 
 ### 🚩 Checkpoint I `[Ops · Baja · N1]`
 
-- [ ] 🧍 Módulos reales buscan, listan capítulos y entregan imágenes en sitios reales (= T41) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (faltan T40 y T41) · [ ] 🧍 Revisión
+- [ ] 🧍 Módulos reales buscan, listan capítulos y entregan imágenes en sitios reales (= T41) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (falta T41) · [ ] 🧍 Revisión
 
 ---
 

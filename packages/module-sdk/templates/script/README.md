@@ -12,6 +12,23 @@ límite, el máximo de peticiones simultáneas y la pausa entre peticiones. `mod
 trae los selectores del **sitio falso de pruebas** (`@ryuunest/test-site`), así que
 puedes probarlo sin tocar nada.
 
+## Qué puede usar el módulo (SPEC §6.5)
+
+- Un **módulo ES**: `module.js` exporta por defecto `create(host)`.
+- Puede repartirse en varios archivos con **imports relativos** dentro del paquete
+  (`./bin/home.js`, `../utils/text.js`). Formas admitidas: `import { a, b as c }`,
+  `import d`, `import d, { a }`, `import * as n`, `import "./x.js"`,
+  `export const|let|var|function|async function|class`, `export default` y
+  `export { a as b }`.
+- **No** se admite `export … from`, `export *`, `import()` ni paquetes (`import x from "lib"`).
+- El entorno es **ECMAScript estándar**: no cuentes con `setTimeout`, `URL`,
+  `TextDecoder`, `fetch` ni otros globales de plataforma. La red va siempre por `host.fetch`.
+
+`ryuunest-module test` carga el paquete con el mismo cargador que la app, así que verás
+antes de publicar un import o export no admitido, un archivo que falte o un ciclo de
+imports. Lo demás (`import()` o globales de plataforma) **no** lo detecta: `test` corre
+en Node, donde existen.
+
 ## Errores tipados
 
 `module.js` no puede importar `ModuleError`. Para que la app sepa qué pasó (`NOT_FOUND`,
