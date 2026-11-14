@@ -9,7 +9,7 @@
 
 **Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37), endurecimiento T34/T35/T36, Fase 6a completa (F01–F10), móvil F11–F21 y F29/F30/FB2 hechas (F34 casi completa), web F24/F25 y extensión F26/F27 hechas, F28 parte web, recorridos F32/F33 hechos. Detalle en `todo.archive.md`.
 
-**Orden recomendado:** T38 → T39 → T40 → T41 (cierre API 1.0) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · verificaciones 🧍 al final de cada tarea.
+**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → T41 (cierre API 1.0) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · verificaciones 🧍 al final de cada tarea.
 
 ---
 
@@ -24,7 +24,7 @@
 
 ## Cierre de la API 1.0 (ADR-0003, aceptado 2026-10-29)
 
-Orden: ~~T37~~ ✅ → ~~T38~~ ✅ → T39 → ~~T40~~ ✅ → T41. Cada tarea: TDD (rojo → verde), un commit por corte, rama propia. Todas parten de `docs/decisions/ADR-0003-congelacion-api-1.0.md`; los tres módulos publicados de `RyuuNest-Models` son la regresión (ninguno debe necesitar cambios, salvo que T40 lo decida).
+Orden: ~~T37~~ ✅ → ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → T41. Cada tarea: TDD (rojo → verde), un commit por corte, rama propia. Todas parten de `docs/decisions/ADR-0003-congelacion-api-1.0.md`; los tres módulos publicados de `RyuuNest-Models` son la regresión (ninguno debe necesitar cambios, salvo que T40 lo decida).
 
 ### T38 Compatibilidad hacia delante ejecutable (R3) `[BE · Intermedia · N4]`
 
@@ -42,13 +42,14 @@ Dep: T37 · M · `packages/module-sdk/src/{repoIndex,manifest,cli}.ts`, `package
 
 Dep: T38 · L (dividir en 2 PRs si pasa de ~5 archivos por corte) · `docs/declarative-format.md`, `packages/core/src/runtimes/{DeclarativeRuntime,transforms}.ts`, `packages/module-sdk/src/*`, `packages/module-sdk/templates/declarative/*`
 
-- [ ] `pages.imageHeaders` (mapa de cabeceras con `{baseUrl}`, `{chapterId}`, `{releaseId}`) rellena `ImageRef.headers`; el lector ya las aplica
-- [ ] Serie sin capítulos devuelve `chapters: []` en vez de `PARSE` (L2)
-- [ ] `validateDeclarativeConfig` en `module-sdk`, usado por `ryuunest-module validate`
-- [ ] `ryuunest-module test` ejecuta el arnés también con módulos declarativos (retirar la omisión de `cli.test.ts`)
-- [ ] `docs/declarative-format.md` normativo a partir del Anexo B del ADR; SPEC §6.6 lo enlaza
-- [ ] L3–L6 del ADR (extra, fechas, id sin codificar, mapas de `status`/`kind`): decidir aquí cuáles entran; el resto queda como aditivo
+- [x] `pages.imageHeaders` (mapa de cabeceras con `{baseUrl}`, `{chapterId}`, `{releaseId}`) rellena `ImageRef.headers`; el lector ya las aplica
+- [x] Serie sin capítulos devuelve `chapters: []` en vez de `PARSE` (L2)
+- [x] `validateDeclarativeConfig` en `module-sdk`, usado por `ryuunest-module validate`
+- [x] `ryuunest-module test` ejecuta el arnés también con módulos declarativos (retirar la omisión de `cli.test.ts`)
+- [x] `docs/declarative-format.md` normativo a partir del Anexo B del ADR; SPEC §6.6 lo enlaza
+- [x] L3–L6 del ADR (extra, fechas, id sin codificar, mapas de `status`/`kind`): decidir aquí cuáles entran; el resto queda como aditivo → **entran los cuatro** (decisión del humano)
 - Verif: `pnpm -r test` + contrato declarativo con `imageHeaders`
+> **Hecho (2026-11-14, `feature/T39-formato-declarativo`):** `extra`, `date`, `{x:raw}` y `map` además de L1/L2; todo «desde la app 0.2.0» (la plantilla declara `minAppVersion`). Detalle en `MEMORY.md` P-144.
 
 ### T40 Ejecución y empaquetado de módulos `script` (R1, D1 = A) `[BE · Alta · N4 → N5]`
 
@@ -75,7 +76,7 @@ Dep: T39, T40 · S · sin código (salvo ajustes que salgan)
 
 ### 🚩 Checkpoint I `[Ops · Baja · N1]`
 
-- [ ] 🧍 Módulos reales buscan, listan capítulos y entregan imágenes en sitios reales (= T41) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (faltan T38–T41) · [ ] 🧍 Revisión
+- [ ] 🧍 Módulos reales buscan, listan capítulos y entregan imágenes en sitios reales (= T41) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (falta T41) · [ ] 🧍 Revisión
 
 ---
 
