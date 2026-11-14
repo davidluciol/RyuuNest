@@ -255,7 +255,7 @@ export interface ModuleManifest {
   lang: string;                  // BCP 47: "es", "en"
   nsfw: boolean;                 // el módulo completo es NSFW
   baseUrl: string;
-  capabilities: Array<"popular" | "latest" | "search" | "details" | "pages">;
+  capabilities: Array<"popular" | "latest" | "search" | "details" | "pages" | "home" | "list" | "filters">;
   permissions: { domains: string[] };   // dominios a los que puede llamar
   entry: string;                 // archivo de entrada dentro del paquete
   minAppVersion?: string;
@@ -265,7 +265,7 @@ export interface ModuleManifest {
 }
 ```
 
-**Sobre `capabilities` (P-82).** `search`, `details` y `pages` son obligatorios siempre en la `ModuleApi` (§6.3); declararlas en `capabilities` es informativo y se admite, porque así publican módulos ya existentes (el `zonatmo` del repo externo). Las dos que cambian de verdad lo que ofrece la API son `popular` y `latest` (§6.3). Cualquier valor fuera de estos cinco se rechaza.
+**Sobre `capabilities` (P-82).** `search`, `details` y `pages` son obligatorios siempre en la `ModuleApi` (§6.3); declararlas en `capabilities` es informativo y se admite, porque así publican módulos ya existentes (el `zonatmo` del repo externo). Las que cambian de verdad lo que ofrece la API son `popular` y `latest` (§6.3) y, desde T43, `home`, `list` y `filters` (contrato dinámico; los declaran `m440` 0.2.0 y `zonatmo` 0.3.0). Cualquier valor fuera de estos ocho se rechaza.
 
 ### 6.2 Tipos de datos
 
@@ -314,12 +314,19 @@ export interface ChapterPages { title?: string; images: ImageRef[] }
 export interface ModuleApi {
   popular?(page: number): Promise<Page<SeriesSummary>>;
   latest?(page: number): Promise<Page<SeriesSummary>>;
-  search(query: string, page: number): Promise<Page<SeriesSummary>>;
+  search(query: string, page: number, filters?: SearchFilterValues): Promise<Page<SeriesSummary>>;
   details(seriesId: string): Promise<SeriesDetails>;
   pages(chapterId: string, releaseId: string): Promise<ChapterPages>;
+  // Contrato dinámico (T43, opcional y aditivo):
+  home?(): Promise<{ sections: HomeSection[] }>; // HomeSection = Page<SeriesSummary> + { id, title, kind? }
+  list?(sectionId: string, page: number): Promise<Page<SeriesSummary>>;
+  filters?(): Promise<SearchFilter[]>; // { id, label, type: "text"|"select"|"multi"|"tags", options? }
 }
+type SearchFilterValues = Record<string, string | string[]>; // { [filterId]: valor }
 ```
-`page` empieza en **1**. `hasNext` puede ser una **estimación** válida: la app no debe asumir que `hasNext: true` garantiza una página siguiente no vacía. `search(query, page)` queda congelada; los filtros por módulo (§17.2, pregunta 5) serían un parámetro opcional aditivo fuera de la v1.
+`page` empieza en **1**. `hasNext` puede ser una **estimación** válida: la app no debe asumir que `hasNext: true` garantiza una página siguiente no vacía. `search(query, page)` sigue siendo válida; el tercer parámetro `filters` es opcional (T43).
+
+**Contrato dinámico (T43).** `home()`, `list(sectionId, page)` y `filters()` dejan que cada módulo describa las secciones y el buscador de **su** sitio (formato del repo `RyuuNest-Models`, `AGENTS.md` §7). El núcleo los pasa y valida su forma mínima (`guardApi`: secciones con `id` y `title`; filtros con `id`, `label` y `type` de texto; un `type` o un `kind` nuevos no rompen nada). **La app aún no los usa en ninguna pantalla:** eso es otra tarea (UI).
 
 ### 6.4 Errores
 
