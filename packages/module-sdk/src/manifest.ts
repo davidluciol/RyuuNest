@@ -29,7 +29,8 @@ export const MODULE_RUNTIMES = ["declarative", "script"] as const;
 /**
  * P-82: `details` y `pages` se admiten (los publica así el `zonatmo` del repo
  * externo); son informativas porque sus métodos siempre están en la `ModuleApi`
- * (SPEC §6.3). Cualquier otro valor sigue rechazándose.
+ * (SPEC §6.3). T43: `home`, `list` y `filters` (contrato dinámico, opcionales; los
+ * publican m440 0.2.0 y zonatmo 0.3.0). Cualquier otro valor sigue rechazándose.
  */
 export const MODULE_CAPABILITIES = [
   "popular",
@@ -37,6 +38,9 @@ export const MODULE_CAPABILITIES = [
   "search",
   "details",
   "pages",
+  "home",
+  "list",
+  "filters",
 ] as const satisfies readonly ModuleCapability[];
 
 export interface ValidateOptions {

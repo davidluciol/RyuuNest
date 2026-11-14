@@ -13,7 +13,8 @@ export type MediaKind = "manga" | "manhua" | "manhwa" | "comic";
  * se admiten como informativas desde P-82 (la forma del `zonatmo` real); los
  * métodos obligatorios del contrato no cambian (§6.3).
  */
-export type ModuleCapability = "popular" | "latest" | "search" | "details" | "pages";
+export type ModuleCapability =
+  "popular" | "latest" | "search" | "details" | "pages" | "home" | "list" | "filters";
 
 /** Estado de publicación de una serie. */
 export type SeriesStatus = "ongoing" | "completed" | "hiatus" | "cancelled" | "unknown";
@@ -114,13 +115,42 @@ export interface ModuleManifest {
   license?: string;
 }
 
+/** Sección del inicio de un sitio (`home()`, T43). */
+export interface HomeSection extends Page<SeriesSummary> {
+  id: string;
+  title: string;
+  kind?: "list" | "carousel" | "genres";
+}
+
+/** Inicio propio de un sitio (`home()`, T43). */
+export interface ModuleHome {
+  sections: HomeSection[];
+}
+
+/** Filtro que admite el buscador del sitio (`filters()`, T43). */
+export interface SearchFilter {
+  id: string;
+  label: string;
+  type: "text" | "select" | "multi" | "tags";
+  options?: { value: string; label: string }[];
+}
+
+/** Filtros activos de una búsqueda: `{ [filterId]: valor }` (T43). */
+export type SearchFilterValues = Record<string, string | string[]>;
+
 /** Interfaz que implementa un módulo (SPEC §6.3). */
 export interface ModuleApi {
   popular?(page: number): Promise<Page<SeriesSummary>>;
   latest?(page: number): Promise<Page<SeriesSummary>>;
-  search(query: string, page: number): Promise<Page<SeriesSummary>>;
+  search(query: string, page: number, filters?: SearchFilterValues): Promise<Page<SeriesSummary>>;
   details(seriesId: string): Promise<SeriesDetails>;
   pages(chapterId: string, releaseId: string): Promise<ChapterPages>;
+  /** Contrato dinámico (T43, aditivo): secciones propias del sitio. */
+  home?(): Promise<ModuleHome>;
+  /** Más series de una sección de `home()`. */
+  list?(sectionId: string, page: number): Promise<Page<SeriesSummary>>;
+  /** Filtros que admite `search`. */
+  filters?(): Promise<SearchFilter[]>;
 }
 
 /**

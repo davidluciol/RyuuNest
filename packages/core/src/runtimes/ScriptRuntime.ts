@@ -19,7 +19,9 @@ import type {
   ChapterPages,
   Host,
   ModuleApi,
+  ModuleHome,
   Page,
+  SearchFilter,
   SeriesDetails,
   SeriesSummary,
 } from "../contract/types.js";
@@ -62,7 +64,11 @@ export class ScriptRuntime {
       this.#invoke<R>(module, name, args);
 
     const api: ModuleApi = {
-      search: (query, page) => call<Page<SeriesSummary>>("search", [query, page]),
+      search: (query, page, filters) =>
+        call<Page<SeriesSummary>>(
+          "search",
+          filters === undefined ? [query, page] : [query, page, filters],
+        ),
       details: (seriesId) => call<SeriesDetails>("details", [seriesId]),
       pages: (chapterId, releaseId) => call<ChapterPages>("pages", [chapterId, releaseId]),
     };
@@ -72,6 +78,16 @@ export class ScriptRuntime {
     }
     if (typeof module["latest"] === "function") {
       api.latest = (page) => call<Page<SeriesSummary>>("latest", [page]);
+    }
+    // Contrato dinámico (T43): opcionales.
+    if (typeof module["home"] === "function") {
+      api.home = () => call<ModuleHome>("home", []);
+    }
+    if (typeof module["list"] === "function") {
+      api.list = (sectionId, page) => call<Page<SeriesSummary>>("list", [sectionId, page]);
+    }
+    if (typeof module["filters"] === "function") {
+      api.filters = () => call<SearchFilter[]>("filters", []);
     }
     return api;
   }

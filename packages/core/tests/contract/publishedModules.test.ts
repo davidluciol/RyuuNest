@@ -5,7 +5,11 @@ import type { Host, ModuleApi } from "../../src/contract/types";
 import { FakeScriptLoader } from "../../src/ports/fakes";
 import type { ScriptFactory } from "../../src/ports/scriptLoader";
 import { createModuleApi } from "../../src/runtimes/ModuleRuntime";
-import { publishedModules, type PublishedModuleOutputs } from "./publishedModuleFixtures";
+import {
+  dynamicContractModules,
+  publishedModules,
+  type PublishedModuleOutputs,
+} from "./publishedModuleFixtures";
 
 /**
  * Regresión de la validación de forma del contrato con los tres módulos publicados
@@ -117,6 +121,38 @@ describe.each(publishedModules)(
       expect(error).toBeInstanceOf(ModuleError);
       expect(error.code).toBe("PARSE");
       expect(error.message).toContain("«items[0].title»");
+    });
+  },
+);
+
+describe.each(dynamicContractModules)(
+  "contrato dinámico de $id $version (T43): home, list y filters",
+  (module) => {
+    const base = publishedModules.find((candidate) => candidate.id === module.id);
+    if (base === undefined) throw new Error(`Falta la fixture base de ${module.id}`);
+    const dynamic = {
+      home: async () => module.home,
+      list: async () => module.list,
+      filters: async () => module.filters,
+    };
+
+    it("sus formas pasan la validación de guardApi tal cual", async () => {
+      const handle = await mountPublishedModule(base, dynamic);
+
+      await expect(handle.api.home?.()).resolves.toEqual(module.home);
+      await expect(handle.api.list?.("popular", 1)).resolves.toEqual(module.list);
+      await expect(handle.api.filters?.()).resolves.toEqual(module.filters);
+      expect(handle.lastError()).toBeUndefined();
+    });
+
+    it("una sección sin título cae en PARSE (la validación está activa en home())", async () => {
+      const roto = {
+        sections: module.home.sections.map((section) => withoutKey(section, "title")),
+      };
+      const handle = await mountPublishedModule(base, { ...dynamic, home: async () => roto });
+
+      const error = (await rejection(handle.api.home?.() ?? Promise.resolve())) as ModuleError;
+      expect(error.code).toBe("PARSE");
     });
   },
 );

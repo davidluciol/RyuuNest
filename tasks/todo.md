@@ -59,7 +59,7 @@ Dep: T38 · L · `packages/core/src/ports/scriptLoader.ts`, `runtimes/{ScriptRun
 
 - [x] `ScriptLoader.load` recibe el paquete (ruta → texto) y la ruta de entrada; el montador deja de pasar solo `manifest.entry`
 - [x] Contrato a autores documentado: módulo ES, `export default create(host)`, solo imports relativos dentro del paquete, sin `import()` ni paquetes, entorno ECMAScript estándar (SPEC §6.5) → SPEC §6.5 con las formas admitidas + README de la plantilla `script`
-- [x] 🧍 **Spike de `m440` y `yupmanga`** en el dispositivo (el de `zonatmo` ya pasó); si falla: marcar `script` como experimental (plan C del ADR), anotar la decisión y reabrir D1; escalar a N5 → **hecho (2026-11-14, S25 Ultra, Expo Go, agent-device):** M440 0.1.0 (listas, ficha de 378 capítulos con la lista cifrada, capítulo de 18 páginas con imágenes) y YupManga 0.1.1 instalado por `InstallFlow` (listas, ficha de 7 capítulos, capítulo de 152 páginas con imágenes). Portadas en blanco en ambos (F35).
+- [x] 🧍 **Spike de `m440` y `yupmanga`** en el dispositivo (el de `zonatmo` ya pasó); si falla: marcar `script` como experimental (plan C del ADR), anotar la decisión y reabrir D1; escalar a N5 → **hecho (2026-11-14, S25 Ultra, Expo Go, agent-device):** M440 0.1.0 (listas, ficha de 378 capítulos con la lista cifrada, capítulo de 18 páginas con imágenes) y YupManga 0.1.1 instalado por `InstallFlow` (listas, ficha de 7 capítulos, capítulo de 152 páginas con imágenes). Portadas en blanco en ambos (F35). M440 se actualizó a 0.2.0 después, en T43.
 - [x] Desbloquear en la app los módulos `script` (`createInstalledMounter` deja de lanzar `UNSUPPORTED`): Descubrir y Lector montan con `createFunctionScriptLoader`
 - [x] `ryuunest-module test` carga los `script` con el mismo cargador que la app (decisión del humano)
 - Verif: pruebas del cargador con paquetes de varios archivos + 🧍 spike en el dispositivo
@@ -188,6 +188,20 @@ Dep: F32 · S · S25 Ultra con red real
 - [ ] Si es del módulo, corregir en `RyuuNest-Models` (otro repo) y subir versión; si es de la app, arreglar con test y verificar en el teléfono.
 - [ ] Comprobar portadas en Descubrir (listas y catálogo), ficha y Guarida/Tesoros.
 - Verif: 🧍 S25 Ultra (portadas visibles en M440 y YupManga).
+
+### T43 Capacidades `home`/`list`/`filters` rompen instalar y actualizar módulos `[BE · Intermedia · N3]`
+
+Dep: T40 · S · `packages/core/src/contract/types.ts`, `runtimes/{contractShape,ModuleRuntime,ScriptRuntime}.ts`, `packages/module-sdk/src/manifest.ts`, SPEC §6.1/§6.3
+
+> Origen (2026-11-14): al probar «Gestionar» en el S25 Ultra, el panel sí abre y ofrece «Actualizar a v0.2.0» (el fallo que se sospechaba no existe), pero actualizar M440 0.1.0 → 0.2.0 fallaba con «Manifest inválido: capabilities[5..7]». M440 0.2.0 y ZonaTMO 0.3.0 declaran `home`, `list` y `filters` (contrato dinámico de `RyuuNest-Models`, `AGENTS.md` §7) y el validador solo admitía cinco valores.
+
+- [x] `ModuleCapability` y `MODULE_CAPABILITIES` admiten `home`, `list` y `filters` (decisión del humano: añadirlas al contrato)
+- [x] `ModuleApi` con `home?()`, `list?(sectionId, page)`, `filters?()` y `search(query, page, filters?)`; `ScriptRuntime` y `guardApi` los pasan y validan la forma mínima
+- [x] SPEC §6.1 y §6.3
+- [x] 🧍→ hecho con agent-device: M440 se actualiza a 0.2.0 en el S25 Ultra y sus listas cargan
+- [ ] Fuera de alcance: usar `home`/`list`/`filters` en la app (UI de Descubrir con secciones y filtros) — tarea aparte
+- Verif: `pnpm -r test` + actualización real en el dispositivo
+> **Hecho (2026-11-14, `fix/T43-capacidades-home-list-filters`):** ver `MEMORY.md` P-146.
 
 ### T42 YupManga: el «reto del lector» cambió de formato `[Ops · Intermedia · N3]` 🧍
 

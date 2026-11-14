@@ -255,7 +255,7 @@ export interface ModuleManifest {
   lang: string;                  // BCP 47: "es", "en"
   nsfw: boolean;                 // el módulo completo es NSFW
   baseUrl: string;
-  capabilities: Array<"popular" | "latest" | "search" | "details" | "pages">;
+  capabilities: Array<"popular" | "latest" | "search" | "details" | "pages" | "home" | "list" | "filters">;
   permissions: { domains: string[] };   // dominios a los que puede llamar
   entry: string;                 // archivo de entrada dentro del paquete
   minAppVersion?: string;
@@ -265,7 +265,7 @@ export interface ModuleManifest {
 }
 ```
 
-**Sobre `capabilities` (P-82).** `search`, `details` y `pages` son obligatorios siempre en la `ModuleApi` (§6.3); declararlas en `capabilities` es informativo y se admite, porque así publican módulos ya existentes (el `zonatmo` del repo externo). Las dos que cambian de verdad lo que ofrece la API son `popular` y `latest` (§6.3). Cualquier valor fuera de estos cinco se rechaza.
+**Sobre `capabilities` (P-82).** `search`, `details` y `pages` son obligatorios siempre en la `ModuleApi` (§6.3); declararlas en `capabilities` es informativo y se admite, porque así publican módulos ya existentes (el `zonatmo` del repo externo). Las que cambian de verdad lo que ofrece la API son `popular` y `latest` (§6.3) y, desde T43, `home`, `list` y `filters` (contrato dinámico; los declaran `m440` 0.2.0 y `zonatmo` 0.3.0). Cualquier valor fuera de estos ocho se rechaza.
 
 ### 6.2 Tipos de datos
 
@@ -314,12 +314,19 @@ export interface ChapterPages { title?: string; images: ImageRef[] }
 export interface ModuleApi {
   popular?(page: number): Promise<Page<SeriesSummary>>;
   latest?(page: number): Promise<Page<SeriesSummary>>;
-  search(query: string, page: number): Promise<Page<SeriesSummary>>;
+  search(query: string, page: number, filters?: SearchFilterValues): Promise<Page<SeriesSummary>>;
   details(seriesId: string): Promise<SeriesDetails>;
   pages(chapterId: string, releaseId: string): Promise<ChapterPages>;
+  // Contrato dinámico (T43, opcional y aditivo):
+  home?(): Promise<{ sections: HomeSection[] }>; // HomeSection = Page<SeriesSummary> + { id, title, kind? }
+  list?(sectionId: string, page: number): Promise<Page<SeriesSummary>>;
+  filters?(): Promise<SearchFilter[]>; // { id, label, type: "text"|"select"|"multi"|"tags", options? }
 }
+type SearchFilterValues = Record<string, string | string[]>; // { [filterId]: valor }
 ```
-`page` empieza en **1**. `hasNext` puede ser una **estimación** válida: la app no debe asumir que `hasNext: true` garantiza una página siguiente no vacía. `search(query, page)` queda congelada; los filtros por módulo (§17.2, pregunta 5) serían un parámetro opcional aditivo fuera de la v1.
+`page` empieza en **1**. `hasNext` puede ser una **estimación** válida: la app no debe asumir que `hasNext: true` garantiza una página siguiente no vacía. `search(query, page)` sigue siendo válida; el tercer parámetro `filters` es opcional (T43).
+
+**Contrato dinámico (T43).** `home()`, `list(sectionId, page)` y `filters()` dejan que cada módulo describa las secciones y el buscador de **su** sitio (formato del repo `RyuuNest-Models`, `AGENTS.md` §7). El núcleo los pasa y valida su forma mínima (`guardApi`: secciones con `id` y `title`; filtros con `id`, `label` y `type` de texto; un `type` o un `kind` nuevos no rompen nada). Llegan con la app **0.2.0**: un módulo que los declare debería declarar `"minAppVersion": "0.2.0"` (una app anterior rechaza su manifest). **La app aún no los usa en ninguna pantalla:** eso es otra tarea (UI).
 
 ### 6.4 Errores
 
@@ -885,7 +892,7 @@ La v2 y la v3 están en `IDEA.md`, sección 9.
 2. **Formato declarativo completo** (paginación, transformaciones, limpieza de texto): se cierra en un SPEC propio en la Fase 3.
 3. **Librería de navegación con foco para TV** y librería de listas virtualizadas: se eligen en la Fase 0 con pruebas en la MiBox.
 4. **Un favorito en varias carpetas:** hoy una sola (D-12); reevaluar si hace falta.
-5. **Búsqueda con filtros de género o tipo dentro de un módulo:** fuera de la v1; decidir si entra en la v2.
+5. **Búsqueda con filtros de género o tipo dentro de un módulo:** fuera de la v1; decidir si entra en la v2. **Actualización (T43, 2026-11-14):** los módulos ya declaran sus filtros (`filters()` y `search(query, page, filters)`, §6.3); falta la UI.
 6. **Nombre:** verificación de disponibilidad pendiente (sección 15).
 7. **Temas:** el selector de Ajustes y el PRD muestran 4 temas (Dragon Night, Ember Hearth, Arcane Vault, Moonlit Frost), pero solo Dragon Night tiene las 7 pantallas (Lector incluido). Propuesta: la v1 trae solo Dragon Night, con tokens semánticos que permitan añadir temas, y el selector no se muestra hasta que existan dos. Decide el autor.
 8. **Tipos de obra:** el diseño filtra por Manga, Manhwa y Cómic; el SPEC y `IDEA.md` incluyen manhua. El contrato admite los cuatro (D-13); decidir si los filtros muestran los cuatro.
@@ -893,7 +900,7 @@ La v2 y la v3 están en `IDEA.md`, sección 9.
 10. **Pantallas sin diseño (11.5):** decidir cuáles se generan en Stitch antes de la Fase 6b.
 11. **Verificación visual de la app nativa:** Playwright solo cubre el navegador. Decidir si la galería también se compila para web o si las pantallas nativas se verifican con capturas del dispositivo (AC-12).
 
-**Estado según el ADR-0003 (2026-10-29):** resueltas 1 (API 28, ADR-0002), 6 (P-71), 7 (P-29), 8 (P-27) y 9 (P-31); la 2 quedó cerrada con T39 (`docs/declarative-format.md`, 2026-11-14); la 5 queda fuera de la v1 (parámetro opcional aditivo en `search`); la 3, la 4 (D-12) y la 10 no afectan a la API de módulos; la 11 sigue abierta (decisión del humano).
+**Estado según el ADR-0003 (2026-10-29):** resueltas 1 (API 28, ADR-0002), 6 (P-71), 7 (P-29), 8 (P-27) y 9 (P-31); la 2 quedó cerrada con T39 (`docs/declarative-format.md`, 2026-11-14); la 5 entró en el contrato con T43 (`filters()` y `search(…, filters)`; la UI sigue pendiente); la 3, la 4 (D-12) y la 10 no afectan a la API de módulos; la 11 sigue abierta (decisión del humano).
 
 ---
 

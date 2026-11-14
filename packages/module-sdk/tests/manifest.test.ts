@@ -59,14 +59,36 @@ describe("manifest · válido", () => {
 
     expect(result.ok).toBe(true);
     if (result.ok) {
-      expect(result.value.capabilities).toEqual(["popular", "latest", "search", "details", "pages"]);
+      expect(result.value.capabilities).toEqual([
+        "popular",
+        "latest",
+        "search",
+        "details",
+        "pages",
+      ]);
     }
   });
 
+  it("acepta `home`, `list` y `filters` (T43: la forma de m440 0.2.0 y zonatmo 0.3.0)", () => {
+    const capabilities = [
+      "popular",
+      "latest",
+      "search",
+      "home",
+      "list",
+      "filters",
+      "details",
+      "pages",
+    ];
+    const result = validateManifest({ ...validManifest, capabilities });
+
+    expect(result.ok).toBe(true);
+  });
+
   it("acepta un manifest que solo declara `details` y `pages`", () => {
-    expect(
-      validateManifest({ ...validManifest, capabilities: ["details", "pages"] }).ok,
-    ).toBe(true);
+    expect(validateManifest({ ...validManifest, capabilities: ["details", "pages"] }).ok).toBe(
+      true,
+    );
   });
 });
 
