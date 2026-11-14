@@ -84,6 +84,11 @@ export interface DeclarativePagesMethod {
   url: string;
   images: DeclarativeFieldSpec;
   title?: DeclarativeFieldSpec;
+  /**
+   * Cabeceras de cada imagen (RF-24, D2 del ADR-0003): mismas variables que `url`
+   * (`{baseUrl}`, `{chapterId}`, `{releaseId}`). Rellena `ImageRef.headers`.
+   */
+  imageHeaders?: Record<string, string>;
 }
 
 /** Configuración declarativa completa (`index.json`). */
@@ -226,10 +231,8 @@ export class DeclarativeRuntime {
     const kind = value("kind");
     const nsfw = parseBoolean(value("nsfw"));
 
+    // L2 (ADR-0003): una serie sin capítulos es contenido válido, no `PARSE`.
     const chapterElements = this.#select(document, config.chapters.list);
-    if (chapterElements.length === 0) {
-      throw parseError("No se encontró ningún capítulo", config.chapters.list, url);
-    }
 
     const details: SeriesDetails = {
       id: seriesId,
@@ -252,10 +255,11 @@ export class DeclarativeRuntime {
     chapterId: string,
     releaseId: string,
   ): Promise<ChapterPages> {
-    const url = this.#fill(config.url, {
+    const vars = {
       chapterId: encodeURIComponent(chapterId),
       releaseId: encodeURIComponent(releaseId),
-    });
+    };
+    const url = this.#fill(config.url, vars);
     const document = await this.#document(url);
     const imagesSpec: DeclarativeFieldSpec = { ...config.images, all: true };
     const urls = this.#readList(document, imagesSpec);
@@ -264,7 +268,18 @@ export class DeclarativeRuntime {
     }
 
     const title = this.#read(document, config.title);
-    const images: ImageRef[] = urls.map((imageUrl) => ({ url: imageUrl }));
+    const headers =
+      config.imageHeaders === undefined
+        ? undefined
+        : Object.fromEntries(
+            Object.entries(config.imageHeaders).map(([name, value]) => [
+              name,
+              this.#fill(value, vars),
+            ]),
+          );
+    const images: ImageRef[] = urls.map((imageUrl) =>
+      headers === undefined ? { url: imageUrl } : { url: imageUrl, headers },
+    );
     return { ...(title === "" ? {} : { title }), images };
   }
 
