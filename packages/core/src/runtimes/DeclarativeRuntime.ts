@@ -102,6 +102,18 @@ export interface DeclarativeConfig {
   pages?: DeclarativePagesMethod;
 }
 
+/**
+ * Variables de plantilla que admite cada método, además de `{baseUrl}` (B.7 y D2 del
+ * ADR-0003); `pages` las comparte con `imageHeaders`. Lo usa el validador del SDK.
+ */
+export const DECLARATIVE_VARIABLES = {
+  popular: ["page"],
+  latest: ["page"],
+  search: ["page", "query"],
+  details: ["id"],
+  pages: ["chapterId", "releaseId"],
+} as const satisfies Record<keyof DeclarativeConfig, readonly string[]>;
+
 /** Opciones del runtime. */
 export interface DeclarativeRuntimeOptions {
   config: DeclarativeConfig;
