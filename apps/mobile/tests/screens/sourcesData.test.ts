@@ -33,6 +33,7 @@ interface Version {
   runtime?: "declarative" | "script";
   domains?: string[];
   nsfw?: boolean;
+  apiVersion?: number;
 }
 
 function manifestOf(v: Version) {
@@ -41,7 +42,7 @@ function manifestOf(v: Version) {
     id: v.id,
     name: `Módulo ${v.id}`,
     version: v.version,
-    apiVersion: 1,
+    apiVersion: v.apiVersion ?? 1,
     runtime,
     kinds: ["manga"],
     lang: "es",
@@ -192,6 +193,24 @@ describe("createSourcesService · repos y lista (RF-1 a RF-3, RF-8)", () => {
       modules: [],
       officialRepoDismissed: false,
     });
+  });
+
+  it("un módulo de apiVersion 2 no inutiliza el repo: sale aparte como no compatible (T38)", async () => {
+    const service = build(
+      new Repo([
+        { id: "uno", version: "1.0.0" },
+        { id: "futuro", version: "1.0.0", apiVersion: 2 },
+      ]),
+    );
+
+    await service.addRepo(REPO_URL);
+    const data = await service.load();
+
+    expect(data.modules.map((m) => m.id)).toEqual(["uno"]);
+    expect(data.repos[0]?.moduleCount).toBe(1);
+    expect(data.incompatible).toEqual([
+      { id: "futuro", name: "Módulo futuro", repoId: REPO_URL, reason: expect.any(String) },
+    ]);
   });
 
   it("añade un repo y lista sus módulos como disponibles con sus metadatos (RF-2, RF-3)", async () => {

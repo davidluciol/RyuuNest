@@ -7,7 +7,7 @@
  */
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
-import { CORE_VERSION, ModuleHost, type ModuleManifest } from "@ryuunest/core";
+import { ModuleHost, type ModuleManifest } from "@ryuunest/core";
 import {
   createHtmlSite,
   createSiteHttp,
@@ -317,8 +317,9 @@ async function loadManifest(
     return { ok: false, message: `${manifestPath} no es JSON válido: ${describe(error)}` };
   }
 
-  const appVersion = flagValue(flags, "app-version") ?? CORE_VERSION;
-  const result = validateManifest(value, { appVersion });
+  // T38: el SDK no es la app; `minAppVersion` solo se comprueba con `--app-version`.
+  const appVersion = flagValue(flags, "app-version");
+  const result = validateManifest(value, appVersion === undefined ? {} : { appVersion });
   if (!result.ok) {
     const lines = result.issues.map(
       (issue) => `  ${issue.path === "" ? "(raíz)" : issue.path}: ${issue.message}`,

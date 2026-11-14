@@ -1,3 +1,4 @@
+import Constants from "expo-constants";
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 import type { SqlDriver } from "@ryuunest/core";
@@ -24,8 +25,8 @@ import type { SourcesView } from "./sourcesFixtures";
  * memoria), carga la lista y entrega el flujo de hojas y el controlador. Misma
  * idea que `useDiscoverData` (F15b): la pantalla no pregunta la plataforma.
  *
- * `appVersion` queda sin pasar a propósito: `app.json` está en 0.0.0 y un
- * módulo con `minAppVersion` mayor se rechazaría entero (ver `MEMORY.md`).
+ * T38: se pasa la versión real de la app (`app.json`) para que `minAppVersion`
+ * oculte lo incompatible antes de descargarlo.
  */
 
 export async function resolveSourcesService(): Promise<SourcesService> {
@@ -41,6 +42,9 @@ export function createNativeSourcesService(driver: SqlDriver): SourcesService {
     archive: createFflateArchive(),
     secureLock: createAppSecureLock(),
     clock: { now: () => Date.now() },
+    ...(Constants.expoConfig?.version === undefined
+      ? {}
+      : { appVersion: Constants.expoConfig.version }),
   });
 }
 

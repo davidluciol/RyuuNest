@@ -66,6 +66,20 @@ describe("T12 · RepoRegistry con el validador real (T09)", () => {
     expect(modules[0]).toMatchObject({ id: "ejemplo", runtime: "declarative", size: 2048 });
   });
 
+  it("T38: un módulo de apiVersion 2 no inutiliza el repo y se lista como incompatible", async () => {
+    const future = { ...validIndex.modules[0], id: "futuro", name: "Futuro", apiVersion: 2 };
+    const registry = makeRegistry(
+      JSON.stringify({ ...validIndex, modules: [...validIndex.modules, future] }),
+    );
+
+    const repo = await registry.addRepo(REPO_URL);
+
+    expect((await registry.listModules(repo.id)).map((m) => m.id)).toEqual(["ejemplo"]);
+    expect(await registry.listIncompatible()).toEqual([
+      { repoId: repo.id, id: "futuro", name: "Futuro", reason: expect.stringContaining("apiVersion") },
+    ]);
+  });
+
   it("rechaza un índice inválido con la ruta y el motivo", async () => {
     const registry = makeRegistry(JSON.stringify({ ...validIndex, version: 2 }));
 

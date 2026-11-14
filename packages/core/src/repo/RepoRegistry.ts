@@ -6,7 +6,7 @@
  * vive en `module-sdk` (SPEC §5.1) y el núcleo no puede importarlo (P-37).
  */
 import { ModuleError } from "../contract/errors.js";
-import type { RepoIndex } from "../contract/repoIndex.js";
+import type { IncompatibleModuleEntry, RepoIndex } from "../contract/repoIndex.js";
 import type { MediaKind } from "../contract/types.js";
 import type { Clock } from "../ports/clock.js";
 import type { Http } from "../ports/http.js";
@@ -44,6 +44,12 @@ export interface RepoModuleSummary {
   package: string;
   sha256: string;
   size: number;
+  minAppVersion?: string;
+}
+
+/** Módulo de un repo que esta app no puede usar (T38, R3). */
+export interface RepoIncompatibleSummary extends IncompatibleModuleEntry {
+  repoId: string;
 }
 
 /** Opciones del registro. */
@@ -156,6 +162,24 @@ export class RepoRegistry {
     }
 
     return modules.sort((a, b) =>
+      a.repoId === b.repoId ? a.id.localeCompare(b.id) : a.repoId.localeCompare(b.repoId),
+    );
+  }
+
+  /** Módulos «no compatibles» del índice (T38): de un repo o de todos. */
+  async listIncompatible(repoId?: string): Promise<RepoIncompatibleSummary[]> {
+    const ids = repoId === undefined ? (await this.listRepos()).map((repo) => repo.id) : [repoId];
+    const entries: RepoIncompatibleSummary[] = [];
+
+    for (const id of ids) {
+      const raw = await this.storage.get(repoIndexKey(id));
+      if (raw === undefined) continue;
+      for (const entry of (JSON.parse(raw) as RepoIndex).incompatible ?? []) {
+        entries.push({ repoId: id, ...entry });
+      }
+    }
+
+    return entries.sort((a, b) =>
       a.repoId === b.repoId ? a.id.localeCompare(b.id) : a.repoId.localeCompare(b.repoId),
     );
   }
