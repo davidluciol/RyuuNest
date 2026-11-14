@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1794680864.9916203,
-    "seen": 1794680951.4139254,
-    "ast_hash": "00cea125e61d0163df24951fd648500b",
+    "mtime": 1794681305.1396453,
+    "seen": 1794681370.3082104,
+    "ast_hash": "a89b2a0a5aaa809835d949592da2ffdb",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -912,9 +912,9 @@
     "semantic_hash": ""
   },
   "docs/SPEC.md": {
-    "mtime": 1794680821.6349592,
-    "seen": 1794680951.4139817,
-    "ast_hash": "236e8389513c41f778511c95ac4a0f3d",
+    "mtime": 1794681305.124328,
+    "seen": 1794681370.3082757,
+    "ast_hash": "50f1238549fce8cf1e2ca1e9deeb30ab",
     "semantic_hash": ""
   },
   "docs/SPEC_Legacy.md": {
@@ -966,9 +966,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1794680841.9345558,
-    "seen": 1794680951.4140046,
-    "ast_hash": "3222f04689a16856db98dc7f83bff72c",
+    "mtime": 1794681305.1457908,
+    "seen": 1794681370.3083024,
+    "ast_hash": "b0389bc1828880c658a904da3fb08eff",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -3624,9 +3624,9 @@
     "semantic_hash": ""
   },
   "docs/decisions/ADR-0003-congelacion-api-1.0.md": {
-    "mtime": 1794680071.762851,
-    "seen": 1794680951.413988,
-    "ast_hash": "6ba31182f7fcd87031313c5d872ac074",
+    "mtime": 1794681305.1311142,
+    "seen": 1794681370.3082824,
+    "ast_hash": "1d7dd5732226842bc1fc450ee75e2052",
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/series/seriesLogic.ts": {
@@ -4608,15 +4608,15 @@
     "semantic_hash": ""
   },
   "packages/core/tests/contract/publishedModuleFixtures.ts": {
-    "mtime": 1793594417.45657,
-    "seen": 1793595700.0697813,
-    "ast_hash": "4e879db0c3b3d4b4a65c3342358809ce",
+    "mtime": 1794681275.7215743,
+    "seen": 1794681370.3079677,
+    "ast_hash": "f163d52cdc7c5582bc21153d03799d01",
     "semantic_hash": ""
   },
   "packages/core/tests/contract/publishedModules.test.ts": {
-    "mtime": 1793594417.4575706,
-    "seen": 1793595700.0697813,
-    "ast_hash": "fdec780ad81d5a66502649415c48ebdf",
+    "mtime": 1794681275.7615983,
+    "seen": 1794681370.3079705,
+    "ast_hash": "a7ac5a9f3e487ee326f35389b75825ab",
     "semantic_hash": ""
   },
   "packages/core/tests/runtimes/contractShape.test.ts": {
