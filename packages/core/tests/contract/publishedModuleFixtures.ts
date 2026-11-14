@@ -1,7 +1,10 @@
 import type {
   ChapterPages,
+  HomeSection,
+  ModuleHome,
   ModuleManifest,
   Page,
+  SearchFilter,
   SeriesDetails,
   SeriesSummary,
 } from "../../src/contract/types";
@@ -378,3 +381,76 @@ export const yupmanga: PublishedModuleOutputs = {
 
 /** Los tres módulos publicados, en el orden del `index.json` de RyuuNest-Models. */
 export const publishedModules: PublishedModuleOutputs[] = [zonatmo, yupmanga, m440];
+
+/**
+ * Contrato dinámico (T43): forma de `home()`, `list()` y `filters()` de zonatmo 0.3.0 y
+ * m440 0.2.0, leída al ejecutar su código contra sus propias fixtures (secciones con
+ * `kind: "list"`, resúmenes con portada y cabeceras, filtros `select` con `{ value, label }`).
+ * Valores inventados, como el resto del archivo.
+ */
+export interface DynamicContractOutputs {
+  id: string;
+  version: string;
+  home: ModuleHome;
+  list: Page<SeriesSummary>;
+  filters: SearchFilter[];
+}
+
+function dynamicSection(id: string, title: string, origin: string): HomeSection {
+  return {
+    id,
+    title,
+    kind: "list",
+    items: [
+      {
+        id: "/library/manhwa/9001/serie-falsa-uno",
+        title: "Serie falsa uno",
+        cover: {
+          url: `${origin}/cover.webp`,
+          headers: { Referer: `${origin}/`, "User-Agent": USER_AGENT },
+        },
+        badges: ["★ 8.0"],
+        hint: "Capítulo 1",
+      },
+    ],
+    hasNext: true,
+  };
+}
+
+const selectFilter = (id: string, label: string): SearchFilter => ({
+  id,
+  label,
+  type: "select",
+  options: [{ value: "1", label: "Uno" }],
+});
+
+export const dynamicContractModules: DynamicContractOutputs[] = [
+  {
+    id: "zonatmo",
+    version: "0.3.0",
+    home: { sections: [dynamicSection("popular", "Populares", "https://zonatmo.test")] },
+    list: {
+      items: dynamicSection("latest", "Recientes", "https://zonatmo.test").items,
+      hasNext: false,
+    },
+    filters: [
+      selectFilter("sort", "Orden"),
+      selectFilter("genre", "Género"),
+      selectFilter("content", "Contenido"),
+    ],
+  },
+  {
+    id: "m440",
+    version: "0.2.0",
+    home: { sections: [dynamicSection("views", "Más leídos", "https://m440.test")] },
+    list: {
+      items: dynamicSection("az", "Directorio A-Z", "https://m440.test").items,
+      hasNext: true,
+    },
+    filters: [
+      selectFilter("cat", "Género"),
+      selectFilter("alpha", "Inicial"),
+      selectFilter("sort", "Orden"),
+    ],
+  },
+];
