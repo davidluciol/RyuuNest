@@ -6,9 +6,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/app.json": {
-    "mtime": 1794674341.4471872,
-    "seen": 1794676979.4997816,
-    "ast_hash": "c04585a9b86c1842384925ee62f0ef48",
+    "mtime": 1794677940.9786758,
+    "seen": 1794678124.5920882,
+    "ast_hash": "c0d96bf1d64c94829584e115880d11f7",
     "semantic_hash": ""
   },
   "apps/mobile/globals.d.ts": {
@@ -300,9 +300,9 @@
     "semantic_hash": ""
   },
   "packages/core/src/runtimes/DeclarativeRuntime.ts": {
-    "mtime": 1794676844.377742,
-    "seen": 1794676979.5005388,
-    "ast_hash": "860ad89f5cd1c231c70c42828819ab19",
+    "mtime": 1794677940.941396,
+    "seen": 1794678124.5928335,
+    "ast_hash": "7b5c89bc0f57830226a3c06c7c740fe6",
     "semantic_hash": ""
   },
   "packages/core/src/runtimes/ModuleRuntime.ts": {
@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1794676892.79222,
-    "seen": 1794676979.500822,
-    "ast_hash": "e9255272469d6f13826041c162cfdd45",
+    "mtime": 1794678046.6858547,
+    "seen": 1794678124.5930874,
+    "ast_hash": "8d94e2b2f0b21dff76224cea98598fef",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -966,9 +966,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1794676893.4026072,
-    "seen": 1794676979.5009117,
-    "ast_hash": "38a8fff3b5f32d95d7cf5bb2838b8b29",
+    "mtime": 1794678018.1301968,
+    "seen": 1794678124.5931697,
+    "ast_hash": "f39a397dd5aae1a51b4834e6a5ac726b",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -3624,9 +3624,9 @@
     "semantic_hash": ""
   },
   "docs/decisions/ADR-0003-congelacion-api-1.0.md": {
-    "mtime": 1793404168.4149559,
-    "seen": 1793495545.75895,
-    "ast_hash": "a8de7e9ddfa86917cf5fefc6ef39f40f",
+    "mtime": 1794678023.9441333,
+    "seen": 1794678124.593152,
+    "ast_hash": "6ba31182f7fcd87031313c5d872ac074",
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/series/seriesLogic.ts": {
@@ -5466,21 +5466,21 @@
     "semantic_hash": ""
   },
   "packages/module-sdk/src/declarativeConfig.ts": {
-    "mtime": 1794676504.962851,
-    "seen": 1794676979.500673,
-    "ast_hash": "b03a31d285e7b1f0b206c760cdbc60a5",
+    "mtime": 1794677931.463606,
+    "seen": 1794678124.592959,
+    "ast_hash": "9b6f952a80d7dbaef292fffd45c288ee",
     "semantic_hash": ""
   },
   "packages/module-sdk/tests/declarativeConfig.test.ts": {
-    "mtime": 1794676713.0520666,
-    "seen": 1794676979.5007029,
-    "ast_hash": "af5561e77da57f50c4800899a86e1d32",
+    "mtime": 1794677896.7302904,
+    "seen": 1794678124.5929751,
+    "ast_hash": "89ed473368be07bc6ecda00913fa400f",
     "semantic_hash": ""
   },
   "docs/declarative-format.md": {
-    "mtime": 1794676833.8662677,
-    "seen": 1794676979.500894,
-    "ast_hash": "2d3c1efe6fce2b176a33d7fa92296e4b",
+    "mtime": 1794677974.9295535,
+    "seen": 1794678124.5931535,
+    "ast_hash": "0113c4ffa1ced0a4ecadd42b8b812c39",
     "semantic_hash": ""
   },
   "pnpm-lock.yaml": {
