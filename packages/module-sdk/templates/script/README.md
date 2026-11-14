@@ -24,8 +24,10 @@ puedes probarlo sin tocar nada.
 - El entorno es **ECMAScript estándar**: no cuentes con `setTimeout`, `URL`,
   `TextDecoder`, `fetch` ni otros globales de plataforma. La red va siempre por `host.fetch`.
 
-`ryuunest-module test` carga el paquete con el mismo cargador que la app, así que si
-algo de esto falla lo verás antes de publicar.
+`ryuunest-module test` carga el paquete con el mismo cargador que la app, así que verás
+antes de publicar un import o export no admitido, un archivo que falte o un ciclo de
+imports. Lo demás (`import()` o globales de plataforma) **no** lo detecta: `test` corre
+en Node, donde existen.
 
 ## Errores tipados
 
