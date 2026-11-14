@@ -266,6 +266,23 @@ describe("cli · test", () => {
     expect(io.errText()).toContain("search()");
   });
 
+  it("carga el script con el mismo cargador que la app (T40)", async () => {
+    await main(["create", "demo", "--template", "script"], createTestIo(scratch));
+    // Node admite `export * from`; el cargador de la app no (SPEC §6.5).
+    await mkdir(join(scratch, "demo", "bin"), { recursive: true });
+    await writeFile(join(scratch, "demo", "bin", "extra.js"), "export const X = 1;\n", "utf8");
+    const source = await readText(join(scratch, "demo", "module.js"));
+    await writeFile(
+      join(scratch, "demo", "module.js"),
+      `${source}\nexport * from "./bin/extra.js";\n`,
+      "utf8",
+    );
+
+    const io = createTestIo(scratch);
+    expect(await main(["test", "demo"], io)).toBe(1);
+    expect(io.errText()).toContain("export");
+  });
+
   it("informa si la entrada no exporta create(host)", async () => {
     await main(["create", "demo", "--template", "script"], createTestIo(scratch));
     await writeFile(join(scratch, "demo", "module.js"), "export const otraCosa = 1;", "utf8");

@@ -7,7 +7,12 @@
  */
 import { sha256 } from "@noble/hashes/sha2.js";
 import { bytesToHex } from "@noble/hashes/utils.js";
-import { ModuleHost, type ModuleManifest } from "@ryuunest/core";
+import {
+  createFunctionScriptLoader,
+  ModuleHost,
+  type ModuleManifest,
+  type ScriptFactory,
+} from "@ryuunest/core";
 import {
   createHtmlSite,
   createSiteHttp,
@@ -15,9 +20,9 @@ import {
   runContract,
 } from "@ryuunest/test-site";
 import { zipSync } from "fflate";
-import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 import { validateManifest } from "./manifest.js";
 import { ID_PATTERN } from "./validation.js";
@@ -234,7 +239,7 @@ async function testCommand(argv: readonly string[], io: CliIo): Promise<number> 
   }
 
   try {
-    const create = await loadScriptFactory(join(dir, manifest.entry), dir);
+    const create = await loadScriptFactory(dir, manifest.entry);
     const host = new ModuleHost({
       http: createSiteHttp(createHtmlSite()),
       clock: { now: () => Date.now() },
@@ -335,46 +340,16 @@ function describe(error: unknown): string {
 }
 
 /**
- * Carga la fábrica de un módulo script.
- *
- * El archivo de entrada es un módulo ES dentro de un `.js` que no tiene un
- * `package.json` al lado, así que Node lo tomaría como CommonJS. Se evalúa desde una
- * copia `.mjs` temporal, en la misma carpeta para que resuelvan los `import`
- * relativos, y se borra siempre. (El runtime del núcleo, T18, cerrará esta
- * estrategia.)
+ * Carga la fábrica de un módulo script con **el mismo cargador que la app**
+ * (`createFunctionScriptLoader`, T40): el paquete entero (ruta → texto) y su entrada.
+ * Así `test` rechaza lo que la app no admite (SPEC §6.5), aunque Node sí lo aceptara.
  */
-async function loadScriptFactory(
-  entryPath: string,
-  workDir: string,
-): Promise<(host: ModuleHost) => Promise<unknown>> {
-  let source: string;
-  try {
-    source = await readFile(entryPath, "utf8");
-  } catch {
-    throw new Error(`No se pudo leer el archivo de entrada: ${entryPath}`);
+async function loadScriptFactory(dir: string, entry: string): Promise<ScriptFactory> {
+  const files: Record<string, string> = {};
+  for (const file of await collectFiles(dir, [])) {
+    files[file] = await readFile(join(dir, file), "utf8");
   }
-
-  const temporaryPath = join(
-    workDir,
-    `.ryuunest-eval-${Date.now()}-${Math.random().toString(16).slice(2)}.mjs`,
-  );
-
-  try {
-    await writeFile(temporaryPath, source, "utf8");
-    const namespace = (await import(/* @vite-ignore */ pathToFileURL(temporaryPath).href)) as {
-      default?: unknown;
-      create?: unknown;
-    };
-
-    const factory = typeof namespace.default === "function" ? namespace.default : namespace.create;
-    if (typeof factory !== "function") {
-      throw new Error(`${entryPath} debe exportar \`create(host)\``);
-    }
-
-    return factory as (host: ModuleHost) => Promise<unknown>;
-  } finally {
-    await rm(temporaryPath, { force: true });
-  }
+  return createFunctionScriptLoader().load(files, entry);
 }
 
 function templateRoot(): string {
