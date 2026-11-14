@@ -69,14 +69,15 @@ Dep: T38 · L · `packages/core/src/ports/scriptLoader.ts`, `runtimes/{ScriptRun
 
 Dep: T39, T40 · S · sin código (salvo ajustes que salgan)
 
-- [ ] Ambos módulos pasan su arnés con fixtures propias (repo `RyuuNest-Models`) — **ojo (T37):** `runContract` exige «al menos un capítulo con dos releases» y m440/yupmanga nunca la cumplen (una release por capítulo por construcción); relajar esa regla del arnés antes de esta puerta
-- [ ] Se instalan por `InstallFlow` en el dispositivo y ejecutan `popular` o `latest`, `search`, `details` y `pages`, y se ve una imagen en el lector
-- [ ] Ningún cambio de tipos del modelo de datos; si hace falta uno, se reabre el ADR
+- [x] Ambos módulos pasan su arnés con fixtures propias (repo `RyuuNest-Models`) — la regla «un capítulo con dos releases» se relaja con la opción **opt-in** `singleReleasePerChapter` de `runContract` (decisión del humano); m440 la usa, zonatmo no la necesita
+- [x] Se instalan por `InstallFlow` en el dispositivo y ejecutan `popular` o `latest`, `search`, `details` y `pages`, y se ve una imagen en el lector
+- [x] Ningún cambio de tipos del modelo de datos; si hace falta uno, se reabre el ADR
 - Verif: 🧍 prueba en el dispositivo (S25 Ultra; POCO si vuelve a estar disponible)
+> **Hecho (2026-11-14, `feature/T41-puerta-segundo-sitio` + rama `test/T41-arnes-fixtures-propias` en `RyuuNest-Models`):** `runContract` acepta `singleReleasePerChapter`; los tests de zonatmo y m440 en `RyuuNest-Models` llaman al arnés con sus fixtures (m440 añade ficha con capítulos cifrados y capítulo, datos inventados). En el S25 Ultra (Expo Go, agent-device, red real): ZonaTMO 0.3.0 instalado por `InstallFlow`, listas, búsqueda «dragon», ficha de 30 capítulos y lector de 80 páginas con imagen; M440 0.2.0 listas, búsqueda «kobayashi», ficha de 186 capítulos y lector de 17 páginas con imagen. Portadas de M440 en blanco (F35, causa en la app). Detalle en `MEMORY.md` P-147.
 
 ### 🚩 Checkpoint I `[Ops · Baja · N1]`
 
-- [ ] 🧍 Módulos reales buscan, listan capítulos y entregan imágenes en sitios reales (= T41) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (falta T41) · [ ] 🧍 Revisión
+- [x] 🧍 Módulos reales buscan, listan capítulos y entregan imágenes en sitios reales (= T41, 2026-11-14) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (falta T41) · [ ] 🧍 Revisión
 
 ---
 
