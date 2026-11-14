@@ -109,7 +109,7 @@ export class RepoRegistry {
   /** Añade (o refresca) un repo a partir de su `index.json` (RF-2). */
   async addRepo(url: string): Promise<RepoRecord> {
     const id = canonicalHttpsUrl(url);
-    const index = await this.fetchIndex(id);
+    const { index, text } = await this.fetchIndex(id);
     const now = this.clock.now();
     const previous = await this.getRepo(id);
 
@@ -122,7 +122,8 @@ export class RepoRegistry {
     };
 
     await this.storage.set(repoKey(id), JSON.stringify(record));
-    await this.storage.set(repoIndexKey(id), JSON.stringify(index));
+    // T38: se guarda el índice tal cual llegó; se reclasifica al leer con la versión actual de la app.
+    await this.storage.set(repoIndexKey(id), text);
     return record;
   }
 
@@ -151,11 +152,10 @@ export class RepoRegistry {
     const modules: RepoModuleSummary[] = [];
 
     for (const id of ids) {
-      const raw = await this.storage.get(repoIndexKey(id));
-      if (raw === undefined) {
+      const index = await this.readIndex(id);
+      if (index === undefined) {
         continue;
       }
-      const index = JSON.parse(raw) as RepoIndex;
       for (const entry of index.modules) {
         modules.push({ repoId: id, ...entry });
       }
@@ -172,9 +172,9 @@ export class RepoRegistry {
     const entries: RepoIncompatibleSummary[] = [];
 
     for (const id of ids) {
-      const raw = await this.storage.get(repoIndexKey(id));
-      if (raw === undefined) continue;
-      for (const entry of (JSON.parse(raw) as RepoIndex).incompatible ?? []) {
+      const index = await this.readIndex(id);
+      if (index === undefined) continue;
+      for (const entry of index.incompatible ?? []) {
         entries.push({ repoId: id, ...entry });
       }
     }
@@ -190,8 +190,16 @@ export class RepoRegistry {
     await this.storage.delete(repoIndexKey(id));
   }
 
-  /** Descarga, parsea y valida el `index.json`. */
-  private async fetchIndex(url: string): Promise<RepoIndex> {
+  /** Índice guardado, validado otra vez con la versión actual de la app (T38). */
+  private async readIndex(id: string): Promise<RepoIndex | undefined> {
+    const raw = await this.storage.get(repoIndexKey(id));
+    if (raw === undefined) return undefined;
+    const result = this.validateIndex(JSON.parse(raw));
+    return result.ok ? result.value : undefined;
+  }
+
+  /** Descarga, parsea y valida el `index.json`; devuelve también el texto original. */
+  private async fetchIndex(url: string): Promise<{ index: RepoIndex; text: string }> {
     const response = await this.http.request(url);
     if (response.status < 200 || response.status >= 300) {
       throw new ModuleError(
@@ -219,6 +227,6 @@ export class RepoRegistry {
       });
     }
 
-    return result.value;
+    return { index: result.value, text };
   }
 }
