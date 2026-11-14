@@ -300,3 +300,84 @@ async function guardedRejectionDetails(details: unknown): Promise<ModuleError | 
   const error = await rejection(handle.api.details("/serie/uno"));
   return error as ModuleError | undefined;
 }
+
+describe("contrato dinámico: home, list y filters (T43)", () => {
+  const home = {
+    sections: [
+      {
+        id: "nuevos",
+        title: "Nuevos",
+        kind: "list",
+        items: [{ id: "/s/1", title: "Uno" }],
+        hasNext: true,
+      },
+    ],
+  };
+  const filters = [
+    {
+      id: "sort",
+      label: "Orden",
+      type: "select",
+      options: [{ value: "views", label: "Más visitas" }],
+    },
+  ];
+
+  it("expone home, list y filters cuando el módulo los trae", async () => {
+    const handle = await mountGuarded(
+      compliantApi({
+        home: async () => home,
+        list: async (sectionId: string, page: number) => ({
+          items: [{ id: `/s/${sectionId}-${page}`, title: "Dos" }],
+          hasNext: false,
+        }),
+        filters: async () => filters,
+      }),
+    );
+
+    await expect(handle.api.home?.()).resolves.toEqual(home);
+    await expect(handle.api.list?.("nuevos", 2)).resolves.toEqual({
+      items: [{ id: "/s/nuevos-2", title: "Dos" }],
+      hasNext: false,
+    });
+    await expect(handle.api.filters?.()).resolves.toEqual(filters);
+  });
+
+  it("no los expone si el módulo no los trae", async () => {
+    const handle = await mountGuarded(compliantApi());
+
+    expect(handle.api.home).toBeUndefined();
+    expect(handle.api.list).toBeUndefined();
+    expect(handle.api.filters).toBeUndefined();
+  });
+
+  it("search pasa los filtros al módulo", async () => {
+    let received: unknown;
+    const handle = await mountGuarded(
+      compliantApi({
+        search: async (_query: string, _page: number, active: unknown) => {
+          received = active;
+          return { items: [], hasNext: false };
+        },
+      }),
+    );
+
+    await handle.api.search("x", 1, { sort: "views", tags: ["a", "b"] });
+    expect(received).toEqual({ sort: "views", tags: ["a", "b"] });
+  });
+
+  it("rechaza con PARSE un home o unos filtros fuera del contrato", async () => {
+    const handle = await mountGuarded(
+      compliantApi({
+        home: async () => ({ sections: [{ id: "x", items: [], hasNext: false }] }),
+        filters: async () => [{ id: "sort", type: "select" }],
+      }),
+    );
+
+    expect(((await rejection(handle.api.home?.() ?? Promise.resolve())) as ModuleError).code).toBe(
+      "PARSE",
+    );
+    expect(
+      ((await rejection(handle.api.filters?.() ?? Promise.resolve())) as ModuleError).code,
+    ).toBe("PARSE");
+  });
+});

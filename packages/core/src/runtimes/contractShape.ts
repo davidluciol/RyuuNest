@@ -133,3 +133,47 @@ export function pagesShapeViolation(value: unknown): string | undefined {
   }
   return undefined;
 }
+
+/**
+ * Forma mínima de `home()` (T43): `sections` con `id` y `title` de texto y la forma de
+ * una `Page`. `kind` es opcional y no se restringe (un valor nuevo no rompe el inicio).
+ */
+export function homeShapeViolation(value: unknown): string | undefined {
+  if (!isPlainObject(value) || !Array.isArray(value.sections)) {
+    return "«sections» debe ser una lista";
+  }
+  for (const [index, section] of value.sections.entries()) {
+    if (!isPlainObject(section)) {
+      return `«sections[${index}]» debe ser un objeto`;
+    }
+    if (!isNonEmptyString(section.id) || !isNonEmptyString(section.title)) {
+      return `«sections[${index}]» necesita «id» y «title» no vacíos`;
+    }
+    const page = pageShapeViolation(section);
+    if (page !== undefined) {
+      return `«sections[${index}]»: ${page}`;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Forma mínima de `filters()` (T43): lista de `{ id, label, type }` de texto. `type` no
+ * se limita a los cuatro conocidos: la app ignorará los que no sepa mostrar.
+ */
+export function filtersShapeViolation(value: unknown): string | undefined {
+  if (!Array.isArray(value)) {
+    return "debe ser una lista";
+  }
+  for (const [index, filter] of value.entries()) {
+    if (!isPlainObject(filter)) {
+      return `«[${index}]» debe ser un objeto`;
+    }
+    for (const key of ["id", "label", "type"] as const) {
+      if (!isNonEmptyString(filter[key])) {
+        return `«[${index}].${key}» debe ser una cadena no vacía`;
+      }
+    }
+  }
+  return undefined;
+}

@@ -14,7 +14,13 @@ import type { Host, ModuleApi, ModuleManifest } from "../contract/types.js";
 import { ModuleError } from "../contract/errors.js";
 import type { ScriptLoader } from "../ports/scriptLoader.js";
 import { DeclarativeRuntime, type DeclarativeConfig } from "./DeclarativeRuntime.js";
-import { detailsShapeViolation, pageShapeViolation, pagesShapeViolation } from "./contractShape.js";
+import {
+  detailsShapeViolation,
+  filtersShapeViolation,
+  homeShapeViolation,
+  pageShapeViolation,
+  pagesShapeViolation,
+} from "./contractShape.js";
 import { describeError, toModuleError } from "./errorMapping.js";
 import { ScriptRuntime } from "./ScriptRuntime.js";
 
@@ -148,7 +154,12 @@ function guardApi(api: ModuleApi, record: (error: ModuleError) => void): ModuleA
   };
 
   const guarded: ModuleApi = {
-    search: (query, page) => run("search", () => api.search(query, page), pageShapeViolation),
+    search: (query, page, filters) =>
+      run(
+        "search",
+        () => (filters === undefined ? api.search(query, page) : api.search(query, page, filters)),
+        pageShapeViolation,
+      ),
     details: (seriesId) => run("details", () => api.details(seriesId), detailsShapeViolation),
     pages: (chapterId, releaseId) =>
       run("pages", () => api.pages(chapterId, releaseId), pagesShapeViolation),
@@ -161,6 +172,20 @@ function guardApi(api: ModuleApi, record: (error: ModuleError) => void): ModuleA
   const latest = api.latest;
   if (latest !== undefined) {
     guarded.latest = (page) => run("latest", () => latest(page), pageShapeViolation);
+  }
+  // Contrato dinámico (T43): opcionales y aditivos.
+  const home = api.home;
+  if (home !== undefined) {
+    guarded.home = () => run("home", () => home(), homeShapeViolation);
+  }
+  const list = api.list;
+  if (list !== undefined) {
+    guarded.list = (sectionId, page) =>
+      run("list", () => list(sectionId, page), pageShapeViolation);
+  }
+  const filters = api.filters;
+  if (filters !== undefined) {
+    guarded.filters = () => run("filters", () => filters(), filtersShapeViolation);
   }
 
   return guarded;
