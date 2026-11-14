@@ -6,7 +6,7 @@
  * exterior es el `Host` (permisos de dominio, tiempo límite y concurrencia, SPEC
  * §6.5), así que el runtime no hace red por su cuenta.
  *
- * El formato se cierra en esta fase (ver `tasks/plan.md` y la decisión P-50).
+ * Formato normativo: `docs/declarative-format.md` (T39); decisiones previas en P-50.
  */
 import type {
   Chapter,

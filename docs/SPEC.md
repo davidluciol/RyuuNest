@@ -358,7 +358,7 @@ El host aplica por defecto un tiempo límite por petición, un máximo de petici
 
 **Formato de un módulo `script` (ADR-0003, D1).** Un módulo ES cuyo `entry` exporta por defecto `create(host)`. Puede importar solo **rutas relativas dentro de su propio paquete**; no admite `import()` dinámico ni paquetes, y el entorno es ECMAScript estándar (sin `setTimeout`, `URL`, `TextDecoder`, `fetch` ni otros globales de plataforma). El cargador de la app recibe el paquete completo y resuelve esos imports. Hasta que un `script` real se ejecute en el dispositivo (spike de T40), «script» se considera **experimental**.
 
-### 6.6 Módulos declarativos (borrador)
+### 6.6 Módulos declarativos
 
 Un módulo declarativo describe con selectores CSS dónde está cada dato; el núcleo implementa la API. Ejemplo reducido:
 ```json
@@ -375,9 +375,9 @@ Un módulo declarativo describe con selectores CSS dónde está cada dato; el n�
   }
 }
 ```
-Transformaciones previstas: `trim`, `path`, `absoluteUrl`, `regex`, `number`, `join`, `replace`. Cuando un sitio necesita más que esto (redirecciones, lógica condicional), se escribe como módulo script. El formato completo se cierra en `docs/declarative-format.md` (T39); hasta entonces, el punto de partida es el Anexo B de `docs/decisions/ADR-0003-congelacion-api-1.0.md`.
+Transformaciones: `trim`, `path`, `absoluteUrl`, `regex`, `number`, `join`, `replace`, `date` y `map`. Cuando un sitio necesita más que esto (JSON, redirecciones, lógica condicional), se escribe como módulo script. **El formato normativo es `docs/declarative-format.md`** (T39); `ryuunest-module validate` lo comprueba y `ryuunest-module test` ejecuta el arnés también con módulos declarativos.
 
-**Decisiones del ADR-0003 sobre el formato.** (D2) `pages.imageHeaders` es un mapa de cabeceras con las variables `{baseUrl}`, `{chapterId}` y `{releaseId}`, y rellena `ImageRef.headers`; un módulo que lo use declara `minAppVersion`. Una serie sin capítulos devuelve `chapters: []` (no `PARSE`). El alcance del declarativo es HTML + CSS por GET: lo demás es `script`.
+**Decisiones del ADR-0003 y de T39 sobre el formato.** (D2) `pages.imageHeaders` es un mapa de cabeceras con las variables `{baseUrl}`, `{chapterId}` y `{releaseId}`, y rellena `ImageRef.headers`. Una serie sin capítulos devuelve `chapters: []` (no `PARSE`). L3–L6 entran en T39: `details.extra`, `date` (fecha con formato → ISO 8601), el modificador `{variable:raw}` (sin codificar) y `map`. Todo eso llega con la app 0.2.0: un módulo que lo use declara `"minAppVersion": "0.2.0"`. El alcance del declarativo es HTML + CSS por GET: lo demás es `script`.
 
 ### 6.7 Índice de repositorio
 
@@ -893,7 +893,7 @@ La v2 y la v3 están en `IDEA.md`, sección 9.
 10. **Pantallas sin diseño (11.5):** decidir cuáles se generan en Stitch antes de la Fase 6b.
 11. **Verificación visual de la app nativa:** Playwright solo cubre el navegador. Decidir si la galería también se compila para web o si las pantallas nativas se verifican con capturas del dispositivo (AC-12).
 
-**Estado según el ADR-0003 (2026-10-29):** resueltas 1 (API 28, ADR-0002), 6 (P-71), 7 (P-29), 8 (P-27) y 9 (P-31); la 2 se cierra con T39 (`docs/declarative-format.md`); la 5 queda fuera de la v1 (parámetro opcional aditivo en `search`); la 3, la 4 (D-12) y la 10 no afectan a la API de módulos; la 11 sigue abierta (decisión del humano).
+**Estado según el ADR-0003 (2026-10-29):** resueltas 1 (API 28, ADR-0002), 6 (P-71), 7 (P-29), 8 (P-27) y 9 (P-31); la 2 quedó cerrada con T39 (`docs/declarative-format.md`, 2026-11-14); la 5 queda fuera de la v1 (parámetro opcional aditivo en `search`); la 3, la 4 (D-12) y la 10 no afectan a la API de módulos; la 11 sigue abierta (decisión del humano).
 
 ---
 
