@@ -77,6 +77,8 @@ export interface DeclarativeDetailsMethod {
   url: string;
   fields: Record<string, DeclarativeFieldSpec>;
   chapters: DeclarativeChaptersSpec;
+  /** L3 (ADR-0003): cada clave rellena `SeriesDetails.extra` con su primer valor. */
+  extra?: Record<string, DeclarativeFieldSpec>;
 }
 
 /** El método `pages`. */
@@ -207,7 +209,7 @@ export class DeclarativeRuntime {
   ): Promise<Page<SeriesSummary>> {
     const url = this.#fill(config.url, {
       page: String(page),
-      ...(vars.query === undefined ? {} : { query: encodeURIComponent(vars.query) }),
+      ...(vars.query === undefined ? {} : { query: vars.query }),
     });
     const document = await this.#document(url);
     const options: ReadOptions = { scopeSelector: config.list, url };
@@ -218,7 +220,7 @@ export class DeclarativeRuntime {
   }
 
   async #details(config: DeclarativeDetailsMethod, seriesId: string): Promise<SeriesDetails> {
-    const url = this.#fill(config.url, { id: encodeURIComponent(seriesId) });
+    const url = this.#fill(config.url, { id: seriesId });
     const document = await this.#document(url);
     const options: ReadOptions = { url };
     const value = (name: string): string => this.#read(document, config.fields[name]);
@@ -240,7 +242,7 @@ export class DeclarativeRuntime {
       genres: list("genres"),
       altTitles: list("altTitles"),
       status: isSeriesStatus(rawStatus) ? rawStatus : "unknown",
-      extra: {},
+      extra: this.#extra(document, config.extra),
       chapters: chapterElements.map((element) => this.#chapter(element, config.chapters, url)),
       ...(coverUrl === "" ? {} : { cover: { url: coverUrl } }),
       ...(description === "" ? {} : { description }),
@@ -255,10 +257,7 @@ export class DeclarativeRuntime {
     chapterId: string,
     releaseId: string,
   ): Promise<ChapterPages> {
-    const vars = {
-      chapterId: encodeURIComponent(chapterId),
-      releaseId: encodeURIComponent(releaseId),
-    };
+    const vars = { chapterId, releaseId };
     const url = this.#fill(config.url, vars);
     const document = await this.#document(url);
     const imagesSpec: DeclarativeFieldSpec = { ...config.images, all: true };
@@ -351,6 +350,21 @@ export class DeclarativeRuntime {
       ...(group === "" ? {} : { group }),
       ...(publishedAt === "" ? {} : { publishedAt }),
     };
+  }
+
+  /** `SeriesDetails.extra`: primer valor de cada clave (o la lista unida con `join`); sin vacíos. */
+  #extra(
+    document: HtmlDocument,
+    specs: Record<string, DeclarativeFieldSpec> | undefined,
+  ): Record<string, string> {
+    const extra: Record<string, string> = {};
+    for (const [key, spec] of Object.entries(specs ?? {})) {
+      const value = this.#read(document, spec);
+      if (value !== "") {
+        extra[key] = value;
+      }
+    }
+    return extra;
   }
 
   /** Primer valor de un campo (cadena vacía si el campo no está o no coincide). */
@@ -448,19 +462,26 @@ export class DeclarativeRuntime {
     );
   }
 
+  /**
+   * Rellena `{variable}` con su valor codificado (`encodeURIComponent`), o tal cual con
+   * `{variable:raw}` (L5). `{baseUrl}` nunca se codifica.
+   */
   #fill(template: string, vars: Record<string, string>): string {
-    return template.replace(/\{(\w+)\}/gu, (match, key: string) => {
+    return template.replace(/\{(\w+)(?::(\w+))?\}/gu, (match, key: string, modifier?: string) => {
+      if (modifier !== undefined && modifier !== "raw") {
+        throw new ModuleError("UNSUPPORTED", `Modificador desconocido en la plantilla: ${match}`);
+      }
       if (key === "baseUrl") {
         return this.#context.baseUrl;
       }
-      const value = vars[key];
+      const value = Object.hasOwn(vars, key) ? vars[key] : undefined;
       if (value === undefined) {
         throw new ModuleError(
           "UNSUPPORTED",
           `Variable desconocida en la plantilla de URL: ${match}`,
         );
       }
-      return value;
+      return modifier === "raw" ? value : encodeURIComponent(value);
     });
   }
 }

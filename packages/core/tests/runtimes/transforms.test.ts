@@ -130,3 +130,53 @@ describe("transforms · join", () => {
     expect(joinValues([], ", ")).toBe("");
   });
 });
+
+describe("transforms · date (L4, ADR-0003)", () => {
+  const date = (value: string, format: string): string =>
+    applyTransforms(value, [["date", format]], context);
+
+  it("convierte una fecha con formato a ISO 8601 de solo fecha", () => {
+    expect(date("27/05/2026", "DD/MM/YYYY")).toBe("2026-05-27");
+  });
+
+  it("acepta día y mes de uno o dos dígitos", () => {
+    expect(date("5/3/2024", "DD/MM/YYYY")).toBe("2024-03-05");
+  });
+
+  it("con hora devuelve fecha y hora UTC; sin segundos valen 00", () => {
+    expect(date("2024-03-12 18:30", "YYYY-MM-DD HH:mm")).toBe("2024-03-12T18:30:00Z");
+    expect(date("12.03.2024 7:05:09", "DD.MM.YYYY HH:mm:ss")).toBe("2024-03-12T07:05:09Z");
+  });
+
+  it("devuelve vacío si el valor no encaja o la fecha no existe", () => {
+    expect(date("hace 2 h", "DD/MM/YYYY")).toBe("");
+    expect(date("31/02/2024", "DD/MM/YYYY")).toBe("");
+    expect(date("10/10/2024 25:00", "DD/MM/YYYY HH:mm")).toBe("");
+  });
+
+  it("rechaza un formato sin año, mes o día con UNSUPPORTED", () => {
+    expect(() => date("05/2024", "MM/YYYY")).toThrow(ModuleError);
+    expect(() => applyTransforms("x", ["date"], context)).toThrow(ModuleError);
+  });
+});
+
+describe("transforms · map (L6, ADR-0003)", () => {
+  const statuses = { "En emisión": "ongoing", Finalizado: "completed" };
+
+  it("traduce el valor sin distinguir mayúsculas y tras recortar", () => {
+    expect(applyTransforms("  en EMISIÓN ", [["map", statuses]], context)).toBe("ongoing");
+  });
+
+  it("deja el valor igual si no está en el mapa", () => {
+    expect(applyTransforms("Pausado", [["map", statuses]], context)).toBe("Pausado");
+  });
+
+  it("no resuelve propiedades heredadas del objeto", () => {
+    expect(applyTransforms("constructor", [["map", statuses]], context)).toBe("constructor");
+    expect(applyTransforms("__proto__", [["map", statuses]], context)).toBe("__proto__");
+  });
+
+  it("rechaza un map sin objeto con UNSUPPORTED", () => {
+    expect(() => applyTransforms("x", [["map", "ongoing"]], context)).toThrow(ModuleError);
+  });
+});

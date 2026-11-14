@@ -281,6 +281,57 @@ describe("DeclarativeRuntime · details", () => {
     expect(details.title).toBe("El dragón de ceniza");
   });
 
+  it("details.extra rellena SeriesDetails.extra y omite las claves vacías (L3)", async () => {
+    const base = makeConfig();
+    const config: DeclarativeConfig = {
+      ...base,
+      details: {
+        ...base.details,
+        extra: {
+          Estado: { selector: "span.detalle-estado", transform: ["trim"] },
+          Géneros: {
+            selector: "ul.detalle-generos > li.genero",
+            all: true,
+            transform: [["join", ", "]],
+          },
+          Autor: { selector: "span.no-existe" },
+        },
+      },
+    };
+    const { runtime } = makeRuntime(config);
+
+    const details = await runtime.createApi().details("dragon-de-ceniza");
+    expect(details.extra).toEqual({ Estado: "En curso", Géneros: "Fantasía, Aventura" });
+  });
+
+  it("{id:raw} pone el id sin codificar en la URL (L5)", async () => {
+    const base = makeConfig();
+    const config: DeclarativeConfig = {
+      ...base,
+      details: { ...base.details, url: "{baseUrl}{id:raw}" },
+    };
+    const { runtime, http } = makeRuntime(config, {
+      [`${BASE_URL}/serie/dragon-de-ceniza`]: { body: DETAIL_HTML },
+    });
+
+    await runtime.createApi().details("/serie/dragon-de-ceniza");
+    expect(http.requests.map((request) => request.url)).toEqual([
+      `${BASE_URL}/serie/dragon-de-ceniza`,
+    ]);
+  });
+
+  it("un modificador de variable desconocido da UNSUPPORTED", async () => {
+    const base = makeConfig();
+    const config: DeclarativeConfig = {
+      ...base,
+      details: { ...base.details, url: "{baseUrl}/serie/{id:crudo}" },
+    };
+    const { runtime } = makeRuntime(config);
+
+    const error = await rejection(runtime.createApi().details("dragon-de-ceniza"));
+    expect((error as ModuleError).code).toBe("UNSUPPORTED");
+  });
+
   it("un capítulo sin releases sigue siendo PARSE (el contrato exige una)", async () => {
     const body = DETAIL_HTML.replace(/<ul class="releases">[\s\S]*?<\/ul>/u, "");
     const { runtime } = makeRuntime(makeConfig(), {
