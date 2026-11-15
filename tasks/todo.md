@@ -9,7 +9,7 @@
 
 **Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37), endurecimiento T34/T35/T36, Fase 6a completa (F01–F10), móvil F11–F21 y F29/F30/FB2 hechas (F34 casi completa), web F24/F25 y extensión F26/F27 hechas, F28 parte web, recorridos F32/F33 hechos. Detalle en `todo.archive.md`.
 
-**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · verificaciones 🧍 al final de cada tarea.
+**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46 → F47** (datos reales en Inicio y portadas) · F49 (base local en la web de Expo, alternativa A) · verificaciones 🧍 al final de cada tarea.
 
 ---
 
@@ -185,10 +185,11 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 Dep: F32 · S · S25 Ultra con red real
 
-- [ ] Reproducir con prueba en rojo: la `imageRef` de la portada llega a `LibraryCard` con `Referer`/`User-Agent` (P-137), ZonaTMO sí carga y M440/YupManga no; averiguar si falla el módulo (cabeceras o dominio no declarado en `permissions.domains`) o la app (expo-image con cabeceras).
-- [ ] Si es del módulo, corregir en `RyuuNest-Models` (otro repo) y subir versión; si es de la app, arreglar con test y verificar en el teléfono.
-- [ ] Comprobar portadas en Descubrir (listas y catálogo), ficha y Guarida/Tesoros.
+- [x] Reproducir con prueba en rojo: la `imageRef` de la portada llega a `LibraryCard` con `Referer`/`User-Agent` (P-137), ZonaTMO sí carga y M440/YupManga no; averiguar si falla el módulo (cabeceras o dominio no declarado en `permissions.domains`) o la app (expo-image con cabeceras) → **es de la app**: el `Image` de React Native no envía `source.headers` en Android
+- [x] Si es del módulo, corregir en `RyuuNest-Models` (otro repo) y subir versión; si es de la app, arreglar con test y verificar en el teléfono
+- [x] Comprobar portadas en Descubrir (listas y catálogo) y ficha → visibles en el S25 Ultra: listas de M440 y YupManga, cuadrícula de búsqueda/catálogo de M440 («alya») y fichas de M440 y YupManga (la de YupManga usa `og:image` con la cookie de la sesión). **Guarida/Tesoros:** no muestran portadas de ningún módulo (las tarjetas no reciben `cover` y la biblioteca solo guarda `cover_url`, sin cabeceras): queda como pregunta al humano (P-148)
 - Verif: 🧍 S25 Ultra (portadas visibles en M440 y YupManga).
+> **Hecho (2026-11-14, `fix/F35-portadas-cabeceras`):** `LibraryCard` y `SeriesScreen` pintan con `expo-image` (como el lector); `remoteImageUsage.test.ts` impide volver al `Image` de React Native salvo recursos locales y tres tarjetas que aún no reciben portadas remotas (la lista solo mengua). Detalle en `MEMORY.md` P-148.
 
 ### T43 Capacidades `home`/`list`/`filters` rompen instalar y actualizar módulos `[BE · Intermedia · N3]`
 
@@ -244,6 +245,70 @@ Dep: F32 · XS
 - [ ] La web ya muestra los chips de módulo en el error de Descubrir, pero no tiene prueba ni e2e (`discover.cjs`): añadir el caso «el módulo falla → elegir otro».
 - [ ] La web no relee módulos al entrar en Descubrir si cambian en Fuentes (cada ruta monta de nuevo, comprobar que es así) y su error de imagen del lector solo muestra el título: valorar el mismo mensaje por tipo.
 - Verif: Playwright a 1440/426 px.
+
+---
+
+## Datos reales en Inicio y portadas (salieron de F35, 2026-11-14)
+
+Orden (decisión del humano): **F48 → F46 → F47**; F49 espera tu elección de alternativa. Cada una con su rama (`fix/` o `feature/`), TDD y PR propio.
+
+### F48 e2e `discover.cjs` en verde: portadas del sitio falso servidas en local `[QA · Baja · N2]`
+
+Dep: — · S · `apps/mobile/tests/e2e/discover.cjs` (y los e2e que pinten portadas de `test-site`)
+
+> Origen (P-148): desde que Descubrir pinta portadas (P-137), las del sitio falso apuntan a `https://sitio-html.test/img/*.svg`; el e2e aborta todo lo externo y eso deja `ERR_FAILED` en consola y entradas en `external`. Falla igual en `master`.
+
+- [ ] Rojo: el e2e comprueba que las portadas del sitio falso **se ven** (no solo que no hay errores)
+- [ ] El e2e atiende `sitio-html.test` (y el host del sitio JSON) con `route.fulfill` desde los SVG locales de `test-site`, sin contarlos como externos; cualquier otro host sigue abortado y contado (RNF-5 intacto)
+- [ ] Revisar si otros e2e (`library`, `series`, `home`) tienen el mismo problema
+- Verif: `discover.cjs` en verde a 426 y 1440 px, 2–3 ejecuciones seguidas
+
+### F46 Inicio (Guarida) con datos reales locales `[FE · Intermedia · N3]`
+
+Dep: F48 · M · `apps/mobile/src/app/(tabs)/index.tsx`, `src/screens/home/{homeData,useHomeData}.ts` (nuevos), `HomeScreen.tsx`
+
+> Origen (decisión del humano, 2026-11-14): Inicio usa siempre `SAMPLE_HOME_DATA`; debe mostrar lo guardado en el dispositivo, como ya hace Tesoros (`libraryData.ts`).
+
+- [ ] Rojo: `loadHomeData(driver)` arma «Continuar leyendo», recientes y carpetas desde el núcleo (progreso, `browseLibrary`, `Folders`) sobre una base en memoria
+- [ ] La ruta usa `resolveHomeData` con el mismo patrón que Tesoros: nativo → base real; web de Expo → reserva de ejemplo hasta F49
+- [ ] Base vacía → estado vacío de Inicio que lleva a Portales (P-141 punto 1); sin secciones vacías a medias
+- [ ] «Continuar» reanuda en el capítulo y la página guardados; refresca al volver a la pestaña (como `useDiscoverData`)
+- [ ] Galería y `homeFixtures` siguen con datos de ejemplo (solo para la galería)
+- Verif: Vitest + 🧍 S25 Ultra (leer unas páginas → Guarida lo muestra en «Continuar»); retoma QAw2 en el móvil
+
+### F47 Portadas con cabeceras en Guarida y Tesoros `[BE/FE · Intermedia · N4]`
+
+Dep: F46 · M · `packages/core/src/{library/SeriesStore,library/queries,storage/migrations}.ts`, `apps/mobile/src/screens/{home,library}/*`
+
+> Origen (P-148, decisión del humano: opción a): Tesoros y Guarida no pasan `cover` a las tarjetas y `series.cover_url` no guarda las cabeceras, así que M440/YupManga saldrían en blanco aunque se pasara.
+
+- [ ] Rojo (núcleo): `saveFromDetails` guarda `cover.headers` y `browseLibrary` las devuelve junto a `coverUrl`
+- [ ] Migración **aditiva** (columna nueva, p. ej. `cover_headers` en JSON); las filas viejas siguen válidas sin cabeceras
+- [ ] Respaldo: comprobar si `series` viaja en el respaldo (SPEC); si viaja, decidir si las cabeceras van con él (preguntar antes)
+- [ ] `LibraryCard` en Tesoros y las tarjetas de Guarida (`ContinueCard`, `RecentCard`) reciben `{ uri, headers }`; al pasar a `expo-image` salen de `PENDING` en `remoteImageUsage.test.ts`
+- [ ] Las cabeceras se refrescan al abrir la ficha (cookies que caducan, YupManga)
+- Verif: `pnpm -r test` + 🧍 S25 Ultra: portadas de ZonaTMO, M440 y YupManga en Guarida y Tesoros
+
+### F49 Base de datos local en la web de Expo (`apps/mobile` en el navegador) `[FE/Arq · Alta · N4]`
+
+Dep: F46 · M–L · `apps/mobile/src/data/appDatabase.ts` (hoy devuelve `null` en web) · **decidido: alternativa A** (P-150)
+
+> Origen (2026-11-14): en la web de Expo no hay SQLite, así que Tesoros (y Guarida tras F46) usan datos de ejemplo de reserva, y la ficha y el lector usan `sessionSqlDriver` (en memoria, solo las sentencias que conoce). El humano pide una base local real y evaluar alternativas.
+
+| Opción | Cómo | A favor | En contra |
+|---|---|---|---|
+| **A. `sql.js` + IndexedDB, como `apps/web` (recomendada)** | Llevar `webDatabase.ts`/`byteStore.ts` de F25 a un paquete compartido (p. ej. `packages/web-db`) y usarlo en `appDatabase.ts` de web | SQLite real con `migrate`: **todo el núcleo funciona igual que en el teléfono**; ya probado en este repo (F25); persistente; sin cabeceras especiales | Añadir `sql.js` 1.15.2 (ya fijada en el monorepo) a `apps/mobile` → **pide tu permiso**; cargar el `.wasm` con Metro (asset local, sin CDN); ~670 KB más en web (`sql-wasm.wasm`) |
+| B. `expo-sqlite` en web | Mismo `expoSqlDriver` que en nativo; config de Metro para `wasm` y cabeceras COOP/COEP | Sin dependencia nueva; un solo driver para todo | **Alpha** según la doc de Expo 57; exige COOP/COEP en Metro, en `serve.cjs` de los e2e y en cualquier hosting; `SharedArrayBuffer` |
+| C. JSON en IndexedDB/localStorage | Ampliar `sessionSqlDriver` para que persista en JSON | Simple de entender, sin wasm | Hay que **imitar a mano cada sentencia SQL** del núcleo; cada consulta nueva lo rompe; ya hoy rechaza lo que no conoce; no sirve para filtros/orden/cursores de `browseLibrary` sin reescribirlos |
+| D. Sembrar datos solo en pruebas | La web sigue sin base; los e2e importan un respaldo o interceptan | Cero código de producción | No da datos reales a quien use la web de Expo; solo arregla la verificación |
+| E. Dejar la web de Expo como banco de pruebas | La web real es `apps/web` (ya con base real, P-113); `apps/mobile` en web solo sirve a la galería y a Playwright | Cero trabajo; evita duplicar `apps/web` | La web de Expo nunca mostrará datos reales; dos clientes web con comportamiento distinto |
+
+**Recomendación: A.** Es la única que da el núcleo completo (migraciones, consultas, cursores, respaldo) sin imitar SQL y sin depender de algo en alpha, y ya funciona en `apps/web`. B es la segunda opción si prefieres no añadir dependencias, asumiendo el riesgo del alpha y las cabeceras. C (la idea del JSON) parece más simple pero es la que más se rompe con el tiempo.
+
+- [x] 🧍 Elegir alternativa → **A** (2026-11-14): `sql.js` 1.15.2 + IndexedDB, extraído de `apps/web` a un paquete compartido (p. ej. `packages/web-db`) que usan `apps/web` y la web de `apps/mobile`; `sql.js` autorizada en `apps/mobile` con la versión ya fijada (P-150)
+- [ ] Rojo: `openAppDatabase()` en web devuelve un driver que pasa `migrate` y persiste entre recargas (prueba con `ByteStore` en memoria)
+- [ ] Retirar la reserva de ejemplo de Tesoros/Guarida en web y `sessionSqlDriver` donde quede sustituido
+- Verif: Playwright: guardar una serie, recargar la página y verla en Tesoros; cero peticiones externas
 
 ---
 

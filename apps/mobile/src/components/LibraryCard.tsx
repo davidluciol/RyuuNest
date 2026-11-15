@@ -1,5 +1,7 @@
 import FocusPressable from "./FocusPressable";
-import { Image, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
+// expo-image: el Image de react-native no envía `source.headers` en Android (F35).
+import { Image } from "expo-image";
+import { StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "./Badge";

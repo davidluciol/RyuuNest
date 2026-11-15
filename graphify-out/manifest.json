@@ -582,9 +582,9 @@
     "semantic_hash": ""
   },
   "packages/test-site/src/harness.ts": {
-    "mtime": 1794699599.350551,
-    "seen": 1794700392.6953962,
-    "ast_hash": "b5dacc02598daea565818354f0027f27",
+    "mtime": 1794708532.823636,
+    "seen": 1794708570.5472753,
+    "ast_hash": "8bbe76a22326e6f7376b202db3784ca8",
     "semantic_hash": ""
   },
   "packages/test-site/src/index.ts": {
@@ -606,9 +606,9 @@
     "semantic_hash": ""
   },
   "packages/test-site/tests/harness.test.ts": {
-    "mtime": 1794699620.2069397,
-    "seen": 1794700392.695403,
-    "ast_hash": "8ab80e59b8ec0e354d889323d0359194",
+    "mtime": 1794708532.8251402,
+    "seen": 1794708570.5472887,
+    "ast_hash": "f11e6847628eca5379a209a55bf01a7a",
     "semantic_hash": ""
   },
   "packages/test-site/tests/sites.test.ts": {
@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1794700337.8206947,
-    "seen": 1794700392.695485,
-    "ast_hash": "9a8b8f393586b05d6ac52a49b8e77d2f",
+    "mtime": 1794708555.2292252,
+    "seen": 1794708570.5473855,
+    "ast_hash": "74cf6dc2e96430fb162570c244a6b939",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -960,15 +960,15 @@
     "semantic_hash": ""
   },
   "tasks/plan.md": {
-    "mtime": 1794682420.2274582,
-    "seen": 1794700392.6955686,
-    "ast_hash": "535491aab70109ea24bebc799978ef79",
+    "mtime": 1794708532.8261428,
+    "seen": 1794708570.5474846,
+    "ast_hash": "46ae53a816886d566577598d793362e4",
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1794700337.8196957,
-    "seen": 1794700392.6955717,
-    "ast_hash": "9dbfea8fee9f4f63d5b88c5b228ff060",
+    "mtime": 1794708555.2312298,
+    "seen": 1794708570.5474882,
+    "ast_hash": "b595e930be27ed1a085d05e04b1c5fc4",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -1788,14 +1788,14 @@
     "semantic_hash": ""
   },
   "docs/capturasF11/galeria-shell-error.png": {
-    "mtime": 1793997592.1783476,
-    "seen": 1793997608.1802452,
+    "mtime": 1794701545.7491052,
+    "seen": 1794708570.5475602,
     "ast_hash": "530361cb9973d934f94bad5aaf49a50d",
     "semantic_hash": ""
   },
   "docs/capturasF11/galeria-shell-foco.png": {
-    "mtime": 1793997592.1793528,
-    "seen": 1793997608.180247,
+    "mtime": 1794701545.7501054,
+    "seen": 1794708570.547562,
     "ast_hash": "059e45a3c109fc8f28f349ed86d15eb6",
     "semantic_hash": ""
   },
@@ -1860,9 +1860,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/components/LibraryCard.tsx": {
-    "mtime": 1794682418.3074698,
-    "seen": 1794700392.6944873,
-    "ast_hash": "dee5337b9868081b45194e2ba688e4a1",
+    "mtime": 1794708528.0339563,
+    "seen": 1794708570.5461073,
+    "ast_hash": "95f8f7f7ebd8664e1f7c94909f76641d",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/RecentCard.tsx": {
@@ -2730,9 +2730,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/series/SeriesScreen.tsx": {
-    "mtime": 1794682418.363715,
-    "seen": 1794700392.694687,
-    "ast_hash": "9174fabdd47d6e50ef660ba4be727a0d",
+    "mtime": 1794708528.035998,
+    "seen": 1794708570.5463214,
+    "ast_hash": "9e677ee4ad97c26a008aec7489144447",
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/series/seriesFixtures.ts": {
@@ -5481,6 +5481,36 @@
     "mtime": 1794682418.7956796,
     "seen": 1794700392.6955564,
     "ast_hash": "787c9314ccfcafd03ba6349c3f885e7c",
+    "semantic_hash": ""
+  },
+  "apps/mobile/tests/components/remoteImageUsage.test.ts": {
+    "mtime": 1794708528.037001,
+    "seen": 1794708570.546534,
+    "ast_hash": "5913206bdf9b5ef7d620275ba217b357",
+    "semantic_hash": ""
+  },
+  "docs/capturasF35/antes-m440-descubrir-sin-portadas.png": {
+    "mtime": 1794708528.0388775,
+    "seen": 1794708570.5478907,
+    "ast_hash": "34d17c4cf5442bcca4ce4114be94593a",
+    "semantic_hash": ""
+  },
+  "docs/capturasF35/despues-m440-descubrir.png": {
+    "mtime": 1794708528.0403926,
+    "seen": 1794708570.547893,
+    "ast_hash": "f71c34e619fe7faf0a6ff54f463149a2",
+    "semantic_hash": ""
+  },
+  "docs/capturasF35/despues-m440-ficha.png": {
+    "mtime": 1794708528.0425432,
+    "seen": 1794708570.5478942,
+    "ast_hash": "7ec2105e9aafd0a60a38b297ac01eee1",
+    "semantic_hash": ""
+  },
+  "docs/capturasF35/despues-yupmanga-ficha.png": {
+    "mtime": 1794708528.0437481,
+    "seen": 1794708570.5478964,
+    "ast_hash": "8cfff642bcebc47b00029c585fe02ecf",
     "semantic_hash": ""
   },
   "pnpm-lock.yaml": {

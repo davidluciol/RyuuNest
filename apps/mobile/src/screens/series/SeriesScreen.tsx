@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+// expo-image: el Image de react-native no envía `source.headers` en Android (F35).
+import { Image } from "expo-image";
+import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { dragonNightColors, radii, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "../../components/Badge";
@@ -101,19 +103,18 @@ export default function SeriesScreen({
 
       <View style={styles.hero}>
         {details.cover ? (
-          <Image source={data.coverSource ?? { uri: details.cover.url, headers: details.cover.headers }} style={styles.cover} />
+          <Image
+            source={data.coverSource ?? { uri: details.cover.url, headers: details.cover.headers }}
+            style={styles.cover}
+          />
         ) : null}
         <View style={styles.heroText}>
           <View style={styles.badges}>
             {details.kind ? <Badge label={kindLabel(details.kind)} /> : null}
             <Badge label={statusLabel(details.status)} />
           </View>
-          <Text style={styles.title}>
-            {details.title}
-          </Text>
-          <Text style={styles.meta}>
-            {details.altTitles.join(" · ")}
-          </Text>
+          <Text style={styles.title}>{details.title}</Text>
+          <Text style={styles.meta}>{details.altTitles.join(" · ")}</Text>
           <Text style={styles.source}>{data.moduleName}</Text>
         </View>
       </View>
