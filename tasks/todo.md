@@ -184,10 +184,11 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 Dep: F32 · S · S25 Ultra con red real
 
-- [ ] Reproducir con prueba en rojo: la `imageRef` de la portada llega a `LibraryCard` con `Referer`/`User-Agent` (P-137), ZonaTMO sí carga y M440/YupManga no; averiguar si falla el módulo (cabeceras o dominio no declarado en `permissions.domains`) o la app (expo-image con cabeceras).
-- [ ] Si es del módulo, corregir en `RyuuNest-Models` (otro repo) y subir versión; si es de la app, arreglar con test y verificar en el teléfono.
-- [ ] Comprobar portadas en Descubrir (listas y catálogo), ficha y Guarida/Tesoros.
+- [x] Reproducir con prueba en rojo: la `imageRef` de la portada llega a `LibraryCard` con `Referer`/`User-Agent` (P-137), ZonaTMO sí carga y M440/YupManga no; averiguar si falla el módulo (cabeceras o dominio no declarado en `permissions.domains`) o la app (expo-image con cabeceras) → **es de la app**: el `Image` de React Native no envía `source.headers` en Android
+- [x] Si es del módulo, corregir en `RyuuNest-Models` (otro repo) y subir versión; si es de la app, arreglar con test y verificar en el teléfono
+- [x] Comprobar portadas en Descubrir (listas y catálogo) y ficha → visibles en M440 y YupManga. **Guarida/Tesoros:** no muestran portadas de ningún módulo (las tarjetas no reciben `cover` y la biblioteca solo guarda `cover_url`, sin cabeceras): queda como pregunta al humano (P-148)
 - Verif: 🧍 S25 Ultra (portadas visibles en M440 y YupManga).
+> **Hecho (2026-11-14, `fix/F35-portadas-cabeceras`):** `LibraryCard` y `SeriesScreen` pintan con `expo-image` (como el lector); `remoteImageUsage.test.ts` impide volver al `Image` de React Native salvo recursos locales y tres tarjetas que aún no reciben portadas remotas (la lista solo mengua). Detalle en `MEMORY.md` P-148.
 
 ### T43 Capacidades `home`/`list`/`filters` rompen instalar y actualizar módulos `[BE · Intermedia · N3]`
 
