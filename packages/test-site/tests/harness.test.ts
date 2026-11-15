@@ -199,6 +199,20 @@ describe("arnés de contrato · fallos claros", () => {
     await expect(runContract(api)).rejects.toThrow(/dos releases|2 releases/);
   });
 
+  it("con `singleReleasePerChapter` admite capítulos de una sola release (m440, yupmanga)", async () => {
+    const api: ModuleApi = {
+      ...createFixtureApi(),
+      details: async (seriesId) => ({
+        ...toDetails(fixtureSeries(seriesId)),
+        chapters: [{ id: "ch-1", title: "Capítulo 1", number: 1, releases: [{ id: "r-unico" }] }],
+      }),
+    };
+
+    await expect(
+      runContract(api, { singleReleasePerChapter: true, releaseIds: ["r-unico"] }),
+    ).resolves.toMatchObject({ releaseIds: ["r-unico"] });
+  });
+
   it("detecta un `pages` sin imágenes", async () => {
     const api: ModuleApi = {
       ...createFixtureApi(),

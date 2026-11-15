@@ -9,7 +9,7 @@
 
 **Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37), endurecimiento T34/T35/T36, Fase 6a completa (F01–F10), móvil F11–F21 y F29/F30/FB2 hechas (F34 casi completa), web F24/F25 y extensión F26/F27 hechas, F28 parte web, recorridos F32/F33 hechos. Detalle en `todo.archive.md`.
 
-**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → T41 (cierre API 1.0) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · verificaciones 🧍 al final de cada tarea.
+**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · verificaciones 🧍 al final de cada tarea.
 
 ---
 
@@ -24,7 +24,7 @@
 
 ## Cierre de la API 1.0 (ADR-0003, aceptado 2026-10-29)
 
-Orden: ~~T37~~ ✅ → ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → T41. Cada tarea: TDD (rojo → verde), un commit por corte, rama propia. Todas parten de `docs/decisions/ADR-0003-congelacion-api-1.0.md`; los tres módulos publicados de `RyuuNest-Models` son la regresión (ninguno debe necesitar cambios, salvo que T40 lo decida).
+Orden: ~~T37~~ ✅ → ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅. Cada tarea: TDD (rojo → verde), un commit por corte, rama propia. Todas parten de `docs/decisions/ADR-0003-congelacion-api-1.0.md`; los tres módulos publicados de `RyuuNest-Models` son la regresión (ninguno debe necesitar cambios, salvo que T40 lo decida).
 
 ### T38 Compatibilidad hacia delante ejecutable (R3) `[BE · Intermedia · N4]`
 
@@ -69,14 +69,15 @@ Dep: T38 · L · `packages/core/src/ports/scriptLoader.ts`, `runtimes/{ScriptRun
 
 Dep: T39, T40 · S · sin código (salvo ajustes que salgan)
 
-- [ ] Ambos módulos pasan su arnés con fixtures propias (repo `RyuuNest-Models`) — **ojo (T37):** `runContract` exige «al menos un capítulo con dos releases» y m440/yupmanga nunca la cumplen (una release por capítulo por construcción); relajar esa regla del arnés antes de esta puerta
-- [ ] Se instalan por `InstallFlow` en el dispositivo y ejecutan `popular` o `latest`, `search`, `details` y `pages`, y se ve una imagen en el lector
-- [ ] Ningún cambio de tipos del modelo de datos; si hace falta uno, se reabre el ADR
+- [x] Ambos módulos pasan su arnés con fixtures propias (repo `RyuuNest-Models`) — la regla «un capítulo con dos releases» se relaja con la opción **opt-in** `singleReleasePerChapter` de `runContract` (decisión del humano); m440 la usa, zonatmo no la necesita
+- [x] Se instalan por `InstallFlow` en el dispositivo y ejecutan `popular` o `latest`, `search`, `details` y `pages`, y se ve una imagen en el lector
+- [x] Ningún cambio de tipos del modelo de datos; si hace falta uno, se reabre el ADR
 - Verif: 🧍 prueba en el dispositivo (S25 Ultra; POCO si vuelve a estar disponible)
+> **Hecho (2026-11-14, `feature/T41-puerta-segundo-sitio` + rama `test/T41-arnes-fixtures-propias` en `RyuuNest-Models`):** `runContract` acepta `singleReleasePerChapter`; los tests de zonatmo y m440 en `RyuuNest-Models` llaman al arnés con sus fixtures (m440 añade ficha con capítulos cifrados y capítulo, datos inventados). En el S25 Ultra (Expo Go, agent-device, red real): ZonaTMO 0.3.0 instalado por `InstallFlow`, listas, búsqueda «dragon», ficha de 30 capítulos y lector de 80 páginas con imagen; M440 0.2.0 listas, búsqueda «kobayashi», ficha de 186 capítulos y lector de 17 páginas con imagen. Portadas de M440 en blanco (F35, causa en la app). Detalle en `MEMORY.md` P-147.
 
 ### 🚩 Checkpoint I `[Ops · Baja · N1]`
 
-- [ ] 🧍 Módulos reales buscan, listan capítulos y entregan imágenes en sitios reales (= T41) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (falta T41) · [ ] 🧍 Revisión
+- [x] 🧍 Módulos reales buscan, listan capítulos y entregan imágenes en sitios reales (= T41, 2026-11-14) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (T37–T41 hechas; lo decide el humano en la revisión) · [ ] 🧍 Revisión
 
 ---
 
