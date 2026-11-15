@@ -9,7 +9,7 @@
 
 **Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37), endurecimiento T34/T35/T36, Fase 6a completa (F01–F10), móvil F11–F21 y F29/F30/FB2 hechas (F34 casi completa), web F24/F25 y extensión F26/F27 hechas, F28 parte web, recorridos F32/F33 hechos. Detalle en `todo.archive.md`.
 
-**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → T41 (cierre API 1.0) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46 → F47** (datos reales en Inicio y portadas) · F49 ❓ (base local en la web de Expo) · verificaciones 🧍 al final de cada tarea.
+**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → T41 (cierre API 1.0) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46 → F47** (datos reales en Inicio y portadas) · F49 (base local en la web de Expo, alternativa A) · verificaciones 🧍 al final de cada tarea.
 
 ---
 
@@ -288,9 +288,9 @@ Dep: F46 · M · `packages/core/src/{library/SeriesStore,library/queries,storage
 - [ ] Las cabeceras se refrescan al abrir la ficha (cookies que caducan, YupManga)
 - Verif: `pnpm -r test` + 🧍 S25 Ultra: portadas de ZonaTMO, M440 y YupManga en Guarida y Tesoros
 
-### F49 Base de datos local en la web de Expo (`apps/mobile` en el navegador) `[FE/Arq · Alta · N4]` ❓
+### F49 Base de datos local en la web de Expo (`apps/mobile` en el navegador) `[FE/Arq · Alta · N4]`
 
-Dep: F46 · M–L · `apps/mobile/src/data/appDatabase.ts` (hoy devuelve `null` en web) · **requiere tu elección antes de empezar**
+Dep: F46 · M–L · `apps/mobile/src/data/appDatabase.ts` (hoy devuelve `null` en web) · **decidido: alternativa A** (P-150)
 
 > Origen (2026-11-14): en la web de Expo no hay SQLite, así que Tesoros (y Guarida tras F46) usan datos de ejemplo de reserva, y la ficha y el lector usan `sessionSqlDriver` (en memoria, solo las sentencias que conoce). El humano pide una base local real y evaluar alternativas.
 
@@ -304,7 +304,7 @@ Dep: F46 · M–L · `apps/mobile/src/data/appDatabase.ts` (hoy devuelve `null` 
 
 **Recomendación: A.** Es la única que da el núcleo completo (migraciones, consultas, cursores, respaldo) sin imitar SQL y sin depender de algo en alpha, y ya funciona en `apps/web`. B es la segunda opción si prefieres no añadir dependencias, asumiendo el riesgo del alpha y las cabeceras. C (la idea del JSON) parece más simple pero es la que más se rompe con el tiempo.
 
-- [ ] 🧍 Elegir alternativa (y, si es A, autorizar `sql.js` en `apps/mobile` y decidir si se extrae a paquete compartido o se duplica)
+- [x] 🧍 Elegir alternativa → **A** (2026-11-14): `sql.js` 1.15.2 + IndexedDB, extraído de `apps/web` a un paquete compartido (p. ej. `packages/web-db`) que usan `apps/web` y la web de `apps/mobile`; `sql.js` autorizada en `apps/mobile` con la versión ya fijada (P-150)
 - [ ] Rojo: `openAppDatabase()` en web devuelve un driver que pasa `migrate` y persiste entre recargas (prueba con `ByteStore` en memoria)
 - [ ] Retirar la reserva de ejemplo de Tesoros/Guarida en web y `sessionSqlDriver` donde quede sustituido
 - Verif: Playwright: guardar una serie, recargar la página y verla en Tesoros; cero peticiones externas
