@@ -44,6 +44,11 @@ export interface ContractHarnessOptions {
    * página 2 puede venir vacía o seguir marcando `hasNext`.
    */
   estimatedHasNext?: boolean;
+  /**
+   * El sitio publica una sola release por capítulo (m440, yupmanga): no se exige el capítulo
+   * con dos releases. Pasa también `releaseIds` con la release que tenga el capítulo.
+   */
+  singleReleasePerChapter?: boolean;
 }
 
 /** Qué se comprobó y con qué datos. */
@@ -104,7 +109,7 @@ export async function runContract(
   exercised.push("search");
 
   const details = await moduleApi.details(seriesId);
-  assertDetails(seriesId, details);
+  assertDetails(seriesId, details, options.singleReleasePerChapter === true);
   exercised.push("details");
 
   const imageCounts: number[] = [];
@@ -173,7 +178,11 @@ function assertPage(name: string, page: Page<SeriesSummary> | undefined): void {
   });
 }
 
-function assertDetails(expectedId: string, details: SeriesDetails | undefined): void {
+function assertDetails(
+  expectedId: string,
+  details: SeriesDetails | undefined,
+  singleRelease: boolean,
+): void {
   if (details === null || details === undefined || typeof details !== "object") {
     throw new ContractError(`details("${expectedId}") no devolvió una serie`);
   }
@@ -220,7 +229,7 @@ function assertDetails(expectedId: string, details: SeriesDetails | undefined): 
     });
   });
 
-  if (!details.chapters.some((chapter) => chapter.releases.length >= 2)) {
+  if (!singleRelease && !details.chapters.some((chapter) => chapter.releases.length >= 2)) {
     throw new ContractError(
       `details("${expectedId}") debe traer al menos un capítulo con dos releases`,
     );
