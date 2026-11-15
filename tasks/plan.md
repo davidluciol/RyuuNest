@@ -77,7 +77,7 @@ FASE 5 — Biblioteca                           T21–T24 ✅ (Checkpoint F ✅)
 FASE 6 — Progreso                             T25/T26/T27 ✅ + T25b ✅ (Checkpoint G ✅)
 FASE 7 — Respaldo                             T28–T30 ✅ + T30b ✅ (Checkpoint H ✅, falta 🧍) → AC-7
 FASE 8 — Generalidad                          T31 ✅ (retirado del repo, P-80) · T32a ✅ · T32b ✅ (ADR-0003)
-  Cierre API 1.0: T37 ✅ → T38 → T39 → T40 → T41 🧍 (Checkpoint I ⏳)
+  Cierre API 1.0: T37 ✅ → T38 ✅ → T39 ✅ → T40 ✅ → T41 ✅ (Checkpoint I ⏳ revisión 🧍)
 FASE 9 — Endurecimiento                       T34 ✅ · T35 ✅ (AC-11) · T36 ✅ · T33 ⏳ (Checkpoint J ⏳)
   FA1 Arte del dragón 🧍 (independiente; antes de v1.0 pública)
 
@@ -130,9 +130,9 @@ El detalle (criterios, verificación, dependencias y archivos) de lo **pendiente
 ### Fase 8 — Módulos reales y generalidad
 - [x] T31 Port TMO (retirado del repo 2026-10-26, P-80; legado conservó P-74/P-75/P-76) · T32a 2.º sitio falso JSON/cursor · T32b ADR-0003 (aceptado 2026-10-29: D1=A, D2=`pages.imageHeaders`, D3=m440)
 - [x] T37 Contrato escrito y validado en ejecución (R4, `guardApi` + formas)
-- [ ] T38 Compatibilidad hacia delante (R3) · T39 Formato declarativo (R2/D2) · T40 Empaquetado `script` (R1/D1) · T41 Puerta del 2.º sitio real (D3) 🧍
+- [x] T38 Compatibilidad hacia delante (R3) · T39 Formato declarativo (R2/D2) · T40 Empaquetado `script` (R1/D1) · T41 Puerta del 2.º sitio real (D3) 🧍
 
-### ⏳ Checkpoint I — faltan T38–T41 y revisión humana
+### ⏳ Checkpoint I — T38–T41 hechas; falta la revisión humana
 
 ### Fase 9 — Endurecimiento
 - [x] T34 Resiliencia · T35 Puertas de CI/contrato/cobertura (**AC-11**: gate funcional + paso «Contrato» + «Bundle Android») · T36 Diagnóstico (tabla `log`, redacción, export JSON+texto, P-72)
