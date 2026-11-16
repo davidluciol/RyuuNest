@@ -25,11 +25,18 @@ export function chapterState(
   return "unread";
 }
 
+/**
+ * `preferred` es lo guardado en `series_pref.preferred_group`: el grupo de la release (vale en
+ * cualquier capítulo) o, si no tiene grupo, su id. La web antigua guardaba el id (F17).
+ */
 export function preferredRelease(
   releases: readonly Release[],
-  preferredReleaseId: string | null,
+  preferred: string | null,
 ): Release | undefined {
-  return releases.find((release) => release.id === preferredReleaseId) ?? releases[0];
+  return (
+    releases.find((release) => release.id === preferred || release.group === preferred) ??
+    releases[0]
+  );
 }
 
 export function chapterProgress(

@@ -5,6 +5,7 @@ import {
   browseLibrary,
   ModuleError,
   ProgressStore,
+  SeriesPrefs,
   type ModuleApi,
   type ModuleManifest,
   type SeriesDetails,
@@ -112,6 +113,24 @@ describe("createReadingSource · loadSeries", () => {
 
     expect(await source.toggleFavorite("m-a", "serie-1", DETAILS)).toBe(false);
     expect((await browseLibrary(driver, { limit: 10 })).items).toEqual([]);
+  });
+
+  it("la release preferida se guarda como grupo y sobrevive a recargar (F17)", async () => {
+    const source = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+
+    await source.setPreferredRelease("m-a", "serie-1", { id: "r-1", group: "Equipo" });
+
+    expect((await new SeriesPrefs({ driver, clock }).get("m-a", "serie-1"))?.preferredGroup).toBe("Equipo");
+    const reloaded = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    expect((await reloaded.loadSeries("m-a", "serie-1")).preferredReleaseId).toBe("Equipo");
+  });
+
+  it("una release sin grupo se guarda por su id", async () => {
+    const source = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+
+    await source.setPreferredRelease("m-a", "serie-1", { id: "r-solo" });
+
+    expect((await source.loadSeries("m-a", "serie-1")).preferredReleaseId).toBe("r-solo");
   });
 
   it("un fallo del módulo llega tal cual, con su código", async () => {

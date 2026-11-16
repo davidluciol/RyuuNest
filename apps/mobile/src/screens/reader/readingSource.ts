@@ -5,8 +5,10 @@ import {
   ModuleError,
   createFunctionScriptLoader,
   ProgressStore,
+  SeriesPrefs,
   SeriesStore,
   type ImageRef,
+  type Release,
   type SeriesDetails,
   type SqlDriver,
 } from "@ryuunest/core";
@@ -50,6 +52,8 @@ export interface ReadingSource {
    * serie en `series`: la biblioteca une `favorite` con `series` (P-126).
    */
   toggleFavorite(moduleId: string, seriesId: string, details: SeriesDetails): Promise<boolean>;
+  /** Recuerda la release elegida (por su grupo; sin grupo, por su id) para toda la serie (F17). */
+  setPreferredRelease(moduleId: string, seriesId: string, release: Release): Promise<void>;
   /** Páginas de un capítulo en una edición, con las cabeceras del módulo (RF-24). */
   loadPages(moduleId: string, chapterId: string, releaseId: string): Promise<ReaderPages>;
 }
@@ -72,6 +76,7 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
   const chaptersRead = new ChapterReadStore({ driver, clock });
   const favorites = new Favorites({ driver, clock });
   const seriesStore = new SeriesStore({ driver, clock });
+  const prefs = new SeriesPrefs({ driver, clock });
   // Se arranca ya: la primera escritura del sembrado ocurre antes de que nadie más escriba.
   const seeded = deps.seed?.(driver) ?? Promise.resolve();
 
@@ -82,10 +87,11 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
       await seeded;
       const { handle, manifest } = await mounter.mount(moduleId);
       const details = await handle.api.details(seriesId);
-      const [saved, read, favorite] = await Promise.all([
+      const [saved, read, favorite, pref] = await Promise.all([
         progress.get(moduleId, seriesId),
         chaptersRead.readIn(moduleId, seriesId),
         favorites.get(moduleId, seriesId),
+        prefs.get(moduleId, seriesId),
       ]);
       return {
         details,
@@ -96,7 +102,7 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
             ? null
             : { chapterId: saved.chapterId, pageIndex: saved.pageIndex, pageTotal: saved.pageTotal ?? 0 },
         readChapterIds: read,
-        preferredReleaseId: null,
+        preferredReleaseId: pref?.preferredGroup ?? null,
         favorite: favorite !== undefined,
       };
     },
@@ -109,6 +115,10 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
       await seriesStore.saveFromDetails(moduleId, { ...details, id: seriesId });
       await favorites.add(moduleId, seriesId, null);
       return true;
+    },
+
+    async setPreferredRelease(moduleId, seriesId, release) {
+      await prefs.setPreferredGroup(moduleId, seriesId, release.group ?? release.id);
     },
 
     async loadPages(moduleId, chapterId, releaseId) {
