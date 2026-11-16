@@ -9,6 +9,10 @@ const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
 
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
+// F48: portadas del sitio falso (`test-site`) servidas en local; el resto de hosts externos sigue abortado (RNF-5).
+const FAKE_COVER_HOSTS = new Set(["sitio-html.test", "api-json.test"]);
+const FAKE_COVER_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="180"><rect width="120" height="180" fill="#263147"/></svg>';
 const output = path.resolve(__dirname, "../../../../docs/capturasF15");
 
 (async () => {
@@ -26,6 +30,9 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF15");
       });
       await context.route("**/*", (route) => {
         const url = new URL(route.request().url());
+        if (FAKE_COVER_HOSTS.has(url.host) && /^\/img\/.+\.svg$/.test(url.pathname)) {
+          return route.fulfill({ status: 200, contentType: "image/svg+xml", body: FAKE_COVER_SVG });
+        }
         if (["http:", "https:"].includes(url.protocol) && url.host !== new URL(baseURL).host) {
           external.push(url.href);
           return route.abort();
@@ -41,6 +48,16 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF15");
       await page.getByText("Más recientes").waitFor({ state: "visible" });
       await page.getByText("Populares").waitFor({ state: "visible" });
       await page.getByText("Explorar catálogo").waitFor({ state: "visible" });
+
+      // F48: las portadas del sitio falso se ven (no solo «sin errores»).
+      await page.waitForFunction(
+        () => {
+          const covers = [...document.images].filter((img) => img.src.includes("sitio-html.test"));
+          return covers.length > 0 && covers.every((img) => img.complete && img.naturalWidth > 0);
+        },
+        undefined,
+        { timeout: 10000 },
+      );
 
       // El selector muestra el módulo activo; B (NSFW) no está visible (RF-35).
       await page.getByRole("button", { name: "Cambiar de módulo" }).waitFor({ state: "visible" });
