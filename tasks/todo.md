@@ -7,262 +7,27 @@
 > Comandos: `pnpm -r typecheck` · `pnpm -r test` · `pnpm -r build` · `pnpm lint` · `pnpm --filter @ryuunest/core test`.
 > Tracker: `bd` local → GitHub Issues cuando exista el repo (P-12). Etiqueta: `[tipo · complejidad · nivel]`. 🧍 = paso humano (no inventar mediciones).
 
-**Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37), endurecimiento T34/T35/T36, Fase 6a completa (F01–F10), móvil F11–F21 y F29/F30/FB2 hechas (F34 casi completa), web F24/F25 y extensión F26/F27 hechas, F28 parte web, recorridos F32/F33 hechos. Detalle en `todo.archive.md`.
+**Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37–T41), endurecimiento T34–T36, Fase 6a (F01–F10), móvil F11–F21, F29–F31, F35, F48 y FB2, web F24/F25 y extensión F26/F27 (salvo 🧍), recorridos F32/F33. Detalle en `todo.archive.md`.
 
-**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46** (datos reales en Inicio) · **Tesoros: F47 · F52 → F54 → F53 → F55 → F56 · F49** (sección «Tesoros») · F50 (filtros por etiquetas) y F51 (lector en cascada) · verificaciones 🧍 al final de cada tarea.
+## Cómo está organizado este archivo (Regla 15 de `AGENTS.md`)
 
----
+Las tareas pendientes se agrupan **por sección de la app**: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, **Ajustes**; más las secciones relacionadas **Lector y ficha**, **Web y extensión** y **Recursos** (arte, iconos, ilustraciones) y, al final, **General** (lo que no encaja en una sola sección o las abarca todas: seguridad, plataforma, TV, dispositivos, verificaciones 🧍). Da igual que la tarea sea de interfaz, BE, seguridad u Ops: va bajo la sección a la que sirve. Solo hay tareas **pendientes** (con algún `- [ ]`); lo terminado se archiva en `todo.archive.md`. Los identificadores no se renumeran.
 
-## Cierre Fase 0
+**Lotes (≥ 5 tareas por sesión de una misma sección):** cada sección termina con su «Lote sugerido». La dificultad va en la etiqueta `[tipo · complejidad · nivel]` (Baja/Intermedia/Alta; N1–N5 de `tasks/complexity.md`). Cada problema abierto es **una tarea propia**, así se pueden elegir cinco a la vez sin arrastrar el resto.
 
-### T05 cierre `[Ops · Baja · N1]` 🧍
-
-- [ ] 🧍 Confirmar que `ADR-0002` fija versiones Expo/RN/RNTV y el tope de imágenes medido; marcar T05 ✅
-- Aparte (no bloquea): MiBox 4 pospuesta (P-43); revalidar RNF-1 en release.
-
----
-
-## Cierre de la API 1.0 (ADR-0003, aceptado 2026-10-29)
-
-Orden: ~~T37~~ ✅ → ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅. Cada tarea: TDD (rojo → verde), un commit por corte, rama propia. Todas parten de `docs/decisions/ADR-0003-congelacion-api-1.0.md`; los tres módulos publicados de `RyuuNest-Models` son la regresión (ninguno debe necesitar cambios, salvo que T40 lo decida).
-
-### T38 Compatibilidad hacia delante ejecutable (R3) `[BE · Intermedia · N4]`
-
-Dep: T37 · M · `packages/module-sdk/src/{repoIndex,manifest,cli}.ts`, `packages/core/src/{contract/repoIndex,repo/RepoRegistry}.ts`, `apps/mobile/{app.json,src/screens/sources/useSourcesData.ts}`
-
-- [x] Índice tolerante **por entrada**: `apiVersion`, `runtime` o `kinds` desconocidos marcan la entrada «no compatible» y no invalidan el repo; las rotas se descartan con aviso
-- [x] `minAppVersion?` opcional en `RepoModuleEntry` (aditivo) y la app oculta/etiqueta lo incompatible antes de descargar
-- [x] `app.json` con versión real y la app la pasa al validador (`Constants.expoConfig?.version`); `minAppVersion` se aplica de verdad
-- [x] El CLI no comprueba `minAppVersion` salvo con `--app-version`
-- [x] Pruebas: un índice con un módulo `apiVersion: 2` sigue listando los de v1
-> **Hecho (2026-11-14, `feature/T38-compatibilidad-hacia-delante`):** `app.json` en 0.1.0; `validateRepoIndex` devuelve `modules` (compatibles) + `incompatible` + `warnings`; `RepoRegistry.listIncompatible`; `SourcesData.incompatible` (sin etiqueta visual: queda para una tarea de UI).
-- Verif: `pnpm -r test` + 🧍 corregir en `RyuuNest-Models` la frase «un campo de más o de menos lo rechaza» de su `AGENTS.md`
-
-### T39 Formato declarativo cerrado y comprobable (R2, D2) `[BE · Alta · N4]`
-
-Dep: T38 · L (dividir en 2 PRs si pasa de ~5 archivos por corte) · `docs/declarative-format.md`, `packages/core/src/runtimes/{DeclarativeRuntime,transforms}.ts`, `packages/module-sdk/src/*`, `packages/module-sdk/templates/declarative/*`
-
-- [x] `pages.imageHeaders` (mapa de cabeceras con `{baseUrl}`, `{chapterId}`, `{releaseId}`) rellena `ImageRef.headers`; el lector ya las aplica
-- [x] Serie sin capítulos devuelve `chapters: []` en vez de `PARSE` (L2)
-- [x] `validateDeclarativeConfig` en `module-sdk`, usado por `ryuunest-module validate`
-- [x] `ryuunest-module test` ejecuta el arnés también con módulos declarativos (retirar la omisión de `cli.test.ts`)
-- [x] `docs/declarative-format.md` normativo a partir del Anexo B del ADR; SPEC §6.6 lo enlaza
-- [x] L3–L6 del ADR (extra, fechas, id sin codificar, mapas de `status`/`kind`): decidir aquí cuáles entran; el resto queda como aditivo → **entran los cuatro** (decisión del humano)
-- Verif: `pnpm -r test` + contrato declarativo con `imageHeaders`
-> **Hecho (2026-11-14, `feature/T39-formato-declarativo`):** `extra`, `date`, `{x:raw}` y `map` además de L1/L2; todo «desde la app 0.2.0» (la plantilla declara `minAppVersion`). Detalle en `MEMORY.md` P-144.
-
-### T40 Ejecución y empaquetado de módulos `script` (R1, D1 = A) `[BE · Alta · N4 → N5]`
-
-Dep: T38 · L · `packages/core/src/ports/scriptLoader.ts`, `runtimes/{ScriptRuntime,ModuleRuntime}.ts`, `apps/mobile/src/data/moduleMounter.ts`, cargador de plataforma (nuevo)
-
-> **Ya hecho (2026-11-06, `fix/urgente-fuentes-modulos-repo`):** el spike de dispositivo con `zonatmo` confirma que Hermes admite `new Function` (P-83 corregido); la app móvil tiene `createFunctionScriptLoader` y Descubrir lista módulos `script`. Falta lo de abajo.
-
-- [x] `ScriptLoader.load` recibe el paquete (ruta → texto) y la ruta de entrada; el montador deja de pasar solo `manifest.entry`
-- [x] Contrato a autores documentado: módulo ES, `export default create(host)`, solo imports relativos dentro del paquete, sin `import()` ni paquetes, entorno ECMAScript estándar (SPEC §6.5) → SPEC §6.5 con las formas admitidas + README de la plantilla `script`
-- [x] 🧍 **Spike de `m440` y `yupmanga`** en el dispositivo (el de `zonatmo` ya pasó); si falla: marcar `script` como experimental (plan C del ADR), anotar la decisión y reabrir D1; escalar a N5 → **hecho (2026-11-14, S25 Ultra, Expo Go, agent-device):** M440 0.1.0 (listas, ficha de 378 capítulos con la lista cifrada, capítulo de 18 páginas con imágenes) y YupManga 0.1.1 instalado por `InstallFlow` (listas, ficha de 7 capítulos, capítulo de 152 páginas con imágenes). Portadas en blanco en ambos (F35). M440 se actualizó a 0.2.0 después, en T43.
-- [x] Desbloquear en la app los módulos `script` (`createInstalledMounter` deja de lanzar `UNSUPPORTED`): Descubrir y Lector montan con `createFunctionScriptLoader`
-- [x] `ryuunest-module test` carga los `script` con el mismo cargador que la app (decisión del humano)
-- Verif: pruebas del cargador con paquetes de varios archivos + 🧍 spike en el dispositivo
-> **Hecho (2026-11-14, `feature/T40-modulos-script`):** CLI con el cargador de la app; los tres módulos publicados (zonatmo 0.3.0, m440 0.2.0, yupmanga 0.1.1) cargan con `createFunctionScriptLoader` en Node. «script» deja de ser experimental (decisión del humano); el spike de M440/YupManga pasó en el dispositivo. Detalle en `MEMORY.md` P-145.
-
-### T41 Puerta del 2.º sitio real: `zonatmo` y `m440` en la app (D3) `[Ops · Baja · N2]` 🧍
-
-Dep: T39, T40 · S · sin código (salvo ajustes que salgan)
-
-- [x] Ambos módulos pasan su arnés con fixtures propias (repo `RyuuNest-Models`) — la regla «un capítulo con dos releases» se relaja con la opción **opt-in** `singleReleasePerChapter` de `runContract` (decisión del humano); m440 la usa, zonatmo no la necesita
-- [x] Se instalan por `InstallFlow` en el dispositivo y ejecutan `popular` o `latest`, `search`, `details` y `pages`, y se ve una imagen en el lector
-- [x] Ningún cambio de tipos del modelo de datos; si hace falta uno, se reabre el ADR
-- Verif: 🧍 prueba en el dispositivo (S25 Ultra; POCO si vuelve a estar disponible)
-> **Hecho (2026-11-14, `feature/T41-puerta-segundo-sitio` + rama `test/T41-arnes-fixtures-propias` en `RyuuNest-Models`):** `runContract` acepta `singleReleasePerChapter`; los tests de zonatmo y m440 en `RyuuNest-Models` llaman al arnés con sus fixtures (m440 añade ficha con capítulos cifrados y capítulo, datos inventados). En el S25 Ultra (Expo Go, agent-device, red real): ZonaTMO 0.3.0 instalado por `InstallFlow`, listas, búsqueda «dragon», ficha de 30 capítulos y lector de 80 páginas con imagen; M440 0.2.0 listas, búsqueda «kobayashi», ficha de 186 capítulos y lector de 17 páginas con imagen. Portadas de M440 en blanco (F35, causa en la app). Detalle en `MEMORY.md` P-147.
-
-### 🚩 Checkpoint I `[Ops · Baja · N1]`
-
-- [x] 🧍 Módulos reales buscan, listan capítulos y entregan imágenes en sitios reales (= T41, 2026-11-14) · [x] Contrato pasa con 2 arquitecturas (T32a) · [ ] API 1.0 congelable (T37–T41 hechas; lo decide el humano en la revisión) · [ ] 🧍 Revisión
+| Sección | Lote sugerido (una sesión) |
+|---|---|
+| Guarida | F46 → QAw2 → F34 → F40 → F76 |
+| Tesoros | F52 → F54 → F53 → F55 → F56 → F57 → F58 (luego F47, F49) |
+| Aventuras | F59 → F50 → F38 → F60 → F77 → QAw3 |
+| Portales | T42 → F61 → F63 → F64 → F45 → F42 |
+| Ajustes | F65 → F66 → F67 → F68 → F69 |
+| Lector y ficha | F17 → F51 → F39 → F43 → F23 |
+| Recursos | F70 → F71 → F72 → F73 → F74 → F75 (FA1 es 🧍) |
 
 ---
 
-## Fase 9 — Endurecimiento (pendiente)
-
-### T33 Pruebas de seguridad `[Sec · Alta · N4]`
-
-Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre de la API (en paralelo)
-
-- [ ] Cada amenaza de SPEC §7.2 (zip-slip, bomba, hash, manifest, respaldo malicioso) tiene una prueba que falla si se quita la mitigación
-- [ ] Un deep link `ryuunest://add-repo?url=…` solo abre la confirmación, no instala (AC-8)
-- [ ] Límites de tamaño/archivos cubiertos
-- Verif: `pnpm --filter @ryuunest/core test -- security` + revisar correspondencia amenaza↔prueba
-
-### 🚩 Checkpoint J — Fin de la Parte 1 `[Ops · Baja · N1]`
-
-- [ ] Suite y CI en verde · [ ] Cobertura del contrato completa · [ ] 🧍 Revisión → cierre formal de la Parte 1
-
-### FA1 Arte final del dragón `[Ops · Baja · N1]` 🧍 (sin dependencias; antes de v1.0 pública)
-
-- [ ] 🧍 Arte original con licencia compatible GPL-3.0; sustituir `apps/mobile/assets/placeholder/*`
-- [ ] `ASSETS.md` y `README` de placeholder actualizados; retirar marca TEMPORAL
-- Verif: `apps/mobile/tests/placeholder.test.ts` en verde + galería con Playwright (RNF-5)
-
----
-
-## Fase 6b — Pendientes de la interfaz móvil
-
-### F17 Cierre de la ficha de serie `[FE · Baja · N2]`
-
-Dep: F32 (hallazgo) · S · `apps/mobile/src/screens/series/*`
-
-- [x] Favorito (ya persistía, P-126) y **release preferida** (se guarda por grupo en `series_pref`, P-151) sobreviven a un reinicio — rama `fix/F17-ficha-persistente`
-- [ ] **Carpeta:** no hay selector de carpeta en la ficha (`onFolderLongPress` vacío); queda como tarea aparte (hoja con `Folders.list` + «Sin carpeta» → `Favorites.move`)
-- [ ] Comprobar en el dispositivo que el reinicio conserva favorito y release (la ficha no tiene aún selector de release: el chip solo repite la actual)
-- Verif: Vitest con SQLite real · 🧍 S25 Ultra
-- Nota: la parte web de la ficha entra en F41 (propuesta de F33).
-
-### F31 Integrar errores en las pantallas — verificación restante `[FE · Baja · N2]`
-
-Dep: hecha la integración (errorLog, ErrorState, ErrorBanner, registro en `log`) · S · `apps/mobile/src/screens/*`
-
-- [x] Integración en Descubrir, Fuentes, Respaldo y lector, con registro en `log` (hecha 2026-10-31; detalle en `todo.archive.md`)
-- [x] Playwright por pantalla: `screenErrors.cjs` cubre los errores visibles de la ficha y el lector a 426 y 1440 px (Fuentes y Respaldo ya en `sources.cjs`/`backup.cjs`; Descubrir web no puede fallar con los datos de ejemplo, lo cubre `apps/web/tests/e2e/discover.cjs`, F39) — rama `test/F31-e2e-errores-por-pantalla`
-- Verif: `apps/mobile/tests/e2e/*.cjs` en verde
-
-### F34 Correcciones UX/UI transversales — restante `[FE · Intermedia · N3]`
-
-> F34.1 (bloqueantes), F34.2 (importantes) y casi todo F34.3 están hechos (2026-11-03 → 2026-11-06; detalle en `todo.archive.md`).
-
-- [ ] **Inicio al 200 %**: recortes en «Continuar la Aventura», el botón «Continuar cap. 41» y las insignias (hallazgo de F34.3, fuera de su alcance)
-- Verif: `focusAndScale.cjs` + `fontScale.test.ts` en verde · 🧍 S25 Ultra con `font_scale 2.0`
-
-### Tareas propuestas por F33 (pendientes de aprobar; detalle en `tasks/Analisis.md` §7). Orden decidido: F40 → F45 → F41/F42 → F43 → F44
-
-- **F40** Inicio con datos reales, estado vacío propio (instalar un módulo + botón a Fuentes) y paridad web/nativo. **F45** Dos avisos NSFW (al instalar y al abrir por primera vez, explicando qué es NSFW) y primer uso sin jerga. **F41** Descubrir, Biblioteca y ficha (web con portada y sinopsis; incluye la ficha web de F17). **F42** Portales y Ajustes (permisos con icono de aviso, «disponibles» visible). **F43** Lector, Diagnóstico y escritorio. **F44** «Recomendados» como índice remoto (requiere actualizar RNF-5 en el SPEC).
-
----
-
-## Fase 7 — TV
-
-### F22 Riel lateral + navegación espacial + foco `[FE · Alta · N4]`
-
-Dep: P-B · M · `apps/mobile/src/tv/*`
-
-- [ ] Foco siempre visible (anillo 2 px `accent`, separación 2 px); escala 1,25×; márgenes seguros; navegación completa con D-pad (incluye el ítem pendiente de F33: revisar navegación con teclado/D-pad y legibilidad en densidad TV)
-- Verif: Playwright (foco con teclado) · 🧍 recorrer los 5 destinos en la MiBox 4
-
-### F23 Lector para TV (D-pad) `[FE · Alta · N4]`
-
-Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
-
-- [ ] Todas las acciones del lector solo con control remoto (AC-9); controles grandes; sin animaciones
-- Verif: 🧍 leer un capítulo completo en la MiBox 4 (AC-9, AC-6)
-
-### 🚩 Checkpoint P-C `[Ops · Baja · N1]`
-
-- [ ] AC-9 · [ ] 🧍 Revisión
-
----
-
-## Fase 8 — Web + extensión (pendientes)
-
-### F25 Pantallas web — restante `[FE · Baja · N2]`
-
-- [x] Pantallas de la v1 sobre base real (sql.js + IndexedDB, P-113), módulos `script` en Web Worker (P-114) — hecho en `feature/F24-F25-web-client`; detalle en `todo.archive.md`
-- [x] **Subir react a 19.3.1+ y react-router a 8** (P-110): ADR-0002 fija react 19.2.3 por Expo SDK 57; al subir react, react-router 8 pasa a ser compatible. Sin tocar Expo: solo `apps/web`. — hecho: react/react-dom 19.3.1 en `apps/web` y `apps/extension`, react-router 8.5.1, `resolve.dedupe` de react en la web (mobile-src sigue en 19.2.3). Lint, typecheck, tests y e2e web en verde salvo `reader.cjs` a 426 px, intermitente también en `HEAD` (preexistente).
-- Verif: `pnpm -r test` + e2e web en verde
-
-### F26/F27 Extensión y puente — restante `[FE/BE · Baja · N2]`
-
-- [x] Extensión MV3 con permisos por dominio y puente web ↔ extensión hechos en `feature/F26-F27-extension-bridge`; AC-10 con e2e real — detalle en `todo.archive.md`
-- [ ] 🧍 Cargar la extensión **en Chrome y en Firefox** y autorizar un dominio con el aviso real del navegador (Playwright no puede pulsar ese aviso; ver `apps/extension/README.md`)
-- [ ] 🧍 Leer un capítulo con la extensión instalada en tu navegador y con un sitio real (AC-10; cierra Checkpoint P-D)
-- [ ] Pendiente (no bloquea): iconos de la extensión (no hay arte; el manifiesto va sin `icons`), origen de producción de la PWA (hoy solo `localhost`, P-116) y ficha de publicación en las tiendas.
-
-### 🚩 Checkpoint P-D `[Ops · Baja · N1]`
-
-- [x] AC-10 con e2e de la extensión real · [ ] 🧍 AC-10 en tu navegador · [ ] 🧍 Revisión
-
----
-
-## Pendientes que dejó el recorrido F32 (2026-11-08, S25 Ultra)
-
-### F35 Portadas en blanco de M440 y YupManga `[FE/Ops · Intermedia · N3]`
-
-Dep: F32 · S · S25 Ultra con red real
-
-- [x] Reproducir con prueba en rojo: la `imageRef` de la portada llega a `LibraryCard` con `Referer`/`User-Agent` (P-137), ZonaTMO sí carga y M440/YupManga no; averiguar si falla el módulo (cabeceras o dominio no declarado en `permissions.domains`) o la app (expo-image con cabeceras) → **es de la app**: el `Image` de React Native no envía `source.headers` en Android
-- [x] Si es del módulo, corregir en `RyuuNest-Models` (otro repo) y subir versión; si es de la app, arreglar con test y verificar en el teléfono
-- [x] Comprobar portadas en Descubrir (listas y catálogo) y ficha → visibles en el S25 Ultra: listas de M440 y YupManga, cuadrícula de búsqueda/catálogo de M440 («alya») y fichas de M440 y YupManga (la de YupManga usa `og:image` con la cookie de la sesión). **Guarida/Tesoros:** no muestran portadas de ningún módulo (las tarjetas no reciben `cover` y la biblioteca solo guarda `cover_url`, sin cabeceras): queda como pregunta al humano (P-148)
-- Verif: 🧍 S25 Ultra (portadas visibles en M440 y YupManga).
-> **Hecho (2026-11-14, `fix/F35-portadas-cabeceras`):** `LibraryCard` y `SeriesScreen` pintan con `expo-image` (como el lector); `remoteImageUsage.test.ts` impide volver al `Image` de React Native salvo recursos locales y tres tarjetas que aún no reciben portadas remotas (la lista solo mengua). Detalle en `MEMORY.md` P-148.
-
-### T43 Capacidades `home`/`list`/`filters` rompen instalar y actualizar módulos `[BE · Intermedia · N3]`
-
-Dep: T40 · S · `packages/core/src/contract/types.ts`, `runtimes/{contractShape,ModuleRuntime,ScriptRuntime}.ts`, `packages/module-sdk/src/manifest.ts`, SPEC §6.1/§6.3
-
-> Origen (2026-11-14): al probar «Gestionar» en el S25 Ultra, el panel sí abre y ofrece «Actualizar a v0.2.0» (el fallo que se sospechaba no existe), pero actualizar M440 0.1.0 → 0.2.0 fallaba con «Manifest inválido: capabilities[5..7]». M440 0.2.0 y ZonaTMO 0.3.0 declaran `home`, `list` y `filters` (contrato dinámico de `RyuuNest-Models`, `AGENTS.md` §7) y el validador solo admitía cinco valores.
-
-- [x] `ModuleCapability` y `MODULE_CAPABILITIES` admiten `home`, `list` y `filters` (decisión del humano: añadirlas al contrato)
-- [x] `ModuleApi` con `home?()`, `list?(sectionId, page)`, `filters?()` y `search(query, page, filters?)`; `ScriptRuntime` y `guardApi` los pasan y validan la forma mínima
-- [x] SPEC §6.1 y §6.3
-- [x] 🧍→ hecho con agent-device: M440 se actualiza a 0.2.0 en el S25 Ultra y sus listas cargan
-- [ ] Fuera de alcance: usar `home`/`list`/`filters` en la app (UI de Descubrir con secciones y filtros) — tarea aparte
-- Verif: `pnpm -r test` + actualización real en el dispositivo
-> **Hecho (2026-11-14, `fix/T43-capacidades-home-list-filters`):** ver `MEMORY.md` P-146.
-
-### T42 YupManga: el «reto del lector» cambió de formato `[Ops · Intermedia · N3]` 🧍
-
-Dep: T40 · S · repo `RyuuNest-Models`
-
-- [ ] El capítulo falla con `UNSUPPORTED` («el reto del lector cambió de formato»; selector `\[([0-9,]+)\];var [\w$]+=String\.fromCharCode\(([0-9,]+)\);`). Guardar una fixture HTML del reto actual (nunca el sitio real en pruebas), ajustar el módulo y subir versión + índice con SHA-256.
-- [ ] Abrir un capítulo de YupManga en el teléfono y ver al menos una imagen.
-- [ ] Revisar `m440.in`: dio `TIMEOUT` durante la sesión (sitio intermitente); decidir si el módulo necesita reintentos o un mensaje mejor.
-- Verif: 🧍 S25 Ultra; el arnés del módulo en verde.
-
-### F36 Detalle de error sin «…» en la URL `[FE · Baja · N2]`
-
-Dep: F29 · XS
-
-- [x] «Ver detalle» de `ErrorState` ya no limita a una línea y parte la URL (`wordBreak: break-all`); `LogEventRow`, banner y diálogo ya envolvían — rama `fix/F36-detalle-error-url-completa`. Falta 🧍 verlo en el S25 con un error de imagen real.
-- Verif: S25 Ultra con el error de imagen del lector (red cortada).
-
-### F37 Repetir F32 en la MiBox 4 y el POCO F5 Pro `[FE/QA · Baja · N2]` 🧍
-
-Dep: F32 · S · dispositivos
-
-- [ ] Repetir el recorrido de F32 en la MiBox 4 (piso de rendimiento, Android 9, 2 GB) y en el POCO F5 Pro cuando haya módulo y red; anotar diferencias frente al S25 Ultra.
-- [ ] Medir la memoria del lector con `adb shell dumpsys meminfo` durante la precarga (fija `READER_IMAGE_BUDGET_MB`, P-90) y AC-6 (60 páginas verticales sin cierres) en la MiBox 4.
-- Verif: 🧍 dispositivos.
-
-### F38 Búsqueda y estados de Descubrir: pulido `[FE · Baja · N2]`
-
-Dep: F32 · XS
-
-- [x] Con consulta se ocultan «Más recientes/Populares» y hay botón «Buscar» (decisión del humano, P-151); en el S25 un toque basta (`keyboardShouldPersistTaps="handled"`). Rama `fix/F38-descubrir-busqueda-hoja-modulo`.
-- [ ] Sin confirmar: `discover.tsx` llama a `refreshModules` al recuperar el foco; no se probó en el teléfono instalar/desinstalar en Portales y volver.
-- [x] «Desinstalar» queda separado de «Activar/Desactivar» (margen `spacing.xl`; ya pedía confirmación aparte). Visto en el S25.
-- Verif: S25 Ultra.
-
-### F39 Equivalencias web de los arreglos de F32 `[FE · Baja · N2]`
-
-Dep: F32 · XS
-
-- [x] `apps/web/tests/e2e/discover.cjs` cubre «el módulo falla → elegir otro» y que un 2.º módulo instalado en Fuentes aparece al volver a Descubrir (la ruta monta de nuevo) — rama `test/F39-equivalencias-web`
-- [ ] Sin decidir: el error de imagen del lector web solo muestra el título; valorar el mismo mensaje por tipo que en móvil.
-- Verif: Playwright a 1440/426 px.
-
----
-
-## Datos reales en Inicio y portadas (salieron de F35, 2026-11-14)
-
-Orden (decisión del humano): **F48 → F46 → F47**; F49 espera tu elección de alternativa. Cada una con su rama (`fix/` o `feature/`), TDD y PR propio.
-
-### F48 e2e `discover.cjs` en verde: portadas del sitio falso servidas en local `[QA · Baja · N2]`
-
-Dep: — · S · `apps/mobile/tests/e2e/discover.cjs` (y los e2e que pinten portadas de `test-site`)
-
-> Origen (P-148): desde que Descubrir pinta portadas (P-137), las del sitio falso apuntan a `https://sitio-html.test/img/*.svg`; el e2e aborta todo lo externo y eso deja `ERR_FAILED` en consola y entradas en `external`. Falla igual en `master`.
-
-- [x] Rojo: el e2e comprueba que las portadas del sitio falso **se ven** (no solo que no hay errores)
-- [x] El e2e atiende `sitio-html.test` y `api-json.test` con `route.fulfill` (un SVG en línea; `test-site` no tiene SVG en disco); cualquier otro host sigue abortado y contado (RNF-5 intacto) — rama `test/F48-e2e-descubrir-portadas-locales`
-- [x] `library`, `series` y `home` pasan sin cambios
-- Verif: `discover.cjs` en verde a 426 y 1440 px, 2–3 ejecuciones seguidas
+## 🏠 Guarida (Inicio)
 
 ### F46 Inicio (Guarida) con datos reales locales `[FE · Intermedia · N3]`
 
@@ -277,33 +42,48 @@ Dep: F48 · M · `apps/mobile/src/app/(tabs)/index.tsx`, `src/screens/home/{home
 - [ ] Galería y `homeFixtures` siguen con datos de ejemplo (solo para la galería)
 - Verif: Vitest + 🧍 S25 Ultra (leer unas páginas → Guarida lo muestra en «Continuar»); retoma QAw2 en el móvil
 
-### F50 Botón de filtros por etiquetas en el buscador de Descubrir `[FE · Intermedia · N3]`
 
-Dep: F38 (botón «Buscar»), T43 (`filters()` en el contrato) · M · `apps/mobile/src/screens/discover/*`, `packages/core/src/contract/types.ts` (solo lectura)
+### QAw2 Ruta Inicio: vacío → instalar → leer → continuar leyendo `[FE/QA · Intermedia · N3]`
 
-> Origen (petición del humano, 2026-11-16).
+- [ ] Al abrir la aplicación web, **Inicio debería estar vacío** (sin historial de lectura).
+- [ ] Ir a **Fuentes** e instalar un módulo en caso de que no exista ninguno.
+- [ ] Ir a la sección **Descubrir**.
+- [ ] Seleccionar un manga al azar.
+- [ ] Abrir un capítulo al azar y avanzar un poco en la lectura, para que quede registro de progreso.
+- [ ] Salir del lector y regresar a **Inicio**.
+- [ ] Verificar que el manga aparece para **continuar leyendo**.
+- Verif: Inicio muestra la obra con el progreso guardado y reanuda en el punto de lectura.
 
-- [ ] Botón «Filtros» junto al buscador que abre una hoja con las etiquetas (p. ej. Sekai, Aventuras, Horror, Seinen, Shonen…), multiselección y «Limpiar»
-- [ ] Las etiquetas salen de `ModuleApi.filters()` del módulo elegido (tipo `tags`); si el módulo no declara `filters`, el botón no aparece. **Pregunta abierta:** ¿lista fija común a todos los módulos o la de cada módulo? (recomendado: la de cada módulo, sin inventar etiquetas)
-- [ ] `search(query, page, filters?)` recibe la selección; chip/contador de filtros activos y la búsqueda funciona también sin texto
-- [ ] Textos en el catálogo i18n, componente en la galería con todos sus estados, solo tokens
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440 (declaran `filters`)
 
-### F51 Lector en cascada (webtoon): deslizar, pellizcar para zoom y barras que se ocultan a los 3 s `[FE · Alta · N4]`
+### F34 Inicio al 200 % del texto del sistema `[FE · Intermedia · N3]`
 
-Dep: F18/F19 (hechas) · M · `apps/mobile/src/screens/reader/{ReaderScreen,ReaderVertical,ReaderBars,ZoomableView}.tsx`
+> Resto de F34 (F34.1–F34.3 hechos; detalle en `todo.archive.md`).
 
-> Origen (petición del humano, 2026-11-16). Hoy el modo vertical ya es una lista, pero un toque en la pantalla avanza a la página siguiente (`scrollToPage`).
+- [ ] **Inicio al 200 %**: recortes en «Continuar la Aventura», el botón «Continuar cap. 41» y las insignias (hallazgo de F34.3, fuera de su alcance)
+- Verif: `focusAndScale.cjs` + `fontScale.test.ts` en verde · 🧍 S25 Ultra con `font_scale 2.0`
 
-- [ ] En modo cascada/webtoon las imágenes se apilan de arriba abajo y se navega **solo deslizando**; un toque en la pantalla deja de avanzar de página (el toque solo muestra u oculta las barras)
-- [ ] Zoom con pellizco (acercar/alejar) en cascada, sin romper el desplazamiento vertical; revisar el presupuesto de memoria (P-90)
-- [ ] Las barras (cabecera y pie) se ocultan solas **3 s** después de mostrarse; sin animaciones en el lector (AGENTS.md): aparecen y desaparecen sin transición. **Pregunta abierta:** ¿el temporizador se reinicia con cada toque y también afecta al modo paginado?
-- [ ] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20)
-- Verif: Vitest de la lógica (temporizador, toque ≠ avanzar) + 🧍 S25: leer un capítulo largo deslizando, pellizcar y ver que las barras se ocultan
+### F40 Estado vacío propio de Inicio y paridad web/nativo (propuesta de F33, sin aprobar) `[FE · Baja · N2]`
+
+Dep: F46 · XS
+
+> Origen: `tasks/Analisis.md` §7. Los datos reales los cubre F46; aquí queda lo que F46 no hace.
+
+- [ ] 🧍 Aprobar F40 (decisión del humano). Después: estado vacío de Inicio con «instalar un módulo» + botón a Portales y paridad web/nativo comprobada con Playwright
+- Verif: Playwright 426/1440 px + 🧍 S25
+
+### F76 Inicio: «Continuar leyendo» con progreso real en el borde de la tarjeta `[FE · Baja · N2]`
+
+Dep: F46 · XS · `apps/mobile/src/components/ContinueCard.tsx`
+
+- [ ] Comprobar que la tarjeta muestra capítulo y página guardados (no los de ejemplo) y que pulsar reanuda en esa página (RF-20); añadir el caso a la galería si falta
+- Verif: Vitest + 🧍 S25
+
+> **Nota:** F47 (portadas con cabeceras) afecta también a Guarida; vive en **Tesoros**.
 
 ---
 
-## Tesoros (Biblioteca) — pendientes y tareas nuevas (petición del humano, 2026-11-16)
+## 💎 Tesoros (Biblioteca)
+
 
 > Esta sección reúne todo lo de **Tesoros**: primero lo que ya estaba pendiente (F47 y F49, movidas aquí sin cambios) y luego las tareas nuevas **F52–F56**. Solo están **escritas, no implementadas**. Orden propuesto: F52 → F54 → F53 → F55 → F56 (F47/F49 siguen su orden anterior).
 > **Preguntas abiertas (responder antes de F52):** (1) SPEC RF-29/D-12 dice «un favorito pertenece a una carpeta o a ninguna»; aquí **Gemas** contiene todas las series y «Favoritos» es carpeta: ¿una serie puede estar a la vez en Gemas, Favoritos y otra carpeta (pertenencia múltiple), o «mover» la saca de las demás? Recomendado: Gemas es una **vista** (muestra todo, no es pertenencia) y el resto es una sola carpeta + el favorito; hay que **actualizar RF-29/D-12 en el SPEC** (decisión del humano). (2) Las etiquetas de una carpeta: ¿se guardan al crearla y se aplican siempre (carpeta inteligente) o solo añaden series una vez? Recomendado: siempre, con las etiquetas de la serie (`SeriesStore`), sin inventar etiquetas.
@@ -387,33 +167,86 @@ Dep: F55 · S · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`, `pa
 - [ ] Componente en la galería (con y sin filtros activos); textos en el catálogo i18n
 - Verif: Playwright 426/1440 px sin overflow + 🧍 S25
 
+
+### F57 Hoja de filtros real (tipo y fuente) y nombre visible de la fuente `[FE · Intermedia · N3]`
+
+Dep: F55 · M · `apps/mobile/src/screens/library/*`
+
+> Origen: `MEMORY.md` §4 «Biblioteca (restos de F14)». **Comprobar al empezar si sigue vigente.**
+
+- [ ] Hoja de filtros real: tipo y fuente hoy son chips de marcador (RF-27)
+- [ ] Nombre visible de la fuente desde `ModuleRegistry`
+- Verif: Vitest + Playwright 426/1440 px
+
+### F58 Menú de orden real y `reading: true` al núcleo `[FE/BE · Baja · N2]`
+
+Dep: F52 · S · `apps/mobile/src/screens/library/*`, `packages/core/src/library/queries.ts`
+
+> Origen: `MEMORY.md` §4 (restos de F14). **Comprobar al empezar si sigue vigente.**
+
+- [ ] Menú de orden (nombre, último leído, fecha de adición; RF-28) en lugar de ciclar al pulsar
+- [ ] Pasar `reading: true` al núcleo para el chip «Leyendo»
+- Verif: Vitest con SQLite real + Playwright
+
+**Lote sugerido:** F52 → F54 → F53 → F55 → F56 → F57 → F58; F47 y F49 en sesiones propias (N4).
+
 ---
 
-## QA del cliente web — rutas de aceptación
+## 🧭 Aventuras (Descubrir)
 
-> Recorridos de extremo a extremo sobre `apps/web` con datos reales (añadidas el 2026-11-01). Con Playwright (doble de la extensión, `fakeExtension.cjs`) o a mano en el navegador.
+### F50 Botón de filtros por etiquetas en el buscador de Descubrir `[FE · Intermedia · N3]`
 
-### QAw1 Ruta guardado: instalar → descubrir → guardar → biblioteca `[FE/QA · Intermedia · N3]`
+Dep: F38 (botón «Buscar»), T43 (`filters()` en el contrato) · M · `apps/mobile/src/screens/discover/*`, `packages/core/src/contract/types.ts` (solo lectura)
 
-- [x] Abrir la aplicación web.
-- [x] Ir a **Fuentes** e instalar un módulo.
-- [x] Moverse a **Descubrir**.
-- [x] Seleccionar algún manga o cómic al azar.
-- [x] Guardarlo en alguna carpeta o en favoritos.
-- [x] Buscarlo en **Biblioteca**.
-- [x] Seleccionarlo y **debería mostrar de nuevo la pantalla de detalle** para ese manga o cómic.
-- Verif: la obra guardada aparece en Biblioteca y al abrirla se ve su ficha (detalle) completa. — verificado por e2e `apps/web/tests/e2e/discover.cjs` (paso 4: busca en Biblioteca, abre la ficha con capítulos y «Guardada») a 1440/426 px; el bloqueo de «Favorito» ya lo resolvió P-126. Sin cambios nativos, no hay verificación en el teléfono.
+> Origen (petición del humano, 2026-11-16).
 
-### QAw2 Ruta Inicio: vacío → instalar → leer → continuar leyendo `[FE/QA · Intermedia · N3]`
+- [ ] Botón «Filtros» junto al buscador que abre una hoja con las etiquetas (p. ej. Sekai, Aventuras, Horror, Seinen, Shonen…), multiselección y «Limpiar»
+- [ ] Las etiquetas salen de `ModuleApi.filters()` del módulo elegido (tipo `tags`); si el módulo no declara `filters`, el botón no aparece. **Pregunta abierta:** ¿lista fija común a todos los módulos o la de cada módulo? (recomendado: la de cada módulo, sin inventar etiquetas)
+- [ ] `search(query, page, filters?)` recibe la selección; chip/contador de filtros activos y la búsqueda funciona también sin texto
+- [ ] Textos en el catálogo i18n, componente en la galería con todos sus estados, solo tokens
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440 (declaran `filters`)
 
-- [ ] Al abrir la aplicación web, **Inicio debería estar vacío** (sin historial de lectura).
-- [ ] Ir a **Fuentes** e instalar un módulo en caso de que no exista ninguno.
-- [ ] Ir a la sección **Descubrir**.
-- [ ] Seleccionar un manga al azar.
-- [ ] Abrir un capítulo al azar y avanzar un poco en la lectura, para que quede registro de progreso.
-- [ ] Salir del lector y regresar a **Inicio**.
-- [ ] Verificar que el manga aparece para **continuar leyendo**.
-- Verif: Inicio muestra la obra con el progreso guardado y reanuda en el punto de lectura.
+
+### F59 Descubrir usa las capacidades `home`, `list` y `filters` de los módulos `[FE · Alta · N4]`
+
+Dep: T43 (hecha) · M · `apps/mobile/src/screens/discover/*`
+
+> Origen: lo dejó fuera de alcance T43. Los módulos M440 y ZonaTMO ya las declaran.
+
+- [ ] Secciones de portada desde `home()` y listas paginadas desde `list(sectionId, page)`, con reserva a `popular`/`latest` si el módulo no las declara
+- [ ] Los filtros de `filters()` alimentan F50 (no duplicar)
+- Verif: Vitest + 🧍 S25 con M440 o ZonaTMO
+
+### F38 Descubrir: refresco al recuperar el foco `[FE · Baja · N2]`
+
+- [ ] Sin confirmar: `discover.tsx` llama a `refreshModules` al recuperar el foco; no se probó en el teléfono instalar/desinstalar en Portales y volver
+- Verif: S25 Ultra
+
+### F60 Búsqueda global de la cabecera `[FE · Intermedia · N3]`
+
+Dep: F38 · M · `apps/mobile/src/components/Header.tsx`
+
+> Origen: `MEMORY.md` §4 punto 8 («pendiente de F15»). **Comprobar al empezar si sigue vigente.**
+
+- [ ] Búsqueda desde la cabecera que lleva a Aventuras con la consulta ya escrita
+- Verif: Vitest + Playwright 426/1440 px
+
+### F41 Descubrir y ficha en la web: portada y sinopsis (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
+
+Dep: F33 · M · `apps/web/*`
+
+- [ ] 🧍 Aprobar F41. Después: web con portada y sinopsis en Descubrir y en la ficha (incluye la ficha web de F17)
+- Verif: Playwright 426/1440 px
+
+### F44 «Recomendados» como índice remoto (propuesta de F33, sin aprobar) `[BE/FE · Alta · N4]`
+
+- [ ] ❓ Dar el formato y la URL del índice y autorizar el cambio de **RNF-5** en el SPEC (sin servidor propio ni terceros) antes de empezar
+- Verif: según la decisión
+
+### F77 Descubrir: texto de error del lector de imagen en la web `[FE · Baja · N2]`
+
+- [ ] Sin decidir: el error de imagen del lector web solo muestra el título; valorar el mismo mensaje por tipo que en móvil (ver también F39)
+- Verif: Playwright 1440/426 px
 
 ### QAw3 Intercalar entre servidores: dos módulos y cambio de fuente `[FE/QA · Intermedia · N3]`
 
@@ -427,42 +260,293 @@ Dep: F55 · S · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`, `pa
 
 ---
 
-## Verificación final
+
+**Lote sugerido:** F59 → F50 → F38 → F60 → F77 → QAw3 (F41/F44 esperan aprobación).
+
+---
+
+## 🚪 Portales (Fuentes y módulos)
+
+### T42 YupManga: el «reto del lector» cambió de formato `[Ops · Intermedia · N3]` 🧍
+
+Dep: T40 · S · repo `RyuuNest-Models`
+
+- [ ] El capítulo falla con `UNSUPPORTED` («el reto del lector cambió de formato»; selector `\[([0-9,]+)\];var [\w$]+=String\.fromCharCode\(([0-9,]+)\);`). Guardar una fixture HTML del reto actual (nunca el sitio real en pruebas), ajustar el módulo y subir versión + índice con SHA-256.
+- [ ] Abrir un capítulo de YupManga en el teléfono y ver al menos una imagen.
+- [ ] Revisar `m440.in`: dio `TIMEOUT` durante la sesión (sitio intermitente); decidir si el módulo necesita reintentos o un mensaje mejor.
+- Verif: 🧍 S25 Ultra; el arnés del módulo en verde.
+
+
+### F61 Etiqueta visual de módulos incompatibles `[FE · Baja · N2]`
+
+Dep: T38 (hecha) · XS · `apps/mobile/src/screens/sources/*`
+
+> Origen: T38 dejó `SourcesData.incompatible` sin etiqueta visual.
+
+- [ ] Mostrar «No compatible con esta versión» (con la versión mínima) en la fila del módulo; no se puede instalar
+- Verif: Vitest + Playwright
+
+### F63 F16 en el dispositivo: repo real, módulo declarativo y `script` `[Ops · Baja · N2]` 🧍
+
+- [ ] 🧍 Añadir un repo real, instalar uno declarativo y uno `script` (confirmación reforzada y bloqueo de dispositivo con la protección activada); incluye F16b/F16c/F12 (el repo oficial aparece al entrar)
+- Verif: 🧍 POCO F5 Pro
+
+### F64 Revisión de `RyuuNest-Models` `[Ops · Baja · N1]` 🧍
+
+- [ ] 🧍 Corregir la frase «un campo de más o de menos lo rechaza» de su `AGENTS.md` (T38) y copiar `modules/{AGENTS,README,NOTES}.md` al repo
+- Verif: revisión humana
+
+### F45 Avisos NSFW y primer uso sin jerga (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
+
+Dep: F16 · S · `apps/mobile/src/screens/{onboarding,sources}/*`
+
+- [ ] 🧍 Aprobar F45. Después: dos avisos NSFW (al instalar y al abrir por primera vez, explicando qué es NSFW) y primer uso sin jerga
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+
+### F42 Portales y Ajustes: permisos y «disponibles» (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
+
+Dep: F33 · S · `apps/mobile/src/screens/{sources,settings}/*`
+
+- [ ] 🧍 Aprobar F42. Después: permisos con icono de aviso y la lista de «disponibles» visible
+- Verif: Vitest + Playwright 426/1440 px
+
+### F62 Puertos futuros de `legacyModulos/` (deuda) `[BE/Ops · Alta · N4]`
+
+> Decidido 2026-10-24: solo TMO en T31; los demás, a priorizar. Bloqueos: `details`/`pages` de m440 y FoxManga usan render JS (el host no tiene navegador); NineManga y Luscious sin `details`/`pages` en el legado; Yupmanga con anti-bot TLS; TmoHentai vacío. Detalle en `todo.archive.md` (T31).
+
+- [ ] Priorizar solo cuando el host soporte navegador o cambie el sitio
+- Verif: —
+
+**Lote sugerido:** T42 → F61 → F63 → F64 → F45 → F42.
+
+---
+
+## ⚙️ Ajustes (incluye Respaldo y Diagnóstico)
+
+### F65 Respaldo en el teléfono `[FE · Baja · N2]` 🧍
+
+- [ ] 🧍 Compartir el archivo exportado con la hoja del sistema, importar un archivo real y comprobar que las carpetas por defecto no se duplican (ver F52) — F21a/F21b
+- Verif: 🧍 POCO/S25
+
+### F66 Zonas seguras en el dispositivo `[FE · Baja · N2]` 🧍
+
+- [ ] 🧍 Muesca, barra de estado y gesto inferior con `react-native-safe-area-context` en el POCO y el S25 (Diagnóstico y ficha); interruptor apagado legible; tarjetas y botones «Exportar/Importar/Vaciar» a 360 dp; JetBrains Mono visible en códigos (F34.2)
+- [ ] 🧍 Repetir F34.3 en el POCO F5 Pro con texto al 200 %
+- Verif: 🧍 POCO F5 Pro
+
+### F67 Hojas de Respaldo, diálogos de error nativos y modo paginado `[FE · Baja · N2]` 🧍
+
+- [ ] 🧍 Revisar en el teléfono las hojas de Respaldo y los diálogos de error nativos, y el modo paginado I → D (F33 R1); la hoja «Actualizar módulo» espera una actualización real
+- Verif: 🧍 S25
+
+### F68 Informe de diagnóstico en el teléfono `[FE · Baja · N2]` 🧍
+
+- [ ] 🧍 Exportar el informe (hoja del sistema) y copiarlo al portapapeles en el POCO/S25 (F30/F31)
+- Verif: 🧍 dispositivo
+
+### F69 Actualizaciones OTA con `expo-updates` `[Ops · Intermedia · N3]` 🧍 (bloqueada)
+
+> **Bloqueada** por la cuenta de Expo/EAS del humano (login interactivo, proyecto y canal). Mientras no exista, Expo Go avisa «expo-updates system is disabled…»; no afecta al desarrollo.
+
+- [ ] Añadir `updates.url`, política de `runtimeVersion`, proyecto/canal de EAS, build de prueba y verificación de una actualización real
+- Verif: 🧍 con la cuenta de EAS
+
+**Lote sugerido:** F65 → F66 → F67 → F68 (F69 espera cuenta). Diagnóstico y escritorio (F43) está en «Lector y ficha».
+
+---
+
+## 📖 Lector y ficha (relacionadas con Aventuras y Tesoros)
+
+### F17 Cierre de la ficha de serie `[FE · Baja · N2]`
+
+Dep: F32 (hallazgo) · S · `apps/mobile/src/screens/series/*`
+
+- [ ] **Carpeta:** no hay selector de carpeta en la ficha (`onFolderLongPress` vacío); queda como tarea aparte (hoja con `Folders.list` + «Sin carpeta» → `Favorites.move`)
+- [ ] Comprobar en el dispositivo que el reinicio conserva favorito y release (la ficha no tiene aún selector de release: el chip solo repite la actual)
+- Verif: Vitest con SQLite real · 🧍 S25 Ultra
+- Nota: la parte web de la ficha entra en F41 (propuesta de F33).
+
+
+### F51 Lector en cascada (webtoon): deslizar, pellizcar para zoom y barras que se ocultan a los 3 s `[FE · Alta · N4]`
+
+Dep: F18/F19 (hechas) · M · `apps/mobile/src/screens/reader/{ReaderScreen,ReaderVertical,ReaderBars,ZoomableView}.tsx`
+
+> Origen (petición del humano, 2026-11-16). Hoy el modo vertical ya es una lista, pero un toque en la pantalla avanza a la página siguiente (`scrollToPage`).
+
+- [ ] En modo cascada/webtoon las imágenes se apilan de arriba abajo y se navega **solo deslizando**; un toque en la pantalla deja de avanzar de página (el toque solo muestra u oculta las barras)
+- [ ] Zoom con pellizco (acercar/alejar) en cascada, sin romper el desplazamiento vertical; revisar el presupuesto de memoria (P-90)
+- [ ] Las barras (cabecera y pie) se ocultan solas **3 s** después de mostrarse; sin animaciones en el lector (AGENTS.md): aparecen y desaparecen sin transición. **Pregunta abierta:** ¿el temporizador se reinicia con cada toque y también afecta al modo paginado?
+- [ ] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20)
+- Verif: Vitest de la lógica (temporizador, toque ≠ avanzar) + 🧍 S25: leer un capítulo largo deslizando, pellizcar y ver que las barras se ocultan
+
+---
+
+
+### F23 Lector para TV (D-pad) `[FE · Alta · N4]`
+
+Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
+
+- [ ] Todas las acciones del lector solo con control remoto (AC-9); controles grandes; sin animaciones
+- Verif: 🧍 leer un capítulo completo en la MiBox 4 (AC-9, AC-6)
+
+
+### F39 Equivalencias web de los arreglos de F32 `[FE · Baja · N2]`
+
+- [ ] Sin decidir: el error de imagen del lector web solo muestra el título; valorar el mismo mensaje por tipo que en móvil (**mismo asunto que F77**: decidir en una sola)
+- Verif: Playwright a 1440/426 px
+
+### F36 Detalle de error en el S25 `[FE · Baja · N2]` 🧍
+
+- [ ] 🧍 Ver el «Ver detalle» de `ErrorState` con la URL completa (sin «…») en el S25 con un error de imagen real (red cortada)
+- Verif: S25 Ultra
+
+### F43 Lector, Diagnóstico y escritorio (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
+
+- [ ] 🧍 Aprobar F43. Después: ajustes del lector, Diagnóstico y diseño de escritorio según `tasks/Analisis.md` §7
+- Verif: según el análisis
+
+### 🧍 Lector en el POCO (F18/F19) `[FE · Baja · N2]`
+
+- [ ] 🧍 Abrir un capítulo real, cambiar de modo, pellizcar, comprobar que la pantalla no se apaga, romper una imagen (modo avión) y reintentarla, y medir la memoria con `adb shell dumpsys meminfo` durante la precarga
+
+**Lote sugerido:** F17 → F51 → F39 → F36 → F43 → F23.
+
+---
+
+## 🌐 Web y extensión
+
+### F26/F27 Extensión y puente — restos `[FE/BE · Baja · N2]`
+
+- [ ] 🧍 Cargar la extensión **en Chrome y en Firefox** y autorizar un dominio con el aviso real del navegador (ver `apps/extension/README.md`)
+- [ ] 🧍 Leer un capítulo con la extensión instalada y un sitio real (AC-10; cierra Checkpoint P-D)
+- [ ] 🧍 Decidir el origen de producción de la PWA (hoy solo `localhost`, P-116), la ficha de las tiendas y validar los textos `extension.*` (P-120)
+
+### 🚩 Checkpoint P-D `[Ops · Baja · N1]`
+
+- [ ] 🧍 AC-10 en tu navegador · [ ] 🧍 Revisión
+
+> La base local de la web de Expo (F49) está en **Tesoros**. El arte de los iconos de la extensión, en **Recursos** (F72).
+
+---
+
+## 🎨 Recursos (arte, iconos e ilustraciones)
+
+> Hallazgos de explorar la app (2026-11-16): **todos** los estados vacío, de error y de carga usan el mismo `DragonMarker` (silueta marcador en `assets/placeholder/`, TEMPORAL); la barra inferior usa iconos de `lucide`; no hay ilustración propia por pantalla ni arte para las carpetas por defecto; los iconos de la app (`icon.png`, `android-icon-*`, `splash-icon.png`) y los de la extensión no tienen arte final. Solo tokens de color de `ui-tokens`, arte original GPL-3.0, sin recursos externos (RNF-5); cada recurso se registra en `ASSETS.md`.
+
+### FA1 Arte final del dragón `[Ops · Baja · N1]` 🧍 (sin dependencias; antes de v1.0 pública)
+
+- [ ] 🧍 Arte original con licencia compatible GPL-3.0; sustituir `apps/mobile/assets/placeholder/*`
+- [ ] `ASSETS.md` y `README` de placeholder actualizados; retirar marca TEMPORAL
+- Verif: `apps/mobile/tests/placeholder.test.ts` en verde + galería con Playwright (RNF-5)
+
+---
+
+
+### F70 Ilustraciones propias por estado vacío `[FE/Arte · Intermedia · N3]`
+
+Dep: F56 · M · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`
+
+- [ ] Una ilustración SVG distinta por vacío: Guarida (sin lecturas), Tesoros (sin series), Aventuras (sin módulos / sin resultados), Portales (sin repos), Diagnóstico (sin eventos); F56 aporta la de «sin resultados»
+- [ ] `EmptyState` acepta la ilustración por prop; todas en la galería (dos escalas)
+- Verif: Playwright 426/1440 px + 🧍 S25
+
+### F71 Ilustraciones de error y de carga `[FE/Arte · Baja · N2]`
+
+- [ ] `ErrorState` y `LoadingState` con ilustración propia (hoy comparten el dragón marcador); sin animación en el lector
+- Verif: Playwright + galería
+
+### F72 Iconos de la extensión `[Arte · Baja · N1]` 🧍
+
+- [ ] El manifiesto va sin `icons`: crear 16/32/48/128 px a partir del arte final del dragón (tras FA1)
+- Verif: construir la extensión y cargarla
+
+### F73 Icono de la app, adaptativo y pantalla de inicio `[Arte · Baja · N1]` 🧍
+
+- [ ] Sustituir `icon.png`, `android-icon-{background,foreground,monochrome}.png`, `favicon.png` y `splash-icon.png` por arte final; comprobar el icono monocromo
+- Verif: 🧍 S25 (cajón de apps y arranque)
+
+### F74 Iconos y colores de iconos `[FE · Baja · N2]`
+
+Dep: — · S · `apps/mobile/src/icons`, `BottomNav.tsx`
+
+- [ ] Auditar iconos de la barra inferior y la cabecera: un solo juego (`lucide`), tamaños y colores por estado (activo/inactivo/foco) tomados de `ui-tokens`; iconos con nombres temáticos coherentes (Guarida, Tesoros, Aventuras, Portales, Ajustes)
+- Verif: Playwright + galería
+
+### F75 Iconos de las carpetas por defecto y del botón «+» `[FE/Arte · Baja · N2]`
+
+Dep: F52, F53 · XS
+
+- [ ] Iconos para «Favoritos» (estrella) y «Gemas» (gema) en `FolderCard`, y el «+» verde del botón flotante, con tokens
+- Verif: galería + Playwright
+
+**Lote sugerido:** F70 → F71 → F74 → F75 → F73 (F72 y FA1 esperan el arte final del dragón).
+
+---
+
+## 🗂️ General (abarca varias secciones o ninguna)
+
+### T05 cierre `[Ops · Baja · N1]` 🧍
+
+- [ ] 🧍 Confirmar que `ADR-0002` fija versiones Expo/RN/RNTV y el tope de imágenes medido; marcar T05 ✅
+- Aparte (no bloquea): MiBox 4 pospuesta (P-43); revalidar RNF-1 en release.
+
+### T33 Pruebas de seguridad `[Sec · Alta · N4]`
+
+Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre de la API (en paralelo)
+
+- [ ] Cada amenaza de SPEC §7.2 (zip-slip, bomba, hash, manifest, respaldo malicioso) tiene una prueba que falla si se quita la mitigación
+- [ ] Un deep link `ryuunest://add-repo?url=…` solo abre la confirmación, no instala (AC-8)
+- [ ] Límites de tamaño/archivos cubiertos
+- Verif: `pnpm --filter @ryuunest/core test -- security` + revisar correspondencia amenaza↔prueba
+
+
+### G1 Calibrar políticas del host (T35) `[BE · Intermedia · N3]`
+
+- [ ] Calibrar `HOST_DEFAULTS` (15 s, 4, 250 ms) con mediciones; 🧍 PR de prueba que rompe el contrato y hace fallar el CI
+
+### G2 Plataforma: deudas del núcleo `[BE · Intermedia · N3]`
+
+- [ ] La app nativa aún no rellena `HttpResponse.url` (P-74)
+- [ ] Migrar las filas `kv` de repos/módulos a tablas `repo`/`module` y retirar `kv`
+- [ ] Si los `paths` entre paquetes se complican, migrar a *project references* de TypeScript
+- [ ] `react-native-tvos` sin confirmar contra SDK 57 (pospuesto con P-43)
+
+### F22 Riel lateral + navegación espacial + foco `[FE · Alta · N4]`
+
+Dep: P-B · M · `apps/mobile/src/tv/*`
+
+- [ ] Foco siempre visible (anillo 2 px `accent`, separación 2 px); escala 1,25×; márgenes seguros; navegación completa con D-pad (incluye el ítem pendiente de F33: revisar navegación con teclado/D-pad y legibilidad en densidad TV)
+- Verif: Playwright (foco con teclado) · 🧍 recorrer los 5 destinos en la MiBox 4
+
+
+### F37 Repetir F32 en la MiBox 4 y el POCO F5 Pro `[FE/QA · Baja · N2]` 🧍
+
+Dep: F32 · S · dispositivos
+
+- [ ] Repetir el recorrido de F32 en la MiBox 4 (piso de rendimiento, Android 9, 2 GB) y en el POCO F5 Pro cuando haya módulo y red; anotar diferencias frente al S25 Ultra.
+- [ ] Medir la memoria del lector con `adb shell dumpsys meminfo` durante la precarga (fija `READER_IMAGE_BUDGET_MB`, P-90) y AC-6 (60 páginas verticales sin cierres) en la MiBox 4.
+- Verif: 🧍 dispositivos.
+
 
 ### F28 Playwright por pantalla + `DIFFS.md` + lista de 20 s (AC-12) — restante `[FE/QA · Baja · N2]` 🧍
 
-- [x] Parte web hecha (2026-11-02): `f28Screens.cjs`, 34 capturas en `docs/capturasF28/`, comprobaciones de `AGENTS.md` §5 y lista de 20 s; informe en `design/stitch/F28-verificacion.md`; diferencias en `DIFFS.md` — detalle en `todo.archive.md`
 - [ ] 🧍 Capturas en POCO F5 Pro y MiBox 4 (AC-12 no se cierra sin dispositivo)
 
-### Checkpoints pendientes de 🧍 revisión
 
-- [ ] Checkpoint H (respaldo): exportar/importar sin pérdidas ✅ y módulos no se instalan solos ✅; falta 🧍 revisión
-- [ ] Checkpoint P-B (móvil): falta AC-6 en MiBox 4 (F37) y 🧍 revisión
-- [ ] 🚩 Checkpoint P-E — Fin de la Parte 2: pantallas verificadas y diferencias registradas · AC-12 y AC-13 completos · 🧍 Revisión y publicación v1
+### G3 Medidas con APK compilado `[Ops · Baja · N2]` 🧍
+
+- [ ] 🧍 Medir el tope de imágenes (P-45) y revalidar RNF-1 (<3 s) con APK compilado (antes: POCO 4580 ms, S25 1940 ms, MiBox 5600 ms); cierra T05
+
+### G4 Proceso y limpieza `[Ops · Baja · N1]` 🧍
+
+- [ ] 🧍 Definir el proceso Scrum en una sesión aparte (AGENTS.md §16) · [ ] 🧍 Reservar el org npm `@ryuunest` · [ ] 🧍 Decidir qué hacer con las ramas remotas ya fusionadas
+- [ ] Revisar o descartar `stash@{0}` y borrar el worktree residual de F07 en `~/.local/share/opencode/worktree/`
+- [ ] `AGENTS.md` pide una entrada de bitácora por sesión (P-15) que este archivo ya no lleva: decidir dónde va
+
+### 🚩 Checkpoints `[Ops · Baja · N1]`
+
+- [ ] **I:** API 1.0 congelable (T37–T41 hechas; lo decide el humano) · 🧍 Revisión
+- [ ] **P-C:** AC-9 · 🧍 Revisión
+- [ ] **J — Fin de la Parte 1:** suite y CI en verde · cobertura del contrato completa · 🧍 Revisión → cierre formal
 
 ---
-
-## Deudas
-
-- [ ] **Configurar `expo-updates` (OTA)** (decisión del humano, 2026-11-05): añadir `updates.url`, política de `runtimeVersion`, proyecto/canal de EAS, build de prueba y verificación de una actualización real. **Bloqueada (2026-11-06):** necesita la cuenta de Expo/EAS del humano (login interactivo, proyecto y canal); se retoma en una sesión con el humano. Mientras no exista, Expo Go avisa «expo-updates system is disabled…»; no afecta al desarrollo.
-
-### Puertos futuros de `legacyModulos/` (decidido 2026-10-24: solo TMO en T31; los demás, tareas separadas a priorizar)
-
-> Detalle completo (estado del legado por módulo) en `todo.archive.md`, bloque de T31. Bloqueos: `details`/`pages` de m440 y FoxManga usan Playwright/JS render (el host no tiene navegador); NineManga y Luscious sin `details`/`pages` en el legado; Yupmanga con anti-bot a nivel TLS (`BLOCKED` en la v1, P-8); TmoHentai vacío. Priorizar solo cuando el host soporte navegador o cambie el sitio.
-
----
-
-## 🧍 Verificaciones humanas pendientes (consolidado)
-
-> Reunidas de los bloques completados de `todo.md` antes de archivarlos; no son tareas nuevas, son los restos 🧍 de tareas ya implementadas.
-
-- **AC-12 por pantalla (F28):** capturas de todas las pantallas en POCO F5 Pro y MiBox 4 (las móviles F11–F21 solo están verificadas en web; F16/F16b/F12/F15/F15b/F13/F14a-c/F11 sin verificación de dispositivo).
-- **AC-6 y memoria del lector (F37):** 60 páginas en MiBox 4 sin OOM; medir precarga con `adb shell dumpsys meminfo` para fijar `READER_IMAGE_BUDGET_MB` (P-90/P-45).
-- **Respaldo en teléfono (F21a/F21b/F30):** compartir el archivo exportado con la hoja del sistema, importar un archivo real y copiar el informe de diagnóstico en el POCO/S25.
-- **Zonas seguras (F34):** comprobar muesca, barra de estado y gesto inferior con `react-native-safe-area-context` en el POCO y el S25.
-- **F16/F12:** primer uso completo y confirmación reforzada de un módulo `script` en dispositivo (parcialmente cubierto por F32: YupManga reinstalado con huella SHA-256 y «mantén pulsado»).
-- **FB1:** revisión humana del plano de pantalla (`docs/screen-blueprint.md`).
-- **T35:** PR de prueba que rompe el contrato y hace fallar el CI.
-- **F33 (R1):** hoja «Actualizar módulo» (a la espera de una actualización real), hojas de Respaldo, diálogos de error nativos y modo paginado I → D.
-- **F17:** confirmar en el dispositivo qué persiste tras reinicio (favorito, carpeta, release preferida).
-- **Bloqueadas por cuenta/entorno del humano:** `expo-updates` (cuenta EAS), extensión en Chrome/Firefox con aviso real del navegador, AC-10 en tu navegador.
