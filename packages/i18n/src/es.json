@@ -162,6 +162,7 @@
   "kind.comic": "Cómic",
 
   "discover.search.placeholder": "Buscar obras…",
+  "discover.search.submit": "Buscar",
   "discover.selector.open": "Cambiar de módulo",
   "discover.sheet.title": "Elegir módulo",
   "discover.sheet.close": "Cerrar la lista de módulos",

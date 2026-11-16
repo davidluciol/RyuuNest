@@ -133,6 +133,11 @@ export function visibleDiscoverModules(
   return nsfwVisible ? [...modules] : modules.filter((module) => !module.nsfw);
 }
 
+/** Con una consulta activa solo se ven los resultados, sin las filas «Más recientes/Populares» (F38). */
+export function showDiscoverRows(query: string): boolean {
+  return query.trim() === "";
+}
+
 /** Lo mismo para las filas de series que devuelve un módulo. */
 export function visibleDiscoverEntries(
   entries: readonly DiscoverEntry[],
