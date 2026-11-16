@@ -28,6 +28,14 @@ export default function create(host) {
 }
 `;
 
+// F39: segundo módulo cuya portada de Descubrir siempre falla.
+const BROKEN_JS = `
+export default function create() {
+  const fail = async () => { throw new Error("sitio caído"); };
+  return { search: fail, popular: fail, latest: fail, details: fail, pages: fail };
+}
+`;
+
 const MANIFEST = {
   id: "demo",
   name: "Demo",
@@ -43,6 +51,8 @@ const MANIFEST = {
   nsfw: false,
 };
 
+const brokenManifest = { ...MANIFEST, id: "roto", name: "Roto" };
+
 function corsJson(body) {
   return {
     status: 200,
@@ -51,12 +61,37 @@ function corsJson(body) {
   };
 }
 
+/** Instala `id` desde Fuentes: confirmación reforzada (mantener pulsado). */
+async function installModule(page, id) {
+  await page.getByTestId(`module-${id}`).waitFor({ state: "visible" });
+  await page.getByTestId(`module-action-${id}`).click();
+  await page.getByTestId("install-dialog").waitFor({ state: "visible" });
+  const box = await page.getByTestId("install-confirm").boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.waitForTimeout(1700);
+  await page.mouse.up();
+  await page.waitForFunction(
+    (moduleId) =>
+      document
+        .querySelector(`[data-testid="module-action-${moduleId}"]`)
+        ?.textContent?.includes("Gestionar"),
+    id,
+    { timeout: 30000 },
+  );
+}
+
 (async () => {
   const zip = zipSync({
     "manifest.json": strToU8(JSON.stringify(MANIFEST)),
     "module.js": strToU8(MODULE_JS),
   });
   const sha256 = crypto.createHash("sha256").update(zip).digest("hex");
+  const brokenZip = zipSync({
+    "manifest.json": strToU8(JSON.stringify(brokenManifest)),
+    "module.js": strToU8(BROKEN_JS),
+  });
+  const brokenSha256 = crypto.createHash("sha256").update(brokenZip).digest("hex");
   const index = {
     format: "ryuunest-repo",
     version: 1,
@@ -76,6 +111,20 @@ function corsJson(body) {
         package: "packages/demo.zip",
         sha256,
         size: zip.length,
+      },
+      {
+        id: "roto",
+        name: "Roto",
+        version: "1.0.0",
+        apiVersion: 1,
+        runtime: "script",
+        kinds: ["manga"],
+        lang: "es",
+        nsfw: false,
+        permissions: { domains: ["sitio.test"] },
+        package: "packages/roto.zip",
+        sha256: brokenSha256,
+        size: brokenZip.length,
       },
     ],
   };
@@ -103,6 +152,13 @@ function corsJson(body) {
             status: 200,
             headers: { "content-type": "application/zip", "access-control-allow-origin": "*" },
             body: Buffer.from(zip),
+          });
+        }
+        if (url.host === "repo.test" && url.pathname === "/packages/roto.zip") {
+          return route.fulfill({
+            status: 200,
+            headers: { "content-type": "application/zip", "access-control-allow-origin": "*" },
+            body: Buffer.from(brokenZip),
           });
         }
         if (url.host === "sitio.test" && url.pathname === "/api/search") {
@@ -135,22 +191,7 @@ function corsJson(body) {
       await page.getByTestId("sources-add-repo").click();
       await page.getByTestId("add-repo-url").fill("https://repo.test/index.json");
       await page.getByTestId("add-repo-submit").click();
-      await page.getByTestId("module-demo").waitFor({ state: "visible" });
-      await page.getByTestId("module-action-demo").click();
-      await page.getByTestId("install-dialog").waitFor({ state: "visible" });
-      const confirm = page.getByTestId("install-confirm");
-      const box = await confirm.boundingBox();
-      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-      await page.mouse.down();
-      await page.waitForTimeout(1700);
-      await page.mouse.up();
-      await page.waitForFunction(
-        () =>
-          document
-            .querySelector('[data-testid="module-action-demo"]')
-            ?.textContent?.includes("Gestionar"),
-        { timeout: 30000 },
-      );
+      await installModule(page, "demo");
 
       // 2) Descubrir: el módulo instalado aparece y responde en el worker.
       await page.goto(`${baseURL}/discover`);
@@ -185,6 +226,19 @@ function corsJson(body) {
       await page.getByText("Serie s-dragon").first().waitFor({ state: "visible" });
       await page.getByTestId("series-chapter-ch-1").waitFor({ state: "visible" });
       await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
+
+      // 5) F39: instalar un 2.º módulo en Fuentes se refleja al volver a Descubrir
+      //    (la ruta monta de nuevo); si ese módulo falla, los chips siguen
+      //    visibles y elegir el otro recupera la lista.
+      await page.goto(`${baseURL}/sources`);
+      await installModule(page, "roto");
+      await page.goto(`${baseURL}/discover`);
+      await page.getByTestId("discover-module-roto").waitFor({ state: "visible" });
+      await page.getByTestId("discover-module-roto").click();
+      await page.getByTestId("discover-error").waitFor({ state: "visible" });
+      await page.getByTestId("discover-module-demo").click();
+      await page.getByText("Popular de prueba").waitFor({ state: "visible" });
+      await page.getByTestId("discover-error").waitFor({ state: "detached" });
 
       assert.deepEqual(errors, [], `errores de consola/página a ${width} px: ${errors}`);
       assert.deepEqual(
