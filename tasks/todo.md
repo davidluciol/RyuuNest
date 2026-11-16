@@ -110,8 +110,9 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 
 Dep: F32 (hallazgo) · S · `apps/mobile/src/screens/series/*`
 
-- [ ] Favorito, carpeta y release preferida deben sobrevivir a un reinicio (hallazgo de F33 y de los «Hallazgos UX/UI consolidados», ver `todo.archive.md`); hoy quedan solo en el estado de la ficha
-- [ ] Comprobar en el dispositivo que el reinicio conserva los tres
+- [x] Favorito (ya persistía, P-126) y **release preferida** (se guarda por grupo en `series_pref`, P-151) sobreviven a un reinicio — rama `fix/F17-ficha-persistente`
+- [ ] **Carpeta:** no hay selector de carpeta en la ficha (`onFolderLongPress` vacío); queda como tarea aparte (hoja con `Folders.list` + «Sin carpeta» → `Favorites.move`)
+- [ ] Comprobar en el dispositivo que el reinicio conserva favorito y release (la ficha no tiene aún selector de release: el chip solo repite la actual)
 - Verif: Vitest con SQLite real · 🧍 S25 Ultra
 - Nota: la parte web de la ficha entra en F41 (propuesta de F33).
 
@@ -120,7 +121,7 @@ Dep: F32 (hallazgo) · S · `apps/mobile/src/screens/series/*`
 Dep: hecha la integración (errorLog, ErrorState, ErrorBanner, registro en `log`) · S · `apps/mobile/src/screens/*`
 
 - [x] Integración en Descubrir, Fuentes, Respaldo y lector, con registro en `log` (hecha 2026-10-31; detalle en `todo.archive.md`)
-- [ ] Playwright por pantalla (en curso): cubrir los errores visibles de las pantallas tocadas a 426 y 1440 px
+- [x] Playwright por pantalla: `screenErrors.cjs` cubre los errores visibles de la ficha y el lector a 426 y 1440 px (Fuentes y Respaldo ya en `sources.cjs`/`backup.cjs`; Descubrir web no puede fallar con los datos de ejemplo, lo cubre `apps/web/tests/e2e/discover.cjs`, F39) — rama `test/F31-e2e-errores-por-pantalla`
 - Verif: `apps/mobile/tests/e2e/*.cjs` en verde
 
 ### F34 Correcciones UX/UI transversales — restante `[FE · Intermedia · N3]`
@@ -218,7 +219,7 @@ Dep: T40 · S · repo `RyuuNest-Models`
 
 Dep: F29 · XS
 
-- [ ] En «Ver detalle» de `ErrorState` la URL se corta con «…» (`https://storage2.zonatmo.org/ch…`). Mostrarla completa partiéndola en líneas (T7: un dato importante que cabe no se corta), en móvil y web; añadir test sobre `detailLines`/estilo y revisar `LogEventRow`.
+- [x] «Ver detalle» de `ErrorState` ya no limita a una línea y parte la URL (`wordBreak: break-all`); `LogEventRow`, banner y diálogo ya envolvían — rama `fix/F36-detalle-error-url-completa`. Falta 🧍 verlo en el S25 con un error de imagen real.
 - Verif: S25 Ultra con el error de imagen del lector (red cortada).
 
 ### F37 Repetir F32 en la MiBox 4 y el POCO F5 Pro `[FE/QA · Baja · N2]` 🧍
@@ -233,17 +234,17 @@ Dep: F32 · S · dispositivos
 
 Dep: F32 · XS
 
-- [ ] La búsqueda solo se envía con la tecla «buscar» del teclado y los resultados salen en «Catálogo», al fondo, bajo «Más recientes/Populares»: valorar mostrar el catálogo primero o ocultar las filas cuando hay consulta, y un botón de buscar visible.
-- [ ] Al volver a Aventuras sin cambios no hay recarga (`refreshModules`); confirmar que instalar o desinstalar en Portales también se refleja sin Reintentar.
-- [ ] El botón «Activar/Desactivar» de la hoja de módulo no cierra la hoja: confirmar si es intencional (dos toques seguidos llegaron a «Desinstalar») y, si no, cerrarla o separar la acción destructiva.
+- [x] Con consulta se ocultan «Más recientes/Populares» y hay botón «Buscar» (decisión del humano, P-151); en el S25 un toque basta (`keyboardShouldPersistTaps="handled"`). Rama `fix/F38-descubrir-busqueda-hoja-modulo`.
+- [ ] Sin confirmar: `discover.tsx` llama a `refreshModules` al recuperar el foco; no se probó en el teléfono instalar/desinstalar en Portales y volver.
+- [x] «Desinstalar» queda separado de «Activar/Desactivar» (margen `spacing.xl`; ya pedía confirmación aparte). Visto en el S25.
 - Verif: S25 Ultra.
 
 ### F39 Equivalencias web de los arreglos de F32 `[FE · Baja · N2]`
 
 Dep: F32 · XS
 
-- [ ] La web ya muestra los chips de módulo en el error de Descubrir, pero no tiene prueba ni e2e (`discover.cjs`): añadir el caso «el módulo falla → elegir otro».
-- [ ] La web no relee módulos al entrar en Descubrir si cambian en Fuentes (cada ruta monta de nuevo, comprobar que es así) y su error de imagen del lector solo muestra el título: valorar el mismo mensaje por tipo.
+- [x] `apps/web/tests/e2e/discover.cjs` cubre «el módulo falla → elegir otro» y que un 2.º módulo instalado en Fuentes aparece al volver a Descubrir (la ruta monta de nuevo) — rama `test/F39-equivalencias-web`
+- [ ] Sin decidir: el error de imagen del lector web solo muestra el título; valorar el mismo mensaje por tipo que en móvil.
 - Verif: Playwright a 1440/426 px.
 
 ---
@@ -258,9 +259,9 @@ Dep: — · S · `apps/mobile/tests/e2e/discover.cjs` (y los e2e que pinten port
 
 > Origen (P-148): desde que Descubrir pinta portadas (P-137), las del sitio falso apuntan a `https://sitio-html.test/img/*.svg`; el e2e aborta todo lo externo y eso deja `ERR_FAILED` en consola y entradas en `external`. Falla igual en `master`.
 
-- [ ] Rojo: el e2e comprueba que las portadas del sitio falso **se ven** (no solo que no hay errores)
-- [ ] El e2e atiende `sitio-html.test` (y el host del sitio JSON) con `route.fulfill` desde los SVG locales de `test-site`, sin contarlos como externos; cualquier otro host sigue abortado y contado (RNF-5 intacto)
-- [ ] Revisar si otros e2e (`library`, `series`, `home`) tienen el mismo problema
+- [x] Rojo: el e2e comprueba que las portadas del sitio falso **se ven** (no solo que no hay errores)
+- [x] El e2e atiende `sitio-html.test` y `api-json.test` con `route.fulfill` (un SVG en línea; `test-site` no tiene SVG en disco); cualquier otro host sigue abortado y contado (RNF-5 intacto) — rama `test/F48-e2e-descubrir-portadas-locales`
+- [x] `library`, `series` y `home` pasan sin cambios
 - Verif: `discover.cjs` en verde a 426 y 1440 px, 2–3 ejecuciones seguidas
 
 ### F46 Inicio (Guarida) con datos reales locales `[FE · Intermedia · N3]`
