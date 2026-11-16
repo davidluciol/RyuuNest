@@ -5,6 +5,7 @@ import {
   countHiddenNsfwModules,
   moduleErrorView,
   sameDiscoverModules,
+  showDiscoverRows,
   reconcileSelectedModuleId,
   resolveSelectedModuleId,
   SAMPLE_DISCOVER_MODULES,
@@ -155,5 +156,13 @@ describe("sameDiscoverModules · releer los módulos al volver a Aventuras (F32)
     const noLatest = MODULES.map((m, i) => (i === 0 ? { ...m, hasLatest: false } : m));
     expect(sameDiscoverModules(MODULES, renamed)).toBe(false);
     expect(sameDiscoverModules(MODULES, noLatest)).toBe(false);
+  });
+});
+
+describe("showDiscoverRows (F38)", () => {
+  it("con consulta solo se ven los resultados: las filas «Más recientes/Populares» se ocultan", () => {
+    expect(showDiscoverRows("")).toBe(true);
+    expect(showDiscoverRows("   ")).toBe(true);
+    expect(showDiscoverRows("dragon")).toBe(false);
   });
 });

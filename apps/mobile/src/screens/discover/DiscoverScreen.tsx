@@ -21,6 +21,7 @@ import { kindLabel } from "../../components/kindLabel";
 import { Search } from "../../icons";
 import { t } from "../../i18n";
 import {
+  showDiscoverRows,
   visibleDiscoverEntries,
   visibleDiscoverModules,
   type DiscoverEntry,
@@ -210,8 +211,9 @@ function DiscoverReady({
     entries: visibleDiscoverEntries(ready.catalog.entries, nsfwVisible),
   };
   const selectedModule = ready.modules.find((module) => module.id === selected?.id);
-  const showLatest = (selectedModule?.hasLatest ?? false) && latest.length > 0;
-  const showPopular = (selectedModule?.hasPopular ?? false) && popular.length > 0;
+  const rows = showDiscoverRows(ready.query);
+  const showLatest = rows && (selectedModule?.hasLatest ?? false) && latest.length > 0;
+  const showPopular = rows && (selectedModule?.hasPopular ?? false) && popular.length > 0;
 
   if (!selected || modules.length === 0) {
     return (
@@ -253,6 +255,11 @@ function DiscoverReady({
             onSelect={(id) => onModuleSelect?.(id)}
           />
         </View>
+        <Button
+          variant="secondary"
+          label={t("discover.search.submit")}
+          onPress={() => onSearch?.(draft.trim())}
+        />
 
         {showLatest ? (
           <View style={styles.section}>

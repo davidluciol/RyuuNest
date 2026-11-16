@@ -117,11 +117,13 @@ export default function SourcesSheets({ flow, controller, modules }: SourcesShee
               onPress={() => void controller.openUpdate(module.id)}
             />
           ) : null}
-          <Button
-            variant="destructive"
-            label={t("sources.manage.uninstall")}
-            onPress={controller.askUninstall}
-          />
+          <View style={styles.destructiveZone}>
+            <Button
+              variant="destructive"
+              label={t("sources.manage.uninstall")}
+              onPress={controller.askUninstall}
+            />
+          </View>
         </View>
       </SheetModal>
     );
@@ -229,4 +231,6 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   column: { gap: spacing.xs },
+  // F38: la acción destructiva queda lejos de Activar/Desactivar para que un doble toque no la alcance.
+  destructiveZone: { marginTop: spacing.xl },
 });

@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import { moduleRowStyle, moduleRowTextColors } from "../../src/components/moduleRowStyles";
@@ -57,5 +60,16 @@ describe("sheetBackdropStyle", () => {
   it("es un velo oscuro semitransparente que ocupa la pantalla y deja la hoja abajo", () => {
     expect(sheetBackdropStyle()).toMatchObject({ flex: 1, justifyContent: "flex-end" });
     expect(sheetBackdropStyle().backgroundColor).toMatch(/^rgba\(11, 14, 20, 0\.64\)$/);
+  });
+});
+
+describe("hoja de gestión de módulo (F38)", () => {
+  it("«Desinstalar» va aparte de «Activar/Desactivar», con separación de ancho de zona táctil", () => {
+    const src = readFileSync(
+      path.resolve(process.cwd(), "src/screens/sources/SourcesSheets.tsx"),
+      "utf8",
+    );
+    expect(src).toMatch(/destructiveZone:\s*\{[^}]*marginTop:\s*spacing\.xl/);
+    expect(src).toMatch(/style=\{styles\.destructiveZone\}[\s\S]*?sources\.manage\.uninstall/);
   });
 });
