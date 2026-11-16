@@ -230,6 +230,7 @@ function DiscoverReady({
   return (
     <View style={styles.screen} testID="screen-discover">
       <ScrollView
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           paddingHorizontal: sidePadding,
           paddingBottom: spacing.xl,
