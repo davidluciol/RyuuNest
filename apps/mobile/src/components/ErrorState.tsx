@@ -84,11 +84,7 @@ export default function ErrorState({
           {expanded ? (
             <View style={styles.detailBox}>
               {lines.map((line) => (
-                <Text
-                  key={line}
-                  style={[styles.detailLine, { color: colors.message }]}
-                  numberOfLines={1}
-                >
+                <Text key={line} style={[styles.detailLine, { color: colors.message }]}>
                   {line}
                 </Text>
               ))}
@@ -126,5 +122,7 @@ const styles = StyleSheet.create({
   detailBox: detailBoxStyle(),
   detailLine: {
     ...textStyle(detailTextStyle()),
+    // Una URL no tiene espacios: sin esto la web no la parte y se sale de la caja.
+    ...({ wordBreak: "break-all" } as object), // react-native-web lo acepta; RN nativo parte solo
   },
 });
