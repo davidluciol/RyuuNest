@@ -2256,3 +2256,126 @@ Dep: F20, F21, F22, F28, F32 · S · pantallas móviles, escritorio y TV disponi
 - [x] **Parches de Expo SDK 57 actualizados** (hecho 2026-11-05, autorizado por el humano; misma rama/PR): `expo` 57.0.32, `@expo/metro-runtime` 57.0.18, `expo-constants` 57.0.23, `expo-router` 57.0.30 y `expo-sharing` 57.0.25. `npx expo install --check` y `expo-doctor` en **21/21**; gate completo en verde (lint, typecheck, 1534 tests, build) y e2e web `shell`/`library` en verde. `pnpm-workspace.yaml` recibió los `minimumReleaseAgeExclude` de los paquetes nuevos (política de suministro de pnpm 12).
 - [x] **URGENTE — Fuentes no lista los módulos del repo instalado** (hecho 2026-11-06, rama `fix/urgente-fuentes-modulos-repo`). Tres causas encadenadas, comprobadas en el S25 Ultra: (1) la ruta de Fuentes no pasaba `nsfwVisible` y `SourcesScreen` ocultaba los 3 módulos oficiales (todos NSFW; RF-35 solo cubre Inicio, Biblioteca y Descubrir); (2) la app móvil no tenía `ScriptLoader`, así que Descubrir no listaba módulos `script` (T40): ahora `createFunctionScriptLoader` (`new Function`, el spike confirmó que Hermes lo admite, P-83 corregido); (3) `useDiscoverData` elegía el módulo inicial con `nsfwVisible=false` fijo y quedaba vacío aunque se activara NSFW (`reconcileSelectedModuleId`). Descubrir además avisa «Tus portales están ocultos» con botón a Ajustes. Recorrido verificado: Fuentes → instalar ZonaTMO → Descubrir → ficha → capítulo con 31 imágenes visibles en modo vertical. Con la tarea T40 (spike y cargador) queda hecha en la parte de dispositivo; falta el spike de `m440` y `yupmanga`, y T41 (🧍).
 - [x] **Renombrar las secciones con el mundo dragón** (hecho 2026-11-06, rama `feature/rename-secciones-dragon`): Inicio → **Guarida**, Biblioteca → **Tesoros**, Descubrir → **Aventuras**, Fuentes → **Portales**. Decisión del humano: solo textos visibles (las claves i18n y las rutas no cambian) y todos los literales de UI que nombran la sección; nota de nomenclatura en SPEC §1. Capturas de F11 regrabadas; e2e del shell en verde. Lista de textos cambiados en el PR.
+
+---
+
+## Tareas completadas retiradas de `todo.md` el 2026-11-16 (reorganización por secciones)
+
+### T38 Compatibilidad hacia delante ejecutable (R3) `[BE · Intermedia · N4]`
+
+Dep: T37 · M · `packages/module-sdk/src/{repoIndex,manifest,cli}.ts`, `packages/core/src/{contract/repoIndex,repo/RepoRegistry}.ts`, `apps/mobile/{app.json,src/screens/sources/useSourcesData.ts}`
+
+- [x] Índice tolerante **por entrada**: `apiVersion`, `runtime` o `kinds` desconocidos marcan la entrada «no compatible» y no invalidan el repo; las rotas se descartan con aviso
+- [x] `minAppVersion?` opcional en `RepoModuleEntry` (aditivo) y la app oculta/etiqueta lo incompatible antes de descargar
+- [x] `app.json` con versión real y la app la pasa al validador (`Constants.expoConfig?.version`); `minAppVersion` se aplica de verdad
+- [x] El CLI no comprueba `minAppVersion` salvo con `--app-version`
+- [x] Pruebas: un índice con un módulo `apiVersion: 2` sigue listando los de v1
+> **Hecho (2026-11-14, `feature/T38-compatibilidad-hacia-delante`):** `app.json` en 0.1.0; `validateRepoIndex` devuelve `modules` (compatibles) + `incompatible` + `warnings`; `RepoRegistry.listIncompatible`; `SourcesData.incompatible` (sin etiqueta visual: queda para una tarea de UI).
+- Verif: `pnpm -r test` + 🧍 corregir en `RyuuNest-Models` la frase «un campo de más o de menos lo rechaza» de su `AGENTS.md`
+
+
+### T39 Formato declarativo cerrado y comprobable (R2, D2) `[BE · Alta · N4]`
+
+Dep: T38 · L (dividir en 2 PRs si pasa de ~5 archivos por corte) · `docs/declarative-format.md`, `packages/core/src/runtimes/{DeclarativeRuntime,transforms}.ts`, `packages/module-sdk/src/*`, `packages/module-sdk/templates/declarative/*`
+
+- [x] `pages.imageHeaders` (mapa de cabeceras con `{baseUrl}`, `{chapterId}`, `{releaseId}`) rellena `ImageRef.headers`; el lector ya las aplica
+- [x] Serie sin capítulos devuelve `chapters: []` en vez de `PARSE` (L2)
+- [x] `validateDeclarativeConfig` en `module-sdk`, usado por `ryuunest-module validate`
+- [x] `ryuunest-module test` ejecuta el arnés también con módulos declarativos (retirar la omisión de `cli.test.ts`)
+- [x] `docs/declarative-format.md` normativo a partir del Anexo B del ADR; SPEC §6.6 lo enlaza
+- [x] L3–L6 del ADR (extra, fechas, id sin codificar, mapas de `status`/`kind`): decidir aquí cuáles entran; el resto queda como aditivo → **entran los cuatro** (decisión del humano)
+- Verif: `pnpm -r test` + contrato declarativo con `imageHeaders`
+> **Hecho (2026-11-14, `feature/T39-formato-declarativo`):** `extra`, `date`, `{x:raw}` y `map` además de L1/L2; todo «desde la app 0.2.0» (la plantilla declara `minAppVersion`). Detalle en `MEMORY.md` P-144.
+
+
+### T40 Ejecución y empaquetado de módulos `script` (R1, D1 = A) `[BE · Alta · N4 → N5]`
+
+Dep: T38 · L · `packages/core/src/ports/scriptLoader.ts`, `runtimes/{ScriptRuntime,ModuleRuntime}.ts`, `apps/mobile/src/data/moduleMounter.ts`, cargador de plataforma (nuevo)
+
+> **Ya hecho (2026-11-06, `fix/urgente-fuentes-modulos-repo`):** el spike de dispositivo con `zonatmo` confirma que Hermes admite `new Function` (P-83 corregido); la app móvil tiene `createFunctionScriptLoader` y Descubrir lista módulos `script`. Falta lo de abajo.
+
+- [x] `ScriptLoader.load` recibe el paquete (ruta → texto) y la ruta de entrada; el montador deja de pasar solo `manifest.entry`
+- [x] Contrato a autores documentado: módulo ES, `export default create(host)`, solo imports relativos dentro del paquete, sin `import()` ni paquetes, entorno ECMAScript estándar (SPEC §6.5) → SPEC §6.5 con las formas admitidas + README de la plantilla `script`
+- [x] 🧍 **Spike de `m440` y `yupmanga`** en el dispositivo (el de `zonatmo` ya pasó); si falla: marcar `script` como experimental (plan C del ADR), anotar la decisión y reabrir D1; escalar a N5 → **hecho (2026-11-14, S25 Ultra, Expo Go, agent-device):** M440 0.1.0 (listas, ficha de 378 capítulos con la lista cifrada, capítulo de 18 páginas con imágenes) y YupManga 0.1.1 instalado por `InstallFlow` (listas, ficha de 7 capítulos, capítulo de 152 páginas con imágenes). Portadas en blanco en ambos (F35). M440 se actualizó a 0.2.0 después, en T43.
+- [x] Desbloquear en la app los módulos `script` (`createInstalledMounter` deja de lanzar `UNSUPPORTED`): Descubrir y Lector montan con `createFunctionScriptLoader`
+- [x] `ryuunest-module test` carga los `script` con el mismo cargador que la app (decisión del humano)
+- Verif: pruebas del cargador con paquetes de varios archivos + 🧍 spike en el dispositivo
+> **Hecho (2026-11-14, `feature/T40-modulos-script`):** CLI con el cargador de la app; los tres módulos publicados (zonatmo 0.3.0, m440 0.2.0, yupmanga 0.1.1) cargan con `createFunctionScriptLoader` en Node. «script» deja de ser experimental (decisión del humano); el spike de M440/YupManga pasó en el dispositivo. Detalle en `MEMORY.md` P-145.
+
+
+### T41 Puerta del 2.º sitio real: `zonatmo` y `m440` en la app (D3) `[Ops · Baja · N2]` 🧍
+
+Dep: T39, T40 · S · sin código (salvo ajustes que salgan)
+
+- [x] Ambos módulos pasan su arnés con fixtures propias (repo `RyuuNest-Models`) — la regla «un capítulo con dos releases» se relaja con la opción **opt-in** `singleReleasePerChapter` de `runContract` (decisión del humano); m440 la usa, zonatmo no la necesita
+- [x] Se instalan por `InstallFlow` en el dispositivo y ejecutan `popular` o `latest`, `search`, `details` y `pages`, y se ve una imagen en el lector
+- [x] Ningún cambio de tipos del modelo de datos; si hace falta uno, se reabre el ADR
+- Verif: 🧍 prueba en el dispositivo (S25 Ultra; POCO si vuelve a estar disponible)
+> **Hecho (2026-11-14, `feature/T41-puerta-segundo-sitio` + rama `test/T41-arnes-fixtures-propias` en `RyuuNest-Models`):** `runContract` acepta `singleReleasePerChapter`; los tests de zonatmo y m440 en `RyuuNest-Models` llaman al arnés con sus fixtures (m440 añade ficha con capítulos cifrados y capítulo, datos inventados). En el S25 Ultra (Expo Go, agent-device, red real): ZonaTMO 0.3.0 instalado por `InstallFlow`, listas, búsqueda «dragon», ficha de 30 capítulos y lector de 80 páginas con imagen; M440 0.2.0 listas, búsqueda «kobayashi», ficha de 186 capítulos y lector de 17 páginas con imagen. Portadas de M440 en blanco (F35, causa en la app). Detalle en `MEMORY.md` P-147.
+
+
+### F25 Pantallas web — restante `[FE · Baja · N2]`
+
+- [x] Pantallas de la v1 sobre base real (sql.js + IndexedDB, P-113), módulos `script` en Web Worker (P-114) — hecho en `feature/F24-F25-web-client`; detalle en `todo.archive.md`
+- [x] **Subir react a 19.3.1+ y react-router a 8** (P-110): ADR-0002 fija react 19.2.3 por Expo SDK 57; al subir react, react-router 8 pasa a ser compatible. Sin tocar Expo: solo `apps/web`. — hecho: react/react-dom 19.3.1 en `apps/web` y `apps/extension`, react-router 8.5.1, `resolve.dedupe` de react en la web (mobile-src sigue en 19.2.3). Lint, typecheck, tests y e2e web en verde salvo `reader.cjs` a 426 px, intermitente también en `HEAD` (preexistente).
+- Verif: `pnpm -r test` + e2e web en verde
+
+
+### F31 Integrar errores en las pantallas — verificación restante `[FE · Baja · N2]`
+
+Dep: hecha la integración (errorLog, ErrorState, ErrorBanner, registro en `log`) · S · `apps/mobile/src/screens/*`
+
+- [x] Integración en Descubrir, Fuentes, Respaldo y lector, con registro en `log` (hecha 2026-10-31; detalle en `todo.archive.md`)
+- [x] Playwright por pantalla: `screenErrors.cjs` cubre los errores visibles de la ficha y el lector a 426 y 1440 px (Fuentes y Respaldo ya en `sources.cjs`/`backup.cjs`; Descubrir web no puede fallar con los datos de ejemplo, lo cubre `apps/web/tests/e2e/discover.cjs`, F39) — rama `test/F31-e2e-errores-por-pantalla`
+- Verif: `apps/mobile/tests/e2e/*.cjs` en verde
+
+
+### F35 Portadas en blanco de M440 y YupManga `[FE/Ops · Intermedia · N3]`
+
+Dep: F32 · S · S25 Ultra con red real
+
+- [x] Reproducir con prueba en rojo: la `imageRef` de la portada llega a `LibraryCard` con `Referer`/`User-Agent` (P-137), ZonaTMO sí carga y M440/YupManga no; averiguar si falla el módulo (cabeceras o dominio no declarado en `permissions.domains`) o la app (expo-image con cabeceras) → **es de la app**: el `Image` de React Native no envía `source.headers` en Android
+- [x] Si es del módulo, corregir en `RyuuNest-Models` (otro repo) y subir versión; si es de la app, arreglar con test y verificar en el teléfono
+- [x] Comprobar portadas en Descubrir (listas y catálogo) y ficha → visibles en el S25 Ultra: listas de M440 y YupManga, cuadrícula de búsqueda/catálogo de M440 («alya») y fichas de M440 y YupManga (la de YupManga usa `og:image` con la cookie de la sesión). **Guarida/Tesoros:** no muestran portadas de ningún módulo (las tarjetas no reciben `cover` y la biblioteca solo guarda `cover_url`, sin cabeceras): queda como pregunta al humano (P-148)
+- Verif: 🧍 S25 Ultra (portadas visibles en M440 y YupManga).
+> **Hecho (2026-11-14, `fix/F35-portadas-cabeceras`):** `LibraryCard` y `SeriesScreen` pintan con `expo-image` (como el lector); `remoteImageUsage.test.ts` impide volver al `Image` de React Native salvo recursos locales y tres tarjetas que aún no reciben portadas remotas (la lista solo mengua). Detalle en `MEMORY.md` P-148.
+
+
+### T43 Capacidades `home`/`list`/`filters` rompen instalar y actualizar módulos `[BE · Intermedia · N3]`
+
+Dep: T40 · S · `packages/core/src/contract/types.ts`, `runtimes/{contractShape,ModuleRuntime,ScriptRuntime}.ts`, `packages/module-sdk/src/manifest.ts`, SPEC §6.1/§6.3
+
+> Origen (2026-11-14): al probar «Gestionar» en el S25 Ultra, el panel sí abre y ofrece «Actualizar a v0.2.0» (el fallo que se sospechaba no existe), pero actualizar M440 0.1.0 → 0.2.0 fallaba con «Manifest inválido: capabilities[5..7]». M440 0.2.0 y ZonaTMO 0.3.0 declaran `home`, `list` y `filters` (contrato dinámico de `RyuuNest-Models`, `AGENTS.md` §7) y el validador solo admitía cinco valores.
+
+- [x] `ModuleCapability` y `MODULE_CAPABILITIES` admiten `home`, `list` y `filters` (decisión del humano: añadirlas al contrato)
+- [x] `ModuleApi` con `home?()`, `list?(sectionId, page)`, `filters?()` y `search(query, page, filters?)`; `ScriptRuntime` y `guardApi` los pasan y validan la forma mínima
+- [x] SPEC §6.1 y §6.3
+- [x] 🧍→ hecho con agent-device: M440 se actualiza a 0.2.0 en el S25 Ultra y sus listas cargan
+- [ ] Fuera de alcance: usar `home`/`list`/`filters` en la app (UI de Descubrir con secciones y filtros) — tarea aparte
+- Verif: `pnpm -r test` + actualización real en el dispositivo
+> **Hecho (2026-11-14, `fix/T43-capacidades-home-list-filters`):** ver `MEMORY.md` P-146.
+
+
+### F48 e2e `discover.cjs` en verde: portadas del sitio falso servidas en local `[QA · Baja · N2]`
+
+Dep: — · S · `apps/mobile/tests/e2e/discover.cjs` (y los e2e que pinten portadas de `test-site`)
+
+> Origen (P-148): desde que Descubrir pinta portadas (P-137), las del sitio falso apuntan a `https://sitio-html.test/img/*.svg`; el e2e aborta todo lo externo y eso deja `ERR_FAILED` en consola y entradas en `external`. Falla igual en `master`.
+
+- [x] Rojo: el e2e comprueba que las portadas del sitio falso **se ven** (no solo que no hay errores)
+- [x] El e2e atiende `sitio-html.test` y `api-json.test` con `route.fulfill` (un SVG en línea; `test-site` no tiene SVG en disco); cualquier otro host sigue abortado y contado (RNF-5 intacto) — rama `test/F48-e2e-descubrir-portadas-locales`
+- [x] `library`, `series` y `home` pasan sin cambios
+- Verif: `discover.cjs` en verde a 426 y 1440 px, 2–3 ejecuciones seguidas
+
+
+### QAw1 Ruta guardado: instalar → descubrir → guardar → biblioteca `[FE/QA · Intermedia · N3]`
+
+- [x] Abrir la aplicación web.
+- [x] Ir a **Fuentes** e instalar un módulo.
+- [x] Moverse a **Descubrir**.
+- [x] Seleccionar algún manga o cómic al azar.
+- [x] Guardarlo en alguna carpeta o en favoritos.
+- [x] Buscarlo en **Biblioteca**.
+- [x] Seleccionarlo y **debería mostrar de nuevo la pantalla de detalle** para ese manga o cómic.
+- Verif: la obra guardada aparece en Biblioteca y al abrirla se ve su ficha (detalle) completa. — verificado por e2e `apps/web/tests/e2e/discover.cjs` (paso 4: busca en Biblioteca, abre la ficha con capítulos y «Guardada») a 1440/426 px; el bloqueo de «Favorito» ya lo resolvió P-126. Sin cambios nativos, no hay verificación en el teléfono.
+

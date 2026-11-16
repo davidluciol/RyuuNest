@@ -247,7 +247,16 @@ Una tarea está terminada solo si:
 - Usar `any` sin justificar, código muerto o tests tautológicos.
 - Ocultar un bloqueo o un test en rojo.
 
-## 15. Scrum (pendiente de definir)
+## 15. Formato de `tasks/todo.md` (Regla 15)
+
+- Las tareas pendientes se agrupan **por sección de la app**, en este orden: **Guarida** (Inicio), **Tesoros** (Biblioteca), **Aventuras** (Descubrir), **Portales** (Fuentes y módulos) y **Ajustes** (Respaldo y Diagnóstico). Después, las secciones relacionadas **Lector y ficha**, **Web y extensión** y **Recursos** (arte, iconos, ilustraciones, imágenes de estados vacíos) y, al final, **General**.
+- Una tarea va bajo la sección a la que sirve, **sea de interfaz, BE, seguridad, Ops o QA**. Si no encaja en una sola o las abarca todas (seguridad transversal, plataforma, TV, dispositivos, checkpoints, 🧍 consolidadas), va en **General**. Todo lo de arte (iconos, colores de iconos, ilustraciones) va en **Recursos**, aparte de la sección a la que decore.
+- Cada sección acaba con un **«Lote sugerido»** de **5 o más tareas** para una sola sesión, y la tabla del inicio del archivo lo resume.
+- **Cada problema abierto es una tarea propia** con etiqueta `[tipo · complejidad · nivel]` (Baja/Intermedia/Alta; N1–N5 de `tasks/complexity.md`). Las preguntas al humano se escriben en la tarea («Pregunta abierta»).
+- `todo.md` solo contiene **pendientes**: una tarea con todos sus `- [x]` pasa a `tasks/todo.archive.md`; si queda un `- [ ]`, se queda en su sección (se puede podar lo ya hecho, nunca el pendiente). Los identificadores no se renumeran; las tareas nuevas siguen la numeración (hoy, hasta F77/G4).
+- Al crear una tarea, ponla en su sección, añade su ID al lote y actualiza `MEMORY.md` si implica una decisión.
+
+## 16. Scrum (pendiente de definir)
 
 - A partir de ahora el proyecto se gestiona con **Scrum**. Las ceremonias, artefactos, duraciones, roles y métricas se definirán en una sesión aparte; **no los inventes**.
 - Mientras se define, `tasks/plan.md` (PLAN) y `tasks/todo.md` (TODO) siguen siendo la fuente de trabajo, y `MEMORY.md` la de decisiones.
