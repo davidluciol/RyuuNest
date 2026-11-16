@@ -27,5 +27,8 @@ describe("series detail fixture helpers", () => {
 
     expect(preferredRelease(releases, "r-alt")).toEqual(releases[1]);
     expect(preferredRelease(releases, "missing")).toEqual(releases[0]);
+    expect(preferredRelease(releases, null)).toEqual(releases[0]);
+    // F17: lo guardado es el grupo, así vale en cualquier capítulo de la serie.
+    expect(preferredRelease(releases, "Escuadrón Noche")).toEqual(releases[1]);
   });
 });

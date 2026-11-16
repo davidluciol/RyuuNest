@@ -17,8 +17,8 @@ import { useSeriesData } from "../../../screens/series/useSeriesData";
 /**
  * F17/F18 — ruta de la ficha de serie: lee `details()` del módulo con su progreso (useSeriesData)
  * y abre el lector desde «Continuar/Empezar» o desde un capítulo. El favorito se guarda en la base
- * junto con su serie (P-126); carpeta y edición preferida siguen en el estado de la pantalla hasta
- * que se conecten (F20).
+ * junto con su serie (P-126) y la edición preferida se guarda como grupo por serie (F17); la
+ * carpeta espera a su selector, que aún no existe.
  */
 export default function SeriesRoute() {
   return (
@@ -34,10 +34,15 @@ function SeriesRouteContent() {
   const [favorite, setFavorite] = useState(false);
   const [preferredReleaseId, setPreferredReleaseId] = useState<string | null>(null);
   const savedFavorite = view.status === "ready" ? view.data.favorite : undefined;
+  const savedRelease = view.status === "ready" ? view.data.preferredReleaseId : undefined;
 
   useEffect(() => {
     if (savedFavorite !== undefined) setFavorite(savedFavorite);
   }, [savedFavorite]);
+
+  useEffect(() => {
+    if (savedRelease !== undefined) setPreferredReleaseId(savedRelease);
+  }, [savedRelease]);
 
   if (view.status === "loading") {
     return (
@@ -109,9 +114,20 @@ function SeriesRouteContent() {
       onFolderLongPress={() => undefined}
       onReleaseSelect={(chapterId, releaseId) => {
         const chapter = data.details.chapters.find((item) => item.id === chapterId);
-        if (chapter !== undefined && preferredRelease(chapter.releases, releaseId)?.id === releaseId) {
-          setPreferredReleaseId(releaseId);
-        }
+        const release = chapter?.releases.find((item) => item.id === releaseId);
+        if (release === undefined) return;
+        setPreferredReleaseId(release.group ?? release.id);
+        resolveReadingSource()
+          .then((source) => source.setPreferredRelease(moduleId, seriesId, release))
+          .catch(async (error: unknown) => {
+            const reporter = await resolveErrorReporter();
+            reporter.report(
+              "error",
+              "series.release.internal",
+              error instanceof Error ? error.message : String(error),
+              { moduleId, seriesId },
+            );
+          });
       }}
       onChapterPress={openReader}
     />
