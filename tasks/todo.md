@@ -9,7 +9,7 @@
 
 **Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37), endurecimiento T34/T35/T36, Fase 6a completa (F01–F10), móvil F11–F21 y F29/F30/FB2 hechas (F34 casi completa), web F24/F25 y extensión F26/F27 hechas, F28 parte web, recorridos F32/F33 hechos. Detalle en `todo.archive.md`.
 
-**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46 → F47** (datos reales en Inicio y portadas) · F49 (base local en la web de Expo, alternativa A) · verificaciones 🧍 al final de cada tarea.
+**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46 → F47** (datos reales en Inicio y portadas) · F50 (filtros por etiquetas) y F51 (lector en cascada) · F49 (base local en la web de Expo, alternativa A) · verificaciones 🧍 al final de cada tarea.
 
 ---
 
@@ -110,8 +110,9 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 
 Dep: F32 (hallazgo) · S · `apps/mobile/src/screens/series/*`
 
-- [ ] Favorito, carpeta y release preferida deben sobrevivir a un reinicio (hallazgo de F33 y de los «Hallazgos UX/UI consolidados», ver `todo.archive.md`); hoy quedan solo en el estado de la ficha
-- [ ] Comprobar en el dispositivo que el reinicio conserva los tres
+- [x] Favorito (ya persistía, P-126) y **release preferida** (se guarda por grupo en `series_pref`, P-151) sobreviven a un reinicio — rama `fix/F17-ficha-persistente`
+- [ ] **Carpeta:** no hay selector de carpeta en la ficha (`onFolderLongPress` vacío); queda como tarea aparte (hoja con `Folders.list` + «Sin carpeta» → `Favorites.move`)
+- [ ] Comprobar en el dispositivo que el reinicio conserva favorito y release (la ficha no tiene aún selector de release: el chip solo repite la actual)
 - Verif: Vitest con SQLite real · 🧍 S25 Ultra
 - Nota: la parte web de la ficha entra en F41 (propuesta de F33).
 
@@ -120,7 +121,7 @@ Dep: F32 (hallazgo) · S · `apps/mobile/src/screens/series/*`
 Dep: hecha la integración (errorLog, ErrorState, ErrorBanner, registro en `log`) · S · `apps/mobile/src/screens/*`
 
 - [x] Integración en Descubrir, Fuentes, Respaldo y lector, con registro en `log` (hecha 2026-10-31; detalle en `todo.archive.md`)
-- [ ] Playwright por pantalla (en curso): cubrir los errores visibles de las pantallas tocadas a 426 y 1440 px
+- [x] Playwright por pantalla: `screenErrors.cjs` cubre los errores visibles de la ficha y el lector a 426 y 1440 px (Fuentes y Respaldo ya en `sources.cjs`/`backup.cjs`; Descubrir web no puede fallar con los datos de ejemplo, lo cubre `apps/web/tests/e2e/discover.cjs`, F39) — rama `test/F31-e2e-errores-por-pantalla`
 - Verif: `apps/mobile/tests/e2e/*.cjs` en verde
 
 ### F34 Correcciones UX/UI transversales — restante `[FE · Intermedia · N3]`
@@ -218,7 +219,7 @@ Dep: T40 · S · repo `RyuuNest-Models`
 
 Dep: F29 · XS
 
-- [ ] En «Ver detalle» de `ErrorState` la URL se corta con «…» (`https://storage2.zonatmo.org/ch…`). Mostrarla completa partiéndola en líneas (T7: un dato importante que cabe no se corta), en móvil y web; añadir test sobre `detailLines`/estilo y revisar `LogEventRow`.
+- [x] «Ver detalle» de `ErrorState` ya no limita a una línea y parte la URL (`wordBreak: break-all`); `LogEventRow`, banner y diálogo ya envolvían — rama `fix/F36-detalle-error-url-completa`. Falta 🧍 verlo en el S25 con un error de imagen real.
 - Verif: S25 Ultra con el error de imagen del lector (red cortada).
 
 ### F37 Repetir F32 en la MiBox 4 y el POCO F5 Pro `[FE/QA · Baja · N2]` 🧍
@@ -233,17 +234,17 @@ Dep: F32 · S · dispositivos
 
 Dep: F32 · XS
 
-- [ ] La búsqueda solo se envía con la tecla «buscar» del teclado y los resultados salen en «Catálogo», al fondo, bajo «Más recientes/Populares»: valorar mostrar el catálogo primero o ocultar las filas cuando hay consulta, y un botón de buscar visible.
-- [ ] Al volver a Aventuras sin cambios no hay recarga (`refreshModules`); confirmar que instalar o desinstalar en Portales también se refleja sin Reintentar.
-- [ ] El botón «Activar/Desactivar» de la hoja de módulo no cierra la hoja: confirmar si es intencional (dos toques seguidos llegaron a «Desinstalar») y, si no, cerrarla o separar la acción destructiva.
+- [x] Con consulta se ocultan «Más recientes/Populares» y hay botón «Buscar» (decisión del humano, P-151); en el S25 un toque basta (`keyboardShouldPersistTaps="handled"`). Rama `fix/F38-descubrir-busqueda-hoja-modulo`.
+- [ ] Sin confirmar: `discover.tsx` llama a `refreshModules` al recuperar el foco; no se probó en el teléfono instalar/desinstalar en Portales y volver.
+- [x] «Desinstalar» queda separado de «Activar/Desactivar» (margen `spacing.xl`; ya pedía confirmación aparte). Visto en el S25.
 - Verif: S25 Ultra.
 
 ### F39 Equivalencias web de los arreglos de F32 `[FE · Baja · N2]`
 
 Dep: F32 · XS
 
-- [ ] La web ya muestra los chips de módulo en el error de Descubrir, pero no tiene prueba ni e2e (`discover.cjs`): añadir el caso «el módulo falla → elegir otro».
-- [ ] La web no relee módulos al entrar en Descubrir si cambian en Fuentes (cada ruta monta de nuevo, comprobar que es así) y su error de imagen del lector solo muestra el título: valorar el mismo mensaje por tipo.
+- [x] `apps/web/tests/e2e/discover.cjs` cubre «el módulo falla → elegir otro» y que un 2.º módulo instalado en Fuentes aparece al volver a Descubrir (la ruta monta de nuevo) — rama `test/F39-equivalencias-web`
+- [ ] Sin decidir: el error de imagen del lector web solo muestra el título; valorar el mismo mensaje por tipo que en móvil.
 - Verif: Playwright a 1440/426 px.
 
 ---
@@ -258,9 +259,9 @@ Dep: — · S · `apps/mobile/tests/e2e/discover.cjs` (y los e2e que pinten port
 
 > Origen (P-148): desde que Descubrir pinta portadas (P-137), las del sitio falso apuntan a `https://sitio-html.test/img/*.svg`; el e2e aborta todo lo externo y eso deja `ERR_FAILED` en consola y entradas en `external`. Falla igual en `master`.
 
-- [ ] Rojo: el e2e comprueba que las portadas del sitio falso **se ven** (no solo que no hay errores)
-- [ ] El e2e atiende `sitio-html.test` (y el host del sitio JSON) con `route.fulfill` desde los SVG locales de `test-site`, sin contarlos como externos; cualquier otro host sigue abortado y contado (RNF-5 intacto)
-- [ ] Revisar si otros e2e (`library`, `series`, `home`) tienen el mismo problema
+- [x] Rojo: el e2e comprueba que las portadas del sitio falso **se ven** (no solo que no hay errores)
+- [x] El e2e atiende `sitio-html.test` y `api-json.test` con `route.fulfill` (un SVG en línea; `test-site` no tiene SVG en disco); cualquier otro host sigue abortado y contado (RNF-5 intacto) — rama `test/F48-e2e-descubrir-portadas-locales`
+- [x] `library`, `series` y `home` pasan sin cambios
 - Verif: `discover.cjs` en verde a 426 y 1440 px, 2–3 ejecuciones seguidas
 
 ### F46 Inicio (Guarida) con datos reales locales `[FE · Intermedia · N3]`
@@ -309,6 +310,30 @@ Dep: F46 · M–L · `apps/mobile/src/data/appDatabase.ts` (hoy devuelve `null` 
 - [ ] Rojo: `openAppDatabase()` en web devuelve un driver que pasa `migrate` y persiste entre recargas (prueba con `ByteStore` en memoria)
 - [ ] Retirar la reserva de ejemplo de Tesoros/Guarida en web y `sessionSqlDriver` donde quede sustituido
 - Verif: Playwright: guardar una serie, recargar la página y verla en Tesoros; cero peticiones externas
+
+### F50 Botón de filtros por etiquetas en el buscador de Descubrir `[FE · Intermedia · N3]`
+
+Dep: F38 (botón «Buscar»), T43 (`filters()` en el contrato) · M · `apps/mobile/src/screens/discover/*`, `packages/core/src/contract/types.ts` (solo lectura)
+
+> Origen (petición del humano, 2026-11-16).
+
+- [ ] Botón «Filtros» junto al buscador que abre una hoja con las etiquetas (p. ej. Sekai, Aventuras, Horror, Seinen, Shonen…), multiselección y «Limpiar»
+- [ ] Las etiquetas salen de `ModuleApi.filters()` del módulo elegido (tipo `tags`); si el módulo no declara `filters`, el botón no aparece. **Pregunta abierta:** ¿lista fija común a todos los módulos o la de cada módulo? (recomendado: la de cada módulo, sin inventar etiquetas)
+- [ ] `search(query, page, filters?)` recibe la selección; chip/contador de filtros activos y la búsqueda funciona también sin texto
+- [ ] Textos en el catálogo i18n, componente en la galería con todos sus estados, solo tokens
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440 (declaran `filters`)
+
+### F51 Lector en cascada (webtoon): deslizar, pellizcar para zoom y barras que se ocultan a los 3 s `[FE · Alta · N4]`
+
+Dep: F18/F19 (hechas) · M · `apps/mobile/src/screens/reader/{ReaderScreen,ReaderVertical,ReaderBars,ZoomableView}.tsx`
+
+> Origen (petición del humano, 2026-11-16). Hoy el modo vertical ya es una lista, pero un toque en la pantalla avanza a la página siguiente (`scrollToPage`).
+
+- [ ] En modo cascada/webtoon las imágenes se apilan de arriba abajo y se navega **solo deslizando**; un toque en la pantalla deja de avanzar de página (el toque solo muestra u oculta las barras)
+- [ ] Zoom con pellizco (acercar/alejar) en cascada, sin romper el desplazamiento vertical; revisar el presupuesto de memoria (P-90)
+- [ ] Las barras (cabecera y pie) se ocultan solas **3 s** después de mostrarse; sin animaciones en el lector (AGENTS.md): aparecen y desaparecen sin transición. **Pregunta abierta:** ¿el temporizador se reinicia con cada toque y también afecta al modo paginado?
+- [ ] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20)
+- Verif: Vitest de la lógica (temporizador, toque ≠ avanzar) + 🧍 S25: leer un capítulo largo deslizando, pellizcar y ver que las barras se ocultan
 
 ---
 
