@@ -9,7 +9,7 @@
 
 **Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37), endurecimiento T34/T35/T36, Fase 6a completa (F01–F10), móvil F11–F21 y F29/F30/FB2 hechas (F34 casi completa), web F24/F25 y extensión F26/F27 hechas, F28 parte web, recorridos F32/F33 hechos. Detalle en `todo.archive.md`.
 
-**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46 → F47** (datos reales en Inicio y portadas) · F49 (base local en la web de Expo, alternativa A) · verificaciones 🧍 al final de cada tarea.
+**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46 → F47** (datos reales en Inicio y portadas) · F50 (filtros por etiquetas) y F51 (lector en cascada) · F49 (base local en la web de Expo, alternativa A) · verificaciones 🧍 al final de cada tarea.
 
 ---
 
@@ -310,6 +310,30 @@ Dep: F46 · M–L · `apps/mobile/src/data/appDatabase.ts` (hoy devuelve `null` 
 - [ ] Rojo: `openAppDatabase()` en web devuelve un driver que pasa `migrate` y persiste entre recargas (prueba con `ByteStore` en memoria)
 - [ ] Retirar la reserva de ejemplo de Tesoros/Guarida en web y `sessionSqlDriver` donde quede sustituido
 - Verif: Playwright: guardar una serie, recargar la página y verla en Tesoros; cero peticiones externas
+
+### F50 Botón de filtros por etiquetas en el buscador de Descubrir `[FE · Intermedia · N3]`
+
+Dep: F38 (botón «Buscar»), T43 (`filters()` en el contrato) · M · `apps/mobile/src/screens/discover/*`, `packages/core/src/contract/types.ts` (solo lectura)
+
+> Origen (petición del humano, 2026-11-16).
+
+- [ ] Botón «Filtros» junto al buscador que abre una hoja con las etiquetas (p. ej. Sekai, Aventuras, Horror, Seinen, Shonen…), multiselección y «Limpiar»
+- [ ] Las etiquetas salen de `ModuleApi.filters()` del módulo elegido (tipo `tags`); si el módulo no declara `filters`, el botón no aparece. **Pregunta abierta:** ¿lista fija común a todos los módulos o la de cada módulo? (recomendado: la de cada módulo, sin inventar etiquetas)
+- [ ] `search(query, page, filters?)` recibe la selección; chip/contador de filtros activos y la búsqueda funciona también sin texto
+- [ ] Textos en el catálogo i18n, componente en la galería con todos sus estados, solo tokens
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440 (declaran `filters`)
+
+### F51 Lector en cascada (webtoon): deslizar, pellizcar para zoom y barras que se ocultan a los 3 s `[FE · Alta · N4]`
+
+Dep: F18/F19 (hechas) · M · `apps/mobile/src/screens/reader/{ReaderScreen,ReaderVertical,ReaderBars,ZoomableView}.tsx`
+
+> Origen (petición del humano, 2026-11-16). Hoy el modo vertical ya es una lista, pero un toque en la pantalla avanza a la página siguiente (`scrollToPage`).
+
+- [ ] En modo cascada/webtoon las imágenes se apilan de arriba abajo y se navega **solo deslizando**; un toque en la pantalla deja de avanzar de página (el toque solo muestra u oculta las barras)
+- [ ] Zoom con pellizco (acercar/alejar) en cascada, sin romper el desplazamiento vertical; revisar el presupuesto de memoria (P-90)
+- [ ] Las barras (cabecera y pie) se ocultan solas **3 s** después de mostrarse; sin animaciones en el lector (AGENTS.md): aparecen y desaparecen sin transición. **Pregunta abierta:** ¿el temporizador se reinicia con cada toque y también afecta al modo paginado?
+- [ ] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20)
+- Verif: Vitest de la lógica (temporizador, toque ≠ avanzar) + 🧍 S25: leer un capítulo largo deslizando, pellizcar y ver que las barras se ocultan
 
 ---
 
