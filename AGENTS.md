@@ -253,7 +253,7 @@ Una tarea está terminada solo si:
 - Una tarea va bajo la sección a la que sirve, **sea de interfaz, BE, seguridad, Ops o QA**. Si no encaja en una sola o las abarca todas (seguridad transversal, plataforma, TV, dispositivos, checkpoints, 🧍 consolidadas), va en **General**. Todo lo de arte (iconos, colores de iconos, ilustraciones) va en **Recursos**, aparte de la sección a la que decore.
 - Cada sección acaba con un **«Lote sugerido»** de **5 o más tareas** para una sola sesión, y la tabla del inicio del archivo lo resume.
 - **Cada problema abierto es una tarea propia** con etiqueta `[tipo · complejidad · nivel]` (Baja/Intermedia/Alta; N1–N5 de `tasks/complexity.md`). Las preguntas al humano se escriben en la tarea («Pregunta abierta»).
-- `todo.md` solo contiene **pendientes**: una tarea con todos sus `- [x]` pasa a `tasks/todo.archive.md`; si queda un `- [ ]`, se queda en su sección (se puede podar lo ya hecho, nunca el pendiente). Los identificadores no se renumeran; las tareas nuevas siguen la numeración (hoy, hasta F77/G4).
+- `todo.md` solo contiene **pendientes**: una tarea con todos sus `- [x]` pasa a `tasks/todo.archive.md`; si queda un `- [ ]`, se queda en su sección (se puede podar lo ya hecho, nunca el pendiente). Los identificadores no se renumeran; las tareas nuevas siguen la numeración (hoy, hasta F91/G4).
 - Al crear una tarea, ponla en su sección, añade su ID al lote y actualiza `MEMORY.md` si implica una decisión.
 
 ## 16. Scrum (pendiente de definir)
