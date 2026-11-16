@@ -84,9 +84,9 @@ Dep: F46 · XS · `apps/mobile/src/components/ContinueCard.tsx`
 
 Dep: F46 · M · `packages/core` (progreso + `ports`), `apps/mobile/src/screens/reader/*` (solo el gancho de guardado)
 
-> Origen (petición del humano, 2026-11-16). **Decisión:** registro propio, no solo la biblioteca, para que también cuente lo leído sin guardar.
+> Origen (petición del humano, 2026-11-16). **Decisión:** registro propio, no solo la biblioteca, para que también cuente lo leído sin guardar.  Debe incluir lo necesario para abrir el lector sin pasar por Detalles (enlace del capítulo).
 
-- [ ] Rojo: `recordLastRead(entry)` y `getLastRead()`; entrada = título del capítulo, portada, categoría, título de la serie, estado (en emisión, finalizado, en pausa…), página actual y páginas restantes, **módulo de origen** (lectorTMO, yupmangas, mangasin…) y **enlace de origen** (el que lleva a Detalles)
+- [ ] Rojo: `recordLastRead(entry)` y `getLastRead()`; entrada = título del capítulo, portada, categoría, título de la serie, estado (en emisión, finalizado, en pausa…), página actual y páginas restantes, **módulo de origen** (lectorTMO, yupmangas, mangasin…) y **enlace de origen** (abre la serie/capítulo en su módulo; ya no pasa por Detalles al reanudar)
 - [ ] El historial guarda **una entrada por serie** (la última lectura), ordenado por fecha; las lecturas de una misma serie reemplazan la anterior
 - [ ] El lector lo actualiza al guardar el progreso (sin animaciones ni trabajo extra en el lector)
 - [ ] Entra en el respaldo/`backup` y en la migración aditiva de la base (sin romper copias anteriores)
@@ -100,7 +100,7 @@ Dep: F78 · M · `apps/mobile/src/screens/home/*`, `apps/mobile/src/components/C
 > **Pregunta abierta (responder antes de implementar):** el humano pidió que «Reanudar» haga cosas distintas **vía la app** y, en otro caso, **web frente a móvil**. Hay que precisar qué cambia en la web de Expo (¿sin página exacta? ¿sin lector nativo?). Propuesta provisional: igual flujo en ambos, y en la web de Expo, al faltar la base real hasta F49, usar la reserva de ejemplo.
 
 - [ ] La tarjeta muestra el último leído de `getLastRead()` (capítulo, portada, categoría, título, estado, página y páginas restantes, módulo de origen)
-- [ ] «Reanudar» → ficha (Detalles) de la serie con el enlace de origen → carga el capítulo pendiente → abre el lector **exactamente en la página** guardada
+- [ ] «Reanudar» abre **directo el lector** en el capítulo y la **página exacta** guardados, **sin pasar por Detalles** (decisión del humano, 2026-11-16: más fácil y seguro); el registro de F78 guarda lo necesario (módulo, enlace del capítulo, página) para cargarlo sin la ficha
 - [ ] Sin registro → estado vacío de Guarida (F40), nunca datos de ejemplo en nativo
 - Verif: Vitest + 🧍 S25 (leer páginas → Guarida → Reanudar abre la misma página)
 
@@ -109,7 +109,7 @@ Dep: F78 · M · `apps/mobile/src/screens/home/*`, `apps/mobile/src/components/C
 Dep: F78 · S · `apps/mobile/src/screens/home/*`
 
 - [ ] Las tarjetas salen del historial (una por serie, más reciente primero) en lugar de los datos de ejemplo
-- [ ] Al tocar: Detalles → capítulo y página donde quedó (misma ruta que F79)
+- [ ] Al tocar: directo al lector en el capítulo y la página donde quedó, sin pasar por Detalles (misma ruta que F79)
 - Verif: Vitest + 🧍 S25
 
 ### F81 Guarida: «Tesoros guardados» solo con las 3 carpetas con más series `[FE · Baja · N2]`
@@ -127,7 +127,7 @@ Dep: F78, F80 · M · `apps/mobile/src/app/` (ruta nueva), `apps/mobile/src/scre
 > Origen (petición del humano, 2026-11-16). **La lógica de navegación debe cuidarse: preguntar al humano ante cualquier duda.**
 
 - [ ] Ruta/pestaña nueva en blanco y **reutilizable** para otras listas, con título y fuente de datos como props
-- [ ] Muestra solo los 9 ítems del historial; al tocar → Detalles → capítulo y página donde quedó (misma ruta que F79)
+- [ ] Muestra solo los 9 ítems del historial; al tocar → directo al lector en el capítulo y la página donde quedó, sin pasar por Detalles (misma ruta que F79)
 - [ ] Botón atrás vuelve a Guarida; componente nuevo en la galería con todos sus estados
 - Verif: Vitest + Playwright 426/1440 px + 🧍 S25
 
