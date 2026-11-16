@@ -9,7 +9,7 @@
 
 **Hecho hasta hoy:** Fases 0–7 del núcleo (T01–T30b, T32a/T32b, T37), endurecimiento T34/T35/T36, Fase 6a completa (F01–F10), móvil F11–F21 y F29/F30/FB2 hechas (F34 casi completa), web F24/F25 y extensión F26/F27 hechas, F28 parte web, recorridos F32/F33 hechos. Detalle en `todo.archive.md`.
 
-**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46 → F47** (datos reales en Inicio y portadas) · F50 (filtros por etiquetas) y F51 (lector en cascada) · F49 (base local en la web de Expo, alternativa A) · verificaciones 🧍 al final de cada tarea.
+**Orden recomendado:** ~~T38~~ ✅ → ~~T39~~ ✅ → ~~T40~~ ✅ → ~~T41~~ ✅ (cierre API 1.0; falta la revisión 🧍 del Checkpoint I) · T33 en paralelo · F31 (Playwright por pantalla) · F40 → F45 → F41/F42 → F43 → F44 (propuestas de F33, pendientes de aprobar) · F22/F23 (TV) · pulidos F35–F39 y QAw1–3 · **F48 → F46** (datos reales en Inicio) · **Tesoros: F47 · F52 → F54 → F53 → F55 → F56 · F49** (sección «Tesoros») · F50 (filtros por etiquetas) y F51 (lector en cascada) · verificaciones 🧍 al final de cada tarea.
 
 ---
 
@@ -277,6 +277,37 @@ Dep: F48 · M · `apps/mobile/src/app/(tabs)/index.tsx`, `src/screens/home/{home
 - [ ] Galería y `homeFixtures` siguen con datos de ejemplo (solo para la galería)
 - Verif: Vitest + 🧍 S25 Ultra (leer unas páginas → Guarida lo muestra en «Continuar»); retoma QAw2 en el móvil
 
+### F50 Botón de filtros por etiquetas en el buscador de Descubrir `[FE · Intermedia · N3]`
+
+Dep: F38 (botón «Buscar»), T43 (`filters()` en el contrato) · M · `apps/mobile/src/screens/discover/*`, `packages/core/src/contract/types.ts` (solo lectura)
+
+> Origen (petición del humano, 2026-11-16).
+
+- [ ] Botón «Filtros» junto al buscador que abre una hoja con las etiquetas (p. ej. Sekai, Aventuras, Horror, Seinen, Shonen…), multiselección y «Limpiar»
+- [ ] Las etiquetas salen de `ModuleApi.filters()` del módulo elegido (tipo `tags`); si el módulo no declara `filters`, el botón no aparece. **Pregunta abierta:** ¿lista fija común a todos los módulos o la de cada módulo? (recomendado: la de cada módulo, sin inventar etiquetas)
+- [ ] `search(query, page, filters?)` recibe la selección; chip/contador de filtros activos y la búsqueda funciona también sin texto
+- [ ] Textos en el catálogo i18n, componente en la galería con todos sus estados, solo tokens
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440 (declaran `filters`)
+
+### F51 Lector en cascada (webtoon): deslizar, pellizcar para zoom y barras que se ocultan a los 3 s `[FE · Alta · N4]`
+
+Dep: F18/F19 (hechas) · M · `apps/mobile/src/screens/reader/{ReaderScreen,ReaderVertical,ReaderBars,ZoomableView}.tsx`
+
+> Origen (petición del humano, 2026-11-16). Hoy el modo vertical ya es una lista, pero un toque en la pantalla avanza a la página siguiente (`scrollToPage`).
+
+- [ ] En modo cascada/webtoon las imágenes se apilan de arriba abajo y se navega **solo deslizando**; un toque en la pantalla deja de avanzar de página (el toque solo muestra u oculta las barras)
+- [ ] Zoom con pellizco (acercar/alejar) en cascada, sin romper el desplazamiento vertical; revisar el presupuesto de memoria (P-90)
+- [ ] Las barras (cabecera y pie) se ocultan solas **3 s** después de mostrarse; sin animaciones en el lector (AGENTS.md): aparecen y desaparecen sin transición. **Pregunta abierta:** ¿el temporizador se reinicia con cada toque y también afecta al modo paginado?
+- [ ] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20)
+- Verif: Vitest de la lógica (temporizador, toque ≠ avanzar) + 🧍 S25: leer un capítulo largo deslizando, pellizcar y ver que las barras se ocultan
+
+---
+
+## Tesoros (Biblioteca) — pendientes y tareas nuevas (petición del humano, 2026-11-16)
+
+> Esta sección reúne todo lo de **Tesoros**: primero lo que ya estaba pendiente (F47 y F49, movidas aquí sin cambios) y luego las tareas nuevas **F52–F56**. Solo están **escritas, no implementadas**. Orden propuesto: F52 → F54 → F53 → F55 → F56 (F47/F49 siguen su orden anterior).
+> **Preguntas abiertas (responder antes de F52):** (1) SPEC RF-29/D-12 dice «un favorito pertenece a una carpeta o a ninguna»; aquí **Gemas** contiene todas las series y «Favoritos» es carpeta: ¿una serie puede estar a la vez en Gemas, Favoritos y otra carpeta (pertenencia múltiple), o «mover» la saca de las demás? Recomendado: Gemas es una **vista** (muestra todo, no es pertenencia) y el resto es una sola carpeta + el favorito; hay que **actualizar RF-29/D-12 en el SPEC** (decisión del humano). (2) Las etiquetas de una carpeta: ¿se guardan al crearla y se aplican siempre (carpeta inteligente) o solo añaden series una vez? Recomendado: siempre, con las etiquetas de la serie (`SeriesStore`), sin inventar etiquetas.
+
 ### F47 Portadas con cabeceras en Guarida y Tesoros `[BE/FE · Intermedia · N4]`
 
 Dep: F46 · M · `packages/core/src/{library/SeriesStore,library/queries,storage/migrations}.ts`, `apps/mobile/src/screens/{home,library}/*`
@@ -311,29 +342,50 @@ Dep: F46 · M–L · `apps/mobile/src/data/appDatabase.ts` (hoy devuelve `null` 
 - [ ] Retirar la reserva de ejemplo de Tesoros/Guarida en web y `sessionSqlDriver` donde quede sustituido
 - Verif: Playwright: guardar una serie, recargar la página y verla en Tesoros; cero peticiones externas
 
-### F50 Botón de filtros por etiquetas en el buscador de Descubrir `[FE · Intermedia · N3]`
+### F52 Carpetas por defecto: «Favoritos» y «Gemas» `[BE/FE · Intermedia · N3]`
 
-Dep: F38 (botón «Buscar»), T43 (`filters()` en el contrato) · M · `apps/mobile/src/screens/discover/*`, `packages/core/src/contract/types.ts` (solo lectura)
+Dep: preguntas abiertas (1) · M · `packages/core/src/library/{Folders,Favorites,queries}.ts`, `apps/mobile/src/screens/library/*`
 
-> Origen (petición del humano, 2026-11-16).
+- [ ] Rojo (núcleo): al abrir la base por primera vez se crean **Favoritos** y **Gemas** (migración/semilla **idempotente**: no se duplican al reiniciar ni al importar un respaldo); no se pueden borrar ni renombrar
+- [ ] **Gemas** muestra todas las series sin distinción; **Favoritos** muestra las marcadas como favorito (reutilizar `Favorites`)
+- [ ] Textos en el catálogo i18n («Favoritos», «Gemas»), tarjetas con `FolderCard`, estados en la galería
+- [ ] Comprobar el respaldo: las carpetas por defecto no se duplican al restaurar
+- Verif: Vitest con SQLite real + Playwright 426/1440 px + 🧍 S25: primer arranque muestra las dos carpetas
 
-- [ ] Botón «Filtros» junto al buscador que abre una hoja con las etiquetas (p. ej. Sekai, Aventuras, Horror, Seinen, Shonen…), multiselección y «Limpiar»
-- [ ] Las etiquetas salen de `ModuleApi.filters()` del módulo elegido (tipo `tags`); si el módulo no declara `filters`, el botón no aparece. **Pregunta abierta:** ¿lista fija común a todos los módulos o la de cada módulo? (recomendado: la de cada módulo, sin inventar etiquetas)
-- [ ] `search(query, page, filters?)` recibe la selección; chip/contador de filtros activos y la búsqueda funciona también sin texto
-- [ ] Textos en el catálogo i18n, componente en la galería con todos sus estados, solo tokens
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440 (declaran `filters`)
+### F53 Botón flotante «+» y modal «Nueva carpeta» `[FE · Intermedia · N3]`
 
-### F51 Lector en cascada (webtoon): deslizar, pellizcar para zoom y barras que se ocultan a los 3 s `[FE · Alta · N4]`
+Dep: F52 · M · `apps/mobile/src/screens/library/*`, `apps/mobile/src/components/*` (botón flotante, modal), `packages/i18n`
 
-Dep: F18/F19 (hechas) · M · `apps/mobile/src/screens/reader/{ReaderScreen,ReaderVertical,ReaderBars,ZoomableView}.tsx`
+- [ ] Botón flotante **fijo** abajo con icono «+» **verde** (token de `ui-tokens`, sin hexadecimales), ≥48×48, foco visible; no tapa la última fila (margen de la lista)
+- [ ] Modal con **nombre** (obligatorio, sin duplicados) y **etiquetas** (opcional, multiselección con las etiquetas de las series guardadas); al elegir etiquetas se **añaden dinámicamente** las series de esas categorías (ver pregunta abierta 2)
+- [ ] Reutilizar `ConfirmSheet`/hoja existente y `TextField`/`Chip`; componente nuevo en la galería con todos sus estados (vacío, error de nombre, con etiquetas)
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
 
-> Origen (petición del humano, 2026-11-16). Hoy el modo vertical ya es una lista, pero un toque en la pantalla avanza a la página siguiente (`scrollToPage`).
+### F54 Menú de pulsación larga en las series de Tesoros `[FE · Intermedia · N3]`
 
-- [ ] En modo cascada/webtoon las imágenes se apilan de arriba abajo y se navega **solo deslizando**; un toque en la pantalla deja de avanzar de página (el toque solo muestra u oculta las barras)
-- [ ] Zoom con pellizco (acercar/alejar) en cascada, sin romper el desplazamiento vertical; revisar el presupuesto de memoria (P-90)
-- [ ] Las barras (cabecera y pie) se ocultan solas **3 s** después de mostrarse; sin animaciones en el lector (AGENTS.md): aparecen y desaparecen sin transición. **Pregunta abierta:** ¿el temporizador se reinicia con cada toque y también afecta al modo paginado?
-- [ ] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20)
-- Verif: Vitest de la lógica (temporizador, toque ≠ avanzar) + 🧍 S25: leer un capítulo largo deslizando, pellizcar y ver que las barras se ocultan
+Dep: F52, F53 · M · `apps/mobile/src/screens/library/*`, `packages/core/src/library/{Favorites,Folders}.ts`
+
+- [ ] Pulsación larga en una serie (en **Gemas y en toda Tesoros**) abre una hoja con: **Eliminar** (con `ConfirmSheet`; no borra el progreso, RF-30), **Mover** (lista de carpetas; la serie pasa a la elegida), **Mover y crear** (abre el modal de F53 y mueve la serie a la carpeta nueva) y **Añadir a favoritos**
+- [ ] Rojo (núcleo): operaciones atómicas de mover/crear+mover/quitar; que «Eliminar» use `removeSeriesFromLibrary`
+- [ ] Alternativa accesible a la pulsación larga (TV/teclado: botón de menú), foco visible
+- Verif: Vitest con SQLite real + Playwright + 🧍 S25 (pulsación larga) y MiBox 4 (D-pad)
+
+### F55 Búsqueda en tiempo real y filtros por categoría `[FE · Intermedia · N3]`
+
+Dep: F52 · M · `apps/mobile/src/screens/library/*`, `packages/core/src/library/queries.ts`
+
+- [ ] La búsqueda devuelve **al escribir** (con *debounce* corto) las series de nombre **similar** al texto (tolerante a mayúsculas/tildes; decidir si basta «contiene» o hace falta similitud difusa: preguntar)
+- [ ] Filtros por categoría (seinen, shonen, isekai, aventura…) tomados de las etiquetas de las series guardadas (no inventar lista); con filtros activos **solo** se devuelven series que coincidan (con y sin texto)
+- [ ] Combina con carpeta, tipo, fuente y NSFW del RF-27
+- Verif: Vitest (consulta + debounce) + Playwright 426/1440 px + 🧍 S25
+
+### F56 Estado vacío de búsqueda: el dragón sin tesoros `[FE · Baja · N2]`
+
+Dep: F55 · S · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`, `packages/i18n`
+
+- [ ] Sin resultados: texto **cómico** (analogía del dragón rebuscando entre sus tesoros y sin hallar nada; breve, sin ocultar la causa, SPEC 11.7) y un **SVG generado** centrado (ilustración propia del dragón, solo tokens de color; sin imágenes externas, RNF-5)
+- [ ] Componente en la galería (con y sin filtros activos); textos en el catálogo i18n
+- Verif: Playwright 426/1440 px sin overflow + 🧍 S25
 
 ---
 
