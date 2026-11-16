@@ -17,11 +17,11 @@ Las tareas pendientes se agrupan **por sección de la app**: **Guarida**, **Teso
 
 | Sección | Lote sugerido (una sesión) |
 |---|---|
-| Guarida | F46 → QAw2 → F34 → F40 → F76 |
+| Guarida | F46 → F78 → F79 → F80 → F81 → F82 (luego QAw2, F34, F40, F76) |
 | Tesoros | F52 → F54 → F53 → F55 → F56 → F57 → F58 (luego F47, F49) |
-| Aventuras | F59 → F50 → F38 → F60 → F77 → QAw3 |
+| Aventuras | F59 → F50 → F38 → F60 → F77 → QAw3 · listas/filtros: F83 → F84 → F85 → F86 → F87 → F88 |
 | Portales | T42 → F61 → F63 → F64 → F45 → F42 |
-| Ajustes | F65 → F66 → F67 → F68 → F69 |
+| Ajustes | F65 → F66 → F67 → F68 → F69 · temas: F89 → F90 → F91 |
 | Lector y ficha | F17 → F51 → F39 → F43 → F23 |
 | Recursos | F70 → F71 → F72 → F73 → F74 → F75 (FA1 es 🧍) |
 
@@ -79,6 +79,57 @@ Dep: F46 · XS · `apps/mobile/src/components/ContinueCard.tsx`
 - Verif: Vitest + 🧍 S25
 
 > **Nota:** F47 (portadas con cabeceras) afecta también a Guarida; vive en **Tesoros**.
+
+### F78 Registro «último leído» (base de Continuar y Recientes) `[BE · Intermedia · N3]`
+
+Dep: F46 · M · `packages/core` (progreso + `ports`), `apps/mobile/src/screens/reader/*` (solo el gancho de guardado)
+
+> Origen (petición del humano, 2026-11-16). **Decisión:** registro propio, no solo la biblioteca, para que también cuente lo leído sin guardar.
+
+- [ ] Rojo: `recordLastRead(entry)` y `getLastRead()`; entrada = título del capítulo, portada, categoría, título de la serie, estado (en emisión, finalizado, en pausa…), página actual y páginas restantes, **módulo de origen** (lectorTMO, yupmangas, mangasin…) y **enlace de origen** (el que lleva a Detalles)
+- [ ] El historial guarda **una entrada por serie** (la última lectura), ordenado por fecha; las lecturas de una misma serie reemplazan la anterior
+- [ ] El lector lo actualiza al guardar el progreso (sin animaciones ni trabajo extra en el lector)
+- [ ] Entra en el respaldo/`backup` y en la migración aditiva de la base (sin romper copias anteriores)
+- Verif: Vitest en `packages/core` (orden, reemplazo por serie, vacío)
+
+### F79 Guarida: «Continuar aventura» con datos reales y «Reanudar» exacto `[FE · Intermedia · N3]`
+
+Dep: F78 · M · `apps/mobile/src/screens/home/*`, `apps/mobile/src/components/ContinueCard.tsx`
+
+> Origen (petición del humano, 2026-11-16). Sustituye los datos de ejemplo poco a poco; amplía F46/F76.
+> **Pregunta abierta (responder antes de implementar):** el humano pidió que «Reanudar» haga cosas distintas **vía la app** y, en otro caso, **web frente a móvil**. Hay que precisar qué cambia en la web de Expo (¿sin página exacta? ¿sin lector nativo?). Propuesta provisional: igual flujo en ambos, y en la web de Expo, al faltar la base real hasta F49, usar la reserva de ejemplo.
+
+- [ ] La tarjeta muestra el último leído de `getLastRead()` (capítulo, portada, categoría, título, estado, página y páginas restantes, módulo de origen)
+- [ ] «Reanudar» → ficha (Detalles) de la serie con el enlace de origen → carga el capítulo pendiente → abre el lector **exactamente en la página** guardada
+- [ ] Sin registro → estado vacío de Guarida (F40), nunca datos de ejemplo en nativo
+- Verif: Vitest + 🧍 S25 (leer páginas → Guarida → Reanudar abre la misma página)
+
+### F80 Guarida: «Lecturas recientes» desde el historial de series `[FE · Baja · N2]`
+
+Dep: F78 · S · `apps/mobile/src/screens/home/*`
+
+- [ ] Las tarjetas salen del historial (una por serie, más reciente primero) en lugar de los datos de ejemplo
+- [ ] Al tocar: Detalles → capítulo y página donde quedó (misma ruta que F79)
+- Verif: Vitest + 🧍 S25
+
+### F81 Guarida: «Tesoros guardados» solo con las 3 carpetas con más series `[FE · Baja · N2]`
+
+Dep: F46 · S · `apps/mobile/src/screens/home/*`, `packages/core` (carpetas)
+
+- [ ] Rojo: ordenar carpetas por número de series (empate → más reciente) y tomar 3
+- [ ] Si hay menos de 3 con series, mostrar solo esas; sin ninguna, ocultar la sección
+- Verif: Vitest + Playwright 426/1440 px
+
+### F82 Guarida: «Ver todo» de Lecturas recientes (pantalla reutilizable) `[FE · Intermedia · N3]`
+
+Dep: F78, F80 · M · `apps/mobile/src/app/` (ruta nueva), `apps/mobile/src/screens/*`
+
+> Origen (petición del humano, 2026-11-16). **La lógica de navegación debe cuidarse: preguntar al humano ante cualquier duda.**
+
+- [ ] Ruta/pestaña nueva en blanco y **reutilizable** para otras listas, con título y fuente de datos como props
+- [ ] Muestra solo los 9 ítems del historial; al tocar → Detalles → capítulo y página donde quedó (misma ruta que F79)
+- [ ] Botón atrás vuelve a Guarida; componente nuevo en la galería con todos sus estados
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
 
 ---
 
@@ -258,10 +309,68 @@ Dep: F33 · M · `apps/web/*`
 - [ ] Verificar que cargan correctamente los mangas del **segundo** módulo.
 - Verif: el filtro de módulo cambia la fuente y la rejilla muestra series del módulo elegido, sin errores y sin mezclar resultados del anterior.
 
+### F83 Contrato de módulo: paginación y orden «más reciente» declarados `[BE · Intermedia · N3]`
+
+Dep: F59 · M · `packages/core/src/contract/types.ts`, `packages/module-sdk` (manifiesto)
+
+> Origen (petición del humano, 2026-11-16). **Decisión:** si un módulo no soporta paginación u orden «más reciente», **se oculta esa sección** para él.
+
+- [ ] Rojo: el manifiesto/`ModuleApi` declara si `list`/`search` paginan y si pueden ordenar por más reciente; validación en `module-sdk`
+- [ ] La UI consulta la declaración y oculta Catálogo/Reciente/Popular que no la cumplan
+- Verif: Vitest (núcleo + SDK) con fixtures
+
+### F84 Explorar catálogo con scroll infinito `[FE · Intermedia · N3]`
+
+Dep: F83 · M · `apps/mobile/src/screens/discover/*`
+
+> Origen (petición del humano, 2026-11-16). Una página del buscador del sitio por lote.
+
+- [ ] Resultados del buscador del sitio en orden más reciente; al llegar al final se pide la página siguiente, hasta agotar (sin duplicados ni peticiones repetidas)
+- [ ] Estados: cargando más, error con reintento, fin de lista; sin overflow, sin animaciones salvo `transform`/`opacity`
+- Verif: Vitest (paginación) + Playwright 426/1440 px + 🧍 S25
+
+### F85 «Más reciente» y «Popular» con scroll infinito en vez de carrusel `[FE · Intermedia · N3]`
+
+Dep: F83, F84 · M · `apps/mobile/src/screens/discover/*`
+
+- [ ] Sustituir los carruseles por listas con scroll infinito reutilizando la lógica de F84; rejilla de portadas (T7: 3 líneas)
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+
+### F86 Propuesta UX de búsqueda y filtros (revisión de diseño) `[Diseño · Intermedia · N3]` 🧍
+
+Dep: F50 · S
+
+> Origen (petición del humano, 2026-11-16: «revisarlo con un especialista»). Decisión: crítica con las skills de diseño/UX y 2–3 variantes; luego aprobación humana.
+
+- [ ] Barra de búsqueda visible por defecto + botón de búsqueda con icono más pequeño y rápido de pulsar (área ≥48×48) + botón de filtros oculto por defecto junto a él
+- [ ] 2–3 variantes con crítica (jerarquía, alcance con el pulgar, TV/D-pad) y recomendación; registrar diferencias en `design/stitch/DIFFS.md`
+- [ ] 🧍 El humano elige la variante antes de F87/F88
+- Verif: capturas de las variantes + decisión en `MEMORY.md`
+
+### F87 Filtros desplegables con casillas, declarados por el módulo `[FE · Alta · N4]`
+
+Dep: F86, F50, F59 · M · `apps/mobile/src/screens/discover/*`, `packages/core/src/contract/types.ts`
+
+> Origen (petición del humano, 2026-11-16). Amplía F50 (etiquetas) con más tipos de filtro; **no duplicar F50**.
+
+- [ ] Al pulsar «Filtros» aparecen desplegables con casillas: **SFW/NSFW** (NSFW solo si el sitio lo permite), **género** (terror, aventura, harem, ecchi…), **estado** (en emisión, finalizado, en pausa, abandonado y lo que permita el sitio) y **tipo** (manga, manhua, manhwa, webtoon, cómic)
+- [ ] Todo sale de `ModuleApi.filters()`; lo que el módulo no declare no aparece; «Limpiar» y contador de activos
+- [ ] Componentes nuevos en la galería con todos sus estados; textos en i18n; solo tokens
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440
+
+### F88 Reubicar el selector de servidor/módulo en Aventuras `[FE · Baja · N2]`
+
+Dep: F86 · S · `apps/mobile/src/screens/discover/*`
+
+> Origen (petición del humano, 2026-11-16: «reorganizar el desplegable para cambiar de servidor o módulo»). Posición final según la variante de F86.
+
+- [ ] Mover el desplegable de módulo fuera de los filtros (según F86); cambiar de módulo recarga la rejilla sin mezclar resultados (cubre QAw3)
+- Verif: Vitest + Playwright 426/1440 px
+
 ---
 
 
-**Lote sugerido:** F59 → F50 → F38 → F60 → F77 → QAw3 (F41/F44 esperan aprobación).
+**Lote sugerido:** F59 → F50 → F38 → F60 → F77 → QAw3 (F41/F44 esperan aprobación). Nuevo bloque de listas/filtros: F83 → F84 → F85 → F86 → F87 → F88.
 
 ---
 
@@ -351,7 +460,32 @@ Dep: F33 · S · `apps/mobile/src/screens/{sources,settings}/*`
 - [ ] Añadir `updates.url`, política de `runtimeVersion`, proyecto/canal de EAS, build de prueba y verificación de una actualización real
 - Verif: 🧍 con la cuenta de EAS
 
-**Lote sugerido:** F65 → F66 → F67 → F68 (F69 espera cuenta). Diagnóstico y escritorio (F43) está en «Lector y ficha».
+### F89 Esquema de tema (JSON de tokens) y validación `[BE · Intermedia · N3]`
+
+Dep: ninguna · M · `packages/ui-tokens`, `packages/module-sdk` (validación)
+
+> Origen (petición del humano, 2026-11-16). **Decisión:** un tema es un JSON de tokens, sin código ejecutable.
+
+- [ ] Rojo: esquema con los colores semánticos de `ui-tokens`, versión y nombre; rechaza claves desconocidas, colores inválidos y contraste insuficiente (WCAG AA)
+- [ ] Temas integrados actuales expresados con ese esquema
+- Verif: Vitest en `ui-tokens`/SDK
+
+### F90 Ajustes: sección «Temas» con cambio dinámico `[FE · Intermedia · N3]`
+
+Dep: F89 · M · `apps/mobile/src/screens/settings/*`, `packages/ui-tokens`
+
+- [ ] Selector de tema con vista previa; el cambio se aplica al instante y persiste entre sesiones
+- [ ] Componentes nuevos en la galería; textos en i18n; respeta `prefers-reduced-motion`
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+
+### F91 Ajustes: importar temas de la comunidad `[FE · Intermedia · N3]`
+
+Dep: F90 · M · `apps/mobile/src/screens/settings/*`
+
+- [ ] Importar un JSON de tema **con confirmación manual** (nunca automática); error claro si no valida; poder borrar un tema importado
+- Verif: Vitest + 🧍 S25
+
+**Lote sugerido:** F65 → F66 → F67 → F68 (F69 espera cuenta); temas: F89 → F90 → F91. Diagnóstico y escritorio (F43) está en «Lector y ficha».
 
 ---
 
