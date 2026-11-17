@@ -462,6 +462,11 @@ export function hasActiveFilters(filters: LibraryFilters): boolean {
   );
 }
 
+/** Marca o desmarca un valor de una selección múltiple (tipo, fuente, categoría). */
+export function toggleItem<T>(list: readonly T[], item: T): T[] {
+  return list.includes(item) ? list.filter((other) => other !== item) : [...list, item];
+}
+
 /** Quita texto y filtros; el orden y el NSFW son preferencias y se respetan. */
 export function clearedFilters(filters: LibraryFilters): LibraryFilters {
   return { ...DEFAULT_LIBRARY_FILTERS, order: filters.order, nsfwVisible: filters.nsfwVisible };

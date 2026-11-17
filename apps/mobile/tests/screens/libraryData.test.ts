@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { Folders, SeriesStore, type SqlDriver } from "@ryuunest/core";
+import { Folders, SeriesStore, SqliteStorage, type SqlDriver } from "@ryuunest/core";
 
 import {
   openMigratedDriver,
@@ -251,6 +251,22 @@ describe("loadLibraryData (F14c)", () => {
 
     expect(sources).toEqual([
       { id: "alfa", name: "alfa" },
+      { id: "zeta", name: "zeta" },
+    ]);
+  });
+
+  it("el nombre visible de la fuente sale de ModuleRegistry; sin módulo instalado, su id (F57)", async () => {
+    await addSeries(driver, { id: "a", title: "A", moduleId: "zeta", addedAt: 1 });
+    await addSeries(driver, { id: "b", title: "B", moduleId: "alfa", addedAt: 2 });
+    await new SqliteStorage(driver).set(
+      "module:alfa",
+      JSON.stringify({ id: "alfa", manifest: { name: "Alfa Scans" } }),
+    );
+
+    const { sources } = await loadLibraryData(driver);
+
+    expect(sources).toEqual([
+      { id: "alfa", name: "Alfa Scans" },
       { id: "zeta", name: "zeta" },
     ]);
   });

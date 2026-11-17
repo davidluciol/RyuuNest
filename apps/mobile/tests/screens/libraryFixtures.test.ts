@@ -6,6 +6,7 @@ import {
   SAMPLE_LIBRARY_DATA,
   filterLibrarySeries,
   libraryGridRows,
+  toggleItem,
   type LibraryFilters,
 } from "../../src/screens/library/libraryFixtures";
 
@@ -174,5 +175,18 @@ describe("filterLibrarySeries (F14a/F14b)", () => {
   it("elegir Gemas no filtra: es la vista de todas las series (F52)", () => {
     const filters: LibraryFilters = { ...DEFAULT_LIBRARY_FILTERS, folderId: GEMS_FOLDER_ID };
     expect(filterLibrarySeries(all, filters)).toEqual(filterLibrarySeries(all, DEFAULT_LIBRARY_FILTERS));
+  });
+});
+
+/** F57 — marcar/desmarcar un valor de una selección múltiple (tipo, fuente) sin mutar la lista. */
+describe("toggleItem (F57)", () => {
+  it("añade el valor que falta, al final", () => {
+    expect(toggleItem(["manga"], "manhwa")).toEqual(["manga", "manhwa"]);
+  });
+
+  it("quita el valor que ya estaba y no toca la lista original", () => {
+    const original = ["manga", "manhwa"];
+    expect(toggleItem(original, "manga")).toEqual(["manhwa"]);
+    expect(original).toEqual(["manga", "manhwa"]);
   });
 });

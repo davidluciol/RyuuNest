@@ -233,9 +233,9 @@ Dep: F55 · M · `apps/mobile/src/screens/library/*`
 
 > Origen: `MEMORY.md` §4 «Biblioteca (restos de F14)». **Comprobar al empezar si sigue vigente.**
 
-- [ ] Hoja de filtros real: tipo y fuente hoy son chips de marcador (RF-27)
-- [ ] Nombre visible de la fuente desde `ModuleRegistry`
-- Verif: Vitest + Playwright 426/1440 px
+- [x] Hoja de filtros real (`FilterSheet`): **tipo, fuente y NSFW** (decisión del humano 2026-11-17; RF-27 ajustado), cada chip aplica al instante, «Limpiar» vacía tipo y fuente, «Listo» cierra
+- [x] Nombre visible de la fuente desde `ModuleRegistry` (sin módulo instalado, su id)
+- Verif: ✅ Vitest + ✅ Playwright 426/1440 px (`library.cjs`) · 🧍 S25 pendiente
 
 ### F58 Menú de orden real y `reading: true` al núcleo `[FE/BE · Baja · N2]`
 

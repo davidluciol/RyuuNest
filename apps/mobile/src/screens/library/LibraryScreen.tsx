@@ -15,6 +15,7 @@ import ConfirmSheet from "../../components/ConfirmSheet";
 import DragonTreasure from "../../components/DragonTreasure";
 import EmptyState from "../../components/EmptyState";
 import ErrorBanner from "../../components/ErrorBanner";
+import FilterSheet from "../../components/FilterSheet";
 import FloatingActionButton from "../../components/FloatingActionButton";
 import { FAB_SIZE } from "../../components/floatingButtonStyles";
 import FolderCard from "../../components/FolderCard";
@@ -29,6 +30,7 @@ import {
   EMPTY_LIBRARY_DATA,
   clearedFilters,
   filterLibrarySeries,
+  toggleItem,
   hasActiveFilters,
   type FolderNameProblem,
   type SeriesKey,
@@ -133,6 +135,7 @@ export default function LibraryScreen({
   };
 
   const [creating, setCreating] = useState(false);
+  const [filtering, setFiltering] = useState(false);
   // F54: la serie del menú abierto, la que se va a eliminar y la que espera su carpeta nueva.
   const [menuSeries, setMenuSeries] = useState<LibrarySeries | null>(null);
   const [removing, setRemoving] = useState<LibrarySeries | null>(null);
@@ -235,8 +238,16 @@ export default function LibraryScreen({
       {/* Filtros secundarios: tipo, fuente, orden, NSFW (RF-27, RF-28). */}
       <View style={[styles.filtersWrap, { paddingHorizontal: layout.margin }]}>
         <ChipScroller contentContainerStyle={styles.filtersRow}>
-          <Chip label={t("library.filter.kind")} selected={filters.kinds.length > 0} />
-          <Chip label={t("library.filter.source")} selected={filters.moduleIds.length > 0} />
+          <Chip
+            label={t("library.filter.kind")}
+            selected={filters.kinds.length > 0}
+            onPress={() => setFiltering(true)}
+          />
+          <Chip
+            label={t("library.filter.source")}
+            selected={filters.moduleIds.length > 0}
+            onPress={() => setFiltering(true)}
+          />
           <Chip
             label={`${t("library.sort.label")}: ${t(ORDER_KEYS[filters.order])}`}
             selected={filters.order !== "name"}
@@ -270,9 +281,7 @@ export default function LibraryScreen({
                 selected={filters.tags.includes(tag)}
                 onPress={() =>
                   updateFilters({
-                    tags: filters.tags.includes(tag)
-                      ? filters.tags.filter((other) => other !== tag)
-                      : [...filters.tags, tag],
+                    tags: toggleItem(filters.tags, tag),
                   })
                 }
               />
@@ -389,6 +398,16 @@ export default function LibraryScreen({
           ))}
         </View>
       )}
+
+      <FilterSheet
+        visible={filtering}
+        kinds={filters.kinds}
+        moduleIds={filters.moduleIds}
+        nsfwVisible={filters.nsfwVisible}
+        sources={data.sources}
+        onChange={updateFilters}
+        onClose={() => setFiltering(false)}
+      />
 
       {actionFailed ? (
         <View style={[styles.banner, { paddingHorizontal: layout.margin }]}>
