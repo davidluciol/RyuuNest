@@ -4,6 +4,8 @@ import {
   GEMS_FOLDER_ID,
   SAMPLE_LIBRARY_DATA,
   addSampleFolder,
+  moveSampleSeries,
+  removeSampleSeries,
   folderCount,
   seriesInFolder,
   validateFolderName,
@@ -95,5 +97,44 @@ describe("addSampleFolder", () => {
     expect(tags.length).toBeGreaterThan(0);
     expect([...tags].sort((a, b) => a.localeCompare(b, "es"))).toEqual(tags);
     expect(new Set(tags).size).toBe(tags.length);
+  });
+});
+
+describe("acciones de serie sobre los datos de ejemplo (F54, web sin base)", () => {
+  const primera = SAMPLE_LIBRARY_DATA.series[0] as LibrarySeries;
+  const clave = { moduleId: primera.moduleId, seriesId: primera.seriesId };
+  const cuenta = (data: typeof SAMPLE_LIBRARY_DATA, id: string) =>
+    data.folders.find((f) => f.id === id)?.count ?? -1;
+
+  it("mover cambia la carpeta de la serie (solo una, D-12) y reajusta los dos recuentos", () => {
+    const origen = primera.folderId as string;
+    const destino = SAMPLE_LIBRARY_DATA.folders.find((f) => f.id !== origen && f.kind === undefined) as LibraryFolder;
+
+    const data = moveSampleSeries(SAMPLE_LIBRARY_DATA, clave, destino.id);
+
+    expect(data.series.find((s) => s.seriesId === clave.seriesId)?.folderId).toBe(destino.id);
+    expect(cuenta(data, origen)).toBe(cuenta(SAMPLE_LIBRARY_DATA, origen) - 1);
+    expect(cuenta(data, destino.id)).toBe(cuenta(SAMPLE_LIBRARY_DATA, destino.id) + 1);
+    expect(cuenta(data, GEMS_FOLDER_ID)).toBe(cuenta(SAMPLE_LIBRARY_DATA, GEMS_FOLDER_ID));
+  });
+
+  it("quitar la serie la saca de Tesoros y descuenta de Gemas y de su carpeta", () => {
+    const origen = primera.folderId as string;
+
+    const data = removeSampleSeries(SAMPLE_LIBRARY_DATA, clave);
+
+    expect(data.series.some((s) => s.seriesId === clave.seriesId)).toBe(false);
+    expect(cuenta(data, GEMS_FOLDER_ID)).toBe(cuenta(SAMPLE_LIBRARY_DATA, GEMS_FOLDER_ID) - 1);
+    expect(cuenta(data, origen)).toBe(cuenta(SAMPLE_LIBRARY_DATA, origen) - 1);
+  });
+
+  it("crear y mover: la carpeta nueva recibe la serie", () => {
+    const resultado = addSampleFolder(SAMPLE_LIBRARY_DATA, "Recién llegadas", [], clave);
+
+    expect(resultado.ok).toBe(true);
+    if (!resultado.ok) return;
+    const nueva = resultado.data.folders.at(-1) as LibraryFolder;
+    expect(resultado.data.series.find((s) => s.seriesId === clave.seriesId)?.folderId).toBe(nueva.id);
+    expect(nueva.count).toBe(1);
   });
 });

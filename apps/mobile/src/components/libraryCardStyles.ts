@@ -3,6 +3,7 @@ import {
   layoutForWidth,
   radii,
   spacing,
+  touchTarget,
   typography,
   dragonNightColors,
   type TypeStyle,
@@ -127,6 +128,30 @@ export function libraryCardGridColumns(width: number): number {
  * «…» (T7). Provisional: se mide en el teléfono (P-45).
  */
 export const LIBRARY_CARD_MIN_WIDTH = 96;
+
+/** F54 — botón de menú «⋮» de la tarjeta: 36 px visibles; `hitSlop` lo lleva a 48 (RNF-7). */
+export interface LibraryCardMenuStyleShape {
+  size: number;
+  hitSlop: number;
+  backgroundColor: string;
+  iconColor: string;
+  iconSize: number;
+  elevation: number;
+  shadowOpacity: number;
+}
+
+export function libraryCardMenuStyle(): LibraryCardMenuStyleShape {
+  const size = spacing.xl + spacing.xxs;
+  return {
+    size,
+    hitSlop: (touchTarget.min - size) / 2,
+    backgroundColor: colors.elevated,
+    iconColor: colors.textPrimary,
+    iconSize: spacing.md + spacing.xxs,
+    elevation: 0,
+    shadowOpacity: 0,
+  };
+}
 
 /** Columnas de la cuadrícula de Biblioteca: 3 si la tarjeta conserva su ancho mínimo; si no, 2. */
 export function libraryColumnsFor(width: number): 2 | 3 {

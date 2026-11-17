@@ -18,6 +18,7 @@ export default function LibraryRoute() {
         data={library.data}
         initialFilters={{ nsfwVisible: settings.nsfwVisible }}
         onCreateFolder={library.createFolder}
+        seriesActions={library.seriesActions}
       />
     );
   }

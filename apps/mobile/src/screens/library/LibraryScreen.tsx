@@ -11,11 +11,14 @@ import LibraryCard from "../../components/LibraryCard";
 import { libraryColumnsFor } from "../../components/libraryCardStyles";
 import Chip from "../../components/Chip";
 import ChipScroller from "../../components/ChipScroller";
+import ConfirmSheet from "../../components/ConfirmSheet";
 import EmptyState from "../../components/EmptyState";
+import ErrorBanner from "../../components/ErrorBanner";
 import FloatingActionButton from "../../components/FloatingActionButton";
 import { FAB_SIZE } from "../../components/floatingButtonStyles";
 import FolderCard from "../../components/FolderCard";
 import NewFolderSheet from "../../components/NewFolderSheet";
+import SeriesMenuSheet from "../../components/SeriesMenuSheet";
 import TextField from "../../components/TextField";
 import { Search } from "../../icons";
 import { t } from "../../i18n";
@@ -25,6 +28,7 @@ import {
   EMPTY_LIBRARY_DATA,
   filterLibrarySeries,
   type FolderNameProblem,
+  type SeriesKey,
   libraryGridRows,
   type LibraryData,
   type LibraryFilters,
@@ -49,6 +53,20 @@ const ORDER_KEYS = {
   addedAt: "library.sort.addedAt",
 } as const;
 
+/** F54 — acciones del menú de una serie; sin ellas no hay menú ni «⋮». */
+export interface LibrarySeriesActions {
+  move: (key: SeriesKey, folderId: string) => Promise<void>;
+  /** «Mover y crear»: devuelve el problema del nombre si lo hay. */
+  moveAndCreate: (
+    key: SeriesKey,
+    name: string,
+    tags: string[],
+  ) => Promise<FolderNameProblem | null>;
+  addToFavorites: (key: SeriesKey) => Promise<void>;
+  /** Quita la serie de Tesoros; su progreso se conserva (RF-30). */
+  remove: (key: SeriesKey) => Promise<void>;
+}
+
 export interface LibraryScreenProps {
   /** Datos de la pantalla; por defecto, estado vacío. */
   data?: LibraryData;
@@ -65,6 +83,8 @@ export interface LibraryScreenProps {
    * Sin esta función no hay botón flotante «+».
    */
   onCreateFolder?: (name: string, tags: string[]) => Promise<FolderNameProblem | null>;
+  /** F54 — menú de pulsación larga de cada serie (mover, favoritos, eliminar). */
+  seriesActions?: LibrarySeriesActions;
   /** Callback del estado vacío (añadir repositorio). */
   onEmptyAction?: () => void;
   /** Callback al cambiar los filtros (para persistir estado). */
@@ -84,6 +104,7 @@ export default function LibraryScreen({
   onFolderPress,
   onManageFolders,
   onCreateFolder,
+  seriesActions,
   onEmptyAction,
   onFiltersChange,
   virtualize = true,
@@ -108,6 +129,16 @@ export default function LibraryScreen({
   };
 
   const [creating, setCreating] = useState(false);
+  // F54: la serie del menú abierto, la que se va a eliminar y la que espera su carpeta nueva.
+  const [menuSeries, setMenuSeries] = useState<LibrarySeries | null>(null);
+  const [removing, setRemoving] = useState<LibrarySeries | null>(null);
+  const [creatingFor, setCreatingFor] = useState<LibrarySeries | null>(null);
+  const [actionFailed, setActionFailed] = useState(false);
+
+  /** Ejecuta una acción de serie; si falla, avisa y no pierde nada. */
+  const run = (action: () => Promise<unknown>) => {
+    action().catch(() => setActionFailed(true));
+  };
 
   const visibleSeries = useMemo(
     () => filterLibrarySeries(data.series, filters, data.folders),
@@ -135,6 +166,13 @@ export default function LibraryScreen({
       }
       accessibilityLabel={item.title}
       onPress={() => onSeriesPress?.(item.seriesId, item.moduleId)}
+      {...(seriesActions === undefined
+        ? {}
+        : {
+            onLongPress: () => setMenuSeries(item),
+            onMenuPress: () => setMenuSeries(item),
+            menuLabel: t("library.series.menu.label", { title: item.title }),
+          })}
     />
   );
 
@@ -306,23 +344,92 @@ export default function LibraryScreen({
         </View>
       )}
 
-      {onCreateFolder !== undefined ? (
-        <>
-          <View style={[styles.fab, { right: layout.margin }]} pointerEvents="box-none">
-            <FloatingActionButton
-              accessibilityLabel={t("library.folder.new.fab")}
-              onPress={() => setCreating(true)}
-              testID="library-new-folder"
-            />
-          </View>
-          <NewFolderSheet
-            visible={creating}
-            existingNames={data.folders.map((f) => f.name)}
-            availableTags={data.tags}
-            onSubmit={onCreateFolder}
-            onClose={() => setCreating(false)}
+      {actionFailed ? (
+        <View style={[styles.banner, { paddingHorizontal: layout.margin }]}>
+          <ErrorBanner
+            title={t("library.series.error.title")}
+            message={t("library.series.error.message")}
+            actionLabel={t("library.series.error.dismiss")}
+            onAction={() => setActionFailed(false)}
+            testID="library-action-error"
           />
-        </>
+        </View>
+      ) : null}
+
+      {onCreateFolder !== undefined ? (
+        <View style={[styles.fab, { right: layout.margin }]} pointerEvents="box-none">
+          <FloatingActionButton
+            accessibilityLabel={t("library.folder.new.fab")}
+            onPress={() => setCreating(true)}
+            testID="library-new-folder"
+          />
+        </View>
+      ) : null}
+
+      {/* Una sola hoja de «Nueva carpeta»: la del botón «+» o la de «Mover y crear» (F54). */}
+      {onCreateFolder !== undefined || seriesActions !== undefined ? (
+        <NewFolderSheet
+          visible={creating || creatingFor !== null}
+          existingNames={data.folders.map((f) => f.name)}
+          availableTags={data.tags}
+          onSubmit={(name, tags) =>
+            creatingFor !== null && seriesActions !== undefined
+              ? seriesActions.moveAndCreate(creatingFor, name, tags)
+              : (onCreateFolder?.(name, tags) ?? Promise.resolve(null))
+          }
+          onClose={() => {
+            setCreating(false);
+            setCreatingFor(null);
+          }}
+        />
+      ) : null}
+
+      {seriesActions !== undefined && menuSeries !== null ? (
+        <SeriesMenuSheet
+          visible
+          title={menuSeries.title}
+          folders={data.folders.filter((f) => f.kind !== "gems")}
+          currentFolderId={menuSeries.folderId}
+          inFavorites={
+            data.folders.find((f) => f.id === menuSeries.folderId)?.kind === "favorites"
+          }
+          onMove={(folderId) => {
+            const series = menuSeries;
+            setMenuSeries(null);
+            run(() => seriesActions.move(series, folderId));
+          }}
+          onMoveAndCreate={() => {
+            setCreatingFor(menuSeries);
+            setMenuSeries(null);
+          }}
+          onAddToFavorites={() => {
+            const series = menuSeries;
+            setMenuSeries(null);
+            run(() => seriesActions.addToFavorites(series));
+          }}
+          onRemove={() => {
+            setRemoving(menuSeries);
+            setMenuSeries(null);
+          }}
+          onClose={() => setMenuSeries(null)}
+        />
+      ) : null}
+
+      {seriesActions !== undefined ? (
+        <ConfirmSheet
+          visible={removing !== null}
+          title={t("library.series.remove.title")}
+          message={t("library.series.remove.message", { title: removing?.title ?? "" })}
+          confirmLabel={t("library.series.remove.confirm")}
+          onConfirm={() => {
+            const series = removing;
+            setRemoving(null);
+            if (series !== null) run(() => seriesActions.remove(series));
+          }}
+          onCancel={() => setRemoving(null)}
+          testID="library-remove-confirm"
+          confirmTestID="library-remove-confirm-submit"
+        />
       ) : null}
     </View>
   );
@@ -386,6 +493,12 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: "absolute",
+    bottom: spacing.md,
+  },
+  banner: {
+    position: "absolute",
+    left: 0,
+    right: 0,
     bottom: spacing.md,
   },
   emptySearchWrap: {

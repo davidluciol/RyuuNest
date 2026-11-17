@@ -362,15 +362,61 @@ export function addSampleFolder(
   data: LibraryData,
   name: string,
   tags: readonly string[],
+  move?: SeriesKey,
 ): { ok: true; data: LibraryData } | { ok: false; reason: FolderNameProblem } {
   const problem = validateFolderName(
     name,
     data.folders.map((f) => f.name),
   );
   if (problem !== null) return { ok: false, reason: problem };
-  const folder: LibraryFolder = { id: `nueva-${data.folders.length}`, name: name.trim(), count: 0, tags: [...tags] };
-  folder.count = folderCount(data.series, folder, true);
-  return { ok: true, data: { ...data, folders: [...data.folders, folder] } };
+  const folder: LibraryFolder = {
+    id: `nueva-${data.folders.length}`,
+    name: name.trim(),
+    count: 0,
+    tags: [...tags],
+  };
+  const created: LibraryData = { ...data, folders: [...data.folders, folder] };
+  // «Mover y crear» (F54): la serie pasa a la carpeta nueva y su recuento se calcula con ella.
+  const result = move === undefined ? created : moveSampleSeries(created, move, folder.id);
+  const index = result.folders.length - 1;
+  const counted = { ...folder, count: folderCount(result.series, folder, true) };
+  return { ok: true, data: { ...result, folders: result.folders.map((f, i) => (i === index ? counted : f)) } };
+}
+
+/** Clave de una serie guardada. */
+export interface SeriesKey {
+  moduleId: string;
+  seriesId: string;
+}
+
+const sameSeries = (s: LibrarySeries, key: SeriesKey): boolean =>
+  s.moduleId === key.moduleId && s.seriesId === key.seriesId;
+
+/** Suma `delta` al recuento de una carpeta (los de ejemplo son cifras fijas, no se recalculan). */
+function bump(folders: readonly LibraryFolder[], id: string | null, delta: number): LibraryFolder[] {
+  return folders.map((f) => (f.id === id ? { ...f, count: Math.max(0, f.count + delta) } : f));
+}
+
+/** F54 (web sin base): mueve la serie a otra carpeta; una sola carpeta (D-12). */
+export function moveSampleSeries(data: LibraryData, key: SeriesKey, folderId: string): LibraryData {
+  const current = data.series.find((s) => sameSeries(s, key));
+  if (current === undefined || current.folderId === folderId) return data;
+  return {
+    ...data,
+    series: data.series.map((s) => (sameSeries(s, key) ? { ...s, folderId } : s)),
+    folders: bump(bump(data.folders, current.folderId, -1), folderId, 1),
+  };
+}
+
+/** F54 (web sin base): quita la serie de Tesoros; su progreso no es de esta lista (RF-30). */
+export function removeSampleSeries(data: LibraryData, key: SeriesKey): LibraryData {
+  const current = data.series.find((s) => sameSeries(s, key));
+  if (current === undefined) return data;
+  return {
+    ...data,
+    series: data.series.filter((s) => !sameSeries(s, key)),
+    folders: bump(bump(data.folders, current.folderId, -1), GEMS_FOLDER_ID, -1),
+  };
 }
 
 /** Filtros activos de la pantalla Biblioteca. */
