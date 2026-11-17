@@ -1,15 +1,14 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { dragonNightColors } from "@ryuunest/ui-tokens";
 
 import ErrorState from "../../components/ErrorState";
 import { t } from "../../i18n";
-import { resumeRoutes } from "../../navigation/resume";
+import { openResume } from "../../navigation/openResume";
 import { destinationRoutes } from "../../navigation/routes";
 
 import HomeScreen from "../../screens/home/HomeScreen";
-import type { HomeProgress } from "../../screens/home/homeFixtures";
 import { useHomeData } from "../../screens/home/useHomeData";
 import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
 import OnboardingScreen from "../../screens/onboarding/OnboardingScreen";
@@ -30,16 +29,6 @@ import { isNativePlatform } from "../../data/backupFilesPort";
  * en TV (SPEC §11.8: el primer uso en TV lo prioriza) y, para poder probarlo
  * en web, también en la galería; en el móvil nativo queda en Ajustes.
  */
-/** Pausa entre los pushes de «Reanudar» (Detalles → lector). */
-const RESUME_STEP_MS = 50;
-
-function resume(item: HomeProgress): void {
-  // Un push por ciclo: dos seguidos en el mismo tick se pisan y se pierde Detalles de la pila.
-  resumeRoutes(item, Platform.OS).forEach((route, i) => {
-    setTimeout(() => router.push(route), i * RESUME_STEP_MS);
-  });
-}
-
 /** F46 — Inicio con lo guardado en el dispositivo; el vacío lleva a Portales (P-141). */
 function HomeContent() {
   const settings = useSettingsPreferences();
@@ -49,8 +38,9 @@ function HomeContent() {
     return (
       <HomeScreen
         data={home.data}
-        onContinue={resume}
-        onRecentPress={resume}
+        onContinue={openResume}
+        onRecentPress={openResume}
+        onSeeAllRecent={() => router.push("/list/recent")}
         onFolderPress={() => router.push(destinationRoutes.library)}
         onSeeAllFolders={() => router.push(destinationRoutes.library)}
         onEmptyAction={() => router.push(destinationRoutes.sources)}

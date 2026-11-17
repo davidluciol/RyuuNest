@@ -92,6 +92,7 @@
   "home.section.folders": "Tesoros Guardados",
   "home.action.resume": "Retomar",
   "home.action.seeAll": "Ver todas",
+  "list.empty.recent": "Aún no has leído nada",
   "home.chapter.saved": "Capítulo guardado",
   "home.action.continueChapter": "Continuar cap. {number}",
 
@@ -140,6 +141,8 @@
   "gallery.component.sectionHeader": "encabezado de sección",
   "gallery.component.continueCard": "tarjeta hero (continuar)",
   "gallery.component.recentCard": "tarjeta de recientes",
+  "gallery.component.listScreen": "pantalla de lista (Ver todas)",
+  "gallery.component.listScreenEmpty": "pantalla de lista vacía",
   "gallery.component.folderCard": "tarjeta de carpeta",
   "gallery.component.homeScreen": "pantalla Guarida",
   "gallery.component.libraryCard": "tarjeta de tesoro",

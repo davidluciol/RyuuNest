@@ -27,6 +27,7 @@ import FolderCard from "../components/FolderCard";
 import Header from "../components/Header";
 import LoadingState from "../components/LoadingState";
 import RecentCard from "../components/RecentCard";
+import ListScreen from "../screens/list/ListScreen";
 import SectionHeader from "../components/SectionHeader";
 import SettingsRow from "../components/SettingsRow";
 import Sheet from "../components/Sheet";
@@ -400,6 +401,25 @@ export default function GalleryScreen() {
             progress={0.1}
           />
           <RecentCard kind={t("kind.manga")} title="Guardián del nido sin progreso" />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.listScreen")}</Text>
+        <View style={styles.shellPreview}>
+          <ListScreen
+            title={t("home.section.recent")}
+            items={SAMPLE_HOME_DATA.recent}
+            emptyTitle={t("list.empty.recent")}
+            emptyActionLabel={t("actions.addRepository")}
+          />
+        </View>
+        <Text style={styles.groupLabel}>{t("gallery.component.listScreenEmpty")}</Text>
+        <View style={styles.shellPreview}>
+          <ListScreen
+            title={t("home.section.recent")}
+            items={[]}
+            emptyTitle={t("list.empty.recent")}
+            emptyActionLabel={t("actions.addRepository")}
+          />
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.folderCard")}</Text>

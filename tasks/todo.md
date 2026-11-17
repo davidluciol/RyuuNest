@@ -129,9 +129,10 @@ Dep: F78, F80 · M · `apps/mobile/src/app/` (ruta nueva), `apps/mobile/src/scre
 
 > Origen (petición del humano, 2026-11-16). **La lógica de navegación debe cuidarse: preguntar al humano ante cualquier duda.**
 
-- [ ] Ruta/pestaña nueva en blanco y **reutilizable** para otras listas, con título y fuente de datos como props
-- [ ] Muestra solo los 9 ítems del historial; al tocar → misma ruta que F79 (P-155)
-- [ ] Botón atrás vuelve a Guarida; componente nuevo en la galería con todos sus estados
+- [x] Ruta en pila `/list/[source]` (fuera de pestañas) en blanco y **reutilizable** para otras listas, con título y fuente de datos como props
+- [x] Muestra como máximo los 9 ítems del historial; al tocar → misma ruta que F79 (P-155)
+- [x] Botón atrás vuelve a Guarida; componente nuevo en la galería con todos sus estados
+> **Hecho (2026-11-16, P-159):** `ListScreen` + `listSources` (fuente = título, cargador y reserva web); `RecentCard` en cuadrícula; máx. 9. Playwright/web y S25 verificados.
 - Verif: Vitest + Playwright 426/1440 px + 🧍 S25
 
 ---
