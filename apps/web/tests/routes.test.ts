@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { catalogKeys, t } from "@ryuunest/i18n";
 
-import { DIAGNOSTICS_PATH, readerPath, seriesPath, TAB_ROUTES } from "../src/routes";
+import { DIAGNOSTICS_PATH, discoverSearchPath, readerPath, seriesPath, TAB_ROUTES } from "../src/routes";
 
 describe("tabla de rutas del cliente web (F24)", () => {
   it("cinco pestañas con id único, ruta absoluta y etiqueta traducida", () => {
@@ -29,5 +29,12 @@ describe("tabla de rutas del cliente web (F24)", () => {
 
   it("diagnóstico cuelga de una ruta propia fuera de las pestañas", () => {
     expect(DIAGNOSTICS_PATH).toBe("/diagnostics");
+  });
+});
+
+describe("búsqueda global (F60)", () => {
+  it("lleva la consulta recortada y una marca para repetirla; vacía no navega", () => {
+    expect(discoverSearchPath("  dragón ", 7)).toBe("/discover?q=drag%C3%B3n&ts=7");
+    expect(discoverSearchPath("   ", 1)).toBeNull();
   });
 });

@@ -174,6 +174,16 @@ async function installModule(page, id) {
         "quedan series del otro módulo",
       );
 
+      // 6) F60: la lupa de la cabecera lleva a Descubrir con la consulta ya escrita y lanzada.
+      await page.goto(`${baseURL}/settings`);
+      await page.getByTestId("header-search-open").click();
+      await page.getByTestId("header-search-input").fill("zeta");
+      await page.keyboard.press("Enter");
+      await page.getByTestId("screen-discover").waitFor({ state: "visible" });
+      await page.waitForFunction(() => document.querySelector('[data-testid="discover-search"]')?.value === "zeta");
+      await page.getByTestId("header-search-open").waitFor({ state: "visible" });
+      assert.deepEqual(errors, [], `errores de consola/página a ${width} px: ${errors}`);
+
       await context.close();
       console.log(`OK ${width} px`);
     }

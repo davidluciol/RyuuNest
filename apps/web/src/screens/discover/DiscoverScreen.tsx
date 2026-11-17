@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { t } from "@ryuunest/i18n";
 import { kindLabel } from "@ryuunest/mobile-src/components/kindLabel";
@@ -45,6 +45,13 @@ export default function DiscoverScreen() {
     reporter: services.reporter,
   });
   const navigate = useNavigate();
+  // F60: la búsqueda de la cabecera llega como `q`; `ts` cambia en cada envío.
+  const [params] = useSearchParams();
+  const globalQuery = params.get("q");
+  const globalStamp = params.get("ts");
+  useEffect(() => {
+    if (globalQuery !== null) search(globalQuery);
+  }, [globalQuery, globalStamp, search]);
 
   return (
     <div className="screen discover-screen" data-testid="screen-discover">
@@ -118,7 +125,9 @@ function DiscoverReady({
   onPrevPage: () => void;
   onOpenSeries: (moduleId: string, seriesId: string) => void;
 }) {
-  const [query, setQuery] = useState("");
+  // El campo sigue a la consulta activa (también la que llega de la cabecera, F60).
+  const [query, setQuery] = useState(view.query);
+  useEffect(() => setQuery(view.query), [view.query]);
   return (
     <div className="discover-content">
       <div className="discover-toolbar">

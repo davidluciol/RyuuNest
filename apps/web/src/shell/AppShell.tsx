@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router";
 
 import DragonMarker from "../components/DragonMarker";
+import HeaderSearch from "../components/HeaderSearch";
 import { Compass, Home, Layers, LibraryBig, Settings as SettingsIcon, type LucideIcon } from "../icons";
 import { TAB_ROUTES, type TabIcon } from "../routes";
 import "./shell.css";
@@ -67,12 +68,14 @@ export default function AppShell() {
             <DragonMarker size={32} color={defaultTheme.colors.accent} />
             <span className="t-headline-sm brand-name">{t("shell.brand")}</span>
           </div>
+          <HeaderSearch />
           <TabItems compact={false} />
         </nav>
       ) : (
         <header className="topbar">
           <DragonMarker size={28} color={defaultTheme.colors.accent} />
           <span className="t-headline-sm brand-name">{t("shell.brand")}</span>
+          <HeaderSearch />
         </header>
       )}
       <main className="content">
