@@ -296,6 +296,7 @@ export default function GalleryScreen() {
 
         <Text style={styles.groupLabel}>{t("gallery.component.header")}</Text>
         <Header title={t("nav.library")} />
+        <Header title={t("nav.library")} onSearch={() => undefined} />
 
         <Text style={styles.groupLabel}>{t("gallery.component.bottomNav")}</Text>
         <BottomNav active="library" />

@@ -10,10 +10,13 @@ export default function AppShell({
   section,
   children,
   style,
+  onSearch,
 }: {
   section: string;
   children: React.ReactNode;
   style?: ViewStyle;
+  /** Búsqueda global de la cabecera (F60). */
+  onSearch?: (query: string) => void;
 }) {
   return (
     <View testID="app-shell" style={[styles.screen, style]}>
@@ -21,6 +24,7 @@ export default function AppShell({
         <Header
           title={t("shell.brand")}
           subtitle={section}
+          {...(onSearch === undefined ? {} : { onSearch })}
           leading={<DragonMarker size={spacing.xl} color={dragonNightColors.textSecondary} />}
         />
       </View>

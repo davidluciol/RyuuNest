@@ -4,6 +4,7 @@ import { BOTTOM_NAV_DESTINATIONS } from "../../src/components/shellStyles";
 import {
   destinationForPath,
   destinationLabel,
+  discoverSearchParams,
   destinationRoutes,
   shellDestination,
 } from "../../src/navigation/routes";
@@ -48,5 +49,16 @@ describe("shellDestination · «atrás» vuelve a la pestaña de origen (F32)", 
 
   it("sin pestaña previa y fuera de las pestañas no hay destino", () => {
     expect(shellDestination("/series/zonatmo/abc", null)).toBeNull();
+  });
+});
+
+describe("búsqueda desde la cabecera (F60)", () => {
+  it("lleva la consulta recortada y una marca para repetir la misma búsqueda", () => {
+    expect(discoverSearchParams("  dragón ", 7)).toEqual({ q: "dragón", ts: "7" });
+    expect(discoverSearchParams("dragón", 8)).not.toEqual(discoverSearchParams("dragón", 7));
+  });
+
+  it("una consulta vacía no navega", () => {
+    expect(discoverSearchParams("   ", 1)).toBeNull();
   });
 });
