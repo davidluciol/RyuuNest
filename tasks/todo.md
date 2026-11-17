@@ -243,9 +243,9 @@ Dep: F52 · S · `apps/mobile/src/screens/library/*`, `packages/core/src/library
 
 > Origen: `MEMORY.md` §4 (restos de F14). **Comprobar al empezar si sigue vigente.**
 
-- [ ] Menú de orden (nombre, último leído, fecha de adición; RF-28) en lugar de ciclar al pulsar
-- [ ] Pasar `reading: true` al núcleo para el chip «Leyendo»
-- Verif: Vitest con SQLite real + Playwright
+- [x] Menú de orden (`SortSheet`: nombre, último leído, fecha de adición; RF-28) en lugar de ciclar al pulsar
+- [x] `reading: true` **no** se pasa al núcleo (decisión del humano 2026-11-17, P-166): la pantalla filtra en memoria y el chip «Leyendo» ya funciona; el núcleo ya lo soporta
+- Verif: ✅ Vitest (`LIBRARY_ORDERS`) + ✅ Playwright 426/1440 px (`library.cjs`) · 🧍 S25 pendiente
 
 **Lote sugerido:** F52 → F54 → F53 → F55 → F56 → F57 → F58; F47 y F49 en sesiones propias (N4).
 

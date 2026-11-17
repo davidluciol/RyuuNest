@@ -21,6 +21,7 @@ import { FAB_SIZE } from "../../components/floatingButtonStyles";
 import FolderCard from "../../components/FolderCard";
 import NewFolderSheet from "../../components/NewFolderSheet";
 import SeriesMenuSheet from "../../components/SeriesMenuSheet";
+import SortSheet, { ORDER_KEYS } from "../../components/SortSheet";
 import TextField from "../../components/TextField";
 import { Search } from "../../icons";
 import { t } from "../../i18n";
@@ -51,13 +52,6 @@ import { useDebouncedValue } from "./debounce";
  */
 
 const colors = dragonNightColors;
-
-/** Mapa de claves de traducción para los órdenes (RF-28). */
-const ORDER_KEYS = {
-  name: "library.sort.name",
-  lastRead: "library.sort.lastRead",
-  addedAt: "library.sort.addedAt",
-} as const;
 
 /** F54 — acciones del menú de una serie; sin ellas no hay menú ni «⋮». */
 export interface LibrarySeriesActions {
@@ -136,6 +130,7 @@ export default function LibraryScreen({
 
   const [creating, setCreating] = useState(false);
   const [filtering, setFiltering] = useState(false);
+  const [sorting, setSorting] = useState(false);
   // F54: la serie del menú abierto, la que se va a eliminar y la que espera su carpeta nueva.
   const [menuSeries, setMenuSeries] = useState<LibrarySeries | null>(null);
   const [removing, setRemoving] = useState<LibrarySeries | null>(null);
@@ -251,12 +246,7 @@ export default function LibraryScreen({
           <Chip
             label={`${t("library.sort.label")}: ${t(ORDER_KEYS[filters.order])}`}
             selected={filters.order !== "name"}
-            onPress={() => {
-              const orders: Array<LibraryFilters["order"]> = ["name", "lastRead", "addedAt"];
-              const idx = orders.indexOf(filters.order);
-              const next = orders[(idx + 1) % orders.length];
-              updateFilters({ order: next });
-            }}
+            onPress={() => setSorting(true)}
           />
           <Chip
             label={t("library.filter.nsfw")}
@@ -398,6 +388,16 @@ export default function LibraryScreen({
           ))}
         </View>
       )}
+
+      <SortSheet
+        visible={sorting}
+        order={filters.order}
+        onSelect={(order) => {
+          updateFilters({ order });
+          setSorting(false);
+        }}
+        onClose={() => setSorting(false)}
+      />
 
       <FilterSheet
         visible={filtering}

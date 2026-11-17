@@ -126,6 +126,18 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await hoja.waitFor({ state: "hidden" });
       await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
 
+      // F58: menú de orden (hoja con los tres órdenes) en lugar de ciclar al pulsar.
+      await page.getByRole("button", { name: "Orden: Nombre", exact: true }).click();
+      const orden = page.getByTestId("sort-sheet");
+      await orden.waitFor({ state: "visible" });
+      await orden.getByRole("button", { name: "Fecha de adición", exact: true }).click();
+      await orden.waitFor({ state: "hidden" });
+      await page.getByRole("button", { name: "Orden: Fecha de adición", exact: true }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Orden: Fecha de adición", exact: true }).click();
+      await orden.getByRole("button", { name: "Nombre", exact: true }).click();
+      await orden.waitFor({ state: "hidden" });
+      await page.getByRole("button", { name: "Orden: Nombre", exact: true }).waitFor({ state: "visible" });
+
       // F54: menú de la serie (pulsación larga y «⋮» con foco): favoritos, mover, mover y crear, eliminar.
       const contar = async (nombre) => {
         const boton = page.getByRole("button", { name: new RegExp(`^${nombre}, \\d+ obras$`) });
