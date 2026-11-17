@@ -495,6 +495,21 @@ CREATE TABLE series_pref (
 
 CREATE TABLE setting (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 
+-- F52 (migración 3): `folder.system` ('favorites' = carpeta por defecto «Favoritos», no se borra ni
+-- se renombra; índice único parcial). F53 (migración 4): etiquetas de series y de carpetas
+-- inteligentes; una carpeta muestra lo puesto a mano (favorite.folder_id) más las series que
+-- tengan alguna de sus etiquetas.
+ALTER TABLE folder ADD COLUMN system TEXT;
+CREATE TABLE series_tag (
+  module_id TEXT NOT NULL, series_id TEXT NOT NULL, tag TEXT NOT NULL, tag_norm TEXT NOT NULL,
+  PRIMARY KEY (module_id, series_id, tag_norm),
+  FOREIGN KEY (module_id, series_id) REFERENCES series(module_id, series_id) ON DELETE CASCADE
+);
+CREATE TABLE folder_tag (
+  folder_id INTEGER NOT NULL REFERENCES folder(id) ON DELETE CASCADE,
+  tag TEXT NOT NULL, tag_norm TEXT NOT NULL, PRIMARY KEY (folder_id, tag_norm)
+);
+
 CREATE INDEX idx_series_title   ON series(title_norm);
 CREATE INDEX idx_favorite_folder ON favorite(folder_id);
 CREATE INDEX idx_progress_recent ON progress(updated_at DESC);
@@ -512,11 +527,11 @@ Listas virtualizadas, paginación por cursor, consultas con índices, portadas c
 
 ```json
 {
-  "format": "ryuunest-backup", "version": 1, "createdAt": 1790000000000,
+  "format": "ryuunest-backup", "version": 2, "createdAt": 1790000000000,
   "repos":     [{ "url": "…", "name": "…" }],
   "modules":   [{ "id": "…", "version": "…", "repoUrl": "…" }],
-  "folders":   [{ "id": 1, "name": "…", "sort": 0, "updatedAt": 0 }],
-  "series":    [{ "moduleId": "…", "seriesId": "…", "title": "…", "coverUrl": "…", "kind": "…", "nsfw": false, "updatedAt": 0 }],
+  "folders":   [{ "id": 1, "name": "…", "sort": 0, "updatedAt": 0, "tags": ["…"] }],
+  "series":    [{ "moduleId": "…", "seriesId": "…", "title": "…", "coverUrl": "…", "kind": "…", "nsfw": false, "updatedAt": 0, "tags": ["…"] }],
   "favorites": [{ "moduleId": "…", "seriesId": "…", "folderId": 1, "addedAt": 0, "updatedAt": 0 }],
   "progress":  [{ "moduleId": "…", "seriesId": "…", "chapterId": "…", "releaseId": "…", "pageIndex": 0, "pageTotal": 0, "updatedAt": 0 }],
   "read":      [{ "moduleId": "…", "seriesId": "…", "chapterId": "…", "readAt": 0 }],
@@ -524,7 +539,7 @@ Listas virtualizadas, paginación por cursor, consultas con índices, portadas c
   "settings":  { "nsfwVisible": false, "language": "es" }
 }
 ```
-El respaldo no contiene secretos. La importación valida el esquema y el tamaño, y trata los repos y módulos como sugerencias (RF-38).
+**Versión 2 (F53, P-162):** añade `tags` en `series` y `folders`; la versión 1 (sin ellas) sigue importándose y no toca las etiquetas locales. Al fusionar, las etiquetas de una serie del respaldo reemplazan a las locales solo si es más nueva, y las de carpetas con el mismo nombre se unen. El respaldo no contiene secretos. La importación valida el esquema y el tamaño, y trata los repos y módulos como sugerencias (RF-38).
 
 ---
 

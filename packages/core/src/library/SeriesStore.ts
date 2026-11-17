@@ -10,9 +10,12 @@ import type { Clock } from "../ports/clock.js";
 import {
   fromSqlBoolean,
   toSqlBoolean,
+  withTransaction,
   type SqlDriver,
   type SqlValue,
 } from "../storage/SqlDriver.js";
+import { normalizeTitle } from "./normalize.js";
+import { readTags, replaceTags } from "./tags.js";
 
 /** Fila de `series` en forma de dominio. */
 export interface SeriesRecord {
@@ -50,18 +53,7 @@ interface SeriesRow {
   updated_at: number;
 }
 
-/**
- * Título buscable: minúsculas y sin acentos (SPEC §8.1), con los espacios comprimidos
- * para que «una   serie» y «Una Serie» coincidan.
- */
-export function normalizeTitle(titulo: string): string {
-  return titulo
-    .normalize("NFD")
-    .replace(/\p{Mn}+/gu, "")
-    .toLowerCase()
-    .replace(/\s+/gu, " ")
-    .trim();
-}
+export { normalizeTitle } from "./normalize.js";
 
 function toRecord(fila: SeriesRow): SeriesRecord {
   return {
@@ -128,6 +120,19 @@ export class SeriesStore {
       nsfw: detalles.nsfw ?? false,
       status: detalles.status,
     });
+    await this.setTags(moduleId, detalles.id, detalles.genres);
+  }
+
+  /** Reemplaza las etiquetas de la serie (F53). La serie ya debe existir en `series`. */
+  async setTags(moduleId: string, seriesId: string, tags: readonly string[]): Promise<void> {
+    await withTransaction(this.#driver, () =>
+      replaceTags(this.#driver, "series_tag", [moduleId, seriesId], tags),
+    );
+  }
+
+  /** Etiquetas de la serie, por orden. */
+  async tags(moduleId: string, seriesId: string): Promise<string[]> {
+    return readTags(this.#driver, "series_tag", [moduleId, seriesId]);
   }
 
   async get(moduleId: string, seriesId: string): Promise<SeriesRecord | undefined> {

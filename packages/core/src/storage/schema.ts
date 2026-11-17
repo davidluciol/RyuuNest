@@ -10,7 +10,7 @@
  */
 
 /** Versión del esquema: sube con cada migración nueva (SPEC §8.1). */
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 /** Tablas, claves y valores por defecto del SPEC §8.1. */
 const TABLAS: readonly string[] = [
@@ -112,4 +112,23 @@ export const MIGRATION_3: readonly string[] = [
   "ALTER TABLE folder ADD COLUMN system TEXT",
   "CREATE UNIQUE INDEX IF NOT EXISTS idx_folder_system ON folder(system) WHERE system IS NOT NULL",
   ...ENSURE_DEFAULT_FOLDERS,
+];
+
+/**
+ * Migración 4 (F53, P-162): etiquetas. `series_tag` guarda los géneros de cada serie (de
+ * `SeriesDetails.genres`) y `folder_tag` las de una carpeta inteligente. `tag_norm` es la
+ * clave de comparación (minúsculas, sin acentos); `tag`, el texto que se muestra. Aditiva.
+ */
+export const MIGRATION_4: readonly string[] = [
+  `CREATE TABLE IF NOT EXISTS series_tag (
+  module_id TEXT NOT NULL, series_id TEXT NOT NULL, tag TEXT NOT NULL, tag_norm TEXT NOT NULL,
+  PRIMARY KEY (module_id, series_id, tag_norm),
+  FOREIGN KEY (module_id, series_id) REFERENCES series(module_id, series_id) ON DELETE CASCADE
+)`,
+  "CREATE INDEX IF NOT EXISTS idx_series_tag_norm ON series_tag(tag_norm)",
+  `CREATE TABLE IF NOT EXISTS folder_tag (
+  folder_id INTEGER NOT NULL REFERENCES folder(id) ON DELETE CASCADE,
+  tag TEXT NOT NULL, tag_norm TEXT NOT NULL,
+  PRIMARY KEY (folder_id, tag_norm)
+)`,
 ];

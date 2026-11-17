@@ -195,10 +195,10 @@ Dep: preguntas abiertas (1) · M · `packages/core/src/library/{Folders,Favorite
 
 Dep: F52 · M · `apps/mobile/src/screens/library/*`, `apps/mobile/src/components/*` (botón flotante, modal), `packages/i18n`
 
-- [ ] Botón flotante **fijo** abajo con icono «+» **verde** (token de `ui-tokens`, sin hexadecimales), ≥48×48, foco visible; no tapa la última fila (margen de la lista)
-- [ ] Modal con **nombre** (obligatorio, sin duplicados) y **etiquetas** (opcional, multiselección con las etiquetas de las series guardadas); al elegir etiquetas se **añaden dinámicamente** las series de esas categorías (ver pregunta abierta 2)
-- [ ] Reutilizar `ConfirmSheet`/hoja existente y `TextField`/`Chip`; componente nuevo en la galería con todos sus estados (vacío, error de nombre, con etiquetas)
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+- [x] Botón flotante **fijo** abajo con icono «+» **verde** (token de `ui-tokens`, sin hexadecimales), ≥48×48, foco visible; no tapa la última fila (margen de la lista)
+- [x] Modal con **nombre** (obligatorio, sin duplicados) y **etiquetas** (opcional, multiselección con las etiquetas de las series guardadas); al elegir etiquetas se **añaden dinámicamente** las series de esas categorías (carpeta inteligente, P-161/P-162: etiquetas en migración 4 y respaldo v2)
+- [x] Reutilizar `ConfirmSheet`/hoja existente y `TextField`/`Chip`; componente nuevo en la galería con todos sus estados (vacío, error de nombre, con etiquetas)
+- Verif: ✅ Vitest + ✅ Playwright 426/1440 px (`library.cjs`) · 🧍 S25 pendiente (al final de la serie)
 
 ### F54 Menú de pulsación larga en las series de Tesoros `[FE · Intermedia · N3]`
 

@@ -215,7 +215,7 @@ describe("Folders · crear, renombrar, reordenar y borrar (RF-29)", () => {
 describe("Favorites · una carpeta o ninguna (D-12)", () => {
   it("añade un favorito sin carpeta y luego lo asigna", async () => {
     await series.upsert({ moduleId: MODULO, seriesId: "s", title: "S", nsfw: false });
-    const carpeta = await carpetas.create("Favoritos");
+    const carpeta = await carpetas.create("Pendientes");
 
     await favoritos.add(MODULO, "s", null);
     await expect(favoritos.get(MODULO, "s")).resolves.toMatchObject({ folderId: null });

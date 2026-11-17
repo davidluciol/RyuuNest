@@ -128,7 +128,13 @@ const texto = (backup: unknown): string => JSON.stringify(backup);
  */
 async function estado(db: SqlDriver): Promise<Backup> {
   const backup = await exportBackup({ driver: db, storage: new MemoryStorage(), clock });
-  return { ...backup, createdAt: 0, folders: backup.folders.filter((f) => f.name !== "Favoritos") };
+  // Las etiquetas (F53) tienen sus propias pruebas (`tags.test.ts`): aquí se comparan sin ellas.
+  return {
+    ...backup,
+    createdAt: 0,
+    folders: backup.folders.filter((f) => f.name !== "Favoritos").map(({ tags: _t, ...f }) => f),
+    series: backup.series.map(({ tags: _t, ...s }) => s),
+  };
 }
 
 /** Importa y exige que se haya aplicado. */
@@ -233,7 +239,7 @@ describe("importBackup · rechazo de respaldos inválidos (sin tocar datos)", ()
   });
 
   it("una versión que esta app no conoce → INVALID, señalando `version`", async () => {
-    const result = await rechazar("merge", texto({ ...backupOf(), version: 2 }));
+    const result = await rechazar("merge", texto({ ...backupOf(), version: 99 }));
 
     expect(result.reason).toBe("INVALID");
     expect(result.issues.map((issue) => issue.path)).toContain("version");

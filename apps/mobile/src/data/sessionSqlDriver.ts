@@ -41,10 +41,16 @@ export function createSessionSqlDriver(): SqlDriver {
 
   return {
     async exec(sql) {
+      // Las transacciones (F53: guardar una serie escribe sus etiquetas) no hacen falta en memoria.
+      if (/^(BEGIN|COMMIT|ROLLBACK)$/i.test(sql.trim())) return;
       throw unknownStatement(sql);
     },
 
     async run(sql, params = []) {
+      // Etiquetas de la serie (F53): nadie las lee en la sesión web, así que se aceptan sin guardar.
+      if (sql.includes("series_tag")) {
+        return NO_CHANGES;
+      }
       if (sql.includes("INSERT INTO series (module_id, series_id, title")) {
         const [moduleId, seriesId, title, titleNorm, coverUrl, kind, nsfw, status, updatedAt] = params;
         series.set(key(moduleId as string, seriesId as string), {

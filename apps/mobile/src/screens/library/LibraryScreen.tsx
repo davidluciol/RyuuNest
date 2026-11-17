@@ -12,7 +12,10 @@ import { libraryColumnsFor } from "../../components/libraryCardStyles";
 import Chip from "../../components/Chip";
 import ChipScroller from "../../components/ChipScroller";
 import EmptyState from "../../components/EmptyState";
+import FloatingActionButton from "../../components/FloatingActionButton";
+import { FAB_SIZE } from "../../components/floatingButtonStyles";
 import FolderCard from "../../components/FolderCard";
+import NewFolderSheet from "../../components/NewFolderSheet";
 import TextField from "../../components/TextField";
 import { Search } from "../../icons";
 import { t } from "../../i18n";
@@ -21,6 +24,7 @@ import {
   DEFAULT_LIBRARY_FILTERS,
   EMPTY_LIBRARY_DATA,
   filterLibrarySeries,
+  type FolderNameProblem,
   libraryGridRows,
   type LibraryData,
   type LibraryFilters,
@@ -56,6 +60,11 @@ export interface LibraryScreenProps {
   onFolderPress?: (folderId: string) => void;
   /** Callback al pulsar «Gestionar» carpetas. */
   onManageFolders?: () => void;
+  /**
+   * F53 — crea una carpeta (nombre y etiquetas). Devuelve el problema del nombre si lo hay.
+   * Sin esta función no hay botón flotante «+».
+   */
+  onCreateFolder?: (name: string, tags: string[]) => Promise<FolderNameProblem | null>;
   /** Callback del estado vacío (añadir repositorio). */
   onEmptyAction?: () => void;
   /** Callback al cambiar los filtros (para persistir estado). */
@@ -74,6 +83,7 @@ export default function LibraryScreen({
   onSeriesPress,
   onFolderPress,
   onManageFolders,
+  onCreateFolder,
   onEmptyAction,
   onFiltersChange,
   virtualize = true,
@@ -81,8 +91,11 @@ export default function LibraryScreen({
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
   const columns = libraryColumnsFor(width);
-  // Tarjetas de carpeta más anchas que las portadas: una columna menos (nombre completo, T7).
+  // Tarjetas de carpeta en una fila que se desplaza (como el diseño): caben `columns - 1` a la
+  // vista, más anchas que las portadas para que el nombre se lea entero (T7).
   const folderColumns = Math.max(1, columns - 1);
+  const folderCardWidth =
+    (width - 2 * layout.margin - layout.gap * (folderColumns - 1)) / folderColumns;
   const [filters, setFilters] = useState<LibraryFilters>({
     ...DEFAULT_LIBRARY_FILTERS,
     ...initialFilters,
@@ -94,9 +107,11 @@ export default function LibraryScreen({
     onFiltersChange?.(next);
   };
 
+  const [creating, setCreating] = useState(false);
+
   const visibleSeries = useMemo(
-    () => filterLibrarySeries(data.series, filters),
-    [data.series, filters],
+    () => filterLibrarySeries(data.series, filters, data.folders),
+    [data.series, data.folders, filters],
   );
 
   const totalCount = data.series.filter((s) => !s.nsfw || filters.nsfwVisible).length;
@@ -105,6 +120,9 @@ export default function LibraryScreen({
   ).length;
   // «Gemas» es una vista, no una carpeta: no cuenta en «Carpetas (n)».
   const foldersCount = data.folders.filter((f) => f.kind !== "gems").length;
+
+  // La última fila no queda tapada por el botón flotante (F53).
+  const listBottom = onCreateFolder === undefined ? spacing.xl : spacing.xl + FAB_SIZE + spacing.md;
 
   const renderCard = (item: LibrarySeries) => (
     <LibraryCard
@@ -200,34 +218,30 @@ export default function LibraryScreen({
               {t("library.folder.manage")}
             </Text>
           </View>
-          <View testID="library-folders" style={{ gap: layout.gap }}>
-            {libraryGridRows(data.folders, folderColumns).map((row) => (
-              <View key={row[0]?.id} style={[styles.gridRow, { gap: layout.gap }]}>
-                {row.map((folder) => (
-                  <View key={folder.id} style={[styles.gridItem, { flex: 1 / folderColumns }]}>
-                    <FolderCard
-                      name={folder.name}
-                      count={folder.count}
-                      selected={
-                        folder.kind === "gems"
-                          ? filters.folderId === undefined || filters.folderId === folder.id
-                          : filters.folderId === folder.id
-                      }
-                      onPress={() => {
-                        updateFilters({
-                          folderId:
-                            folder.kind === "gems" || filters.folderId === folder.id
-                              ? undefined
-                              : folder.id,
-                        });
-                        onFolderPress?.(folder.id);
-                      }}
-                    />
-                  </View>
-                ))}
+          <ChipScroller contentContainerStyle={{ gap: layout.gap }}>
+            {data.folders.map((folder) => (
+              <View key={folder.id} style={{ width: folderCardWidth }}>
+                <FolderCard
+                  name={folder.name}
+                  count={folder.count}
+                  selected={
+                    folder.kind === "gems"
+                      ? filters.folderId === undefined || filters.folderId === folder.id
+                      : filters.folderId === folder.id
+                  }
+                  onPress={() => {
+                    updateFilters({
+                      folderId:
+                        folder.kind === "gems" || filters.folderId === folder.id
+                          ? undefined
+                          : folder.id,
+                    });
+                    onFolderPress?.(folder.id);
+                  }}
+                />
               </View>
             ))}
-          </View>
+          </ChipScroller>
         </View>
       ) : null}
 
@@ -247,7 +261,7 @@ export default function LibraryScreen({
           style={styles.grid}
           contentContainerStyle={{
             paddingHorizontal: layout.margin,
-            paddingBottom: spacing.xl,
+            paddingBottom: listBottom,
             gap: layout.gap,
           }}
           data={visibleSeries}
@@ -269,7 +283,7 @@ export default function LibraryScreen({
             styles.gridStatic,
             {
               paddingHorizontal: layout.margin,
-              paddingBottom: spacing.xl,
+              paddingBottom: listBottom,
               gap: layout.gap,
             },
           ]}
@@ -291,6 +305,25 @@ export default function LibraryScreen({
           ))}
         </View>
       )}
+
+      {onCreateFolder !== undefined ? (
+        <>
+          <View style={[styles.fab, { right: layout.margin }]} pointerEvents="box-none">
+            <FloatingActionButton
+              accessibilityLabel={t("library.folder.new.fab")}
+              onPress={() => setCreating(true)}
+              testID="library-new-folder"
+            />
+          </View>
+          <NewFolderSheet
+            visible={creating}
+            existingNames={data.folders.map((f) => f.name)}
+            availableTags={data.tags}
+            onSubmit={onCreateFolder}
+            onClose={() => setCreating(false)}
+          />
+        </>
+      ) : null}
     </View>
   );
 }
@@ -350,6 +383,10 @@ const styles = StyleSheet.create({
   gridItem: {
     flex: 1 / 3,
     minWidth: 0,
+  },
+  fab: {
+    position: "absolute",
+    bottom: spacing.md,
   },
   emptySearchWrap: {
     flex: 1,

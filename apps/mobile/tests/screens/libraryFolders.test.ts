@@ -1,0 +1,99 @@
+import { describe, expect, it } from "vitest";
+
+import {
+  GEMS_FOLDER_ID,
+  SAMPLE_LIBRARY_DATA,
+  addSampleFolder,
+  folderCount,
+  seriesInFolder,
+  validateFolderName,
+  type LibraryFolder,
+  type LibrarySeries,
+} from "../../src/screens/library/libraryFixtures";
+
+/**
+ * F53 — lógica de presentación de las carpetas: nombre válido, pertenencia (a mano o por
+ * etiqueta, carpeta inteligente) y alta en los datos de ejemplo (web, sin base).
+ */
+const base: LibrarySeries = {
+  seriesId: "a",
+  moduleId: "m",
+  title: "A",
+  kind: "manga",
+  nsfw: false,
+  status: "ongoing",
+  folderId: null,
+  addedAt: 1,
+  progress: null,
+};
+
+describe("validateFolderName", () => {
+  it("vacío o solo espacios → EMPTY", () => {
+    expect(validateFolderName("", [])).toBe("EMPTY");
+    expect(validateFolderName("   ", [])).toBe("EMPTY");
+  });
+
+  it("repetido sin distinguir mayúsculas, acentos ni espacios → DUPLICATE", () => {
+    expect(validateFolderName(" ACCIÓN ", ["Acción"])).toBe("DUPLICATE");
+  });
+
+  it("válido → null", () => {
+    expect(validateFolderName("Noche", ["Acción"])).toBeNull();
+  });
+});
+
+describe("seriesInFolder / folderCount (carpeta inteligente)", () => {
+  const manual: LibraryFolder = { id: "1", name: "Manual", count: 0 };
+  const inteligente: LibraryFolder = { id: "2", name: "Seinen", count: 0, tags: ["Seinen"] };
+
+  it("a mano: coincide por folderId", () => {
+    expect(seriesInFolder({ ...base, folderId: "1" }, manual)).toBe(true);
+    expect(seriesInFolder(base, manual)).toBe(false);
+  });
+
+  it("por etiqueta: coincide aunque esté en otra carpeta, sin distinguir mayúsculas ni acentos", () => {
+    expect(seriesInFolder({ ...base, folderId: "1", tags: ["seinen"] }, inteligente)).toBe(true);
+    expect(seriesInFolder({ ...base, tags: ["Isekai"] }, inteligente)).toBe(false);
+  });
+
+  it("Gemas contiene todo", () => {
+    const gemas: LibraryFolder = { id: GEMS_FOLDER_ID, name: "Gemas", count: 0, kind: "gems" };
+    expect(seriesInFolder(base, gemas)).toBe(true);
+  });
+
+  it("folderCount ignora las NSFW salvo que se pidan", () => {
+    const series = [base, { ...base, seriesId: "b", nsfw: true, folderId: "1" }, { ...base, seriesId: "c", folderId: "1" }];
+    expect(folderCount(series, manual, false)).toBe(1);
+    expect(folderCount(series, manual, true)).toBe(2);
+  });
+});
+
+describe("addSampleFolder", () => {
+  it("añade la carpeta con su recuento por etiquetas y no toca las series", () => {
+    const antes = SAMPLE_LIBRARY_DATA.folders.length;
+
+    const resultado = addSampleFolder(SAMPLE_LIBRARY_DATA, "Mis acción", ["Acción"]);
+
+    expect(resultado.ok).toBe(true);
+    if (!resultado.ok) return;
+    expect(resultado.data.folders).toHaveLength(antes + 1);
+    const nueva = resultado.data.folders.at(-1);
+    expect(nueva).toMatchObject({ name: "Mis acción", tags: ["Acción"] });
+    expect(nueva?.count).toBe(
+      SAMPLE_LIBRARY_DATA.series.filter((s) => s.tags?.some((t) => t === "Acción")).length,
+    );
+    expect(resultado.data.series).toBe(SAMPLE_LIBRARY_DATA.series);
+  });
+
+  it("rechaza un nombre repetido o vacío", () => {
+    expect(addSampleFolder(SAMPLE_LIBRARY_DATA, "gemas", [])).toEqual({ ok: false, reason: "DUPLICATE" });
+    expect(addSampleFolder(SAMPLE_LIBRARY_DATA, " ", [])).toEqual({ ok: false, reason: "EMPTY" });
+  });
+
+  it("las etiquetas de ejemplo salen de las series (sin repetir, por orden)", () => {
+    const tags = SAMPLE_LIBRARY_DATA.tags;
+    expect(tags.length).toBeGreaterThan(0);
+    expect([...tags].sort((a, b) => a.localeCompare(b, "es"))).toEqual(tags);
+    expect(new Set(tags).size).toBe(tags.length);
+  });
+});

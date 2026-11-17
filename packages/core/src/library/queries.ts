@@ -163,8 +163,13 @@ export function buildLibraryQuery(filtro: LibraryFilter): BuiltQuery {
   if (filtro.folderId === null) {
     donde.push("f.folder_id IS NULL");
   } else if (filtro.folderId !== undefined) {
-    donde.push("f.folder_id = ?");
-    params.push(filtro.folderId);
+    // Carpeta inteligente (F53): lo puesto a mano más lo que tenga alguna etiqueta de la carpeta.
+    donde.push(`(f.module_id, f.series_id) IN (
+    SELECT module_id, series_id FROM favorite WHERE folder_id = ?
+    UNION
+    SELECT st.module_id, st.series_id FROM folder_tag AS ft
+      JOIN series_tag AS st ON st.tag_norm = ft.tag_norm WHERE ft.folder_id = ?)`);
+    params.push(filtro.folderId, filtro.folderId);
   }
 
   // «Leyendo» (P-70): una serie cuenta si tiene fila en `progress`, aunque el capítulo

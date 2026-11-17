@@ -92,7 +92,7 @@ describe("exportBackup · forma del respaldo (SPEC §8.3)", () => {
       repos: [],
       modules: [],
       // F52: la carpeta «Favoritos» siembra con la migración, así que viaja siempre.
-      folders: [{ id: 1, name: "Favoritos", sort: 0, updatedAt: expect.any(Number) }],
+      folders: [{ id: 1, name: "Favoritos", sort: 0, updatedAt: expect.any(Number), tags: [] }],
       series: [],
       favorites: [],
       progress: [],
@@ -196,7 +196,7 @@ describe("exportBackup · filas de usuario", () => {
     const backup = await exportBackup({ driver, storage, clock });
 
     expect(backup.folders.filter((f) => f.name !== "Favoritos")).toEqual([
-      { id: folderId, name: "Favoritas", sort: 0, updatedAt: 2_000 },
+      { id: folderId, name: "Favoritas", sort: 0, updatedAt: 2_000, tags: [] },
     ]);
     expect(backup.series).toEqual([
       {
@@ -208,6 +208,7 @@ describe("exportBackup · filas de usuario", () => {
         nsfw: false,
         status: "ongoing",
         updatedAt: 1_000,
+        tags: [],
       },
     ]);
     expect(backup.favorites).toEqual([

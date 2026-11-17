@@ -1,6 +1,6 @@
 import type { ImageSourcePropType } from "react-native";
 
-import type { MediaKind } from "@ryuunest/core";
+import { normalizeTitle, type MediaKind } from "@ryuunest/core";
 
 import { t } from "../../i18n";
 
@@ -38,6 +38,8 @@ export interface LibrarySeries {
   lastReadAt?: number;
   /** Progreso de lectura; `null` = sin progreso. */
   progress: LibraryProgress | null;
+  /** Géneros de la serie (F53). Ausentes = sin etiquetas. */
+  tags?: string[];
 }
 
 /** Progreso de lectura de una serie (RF-31, RF-41). */
@@ -68,6 +70,8 @@ export interface LibraryFolder {
   count: number;
   /** F52: `gems` = vista de todo (sin fila); `favorites` = carpeta del sistema. Ausente = del usuario. */
   kind?: "gems" | "favorites";
+  /** Etiquetas de la carpeta inteligente (F53): muestra también las series que las tengan. */
+  tags?: string[];
 }
 
 /** Datos completos de la pantalla Biblioteca. */
@@ -78,6 +82,8 @@ export interface LibraryData {
   folders: LibraryFolder[];
   /** Módulos/fuentes disponibles (para el filtro de fuente). */
   sources: LibrarySource[];
+  /** Etiquetas de las series guardadas, para elegirlas al crear una carpeta (F53). */
+  tags: string[];
 }
 
 /** Fuente (módulo) disponible para filtrar. */
@@ -93,6 +99,7 @@ export const EMPTY_LIBRARY_DATA: LibraryData = {
   series: [],
   folders: [],
   sources: [],
+  tags: [],
 };
 
 // Fecha base para los fixtures (2026-10-01).
@@ -104,7 +111,7 @@ const DAY = 24 * 60 * 60 * 1000;
  * según las cifras de Inicio), 3 carpetas coherentes (24+14+10=48),
  * 2 fuentes, algunas con progreso y una NSFW.
  */
-export const SAMPLE_LIBRARY_DATA: LibraryData = {
+const RAW_SAMPLE_LIBRARY_DATA: Omit<LibraryData, "tags"> = {
   sources: [
     { id: "m-ejemplo-a", name: "Módulo de ejemplo A" },
     { id: "m-ejemplo-b", name: "Módulo de ejemplo B" },
@@ -276,6 +283,96 @@ export const SAMPLE_LIBRARY_DATA: LibraryData = {
   ],
 };
 
+/** Géneros de ejemplo por serie (inventados, F53): dan etiquetas que elegir en la carpeta nueva. */
+const SAMPLE_TAGS: Readonly<Record<string, readonly string[]>> = {
+  "dragon-de-ceniza": ["Acción", "Fantasía"],
+  "sombras-de-arcano": ["Acción", "Aventura"],
+  "la-forja-perdida": ["Fantasía", "Seinen"],
+  "guardiana-del-nido": ["Aventura"],
+  "cronicas-de-moonlit": ["Fantasía", "Isekai"],
+  "noche-de-ambar": ["Misterio", "Seinen"],
+  "el-eco-de-los-valles": ["Aventura", "Fantasía"],
+  "las-cronicas-del-reloj": ["Misterio"],
+  "montana-de-hielo": ["Aventura", "Shonen"],
+  "el-ultimo-susurro": ["Seinen", "Terror"],
+  "ciudad-sin-nombre": ["Acción", "Misterio"],
+  "draco-de-jade": ["Fantasía"],
+};
+
+/** Etiquetas distintas de un conjunto de series, por orden alfabético. */
+function distinctTags(series: readonly LibrarySeries[]): string[] {
+  const vistas = new Map<string, string>();
+  for (const tag of series.flatMap((s) => s.tags ?? [])) {
+    const clave = normalizeTitle(tag);
+    if (!vistas.has(clave)) vistas.set(clave, tag);
+  }
+  return [...vistas.values()].sort((a, b) => a.localeCompare(b, "es"));
+}
+
+const SAMPLE_SERIES: LibrarySeries[] = RAW_SAMPLE_LIBRARY_DATA.series.map((s) => ({
+  ...s,
+  tags: [...(SAMPLE_TAGS[s.seriesId] ?? [])],
+}));
+
+/** Conjunto de ejemplo completo: las series llevan sus géneros y `tags` los reúne. */
+export const SAMPLE_LIBRARY_DATA: LibraryData = {
+  ...RAW_SAMPLE_LIBRARY_DATA,
+  series: SAMPLE_SERIES,
+  tags: distinctTags(SAMPLE_SERIES),
+};
+
+/** Por qué se rechaza el nombre de una carpeta (igual que `FolderNameError` del núcleo). */
+export type FolderNameProblem = "EMPTY" | "DUPLICATE";
+
+/** Nombre vacío o repetido (sin distinguir mayúsculas, acentos ni espacios de los bordes). */
+export function validateFolderName(
+  name: string,
+  existing: readonly string[],
+): FolderNameProblem | null {
+  const clave = normalizeTitle(name);
+  if (clave === "") return "EMPTY";
+  return existing.some((otro) => normalizeTitle(otro) === clave) ? "DUPLICATE" : null;
+}
+
+/**
+ * ¿Pertenece la serie a la carpeta? «Gemas» contiene todo; las demás, lo puesto a mano más lo
+ * que tenga alguna de sus etiquetas (carpeta inteligente, F53).
+ */
+export function seriesInFolder(series: LibrarySeries, folder: LibraryFolder): boolean {
+  if (folder.kind === "gems") return true;
+  if (series.folderId === folder.id) return true;
+  const claves = new Set((folder.tags ?? []).map(normalizeTitle));
+  return (series.tags ?? []).some((tag) => claves.has(normalizeTitle(tag)));
+}
+
+/** Número de series de la carpeta (las NSFW solo si se piden, RF-35). */
+export function folderCount(
+  series: readonly LibrarySeries[],
+  folder: LibraryFolder,
+  nsfwVisible: boolean,
+): number {
+  return series.filter((s) => (nsfwVisible || !s.nsfw) && seriesInFolder(s, folder)).length;
+}
+
+/**
+ * Alta de una carpeta en los datos de ejemplo (web de Expo, sin base real): el mismo contrato
+ * que `Folders.create` del núcleo, para que la pantalla se verifique igual.
+ */
+export function addSampleFolder(
+  data: LibraryData,
+  name: string,
+  tags: readonly string[],
+): { ok: true; data: LibraryData } | { ok: false; reason: FolderNameProblem } {
+  const problem = validateFolderName(
+    name,
+    data.folders.map((f) => f.name),
+  );
+  if (problem !== null) return { ok: false, reason: problem };
+  const folder: LibraryFolder = { id: `nueva-${data.folders.length}`, name: name.trim(), count: 0, tags: [...tags] };
+  folder.count = folderCount(data.series, folder, true);
+  return { ok: true, data: { ...data, folders: [...data.folders, folder] } };
+}
+
 /** Filtros activos de la pantalla Biblioteca. */
 export interface LibraryFilters {
   /** Búsqueda por título. */
@@ -325,6 +422,7 @@ export function libraryGridRows<T>(items: readonly T[], columns: number): T[][] 
 export function filterLibrarySeries(
   series: readonly LibrarySeries[],
   filters: LibraryFilters,
+  folders: readonly LibraryFolder[] = [],
 ): LibrarySeries[] {
   let result = [...series];
 
@@ -370,7 +468,10 @@ export function filterLibrarySeries(
   if (filters.folderId === null) {
     result = result.filter((s) => s.folderId === null);
   } else if (filters.folderId !== undefined && filters.folderId !== GEMS_FOLDER_ID) {
-    result = result.filter((s) => s.folderId === filters.folderId);
+    const folder = folders.find((f) => f.id === filters.folderId);
+    result = result.filter((s) =>
+      folder === undefined ? s.folderId === filters.folderId : seriesInFolder(s, folder),
+    );
   }
 
   // Orden (RF-28).

@@ -23,7 +23,13 @@ import type { ValidationIssue, ValidationResult } from "../validation.js";
 export const BACKUP_FORMAT = "ryuunest-backup";
 
 /** Versión del formato (SPEC §8.3). */
-export const BACKUP_VERSION = 1;
+export const BACKUP_VERSION = 2;
+
+/**
+ * Versiones que se leen. La 2 (F53, P-162) añade `series[].tags` y `folders[].tags`; la 1 no
+ * las trae y se importa igual (sin tocar las etiquetas locales).
+ */
+const READABLE_VERSIONS: readonly number[] = [1, 2];
 
 /**
  * Tamaño máximo, en bytes UTF-8, del texto de un respaldo al importarlo (SPEC §7.2: «límites
@@ -59,6 +65,8 @@ export interface BackupFolder {
   name: string;
   sort: number;
   updatedAt: number;
+  /** Etiquetas de la carpeta inteligente (v2). Ausente en un respaldo v1. */
+  tags?: string[];
 }
 
 /** Serie guardada en la biblioteca. */
@@ -71,6 +79,8 @@ export interface BackupSeries {
   nsfw: boolean;
   status: SeriesStatus | null;
   updatedAt: number;
+  /** Géneros de la serie (v2). Ausente en un respaldo v1. */
+  tags?: string[];
 }
 
 /** Favorito de la biblioteca. */
@@ -114,7 +124,7 @@ export interface BackupPref {
 /** El respaldo completo, en el orden de SPEC §8.3. */
 export interface Backup {
   format: "ryuunest-backup";
-  version: 1;
+  version: 1 | 2;
   createdAt: number;
   repos: BackupRepo[];
   modules: BackupModule[];
@@ -237,6 +247,25 @@ class RowReader {
     return value;
   }
 
+  /** Lista de textos opcional: `undefined` si falta (respaldo v1), error si no es una lista de textos. */
+  optionalTexts(key: string): string[] | undefined {
+    const value = this.row[key];
+    if (value === undefined) {
+      return undefined;
+    }
+    if (!Array.isArray(value)) {
+      this.fail(key, "debe ser una lista");
+      return undefined;
+    }
+    return value.map((item: unknown, index) => {
+      if (typeof item !== "string") {
+        this.fail(`${key}[${index}]`, "debe ser texto");
+        return "";
+      }
+      return item;
+    });
+  }
+
   kinds(key: string): MediaKind[] {
     const value = this.row[key];
     if (!Array.isArray(value)) {
@@ -251,6 +280,11 @@ class RowReader {
       return item as MediaKind;
     });
   }
+}
+
+/** `{ tags }` solo si el respaldo las traía (con `exactOptionalPropertyTypes`, sin `undefined`). */
+function withTags(tags: string[] | undefined): { tags?: string[] } {
+  return tags === undefined ? {} : { tags };
 }
 
 function claveSerie(row: { moduleId: string; seriesId: string }): string {
@@ -291,10 +325,10 @@ export function validateBackup(value: unknown): ValidationResult<Backup> {
   if (value["format"] !== BACKUP_FORMAT) {
     issues.push({ path: "format", message: `debe ser "${BACKUP_FORMAT}"` });
   }
-  if (value["version"] !== BACKUP_VERSION) {
+  if (typeof value["version"] !== "number" || !READABLE_VERSIONS.includes(value["version"])) {
     issues.push({
       path: "version",
-      message: `versión no compatible (esta app lee la versión ${BACKUP_VERSION})`,
+      message: `versión no compatible (esta app lee las versiones ${READABLE_VERSIONS.join(" y ")})`,
     });
   }
   const createdAt = new RowReader(value, "", issues).integer("createdAt");
@@ -365,6 +399,7 @@ export function validateBackup(value: unknown): ValidationResult<Backup> {
       name: r.text("name", { nonEmpty: true }),
       sort: r.integer("sort"),
       updatedAt: r.integer("updatedAt"),
+      ...withTags(r.optionalTexts("tags")),
     }),
     (index) => `folders[${index}].id`,
   );
@@ -378,6 +413,7 @@ export function validateBackup(value: unknown): ValidationResult<Backup> {
     nsfw: r.boolean("nsfw"),
     status: r.oneOfOrNull("status", SERIES_STATUSES),
     updatedAt: r.integer("updatedAt"),
+    ...withTags(r.optionalTexts("tags")),
   }));
 
   const favorites = section<BackupFavorite>("favorites", claveSerie, (r) => ({

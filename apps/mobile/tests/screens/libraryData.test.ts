@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import type { SqlDriver } from "@ryuunest/core";
+import { Folders, SeriesStore, type SqlDriver } from "@ryuunest/core";
 
 import {
   openMigratedDriver,
@@ -8,6 +8,8 @@ import {
 } from "../../../../packages/core/tests/support/nodeSqliteDriver";
 import { loadLibraryData, resolveLibraryData } from "../../src/screens/library/libraryData";
 import { GEMS_FOLDER_ID, type LibraryData } from "../../src/screens/library/libraryFixtures";
+
+const reloj = { now: () => 1 };
 
 /**
  * F14c — la pantalla Biblioteca lee del núcleo (`browseLibrary`, T23; `Folders`, T22)
@@ -82,7 +84,7 @@ async function addSeries(
 }
 
 describe("resolveLibraryData (F14c)", () => {
-  const fallback: LibraryData = { series: [], folders: [], sources: [{ id: "x", name: "x" }] };
+  const fallback: LibraryData = { series: [], folders: [], sources: [{ id: "x", name: "x" }], tags: [] };
 
   it("sin base de datos en la plataforma (web) usa los datos de reserva", async () => {
     expect(await resolveLibraryData(async () => null, fallback)).toBe(fallback);
@@ -212,6 +214,26 @@ describe("loadLibraryData (F14c)", () => {
       { id: "11", name: "Segunda", count: 1 },
       { id: "13", name: "Vacía", count: 0 },
     ]);
+  });
+
+  it("etiquetas (F53): las de cada serie, las de cada carpeta y la lista para elegir; el recuento sigue la carpeta inteligente", async () => {
+    await addSeries(driver, { id: "a", title: "A", addedAt: 1 });
+    await addSeries(driver, { id: "b", title: "B", addedAt: 2 });
+    await new SeriesStore({ driver, clock: reloj }).setTags("mod-a", "a", ["Seinen", "Acción"]);
+    await new SeriesStore({ driver, clock: reloj }).setTags("mod-a", "b", ["Isekai"]);
+    const carpetas = new Folders({ driver, clock: reloj });
+    const id = await carpetas.create("Mis seinen", 5, ["Seinen"]);
+
+    const data = await loadLibraryData(driver);
+
+    expect(data.tags).toEqual(["Acción", "Isekai", "Seinen"]);
+    expect(data.series.find((s) => s.seriesId === "a")?.tags).toEqual(["Acción", "Seinen"]);
+    expect(data.folders.find((f) => f.id === String(id))).toEqual({
+      id: String(id),
+      name: "Mis seinen",
+      count: 1,
+      tags: ["Seinen"],
+    });
   });
 
   it("en un primer arranque ya hay dos carpetas: Gemas y Favoritos (F52)", async () => {
