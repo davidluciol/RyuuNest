@@ -6,6 +6,7 @@
 // Ejecutar con el cliente servido: node apps/mobile/tests/e2e/screenErrors.cjs
 const assert = require("node:assert/strict");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { newSeededContext } = require("./seedDb.cjs");
 
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
 
@@ -13,7 +14,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     for (const width of [426, 1440]) {
-      const context = await browser.newContext({ viewport: { width, height: 1000 } });
+      const context = await newSeededContext(browser, { viewport: { width, height: 1000 } });
       const page = await context.newPage();
       page.setDefaultTimeout(15000);
       const errors = [];

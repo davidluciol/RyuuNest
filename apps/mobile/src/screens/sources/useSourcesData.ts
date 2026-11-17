@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "r
 import type { SqlDriver } from "@ryuunest/core";
 import { createFetchHttp } from "../../data/fetchHttp";
 import { openAppDatabase } from "../../data/appDatabase";
+import { isNativePlatform } from "../../data/backupFilesPort";
 import { resolveErrorReporter, type ErrorReporter } from "../../data/errorLog";
 import { createFflateArchive } from "../../data/fflateArchive";
 import { createAppSecureLock } from "../../data/secureLock";
@@ -31,7 +32,10 @@ import type { SourcesView } from "./sourcesFixtures";
 
 export async function resolveSourcesService(): Promise<SourcesService> {
   const driver = await openAppDatabase();
-  return driver === null ? createSampleSourcesService() : createNativeSourcesService(driver);
+  // Web (F49b): sin red no hay módulos que instalar; se muestran los portales de ejemplo.
+  return driver === null || !isNativePlatform()
+    ? createSampleSourcesService()
+    : createNativeSourcesService(driver);
 }
 
 /** El servicio de Fuentes sobre el driver nativo (compartido con el primer uso, F12). */

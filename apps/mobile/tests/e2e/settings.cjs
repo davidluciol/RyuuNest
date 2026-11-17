@@ -7,6 +7,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { fulfillFakeCover, newSeededContext } = require("./seedDb.cjs");
 
 const baseURL = process.env.SETTINGS_URL || "http://127.0.0.1:8082";
 const output = path.resolve(__dirname, "../../../../docs/capturasF20");
@@ -15,7 +16,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     for (const width of [426, 1440]) {
-      const context = await browser.newContext({ viewport: { width, height: 1400 } });
+      const context = await newSeededContext(browser, { viewport: { width, height: 1400 } });
       const page = await context.newPage();
       page.setDefaultTimeout(15000);
       const errors = [];
@@ -26,6 +27,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
       });
       await context.route("**/*", (route) => {
         const url = new URL(route.request().url());
+        if (fulfillFakeCover(route, url)) return;
         if (["http:", "https:"].includes(url.protocol) && url.host !== new URL(baseURL).host) {
           external.push(url.href);
           return route.abort();
@@ -99,11 +101,10 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
       await page.waitForTimeout(300);
       assert.equal(await isOn(toggle), false, `el interruptor se activó sin bloqueo @${width}`);
 
-      // El repo oficial está registrado en el ejemplo: no hay fila de restaurar.
-      assert.equal(
-        await page.getByText("Repositorio oficial").count(),
-        0,
-        `fila inesperada @${width}`,
+      // Base real: la sembrada tiene el repo oficial descartado, así que se ofrece restaurarlo.
+      assert.ok(
+        (await page.getByText("Repositorio oficial").count()) > 0,
+        `falta la fila de restaurar el repo oficial @${width}`,
       );
 
       // El ajuste se comparte con las pantallas que filtran contenido.

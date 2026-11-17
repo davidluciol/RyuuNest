@@ -178,10 +178,11 @@ Dep: F46 · M–L · `apps/mobile/src/data/appDatabase.ts` (hoy devuelve `null` 
 
 - [x] 🧍 Elegir alternativa → **A** (2026-11-14): `sql.js` 1.15.2 + IndexedDB, extraído de `apps/web` a un paquete compartido (p. ej. `packages/web-db`) que usan `apps/web` y la web de `apps/mobile`; `sql.js` autorizada en `apps/mobile` con la versión ya fijada (P-150)
 - [x] **F49a** (2026-11-17): `webDatabase.ts` y `byteStore.ts` salen de `apps/web` al paquete `packages/web-db` (`@ryuunest/web-db`, `sql.js` 1.15.2 ya fijada); `apps/web` lo importa, sin cambio de comportamiento
-- [ ] **F49b** — alcance **completo** (decisión del humano 2026-11-17, anula el aparcado de P-160): activar la base real en la web de Expo
-- [ ] Rojo: `openAppDatabase()` en web devuelve un driver que pasa `migrate` y persiste entre recargas (prueba con `ByteStore` en memoria)
-- [ ] Retirar la reserva de ejemplo de Tesoros/Guarida en web y `sessionSqlDriver` donde quede sustituido
-- Verif: Playwright: guardar una serie, recargar la página y verla en Tesoros; cero peticiones externas
+- [x] **F49b** (2026-11-17, alcance **completo**, decisión del humano que anula el aparcado de P-160): la web de Expo abre una base real (`appDatabase.web.ts`: sql.js en IndexedDB `ryuunest-expo-web`, wasm por `expo-asset`) y Tesoros, Guarida, Ajustes, Respaldo y Bienvenida leen de ella
+- [x] Rojo/verde: persistencia cubierta en `@ryuunest/web-db` (memoria) y en Playwright (`persistence.cjs`); `createSampleReadingSource(driver)` no siembra progreso con base real
+- [x] Reserva de ejemplo retirada de Tesoros/Guarida. **Siguen con ejemplo en web** (sin red no hay módulos que instalar): Portales, Aventuras, lector/ficha (módulos de `test-site`, ahora con el progreso en la base real) y Diagnóstico; `sessionSqlDriver` solo queda para Vitest
+- [x] e2e: `tests/e2e/seedDb.cjs` genera con el núcleo y sql.js una base con 3 obras y una carpeta y la siembra en IndexedDB antes de cargar; los scripts de la web de Expo se adaptaron a esos datos
+- Verif: Playwright (426 y 1440): guardar/quitar una serie, recargar y verla en Tesoros (`persistence.cjs`), cero peticiones externas y consola limpia
 
 ### F52 Carpetas por defecto: «Favoritos» y «Gemas» `[BE/FE · Intermedia · N3]`
 

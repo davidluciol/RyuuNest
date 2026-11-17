@@ -2,6 +2,7 @@
 // del shell de destinos. Se verifica con el bundle web y datos ficticios.
 const assert = require("node:assert/strict");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { newSeededContext } = require("./seedDb.cjs");
 
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
 
@@ -9,7 +10,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     for (const width of [426, 1440]) {
-      const context = await browser.newContext({ viewport: { width, height: 1400 } });
+      const context = await newSeededContext(browser, { viewport: { width, height: 1400 } });
       const page = await context.newPage();
       page.setDefaultTimeout(15000);
       const errors = [];
@@ -36,6 +37,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       // Progreso de ejemplo de la fuente de lectura: capítulo 2, página 3 de 4 (2 / 4).
       await page.getByText("● 50%").waitFor({ state: "visible" });
 
+      await page.getByRole("button", { name: "Guardada" }).click(); // la serie sembrada ya es favorita
       await page.getByRole("button", { name: "Guardar" }).click();
       await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
       await page.getByRole("button", { name: "Carpeta" }).waitFor({ state: "visible" });

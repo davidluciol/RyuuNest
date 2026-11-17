@@ -3,6 +3,7 @@
 // Ejecutar con el cliente servido: node apps/mobile/tests/e2e/library.cjs
 const assert = require("node:assert/strict");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { newSeededContext } = require("./seedDb.cjs");
 
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
 
@@ -10,7 +11,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     for (const width of [426, 1440]) {
-      const context = await browser.newContext({ viewport: { width, height: 900 } });
+      const context = await newSeededContext(browser, { viewport: { width, height: 900 } });
       const page = await context.newPage();
       page.setDefaultTimeout(10000);
       const errors = [];
@@ -34,8 +35,8 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       // react-native-web no expone `selected` como atributo: se lee el borde `accent` (#35C98A).
       const elegida = async (card) =>
         (await card.evaluate((el) => getComputedStyle(el).borderTopColor)) === "rgb(53, 201, 138)";
-      const gemas = page.getByRole("button", { name: /^Gemas, 48 obras(, Carpeta dinámica)?$/ });
-      const favoritos = page.getByRole("button", { name: /^Favoritos, 24 obras(, Carpeta dinámica)?$/ });
+      const gemas = page.getByRole("button", { name: /^Gemas, 3 obras(, Carpeta dinámica)?$/ });
+      const favoritos = page.getByRole("button", { name: /^Favoritos, 0 obras(, Carpeta dinámica)?$/ });
       await gemas.waitFor({ state: "visible" });
       await favoritos.waitFor({ state: "visible" });
       assert.equal(await elegida(gemas), true, `Gemas elegida @${width}`);
@@ -44,7 +45,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
         assert.ok(box && box.width >= 48 && box.height >= 48, `área táctil de carpeta @${width}`);
       }
       // Nombres de carpeta completos (T7): ninguno recortado con «…» mientras quepa.
-      for (const nombre of ["Lectura Nocturna", "Completados"]) {
+      for (const nombre of ["Lectura Nocturna"]) {
         const recortado = await page
           .getByText(nombre, { exact: true })
           .first()
@@ -87,22 +88,22 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       const oculta = (titulo) => page.getByRole("button", { name: titulo, exact: true }).waitFor({ state: "hidden" });
       await buscador.fill("CENIZA dragon");
       await page.getByRole("button", { name: "El dragón de ceniza", exact: true }).waitFor({ state: "visible" });
-      await oculta("Ciudad sin nombre"); // tras la pausa del debounce
+      await oculta("Crónicas del Cielo"); // tras la pausa del debounce
       await buscador.fill("");
-      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Crónicas del Cielo", exact: true }).waitFor({ state: "visible" });
       const categorias = page.getByTestId("library-categories");
       await categorias.getByRole("button", { name: "Seinen", exact: true }).click();
-      await page.getByRole("button", { name: "La forja perdida", exact: true }).waitFor({ state: "visible" });
-      await oculta("Ciudad sin nombre");
-      await categorias.getByRole("button", { name: "Terror", exact: true }).click(); // alguna de las marcadas
-      await page.getByRole("button", { name: "El último susurro", exact: true }).waitFor({ state: "visible" });
-      await buscador.fill("forja");
-      await page.getByRole("button", { name: "La forja perdida", exact: true }).waitFor({ state: "visible" });
-      await oculta("El último susurro");
+      await page.getByRole("button", { name: "El dragón de ceniza", exact: true }).waitFor({ state: "visible" });
+      await oculta("Crónicas del Cielo");
+      await categorias.getByRole("button", { name: "Acción", exact: true }).click(); // alguna de las marcadas
+      await page.getByRole("button", { name: "La ruta de las sombras", exact: true }).waitFor({ state: "visible" });
+      await buscador.fill("dragon");
+      await page.getByRole("button", { name: "El dragón de ceniza", exact: true }).waitFor({ state: "visible" });
+      await oculta("La ruta de las sombras");
       await buscador.fill("");
       await categorias.getByRole("button", { name: "Seinen", exact: true }).click();
-      await categorias.getByRole("button", { name: "Terror", exact: true }).click();
-      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
+      await categorias.getByRole("button", { name: "Acción", exact: true }).click();
+      await page.getByRole("button", { name: "Crónicas del Cielo", exact: true }).waitFor({ state: "visible" });
 
       // F56: vacío de búsqueda, con texto solo y con filtros activos (el dragón sin tesoros).
       await buscador.fill("zzz-no-existe");
@@ -111,26 +112,26 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.screenshot({ path: process.env.F52_SHOT ? `${process.env.F52_SHOT}-vacio-${width}.png` : undefined });
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `vacío sin overflow @${width}`);
       await page.getByRole("button", { name: "Limpiar búsqueda", exact: true }).click();
-      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
-      await categorias.getByRole("button", { name: "Terror", exact: true }).click();
+      await page.getByRole("button", { name: "Crónicas del Cielo", exact: true }).waitFor({ state: "visible" });
+      await categorias.getByRole("button", { name: "Acción", exact: true }).click();
       await buscador.fill("zzz-no-existe");
       await page.getByText("Ni una gema con esos filtros", { exact: true }).waitFor({ state: "visible" });
       await page.getByRole("button", { name: "Quitar filtros", exact: true }).click();
-      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Crónicas del Cielo", exact: true }).waitFor({ state: "visible" });
       assert.equal(await buscador.inputValue(), "", `Quitar filtros limpia el texto @${width}`);
 
       // F57: hoja de filtros (tipo, fuente) con nombre visible de la fuente; Limpiar los quita.
       await page.getByRole("button", { name: "Tipo", exact: true }).click();
       const hoja = page.getByTestId("filter-sheet");
       await hoja.waitFor({ state: "visible" });
-      await hoja.getByTestId("filter-sheet-kinds").getByRole("button", { name: "Cómic", exact: true }).click();
-      await page.getByRole("button", { name: "Noche de ámbar", exact: true }).waitFor({ state: "visible" });
-      await oculta("Ciudad sin nombre");
-      await hoja.getByTestId("filter-sheet-sources").getByRole("button", { name: "Módulo de ejemplo B", exact: true }).waitFor({ state: "visible" });
+      await hoja.getByTestId("filter-sheet-kinds").getByRole("button", { name: "Manhwa", exact: true }).click();
+      await page.getByRole("button", { name: "Crónicas del Cielo", exact: true }).waitFor({ state: "visible" });
+      await oculta("El dragón de ceniza");
+      await hoja.getByTestId("filter-sheet-sources").getByRole("button", { name: "m-ejemplo-a", exact: true }).waitFor({ state: "visible" });
       await page.getByTestId("filter-sheet-clear").click();
       await page.getByTestId("filter-sheet-done").click();
       await hoja.waitFor({ state: "hidden" });
-      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Crónicas del Cielo", exact: true }).waitFor({ state: "visible" });
 
       // F58: menú de orden (hoja con los tres órdenes) en lugar de ciclar al pulsar.
       await page.getByRole("button", { name: "Orden: Nombre", exact: true }).click();
@@ -150,7 +151,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
         await boton.scrollIntoViewIfNeeded();
         return Number((await boton.getAttribute("aria-label")).match(/(\d+) obras(, Carpeta dinámica)?$/)[1]);
       };
-      const serie = page.getByRole("button", { name: "Crónicas de Moonlit", exact: true });
+      const serie = page.getByRole("button", { name: "El dragón de ceniza", exact: true });
       const menu = page.getByTestId("series-menu");
       const favoritosAntes = await contar("Favoritos");
       const nocturnaAntes = await contar("Lectura Nocturna");
@@ -170,7 +171,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
 
       // Teclado: el «⋮» solo se ve con el foco y abre el mismo menú.
       const opacidad = (el) => el.evaluate((n) => getComputedStyle(n).opacity);
-      const puntos = page.getByRole("button", { name: "Menú de Crónicas de Moonlit" });
+      const puntos = page.getByRole("button", { name: "Menú de El dragón de ceniza" });
       await page.evaluate(() => document.activeElement && document.activeElement.blur());
       assert.equal(await opacidad(puntos), "0", `⋮ oculto sin foco @${width}`);
       await puntos.focus();
@@ -179,7 +180,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await menu.waitFor({ state: "visible" });
       assert.equal(await page.getByTestId("series-menu-favorite").count(), 0, `ya está en Favoritos @${width}`);
       await page.getByTestId("series-menu-move").click();
-      await page.getByRole("button", { name: /^Completados$/ }).click();
+      await page.getByRole("button", { name: /^Lectura Nocturna$/ }).click();
       await menu.waitFor({ state: "hidden" });
       assert.equal(await contar("Favoritos"), favoritosAntes, `Mover saca de Favoritos @${width}`);
 

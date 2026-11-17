@@ -21,6 +21,7 @@ import {
 } from "@ryuunest/test-site";
 
 import { openAppDatabase } from "../../data/appDatabase";
+import { isNativePlatform } from "../../data/backupFilesPort";
 import { createFetchHttp } from "../../data/fetchHttp";
 import { createInstalledMounter, type ModuleMounter } from "../../data/moduleMounter";
 import {
@@ -300,10 +301,9 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
       );
     },
     async recallLastModule() {
-      const row = await driver.get<{ value: string }>(
-        "SELECT value FROM setting WHERE key = ?",
-        [LAST_MODULE_SETTING],
-      );
+      const row = await driver.get<{ value: string }>("SELECT value FROM setting WHERE key = ?", [
+        LAST_MODULE_SETTING,
+      ]);
       return row?.value ?? null;
     },
     async rememberLastModule(id: string) {
@@ -318,13 +318,13 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
 // — Selección por plataforma —
 
 /**
- * La fuente de la pantalla: en el dispositivo, los módulos instalados; en web
- * (sin SQLite, F14c) los módulos de ejemplo sobre `test-site`. La pantalla y
+ * La fuente de la pantalla: en el dispositivo, los módulos instalados; en web (con o sin base
+ * de datos, F14c/F49b) los módulos de ejemplo sobre `test-site`. La pantalla y
  * el hook no preguntan la plataforma: hablan con `DiscoverDataSource`.
  */
 export async function resolveDiscoverSource(): Promise<DiscoverDataSource> {
   const driver = await openAppDatabase();
-  if (driver === null) return createSampleDiscoverSource();
+  if (driver === null || !isNativePlatform()) return createSampleDiscoverSource();
   return createInstalledDiscoverSource({
     driver,
     http: createFetchHttp(),

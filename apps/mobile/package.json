@@ -20,6 +20,7 @@
     "@ryuunest/ui-tokens": "workspace:*",
     "@ryuunest/web-db": "workspace:*",
     "expo": "~57.0.32",
+    "expo-asset": "~57.0.21",
     "expo-clipboard": "~57.0.2",
     "expo-constants": "~57.0.23",
     "expo-document-picker": "~57.0.3",

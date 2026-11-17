@@ -4,6 +4,7 @@
 // peticiones a dominios externos (RNF-5).
 const assert = require("node:assert/strict");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { newSeededContext, resetSeed } = require("./seedDb.cjs");
 
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
 const READER = `${baseURL}/reader/m-ejemplo-a/dragon-de-ceniza`;
@@ -18,7 +19,7 @@ async function tapAt(page, canvasTestId, fx, fy) {
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     for (const width of [426, 1440]) {
-      const context = await browser.newContext({ viewport: { width, height: 900 }, hasTouch: true });
+      const context = await newSeededContext(browser, { viewport: { width, height: 900 }, hasTouch: true });
       // RF-23: pantalla encendida mientras se lee. Se sustituye la API del navegador para contar
       // cuántas veces se pide y se suelta.
       await context.addInitScript(() => {
@@ -139,7 +140,7 @@ async function tapAt(page, canvasTestId, fx, fy) {
       );
 
       // 7. Reabrir el capítulo 2 en frío lleva a la página exacta guardada (RF-20, ejemplo: 3 de 4).
-      await page.goto(`${READER}/ch-2?release=r-oficial`);
+      await resetSeed(page, `${READER}/ch-2?release=r-oficial`); // vuelve al progreso sembrado (la base es real y persiste)
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
       await page.getByText("Pág. 3 / 4").waitFor({ state: "visible" });
 
@@ -177,7 +178,7 @@ async function tapAt(page, canvasTestId, fx, fy) {
       breakingImage = true;
       // El export estático renombra los assets con hash (page-2.<hash>.svg): el patrón admite ambos.
       await page.route("**/*page-2*.svg*", (route) => route.abort());
-      await page.goto(`${READER}/ch-2?release=r-oficial`);
+      await resetSeed(page, `${READER}/ch-2?release=r-oficial`); // vuelve al progreso sembrado (la base es real y persiste)
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
       await page.getByText("No se pudo cargar la página 2").waitFor({ state: "visible" });
       await page.getByText("Pág. 3 / 4").waitFor({ state: "visible" });
