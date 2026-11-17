@@ -56,6 +56,26 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       assert.equal(await elegida(gemas), false, `Gemas ya no @${width}`);
       await gemas.click();
       assert.equal(await elegida(gemas), true, `Gemas vuelve @${width}`);
+      // F53: botón flotante «+», hoja «Nueva carpeta», errores de nombre y alta con etiquetas.
+      const fab = page.getByTestId("library-new-folder");
+      await fab.waitFor({ state: "visible" });
+      const fabBox = await fab.boundingBox();
+      assert.ok(fabBox && fabBox.width >= 48 && fabBox.height >= 48, `FAB ≥ 48 @${width}`);
+      assert.ok(fabBox.y + fabBox.height <= 900, `FAB dentro de la pantalla @${width}`);
+      await fab.click();
+      const sheet = page.getByTestId("new-folder-sheet");
+      await sheet.waitFor({ state: "visible" });
+      await page.getByTestId("new-folder-create").click();
+      assert.match(await page.getByTestId("new-folder-error").innerText(), /nombre/i, `error de nombre vacío @${width}`);
+      await page.getByTestId("new-folder-name").fill("gemas");
+      await page.getByTestId("new-folder-create").click();
+      assert.match(await page.getByTestId("new-folder-error").innerText(), /ya tienes/i, `error de nombre repetido @${width}`);
+      await page.getByTestId("new-folder-name").fill("Mis acción");
+      await page.getByTestId("new-folder-tags").getByRole("button", { name: "Acción", exact: true }).click();
+      await page.screenshot({ path: process.env.F52_SHOT ? `${process.env.F52_SHOT}-sheet-${width}.png` : undefined });
+      await page.getByTestId("new-folder-create").click();
+      await sheet.waitFor({ state: "hidden" });
+      await page.getByRole("button", { name: /^Mis acción, \d+ obras$/ }).waitFor({ state: "visible" });
       await page.screenshot({ path: process.env.F52_SHOT ? `${process.env.F52_SHOT}-${width}.png` : undefined });
       assert.equal(
         await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),

@@ -14,6 +14,7 @@
  * sugerencias para que el usuario las confirme una por una (RF-38, AC-8).
  */
 import { normalizeTitle } from "../library/SeriesStore.js";
+import { readTags, replaceTags } from "../library/tags.js";
 import { ENSURE_DEFAULT_FOLDERS } from "../storage/schema.js";
 import { toSqlBoolean, withTransaction, type SqlDriver } from "../storage/SqlDriver.js";
 import { describeIssues, type ValidationIssue } from "../validation.js";
@@ -149,6 +150,13 @@ function emptyCounts(): Counts {
 
 // --- Escrituras compartidas por los dos modos --------------------------------------------
 
+/** Un respaldo v1 no trae etiquetas: no se tocan las locales. */
+async function guardarEtiquetasSerie(driver: SqlDriver, row: BackupSeries): Promise<void> {
+  if (row.tags !== undefined) {
+    await replaceTags(driver, "series_tag", [row.moduleId, row.seriesId], row.tags);
+  }
+}
+
 async function insertarSerie(driver: SqlDriver, row: BackupSeries): Promise<void> {
   await driver.run(
     `INSERT INTO series (module_id, series_id, title, title_norm, cover_url, kind, nsfw, status, updated_at)
@@ -165,6 +173,7 @@ async function insertarSerie(driver: SqlDriver, row: BackupSeries): Promise<void
       row.updatedAt,
     ],
   );
+  await guardarEtiquetasSerie(driver, row);
 }
 
 async function actualizarSerie(driver: SqlDriver, row: BackupSeries): Promise<void> {
@@ -183,6 +192,7 @@ async function actualizarSerie(driver: SqlDriver, row: BackupSeries): Promise<vo
       row.seriesId,
     ],
   );
+  await guardarEtiquetasSerie(driver, row);
 }
 
 async function insertarFavorito(
@@ -300,6 +310,7 @@ async function reemplazar(driver: SqlDriver, backup: Backup, counts: Counts): Pr
       folder.sort,
       folder.updatedAt,
     ]);
+    await replaceTags(driver, "folder_tag", [folder.id], folder.tags ?? []);
   }
   // El respaldo no trae la marca del sistema (F52): se recupera «Favoritos» sin duplicarla.
   for (const sentencia of ENSURE_DEFAULT_FOLDERS) {
@@ -400,6 +411,7 @@ async function fusionarCarpetas(
         "INSERT INTO folder (name, sort, updated_at) VALUES (?, ?, ?)",
         [folder.name, folder.sort, folder.updatedAt],
       );
+      await replaceTags(driver, "folder_tag", [lastInsertRowid], folder.tags ?? []);
       locales.set(key, {
         id: lastInsertRowid,
         name: folder.name,
@@ -410,6 +422,11 @@ async function fusionarCarpetas(
       counts.added += 1;
     } else {
       idLocal.set(folder.id, local.id);
+      // Las etiquetas de una carpeta inteligente se unen: fusionar nunca quita las locales.
+      if (folder.tags !== undefined && folder.tags.length > 0) {
+        const actuales = await readTags(driver, "folder_tag", [local.id]);
+        await replaceTags(driver, "folder_tag", [local.id], [...actuales, ...folder.tags]);
+      }
       if (folder.updatedAt > local.updated_at) {
         await driver.run("UPDATE folder SET name = ?, sort = ?, updated_at = ? WHERE id = ?", [
           folder.name,

@@ -7,6 +7,8 @@
  */
 import type { Clock } from "../ports/clock.js";
 import { type SqlDriver, withTransaction } from "../storage/SqlDriver.js";
+import { normalizeTitle } from "./normalize.js";
+import { readTags, replaceTags } from "./tags.js";
 
 /** Fila de `folder` en forma de dominio. */
 export interface FolderRecord {
@@ -42,6 +44,17 @@ function toRecord(fila: FolderRow): FolderRecord {
   };
 }
 
+/** Nombre de carpeta rechazado: vacío o ya en uso (F53). La pantalla lo traduce por `reason`. */
+export class FolderNameError extends Error {
+  readonly reason: "EMPTY" | "DUPLICATE";
+
+  constructor(reason: "EMPTY" | "DUPLICATE") {
+    super(reason === "EMPTY" ? "El nombre de la carpeta está vacío" : "Ya existe una carpeta con ese nombre");
+    this.name = "FolderNameError";
+    this.reason = reason;
+  }
+}
+
 export class Folders {
   readonly #driver: SqlDriver;
   readonly #clock: Clock;
@@ -51,13 +64,40 @@ export class Folders {
     this.#clock = options.clock;
   }
 
-  /** Crea una carpeta y devuelve su `id` autonumérico. */
-  async create(name: string, sort = 0): Promise<number> {
-    const resultado = await this.#driver.run(
-      "INSERT INTO folder (name, sort, updated_at) VALUES (?, ?, ?)",
-      [name, sort, this.#clock.now()],
-    );
-    return resultado.lastInsertRowid;
+  /**
+   * Crea una carpeta y devuelve su `id` autonumérico. `tags` la vuelve **inteligente** (F53):
+   * muestra siempre las series que tengan alguna de esas etiquetas. El nombre no puede estar
+   * vacío ni repetirse (sin distinguir mayúsculas, acentos ni espacios de los bordes).
+   */
+  async create(name: string, sort = 0, tags: readonly string[] = []): Promise<number> {
+    const limpio = await this.#validName(name);
+    return withTransaction(this.#driver, async () => {
+      const resultado = await this.#driver.run(
+        "INSERT INTO folder (name, sort, updated_at) VALUES (?, ?, ?)",
+        [limpio, sort, this.#clock.now()],
+      );
+      await replaceTags(this.#driver, "folder_tag", [resultado.lastInsertRowid], tags);
+      return resultado.lastInsertRowid;
+    });
+  }
+
+  /** Etiquetas de la carpeta inteligente, por orden. */
+  async tags(id: number): Promise<string[]> {
+    return readTags(this.#driver, "folder_tag", [id]);
+  }
+
+  /** Valida el nombre (recortado) frente a las demás carpetas; `own` excluye la que se renombra. */
+  async #validName(name: string, own?: number): Promise<string> {
+    const limpio = name.trim();
+    if (limpio === "") {
+      throw new FolderNameError("EMPTY");
+    }
+    const clave = normalizeTitle(limpio);
+    const otras = await this.list();
+    if (otras.some((carpeta) => carpeta.id !== own && normalizeTitle(carpeta.name) === clave)) {
+      throw new FolderNameError("DUPLICATE");
+    }
+    return limpio;
   }
 
   /** Lista por orden manual (`sort`); a igualdad de `sort`, por `id` para que sea decisivo. */
@@ -73,8 +113,9 @@ export class Folders {
 
   async rename(id: number, name: string): Promise<void> {
     await this.#assertUserFolder(id, "renombrar");
+    const limpio = await this.#validName(name, id);
     await this.#driver.run("UPDATE folder SET name = ?, updated_at = ? WHERE id = ?", [
-      name,
+      limpio,
       this.#clock.now(),
       id,
     ]);

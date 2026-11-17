@@ -19,7 +19,7 @@ describe("openWebDatabase (sql.js + ByteStore)", () => {
       expect(names, `falta la tabla ${expected}`).toContain(expected);
     }
     const version = await driver.get<{ user_version: number }>("PRAGMA user_version");
-    expect(version?.user_version).toBe(3);
+    expect(version?.user_version).toBe(4);
   });
 
   it("run/all/get con parámetros hacen ida y vuelta", async () => {

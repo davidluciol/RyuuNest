@@ -106,8 +106,10 @@ describe("exportText (RF-37, F21a)", () => {
     };
 
     expect(backup.format).toBe("ryuunest-backup");
-    expect(backup.version).toBe(1);
-    expect(backup.folders).toEqual([{ name: "Favoritos épicos", id: 1, sort: 0, updatedAt: 100 }]);
+    expect(backup.version).toBe(2);
+    expect(backup.folders).toEqual([
+      { name: "Favoritos épicos", id: 1, sort: 0, updatedAt: 100, tags: [] },
+    ]);
     expect(backup.series[0]?.title).toBe("El dragón de ceniza");
     expect(backup.favorites).toHaveLength(1);
     expect(backup.progress[0]).toMatchObject({ pageIndex: 2, pageTotal: 4 });

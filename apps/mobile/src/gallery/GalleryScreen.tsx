@@ -66,6 +66,8 @@ import Toast from "../components/Toast";
 import ErrorBanner from "../components/ErrorBanner";
 import CodeChip from "../components/CodeChip";
 import ConfirmSheet from "../components/ConfirmSheet";
+import FloatingActionButton from "../components/FloatingActionButton";
+import NewFolderSheet from "../components/NewFolderSheet";
 import ErrorDialog from "../components/ErrorDialog";
 import LogEventRow from "../components/LogEventRow";
 import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen";
@@ -131,6 +133,7 @@ export default function GalleryScreen() {
   const [previewDestination, setPreviewDestination] = useState<BottomNavDestination>("home");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [newFolderOpen, setNewFolderOpen] = useState(false);
   const { width } = useWindowDimensions();
   const screen = layoutForWidth(width);
   const density = densityLayout("comfortable", width);
@@ -467,7 +470,11 @@ export default function GalleryScreen() {
 
         <Text style={styles.groupLabel}>{t("gallery.component.libraryScreen")}</Text>
         <View style={styles.shellPreview}>
-          <LibraryScreen data={SAMPLE_LIBRARY_DATA} virtualize={false} />
+          <LibraryScreen
+            data={SAMPLE_LIBRARY_DATA}
+            virtualize={false}
+            onCreateFolder={async () => null}
+          />
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.modulePicker")}</Text>
@@ -670,6 +677,28 @@ export default function GalleryScreen() {
             testID="gallery-confirm"
             confirmTestID="gallery-confirm-submit"
             cancelTestID="gallery-confirm-cancel"
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.floatingButton")}</Text>
+        <View style={styles.row}>
+          <FloatingActionButton accessibilityLabel={t("library.folder.new.fab")} />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.newFolderSheet")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.newFolder.show")}
+            testID="gallery-show-new-folder"
+            onPress={() => setNewFolderOpen(true)}
+          />
+          <NewFolderSheet
+            visible={newFolderOpen}
+            existingNames={SAMPLE_LIBRARY_DATA.folders.map((folder) => folder.name)}
+            availableTags={SAMPLE_LIBRARY_DATA.tags}
+            onSubmit={async () => null}
+            onClose={() => setNewFolderOpen(false)}
           />
         </View>
 

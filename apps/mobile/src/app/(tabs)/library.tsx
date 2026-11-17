@@ -17,6 +17,7 @@ export default function LibraryRoute() {
         key={`library-${settings.nsfwVisible}`}
         data={library.data}
         initialFilters={{ nsfwVisible: settings.nsfwVisible }}
+        onCreateFolder={library.createFolder}
       />
     );
   }
