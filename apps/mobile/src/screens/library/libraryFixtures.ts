@@ -429,6 +429,8 @@ export interface LibraryFilters {
   kinds: MediaKind[];
   /** Fuentes seleccionadas (vacío = todas). */
   moduleIds: string[];
+  /** Categorías (etiquetas) marcadas: sale la serie con alguna de ellas (F55); vacío = todas. */
+  tags: string[];
   /** Carpeta seleccionada; `null` = sin carpeta; `undefined` = cualquiera. */
   folderId?: string | null;
   /** Mostrar contenido NSFW (RF-34: apagado por defecto). */
@@ -443,6 +445,7 @@ export const DEFAULT_LIBRARY_FILTERS: LibraryFilters = {
   chip: "all",
   kinds: [],
   moduleIds: [],
+  tags: [],
   folderId: undefined,
   nsfwVisible: false,
   order: "name",
@@ -477,20 +480,19 @@ export function filterLibrarySeries(
     result = result.filter((s) => !s.nsfw);
   }
 
-  // Búsqueda por título (normalizada, sin acentos ni mayúsculas).
-  if (filters.search.trim() !== "") {
-    const needle = filters.search
-      .normalize("NFD")
-      .replace(/\p{Mn}+/gu, "")
-      .toLowerCase()
-      .trim();
-    result = result.filter((s) =>
-      s.title
-        .normalize("NFD")
-        .replace(/\p{Mn}+/gu, "")
-        .toLowerCase()
-        .includes(needle),
-    );
+  // Búsqueda por título (F55): todas las palabras, en cualquier orden, sin tildes ni mayúsculas.
+  const words = normalizeTitle(filters.search).split(" ").filter((w) => w !== "");
+  if (words.length > 0) {
+    result = result.filter((s) => {
+      const title = normalizeTitle(s.title);
+      return words.every((word) => title.includes(word));
+    });
+  }
+
+  // Categorías (F55): alguna de las marcadas.
+  if (filters.tags.length > 0) {
+    const wanted = new Set(filters.tags.map(normalizeTitle));
+    result = result.filter((s) => (s.tags ?? []).some((tag) => wanted.has(normalizeTitle(tag))));
   }
 
   // Filtro por chip.

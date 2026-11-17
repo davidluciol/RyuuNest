@@ -134,6 +134,26 @@ describe("filterLibrarySeries (F14a/F14b)", () => {
     expect(ids).toEqual(["leido", "sin-marca", "viejo"]);
   });
 
+  it("búsqueda por palabras en cualquier orden, sin tildes ni mayúsculas (F55)", () => {
+    const filters: LibraryFilters = { ...DEFAULT_LIBRARY_FILTERS, search: "CENIZA dragon" };
+    expect(filterLibrarySeries(all, filters).map((s) => s.title)).toEqual(["El dragón de ceniza"]);
+  });
+
+  it("filtro por categoría: alguna de las marcadas; con texto solo las que coinciden (F55)", () => {
+    const seinen: LibraryFilters = { ...DEFAULT_LIBRARY_FILTERS, tags: ["seinen"] };
+    const result = filterLibrarySeries(all, seinen);
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.every((s) => (s.tags ?? []).some((t) => t.toLowerCase() === "seinen"))).toBe(true);
+
+    const accionOTerror: LibraryFilters = { ...DEFAULT_LIBRARY_FILTERS, tags: ["accion", "TERROR"], nsfwVisible: true };
+    const either = filterLibrarySeries(all, accionOTerror);
+    expect(either.length).toBeGreaterThan(result.length > 0 ? 0 : -1);
+    expect(either.every((s) => (s.tags ?? []).some((t) => ["acción", "terror"].includes(t.toLowerCase())))).toBe(true);
+
+    const conTexto: LibraryFilters = { ...seinen, search: "zzz-no-existe" };
+    expect(filterLibrarySeries(all, conTexto)).toEqual([]);
+  });
+
   it("cifras coherentes con Inicio (D1): Gemas (todo) y 3 carpetas, 48 obras totales", () => {
     const gems = SAMPLE_LIBRARY_DATA.folders.find((f) => f.kind === "gems");
     const reales = SAMPLE_LIBRARY_DATA.folders.filter((f) => f.kind !== "gems");

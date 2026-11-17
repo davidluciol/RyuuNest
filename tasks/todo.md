@@ -213,10 +213,10 @@ Dep: F52, F53 · M · `apps/mobile/src/screens/library/*`, `packages/core/src/li
 
 Dep: F52 · M · `apps/mobile/src/screens/library/*`, `packages/core/src/library/queries.ts`
 
-- [ ] La búsqueda devuelve **al escribir** (con *debounce* corto) las series de nombre **similar** al texto (tolerante a mayúsculas/tildes; decidir si basta «contiene» o hace falta similitud difusa: preguntar)
-- [ ] Filtros por categoría (seinen, shonen, isekai, aventura…) tomados de las etiquetas de las series guardadas (no inventar lista); con filtros activos **solo** se devuelven series que coincidan (con y sin texto)
-- [ ] Combina con carpeta, tipo, fuente y NSFW del RF-27
-- Verif: Vitest (consulta + debounce) + Playwright 426/1440 px + 🧍 S25
+- [x] La búsqueda devuelve **al escribir** (con *debounce* corto) las series de nombre **similar** al texto (tolerante a mayúsculas/tildes; decidir si basta «contiene» o hace falta similitud difusa: preguntar)
+- [x] Filtros por categoría (seinen, shonen, isekai, aventura…) tomados de las etiquetas de las series guardadas (no inventar lista); con filtros activos **solo** se devuelven series que coincidan (con y sin texto)
+- [x] Combina con carpeta, tipo, fuente y NSFW del RF-27
+- Verif: ✅ Vitest (consulta + debounce) + ✅ Playwright 426/1440 px (`library.cjs`) · 🧍 S25 pendiente
 
 ### F56 Estado vacío de búsqueda: el dragón sin tesoros `[FE · Baja · N2]`
 
