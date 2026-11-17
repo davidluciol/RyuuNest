@@ -162,6 +162,8 @@
   "library.sort.addedAt": "Fecha de adición",
   "library.section.folders": "Carpetas",
   "library.folder.manage": "Gestionar",
+  "library.folder.gems": "Gemas",
+  "library.folder.favorites": "Favoritos",
 
   "kind.manga": "Manga",
   "kind.manhua": "Manhua",

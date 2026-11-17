@@ -49,6 +49,7 @@ const TABLAS: Readonly<Record<string, readonly ColumnSpec[]>> = {
     ["name", "TEXT", 1, 0, null],
     ["sort", "INTEGER", 1, 0, "0"],
     ["updated_at", "INTEGER", 1, 0, null],
+    ["system", "TEXT", 0, 0, null],
   ],
   favorite: [
     ["module_id", "TEXT", 1, 1, null],
@@ -101,6 +102,7 @@ const INDICES: Readonly<Record<string, readonly string[]>> = {
   idx_series_title: ["title_norm"],
   idx_favorite_folder: ["folder_id"],
   idx_progress_recent: ["updated_at"],
+  idx_folder_system: ["system"], // F52 (migración 3)
 };
 
 interface TableInfoRow {
@@ -168,7 +170,7 @@ describe("esquema · tablas del SPEC §8.1", () => {
     expect(cobertura).toContain("url:1");
   });
 
-  it("crea exactamente los tres índices del SPEC, sobre las columnas que toca", async () => {
+  it("crea exactamente los índices del SPEC (más el de la carpeta del sistema, F52), sobre las columnas que tocan", async () => {
     const driver = await openMigratedDriver();
 
     const nombres = await driver.all<{ name: string }>(

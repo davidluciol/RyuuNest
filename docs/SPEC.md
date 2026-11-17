@@ -118,7 +118,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 - **RF-26 (M)** Biblioteca única de favoritos con búsqueda por nombre siempre visible y chips: Todo · Leyendo · Carpetas (confirmado por la captura de Biblioteca; «Completado» queda para la v2).
 - **RF-27 (M)** Filtros por tipo, fuente, carpeta y NSFW/SFW. Chips para tipo y carpeta; hoja de filtros para fuente y NSFW.
 - **RF-28 (M)** Ordenar por nombre, último leído y fecha de adición.
-- **RF-29 (M)** Crear, renombrar, reordenar y borrar carpetas. Un favorito pertenece a una carpeta o a ninguna (decisión D-12).
+- **RF-29 (M)** Crear, renombrar, reordenar y borrar carpetas. Un favorito pertenece a una carpeta o a ninguna (decisión D-12). **Carpetas por defecto (F52, P-161):** «Favoritos» es una carpeta real del sistema (no se borra ni se renombra); «Gemas» no es pertenencia, es la vista de todas las series.
 - **RF-30 (M)** Quitar un favorito no borra su progreso.
 
 ### 3.6 Progreso
@@ -233,7 +233,7 @@ ryuunest/
 | D-9 | Android 9 como mínimo (para cubrir la MiBox 4), pruebas principales en Android 12 a 15 | Mínimo Android 12 (dejaría fuera la TV) |
 | D-10 | Respaldo JSON en la v1; sincronización en la v2 | Sincronización desde la v1 |
 | D-11 | Licencia GPL-3.0 | MIT; Apache-2.0 |
-| D-12 | Un favorito pertenece a **una** carpeta o a ninguna | Varias carpetas por favorito (se reevalúa si hace falta) |
+| D-12 | Un favorito pertenece a **una** carpeta o a ninguna. «Gemas» es una vista de todo, no una carpeta (F52, P-161) | Varias carpetas por favorito (se reevalúa si hace falta) |
 | D-13 | Tipos de obra: manga, manhua, manhwa y cómic | Quitar manhua porque el diseño no lo muestra (pregunta abierta 8) |
 
 ---

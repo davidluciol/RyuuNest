@@ -8,7 +8,7 @@
  */
 import type { SqlDriver } from "./SqlDriver.js";
 import { withTransaction } from "./SqlDriver.js";
-import { MIGRATION_1, MIGRATION_2, SCHEMA_VERSION } from "./schema.js";
+import { MIGRATION_1, MIGRATION_2, MIGRATION_3, SCHEMA_VERSION } from "./schema.js";
 
 export { SCHEMA_VERSION };
 
@@ -22,6 +22,7 @@ export interface Migration {
 export const MIGRATIONS: readonly Migration[] = [
   { version: 1, statements: MIGRATION_1 },
   { version: 2, statements: MIGRATION_2 },
+  { version: 3, statements: MIGRATION_3 },
 ];
 
 /**

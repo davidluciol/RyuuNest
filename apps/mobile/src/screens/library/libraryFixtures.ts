@@ -2,6 +2,8 @@ import type { ImageSourcePropType } from "react-native";
 
 import type { MediaKind } from "@ryuunest/core";
 
+import { t } from "../../i18n";
+
 /**
  * F14a/F14b — datos de ejemplo coherentes para la pantalla Biblioteca
  * (`DESIGN_RULES.md` D1–D5): series inventadas, sin obras reales, portadas
@@ -50,6 +52,12 @@ export interface LibraryProgress {
   pageTotal: number;
 }
 
+/**
+ * Id de «Gemas» (F52): no es una carpeta en la base sino la vista de todas las series; elegirla
+ * equivale a no filtrar por carpeta.
+ */
+export const GEMS_FOLDER_ID = "gems";
+
 /** Carpeta de favoritos. */
 export interface LibraryFolder {
   /** ID de la carpeta. */
@@ -58,6 +66,8 @@ export interface LibraryFolder {
   name: string;
   /** Número de obras en la carpeta. */
   count: number;
+  /** F52: `gems` = vista de todo (sin fila); `favorites` = carpeta del sistema. Ausente = del usuario. */
+  kind?: "gems" | "favorites";
 }
 
 /** Datos completos de la pantalla Biblioteca. */
@@ -100,7 +110,8 @@ export const SAMPLE_LIBRARY_DATA: LibraryData = {
     { id: "m-ejemplo-b", name: "Módulo de ejemplo B" },
   ],
   folders: [
-    { id: "epicos", name: "Favoritos Épicos", count: 24 },
+    { id: GEMS_FOLDER_ID, name: t("library.folder.gems"), count: 48, kind: "gems" },
+    { id: "epicos", name: t("library.folder.favorites"), count: 24, kind: "favorites" },
     { id: "nocturna", name: "Lectura Nocturna", count: 14 },
     { id: "completados", name: "Completados", count: 10 },
   ],
@@ -358,7 +369,7 @@ export function filterLibrarySeries(
   // Filtro por carpeta.
   if (filters.folderId === null) {
     result = result.filter((s) => s.folderId === null);
-  } else if (filters.folderId !== undefined) {
+  } else if (filters.folderId !== undefined && filters.folderId !== GEMS_FOLDER_ID) {
     result = result.filter((s) => s.folderId === filters.folderId);
   }
 

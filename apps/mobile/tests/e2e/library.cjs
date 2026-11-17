@@ -30,6 +30,33 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.goto(`${baseURL}/library`);
       await page.getByTestId("app-shell").waitFor({ state: "visible" });
       await page.getByText("El dragón de ceniza").waitFor({ state: "visible" });
+      // F52: «Gemas» (vista de todo, elegida al inicio) y «Favoritos» como tarjetas de carpeta ≥48.
+      // react-native-web no expone `selected` como atributo: se lee el borde `accent` (#35C98A).
+      const elegida = async (card) =>
+        (await card.evaluate((el) => getComputedStyle(el).borderTopColor)) === "rgb(53, 201, 138)";
+      const gemas = page.getByRole("button", { name: /^Gemas, 48 obras$/ });
+      const favoritos = page.getByRole("button", { name: /^Favoritos, 24 obras$/ });
+      await gemas.waitFor({ state: "visible" });
+      await favoritos.waitFor({ state: "visible" });
+      assert.equal(await elegida(gemas), true, `Gemas elegida @${width}`);
+      for (const card of [gemas, favoritos]) {
+        const box = await card.boundingBox();
+        assert.ok(box && box.width >= 48 && box.height >= 48, `área táctil de carpeta @${width}`);
+      }
+      // Nombres de carpeta completos (T7): ninguno recortado con «…» mientras quepa.
+      for (const nombre of ["Lectura Nocturna", "Completados"]) {
+        const recortado = await page
+          .getByText(nombre, { exact: true })
+          .first()
+          .evaluate((el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1);
+        assert.equal(recortado, false, `«${nombre}» recortado @${width}`);
+      }
+      await favoritos.click();
+      assert.equal(await elegida(favoritos), true, `Favoritos elegida @${width}`);
+      assert.equal(await elegida(gemas), false, `Gemas ya no @${width}`);
+      await gemas.click();
+      assert.equal(await elegida(gemas), true, `Gemas vuelve @${width}`);
+      await page.screenshot({ path: process.env.F52_SHOT ? `${process.env.F52_SHOT}-${width}.png` : undefined });
       assert.equal(
         await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
         false,

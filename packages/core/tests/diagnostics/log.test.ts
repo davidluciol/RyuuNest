@@ -33,7 +33,7 @@ describe("migración · tabla log (SPEC §8.1, P-72)", () => {
   it("crea la tabla log y sube la versión del esquema", async () => {
     const version = await driver.get<{ user_version: number }>("PRAGMA user_version");
     expect(version?.user_version).toBe(SCHEMA_VERSION);
-    expect(SCHEMA_VERSION).toBe(2);
+    expect(SCHEMA_VERSION).toBeGreaterThanOrEqual(2);
     expect(MIGRATION_2.length).toBeGreaterThan(0);
 
     const tabla = await driver.get<{ name: string }>(
@@ -45,7 +45,7 @@ describe("migración · tabla log (SPEC §8.1, P-72)", () => {
   it("migrate es idempotente: llamarla de nuevo no falla ni duplica", async () => {
     await migrate(driver);
     const version = await driver.get<{ user_version: number }>("PRAGMA user_version");
-    expect(version?.user_version).toBe(2);
+    expect(version?.user_version).toBe(SCHEMA_VERSION);
   });
 });
 

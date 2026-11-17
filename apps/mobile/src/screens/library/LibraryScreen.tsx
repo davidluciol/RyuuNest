@@ -4,7 +4,6 @@ import {
   dragonNightColors,
   layoutForWidth,
   spacing,
-  touchTarget,
   typography,
 } from "@ryuunest/ui-tokens";
 
@@ -13,6 +12,7 @@ import { libraryColumnsFor } from "../../components/libraryCardStyles";
 import Chip from "../../components/Chip";
 import ChipScroller from "../../components/ChipScroller";
 import EmptyState from "../../components/EmptyState";
+import FolderCard from "../../components/FolderCard";
 import TextField from "../../components/TextField";
 import { Search } from "../../icons";
 import { t } from "../../i18n";
@@ -81,6 +81,8 @@ export default function LibraryScreen({
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
   const columns = libraryColumnsFor(width);
+  // Tarjetas de carpeta más anchas que las portadas: una columna menos (nombre completo, T7).
+  const folderColumns = Math.max(1, columns - 1);
   const [filters, setFilters] = useState<LibraryFilters>({
     ...DEFAULT_LIBRARY_FILTERS,
     ...initialFilters,
@@ -101,7 +103,8 @@ export default function LibraryScreen({
   const readingCount = data.series.filter(
     (s) => s.progress !== null && (!s.nsfw || filters.nsfwVisible),
   ).length;
-  const foldersCount = data.folders.length;
+  // «Gemas» es una vista, no una carpeta: no cuenta en «Carpetas (n)».
+  const foldersCount = data.folders.filter((f) => f.kind !== "gems").length;
 
   const renderCard = (item: LibrarySeries) => (
     <LibraryCard
@@ -197,22 +200,34 @@ export default function LibraryScreen({
               {t("library.folder.manage")}
             </Text>
           </View>
-          <ChipScroller contentContainerStyle={styles.foldersRow}>
-            {data.folders.map((folder) => (
-              <View key={folder.id} style={styles.folderChip}>
-                <Chip
-                  label={`${folder.name} (${folder.count})`}
-                  selected={filters.folderId === folder.id}
-                  onPress={() => {
-                    updateFilters({
-                      folderId: filters.folderId === folder.id ? undefined : folder.id,
-                    });
-                    onFolderPress?.(folder.id);
-                  }}
-                />
+          <View testID="library-folders" style={{ gap: layout.gap }}>
+            {libraryGridRows(data.folders, folderColumns).map((row) => (
+              <View key={row[0]?.id} style={[styles.gridRow, { gap: layout.gap }]}>
+                {row.map((folder) => (
+                  <View key={folder.id} style={[styles.gridItem, { flex: 1 / folderColumns }]}>
+                    <FolderCard
+                      name={folder.name}
+                      count={folder.count}
+                      selected={
+                        folder.kind === "gems"
+                          ? filters.folderId === undefined || filters.folderId === folder.id
+                          : filters.folderId === folder.id
+                      }
+                      onPress={() => {
+                        updateFilters({
+                          folderId:
+                            folder.kind === "gems" || filters.folderId === folder.id
+                              ? undefined
+                              : folder.id,
+                        });
+                        onFolderPress?.(folder.id);
+                      }}
+                    />
+                  </View>
+                ))}
               </View>
             ))}
-          </ChipScroller>
+          </View>
         </View>
       ) : null}
 
@@ -322,13 +337,6 @@ const styles = StyleSheet.create({
   foldersManage: {
     ...textStyle(typography.labelMd),
     color: colors.accent,
-  },
-  foldersRow: {
-    gap: spacing.xs,
-  },
-  folderChip: {
-    minHeight: touchTarget.min, // área táctil (RNF-7)
-    justifyContent: "center",
   },
   grid: {
     flex: 1,

@@ -31,6 +31,11 @@ beforeEach(async () => {
   favoritos = new Favorites({ driver, clock });
 });
 
+/** Carpetas del usuario: sin «Favoritos», que siembra el sistema (F52). */
+async function delUsuario() {
+  return (await carpetas.list()).filter((c) => c.system === null);
+}
+
 async function contar(tabla: "series" | "favorite"): Promise<number> {
   const filas = await driver.all<{ n: number }>(`SELECT COUNT(*) AS n FROM ${tabla}`);
   return filas[0]?.n ?? 0;
@@ -148,9 +153,9 @@ describe("Folders · crear, renombrar, reordenar y borrar (RF-29)", () => {
     const primera = await carpetas.create("Tesoros");
     const segunda = await carpetas.create("Pendientes");
 
-    await expect(carpetas.list()).resolves.toEqual([
-      { id: primera, name: "Tesoros", sort: 0, updatedAt: 1_000 },
-      { id: segunda, name: "Pendientes", sort: 0, updatedAt: 1_000 },
+    await expect(delUsuario()).resolves.toEqual([
+      { id: primera, name: "Tesoros", sort: 0, updatedAt: 1_000, system: null },
+      { id: segunda, name: "Pendientes", sort: 0, updatedAt: 1_000, system: null },
     ]);
   });
 
@@ -162,8 +167,8 @@ describe("Folders · crear, renombrar, reordenar y borrar (RF-29)", () => {
 
     await carpetas.rename(id, "Nuevo");
 
-    await expect(carpetas.list()).resolves.toEqual([
-      { id, name: "Nuevo", sort: 0, updatedAt: 3_000 },
+    await expect(delUsuario()).resolves.toEqual([
+      { id, name: "Nuevo", sort: 0, updatedAt: 3_000, system: null },
     ]);
     await expect(favoritos.get(MODULO, "s")).resolves.toMatchObject({ folderId: id });
   });
@@ -179,7 +184,7 @@ describe("Folders · crear, renombrar, reordenar y borrar (RF-29)", () => {
       { id: b, sort: 2 },
     ]);
 
-    await expect(carpetas.list()).resolves.toEqual([
+    await expect(delUsuario()).resolves.toEqual([
       expect.objectContaining({ id: c }),
       expect.objectContaining({ id: a }),
       expect.objectContaining({ id: b }),
@@ -195,7 +200,7 @@ describe("Folders · crear, renombrar, reordenar y borrar (RF-29)", () => {
 
     await carpetas.remove(id);
 
-    await expect(carpetas.list()).resolves.toEqual([]);
+    await expect(delUsuario()).resolves.toEqual([]);
     await expect(favoritos.get(MODULO, "s1")).resolves.toMatchObject({ folderId: null });
     await expect(favoritos.get(MODULO, "s2")).resolves.toMatchObject({ folderId: null });
   });

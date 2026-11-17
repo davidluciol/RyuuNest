@@ -145,7 +145,7 @@ Dep: F78, F80 · M · `apps/mobile/src/app/` (ruta nueva), `apps/mobile/src/scre
 
 
 > Esta sección reúne todo lo de **Tesoros**: primero lo que ya estaba pendiente (F47 y F49, movidas aquí sin cambios) y luego las tareas nuevas **F52–F56**. Solo están **escritas, no implementadas**. Orden propuesto: F52 → F54 → F53 → F55 → F56 (F47/F49 siguen su orden anterior).
-> **Preguntas abiertas (responder antes de F52):** (1) SPEC RF-29/D-12 dice «un favorito pertenece a una carpeta o a ninguna»; aquí **Gemas** contiene todas las series y «Favoritos» es carpeta: ¿una serie puede estar a la vez en Gemas, Favoritos y otra carpeta (pertenencia múltiple), o «mover» la saca de las demás? Recomendado: Gemas es una **vista** (muestra todo, no es pertenencia) y el resto es una sola carpeta + el favorito; hay que **actualizar RF-29/D-12 en el SPEC** (decisión del humano). (2) Las etiquetas de una carpeta: ¿se guardan al crearla y se aplican siempre (carpeta inteligente) o solo añaden series una vez? Recomendado: siempre, con las etiquetas de la serie (`SeriesStore`), sin inventar etiquetas.
+> **Resueltas (P-161, 2026-11-16):** (1) «Gemas» es una **vista** (sin fila) y «Favoritos» una carpeta real del sistema; SPEC RF-29/D-12 actualizados. (2) Las etiquetas de una carpeta son **carpeta inteligente** (se guardan y se aplican siempre). Orden de esta sesión: F52 → **F53 → F54** (F54 depende de F53) → F55 → F56.
 
 ### F47 Portadas con cabeceras en Guarida y Tesoros `[BE/FE · Intermedia · N4]`
 
@@ -185,11 +185,11 @@ Dep: F46 · M–L · `apps/mobile/src/data/appDatabase.ts` (hoy devuelve `null` 
 
 Dep: preguntas abiertas (1) · M · `packages/core/src/library/{Folders,Favorites,queries}.ts`, `apps/mobile/src/screens/library/*`
 
-- [ ] Rojo (núcleo): al abrir la base por primera vez se crean **Favoritos** y **Gemas** (migración/semilla **idempotente**: no se duplican al reiniciar ni al importar un respaldo); no se pueden borrar ni renombrar
-- [ ] **Gemas** muestra todas las series sin distinción; **Favoritos** muestra las marcadas como favorito (reutilizar `Favorites`)
-- [ ] Textos en el catálogo i18n («Favoritos», «Gemas»), tarjetas con `FolderCard`, estados en la galería
-- [ ] Comprobar el respaldo: las carpetas por defecto no se duplican al restaurar
-- Verif: Vitest con SQLite real + Playwright 426/1440 px + 🧍 S25: primer arranque muestra las dos carpetas
+- [x] Rojo (núcleo): al abrir la base por primera vez se crean **Favoritos** y **Gemas** (migración/semilla **idempotente**: no se duplican al reiniciar ni al importar un respaldo); no se pueden borrar ni renombrar
+- [x] **Gemas** muestra todas las series sin distinción; **Favoritos** muestra las marcadas como favorito (reutilizar `Favorites`)
+- [x] Textos en el catálogo i18n («Favoritos», «Gemas»), tarjetas con `FolderCard`, estados en la galería
+- [x] Comprobar el respaldo: las carpetas por defecto no se duplican al restaurar
+- Verif: ✅ Vitest con SQLite real + ✅ Playwright 426/1440 px (`library.cjs`) · 🧍 S25 pendiente (se hace al final de la serie de PRs): primer arranque muestra las dos carpetas
 
 ### F53 Botón flotante «+» y modal «Nueva carpeta» `[FE · Intermedia · N3]`
 

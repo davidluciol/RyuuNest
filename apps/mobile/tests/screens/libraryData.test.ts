@@ -7,7 +7,7 @@ import {
   type NodeSqliteDriver,
 } from "../../../../packages/core/tests/support/nodeSqliteDriver";
 import { loadLibraryData, resolveLibraryData } from "../../src/screens/library/libraryData";
-import type { LibraryData } from "../../src/screens/library/libraryFixtures";
+import { GEMS_FOLDER_ID, type LibraryData } from "../../src/screens/library/libraryFixtures";
 
 /**
  * F14c — la pantalla Biblioteca lee del núcleo (`browseLibrary`, T23; `Folders`, T22)
@@ -99,14 +99,14 @@ describe("resolveLibraryData (F14c)", () => {
   it("una base vacía muestra la biblioteca vacía real, sin sembrar nada", async () => {
     const data = await resolveLibraryData(async () => driver, fallback);
 
-    expect(data).toEqual({ series: [], folders: [], sources: [] });
+    expect(data).toMatchObject({ series: [], sources: [] });
     expect(await driver.get("SELECT COUNT(*) AS n FROM favorite")).toEqual({ n: 0 });
   });
 });
 
 describe("loadLibraryData (F14c)", () => {
   it("una base vacía da una biblioteca vacía", async () => {
-    expect(await loadLibraryData(driver)).toEqual({ series: [], folders: [], sources: [] });
+    expect(await loadLibraryData(driver)).toMatchObject({ series: [], sources: [] });
   });
 
   it("adapta una serie con progreso, tipo, estado y carpeta", async () => {
@@ -194,22 +194,30 @@ describe("loadLibraryData (F14c)", () => {
     ]);
   });
 
-  it("carpetas en su orden manual, con el número de series de cada una", async () => {
-    await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (1, 'Segunda', 2, 1)");
-    await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (2, 'Primera', 1, 1)");
-    await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (3, 'Vacía', 3, 1)");
-    await addSeries(driver, { id: "a", title: "A", folderId: 2, addedAt: 1 });
-    await addSeries(driver, { id: "b", title: "B", folderId: 2, addedAt: 2 });
-    await addSeries(driver, { id: "c", title: "C", folderId: 1, addedAt: 3 });
+  it("carpetas: Gemas (vista de todo) primero, Favoritos (del sistema) y las del usuario en su orden manual", async () => {
+    await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (11, 'Segunda', 2, 1)");
+    await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (12, 'Primera', 1, 1)");
+    await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (13, 'Vacía', 3, 1)");
+    await addSeries(driver, { id: "a", title: "A", folderId: 12, addedAt: 1 });
+    await addSeries(driver, { id: "b", title: "B", folderId: 12, addedAt: 2 });
+    await addSeries(driver, { id: "c", title: "C", folderId: 11, addedAt: 3 });
     await addSeries(driver, { id: "d", title: "D", addedAt: 4 });
 
     const { folders } = await loadLibraryData(driver);
 
     expect(folders).toEqual([
-      { id: "2", name: "Primera", count: 2 },
-      { id: "1", name: "Segunda", count: 1 },
-      { id: "3", name: "Vacía", count: 0 },
+      { id: GEMS_FOLDER_ID, name: "Gemas", count: 4, kind: "gems" },
+      { id: "1", name: "Favoritos", count: 0, kind: "favorites" },
+      { id: "12", name: "Primera", count: 2 },
+      { id: "11", name: "Segunda", count: 1 },
+      { id: "13", name: "Vacía", count: 0 },
     ]);
+  });
+
+  it("en un primer arranque ya hay dos carpetas: Gemas y Favoritos (F52)", async () => {
+    const { folders } = await loadLibraryData(driver);
+
+    expect(folders.map((f) => f.name)).toEqual(["Gemas", "Favoritos"]);
   });
 
   it("las fuentes son los módulos distintos de las series, por nombre de módulo", async () => {

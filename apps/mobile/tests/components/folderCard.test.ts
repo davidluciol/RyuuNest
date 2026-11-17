@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { dragonNightColors } from "@ryuunest/ui-tokens";
 
 import {
   FOLDER_CARD_ICON_SIZE,
@@ -22,6 +23,15 @@ describe("folderCardStyle (tarjeta de carpeta)", () => {
     expect(style.borderColor).toBe("#263147");
     expect(style.elevation).toBe(0);
     expect(style.shadowOpacity).toBe(0);
+  });
+
+  it("seleccionada (F52): fondo y borde de chip seleccionado, el resto igual", () => {
+    const normal = folderCardStyle();
+    const elegida = folderCardStyle(true);
+    expect(elegida.borderColor).toBe(dragonNightColors.accent);
+    expect(elegida.backgroundColor).not.toBe(normal.backgroundColor);
+    expect(elegida.padding).toBe(normal.padding);
+    expect(elegida.borderWidth).toBe(normal.borderWidth);
   });
 
   it("relleno interno de 16 px (múltiplo de 4)", () => {

@@ -1,6 +1,13 @@
 import { Folders, browseLibrary, type LibraryEntry, type SqlDriver } from "@ryuunest/core";
 
-import type { LibraryData, LibraryFolder, LibrarySeries, LibrarySource } from "./libraryFixtures";
+import { t } from "../../i18n";
+import {
+  GEMS_FOLDER_ID,
+  type LibraryData,
+  type LibraryFolder,
+  type LibrarySeries,
+  type LibrarySource,
+} from "./libraryFixtures";
 
 /**
  * F14c — conexión de la pantalla Biblioteca con el núcleo: lee los favoritos con
@@ -59,11 +66,18 @@ async function loadFolders(
   series: readonly LibrarySeries[],
 ): Promise<LibraryFolder[]> {
   const folders = new Folders({ driver, clock: { now: () => Date.now() } });
-  return (await folders.list()).map((folder) => ({
-    id: String(folder.id),
-    name: folder.name,
-    count: series.filter((s) => s.folderId === String(folder.id)).length,
-  }));
+  const real = (await folders.list()).map((folder): LibraryFolder => {
+    const id = String(folder.id);
+    const count = series.filter((s) => s.folderId === id).length;
+    return folder.system === "favorites"
+      ? { id, name: t("library.folder.favorites"), count, kind: "favorites" }
+      : { id, name: folder.name, count };
+  });
+  // «Gemas» (F52) no tiene fila: es la vista de todas las series y va siempre primera.
+  return [
+    { id: GEMS_FOLDER_ID, name: t("library.folder.gems"), count: series.length, kind: "gems" },
+    ...real,
+  ];
 }
 
 /** El nombre visible del módulo vive en su registro; hasta conectarlo, se muestra su id. */

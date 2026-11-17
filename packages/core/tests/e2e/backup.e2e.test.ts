@@ -252,7 +252,7 @@ describe("respaldo E2E (AC-7, AC-8, RF-38)", () => {
     const resultado = await importar(destino, respaldo, "replace");
 
     expect(resultado.summary.mode).toBe("replace");
-    expect(resultado.summary.counts.folders.added).toBe(2);
+    expect(resultado.summary.counts.folders.added).toBe(3); // Favoritos (F52) + Tesoros + Pendientes
     expect(resultado.summary.counts.series.added).toBe(4);
     expect(resultado.summary.counts.progress.added).toBe(2);
     expect(resultado.summary.counts.read.added).toBe(3);
@@ -261,10 +261,14 @@ describe("respaldo E2E (AC-7, AC-8, RF-38)", () => {
     expect(bibliotecaDe(restaurado)).toEqual(bibliotecaDe(respaldo));
 
     // Comprobaciones concretas para que el igualado anterior no pase por vacío.
-    expect(restaurado.folders.map((folder) => folder.name)).toEqual(["Tesoros", "Pendientes"]);
+    expect(restaurado.folders.map((folder) => folder.name)).toEqual([
+      "Favoritos",
+      "Tesoros",
+      "Pendientes",
+    ]);
     expect(restaurado.favorites).toHaveLength(3);
     expect(restaurado.favorites.find((row) => row.seriesId === "s-1")?.folderId).toBe(
-      restaurado.folders[0]?.id,
+      restaurado.folders[1]?.id,
     );
     expect(restaurado.progress.find((row) => row.seriesId === "s-1")).toMatchObject({
       chapterId: "cap-12",
