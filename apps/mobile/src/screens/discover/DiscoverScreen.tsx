@@ -71,6 +71,9 @@ export interface DiscoverScreenProps {
   onSearch?: (query: string) => void;
   onNextPage?: () => void;
   onPrevPage?: () => void;
+  /** F59: «Ver más» de una sección de `home()` y vuelta a la portada. */
+  onOpenSection?: (id: string, title: string) => void;
+  onCloseSection?: () => void;
   onRetry?: () => void;
   onSeriesPress?: (entry: DiscoverEntry) => void;
   /** Acción del vacío: ir a añadir un repositorio. */
@@ -86,6 +89,8 @@ export default function DiscoverScreen({
   onSearch,
   onNextPage,
   onPrevPage,
+  onOpenSection,
+  onCloseSection,
   onRetry,
   onSeriesPress,
   onEmptyAction,
@@ -169,6 +174,8 @@ export default function DiscoverScreen({
       onSearch={onSearch}
       onNextPage={onNextPage}
       onPrevPage={onPrevPage}
+      onOpenSection={onOpenSection}
+      onCloseSection={onCloseSection}
       onSeriesPress={onSeriesPress}
     />
   );
@@ -183,6 +190,8 @@ interface DiscoverReadyProps {
   onSearch?: (query: string) => void;
   onNextPage?: () => void;
   onPrevPage?: () => void;
+  onOpenSection?: (id: string, title: string) => void;
+  onCloseSection?: () => void;
   onSeriesPress?: (entry: DiscoverEntry) => void;
 }
 
@@ -195,6 +204,8 @@ function DiscoverReady({
   onSearch,
   onNextPage,
   onPrevPage,
+  onOpenSection,
+  onCloseSection,
   onSeriesPress,
 }: DiscoverReadyProps) {
   // Borrador del campo: se entrega con Entrar (RF-10); al cambiar de módulo o
@@ -212,8 +223,15 @@ function DiscoverReady({
   };
   const selectedModule = ready.modules.find((module) => module.id === selected?.id);
   const rows = showDiscoverRows(ready.query);
-  const showLatest = rows && (selectedModule?.hasLatest ?? false) && latest.length > 0;
-  const showPopular = rows && (selectedModule?.hasPopular ?? false) && popular.length > 0;
+  // F59: con `home()` las secciones del módulo sustituyen a latest/popular.
+  const sections = rows
+    ? ready.sections
+        .map((section) => ({ ...section, entries: visibleDiscoverEntries(section.entries, nsfwVisible) }))
+        .filter((section) => section.entries.length > 0)
+    : [];
+  const hasHome = sections.length > 0;
+  const showLatest = rows && !hasHome && (selectedModule?.hasLatest ?? false) && latest.length > 0;
+  const showPopular = rows && !hasHome && (selectedModule?.hasPopular ?? false) && popular.length > 0;
 
   if (!selected || modules.length === 0) {
     return (
@@ -262,6 +280,28 @@ function DiscoverReady({
           onPress={() => onSearch?.(draft.trim())}
         />
 
+        {sections.map((section) => (
+          <View key={section.id} style={styles.section}>
+            <SectionHeader
+              title={section.title}
+              {...(section.hasMore
+                ? { actionLabel: t("discover.section.seeMore"), onAction: () => onOpenSection?.(section.id, section.title) }
+                : {})}
+            />
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.rowScroller}
+            >
+              {section.entries.map((entry) => (
+                <View key={entry.seriesId} style={{ width: ROW_CARD_WIDTH }}>
+                  <DiscoverCard entry={entry} onPress={onSeriesPress} />
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        ))}
+
         {showLatest ? (
           <View style={styles.section}>
             <SectionHeader title={t("discover.section.latest")} />
@@ -298,7 +338,12 @@ function DiscoverReady({
 
         {/* Catálogo paginado (RF-10): con consulta o exploración libre. */}
         <View style={styles.section}>
-          <SectionHeader title={t("discover.section.catalog")} />
+          <SectionHeader
+            title={ready.section?.title ?? t("discover.section.catalog")}
+            {...(ready.section === undefined
+              ? {}
+              : { actionLabel: t("actions.back"), onAction: onCloseSection })}
+          />
           {catalog.entries.length === 0 ? (
             <EmptyState
               title={t("state.empty.search.title")}

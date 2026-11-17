@@ -30,6 +30,7 @@ import {
   type DiscoverError,
   type DiscoverModule,
   type DiscoverPage,
+  type DiscoverSection,
 } from "./discoverFixtures";
 
 /**
@@ -69,6 +70,8 @@ export interface DiscoverDataSource {
 export interface DiscoverLoadResult {
   latest: DiscoverEntry[];
   popular: DiscoverEntry[];
+  /** Secciones de `home()` (F59); vacío si el módulo no la declara: entonces valen latest/popular. */
+  sections: DiscoverSection[];
   catalog: DiscoverPage;
 }
 
@@ -78,6 +81,8 @@ export interface DiscoverLoadOptions {
   query: string;
   /** Página del catálogo, base 1 (RF-10). */
   page: number;
+  /** F59: sección de `home()` abierta con «Ver más»; el catálogo sale de `list(sectionId, page)`. */
+  sectionId?: string | undefined;
 }
 
 // — Compartido: mapeo de `SeriesSummary` y carga sobre una API montada —
@@ -101,23 +106,36 @@ function toEntry(moduleId: string, series: SeriesSummary): DiscoverEntry {
   };
 }
 
-async function loadFromApi(
+export async function loadFromApi(
   handle: ModuleApiHandle,
-  flags: { hasLatest: boolean; hasPopular: boolean },
+  flags: { hasLatest: boolean; hasPopular: boolean; hasHome: boolean },
   moduleId: string,
   query: string,
   page: number,
+  sectionId?: string,
 ): Promise<DiscoverLoadResult> {
   const { api } = handle;
-  const [latest, popular, catalogPage] = await Promise.all([
-    flags.hasLatest && api.latest ? api.latest(1).then((p) => p.items) : Promise.resolve([]),
-    flags.hasPopular && api.popular ? api.popular(1).then((p) => p.items) : Promise.resolve([]),
-    api.search(query, page),
+  const inSection = sectionId !== undefined && api.list !== undefined;
+  // F59: con `home()` sus secciones sustituyen a latest/popular; dentro de una
+  // sección (`list`) o con consulta solo se ve el catálogo, sin filas.
+  const useHome = flags.hasHome && api.home !== undefined && !inSection && query.trim() === "";
+  const rows = !inSection;
+  const [latest, popular, home, catalogPage] = await Promise.all([
+    rows && !useHome && flags.hasLatest && api.latest ? api.latest(1).then((p) => p.items) : Promise.resolve([]),
+    rows && !useHome && flags.hasPopular && api.popular ? api.popular(1).then((p) => p.items) : Promise.resolve([]),
+    useHome && api.home ? api.home().then((h) => h.sections) : Promise.resolve([]),
+    inSection && api.list ? api.list(sectionId, page) : api.search(query, page),
   ]);
 
   return {
     latest: latest.map((series) => toEntry(moduleId, series)),
     popular: popular.map((series) => toEntry(moduleId, series)),
+    sections: home.map((section) => ({
+      id: section.id,
+      title: section.title,
+      hasMore: section.hasNext,
+      entries: section.items.map((series) => toEntry(moduleId, series)),
+    })),
     catalog: {
       page,
       entries: catalogPage.items.map((series) => toEntry(moduleId, series)),
@@ -220,13 +238,13 @@ export function createSampleMounter(): ModuleMounter {
  * del catálogo. Los fallos del módulo salen como `ModuleError` (SPEC §6.4).
  */
 export async function loadDiscoverData(options: DiscoverLoadOptions): Promise<DiscoverLoadResult> {
-  const { moduleId, query, page } = options;
+  const { moduleId, query, page, sectionId } = options;
   const source = SAMPLE_DISCOVER_MODULES.find((module) => module.id === moduleId);
   if (source === undefined) {
     throw new ModuleError("NOT_FOUND", `El módulo de ejemplo ${moduleId} no existe`);
   }
   const handle = await mountSample(moduleId);
-  return loadFromApi(handle, source, moduleId, query, page);
+  return loadFromApi(handle, { ...source, hasHome: false }, moduleId, query, page, sectionId);
 }
 
 /** El último módulo elegido sobrevive a cambiar de pestaña en la sesión. */
@@ -287,17 +305,19 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
           hasLatest: pkg.manifest.capabilities.includes("latest"),
         }));
     },
-    async load({ moduleId, query, page }) {
+    async load({ moduleId, query, page, sectionId }) {
       const { handle, manifest } = await mounter.mount(moduleId);
       return loadFromApi(
         handle,
         {
           hasLatest: manifest.capabilities.includes("latest"),
           hasPopular: manifest.capabilities.includes("popular"),
+          hasHome: manifest.capabilities.includes("home"),
         },
         moduleId,
         query,
         page,
+        sectionId,
       );
     },
     async recallLastModule() {
