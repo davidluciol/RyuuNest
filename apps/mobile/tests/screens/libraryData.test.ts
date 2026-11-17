@@ -271,6 +271,23 @@ describe("loadLibraryData (F14c)", () => {
     ]);
   });
 
+  it("cada serie lleva su portada con las cabeceras guardadas, o sin portada (F47)", async () => {
+    await addSeries(driver, { id: "a", title: "A", addedAt: 1 });
+    await addSeries(driver, { id: "b", title: "B", addedAt: 2 });
+    await driver.run("UPDATE series SET cover_url = ?, cover_headers = ? WHERE series_id = 'a'", [
+      "https://x.test/a.jpg",
+      JSON.stringify({ Cookie: "s=1" }),
+    ]);
+
+    const { series } = await loadLibraryData(driver);
+
+    expect(series.find((s) => s.seriesId === "a")?.cover).toEqual({
+      uri: "https://x.test/a.jpg",
+      headers: { Cookie: "s=1" },
+    });
+    expect(series.find((s) => s.seriesId === "b")?.cover).toBeUndefined();
+  });
+
   it("recorre todas las páginas del cursor, sin repetir ni saltar series", async () => {
     for (let i = 1; i <= 7; i += 1) {
       await addSeries(driver, { id: `s${i}`, title: `Serie ${i}`, addedAt: i });

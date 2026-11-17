@@ -153,12 +153,12 @@ Dep: F46 · M · `packages/core/src/{library/SeriesStore,library/queries,storage
 
 > Origen (P-148, decisión del humano: opción a): Tesoros y Guarida no pasan `cover` a las tarjetas y `series.cover_url` no guarda las cabeceras, así que M440/YupManga saldrían en blanco aunque se pasara.
 
-- [ ] Rojo (núcleo): `saveFromDetails` guarda `cover.headers` y `browseLibrary` las devuelve junto a `coverUrl`
-- [ ] Migración **aditiva** (columna nueva, p. ej. `cover_headers` en JSON); las filas viejas siguen válidas sin cabeceras
-- [ ] Respaldo: comprobar si `series` viaja en el respaldo (SPEC); si viaja, decidir si las cabeceras van con él (preguntar antes)
-- [ ] `LibraryCard` en Tesoros y las tarjetas de Guarida (`ContinueCard`, `RecentCard`) reciben `{ uri, headers }`; al pasar a `expo-image` salen de `PENDING` en `remoteImageUsage.test.ts`
-- [ ] Las cabeceras se refrescan al abrir la ficha (cookies que caducan, YupManga)
-- Verif: `pnpm -r test` + 🧍 S25 Ultra: portadas de ZonaTMO, M440 y YupManga en Guarida y Tesoros
+- [x] Rojo (núcleo): `saveFromDetails` guarda `cover.headers` y `browseLibrary` (y `listLastRead`, para Guarida) las devuelven junto a `coverUrl`
+- [x] Migración 5 **aditiva** (`series.cover_headers`, JSON); las filas viejas siguen válidas sin cabeceras
+- [x] Respaldo: la serie viaja en el respaldo y **las cabeceras van con él** (decisión del humano 2026-11-17): formato v3 (`series[].coverHeaders`), v1/v2 siguen leyéndose; SPEC §8.3 avisa de que pueden llevar cookies
+- [x] `LibraryCard` en Tesoros y `ContinueCard`/`RecentCard` de Guarida reciben `{ uri, headers }` (`coverSource`); ya usan `expo-image` y salen de `PENDING` en `remoteImageUsage.test.ts`
+- [x] Las cabeceras se refrescan al abrir la ficha: `loadSeries` ya llama a `saveFromDetails`, que reescribe `cover_headers` (probado en el núcleo)
+- Verif: ✅ `pnpm -r test` · 🧍 S25 Ultra pendiente: portadas de ZonaTMO, M440 y YupManga en Guarida y Tesoros
 
 ### F49 Base de datos local en la web de Expo (`apps/mobile` en el navegador) `[FE/Arq · Alta · N4]`
 

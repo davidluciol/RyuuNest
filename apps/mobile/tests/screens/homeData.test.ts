@@ -144,6 +144,24 @@ describe("loadHomeData (F46)", () => {
     expect(data.recent.map((r) => r.seriesId)).toEqual(["new", "old"]);
   });
 
+  it("«Continuar» y recientes llevan la portada con sus cabeceras (F47)", async () => {
+    await addSeries(driver, {
+      id: "a",
+      title: "A",
+      progress: { chapterId: "c1", title: "Capítulo 1", page: 0, total: 10, at: 100 },
+    });
+    await driver.run("UPDATE series SET cover_url = ?, cover_headers = ? WHERE series_id = 'a'", [
+      "https://x.test/a.jpg",
+      JSON.stringify({ Cookie: "s=1" }),
+    ]);
+
+    const data = await loadHomeData(driver);
+
+    const esperada = { uri: "https://x.test/a.jpg", headers: { Cookie: "s=1" } };
+    expect(data.continueReading?.cover).toEqual(esperada);
+    expect(data.recent[0]?.cover).toEqual(esperada);
+  });
+
   it("las series sin progreso no salen en «Continuar» ni en recientes", async () => {
     await addSeries(driver, { id: "sin", title: "Sin leer" });
 

@@ -24,6 +24,8 @@ export interface SeriesRecord {
   title: string;
   titleNorm: string;
   coverUrl: string | null;
+  /** Cabeceras que exige la portada (M440, YupManga); `null` si no pide ninguna (F47). */
+  coverHeaders: Record<string, string> | null;
   kind: MediaKind | null;
   nsfw: boolean;
   status: SeriesStatus | null;
@@ -36,6 +38,7 @@ export interface SeriesInput {
   seriesId: string;
   title: string;
   coverUrl?: string | undefined;
+  coverHeaders?: Record<string, string> | undefined;
   kind?: MediaKind | undefined;
   nsfw?: boolean;
   status?: SeriesStatus | undefined;
@@ -47,10 +50,33 @@ interface SeriesRow {
   title: string;
   title_norm: string;
   cover_url: string | null;
+  cover_headers: string | null;
   kind: string | null;
   nsfw: number;
   status: string | null;
   updated_at: number;
+}
+
+/** Lee las cabeceras guardadas (JSON); un valor ilegible o vacío es «sin cabeceras». */
+export function parseCoverHeaders(raw: string | null): Record<string, string> | null {
+  if (raw === null) return null;
+  try {
+    const value: unknown = JSON.parse(raw);
+    return value !== null && typeof value === "object" && Object.keys(value).length > 0
+      ? (value as Record<string, string>)
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Texto que se guarda en `cover_headers`: `null` si no hay cabeceras. */
+export function serializeCoverHeaders(
+  headers: Record<string, string> | null | undefined,
+): string | null {
+  return headers === undefined || headers === null || Object.keys(headers).length === 0
+    ? null
+    : JSON.stringify(headers);
 }
 
 export { normalizeTitle } from "./normalize.js";
@@ -62,6 +88,7 @@ function toRecord(fila: SeriesRow): SeriesRecord {
     title: fila.title,
     titleNorm: fila.title_norm,
     coverUrl: fila.cover_url,
+    coverHeaders: parseCoverHeaders(fila.cover_headers),
     kind: fila.kind as MediaKind | null,
     nsfw: fromSqlBoolean(fila.nsfw),
     status: fila.status as SeriesStatus | null,
@@ -87,6 +114,7 @@ export class SeriesStore {
       entrada.title,
       normalizeTitle(entrada.title),
       entrada.coverUrl ?? null,
+      serializeCoverHeaders(entrada.coverHeaders),
       entrada.kind ?? null,
       toSqlBoolean(entrada.nsfw ?? false),
       entrada.status ?? null,
@@ -94,11 +122,11 @@ export class SeriesStore {
     ];
 
     await this.#driver.run(
-      `INSERT INTO series (module_id, series_id, title, title_norm, cover_url, kind, nsfw, status, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO series (module_id, series_id, title, title_norm, cover_url, cover_headers, kind, nsfw, status, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT (module_id, series_id) DO UPDATE SET
          title = excluded.title, title_norm = excluded.title_norm,
-         cover_url = excluded.cover_url, kind = excluded.kind,
+         cover_url = excluded.cover_url, cover_headers = excluded.cover_headers, kind = excluded.kind,
          nsfw = excluded.nsfw, status = excluded.status,
          updated_at = excluded.updated_at`,
       params,
@@ -116,6 +144,7 @@ export class SeriesStore {
       seriesId: detalles.id,
       title: detalles.title,
       coverUrl: detalles.cover?.url,
+      coverHeaders: detalles.cover?.headers,
       kind: detalles.kind,
       nsfw: detalles.nsfw ?? false,
       status: detalles.status,

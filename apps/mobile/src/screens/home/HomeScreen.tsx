@@ -86,6 +86,9 @@ export default function HomeScreen({
           <ContinueCard
             kind={data.continueReading.kind ?? undefined}
             title={data.continueReading.title}
+            {...(data.continueReading.cover === undefined
+              ? {}
+              : { cover: data.continueReading.cover })}
             meta={data.continueReading.meta}
             chapter={data.continueReading.chapterLabel}
             pageIndex={data.continueReading.pageIndex}
@@ -118,6 +121,7 @@ export default function HomeScreen({
                 key={item.seriesId}
                 kind={item.kind ?? undefined}
                 title={item.title}
+                {...(item.cover === undefined ? {} : { cover: item.cover })}
                 chapter={item.chapterLabel}
                 progress={item.pageTotal > 0 ? item.pageIndex / item.pageTotal : 0}
                 onPress={() => onRecentPress?.(item)}

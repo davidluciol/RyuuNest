@@ -43,6 +43,7 @@ const TABLAS: Readonly<Record<string, readonly ColumnSpec[]>> = {
     ["nsfw", "INTEGER", 1, 0, "0"],
     ["status", "TEXT", 0, 0, null],
     ["updated_at", "INTEGER", 1, 0, null],
+    ["cover_headers", "TEXT", 0, 0, null],
   ],
   folder: [
     ["id", "INTEGER", 0, 1, null],

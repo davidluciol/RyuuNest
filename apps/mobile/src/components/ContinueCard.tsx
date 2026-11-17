@@ -1,4 +1,6 @@
-import { Image, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
+// expo-image: el Image de react-native no envía `source.headers` en Android (F35).
+import { Image } from "expo-image";
+import { StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 import { Play } from "../icons";
 import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
@@ -75,12 +77,8 @@ export default function ContinueCard({
       </View>
       <View style={[styles.content, { gap: shape.gap }]}>
         <View style={styles.textBlock}>
-          <Text style={[styles.meta, { color: colors.meta }]}>
-            {meta}
-          </Text>
-          <Text style={[styles.title, { color: colors.title }]}>
-            {title}
-          </Text>
+          <Text style={[styles.meta, { color: colors.meta }]}>{meta}</Text>
+          <Text style={[styles.title, { color: colors.title }]}>{title}</Text>
           <View style={styles.chapterRow}>
             <Text style={[styles.chapter, { color: colors.progress }]}>{chapter}</Text>
             <Text style={[styles.page, { color: colors.meta }]}>{pageLabel}</Text>

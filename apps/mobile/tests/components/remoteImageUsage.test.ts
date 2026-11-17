@@ -10,11 +10,7 @@ import { describe, expect, it } from "vitest";
  * `PENDING` aún no recibe portadas remotas: la lista solo puede menguar.
  */
 const LOCAL_ONLY = ["ImageCapPanel.tsx", "components/Header.tsx"];
-const PENDING = [
-  "components/ContinueCard.tsx",
-  "components/CoverCard.tsx",
-  "components/RecentCard.tsx",
-];
+const PENDING = ["components/CoverCard.tsx"];
 
 const RN_IMAGE = /import\s*\{[^}]*\bImage\b[^}]*\}\s*from\s*"react-native"/;
 

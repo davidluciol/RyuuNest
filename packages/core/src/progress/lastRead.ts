@@ -5,6 +5,7 @@
  * registro y el respaldo ya lo incluye.
  */
 import type { MediaKind, SeriesStatus } from "../contract/types.js";
+import { parseCoverHeaders } from "../library/SeriesStore.js";
 import { fromSqlBoolean, type SqlDriver } from "../storage/SqlDriver.js";
 
 export interface LastReadEntry {
@@ -13,6 +14,8 @@ export interface LastReadEntry {
   /** Título de la serie; si aún no hay fila en `series`, su id (no se inventa otro). */
   title: string;
   coverUrl: string | null;
+  /** Cabeceras que exige la portada; `null` si no pide ninguna (F47). */
+  coverHeaders: Record<string, string> | null;
   kind: MediaKind | null;
   status: SeriesStatus | null;
   nsfw: boolean;
@@ -39,6 +42,7 @@ interface Row {
   series_id: string;
   title: string | null;
   cover_url: string | null;
+  cover_headers: string | null;
   kind: MediaKind | null;
   status: SeriesStatus | null;
   nsfw: number | null;
@@ -55,7 +59,7 @@ export async function listLastRead(
   options: LastReadOptions = {},
 ): Promise<LastReadEntry[]> {
   const rows = await driver.all<Row>(
-    `SELECT p.module_id, p.series_id, s.title, s.cover_url, s.kind, s.status, s.nsfw,
+    `SELECT p.module_id, p.series_id, s.title, s.cover_url, s.cover_headers, s.kind, s.status, s.nsfw,
             p.chapter_id, p.release_id, p.chapter_title, p.page_index, p.page_total, p.updated_at
        FROM progress p
        LEFT JOIN series s ON s.module_id = p.module_id AND s.series_id = p.series_id
@@ -69,6 +73,7 @@ export async function listLastRead(
     seriesId: row.series_id,
     title: row.title ?? row.series_id,
     coverUrl: row.cover_url,
+    coverHeaders: parseCoverHeaders(row.cover_headers),
     kind: row.kind,
     status: row.status,
     nsfw: row.nsfw === null ? false : fromSqlBoolean(row.nsfw),

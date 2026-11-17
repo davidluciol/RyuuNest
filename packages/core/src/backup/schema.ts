@@ -23,13 +23,14 @@ import type { ValidationIssue, ValidationResult } from "../validation.js";
 export const BACKUP_FORMAT = "ryuunest-backup";
 
 /** Versión del formato (SPEC §8.3). */
-export const BACKUP_VERSION = 2;
+export const BACKUP_VERSION = 3;
 
 /**
  * Versiones que se leen. La 2 (F53, P-162) añade `series[].tags` y `folders[].tags`; la 1 no
- * las trae y se importa igual (sin tocar las etiquetas locales).
+ * las trae y se importa igual (sin tocar las etiquetas locales). La 3 (F47) añade
+ * `series[].coverHeaders` (cabeceras de la portada); las anteriores no las traen.
  */
-const READABLE_VERSIONS: readonly number[] = [1, 2];
+const READABLE_VERSIONS: readonly number[] = [1, 2, 3];
 
 /**
  * Tamaño máximo, en bytes UTF-8, del texto de un respaldo al importarlo (SPEC §7.2: «límites
@@ -81,6 +82,8 @@ export interface BackupSeries {
   updatedAt: number;
   /** Géneros de la serie (v2). Ausente en un respaldo v1. */
   tags?: string[];
+  /** Cabeceras que exige la portada (v3). Ausente si no pide ninguna o en un respaldo v1/v2. */
+  coverHeaders?: Record<string, string>;
 }
 
 /** Favorito de la biblioteca. */
@@ -124,7 +127,7 @@ export interface BackupPref {
 /** El respaldo completo, en el orden de SPEC §8.3. */
 export interface Backup {
   format: "ryuunest-backup";
-  version: 1 | 2;
+  version: 1 | 2 | 3;
   createdAt: number;
   repos: BackupRepo[];
   modules: BackupModule[];
@@ -137,7 +140,6 @@ export interface Backup {
   /** Ajustes tal cual viven en la tabla `setting` (clave-valor); hoy vacía (F20). */
   settings: Record<string, string>;
 }
-
 
 const MEDIA_KINDS: readonly MediaKind[] = ["manga", "manhua", "manhwa", "comic"];
 const SERIES_STATUSES: readonly SeriesStatus[] = [
@@ -266,6 +268,27 @@ class RowReader {
     });
   }
 
+  /** Objeto de textos opcional: `undefined` si falta, error si algún valor no es texto. */
+  optionalTextMap(key: string): Record<string, string> | undefined {
+    const value = this.row[key];
+    if (value === undefined) {
+      return undefined;
+    }
+    if (!isRecord(value)) {
+      this.fail(key, "debe ser un objeto");
+      return undefined;
+    }
+    const map: Record<string, string> = {};
+    for (const [name, item] of Object.entries(value)) {
+      if (typeof item !== "string") {
+        this.fail(`${key}.${name}`, "debe ser texto");
+      } else {
+        map[name] = item;
+      }
+    }
+    return map;
+  }
+
   kinds(key: string): MediaKind[] {
     const value = this.row[key];
     if (!Array.isArray(value)) {
@@ -280,6 +303,13 @@ class RowReader {
       return item as MediaKind;
     });
   }
+}
+
+/** `{ coverHeaders }` solo si el respaldo las traía. */
+function withCoverHeaders(headers: Record<string, string> | undefined): {
+  coverHeaders?: Record<string, string>;
+} {
+  return headers === undefined ? {} : { coverHeaders: headers };
 }
 
 /** `{ tags }` solo si el respaldo las traía (con `exactOptionalPropertyTypes`, sin `undefined`). */
@@ -414,6 +444,7 @@ export function validateBackup(value: unknown): ValidationResult<Backup> {
     status: r.oneOfOrNull("status", SERIES_STATUSES),
     updatedAt: r.integer("updatedAt"),
     ...withTags(r.optionalTexts("tags")),
+    ...withCoverHeaders(r.optionalTextMap("coverHeaders")),
   }));
 
   const favorites = section<BackupFavorite>("favorites", claveSerie, (r) => ({

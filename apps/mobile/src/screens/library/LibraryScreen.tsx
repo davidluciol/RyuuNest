@@ -165,6 +165,7 @@ export default function LibraryScreen({
     <LibraryCard
       kind={item.kind === null ? undefined : kindLabel(item.kind)}
       title={item.title}
+      {...(item.cover === undefined ? {} : { cover: item.cover })}
       progress={
         item.progress && item.progress.pageTotal > 0
           ? item.progress.pageIndex / item.progress.pageTotal
