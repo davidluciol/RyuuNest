@@ -42,9 +42,11 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByRole("button", { name: "Guardar" }).waitFor();
       await page.waitForTimeout(1500); // la base se guarda en IndexedDB con una pausa
 
-      // Tras recargar, la base sigue sin esa obra (y no se vuelve a sembrar).
-      await page.goto(`${baseURL}/library`);
+      // Al volver a Tesoros se relee la base sin recargar la página (la ficha guarda cambios).
+      await page.goBack();
       await page.getByText("Todo (2)").waitFor();
+
+      // Tras recargar, la base sigue sin esa obra (y no se vuelve a sembrar).
       await page.reload();
       await page.getByText("Todo (2)").waitFor();
 
