@@ -16,7 +16,7 @@
  */
 import { ModuleError } from "../contract/errors.js";
 import type { MediaKind, SeriesStatus } from "../contract/types.js";
-import { normalizeTitle } from "./SeriesStore.js";
+import { normalizeTitle, parseCoverHeaders } from "./SeriesStore.js";
 import { escapeLike, fromSqlBoolean, type SqlDriver, type SqlValue } from "../storage/SqlDriver.js";
 
 /** Órdenes disponibles (RF-28). */
@@ -69,6 +69,8 @@ export interface LibraryEntry {
   seriesId: string;
   title: string;
   coverUrl: string | null;
+  /** Cabeceras que exige la portada; `null` si no pide ninguna (F47). */
+  coverHeaders: Record<string, string> | null;
   kind: MediaKind | null;
   nsfw: boolean;
   status: SeriesStatus | null;
@@ -106,7 +108,7 @@ const ORDENES: Record<
 
 /** Columnas del SELECT: las de dominio, más las que necesita el cursor. */
 const SELECCION = `
-SELECT s.module_id, s.series_id, s.title, s.title_norm, s.cover_url, s.kind, s.nsfw, s.status,
+SELECT s.module_id, s.series_id, s.title, s.title_norm, s.cover_url, s.cover_headers, s.kind, s.nsfw, s.status,
        f.folder_id, f.added_at,
        COALESCE(p.updated_at, f.added_at) AS last_read,
        p.chapter_id, p.chapter_title, p.page_index, p.page_total, p.updated_at AS progress_updated_at
@@ -126,6 +128,7 @@ interface LibraryRow {
   title: string;
   title_norm: string;
   cover_url: string | null;
+  cover_headers: string | null;
   kind: string | null;
   nsfw: number;
   status: string | null;
@@ -271,6 +274,7 @@ function toEntry(fila: LibraryRow): LibraryEntry {
     seriesId: fila.series_id,
     title: fila.title,
     coverUrl: fila.cover_url,
+    coverHeaders: parseCoverHeaders(fila.cover_headers),
     kind: fila.kind as MediaKind | null,
     nsfw: fromSqlBoolean(fila.nsfw),
     status: fila.status as SeriesStatus | null,

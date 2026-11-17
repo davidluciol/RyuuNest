@@ -10,7 +10,7 @@
  */
 
 /** Versión del esquema: sube con cada migración nueva (SPEC §8.1). */
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 /** Tablas, claves y valores por defecto del SPEC §8.1. */
 const TABLAS: readonly string[] = [
@@ -119,6 +119,9 @@ export const MIGRATION_3: readonly string[] = [
  * `SeriesDetails.genres`) y `folder_tag` las de una carpeta inteligente. `tag_norm` es la
  * clave de comparación (minúsculas, sin acentos); `tag`, el texto que se muestra. Aditiva.
  */
+/** F47 — cabeceras de la portada (JSON), aditiva: las filas anteriores quedan en `NULL`. */
+export const MIGRATION_5: readonly string[] = ["ALTER TABLE series ADD COLUMN cover_headers TEXT"];
+
 export const MIGRATION_4: readonly string[] = [
   `CREATE TABLE IF NOT EXISTS series_tag (
   module_id TEXT NOT NULL, series_id TEXT NOT NULL, tag TEXT NOT NULL, tag_norm TEXT NOT NULL,

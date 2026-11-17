@@ -35,8 +35,8 @@ describe("respaldo v2 · etiquetas (F53)", () => {
   it("exporta la versión 2 con las etiquetas de series y carpetas", async () => {
     const backup = await exportar(origen);
 
-    expect(BACKUP_VERSION).toBe(2);
-    expect(backup.version).toBe(2);
+    expect(BACKUP_VERSION).toBe(3);
+    expect(backup.version).toBe(3);
     expect(backup.series[0]?.tags).toEqual(["Acción", "Seinen"]);
     expect(backup.folders.find((f) => f.name === "Mis seinen")?.tags).toEqual(["Seinen"]);
     expect(backup.folders.find((f) => f.name === "Favoritos")?.tags).toEqual([]);
@@ -108,5 +108,40 @@ describe("respaldo v2 · etiquetas (F53)", () => {
     expect(mala.ok).toBe(false);
     expect(!mala.ok && mala.issues.map((i) => i.path)).toContain("series[0].tags");
     expect(buena.ok).toBe(true);
+  });
+});
+
+/** F47 — el respaldo v3 lleva las cabeceras de portada (decisión del humano 2026-11-17). */
+describe("respaldo v3 · cabeceras de portada (F47)", () => {
+  it.each(["merge", "replace"] as const)("ida y vuelta (%s): las cabeceras se restauran", async (mode) => {
+    await new SeriesStore({ driver: origen, clock }).saveFromDetails("m", {
+      id: "a",
+      title: "A",
+      genres: [],
+      nsfw: false,
+      status: "ongoing",
+      kind: "manga",
+      cover: { url: "https://x.test/a.jpg", headers: { Cookie: "s=1" } },
+    } as never);
+    const respaldo = await exportar(origen);
+    expect(respaldo.series[0]?.coverHeaders).toEqual({ Cookie: "s=1" });
+
+    const destino = await openMigratedDriver();
+    expect((await importBackup({ driver: destino, mode }, JSON.stringify(respaldo))).ok).toBe(true);
+
+    expect((await exportar(destino)).series[0]?.coverHeaders).toEqual({ Cookie: "s=1" });
+  });
+
+  it("un respaldo v2 (sin cabeceras) se acepta", async () => {
+    const v2 = { ...(await exportar(origen)), version: 2 };
+
+    expect(validateBackup(v2).ok).toBe(true);
+  });
+
+  it("unas cabeceras que no son texto se rechazan", async () => {
+    const malo = await exportar(origen);
+    (malo.series[0] as unknown as { coverHeaders: unknown }).coverHeaders = { Cookie: 1 };
+
+    expect(validateBackup(malo).ok).toBe(false);
   });
 });

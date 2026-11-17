@@ -1,5 +1,6 @@
 import { Folders, listLastRead, type LastReadEntry, type SqlDriver } from "@ryuunest/core";
 
+import { coverSource } from "../../components/coverSource";
 import { t } from "../../i18n";
 
 import type { HomeData, HomeFolder, HomeProgress } from "./homeFixtures";
@@ -80,7 +81,9 @@ async function loadFolders(driver: SqlDriver, nsfwVisible: boolean): Promise<Hom
 function toProgress(entry: LastReadEntry): HomeProgress {
   // Sin título de capítulo no se muestra su id (suele ser una ruta del módulo).
   const label = entry.chapterTitle ?? t("home.chapter.saved");
+  const cover = coverSource(entry.coverUrl, entry.coverHeaders);
   return {
+    ...(cover === undefined ? {} : { cover }),
     moduleId: entry.moduleId,
     seriesId: entry.seriesId,
     chapterId: entry.chapterId,

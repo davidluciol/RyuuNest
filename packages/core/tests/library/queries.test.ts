@@ -83,6 +83,7 @@ describe("browseLibrary · filtros del SPEC §3.5", () => {
       seriesId: "ceniza",
       title: "El dragón de ceniza",
       coverUrl: "https://sitio.test/ceniza.jpg",
+      coverHeaders: null,
       kind: "manga",
       nsfw: false,
       status: "ongoing",

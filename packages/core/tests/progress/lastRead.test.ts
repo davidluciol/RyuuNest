@@ -62,6 +62,7 @@ describe("listLastRead / getLastRead (F78)", () => {
       seriesId: "a",
       title: "Serie A",
       coverUrl: "http://c/x.jpg",
+      coverHeaders: null,
       kind: "manhwa",
       status: "hiatus",
       nsfw: false,
@@ -103,5 +104,22 @@ describe("listLastRead / getLastRead (F78)", () => {
       "a",
     ]);
     expect(await listLastRead(driver, { nsfwVisible: true, limit: 1 })).toHaveLength(1);
+  });
+});
+
+describe("listLastRead · cabeceras de portada (F47)", () => {
+  it("devuelve las cabeceras guardadas con la serie, o null si no hay", async () => {
+    await addSeries("a");
+    await addSeries("b");
+    await driver.run("UPDATE series SET cover_headers = ? WHERE series_id = 'a'", [
+      JSON.stringify({ Cookie: "s=1" }),
+    ]);
+    await read("a", 2_000);
+    await read("b", 3_000);
+
+    const [b, a] = await listLastRead(driver);
+
+    expect(a?.coverHeaders).toEqual({ Cookie: "s=1" });
+    expect(b?.coverHeaders).toBeNull();
   });
 });

@@ -106,7 +106,7 @@ describe("exportText (RF-37, F21a)", () => {
     };
 
     expect(backup.format).toBe("ryuunest-backup");
-    expect(backup.version).toBe(2);
+    expect(backup.version).toBe(3);
     expect(backup.folders).toEqual([
       { name: "Favoritos épicos", id: 1, sort: 0, updatedAt: 100, tags: [] },
     ]);

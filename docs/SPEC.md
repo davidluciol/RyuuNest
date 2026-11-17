@@ -527,11 +527,11 @@ Listas virtualizadas, paginación por cursor, consultas con índices, portadas c
 
 ```json
 {
-  "format": "ryuunest-backup", "version": 2, "createdAt": 1790000000000,
+  "format": "ryuunest-backup", "version": 3, "createdAt": 1790000000000,
   "repos":     [{ "url": "…", "name": "…" }],
   "modules":   [{ "id": "…", "version": "…", "repoUrl": "…" }],
   "folders":   [{ "id": 1, "name": "…", "sort": 0, "updatedAt": 0, "tags": ["…"] }],
-  "series":    [{ "moduleId": "…", "seriesId": "…", "title": "…", "coverUrl": "…", "kind": "…", "nsfw": false, "updatedAt": 0, "tags": ["…"] }],
+  "series":    [{ "moduleId": "…", "seriesId": "…", "title": "…", "coverUrl": "…", "coverHeaders": { "Referer": "…" }, "kind": "…", "nsfw": false, "updatedAt": 0, "tags": ["…"] }],
   "favorites": [{ "moduleId": "…", "seriesId": "…", "folderId": 1, "addedAt": 0, "updatedAt": 0 }],
   "progress":  [{ "moduleId": "…", "seriesId": "…", "chapterId": "…", "releaseId": "…", "pageIndex": 0, "pageTotal": 0, "updatedAt": 0 }],
   "read":      [{ "moduleId": "…", "seriesId": "…", "chapterId": "…", "readAt": 0 }],
@@ -539,7 +539,7 @@ Listas virtualizadas, paginación por cursor, consultas con índices, portadas c
   "settings":  { "nsfwVisible": false, "language": "es" }
 }
 ```
-**Versión 2 (F53, P-162):** añade `tags` en `series` y `folders`; la versión 1 (sin ellas) sigue importándose y no toca las etiquetas locales. Al fusionar, las etiquetas de una serie del respaldo reemplazan a las locales solo si es más nueva, y las de carpetas con el mismo nombre se unen. El respaldo no contiene secretos. La importación valida el esquema y el tamaño, y trata los repos y módulos como sugerencias (RF-38).
+**Versión 2 (F53, P-162):** añade `tags` en `series` y `folders`; la versión 1 (sin ellas) sigue importándose y no toca las etiquetas locales. Al fusionar, las etiquetas de una serie del respaldo reemplazan a las locales solo si es más nueva, y las de carpetas con el mismo nombre se unen. **Versión 3 (F47, decisión del humano 2026-11-17):** añade `coverHeaders` en `series` (las cabeceras que exige la portada, p. ej. `Referer` o `Cookie` de M440/YupManga); las versiones 1 y 2 siguen importándose y, al actualizar una serie, se conservan las cabeceras locales. **Las cabeceras pueden incluir cookies de sesión de un sitio: el archivo de respaldo debe tratarse como privado.** El respaldo no contiene contraseñas ni claves de la app. La importación valida el esquema y el tamaño, y trata los repos y módulos como sugerencias (RF-38).
 
 ---
 

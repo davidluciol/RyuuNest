@@ -13,7 +13,7 @@
  * Los repos y módulos del respaldo **no se instalan ni se registran**: se devuelven como
  * sugerencias para que el usuario las confirme una por una (RF-38, AC-8).
  */
-import { normalizeTitle } from "../library/SeriesStore.js";
+import { normalizeTitle, serializeCoverHeaders } from "../library/SeriesStore.js";
 import { readTags, replaceTags } from "../library/tags.js";
 import { ENSURE_DEFAULT_FOLDERS } from "../storage/schema.js";
 import { toSqlBoolean, withTransaction, type SqlDriver } from "../storage/SqlDriver.js";
@@ -38,13 +38,7 @@ export type ImportMode = "merge" | "replace";
 
 /** Secciones de usuario que modifica la importación. */
 export type ImportSection =
-  | "folders"
-  | "series"
-  | "favorites"
-  | "progress"
-  | "read"
-  | "prefs"
-  | "settings";
+  "folders" | "series" | "favorites" | "progress" | "read" | "prefs" | "settings";
 
 /**
  * Qué pasó con las filas de una sección. En `replace` todas cuentan como `added`; en `merge`,
@@ -159,14 +153,15 @@ async function guardarEtiquetasSerie(driver: SqlDriver, row: BackupSeries): Prom
 
 async function insertarSerie(driver: SqlDriver, row: BackupSeries): Promise<void> {
   await driver.run(
-    `INSERT INTO series (module_id, series_id, title, title_norm, cover_url, kind, nsfw, status, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO series (module_id, series_id, title, title_norm, cover_url, cover_headers, kind, nsfw, status, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       row.moduleId,
       row.seriesId,
       row.title,
       normalizeTitle(row.title),
       row.coverUrl,
+      serializeCoverHeaders(row.coverHeaders),
       row.kind,
       toSqlBoolean(row.nsfw),
       row.status,
@@ -178,12 +173,14 @@ async function insertarSerie(driver: SqlDriver, row: BackupSeries): Promise<void
 
 async function actualizarSerie(driver: SqlDriver, row: BackupSeries): Promise<void> {
   await driver.run(
-    `UPDATE series SET title = ?, title_norm = ?, cover_url = ?, kind = ?, nsfw = ?, status = ?,
-       updated_at = ? WHERE module_id = ? AND series_id = ?`,
+    // Un respaldo v1/v2 no trae cabeceras: se conservan las locales (`COALESCE`).
+    `UPDATE series SET title = ?, title_norm = ?, cover_url = ?, cover_headers = COALESCE(?, cover_headers),
+       kind = ?, nsfw = ?, status = ?, updated_at = ? WHERE module_id = ? AND series_id = ?`,
     [
       row.title,
       normalizeTitle(row.title),
       row.coverUrl,
+      serializeCoverHeaders(row.coverHeaders),
       row.kind,
       toSqlBoolean(row.nsfw),
       row.status,
