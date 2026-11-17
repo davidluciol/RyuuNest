@@ -1,10 +1,6 @@
 import { useWindowDimensions, ScrollView, StyleSheet, View } from "react-native";
 import { Flame, History, Gem } from "../../icons";
-import {
-  dragonNightColors,
-  layoutForWidth,
-  spacing,
-} from "@ryuunest/ui-tokens";
+import { dragonNightColors, layoutForWidth, spacing } from "@ryuunest/ui-tokens";
 
 import ContinueCard from "../../components/ContinueCard";
 import EmptyState from "../../components/EmptyState";
@@ -13,7 +9,7 @@ import RecentCard from "../../components/RecentCard";
 import SectionHeader from "../../components/SectionHeader";
 import { t } from "../../i18n";
 
-import { EMPTY_HOME_DATA, type HomeData } from "./homeFixtures";
+import { EMPTY_HOME_DATA, type HomeData, type HomeProgress } from "./homeFixtures";
 
 /**
  * F13 — pantalla Inicio (RF-14, RF-33, RF-41, SPEC §11.5): máximo 4
@@ -29,9 +25,9 @@ export interface HomeScreenProps {
   /** Datos de la pantalla; por defecto, el estado vacío. */
   data?: HomeData;
   /** Callback al pulsar «Continuar». */
-  onContinue?: (seriesId: string) => void;
+  onContinue?: (item: HomeProgress) => void;
   /** Callback al pulsar una tarjeta reciente. */
-  onRecentPress?: (seriesId: string) => void;
+  onRecentPress?: (item: HomeProgress) => void;
   /** Callback al pulsar una carpeta. */
   onFolderPress?: (folderId: string) => void;
   /** Callback de la acción «Ver todas» de recientes. */
@@ -85,19 +81,21 @@ export default function HomeScreen({
             title={t("home.section.continue")}
             icon={Flame}
             actionLabel={t("home.action.resume")}
-            onAction={() => onContinue?.(data.continueReading!.seriesId)}
+            onAction={() => onContinue?.(data.continueReading!)}
           />
           <ContinueCard
-            kind={data.continueReading.kind}
+            kind={data.continueReading.kind ?? undefined}
             title={data.continueReading.title}
             meta={data.continueReading.meta}
             chapter={data.continueReading.chapterLabel}
             pageIndex={data.continueReading.pageIndex}
             pageTotal={data.continueReading.pageTotal}
-            actionLabel={t("home.action.continueChapter", {
-              number: data.continueReading.chapterNumber,
-            })}
-            onPress={() => onContinue?.(data.continueReading!.seriesId)}
+            actionLabel={
+              data.continueReading.chapterNumber > 0
+                ? t("home.action.continueChapter", { number: data.continueReading.chapterNumber })
+                : t("home.action.resume")
+            }
+            onPress={() => onContinue?.(data.continueReading!)}
           />
         </View>
       ) : null}
@@ -118,11 +116,11 @@ export default function HomeScreen({
             {data.recent.map((item) => (
               <RecentCard
                 key={item.seriesId}
-                kind={item.kind}
+                kind={item.kind ?? undefined}
                 title={item.title}
                 chapter={item.chapterLabel}
                 progress={item.pageTotal > 0 ? item.pageIndex / item.pageTotal : 0}
-                onPress={() => onRecentPress?.(item.seriesId)}
+                onPress={() => onRecentPress?.(item)}
               />
             ))}
           </ScrollView>
@@ -142,7 +140,7 @@ export default function HomeScreen({
               <FolderCard
                 key={folder.id}
                 name={folder.name}
-                description={folder.description}
+                {...(folder.description === undefined ? {} : { description: folder.description })}
                 count={folder.count}
                 onPress={() => onFolderPress?.(folder.id)}
               />

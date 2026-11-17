@@ -19,7 +19,7 @@ export interface RecentCardProps {
   /** Fuente de la portada. */
   cover?: ImageSourcePropType;
   /** Tipo de obra para el badge (p. ej. «Manhwa»). */
-  kind: string;
+  kind?: string | undefined;
   /** Título de la serie (completo si cabe; máx. 3 líneas, T7). */
   title: string;
   /** Capítulo en curso (p. ej. «Cap. 24»). */
@@ -65,9 +65,11 @@ export default function RecentCard({
         ]}
       >
         {cover ? <Image source={cover} style={styles.cover} /> : null}
-        <View style={styles.badgeWrap}>
-          <Badge label={kind} />
-        </View>
+        {kind ? (
+          <View style={styles.badgeWrap}>
+            <Badge label={kind} />
+          </View>
+        ) : null}
         {hasProgress ? (
           <View style={styles.progressTrack}>
             <View style={progressBarStyle(progress)} />

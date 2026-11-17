@@ -11,12 +11,16 @@ import type { MediaKind } from "@ryuunest/core";
 
 /** Datos de progreso de lectura para Inicio (RF-33, RF-41). */
 export interface HomeProgress {
+  /** Módulo de origen (clave junto a la serie). */
+  moduleId: string;
   /** ID de la serie (clave junto al módulo). */
   seriesId: string;
+  /** Capítulo en curso en el módulo. */
+  chapterId: string;
   /** Título de la serie. */
   title: string;
-  /** Tipo de obra. */
-  kind: MediaKind;
+  /** Tipo de obra; `null` si el módulo no lo dio. */
+  kind: MediaKind | null;
   /** Fuente de la portada (asset local). */
   cover?: ImageSourcePropType;
   /** Capítulo en curso (p. ej. «Cap. 41»). */
@@ -37,8 +41,8 @@ export interface HomeFolder {
   id: string;
   /** Nombre de la carpeta. */
   name: string;
-  /** Descripción/subtítulo. */
-  description: string;
+  /** Descripción/subtítulo, si la hay (las carpetas reales no la tienen). */
+  description?: string;
   /** Número de obras en la carpeta. */
   count: number;
 }
@@ -73,7 +77,9 @@ export const EMPTY_HOME_DATA: HomeData = {
  */
 export const SAMPLE_HOME_DATA: HomeData = {
   continueReading: {
+    moduleId: "ejemplo",
     seriesId: "dragon-de-ceniza",
+    chapterId: "dragon-de-ceniza-cap",
     title: "El dragón de ceniza",
     kind: "manhwa",
     chapterLabel: "Cap. 41",
@@ -84,7 +90,9 @@ export const SAMPLE_HOME_DATA: HomeData = {
   },
   recent: [
     {
+      moduleId: "ejemplo",
       seriesId: "sombras-de-arcano",
+      chapterId: "sombras-de-arcano-cap",
       title: "Sombras de Arcano",
       kind: "manhwa",
       chapterLabel: "Cap. 24",
@@ -94,7 +102,9 @@ export const SAMPLE_HOME_DATA: HomeData = {
       meta: "Sello Nocturno · En emisión",
     },
     {
+      moduleId: "ejemplo",
       seriesId: "la-forja-perdida",
+      chapterId: "la-forja-perdida-cap",
       title: "La forja perdida",
       kind: "manga",
       chapterLabel: "Cap. 52",
@@ -104,7 +114,9 @@ export const SAMPLE_HOME_DATA: HomeData = {
       meta: "Nido Editorial · En emisión",
     },
     {
+      moduleId: "ejemplo",
       seriesId: "guardian-del-nido",
+      chapterId: "guardian-del-nido-cap",
       title: "Guardián del nido",
       kind: "manga",
       chapterLabel: "Cap. 182",
@@ -114,7 +126,9 @@ export const SAMPLE_HOME_DATA: HomeData = {
       meta: "Nido Editorial · En emisión",
     },
     {
+      moduleId: "ejemplo",
       seriesId: "cronicas-de-moonlit",
+      chapterId: "cronicas-de-moonlit-cap",
       title: "Crónicas de Moonlit",
       kind: "manhua",
       chapterLabel: "Cap. 12",

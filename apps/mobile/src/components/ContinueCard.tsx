@@ -25,7 +25,7 @@ export interface ContinueCardProps {
   /** Fuente de la portada. */
   cover?: ImageSourcePropType;
   /** Tipo de obra para el badge (p. ej. «Manga»). */
-  kind: string;
+  kind?: string | undefined;
   /** Título de la serie. */
   title: string;
   /** Metadatos superiores (p. ej. «Crónicas de Alden · En emisión»). */
@@ -62,9 +62,11 @@ export default function ContinueCard({
     <View style={[styles.container, shape]}>
       <View style={[styles.coverWrap, { width: CONTINUE_CARD_COVER_WIDTH, height: coverHeight }]}>
         {cover ? <Image source={cover} style={styles.cover} /> : null}
-        <View style={styles.badgeWrap}>
-          <Badge label={kind} />
-        </View>
+        {kind ? (
+          <View style={styles.badgeWrap}>
+            <Badge label={kind} />
+          </View>
+        ) : null}
         {progress > 0 ? (
           <View style={styles.progressTrack}>
             <View style={progressBarStyle(progress)} />
