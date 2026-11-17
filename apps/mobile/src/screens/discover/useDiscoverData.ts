@@ -13,6 +13,8 @@ import {
   sameDiscoverModules,
   type DiscoverFilterValues,
   type DiscoverModule,
+  viewWhileReloading,
+  withActiveFilters,
   type DiscoverView,
 } from "./discoverFixtures";
 
@@ -83,6 +85,8 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
   const bootRef = useRef<Boot | null>(null);
   const reporterRef = useRef<ErrorReporter | null>(null);
   const rememberedRef = useRef<string | null>(null);
+  // F50: el próximo reload es por cambio de filtros, así que no se vacía la pantalla.
+  const keepOnReloadRef = useRef(false);
 
   // Arranque: fuente (inyectada en apps/web, de plataforma en móvil) + módulos
   // elegibles + último recordado; el reporter del registro `log` (F31, P-72).
@@ -149,7 +153,15 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     }
 
     let cancelled = false;
-    setView({ status: "loading" });
+    const keep = keepOnReloadRef.current;
+    keepOnReloadRef.current = false;
+    // Solo se conserva la pantalla del mismo módulo: nunca se mezclan series de otro.
+    setView((current) =>
+      viewWhileReloading(
+        current,
+        keep && current.status === "ready" && current.ready.selectedModuleId === moduleId,
+      ),
+    );
     boot.source
       .load({ moduleId, query, page, sectionId: section?.id, filters })
       .then((data) => {
@@ -212,8 +224,11 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
   );
 
   const applyFilters = useCallback(
-    (filters: DiscoverFilterValues) =>
-      setRequest((current) => ({ ...current, filters, page: 1, section: null })),
+    (filters: DiscoverFilterValues) => {
+      keepOnReloadRef.current = true;
+      setView((current) => withActiveFilters(current, filters));
+      setRequest((current) => ({ ...current, filters, page: 1, section: null }));
+    },
     [],
   );
 

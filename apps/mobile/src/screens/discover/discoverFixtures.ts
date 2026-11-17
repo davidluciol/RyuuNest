@@ -185,6 +185,21 @@ export function moduleErrorView(
   };
 }
 
+/**
+ * Vista mientras se recarga. Si cambian los filtros se conserva la pantalla (y con ella la hoja
+ * abierta, para poder elegir varias etiquetas seguidas); en lo demás, «Cargando…».
+ */
+export function viewWhileReloading(current: DiscoverView, keep: boolean): DiscoverView {
+  return keep && current.status === "ready" ? current : { status: "loading" };
+}
+
+/** Refleja al instante la selección de filtros en la vista lista, sin esperar a los datos. */
+export function withActiveFilters(view: DiscoverView, filters: DiscoverFilterValues): DiscoverView {
+  return view.status === "ready"
+    ? { status: "ready", ready: { ...view.ready, activeFilters: filters } }
+    : view;
+}
+
 /** Página vacía: primera, sin entradas ni siguiente. */
 export const EMPTY_DISCOVER_PAGE: DiscoverPage = { page: 1, entries: [], hasNext: false };
 

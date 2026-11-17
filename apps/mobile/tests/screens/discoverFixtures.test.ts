@@ -8,6 +8,10 @@ import {
   countActiveFilters,
   showDiscoverRows,
   toggleFilterValue,
+  viewWhileReloading,
+  withActiveFilters,
+  SAMPLE_DISCOVER_VIEW,
+  type DiscoverView,
   reconcileSelectedModuleId,
   resolveSelectedModuleId,
   SAMPLE_DISCOVER_MODULES,
@@ -195,5 +199,21 @@ describe("filtros de etiquetas (F50)", () => {
     expect(showDiscoverRows("", {})).toBe(true);
     expect(showDiscoverRows("", { genre: ["horror"] })).toBe(false);
     expect(showDiscoverRows("x", {})).toBe(false);
+  });
+});
+
+describe("recarga al cambiar filtros (F50)", () => {
+  const ready: DiscoverView = SAMPLE_DISCOVER_VIEW;
+
+  it("al cambiar filtros se conserva la pantalla (y la hoja abierta) mientras recarga", () => {
+    expect(viewWhileReloading(ready, true)).toBe(ready);
+    expect(viewWhileReloading(ready, false)).toEqual({ status: "loading" });
+    expect(viewWhileReloading({ status: "loading" }, true)).toEqual({ status: "loading" });
+  });
+
+  it("la selección se refleja al instante en la vista, sin esperar a los datos", () => {
+    const next = withActiveFilters(ready, { genre: ["horror"] });
+    expect(next.status === "ready" && next.ready.activeFilters).toEqual({ genre: ["horror"] });
+    expect(withActiveFilters({ status: "loading" }, { genre: ["a"] })).toEqual({ status: "loading" });
   });
 });
