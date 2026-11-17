@@ -47,6 +47,8 @@ import DiscoverScreen from "../screens/discover/DiscoverScreen";
 import {
   SAMPLE_DISCOVER_MODULES,
   SAMPLE_DISCOVER_VIEW,
+  SAMPLE_TAG_FILTERS,
+  type DiscoverFilterValues,
 } from "../screens/discover/discoverFixtures";
 import HoldToConfirm from "../components/HoldToConfirm";
 import ModuleRow from "../components/ModuleRow";
@@ -71,6 +73,7 @@ import FloatingActionButton from "../components/FloatingActionButton";
 import type { MediaKind } from "@ryuunest/core";
 import SortSheet from "../components/SortSheet";
 import FilterSheet from "../components/FilterSheet";
+import TagFilterSheet from "../components/TagFilterSheet";
 import NewFolderSheet from "../components/NewFolderSheet";
 import SeriesMenuSheet from "../components/SeriesMenuSheet";
 import ErrorDialog from "../components/ErrorDialog";
@@ -141,6 +144,8 @@ export default function GalleryScreen() {
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   const [seriesMenuOpen, setSeriesMenuOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [tagFilterOpen, setTagFilterOpen] = useState(false);
+  const [tagFilters, setTagFilters] = useState<DiscoverFilterValues>({ genre: ["horror"] });
   const [sortOpen, setSortOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState<LibraryFilters["order"]>("lastRead");
   const [filterKinds, setFilterKinds] = useState<MediaKind[]>(["manhwa"]);
@@ -761,6 +766,23 @@ export default function GalleryScreen() {
               if (patch.nsfwVisible !== undefined) setFilterNsfw(patch.nsfwVisible);
             }}
             onClose={() => setFilterOpen(false)}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.tagFilterSheet")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.tagFilterSheet.show")}
+            testID="gallery-show-tag-filter-sheet"
+            onPress={() => setTagFilterOpen(true)}
+          />
+          <TagFilterSheet
+            visible={tagFilterOpen}
+            groups={SAMPLE_TAG_FILTERS}
+            selected={tagFilters}
+            onChange={setTagFilters}
+            onClose={() => setTagFilterOpen(false)}
           />
         </View>
 

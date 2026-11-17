@@ -5,7 +5,9 @@ import {
   countHiddenNsfwModules,
   moduleErrorView,
   sameDiscoverModules,
+  countActiveFilters,
   showDiscoverRows,
+  toggleFilterValue,
   reconcileSelectedModuleId,
   resolveSelectedModuleId,
   SAMPLE_DISCOVER_MODULES,
@@ -164,5 +166,27 @@ describe("showDiscoverRows (F38)", () => {
     expect(showDiscoverRows("")).toBe(true);
     expect(showDiscoverRows("   ")).toBe(true);
     expect(showDiscoverRows("dragon")).toBe(false);
+  });
+});
+
+describe("filtros de etiquetas (F50)", () => {
+  it("toggleFilterValue añade, quita y borra el grupo vacío", () => {
+    const a = toggleFilterValue({}, "genre", "horror");
+    expect(a).toEqual({ genre: ["horror"] });
+    const b = toggleFilterValue(a, "genre", "seinen");
+    expect(b).toEqual({ genre: ["horror", "seinen"] });
+    expect(toggleFilterValue(b, "genre", "horror")).toEqual({ genre: ["seinen"] });
+    expect(toggleFilterValue({ genre: ["horror"] }, "genre", "horror")).toEqual({});
+  });
+
+  it("countActiveFilters suma las etiquetas elegidas de todos los grupos", () => {
+    expect(countActiveFilters({})).toBe(0);
+    expect(countActiveFilters({ genre: ["a", "b"], demo: ["c"] })).toBe(3);
+  });
+
+  it("con filtros activos se ocultan las filas, igual que con consulta", () => {
+    expect(showDiscoverRows("", {})).toBe(true);
+    expect(showDiscoverRows("", { genre: ["horror"] })).toBe(false);
+    expect(showDiscoverRows("x", {})).toBe(false);
   });
 });
