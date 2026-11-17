@@ -363,6 +363,9 @@ importers:
       '@ryuunest/ui-tokens':
         specifier: workspace:*
         version: link:../../packages/ui-tokens
+      '@ryuunest/web-db':
+        specifier: workspace:*
+        version: link:../../packages/web-db
       fflate:
         specifier: ^0.8.3
         version: 0.8.3
@@ -456,6 +459,19 @@ importers:
         version: link:../core
 
   packages/ui-tokens: {}
+
+  packages/web-db:
+    dependencies:
+      '@ryuunest/core':
+        specifier: workspace:*
+        version: link:../core
+      sql.js:
+        specifier: 1.15.2
+        version: 1.15.2
+    devDependencies:
+      '@types/sql.js':
+        specifier: 1.4.11
+        version: 1.4.11
 
   tools/eslint-plugin-ryuunest:
     devDependencies:

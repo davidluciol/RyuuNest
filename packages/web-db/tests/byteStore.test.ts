@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createMemoryByteStore } from "../../src/data/byteStore";
+import { createMemoryByteStore } from "../src/byteStore";
 
 describe("ByteStore en memoria (doble de pruebas del de IndexedDB)", () => {
   it("empieza vacío y hace ida y vuelta de bytes", async () => {

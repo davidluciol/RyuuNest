@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { createMemoryByteStore } from "../../src/data/byteStore";
-import { openWebDatabase } from "../../src/data/webDatabase";
+import { createMemoryByteStore } from "../src/byteStore";
+import { openWebDatabase } from "../src/webDatabase";
 
 /**
  * F25 — base de datos web: SQLite real sobre sql.js (WASM) cuyos bytes se

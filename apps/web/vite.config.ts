@@ -30,6 +30,7 @@ export default defineConfig({
       "@ryuunest/module-sdk": srcAlias("module-sdk"),
       "@ryuunest/test-site": srcAlias("test-site"),
       "@ryuunest/ui-tokens": srcAlias("ui-tokens"),
+      "@ryuunest/web-db": srcAlias("web-db"),
     },
   },
   build: { outDir: "dist", sourcemap: true },
