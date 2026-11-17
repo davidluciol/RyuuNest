@@ -12,6 +12,8 @@ import type { HomeData, HomeFolder, HomeProgress } from "./homeFixtures";
 
 /** Lecturas recientes en el carrusel (HomeData.recent). */
 const RECENT_LIMIT = 6;
+/** F82 — «Ver todas» de Lecturas recientes: como máximo 9 series. */
+export const RECENT_LIST_LIMIT = 9;
 /** «Tesoros guardados»: solo las 3 carpetas con más series (F81). */
 const FOLDER_LIMIT = 3;
 
@@ -42,6 +44,18 @@ export async function loadHomeData(
     recent,
     folders: await loadFolders(driver, nsfwVisible),
   };
+}
+
+/** F82 — historial completo de «Ver todas» (una entrada por serie, la más reciente primero). */
+export async function loadRecentList(
+  driver: SqlDriver,
+  options: LoadHomeOptions = {},
+): Promise<HomeProgress[]> {
+  const entries = await listLastRead(driver, {
+    limit: RECENT_LIST_LIMIT,
+    nsfwVisible: options.nsfwVisible === true,
+  });
+  return entries.map(toProgress);
 }
 
 async function loadFolders(driver: SqlDriver, nsfwVisible: boolean): Promise<HomeFolder[]> {

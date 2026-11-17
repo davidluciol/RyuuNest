@@ -6,7 +6,7 @@ import {
   openMigratedDriver,
   type NodeSqliteDriver,
 } from "../../../../packages/core/tests/support/nodeSqliteDriver";
-import { loadHomeData, resolveHomeData } from "../../src/screens/home/homeData";
+import { loadHomeData, loadRecentList, resolveHomeData } from "../../src/screens/home/homeData";
 import { EMPTY_HOME_DATA, SAMPLE_HOME_DATA } from "../../src/screens/home/homeFixtures";
 
 /**
@@ -252,5 +252,53 @@ describe("loadHomeData (F46)", () => {
     await addFolder(driver, 1, "Vacía");
 
     expect((await loadHomeData(driver)).folders).toEqual([]);
+  });
+});
+
+describe("loadRecentList (F82)", () => {
+  it("da como máximo 9 series, la más reciente primero, una por serie", async () => {
+    for (let i = 0; i < 11; i += 1) {
+      await addSeries(driver, {
+        id: `s${i}`,
+        title: `Serie ${i}`,
+        progress: { chapterId: `c${i}`, title: `Capítulo ${i}`, page: 1, total: 10, at: 100 + i },
+      });
+    }
+
+    const list = await loadRecentList(driver);
+
+    expect(list).toHaveLength(9);
+    expect(list.map((item) => item.seriesId)).toEqual([
+      "s10",
+      "s9",
+      "s8",
+      "s7",
+      "s6",
+      "s5",
+      "s4",
+      "s3",
+      "s2",
+    ]);
+  });
+
+  it("con menos de 9 muestra solo esas y sin historial queda vacía", async () => {
+    expect(await loadRecentList(driver)).toEqual([]);
+    await addSeries(driver, {
+      id: "solo",
+      title: "Solo",
+      progress: { chapterId: "c1", title: "Capítulo 1", page: 0, total: 10, at: 5 },
+    });
+    expect((await loadRecentList(driver)).map((item) => item.seriesId)).toEqual(["solo"]);
+  });
+
+  it("oculta las series NSFW salvo que se pidan", async () => {
+    await addSeries(driver, {
+      id: "nsfw",
+      title: "Adulta",
+      nsfw: true,
+      progress: { chapterId: "c1", title: "Capítulo 1", page: 0, total: 10, at: 5 },
+    });
+    expect(await loadRecentList(driver)).toEqual([]);
+    expect(await loadRecentList(driver, { nsfwVisible: true })).toHaveLength(1);
   });
 });
