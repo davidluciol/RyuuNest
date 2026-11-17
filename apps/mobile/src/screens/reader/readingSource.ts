@@ -87,6 +87,8 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
       await seeded;
       const { handle, manifest } = await mounter.mount(moduleId);
       const details = await handle.api.details(seriesId);
+      // Inicio («Continuar», Recientes) muestra el nombre y la portada de lo leído aunque no sea favorito.
+      await seriesStore.saveFromDetails(moduleId, { ...details, id: seriesId });
       const [saved, read, favorite, pref] = await Promise.all([
         progress.get(moduleId, seriesId),
         chaptersRead.readIn(moduleId, seriesId),
@@ -100,7 +102,11 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
         progress:
           saved === undefined
             ? null
-            : { chapterId: saved.chapterId, pageIndex: saved.pageIndex, pageTotal: saved.pageTotal ?? 0 },
+            : {
+                chapterId: saved.chapterId,
+                pageIndex: saved.pageIndex,
+                pageTotal: saved.pageTotal ?? 0,
+              },
         readChapterIds: read,
         preferredReleaseId: pref?.preferredGroup ?? null,
         favorite: favorite !== undefined,

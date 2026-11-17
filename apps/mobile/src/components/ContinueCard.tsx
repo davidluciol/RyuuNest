@@ -149,12 +149,14 @@ const styles = StyleSheet.create({
   },
   chapterRow: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
     gap: spacing.xs,
     marginTop: spacing.xxs,
   },
   chapter: {
     ...textStyle(typography.labelLg),
+    flexShrink: 1,
   },
   page: {
     ...textStyle(typography.bodySm),

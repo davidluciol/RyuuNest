@@ -199,7 +199,12 @@ describe("loadHomeData (F46)", () => {
 
     const { continueReading } = await loadHomeData(driver);
 
-    expect(continueReading).toMatchObject({ chapterLabel: "ch-9", pageTotal: 0, pageIndex: 2 });
+    expect(continueReading).toMatchObject({
+      chapterLabel: "Capítulo guardado",
+      chapterId: "ch-9",
+      pageTotal: 0,
+      pageIndex: 2,
+    });
   });
 
   it("carpetas con series y su número; las vacías no salen; máximo 4", async () => {

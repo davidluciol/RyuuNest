@@ -11,6 +11,7 @@ import { reportReaderError } from "./readerErrors";
 import { chapterState, type ChapterState } from "../series/seriesFixtures";
 import { resolveReadingSource, type ReaderImage } from "./readingSource";
 import { resolveSettingsService } from "../settings/useSettingsData";
+import { savedChapterLabel } from "./readerChapterLabel";
 import { useReaderPrefetch } from "./useReaderPrefetch";
 
 /**
@@ -122,7 +123,7 @@ export function useReader(target: ReaderTarget): { view: ReaderView; actions: Re
         defaultMode: settings.defaultReaderMode,
         chapters: items.map((item) => ({
           chapterId: item.id,
-          title: item.title,
+          title: savedChapterLabel(item),
           releaseId: item.releaseId,
           pageTotal: null,
         })),

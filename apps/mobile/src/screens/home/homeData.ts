@@ -63,7 +63,8 @@ async function loadFolders(driver: SqlDriver, nsfwVisible: boolean): Promise<Hom
 }
 
 function toProgress(entry: LastReadEntry): HomeProgress {
-  const label = entry.chapterTitle ?? entry.chapterId;
+  // Sin título de capítulo no se muestra su id (suele ser una ruta del módulo).
+  const label = entry.chapterTitle ?? t("home.chapter.saved");
   return {
     moduleId: entry.moduleId,
     seriesId: entry.seriesId,
