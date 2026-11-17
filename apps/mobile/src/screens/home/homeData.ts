@@ -12,8 +12,8 @@ import type { HomeData, HomeFolder, HomeProgress } from "./homeFixtures";
 
 /** Lecturas recientes en el carrusel (HomeData.recent). */
 const RECENT_LIMIT = 6;
-/** Carpetas en la cuadrícula 2×2 (V6). */
-const FOLDER_LIMIT = 4;
+/** «Tesoros guardados»: solo las 3 carpetas con más series (F81). */
+const FOLDER_LIMIT = 3;
 
 export interface LoadHomeOptions {
   /** Con `true` se ven también las series NSFW (RF-35: por defecto no). */
@@ -45,21 +45,22 @@ export async function loadHomeData(
 }
 
 async function loadFolders(driver: SqlDriver, nsfwVisible: boolean): Promise<HomeFolder[]> {
+  // Más series primero; empate → la que recibió una serie más recientemente. Las vacías no salen.
   const rows = await driver.all<{ folder_id: number; n: number }>(
     `SELECT f.folder_id AS folder_id, COUNT(*) AS n
        FROM favorite f JOIN series s ON s.module_id = f.module_id AND s.series_id = f.series_id
       WHERE f.folder_id IS NOT NULL AND (? = 1 OR s.nsfw = 0)
-      GROUP BY f.folder_id`,
-    [nsfwVisible ? 1 : 0],
+      GROUP BY f.folder_id
+      ORDER BY n DESC, MAX(f.added_at) DESC, f.folder_id
+      LIMIT ?`,
+    [nsfwVisible ? 1 : 0, FOLDER_LIMIT],
   );
-  const counts = new Map(rows.map((row) => [row.folder_id, row.n]));
   const folders = new Folders({ driver, clock: { now: () => Date.now() } });
-  return (await folders.list())
-    .flatMap((folder) => {
-      const count = counts.get(folder.id) ?? 0;
-      return count > 0 ? [{ id: String(folder.id), name: folder.name, count }] : [];
-    })
-    .slice(0, FOLDER_LIMIT);
+  const names = new Map((await folders.list()).map((folder) => [folder.id, folder.name]));
+  return rows.flatMap((row) => {
+    const name = names.get(row.folder_id);
+    return name === undefined ? [] : [{ id: String(row.folder_id), name, count: row.n }];
+  });
 }
 
 function toProgress(entry: LastReadEntry): HomeProgress {
