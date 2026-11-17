@@ -32,6 +32,7 @@ export * from "./modules/ModuleRegistry.js";
 export * from "./modules/installedMounter.js";
 export * from "./ports/index.js";
 export * from "./progress/ChapterReadStore.js";
+export * from "./progress/lastRead.js";
 export * from "./progress/ProgressStore.js";
 export * from "./reader/ReaderState.js";
 export * from "./repo/RepoRegistry.js";

@@ -1,4 +1,4 @@
-import { browseLibrary, Folders, type LibraryEntry, type SqlDriver } from "@ryuunest/core";
+import { Folders, listLastRead, type LastReadEntry, type SqlDriver } from "@ryuunest/core";
 
 import { t } from "../../i18n";
 
@@ -35,16 +35,7 @@ export async function loadHomeData(
   options: LoadHomeOptions = {},
 ): Promise<HomeData> {
   const nsfwVisible = options.nsfwVisible === true;
-  const page = await browseLibrary(driver, {
-    limit: RECENT_LIMIT,
-    reading: true,
-    nsfwVisible,
-    order: "lastRead",
-  });
-  const recent = page.items.flatMap((entry) => {
-    const progress = toProgress(entry);
-    return progress === null ? [] : [progress];
-  });
+  const recent = (await listLastRead(driver, { limit: RECENT_LIMIT, nsfwVisible })).map(toProgress);
 
   return {
     continueReading: recent[0] ?? null,
@@ -71,19 +62,18 @@ async function loadFolders(driver: SqlDriver, nsfwVisible: boolean): Promise<Hom
     .slice(0, FOLDER_LIMIT);
 }
 
-function toProgress(entry: LibraryEntry): HomeProgress | null {
-  if (entry.progress === null) return null;
-  const label = entry.progress.chapterTitle ?? entry.progress.chapterId;
+function toProgress(entry: LastReadEntry): HomeProgress {
+  const label = entry.chapterTitle ?? entry.chapterId;
   return {
     moduleId: entry.moduleId,
     seriesId: entry.seriesId,
-    chapterId: entry.progress.chapterId,
+    chapterId: entry.chapterId,
     title: entry.title,
     kind: entry.kind,
     chapterLabel: label,
     chapterNumber: chapterNumberOf(label),
-    pageIndex: entry.progress.pageIndex,
-    pageTotal: entry.progress.pageTotal ?? 0,
+    pageIndex: entry.pageIndex,
+    pageTotal: entry.pageTotal ?? 0,
     // El nombre visible del módulo vive en su registro; hasta conectarlo, su id (como Tesoros).
     meta: `${entry.moduleId} · ${t(`series.status.${entry.status ?? "unknown"}`)}`,
   };

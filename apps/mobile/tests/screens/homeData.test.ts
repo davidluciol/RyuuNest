@@ -151,6 +151,18 @@ describe("loadHomeData (F46)", () => {
     expect(data.recent).toEqual([]);
   });
 
+  it("cuenta lo leído sin guardar en favoritos", async () => {
+    await driver.run(
+      `INSERT INTO progress (module_id, series_id, chapter_id, chapter_title, page_index, page_total, updated_at)
+       VALUES ('mod-a', 'suelta', 'c1', 'Capítulo 1', 3, 9, 7)`,
+    );
+
+    expect((await loadHomeData(driver)).continueReading).toMatchObject({
+      seriesId: "suelta",
+      pageIndex: 3,
+    });
+  });
+
   it("recientes: máximo 6", async () => {
     for (let i = 0; i < 8; i++) {
       await addSeries(driver, {
