@@ -40,7 +40,7 @@ export function pageErrorKind(raw: string): PageErrorKind {
   if (/\b(401|403)\b|forbidden|unauthori[sz]ed/.test(text)) return "denied";
   if (/\b(404|410)\b|not found|\bgone\b/.test(text)) return "missing";
   if (
-    /unknownhost|unable to resolve|timeout|timed out|failed to connect|connection (reset|refused)|network|offline|enotfound|econn/.test(
+    /unknownhost|unable to resolve|timeout|timed out|failed to connect|connection (reset|refused)|network|failed to fetch|offline|enotfound|econn/.test(
       text,
     )
   ) {
