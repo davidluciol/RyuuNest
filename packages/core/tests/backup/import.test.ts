@@ -122,10 +122,13 @@ function pref(over: Partial<BackupPref> = {}): BackupPref {
 
 const texto = (backup: unknown): string => JSON.stringify(backup);
 
-/** Estado completo de la base, sin el `createdAt` (que cambia en cada exportación). */
+/**
+ * Estado completo de la base, sin el `createdAt` (que cambia en cada exportación) y sin la
+ * carpeta «Favoritos» que siembra el sistema (F52): estas pruebas miran lo que trae el respaldo.
+ */
 async function estado(db: SqlDriver): Promise<Backup> {
   const backup = await exportBackup({ driver: db, storage: new MemoryStorage(), clock });
-  return { ...backup, createdAt: 0 };
+  return { ...backup, createdAt: 0, folders: backup.folders.filter((f) => f.name !== "Favoritos") };
 }
 
 /** Importa y exige que se haya aplicado. */

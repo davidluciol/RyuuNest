@@ -14,6 +14,7 @@
  * sugerencias para que el usuario las confirme una por una (RF-38, AC-8).
  */
 import { normalizeTitle } from "../library/SeriesStore.js";
+import { ENSURE_DEFAULT_FOLDERS } from "../storage/schema.js";
 import { toSqlBoolean, withTransaction, type SqlDriver } from "../storage/SqlDriver.js";
 import { describeIssues, type ValidationIssue } from "../validation.js";
 import {
@@ -299,6 +300,10 @@ async function reemplazar(driver: SqlDriver, backup: Backup, counts: Counts): Pr
       folder.sort,
       folder.updatedAt,
     ]);
+  }
+  // El respaldo no trae la marca del sistema (F52): se recupera «Favoritos» sin duplicarla.
+  for (const sentencia of ENSURE_DEFAULT_FOLDERS) {
+    await driver.exec(sentencia);
   }
   for (const row of backup.series) {
     await insertarSerie(driver, row);

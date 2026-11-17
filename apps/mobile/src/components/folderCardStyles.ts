@@ -28,13 +28,16 @@ export interface FolderCardStyleShape {
   shadowOpacity: number;
 }
 
-/** Estilo del contenedor de la tarjeta de carpeta. */
-export function folderCardStyle(): FolderCardStyleShape {
+/**
+ * Estilo del contenedor de la tarjeta de carpeta. `selected` (F52) usa el mismo trato que un
+ * chip seleccionado: fondo `badgeBg` y borde `accent`.
+ */
+export function folderCardStyle(selected = false): FolderCardStyleShape {
   return {
-    backgroundColor: colors.surface,
+    backgroundColor: selected ? colors.badgeBg : colors.surface,
     borderRadius: radii.card,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: selected ? colors.accent : colors.border,
     padding: spacing.md,
     gap: spacing.sm,
     minHeight: touchTarget.min,

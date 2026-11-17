@@ -23,6 +23,8 @@ export interface FolderCardProps {
   count: number;
   /** Etiqueta accesible (p. ej. «Favoritos Épicos, 24 obras»). */
   accessibilityLabel?: string;
+  /** F52: la carpeta que filtra la pantalla (mismo trato que un chip seleccionado). */
+  selected?: boolean;
   onPress?: () => void;
 }
 
@@ -31,15 +33,17 @@ export default function FolderCard({
   description,
   count,
   accessibilityLabel,
+  selected = false,
   onPress,
 }: FolderCardProps) {
   const colors = folderCardColors();
-  const shape = folderCardStyle();
+  const shape = folderCardStyle(selected);
   const countLabel = `${count} obras`;
 
   return (
     <FocusPressable
       accessibilityRole="button"
+      accessibilityState={{ selected }}
       accessibilityLabel={accessibilityLabel ?? `${name}, ${countLabel}`}
       onPress={onPress}
       style={[styles.container, shape]}
@@ -63,7 +67,7 @@ export default function FolderCard({
         </View>
       </View>
       <View style={[styles.textBlock, { marginTop: shape.gap, gap: shape.gap / 3 }]}>
-        <Text style={[styles.name, { color: colors.name }]} numberOfLines={1}>
+        <Text style={[styles.name, { color: colors.name }]} numberOfLines={3}>
           {name}
         </Text>
         {description ? (

@@ -14,6 +14,8 @@ export interface FolderRecord {
   name: string;
   sort: number;
   updatedAt: number;
+  /** `"favorites"` = carpeta por defecto (F52): no se borra ni se renombra. `null` = del usuario. */
+  system: "favorites" | null;
 }
 
 /** Nueva posición de una carpeta en el reorden. */
@@ -27,10 +29,17 @@ interface FolderRow {
   name: string;
   sort: number;
   updated_at: number;
+  system: string | null;
 }
 
 function toRecord(fila: FolderRow): FolderRecord {
-  return { id: fila.id, name: fila.name, sort: fila.sort, updatedAt: fila.updated_at };
+  return {
+    id: fila.id,
+    name: fila.name,
+    sort: fila.sort,
+    updatedAt: fila.updated_at,
+    system: fila.system === "favorites" ? "favorites" : null,
+  };
 }
 
 export class Folders {
@@ -63,11 +72,20 @@ export class Folders {
   }
 
   async rename(id: number, name: string): Promise<void> {
+    await this.#assertUserFolder(id, "renombrar");
     await this.#driver.run("UPDATE folder SET name = ?, updated_at = ? WHERE id = ?", [
       name,
       this.#clock.now(),
       id,
     ]);
+  }
+
+  /** Las carpetas del sistema (F52) no se tocan: se rechaza antes de escribir. */
+  async #assertUserFolder(id: number, accion: string): Promise<void> {
+    const carpeta = await this.get(id);
+    if (carpeta !== undefined && carpeta.system !== null) {
+      throw new Error(`No se puede ${accion} una carpeta del sistema`);
+    }
   }
 
   /** Reordena de golpe: todas las posiciones se escriben en una sola transacción. */
@@ -86,6 +104,7 @@ export class Folders {
 
   /** Borra la carpeta. Sus favoritos quedan, pero sin carpeta (`ON DELETE SET NULL`). */
   async remove(id: number): Promise<void> {
+    await this.#assertUserFolder(id, "borrar");
     await this.#driver.run("DELETE FROM folder WHERE id = ?", [id]);
   }
 }

@@ -46,7 +46,7 @@ beforeAll(async () => {
   driver = await openMigratedDriver();
 
   const ahora = 1_700_000_000_000;
-  await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (1, 'Tesoros', 0, ?)", [
+  await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (50, 'Tesoros', 0, ?)", [
     ahora,
   ]);
 
@@ -72,7 +72,7 @@ beforeAll(async () => {
       );
       await driver.run(
         "INSERT INTO favorite (module_id, series_id, folder_id, added_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-        [modulo, serieId, i % 4 === 0 ? 1 : null, ahora + i, ahora + i],
+        [modulo, serieId, i % 4 === 0 ? 50 : null, ahora + i, ahora + i],
       );
       if (i % 5 === 0) {
         await driver.run(
@@ -125,7 +125,7 @@ describe("biblioteca con 3000 series (AC-4)", () => {
 
   it(`el filtro por carpeta con NSFW apagado responde en menos de ${LIMITE_MS} ms`, async () => {
     const ms = await milisegundos(() =>
-      browseLibrary(driver, { folderId: 1, order: "name", limit: 40 }),
+      browseLibrary(driver, { folderId: 50, order: "name", limit: 40 }),
     );
 
     expect(ms).toBeLessThan(LIMITE_MS);

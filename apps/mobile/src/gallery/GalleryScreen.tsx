@@ -431,6 +431,14 @@ export default function GalleryScreen() {
             <FolderCard name="Lectura Nocturna" description="Atmósfera y Misterio" count={14} />
           </View>
         </View>
+        <View style={styles.row}>
+          <View style={{ flex: 1 }}>
+            <FolderCard name={t("library.folder.gems")} count={48} selected />
+          </View>
+          <View style={{ flex: 1 }}>
+            <FolderCard name={t("library.folder.favorites")} count={0} />
+          </View>
+        </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.homeScreen")}</Text>
         <View style={styles.shellPreview}>

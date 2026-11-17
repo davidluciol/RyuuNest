@@ -46,6 +46,8 @@ let driver: Awaited<ReturnType<typeof openMigratedDriver>>;
 
 beforeEach(async () => {
   driver = await openMigratedDriver();
+  // Estas pruebas fijan los `id` de carpeta: se quita la «Favoritos» que siembra el sistema (F52).
+  await driver.run("DELETE FROM folder");
 });
 
 afterEach(() => {

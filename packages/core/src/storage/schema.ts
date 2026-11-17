@@ -10,7 +10,7 @@
  */
 
 /** Versión del esquema: sube con cada migración nueva (SPEC §8.1). */
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 /** Tablas, claves y valores por defecto del SPEC §8.1. */
 const TABLAS: readonly string[] = [
@@ -90,4 +90,26 @@ export const MIGRATION_2: readonly string[] = [
    app_version TEXT NOT NULL,
    platform TEXT NOT NULL
  )`,
+];
+
+/**
+ * Carpeta por defecto «Favoritos» (F52). Idempotente: adopta la carpeta del usuario que ya se
+ * llame así (sin perder sus series) o la crea; si ya hay una marcada, no hace nada. La reusan
+ * la migración 3 y el reemplazo de respaldo, que vacía `folder`. «Gemas» no tiene fila: es la
+ * vista de todas las series.
+ */
+export const ENSURE_DEFAULT_FOLDERS: readonly string[] = [
+  `UPDATE folder SET system = 'favorites', name = 'Favoritos'
+   WHERE id = (SELECT MIN(id) FROM folder WHERE lower(name) = 'favoritos')
+     AND NOT EXISTS (SELECT 1 FROM folder WHERE system = 'favorites')`,
+  `INSERT INTO folder (name, sort, updated_at, system)
+   SELECT 'Favoritos', 0, CAST(strftime('%s', 'now') AS INTEGER) * 1000, 'favorites'
+   WHERE NOT EXISTS (SELECT 1 FROM folder WHERE system = 'favorites')`,
+];
+
+/** Migración 3 (F52): marca de carpeta del sistema y siembra de «Favoritos». Aditiva. */
+export const MIGRATION_3: readonly string[] = [
+  "ALTER TABLE folder ADD COLUMN system TEXT",
+  "CREATE UNIQUE INDEX IF NOT EXISTS idx_folder_system ON folder(system) WHERE system IS NOT NULL",
+  ...ENSURE_DEFAULT_FOLDERS,
 ];

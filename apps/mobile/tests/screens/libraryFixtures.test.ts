@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   DEFAULT_LIBRARY_FILTERS,
+  GEMS_FOLDER_ID,
   SAMPLE_LIBRARY_DATA,
   filterLibrarySeries,
   libraryGridRows,
@@ -133,9 +134,25 @@ describe("filterLibrarySeries (F14a/F14b)", () => {
     expect(ids).toEqual(["leido", "sin-marca", "viejo"]);
   });
 
-  it("cifras coherentes con Inicio (D1): 3 carpetas, 48 obras totales", () => {
-    expect(SAMPLE_LIBRARY_DATA.folders).toHaveLength(3);
-    const total = SAMPLE_LIBRARY_DATA.folders.reduce((sum, f) => sum + f.count, 0);
-    expect(total).toBe(48);
+  it("cifras coherentes con Inicio (D1): Gemas (todo) y 3 carpetas, 48 obras totales", () => {
+    const gems = SAMPLE_LIBRARY_DATA.folders.find((f) => f.kind === "gems");
+    const reales = SAMPLE_LIBRARY_DATA.folders.filter((f) => f.kind !== "gems");
+    expect(gems).toMatchObject({ id: GEMS_FOLDER_ID, name: "Gemas", count: 48 });
+    expect(reales).toHaveLength(3);
+    expect(reales.reduce((sum, f) => sum + f.count, 0)).toBe(48);
+  });
+
+  it("la carpeta Favoritos de ejemplo es la del sistema (F52)", () => {
+    expect(SAMPLE_LIBRARY_DATA.folders.map((f) => f.kind)).toEqual([
+      "gems",
+      "favorites",
+      undefined,
+      undefined,
+    ]);
+  });
+
+  it("elegir Gemas no filtra: es la vista de todas las series (F52)", () => {
+    const filters: LibraryFilters = { ...DEFAULT_LIBRARY_FILTERS, folderId: GEMS_FOLDER_ID };
+    expect(filterLibrarySeries(all, filters)).toEqual(filterLibrarySeries(all, DEFAULT_LIBRARY_FILTERS));
   });
 });
