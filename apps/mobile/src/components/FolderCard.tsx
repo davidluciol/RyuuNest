@@ -2,7 +2,7 @@ import FocusPressable from "./FocusPressable";
 import { StyleSheet, Text, View } from "react-native";
 import { Folder, Zap } from "../icons";
 import { t } from "../i18n";
-import { radii, spacing, typography } from "@ryuunest/ui-tokens";
+import { spacing, typography } from "@ryuunest/ui-tokens";
 
 import {
   FOLDER_CARD_ICON_SIZE,
@@ -60,7 +60,7 @@ export default function FolderCard({
       onPress={onPress}
       style={[folderCardContainer(), shape]}
     >
-      <View style={styles.topRow}>
+      <View style={[styles.row, { gap: shape.gap }]}>
         <View
           style={[
             styles.iconBox,
@@ -74,60 +74,46 @@ export default function FolderCard({
         >
           <Folder size={spacing.lg} color={colors.icon} />
         </View>
-        <View style={styles.badges}>
-          {dynamic ? (
-            <Zap size={spacing.md} color={colors.icon} testID="folder-card-dynamic" />
-          ) : null}
-          <View style={[styles.countPill, { backgroundColor: colors.countBackground }]}>
-            <Text style={[styles.countText, { color: colors.countText }]}>{countLabel}</Text>
+        <View style={styles.textBlock}>
+          <Text style={[styles.name, { color: colors.name }]} numberOfLines={2}>
+            {name}
+          </Text>
+          <View style={styles.meta}>
+            {dynamic ? (
+              <Zap size={spacing.md} color={colors.icon} testID="folder-card-dynamic" />
+            ) : null}
+            <Text style={[styles.count, { color: colors.countText }]} numberOfLines={1}>
+              {description ? `${countLabel} · ${description}` : countLabel}
+            </Text>
           </View>
         </View>
-      </View>
-      <View style={[styles.textBlock, { marginTop: shape.gap, gap: shape.gap / 3 }]}>
-        <Text style={[styles.name, { color: colors.name }]} numberOfLines={3}>
-          {name}
-        </Text>
-        {description ? (
-          <Text style={[styles.description, { color: colors.description }]} numberOfLines={1}>
-            {description}
-          </Text>
-        ) : null}
       </View>
     </FocusPressable>
   );
 }
 
 const styles = StyleSheet.create({
-  topRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-  },
-  badges: {
+  row: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.xs,
-    flexShrink: 1,
   },
   iconBox: {
     alignItems: "center",
     justifyContent: "center",
   },
-  countPill: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
-    borderRadius: radii.pill,
-  },
-  countText: {
-    ...textStyle(typography.labelMd),
-  },
   textBlock: {
+    flex: 1,
     minWidth: 0,
   },
   name: {
     ...textStyle(typography.titleLg),
   },
-  description: {
+  meta: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+  },
+  count: {
     ...textStyle(typography.bodySm),
   },
 });

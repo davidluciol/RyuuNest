@@ -56,7 +56,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       const cajaCarpeta = await tarjeta.boundingBox();
       const nombre = await page.getByText("Lectura Nocturna", { exact: true }).first().boundingBox();
       assert.ok(cajaCarpeta && nombre && nombre.y + nombre.height <= cajaCarpeta.y + cajaCarpeta.height + 1, `nombre dentro de la tarjeta @${width}`);
-      assert.ok(cajaCarpeta.height > 90, `tarjeta crece con su contenido @${width}`);
+      assert.ok(cajaCarpeta.height >= 48 && nombre.height > 0, `tarjeta contiene el nombre visible @${width}`);
       await favoritos.click();
       assert.equal(await elegida(favoritos), true, `Favoritos elegida @${width}`);
       assert.equal(await elegida(gemas), false, `Gemas ya no @${width}`);
