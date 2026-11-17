@@ -204,10 +204,10 @@ Dep: F52 · M · `apps/mobile/src/screens/library/*`, `apps/mobile/src/component
 
 Dep: F52, F53 · M · `apps/mobile/src/screens/library/*`, `packages/core/src/library/{Favorites,Folders}.ts`
 
-- [ ] Pulsación larga en una serie (en **Gemas y en toda Tesoros**) abre una hoja con: **Eliminar** (con `ConfirmSheet`; no borra el progreso, RF-30), **Mover** (lista de carpetas; la serie pasa a la elegida), **Mover y crear** (abre el modal de F53 y mueve la serie a la carpeta nueva) y **Añadir a favoritos**
-- [ ] Rojo (núcleo): operaciones atómicas de mover/crear+mover/quitar; que «Eliminar» use `removeSeriesFromLibrary`
-- [ ] Alternativa accesible a la pulsación larga (TV/teclado: botón de menú), foco visible
-- Verif: Vitest con SQLite real + Playwright + 🧍 S25 (pulsación larga) y MiBox 4 (D-pad)
+- [x] Pulsación larga en una serie (en **Gemas y en toda Tesoros**) abre una hoja con: **Eliminar** (con `ConfirmSheet`; conserva el progreso, RF-30), **Mover** (lista de carpetas; la serie pasa a la elegida), **Mover y crear** (abre el modal de F53 y mueve la serie a la carpeta nueva) y **Añadir a favoritos**
+- [x] Rojo (núcleo): operaciones atómicas de mover/crear+mover/quitar; que «Eliminar» use `Favorites.remove` (conserva el progreso; P-163 corrige la referencia a `removeSeriesFromLibrary`, que lo borra)
+- [x] Alternativa accesible a la pulsación larga (TV/teclado: botón de menú), foco visible
+- Verif: ✅ Vitest con SQLite real + ✅ Playwright 426/1440 (`library.cjs`: pulsación larga, «⋮» con foco, mover, crear y mover, eliminar) · 🧍 S25 (pulsación larga) y MiBox 4 (D-pad) pendientes
 
 ### F55 Búsqueda en tiempo real y filtros por categoría `[FE · Intermedia · N3]`
 

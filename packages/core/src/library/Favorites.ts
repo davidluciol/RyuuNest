@@ -77,6 +77,19 @@ export class Favorites {
     );
   }
 
+  /**
+   * «Añadir a favoritos» (F54): pasa la serie a la carpeta del sistema «Favoritos» y la saca de
+   * la que tuviera (una sola carpeta, D-12). Si la serie no está guardada, no hace nada.
+   */
+  async moveToFavorites(moduleId: string, seriesId: string): Promise<void> {
+    await this.#driver.run(
+      `UPDATE favorite SET updated_at = ?,
+         folder_id = (SELECT id FROM folder WHERE system = 'favorites')
+       WHERE module_id = ? AND series_id = ?`,
+      [this.#clock.now(), moduleId, seriesId],
+    );
+  }
+
   async get(moduleId: string, seriesId: string): Promise<FavoriteRecord | undefined> {
     const fila = await this.#driver.get<FavoriteRow>(
       "SELECT * FROM favorite WHERE module_id = ? AND series_id = ?",

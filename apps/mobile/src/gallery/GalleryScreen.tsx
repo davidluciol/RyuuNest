@@ -68,6 +68,7 @@ import CodeChip from "../components/CodeChip";
 import ConfirmSheet from "../components/ConfirmSheet";
 import FloatingActionButton from "../components/FloatingActionButton";
 import NewFolderSheet from "../components/NewFolderSheet";
+import SeriesMenuSheet from "../components/SeriesMenuSheet";
 import ErrorDialog from "../components/ErrorDialog";
 import LogEventRow from "../components/LogEventRow";
 import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen";
@@ -134,6 +135,7 @@ export default function GalleryScreen() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [newFolderOpen, setNewFolderOpen] = useState(false);
+  const [seriesMenuOpen, setSeriesMenuOpen] = useState(false);
   const { width } = useWindowDimensions();
   const screen = layoutForWidth(width);
   const density = densityLayout("comfortable", width);
@@ -699,6 +701,28 @@ export default function GalleryScreen() {
             availableTags={SAMPLE_LIBRARY_DATA.tags}
             onSubmit={async () => null}
             onClose={() => setNewFolderOpen(false)}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.seriesMenu")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.seriesMenu.show")}
+            testID="gallery-show-series-menu"
+            onPress={() => setSeriesMenuOpen(true)}
+          />
+          <SeriesMenuSheet
+            visible={seriesMenuOpen}
+            title={SAMPLE_LIBRARY_DATA.series[0]?.title ?? ""}
+            folders={SAMPLE_LIBRARY_DATA.folders.filter((folder) => folder.kind !== "gems")}
+            currentFolderId={SAMPLE_LIBRARY_DATA.series[0]?.folderId ?? null}
+            inFavorites={false}
+            onMove={() => setSeriesMenuOpen(false)}
+            onMoveAndCreate={() => setSeriesMenuOpen(false)}
+            onAddToFavorites={() => setSeriesMenuOpen(false)}
+            onRemove={() => setSeriesMenuOpen(false)}
+            onClose={() => setSeriesMenuOpen(false)}
           />
         </View>
 

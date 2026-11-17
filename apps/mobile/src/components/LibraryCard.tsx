@@ -1,13 +1,17 @@
+import { useState } from "react";
 import FocusPressable from "./FocusPressable";
 // expo-image: el Image de react-native no envía `source.headers` en Android (F35).
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
+
+import { MoreVertical } from "../icons";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "./Badge";
 import {
   LIBRARY_CARD_TITLE_LINES,
   libraryCardBadgeStyle,
+  libraryCardMenuStyle,
   libraryCardMetaStyle,
   libraryCardProgressStyle,
   libraryCardStyle,
@@ -37,6 +41,15 @@ export interface LibraryCardProps {
   /** Accesibilidad: nombre completo de la serie. */
   accessibilityLabel?: string;
   onPress?: () => void;
+  /** F54 — pulsación larga: abre el menú de la serie. */
+  onLongPress?: () => void;
+  /**
+   * F54 — alternativa a la pulsación larga para teclado y D-pad: un «⋮» que aparece con el
+   * foco (el táctil usa la pulsación larga). Siempre montado para que el foco pueda llegar.
+   */
+  onMenuPress?: () => void;
+  /** Etiqueta accesible del «⋮». */
+  menuLabel?: string;
 }
 
 export default function LibraryCard({
@@ -47,7 +60,14 @@ export default function LibraryCard({
   meta,
   accessibilityLabel,
   onPress,
+  onLongPress,
+  onMenuPress,
+  menuLabel,
 }: LibraryCardProps) {
+  const [cardFocused, setCardFocused] = useState(false);
+  const [menuFocused, setMenuFocused] = useState(false);
+  const menuStyle = libraryCardMenuStyle();
+  const menuVisible = cardFocused || menuFocused;
   const cardStyle = libraryCardStyle();
   const titleStyle = libraryCardTitleStyle();
   const badgeStyle = libraryCardBadgeStyle();
@@ -59,6 +79,9 @@ export default function LibraryCard({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
       onPress={onPress}
+      onLongPress={onLongPress}
+      onFocus={() => setCardFocused(true)}
+      onBlur={() => setCardFocused(false)}
       style={styles.container}
     >
       <View
@@ -95,6 +118,30 @@ export default function LibraryCard({
             <View style={libraryCardProgressStyle(progress)} />
           </View>
         ) : null}
+        {onMenuPress !== undefined ? (
+          <FocusPressable
+            accessibilityRole="button"
+            accessibilityLabel={menuLabel}
+            onPress={onMenuPress}
+            onFocus={() => setMenuFocused(true)}
+            onBlur={() => setMenuFocused(false)}
+            hitSlop={menuStyle.hitSlop}
+            // Invisible y sin tacto hasta recibir el foco: el táctil usa la pulsación larga.
+            pointerEvents={menuVisible ? "auto" : "none"}
+            style={[
+              styles.menu,
+              {
+                width: menuStyle.size,
+                height: menuStyle.size,
+                borderRadius: menuStyle.size / 2,
+                backgroundColor: menuStyle.backgroundColor,
+                opacity: menuVisible ? 1 : 0,
+              },
+            ]}
+          >
+            <MoreVertical size={menuStyle.iconSize} color={menuStyle.iconColor} />
+          </FocusPressable>
+        ) : null}
       </View>
       <Text
         style={[styles.title, { ...textStyle(titleStyle), color: titleStyle.color }]}
@@ -129,6 +176,13 @@ const styles = StyleSheet.create({
   badgeWrap: {
     position: "absolute",
     paddingHorizontal: spacing.xs,
+    justifyContent: "center",
+  },
+  menu: {
+    position: "absolute",
+    top: spacing.xs,
+    right: spacing.xs,
+    alignItems: "center",
     justifyContent: "center",
   },
   progressTrack: {

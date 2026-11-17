@@ -70,15 +70,42 @@ export class Folders {
    * vacío ni repetirse (sin distinguir mayúsculas, acentos ni espacios de los bordes).
    */
   async create(name: string, sort = 0, tags: readonly string[] = []): Promise<number> {
-    const limpio = await this.#validName(name);
+    return withTransaction(this.#driver, () => this.#insert(name, sort, tags));
+  }
+
+  /**
+   * Crea la carpeta y mueve a ella una serie guardada, en una sola transacción (F54: «Mover y
+   * crear»). Si el nombre no vale o la serie no está en la biblioteca, no queda nada creado.
+   */
+  async createAndMove(
+    name: string,
+    sort: number,
+    tags: readonly string[],
+    moduleId: string,
+    seriesId: string,
+  ): Promise<number> {
     return withTransaction(this.#driver, async () => {
-      const resultado = await this.#driver.run(
-        "INSERT INTO folder (name, sort, updated_at) VALUES (?, ?, ?)",
-        [limpio, sort, this.#clock.now()],
+      const id = await this.#insert(name, sort, tags);
+      const movida = await this.#driver.run(
+        "UPDATE favorite SET folder_id = ?, updated_at = ? WHERE module_id = ? AND series_id = ?",
+        [id, this.#clock.now(), moduleId, seriesId],
       );
-      await replaceTags(this.#driver, "folder_tag", [resultado.lastInsertRowid], tags);
-      return resultado.lastInsertRowid;
+      if (movida.changes === 0) {
+        throw new Error("La serie no está en la biblioteca");
+      }
+      return id;
     });
+  }
+
+  /** Inserta la carpeta y sus etiquetas; quien llama pone la transacción. */
+  async #insert(name: string, sort: number, tags: readonly string[]): Promise<number> {
+    const limpio = await this.#validName(name);
+    const resultado = await this.#driver.run(
+      "INSERT INTO folder (name, sort, updated_at) VALUES (?, ?, ?)",
+      [limpio, sort, this.#clock.now()],
+    );
+    await replaceTags(this.#driver, "folder_tag", [resultado.lastInsertRowid], tags);
+    return resultado.lastInsertRowid;
   }
 
   /** Etiquetas de la carpeta inteligente, por orden. */

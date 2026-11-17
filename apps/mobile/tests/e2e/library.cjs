@@ -76,6 +76,59 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByTestId("new-folder-create").click();
       await sheet.waitFor({ state: "hidden" });
       await page.getByRole("button", { name: /^Mis acción, \d+ obras$/ }).waitFor({ state: "visible" });
+      // F54: menú de la serie (pulsación larga y «⋮» con foco): favoritos, mover, mover y crear, eliminar.
+      const contar = async (nombre) => {
+        const boton = page.getByRole("button", { name: new RegExp(`^${nombre}, \\d+ obras$`) });
+        await boton.scrollIntoViewIfNeeded();
+        return Number((await boton.getAttribute("aria-label")).match(/(\d+) obras$/)[1]);
+      };
+      const serie = page.getByRole("button", { name: "Crónicas de Moonlit", exact: true });
+      const menu = page.getByTestId("series-menu");
+      const favoritosAntes = await contar("Favoritos");
+      const nocturnaAntes = await contar("Lectura Nocturna");
+      const gemasAntes = await contar("Gemas");
+      await serie.scrollIntoViewIfNeeded();
+      const caja = await serie.boundingBox();
+      await page.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 3);
+      await page.mouse.down();
+      await page.waitForTimeout(700);
+      await page.mouse.up();
+      await menu.waitFor({ state: "visible" });
+      await page.screenshot({ path: process.env.F52_SHOT ? `${process.env.F52_SHOT}-menu-${width}.png` : undefined });
+      await page.getByTestId("series-menu-favorite").click();
+      await menu.waitFor({ state: "hidden" });
+      assert.equal(await contar("Favoritos"), favoritosAntes + 1, `Añadir a favoritos @${width}`);
+      assert.equal(await contar("Lectura Nocturna"), nocturnaAntes - 1, `sale de su carpeta @${width}`);
+
+      // Teclado: el «⋮» solo se ve con el foco y abre el mismo menú.
+      const opacidad = (el) => el.evaluate((n) => getComputedStyle(n).opacity);
+      const puntos = page.getByRole("button", { name: "Menú de Crónicas de Moonlit" });
+      await page.evaluate(() => document.activeElement && document.activeElement.blur());
+      assert.equal(await opacidad(puntos), "0", `⋮ oculto sin foco @${width}`);
+      await puntos.focus();
+      assert.equal(await opacidad(puntos), "1", `⋮ visible con foco @${width}`);
+      await page.keyboard.press("Enter");
+      await menu.waitFor({ state: "visible" });
+      assert.equal(await page.getByTestId("series-menu-favorite").count(), 0, `ya está en Favoritos @${width}`);
+      await page.getByTestId("series-menu-move").click();
+      await page.getByRole("button", { name: /^Completados$/ }).click();
+      await menu.waitFor({ state: "hidden" });
+      assert.equal(await contar("Favoritos"), favoritosAntes, `Mover saca de Favoritos @${width}`);
+
+      await puntos.focus();
+      await page.keyboard.press("Enter");
+      await page.getByTestId("series-menu-move-create").click();
+      await page.getByTestId("new-folder-name").fill("Recién movidas");
+      await page.getByTestId("new-folder-create").click();
+      await page.getByRole("button", { name: /^Recién movidas, 1 obras$/ }).waitFor({ state: "visible" });
+      await page.getByTestId("new-folder-sheet").waitFor({ state: "hidden" });
+
+      await puntos.focus();
+      await page.keyboard.press("Enter");
+      await page.getByTestId("series-menu-remove").click();
+      await page.getByTestId("library-remove-confirm-submit").click();
+      assert.equal(await contar("Gemas"), gemasAntes - 1, `Eliminar quita de Tesoros @${width}`);
+      assert.equal(await serie.count(), 0, `la serie ya no está @${width}`);
       await page.screenshot({ path: process.env.F52_SHOT ? `${process.env.F52_SHOT}-${width}.png` : undefined });
       assert.equal(
         await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
