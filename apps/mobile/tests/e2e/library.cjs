@@ -34,8 +34,8 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       // react-native-web no expone `selected` como atributo: se lee el borde `accent` (#35C98A).
       const elegida = async (card) =>
         (await card.evaluate((el) => getComputedStyle(el).borderTopColor)) === "rgb(53, 201, 138)";
-      const gemas = page.getByRole("button", { name: /^Gemas, 48 obras$/ });
-      const favoritos = page.getByRole("button", { name: /^Favoritos, 24 obras$/ });
+      const gemas = page.getByRole("button", { name: /^Gemas, 48 obras(, Carpeta dinámica)?$/ });
+      const favoritos = page.getByRole("button", { name: /^Favoritos, 24 obras(, Carpeta dinámica)?$/ });
       await gemas.waitFor({ state: "visible" });
       await favoritos.waitFor({ state: "visible" });
       assert.equal(await elegida(gemas), true, `Gemas elegida @${width}`);
@@ -51,6 +51,12 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
           .evaluate((el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1);
         assert.equal(recortado, false, `«${nombre}» recortado @${width}`);
       }
+      // Corrección carpetas: el nombre y el icono quedan dentro de la tarjeta (antes se salían).
+      const tarjeta = page.getByRole("button", { name: /^Lectura Nocturna, \d+ obras/ });
+      const cajaCarpeta = await tarjeta.boundingBox();
+      const nombre = await page.getByText("Lectura Nocturna", { exact: true }).first().boundingBox();
+      assert.ok(cajaCarpeta && nombre && nombre.y + nombre.height <= cajaCarpeta.y + cajaCarpeta.height + 1, `nombre dentro de la tarjeta @${width}`);
+      assert.ok(cajaCarpeta.height >= 48 && nombre.height > 0, `tarjeta contiene el nombre visible @${width}`);
       await favoritos.click();
       assert.equal(await elegida(favoritos), true, `Favoritos elegida @${width}`);
       assert.equal(await elegida(gemas), false, `Gemas ya no @${width}`);
@@ -75,7 +81,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.screenshot({ path: process.env.F52_SHOT ? `${process.env.F52_SHOT}-sheet-${width}.png` : undefined });
       await page.getByTestId("new-folder-create").click();
       await sheet.waitFor({ state: "hidden" });
-      await page.getByRole("button", { name: /^Mis acción, \d+ obras$/ }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: /^Mis acción, \d+ obras(, Carpeta dinámica)?$/ }).waitFor({ state: "visible" });
       // F55: búsqueda en tiempo real por palabras y filtro por categoría (alguna de las marcadas).
       const buscador = page.getByPlaceholder("Buscar en tus tesoros…");
       const oculta = (titulo) => page.getByRole("button", { name: titulo, exact: true }).waitFor({ state: "hidden" });
@@ -140,9 +146,9 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
 
       // F54: menú de la serie (pulsación larga y «⋮» con foco): favoritos, mover, mover y crear, eliminar.
       const contar = async (nombre) => {
-        const boton = page.getByRole("button", { name: new RegExp(`^${nombre}, \\d+ obras$`) });
+        const boton = page.getByRole("button", { name: new RegExp(`^${nombre}, \\\d+ obras(, Carpeta dinámica)?$`) });
         await boton.scrollIntoViewIfNeeded();
-        return Number((await boton.getAttribute("aria-label")).match(/(\d+) obras$/)[1]);
+        return Number((await boton.getAttribute("aria-label")).match(/(\d+) obras(, Carpeta dinámica)?$/)[1]);
       };
       const serie = page.getByRole("button", { name: "Crónicas de Moonlit", exact: true });
       const menu = page.getByTestId("series-menu");
@@ -182,7 +188,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByTestId("series-menu-move-create").click();
       await page.getByTestId("new-folder-name").fill("Recién movidas");
       await page.getByTestId("new-folder-create").click();
-      await page.getByRole("button", { name: /^Recién movidas, 1 obras$/ }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: /^Recién movidas, 1 obras(, Carpeta dinámica)?$/ }).waitFor({ state: "visible" });
       await page.getByTestId("new-folder-sheet").waitFor({ state: "hidden" });
 
       await puntos.focus();

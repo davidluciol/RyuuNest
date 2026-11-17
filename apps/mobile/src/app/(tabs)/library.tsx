@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { dragonNightColors } from "@ryuunest/ui-tokens";
 
@@ -19,6 +20,9 @@ export default function LibraryRoute() {
         initialFilters={{ nsfwVisible: settings.nsfwVisible }}
         onCreateFolder={library.createFolder}
         seriesActions={library.seriesActions}
+        onSeriesPress={(seriesId, moduleId) =>
+          router.push({ pathname: "/series/[moduleId]/[seriesId]", params: { moduleId, seriesId } })
+        }
       />
     );
   }

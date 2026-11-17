@@ -47,6 +47,14 @@ export function folderCardStyle(selected = false): FolderCardStyleShape {
   };
 }
 
+/**
+ * Contenedor de la tarjeta: crece con su contenido. Con `flex: 1` (flexBasis 0) dentro de la fila
+ * que se desplaza se quedaba en `minHeight` y el icono y el nombre se salían de la tarjeta.
+ */
+export function folderCardContainer(): { flexGrow: number; flexShrink: number } {
+  return { flexGrow: 1, flexShrink: 0 };
+}
+
 export interface FolderCardColors {
   /** Nombre de la carpeta (Manrope, `title-lg`). */
   name: string;

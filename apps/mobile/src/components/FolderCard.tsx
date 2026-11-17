@@ -1,9 +1,15 @@
 import FocusPressable from "./FocusPressable";
 import { StyleSheet, Text, View } from "react-native";
-import { Folder } from "../icons";
-import { radii, spacing, typography } from "@ryuunest/ui-tokens";
+import { Folder, Zap } from "../icons";
+import { t } from "../i18n";
+import { spacing, typography } from "@ryuunest/ui-tokens";
 
-import { FOLDER_CARD_ICON_SIZE, folderCardColors, folderCardStyle } from "./folderCardStyles";
+import {
+  FOLDER_CARD_ICON_SIZE,
+  folderCardColors,
+  folderCardContainer,
+  folderCardStyle,
+} from "./folderCardStyles";
 import { textStyle } from "./textStyle";
 
 /**
@@ -23,6 +29,8 @@ export interface FolderCardProps {
   count: number;
   /** Etiqueta accesible (p. ej. «Favoritos Épicos, 24 obras»). */
   accessibilityLabel?: string;
+  /** Carpeta dinámica (con etiquetas): se marca con un rayo pequeño. */
+  dynamic?: boolean;
   /** F52: la carpeta que filtra la pantalla (mismo trato que un chip seleccionado). */
   selected?: boolean;
   onPress?: () => void;
@@ -33,6 +41,7 @@ export default function FolderCard({
   description,
   count,
   accessibilityLabel,
+  dynamic = false,
   selected = false,
   onPress,
 }: FolderCardProps) {
@@ -44,11 +53,14 @@ export default function FolderCard({
     <FocusPressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      accessibilityLabel={accessibilityLabel ?? `${name}, ${countLabel}`}
+      accessibilityLabel={
+        accessibilityLabel ??
+        `${name}, ${countLabel}${dynamic ? `, ${t("library.folder.dynamic")}` : ""}`
+      }
       onPress={onPress}
-      style={[styles.container, shape]}
+      style={[folderCardContainer(), shape]}
     >
-      <View style={styles.topRow}>
+      <View style={[styles.row, { gap: shape.gap }]}>
         <View
           style={[
             styles.iconBox,
@@ -62,52 +74,46 @@ export default function FolderCard({
         >
           <Folder size={spacing.lg} color={colors.icon} />
         </View>
-        <View style={[styles.countPill, { backgroundColor: colors.countBackground }]}>
-          <Text style={[styles.countText, { color: colors.countText }]}>{countLabel}</Text>
-        </View>
-      </View>
-      <View style={[styles.textBlock, { marginTop: shape.gap, gap: shape.gap / 3 }]}>
-        <Text style={[styles.name, { color: colors.name }]} numberOfLines={3}>
-          {name}
-        </Text>
-        {description ? (
-          <Text style={[styles.description, { color: colors.description }]} numberOfLines={1}>
-            {description}
+        <View style={styles.textBlock}>
+          <Text style={[styles.name, { color: colors.name }]} numberOfLines={2}>
+            {name}
           </Text>
-        ) : null}
+          <View style={styles.meta}>
+            {dynamic ? (
+              <Zap size={spacing.md} color={colors.icon} testID="folder-card-dynamic" />
+            ) : null}
+            <Text style={[styles.count, { color: colors.countText }]} numberOfLines={1}>
+              {description ? `${countLabel} · ${description}` : countLabel}
+            </Text>
+          </View>
+        </View>
       </View>
     </FocusPressable>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  topRow: {
+  row: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
+    alignItems: "center",
   },
   iconBox: {
     alignItems: "center",
     justifyContent: "center",
   },
-  countPill: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
-    borderRadius: radii.pill,
-  },
-  countText: {
-    ...textStyle(typography.labelMd),
-  },
   textBlock: {
+    flex: 1,
     minWidth: 0,
   },
   name: {
     ...textStyle(typography.titleLg),
   },
-  description: {
+  meta: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+  },
+  count: {
     ...textStyle(typography.bodySm),
   },
 });

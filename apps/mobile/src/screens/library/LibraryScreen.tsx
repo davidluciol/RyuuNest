@@ -296,6 +296,7 @@ export default function LibraryScreen({
                 <FolderCard
                   name={folder.name}
                   count={folder.count}
+                  dynamic={(folder.tags?.length ?? 0) > 0}
                   selected={
                     folder.kind === "gems"
                       ? filters.folderId === undefined || filters.folderId === folder.id

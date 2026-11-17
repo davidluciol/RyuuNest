@@ -443,7 +443,12 @@ export default function GalleryScreen() {
             <FolderCard name="Favoritos Épicos" description="Fantasía y Aventuras" count={24} />
           </View>
           <View style={{ flex: 1 }}>
-            <FolderCard name="Lectura Nocturna" description="Atmósfera y Misterio" count={14} />
+            <FolderCard
+              name="Lectura Nocturna"
+              description="Atmósfera y Misterio"
+              count={14}
+              dynamic
+            />
           </View>
         </View>
         <View style={styles.row}>
