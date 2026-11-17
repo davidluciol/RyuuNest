@@ -8,6 +8,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { newSeededContext } = require("./seedDb.cjs");
 
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
 const output = path.resolve(__dirname, "../../../../docs/capturasF16");
@@ -16,7 +17,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF16");
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     for (const width of [426, 1440]) {
-      const context = await browser.newContext({ viewport: { width, height: 1400 } });
+      const context = await newSeededContext(browser, { viewport: { width, height: 1400 } });
       const page = await context.newPage();
       page.setDefaultTimeout(15000);
       const errors = [];

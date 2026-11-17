@@ -73,7 +73,8 @@ async function prepare(page) {
       const sampleBackup = path.resolve(output, `respaldo-ejemplo-${width}.json`);
       await fs.writeFile(
         sampleBackup,
-        JSON.stringify({ format: "ryuunest-backup", version: 1 }),
+        // Un respaldo vacío pero válido: la base de la web es real y rechaza lo que no cumple el esquema.
+        JSON.stringify({ format: "ryuunest-backup", version: 3, createdAt: 1, repos: [], modules: [], folders: [], series: [], favorites: [], progress: [], read: [], prefs: [], settings: {} }),
         "utf8",
       );
       await chooser.setFiles(sampleBackup);

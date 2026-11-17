@@ -5,6 +5,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { newSeededContext } = require("./seedDb.cjs");
 const { destinationMarker } = require("./markers.cjs");
 
 const baseURL = process.env.HOME_URL || "http://127.0.0.1:8082";
@@ -13,7 +14,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF13");
 (async () => {
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
-    const context = await browser.newContext({ viewport: { width: 426, height: 900 } });
+    const context = await newSeededContext(browser, { viewport: { width: 426, height: 900 } });
     const page = await context.newPage();
     page.setDefaultTimeout(60000);
     const errors = [];
@@ -43,17 +44,14 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF13");
     await page.getByText("Tesoros Guardados").waitFor();
 
     // Verificar la tarjeta hero (Continuar)
-    await page.getByText("El dragón de ceniza").waitFor();
-    await page.getByRole("button", { name: /Continuar cap\. 41/ }).waitFor();
+    await page.getByText("El dragón de ceniza").first().waitFor();
+    await page.getByRole("button", { name: /Continuar cap. 2/ }).waitFor();
 
     // Verificar carrusel de recientes
-    await page.getByText("Sombras de Arcano").waitFor();
-    await page.getByText("La forja perdida").waitFor();
+    await page.getByText("Crónicas del Cielo").waitFor();
 
     // Verificar carpetas
-    await page.getByText("Favoritos Épicos").waitFor();
     await page.getByText("Lectura Nocturna").waitFor();
-    await page.getByText("Completados").waitFor();
 
     // Verificar 5 anchos
     for (const width of [320, 375, 426, 768, 1440]) {

@@ -18,6 +18,7 @@ import page1 from "../../../assets/placeholder/page-1.svg";
 import page2 from "../../../assets/placeholder/page-2.svg";
 import page3 from "../../../assets/placeholder/page-3.svg";
 import { openAppDatabase } from "../../data/appDatabase";
+import { isNativePlatform } from "../../data/backupFilesPort";
 import { createFetchHttp } from "../../data/fetchHttp";
 import { createInstalledMounter, type ModuleMounter } from "../../data/moduleMounter";
 import { createSessionSqlDriver } from "../../data/sessionSqlDriver";
@@ -168,16 +169,21 @@ async function seedSample(driver: SqlDriver): Promise<void> {
   });
 }
 
-export function createSampleReadingSource(): ReadingSource {
+/**
+ * Web: módulos de ejemplo sobre `test-site`. Sin `driver` (sin base de datos: pruebas) usa una
+ * sesión en memoria con el progreso de ejemplo; con `driver` (la base real de la web, F49b) el
+ * progreso es el que haya guardado quien usa la página.
+ */
+export function createSampleReadingSource(driver?: SqlDriver): ReadingSource {
   return createReadingSource({
-    driver: createSessionSqlDriver(),
+    driver: driver ?? createSessionSqlDriver(),
     mounter: createSampleMounter(),
     coverSource: dragonMarker,
     decorateImage: (image, index) => ({
       ...image,
       asset: SAMPLE_PAGE_ASSETS[index % SAMPLE_PAGE_ASSETS.length] as number,
     }),
-    seed: seedSample,
+    ...(driver === undefined ? { seed: seedSample } : {}),
   });
 }
 
@@ -187,21 +193,23 @@ let resolved: Promise<ReadingSource> | undefined;
 
 /**
  * La fuente de la plataforma, compartida por la ficha y el lector: en el dispositivo, los
- * módulos instalados sobre `ryuunest.db`; en web (sin SQLite, F14c) los de ejemplo con su
+ * módulos instalados sobre `ryuunest.db`; en web los de ejemplo, con la base real (F49b) o, sin ella, con su
  * sesión en memoria. Se crea una vez para que el progreso sobreviva a cambiar de pantalla.
  */
 export function resolveReadingSource(): Promise<ReadingSource> {
   resolved ??= openAppDatabase().then((driver) =>
     driver === null
       ? createSampleReadingSource()
-      : createReadingSource({
-          driver,
-          mounter: createInstalledMounter({
+      : !isNativePlatform()
+        ? createSampleReadingSource(driver)
+        : createReadingSource({
             driver,
-            http: createFetchHttp(),
-            loader: createFunctionScriptLoader(),
+            mounter: createInstalledMounter({
+              driver,
+              http: createFetchHttp(),
+              loader: createFunctionScriptLoader(),
+            }),
           }),
-        }),
   );
   return resolved;
 }

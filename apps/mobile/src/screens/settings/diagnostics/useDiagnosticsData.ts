@@ -6,6 +6,7 @@ import { createLogStore, type LogEntry } from "@ryuunest/core";
 import { copyText } from "../../../data/clipboard";
 import { createDiagnosticsFiles } from "../../../data/diagnosticsFiles";
 import { openAppDatabase } from "../../../data/appDatabase";
+import { isNativePlatform } from "../../../data/backupFilesPort";
 import { createDiagnosticsController, type DiagnosticsController } from "./diagnosticsController";
 import { createDiagnosticsService, type DiagnosticsService } from "./diagnosticsData";
 import {
@@ -29,7 +30,9 @@ let resolvedService: Promise<DiagnosticsService> | undefined;
 export function resolveDiagnosticsService(): Promise<DiagnosticsService> {
   resolvedService ??= openAppDatabase().then((driver) => {
     const files = createDiagnosticsFiles();
-    if (driver === null) return createSampleDiagnosticsService({ files, copyText });
+    // Web (F49b): el registro de ejemplo; el real vive en el dispositivo.
+    if (driver === null || !isNativePlatform())
+      return createSampleDiagnosticsService({ files, copyText });
     return createDiagnosticsService({
       logStore: createLogStore({
         driver,

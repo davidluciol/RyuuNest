@@ -8,6 +8,7 @@ const fs = require("node:fs/promises");
 const os = require("node:os");
 const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { newSeededContext } = require("./seedDb.cjs");
 
 const baseURL = process.env.DIAGNOSTICS_URL || "http://127.0.0.1:8082";
 const output = path.resolve(__dirname, "../../../../docs/capturasF30");
@@ -16,7 +17,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF30");
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     for (const width of [426, 1440]) {
-      const context = await browser.newContext({
+      const context = await newSeededContext(browser, {
         viewport: { width, height: 1400 },
         acceptDownloads: true,
         permissions: ["clipboard-read", "clipboard-write"],

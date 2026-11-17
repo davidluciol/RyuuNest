@@ -10,6 +10,7 @@
 //   GALLERY_URL=http://127.0.0.1:8082 node apps/mobile/tests/e2e/chipScroller.cjs
 const assert = require("node:assert/strict");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { newSeededContext } = require("./seedDb.cjs");
 
 const baseURL = process.env.GALLERY_URL || "http://127.0.0.1:8082";
 const ACCENT = "rgb(53, 201, 138)";
@@ -23,7 +24,7 @@ function attach(page, context) {
   });
   return context.route("**/*", (route) => {
     const url = new URL(route.request().url());
-    if (["http:", "https:"].includes(url.protocol) && url.host !== new URL(baseURL).host) {
+    if (["http:", "https:"].includes(url.protocol) && ![new URL(baseURL).host, "127.0.0.1:8082"].includes(url.host)) {
       page.external.push(url.href);
       return route.abort();
     }
@@ -133,11 +134,11 @@ const fades = (page, scroller) =>
 
     // 2) Biblioteca a 273 px: alguna fila recortada con degradado, sin desborde de página.
     {
-      const context = await browser.newContext({ viewport: { width: 273, height: 900 } });
+      const context = await newSeededContext(browser, { viewport: { width: 273, height: 900 } });
       const page = await context.newPage();
       page.setDefaultTimeout(30000);
       await attach(page, context);
-      await page.goto(`${baseURL}/library`);
+      await page.goto(`${process.env.LIBRARY_URL || "http://127.0.0.1:8082"}/library`); // el export (sin avisos de desarrollo)
       await page.getByTestId("app-shell").waitFor({ state: "visible" });
       await page.getByText("El dragón de ceniza").waitFor({ state: "visible" });
       await page.waitForTimeout(300);

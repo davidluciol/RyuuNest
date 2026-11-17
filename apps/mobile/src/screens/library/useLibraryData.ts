@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { Favorites, FolderNameError, Folders, type SqlDriver } from "@ryuunest/core";
 
 import { openAppDatabase } from "../../data/appDatabase";
@@ -40,23 +41,29 @@ export function useLibraryData(): LibraryLoad & LibraryActions {
   const [state, setState] = useState<LibraryLoad>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
 
-  useEffect(() => {
-    let cancelled = false;
-    setState({ status: "loading" });
-    resolveLibraryData(openAppDatabase, SAMPLE_LIBRARY_DATA).then(
-      (data) => {
-        if (!cancelled) setState({ status: "ready", data });
-      },
-      (error: unknown) => {
-        if (!cancelled) setState({ status: "error", error });
-      },
-    );
-    return () => {
-      cancelled = true;
-    };
-  }, [attempt]);
+  // Las pestañas siguen montadas: al volver (p. ej. de la ficha, que guarda la portada) se
+  // relee sin volver a «loading», así que no hay parpadeo.
+  useFocusEffect(
+    useCallback(() => {
+      let cancelled = false;
+      resolveLibraryData(openAppDatabase, SAMPLE_LIBRARY_DATA).then(
+        (data) => {
+          if (!cancelled) setState({ status: "ready", data });
+        },
+        (error: unknown) => {
+          if (!cancelled) setState({ status: "error", error });
+        },
+      );
+      return () => {
+        cancelled = true;
+      };
+    }, [attempt]),
+  );
 
-  const reload = useCallback(() => setAttempt((n) => n + 1), []);
+  const reload = useCallback(() => {
+    setState({ status: "loading" });
+    setAttempt((n) => n + 1);
+  }, []);
 
   const clock = { now: () => Date.now() };
   /** Posición de una carpeta nueva: después de las que hay. */

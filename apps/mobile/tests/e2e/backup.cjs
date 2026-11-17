@@ -8,6 +8,7 @@ const fs = require("node:fs/promises");
 const os = require("node:os");
 const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { newSeededContext } = require("./seedDb.cjs");
 
 const baseURL = process.env.BACKUP_URL || "http://127.0.0.1:8082";
 const output = path.resolve(__dirname, "../../../../docs/capturasF21");
@@ -16,7 +17,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF21");
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     for (const width of [426, 1440]) {
-      const context = await browser.newContext({
+      const context = await newSeededContext(browser, {
         viewport: { width, height: 1400 },
         acceptDownloads: true,
       });
@@ -64,7 +65,8 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF21");
       const exportedText = await fs.readFile(exportedPath, "utf8");
       const exportedJson = JSON.parse(exportedText);
       assert.equal(exportedJson.format, "ryuunest-backup");
-      assert.equal(exportedJson.version, 1);
+      assert.equal(exportedJson.version, 3);
+      assert.equal(exportedJson.series.length, 3, `el respaldo lleva las obras sembradas @${width}`);
       await shot("ajustes-respaldo");
 
       // Importar: se elige el archivo exportado y se abre la hoja de modo.
@@ -89,21 +91,12 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF21");
       await shot("hoja-reemplazar");
       await replaceSheet.getByTestId("backup-apply-replace").click();
 
-      // Tras importar se abren las sugerencias: repo con «Añadir» y módulo
-      // con «Ir a Fuentes»; nada se instala solo (AC-8).
+      // Base real: el respaldo exportado no trae repos ni módulos, así que la hoja de sugerencias
+      // dice que no hay nada que sugerir (nada se instala solo, AC-8).
       const suggestions = page.getByTestId("sheet-backup-suggestions");
       await suggestions.waitFor({ state: "visible" });
-      await suggestions.getByText("Repositorio de ejemplo").waitFor({ state: "visible" });
-      await suggestions.getByTestId("backup-confirm-repo-https://repositorio-ejemplo.test/index.json").waitFor({ state: "visible" });
-      await suggestions.getByText("m-ejemplo-a").waitFor({ state: "visible" });
-      await suggestions.getByText("Ir a Portales").waitFor({ state: "visible" });
+      await suggestions.getByText("El respaldo no sugiere repositorios ni módulos.").waitFor({ state: "visible" });
       await shot("hoja-sugerencias");
-
-      // Confirmar el repo lo registra (en el ejemplo, queda «Añadido»).
-      await suggestions
-        .getByTestId("backup-confirm-repo-https://repositorio-ejemplo.test/index.json")
-        .click();
-      await suggestions.getByText("Añadido").waitFor({ state: "visible" });
       await suggestions.getByText("Cerrar").click();
       await page.waitForTimeout(300);
 

@@ -259,4 +259,14 @@ describe("createSampleReadingSource (web)", () => {
 
     expect(view.progress).toEqual({ chapterId: "ch-3", pageIndex: 1, pageTotal: 2 });
   });
+
+  it("con la base real de la web (F49b) no siembra progreso: lee el que haya guardado", async () => {
+    const source = createSampleReadingSource(driver);
+
+    const view = await source.loadSeries("m-ejemplo-a", "dragon-de-ceniza");
+
+    expect(source.driver).toBe(driver);
+    expect(view.progress).toBeNull();
+    expect([...view.readChapterIds]).toEqual([]);
+  });
 });

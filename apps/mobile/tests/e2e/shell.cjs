@@ -9,6 +9,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const { fulfillFakeCover, newSeededContext } = require("./seedDb.cjs");
 const { destinationMarker } = require("./markers.cjs");
 
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
@@ -24,7 +25,7 @@ const destinations = [
 (async () => {
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
-    const context = await browser.newContext({ viewport: { width: 426, height: 900 } });
+    const context = await newSeededContext(browser, { viewport: { width: 426, height: 900 } });
     const page = await context.newPage();
     page.setDefaultTimeout(10000);
     const errors = [];
@@ -35,6 +36,7 @@ const destinations = [
     });
     await context.route("**/*", (route) => {
       const url = new URL(route.request().url());
+      if (fulfillFakeCover(route, url)) return;
       if (["http:", "https:"].includes(url.protocol) && url.host !== new URL(baseURL).host) {
         external.push(url.href);
         return route.abort();
