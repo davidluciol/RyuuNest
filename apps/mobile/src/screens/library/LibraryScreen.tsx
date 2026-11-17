@@ -35,6 +35,7 @@ import {
   type LibrarySeries,
 } from "./libraryFixtures";
 import { textStyle } from "../../components/textStyle";
+import { useDebouncedValue } from "./debounce";
 
 /**
  * F14a/F14b — pantalla Biblioteca (RF-26 a RF-30, RF-35, SPEC §11.5):
@@ -140,9 +141,11 @@ export default function LibraryScreen({
     action().catch(() => setActionFailed(true));
   };
 
+  // La búsqueda espera una pausa corta al escribir (F55); el resto de filtros es inmediato.
+  const search = useDebouncedValue(filters.search);
   const visibleSeries = useMemo(
-    () => filterLibrarySeries(data.series, filters, data.folders),
-    [data.series, data.folders, filters],
+    () => filterLibrarySeries(data.series, { ...filters, search }, data.folders),
+    [data.series, data.folders, filters, search],
   );
 
   const totalCount = data.series.filter((s) => !s.nsfw || filters.nsfwVisible).length;
@@ -246,6 +249,32 @@ export default function LibraryScreen({
           />
         </ChipScroller>
       </View>
+
+      {/* Categorías (F55): etiquetas de las series guardadas; sale la serie con alguna marcada. */}
+      {data.tags.length > 0 ? (
+        <View
+          testID="library-categories"
+          accessibilityLabel={t("library.section.categories")}
+          style={[styles.filtersWrap, { paddingHorizontal: layout.margin }]}
+        >
+          <ChipScroller contentContainerStyle={styles.filtersRow}>
+            {data.tags.map((tag) => (
+              <Chip
+                key={tag}
+                label={tag}
+                selected={filters.tags.includes(tag)}
+                onPress={() =>
+                  updateFilters({
+                    tags: filters.tags.includes(tag)
+                      ? filters.tags.filter((other) => other !== tag)
+                      : [...filters.tags, tag],
+                  })
+                }
+              />
+            ))}
+          </ChipScroller>
+        </View>
+      ) : null}
 
       {/* Sección de carpetas (F14b, V6: un solo acceso). */}
       {data.folders.length > 0 ? (

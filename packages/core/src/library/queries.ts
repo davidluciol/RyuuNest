@@ -24,8 +24,16 @@ export type LibraryOrder = "name" | "lastRead" | "addedAt";
 
 /** Filtro y orden de una página de biblioteca. */
 export interface LibraryFilter {
-  /** Búsqueda por nombre; se normaliza igual que `title_norm`. */
+  /**
+   * Búsqueda por nombre; se normaliza igual que `title_norm`. Varias palabras: el título debe
+   * contener todas, en cualquier orden (F55, P-164).
+   */
   search?: string | undefined;
+  /**
+   * Categorías (etiquetas de las series guardadas, F55): sale la serie que tenga **alguna** de
+   * ellas. Vacío o ausente = sin filtro. Sin distinguir mayúsculas ni acentos.
+   */
+  tags?: readonly string[] | undefined;
   /** Tipos admitidos (D-13). Vacío o ausente = todos. */
   kinds?: readonly MediaKind[] | undefined;
   /** Fuentes (módulos) admitidas. Vacía o ausente = todas. */
@@ -143,11 +151,20 @@ export function buildLibraryQuery(filtro: LibraryFilter): BuiltQuery {
   }
 
   if (filtro.search !== undefined && filtro.search !== "") {
-    const normalizado = normalizeTitle(filtro.search);
-    if (normalizado !== "") {
-      donde.push("s.title_norm LIKE ? ESCAPE '\\'");
-      params.push(`%${escapeLike(normalizado)}%`);
+    for (const palabra of normalizeTitle(filtro.search).split(" ")) {
+      if (palabra !== "") {
+        donde.push("s.title_norm LIKE ? ESCAPE '\\'");
+        params.push(`%${escapeLike(palabra)}%`);
+      }
     }
+  }
+
+  const etiquetas = [...new Set((filtro.tags ?? []).map(normalizeTitle).filter((t) => t !== ""))];
+  if (etiquetas.length > 0) {
+    donde.push(`EXISTS (SELECT 1 FROM series_tag AS stf
+      WHERE stf.module_id = f.module_id AND stf.series_id = f.series_id
+        AND stf.tag_norm IN (${etiquetas.map(() => "?").join(", ")}))`);
+    params.push(...etiquetas);
   }
 
   if (filtro.kinds !== undefined && filtro.kinds.length > 0) {

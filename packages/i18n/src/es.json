@@ -156,6 +156,7 @@
   "library.filter.kind": "Tipo",
   "library.filter.source": "Portal",
   "library.filter.nsfw": "NSFW",
+  "library.section.categories": "Categorías",
   "library.sort.label": "Orden",
   "library.sort.name": "Nombre",
   "library.sort.lastRead": "Último leído",

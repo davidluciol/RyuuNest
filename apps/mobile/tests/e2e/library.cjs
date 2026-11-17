@@ -76,6 +76,28 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByTestId("new-folder-create").click();
       await sheet.waitFor({ state: "hidden" });
       await page.getByRole("button", { name: /^Mis acción, \d+ obras$/ }).waitFor({ state: "visible" });
+      // F55: búsqueda en tiempo real por palabras y filtro por categoría (alguna de las marcadas).
+      const buscador = page.getByPlaceholder("Buscar en tus tesoros…");
+      const oculta = (titulo) => page.getByRole("button", { name: titulo, exact: true }).waitFor({ state: "hidden" });
+      await buscador.fill("CENIZA dragon");
+      await page.getByRole("button", { name: "El dragón de ceniza", exact: true }).waitFor({ state: "visible" });
+      await oculta("Ciudad sin nombre"); // tras la pausa del debounce
+      await buscador.fill("");
+      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
+      const categorias = page.getByTestId("library-categories");
+      await categorias.getByRole("button", { name: "Seinen", exact: true }).click();
+      await page.getByRole("button", { name: "La forja perdida", exact: true }).waitFor({ state: "visible" });
+      await oculta("Ciudad sin nombre");
+      await categorias.getByRole("button", { name: "Terror", exact: true }).click(); // alguna de las marcadas
+      await page.getByRole("button", { name: "El último susurro", exact: true }).waitFor({ state: "visible" });
+      await buscador.fill("forja");
+      await page.getByRole("button", { name: "La forja perdida", exact: true }).waitFor({ state: "visible" });
+      await oculta("El último susurro");
+      await buscador.fill("");
+      await categorias.getByRole("button", { name: "Seinen", exact: true }).click();
+      await categorias.getByRole("button", { name: "Terror", exact: true }).click();
+      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
+
       // F54: menú de la serie (pulsación larga y «⋮» con foco): favoritos, mover, mover y crear, eliminar.
       const contar = async (nombre) => {
         const boton = page.getByRole("button", { name: new RegExp(`^${nombre}, \\d+ obras$`) });
