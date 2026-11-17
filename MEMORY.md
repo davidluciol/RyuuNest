@@ -204,6 +204,7 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 ## 4. Pendientes y sugerencias
 
 ### Del humano
+- ❓ **P-170 (F95/F96):** el humano pide guardar en la carpeta «por defecto» y «General», pero solo existen **Favoritos** y **Gemas**. Recomendación: «Guardar» añade a Gemas y no se crea «General». Confirmar antes de F95. También confirmar «josie» = josei (F97).
 - ❓ **F79:** el humano pidió que «Reanudar» se comporte distinto «vía la app» y entre web y móvil; falta precisar qué cambia en la web de Expo antes de implementar.
 - ❓ **F33:** aprobar F40 a F45 (`tasks/Analisis.md` §7), dar el formato y la URL del índice «Recomendados» y autorizar el cambio de RNF-5 en el SPEC. 🧍 Cerrar R1 cuando exista una actualización real de un módulo.
 - 🧍 **Repetir F34.3 en el POCO F5 Pro** (solo se probó en el S25 Ultra) y recorrer ficha, lector y primer uso con zona segura y texto al 200 %.
