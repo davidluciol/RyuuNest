@@ -68,6 +68,8 @@ import CodeChip from "../components/CodeChip";
 import ConfirmSheet from "../components/ConfirmSheet";
 import DragonTreasure from "../components/DragonTreasure";
 import FloatingActionButton from "../components/FloatingActionButton";
+import type { MediaKind } from "@ryuunest/core";
+import FilterSheet from "../components/FilterSheet";
 import NewFolderSheet from "../components/NewFolderSheet";
 import SeriesMenuSheet from "../components/SeriesMenuSheet";
 import ErrorDialog from "../components/ErrorDialog";
@@ -137,6 +139,10 @@ export default function GalleryScreen() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   const [seriesMenuOpen, setSeriesMenuOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterKinds, setFilterKinds] = useState<MediaKind[]>(["manhwa"]);
+  const [filterModules, setFilterModules] = useState<string[]>([]);
+  const [filterNsfw, setFilterNsfw] = useState(false);
   const { width } = useWindowDimensions();
   const screen = layoutForWidth(width);
   const density = densityLayout("comfortable", width);
@@ -724,6 +730,29 @@ export default function GalleryScreen() {
             onAddToFavorites={() => setSeriesMenuOpen(false)}
             onRemove={() => setSeriesMenuOpen(false)}
             onClose={() => setSeriesMenuOpen(false)}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.filterSheet")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.filterSheet.show")}
+            testID="gallery-show-filter-sheet"
+            onPress={() => setFilterOpen(true)}
+          />
+          <FilterSheet
+            visible={filterOpen}
+            kinds={filterKinds}
+            moduleIds={filterModules}
+            nsfwVisible={filterNsfw}
+            sources={SAMPLE_LIBRARY_DATA.sources}
+            onChange={(patch) => {
+              if (patch.kinds !== undefined) setFilterKinds(patch.kinds);
+              if (patch.moduleIds !== undefined) setFilterModules(patch.moduleIds);
+              if (patch.nsfwVisible !== undefined) setFilterNsfw(patch.nsfwVisible);
+            }}
+            onClose={() => setFilterOpen(false)}
           />
         </View>
 

@@ -113,6 +113,19 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
       assert.equal(await buscador.inputValue(), "", `Quitar filtros limpia el texto @${width}`);
 
+      // F57: hoja de filtros (tipo, fuente) con nombre visible de la fuente; Limpiar los quita.
+      await page.getByRole("button", { name: "Tipo", exact: true }).click();
+      const hoja = page.getByTestId("filter-sheet");
+      await hoja.waitFor({ state: "visible" });
+      await hoja.getByTestId("filter-sheet-kinds").getByRole("button", { name: "Cómic", exact: true }).click();
+      await page.getByRole("button", { name: "Noche de ámbar", exact: true }).waitFor({ state: "visible" });
+      await oculta("Ciudad sin nombre");
+      await hoja.getByTestId("filter-sheet-sources").getByRole("button", { name: "Módulo de ejemplo B", exact: true }).waitFor({ state: "visible" });
+      await page.getByTestId("filter-sheet-clear").click();
+      await page.getByTestId("filter-sheet-done").click();
+      await hoja.waitFor({ state: "hidden" });
+      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
+
       // F54: menú de la serie (pulsación larga y «⋮» con foco): favoritos, mover, mover y crear, eliminar.
       const contar = async (nombre) => {
         const boton = page.getByRole("button", { name: new RegExp(`^${nombre}, \\d+ obras$`) });

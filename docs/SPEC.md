@@ -116,7 +116,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 ### 3.5 Biblioteca, carpetas y filtros
 
 - **RF-26 (M)** Biblioteca única de favoritos con búsqueda por nombre siempre visible y chips: Todo · Leyendo · Carpetas (confirmado por la captura de Biblioteca; «Completado» queda para la v2).
-- **RF-27 (M)** Filtros por tipo, fuente, carpeta y NSFW/SFW. Chips para tipo y carpeta; hoja de filtros para fuente y NSFW.
+- **RF-27 (M)** Filtros por tipo, fuente, carpeta y NSFW/SFW. Hoja de filtros con tipo, fuente y NSFW (F57, decisión del humano); chips para la carpeta.
 - **RF-28 (M)** Ordenar por nombre, último leído y fecha de adición.
 - **RF-29 (M)** Crear, renombrar, reordenar y borrar carpetas. Un favorito pertenece a una carpeta o a ninguna (decisión D-12). **Carpetas por defecto (F52, P-161):** «Favoritos» es una carpeta real del sistema (no se borra ni se renombra); «Gemas» no es pertenencia, es la vista de todas las series.
 - **RF-30 (M)** Quitar un favorito no borra su progreso.
