@@ -12,7 +12,7 @@ export const BADGE_HEIGHT = 24;
 const colors = dragonNightColors;
 
 export interface BadgeStyleShape {
-  height: number;
+  minHeight: number;
   borderRadius: number;
   backgroundColor: string;
 }
@@ -20,7 +20,8 @@ export interface BadgeStyleShape {
 /** Estilo de la insignia (único, sin variantes en la v1). */
 export function badgeStyle(): BadgeStyleShape {
   return {
-    height: BADGE_HEIGHT,
+    // Alto mínimo: la insignia crece con el texto del sistema al 200 % (F34).
+    minHeight: BADGE_HEIGHT,
     borderRadius: radii.pill,
     backgroundColor: colors.elevated,
   };

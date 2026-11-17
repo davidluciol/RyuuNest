@@ -17,7 +17,7 @@ import {
 describe("buttonStyle (variantes, SPEC §11.10)", () => {
   it("primario: 48 px de alto, radio 8, relleno accent", () => {
     expect(buttonStyle("primary")).toMatchObject({
-      height: BUTTON_MIN_HEIGHT,
+      minHeight: BUTTON_MIN_HEIGHT,
       borderRadius: 8,
       backgroundColor: "#35C98A",
       borderWidth: 0,
