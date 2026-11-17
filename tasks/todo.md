@@ -118,8 +118,9 @@ Dep: F78 · S · `apps/mobile/src/screens/home/*`
 
 Dep: F46 · S · `apps/mobile/src/screens/home/*`, `packages/core` (carpetas)
 
-- [ ] Rojo: ordenar carpetas por número de series (empate → más reciente) y tomar 3
-- [ ] Si hay menos de 3 con series, mostrar solo esas; sin ninguna, ocultar la sección
+- [x] Rojo: ordenar carpetas por número de series (empate → más reciente) y tomar 3
+- [x] Si hay menos de 3 con series, mostrar solo esas; sin ninguna, ocultar la sección
+> **Hecho (2026-11-16):** empate = serie añadida más recientemente (decisión del humano); máximo 3 (antes 4). Verificado en el S25 (sin carpetas con series la sección se oculta).
 - Verif: Vitest + Playwright 426/1440 px
 
 ### F82 Guarida: «Ver todo» de Lecturas recientes (pantalla reutilizable) `[FE · Intermedia · N3]`

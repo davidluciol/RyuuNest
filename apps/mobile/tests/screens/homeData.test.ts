@@ -207,20 +207,45 @@ describe("loadHomeData (F46)", () => {
     });
   });
 
-  it("carpetas con series y su número; las vacías no salen; máximo 4", async () => {
-    for (let id = 1; id <= 6; id++) await addFolder(driver, id, `Carpeta ${id}`);
-    await addSeries(driver, { id: "a", title: "A", folderId: 1 });
-    await addSeries(driver, { id: "b", title: "B", folderId: 1 });
-    await addSeries(driver, { id: "c", title: "C", folderId: 2 });
-    for (const [i, folderId] of [3, 4, 5, 6].entries()) {
-      await addSeries(driver, { id: `f${i}`, title: `F${i}`, folderId });
+  it("carpetas: solo las 3 con más series, de mayor a menor", async () => {
+    for (let id = 1; id <= 5; id++) await addFolder(driver, id, `Carpeta ${id}`);
+    const counts: Record<number, number> = { 1: 1, 2: 4, 3: 2, 4: 3, 5: 5 };
+    for (const [folder, n] of Object.entries(counts)) {
+      for (let i = 0; i < n; i++) {
+        await addSeries(driver, {
+          id: `f${folder}-${i}`,
+          title: `S${folder}${i}`,
+          folderId: Number(folder),
+        });
+      }
     }
 
     const { folders } = await loadHomeData(driver);
 
-    expect(folders).toHaveLength(4);
-    expect(folders[0]).toEqual({ id: "1", name: "Carpeta 1", count: 2 });
-    expect(folders.every((f) => f.count > 0)).toBe(true);
+    expect(folders).toEqual([
+      { id: "5", name: "Carpeta 5", count: 5 },
+      { id: "2", name: "Carpeta 2", count: 4 },
+      { id: "4", name: "Carpeta 4", count: 3 },
+    ]);
+  });
+
+  it("empate: gana la carpeta cuya serie se añadió más recientemente", async () => {
+    await addFolder(driver, 1, "Vieja");
+    await addFolder(driver, 2, "Nueva");
+    await addSeries(driver, { id: "a", title: "A", folderId: 1 });
+    await addSeries(driver, { id: "b", title: "B", folderId: 2 });
+    await driver.run("UPDATE favorite SET added_at = 10 WHERE series_id = 'a'");
+    await driver.run("UPDATE favorite SET added_at = 20 WHERE series_id = 'b'");
+
+    expect((await loadHomeData(driver)).folders.map((f) => f.name)).toEqual(["Nueva", "Vieja"]);
+  });
+
+  it("con menos de 3 carpetas con series muestra solo esas", async () => {
+    await addFolder(driver, 1, "Una");
+    await addFolder(driver, 2, "Vacía");
+    await addSeries(driver, { id: "a", title: "A", folderId: 1 });
+
+    expect((await loadHomeData(driver)).folders.map((f) => f.name)).toEqual(["Una"]);
   });
 
   it("una carpeta sin series no aparece", async () => {
