@@ -9,6 +9,7 @@ import {
   type Http,
   type ModuleApiHandle,
   type ModuleManifest,
+  type SearchFilterValues,
   type ScriptLoader,
   type SeriesSummary,
   type SqlDriver,
@@ -130,15 +131,40 @@ export async function loadFromApi(
   const useHome =
     flags.hasHome && api.home !== undefined && !inSection && query.trim() === "" && !filtering;
   const rows = !inSection;
-  const [latest, popular, home, filterGroups, catalogPage] = await Promise.all([
+  // Los grupos se leen antes de buscar: de ellos depende cómo viaja cada selección.
+  const filterGroups: DiscoverFilter[] =
+    !inSection && flags.hasFilters === true && api.filters
+      ? (await api.filters()).flatMap((group) =>
+          group.options !== undefined &&
+          group.options.length > 0 &&
+          (group.type === "tags" || group.type === "multi" || group.type === "select")
+            ? [
+                {
+                  id: group.id,
+                  label: group.label,
+                  multi: group.type !== "select",
+                  options: group.options,
+                },
+              ]
+            : [],
+        )
+      : [];
+  // `select` viaja como texto (así lo leen los módulos publicados); `tags`/`multi`, como lista.
+  const searchFilters: SearchFilterValues = {};
+  for (const group of filterGroups) {
+    const chosen = selected[group.id];
+    if (chosen !== undefined && chosen.length > 0) {
+      searchFilters[group.id] = group.multi ? chosen : (chosen[0] ?? "");
+    }
+  }
+  const [latest, popular, home, catalogPage] = await Promise.all([
     rows && !useHome && flags.hasLatest && api.latest ? api.latest(1).then((p) => p.items) : Promise.resolve([]),
     rows && !useHome && flags.hasPopular && api.popular ? api.popular(1).then((p) => p.items) : Promise.resolve([]),
     useHome && api.home ? api.home().then((h) => h.sections) : Promise.resolve([]),
-    !inSection && flags.hasFilters === true && api.filters ? api.filters() : Promise.resolve([]),
     inSection && api.list
       ? api.list(sectionId, page)
       : filtering
-        ? api.search(query, page, selected)
+        ? api.search(query, page, searchFilters)
         : api.search(query, page),
   ]);
 
@@ -151,11 +177,7 @@ export async function loadFromApi(
       hasMore: section.hasNext,
       entries: section.items.map((series) => toEntry(moduleId, series)),
     })),
-    filters: filterGroups.flatMap((group) =>
-      group.type === "tags" && group.options !== undefined && group.options.length > 0
-        ? [{ id: group.id, label: group.label, options: group.options }]
-        : [],
-    ),
+    filters: filterGroups,
     catalog: {
       page,
       entries: catalogPage.items.map((series) => toEntry(moduleId, series)),

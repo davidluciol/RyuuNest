@@ -13,8 +13,8 @@ import SheetModal from "./SheetModal";
 import { textStyle } from "./textStyle";
 
 /**
- * F50 — hoja de filtros por etiquetas de Descubrir: un grupo de chips por cada filtro `tags`
- * que declara el módulo (`filters()`), multiselección. Controlada: cada chip cambia la
+ * F50 — hoja de filtros por etiquetas de Descubrir: un grupo de chips por cada filtro
+ * que declara el módulo (`filters()`): multiselección en `tags`/`multi`, elección única en `select`. Controlada: cada chip cambia la
  * selección al instante; «Limpiar» la vacía y «Listo» cierra. Reutiliza `SheetModal`,
  * `Chip` y `Button`.
  */
@@ -52,7 +52,7 @@ export default function TagFilterSheet({
                 key={option.value}
                 label={option.label}
                 selected={(selected[group.id] ?? []).includes(option.value)}
-                onPress={() => onChange(toggleFilterValue(selected, group.id, option.value))}
+                onPress={() => onChange(toggleFilterValue(selected, group.id, option.value, group.multi))}
               />
             ))}
           </View>

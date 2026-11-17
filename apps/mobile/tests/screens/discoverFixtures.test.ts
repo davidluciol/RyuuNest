@@ -179,6 +179,13 @@ describe("filtros de etiquetas (F50)", () => {
     expect(toggleFilterValue({ genre: ["horror"] }, "genre", "horror")).toEqual({});
   });
 
+  it("en un grupo de elección única (select) elegir otra opción reemplaza y repetir deselecciona", () => {
+    const a = toggleFilterValue({}, "sort", "name", false);
+    expect(a).toEqual({ sort: ["name"] });
+    expect(toggleFilterValue(a, "sort", "views", false)).toEqual({ sort: ["views"] });
+    expect(toggleFilterValue(a, "sort", "name", false)).toEqual({});
+  });
+
   it("countActiveFilters suma las etiquetas elegidas de todos los grupos", () => {
     expect(countActiveFilters({})).toBe(0);
     expect(countActiveFilters({ genre: ["a", "b"], demo: ["c"] })).toBe(3);

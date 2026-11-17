@@ -48,24 +48,31 @@ export interface DiscoverSection {
   hasMore: boolean;
 }
 
-/** Grupo de etiquetas que el módulo declara en `filters()` (tipo `tags`, F50). */
+/** Grupo que el módulo declara en `filters()` (F50): `tags`/`multi` eligen varias, `select` una. */
 export interface DiscoverFilter {
   id: string;
   label: string;
+  /** Varias opciones a la vez; `false` = elección única. */
+  multi: boolean;
   options: { value: string; label: string }[];
 }
 
 /** Etiquetas elegidas por grupo: `{ [filterId]: valores }` (compatible con `SearchFilterValues`). */
 export type DiscoverFilterValues = Record<string, string[]>;
 
-/** Añade o quita una etiqueta; un grupo sin etiquetas desaparece. */
+/** Añade o quita una opción (en elección única, reemplaza); un grupo sin etiquetas desaparece. */
 export function toggleFilterValue(
   values: DiscoverFilterValues,
   filterId: string,
   value: string,
+  multi = true,
 ): DiscoverFilterValues {
   const current = values[filterId] ?? [];
-  const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
+  const next = current.includes(value)
+    ? current.filter((v) => v !== value)
+    : multi
+      ? [...current, value]
+      : [value];
   const { [filterId]: _removed, ...rest } = values;
   return next.length === 0 ? rest : { ...rest, [filterId]: next };
 }
@@ -79,6 +86,7 @@ export const SAMPLE_TAG_FILTERS: readonly DiscoverFilter[] = [
   {
     id: "genre",
     label: "Género",
+    multi: true,
     options: [
       { value: "sekai", label: "Sekai" },
       { value: "horror", label: "Horror" },

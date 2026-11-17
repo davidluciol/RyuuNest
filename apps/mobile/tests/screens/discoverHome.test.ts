@@ -105,20 +105,39 @@ describe("loadFromApi · filters() (F50)", () => {
         { value: "seinen", label: "Seinen" },
       ],
     },
+    {
+      id: "sort",
+      label: "Orden",
+      type: "select" as const,
+      options: [
+        { value: "name", label: "Nombre" },
+        { value: "views", label: "Vistas" },
+      ],
+    },
     { id: "q", label: "Texto", type: "text" as const },
     { id: "empty", label: "Sin opciones", type: "tags" as const },
   ];
   const FLAGS_F = { ...FLAGS, hasFilters: true };
 
-  it("devuelve solo los filtros `tags` con opciones, tal como los declara el módulo", async () => {
+  it("devuelve los grupos `tags`/`select` con opciones (select = elección única)", async () => {
     const data = await loadFromApi(handle({ filters: async () => FILTERS }), FLAGS_F, "m", "", 1);
     expect(data.filters).toEqual([
       {
         id: "genre",
         label: "Género",
+        multi: true,
         options: [
           { value: "horror", label: "Horror" },
           { value: "seinen", label: "Seinen" },
+        ],
+      },
+      {
+        id: "sort",
+        label: "Orden",
+        multi: false,
+        options: [
+          { value: "name", label: "Nombre" },
+          { value: "views", label: "Vistas" },
         ],
       },
     ]);
@@ -134,7 +153,7 @@ describe("loadFromApi · filters() (F50)", () => {
   it("la selección llega a search(query, page, filters), también sin texto, y apaga home()", async () => {
     const search = vi.fn(async () => page(["h1"]));
     const home = vi.fn();
-    const selected = { genre: ["horror"] };
+    const selected = { genre: ["horror"], sort: ["views"] };
     await loadFromApi(
       handle({ search, home, filters: async () => FILTERS }),
       { ...FLAGS_F, hasHome: true },
@@ -144,7 +163,8 @@ describe("loadFromApi · filters() (F50)", () => {
       undefined,
       selected,
     );
-    expect(search).toHaveBeenCalledWith("", 1, selected);
+    // `select` viaja como texto (así lo leen los módulos); `tags`, como lista.
+    expect(search).toHaveBeenCalledWith("", 1, { genre: ["horror"], sort: "views" });
     expect(home).not.toHaveBeenCalled();
   });
 
