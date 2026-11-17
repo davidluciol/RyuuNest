@@ -4,6 +4,7 @@ import { dragonNightColors } from "@ryuunest/ui-tokens";
 import {
   FOLDER_CARD_ICON_SIZE,
   folderCardColors,
+  folderCardContainer,
   folderCardStyle,
 } from "../../src/components/folderCardStyles";
 
@@ -70,5 +71,19 @@ describe("folderCardColors (paleta, V1/V4)", () => {
     expect(colors.iconBackground).toBe("#1B2230");
     expect(colors.countBackground).toBe("#1B2230");
     expect(colors.countText).toBe("#9BA5B5");
+  });
+});
+
+/**
+ * Corrección (2026-11-17): dentro de la fila que se desplaza de Tesoros la tarjeta se quedaba en
+ * su `minHeight` (con `flex: 1` el `flexBasis` es 0) y el icono y el nombre se salían. La
+ * tarjeta crece con su contenido; `flex: 1` no.
+ */
+describe("folderCardContainer (alto según el contenido)", () => {
+  it("crece sin partir de un alto 0 y no se encoge", () => {
+    const container = folderCardContainer();
+    expect(container.flexGrow).toBe(1);
+    expect(container.flexShrink).toBe(0);
+    expect("flex" in container).toBe(false);
   });
 });

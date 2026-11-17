@@ -151,6 +151,7 @@
   "gallery.component.libraryScreen": "pantalla Tesoros",
 
   "library.search.placeholder": "Buscar en tus tesoros…",
+  "library.folder.dynamic": "Carpeta dinámica",
   "library.chip.all": "Todo ({count})",
   "library.chip.reading": "Leyendo ({count})",
   "library.chip.folders": "Carpetas ({count})",
