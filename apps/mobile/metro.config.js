@@ -9,6 +9,8 @@ const workspaceRoot = path.resolve(projectRoot, "../..");
 const config = getDefaultConfig(projectRoot);
 
 config.watchFolders = [workspaceRoot];
+// El `.wasm` de sql.js (F49) se empaqueta como asset local, sin CDN.
+config.resolver.assetExts = [...config.resolver.assetExts, "wasm"];
 config.resolver.nodeModulesPaths = [
   path.join(projectRoot, "node_modules"),
   path.join(workspaceRoot, "node_modules"),
@@ -26,6 +28,7 @@ const WORKSPACE_PACKAGES = [
   "@ryuunest/module-sdk",
   "@ryuunest/test-site",
   "@ryuunest/ui-tokens",
+  "@ryuunest/web-db",
 ];
 const defaultResolveRequest = config.resolver.resolveRequest;
 config.resolver.resolveRequest = (context, moduleName, platform) => {

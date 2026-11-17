@@ -18,6 +18,7 @@
     "@ryuunest/module-sdk": "workspace:*",
     "@ryuunest/test-site": "workspace:*",
     "@ryuunest/ui-tokens": "workspace:*",
+    "@ryuunest/web-db": "workspace:*",
     "expo": "~57.0.32",
     "expo-clipboard": "~57.0.2",
     "expo-constants": "~57.0.23",
@@ -44,7 +45,8 @@
     "react-native-screens": "~4.26.2",
     "react-native-svg": "15.15.4",
     "react-native-web": "~0.21.4",
-    "react-native-worklets": "0.10.1"
+    "react-native-worklets": "0.10.1",
+    "sql.js": "1.15.2"
   },
   "devDependencies": {
     "@react-native/metro-config": "0.86.3",

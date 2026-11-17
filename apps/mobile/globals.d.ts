@@ -12,6 +12,11 @@ declare module "*.ttf" {
   export default source;
 }
 
+declare module "*.wasm" {
+  const source: number;
+  export default source;
+}
+
 declare module "*.svg" {
   const source: number;
   export default source;

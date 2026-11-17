@@ -7,7 +7,8 @@
       "@ryuunest/ui-tokens": ["../../packages/ui-tokens/src/index.ts"],
       "@ryuunest/test-site": ["../../packages/test-site/src/index.ts"],
       "@ryuunest/core": ["../../packages/core/src/index.ts"],
-      "@ryuunest/module-sdk": ["../../packages/module-sdk/src/index.ts"]
+      "@ryuunest/module-sdk": ["../../packages/module-sdk/src/index.ts"],
+      "@ryuunest/web-db": ["../../packages/web-db/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist"]
