@@ -7,6 +7,7 @@
   "shell.brand": "RyuuNest",
 
   "a11y.dragonMarker": "Dragón marcador",
+  "a11y.dragonTreasure": "Un dragón rebuscando entre sus gemas con una lupa",
   "a11y.mainNav": "Navegación principal",
 
   "actions.addRepository": "Añadir repositorio",
@@ -157,6 +158,12 @@
   "library.filter.source": "Portal",
   "library.filter.nsfw": "NSFW",
   "library.section.categories": "Categorías",
+  "library.empty.search.title": "El dragón rebuscó todo su tesoro",
+  "library.empty.search.message": "No hay series que coincidan con «{query}». Prueba con otras palabras.",
+  "library.empty.search.action": "Limpiar búsqueda",
+  "library.empty.filters.title": "Ni una gema con esos filtros",
+  "library.empty.filters.message": "El dragón revolvió el tesoro y no halló series con esos filtros. Quita alguno para ver más.",
+  "library.empty.filters.action": "Quitar filtros",
   "library.sort.label": "Orden",
   "library.sort.name": "Nombre",
   "library.sort.lastRead": "Último leído",
@@ -386,6 +393,7 @@
   "gallery.component.floatingButton": "botón flotante «+»",
   "gallery.component.newFolderSheet": "hoja «Nueva carpeta»",
   "gallery.component.seriesMenu": "menú de serie (pulsación larga)",
+  "gallery.component.searchEmpty": "vacío de búsqueda (dragón sin tesoros)",
   "gallery.seriesMenu.show": "Abrir menú de serie",
   "gallery.newFolder.show": "Abrir «Nueva carpeta»",
   "gallery.component.errorBanner": "aviso inline (banner)",

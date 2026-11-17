@@ -12,6 +12,7 @@ import { libraryColumnsFor } from "../../components/libraryCardStyles";
 import Chip from "../../components/Chip";
 import ChipScroller from "../../components/ChipScroller";
 import ConfirmSheet from "../../components/ConfirmSheet";
+import DragonTreasure from "../../components/DragonTreasure";
 import EmptyState from "../../components/EmptyState";
 import ErrorBanner from "../../components/ErrorBanner";
 import FloatingActionButton from "../../components/FloatingActionButton";
@@ -26,7 +27,9 @@ import { kindLabel } from "../../components/kindLabel";
 import {
   DEFAULT_LIBRARY_FILTERS,
   EMPTY_LIBRARY_DATA,
+  clearedFilters,
   filterLibrarySeries,
+  hasActiveFilters,
   type FolderNameProblem,
   type SeriesKey,
   libraryGridRows,
@@ -140,6 +143,8 @@ export default function LibraryScreen({
   const run = (action: () => Promise<unknown>) => {
     action().catch(() => setActionFailed(true));
   };
+
+  const withFilters = hasActiveFilters(filters);
 
   // La búsqueda espera una pausa corta al escribir (F55); el resto de filtros es inmediato.
   const search = useDebouncedValue(filters.search);
@@ -315,11 +320,23 @@ export default function LibraryScreen({
       {/* Cuadrícula virtualizada (RF-26, AC-4); sin virtualizar cuando la incrusta la galería (F34). */}
       {visibleSeries.length === 0 ? (
         <View style={styles.emptySearchWrap}>
+          {/* F56: el dragón sin tesoros, con la causa a la vista (texto o filtros). */}
           <EmptyState
-            title={t("state.empty.search.title")}
-            message={t("state.empty.search.message", { query: filters.search || "…" })}
-            actionLabel={t("actions.exploreAgain")}
-            onAction={() => updateFilters({ search: "" })}
+            illustration={<DragonTreasure />}
+            title={t(withFilters ? "library.empty.filters.title" : "library.empty.search.title")}
+            message={
+              withFilters
+                ? t("library.empty.filters.message")
+                : t("library.empty.search.message", { query: filters.search.trim() || "…" })
+            }
+            actionLabel={t(
+              withFilters ? "library.empty.filters.action" : "library.empty.search.action",
+            )}
+            onAction={() => {
+              const next = withFilters ? clearedFilters(filters) : { ...filters, search: "" };
+              setFilters(next);
+              onFiltersChange?.(next);
+            }}
             scale="sm"
           />
         </View>

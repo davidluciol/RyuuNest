@@ -66,6 +66,7 @@ import Toast from "../components/Toast";
 import ErrorBanner from "../components/ErrorBanner";
 import CodeChip from "../components/CodeChip";
 import ConfirmSheet from "../components/ConfirmSheet";
+import DragonTreasure from "../components/DragonTreasure";
 import FloatingActionButton from "../components/FloatingActionButton";
 import NewFolderSheet from "../components/NewFolderSheet";
 import SeriesMenuSheet from "../components/SeriesMenuSheet";
@@ -723,6 +724,24 @@ export default function GalleryScreen() {
             onAddToFavorites={() => setSeriesMenuOpen(false)}
             onRemove={() => setSeriesMenuOpen(false)}
             onClose={() => setSeriesMenuOpen(false)}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.searchEmpty")}</Text>
+        <View style={styles.componentColumn}>
+          <EmptyState
+            illustration={<DragonTreasure />}
+            title={t("library.empty.search.title")}
+            message={t("library.empty.search.message", { query: FIXTURE_SERIES[0].title })}
+            actionLabel={t("library.empty.search.action")}
+            scale="sm"
+          />
+          <EmptyState
+            illustration={<DragonTreasure />}
+            title={t("library.empty.filters.title")}
+            message={t("library.empty.filters.message")}
+            actionLabel={t("library.empty.filters.action")}
+            scale="sm"
           />
         </View>
 

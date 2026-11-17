@@ -3,7 +3,10 @@ import { describe, expect, it } from "vitest";
 import {
   GEMS_FOLDER_ID,
   SAMPLE_LIBRARY_DATA,
+  DEFAULT_LIBRARY_FILTERS,
   addSampleFolder,
+  clearedFilters,
+  hasActiveFilters,
   moveSampleSeries,
   removeSampleSeries,
   folderCount,
@@ -136,5 +139,44 @@ describe("acciones de serie sobre los datos de ejemplo (F54, web sin base)", () 
     const nueva = resultado.data.folders.at(-1) as LibraryFolder;
     expect(resultado.data.series.find((s) => s.seriesId === clave.seriesId)?.folderId).toBe(nueva.id);
     expect(nueva.count).toBe(1);
+  });
+});
+
+describe("filtros activos del vacío de búsqueda (F56)", () => {
+  it("sin nada marcado no hay filtros activos (solo texto no cuenta como filtro)", () => {
+    expect(hasActiveFilters(DEFAULT_LIBRARY_FILTERS)).toBe(false);
+    expect(hasActiveFilters({ ...DEFAULT_LIBRARY_FILTERS, search: "dragon" })).toBe(false);
+  });
+
+  it("categorías, tipos, fuentes, carpeta o el chip «Leyendo» cuentan como filtros", () => {
+    expect(hasActiveFilters({ ...DEFAULT_LIBRARY_FILTERS, tags: ["Seinen"] })).toBe(true);
+    expect(hasActiveFilters({ ...DEFAULT_LIBRARY_FILTERS, kinds: ["manga"] })).toBe(true);
+    expect(hasActiveFilters({ ...DEFAULT_LIBRARY_FILTERS, moduleIds: ["m"] })).toBe(true);
+    expect(hasActiveFilters({ ...DEFAULT_LIBRARY_FILTERS, folderId: "x" })).toBe(true);
+    expect(hasActiveFilters({ ...DEFAULT_LIBRARY_FILTERS, chip: "reading" })).toBe(true);
+  });
+
+  it("Gemas (vista de todo) como carpeta elegida no es un filtro", () => {
+    expect(hasActiveFilters({ ...DEFAULT_LIBRARY_FILTERS, folderId: GEMS_FOLDER_ID })).toBe(false);
+  });
+
+  it("clearedFilters quita los filtros y el texto pero respeta el orden y el NSFW", () => {
+    const sucio = {
+      ...DEFAULT_LIBRARY_FILTERS,
+      search: "x",
+      tags: ["Seinen"],
+      kinds: ["manga" as const],
+      moduleIds: ["m"],
+      folderId: "x",
+      chip: "reading" as const,
+      order: "addedAt" as const,
+      nsfwVisible: true,
+    };
+
+    expect(clearedFilters(sucio)).toEqual({
+      ...DEFAULT_LIBRARY_FILTERS,
+      order: "addedAt",
+      nsfwVisible: true,
+    });
   });
 });
