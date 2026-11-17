@@ -82,6 +82,8 @@
   "state.error.module.message": "El listado no se pudo leer.",
   "state.error.library.title": "No se pudieron abrir tus tesoros",
   "state.error.library.message": "Algo falló al leer los datos guardados en este dispositivo.",
+  "state.error.home.title": "No se pudo abrir tu guarida",
+  "state.error.home.message": "Algo falló al leer los datos guardados en este dispositivo.",
   "state.loading.title": "Cargando…",
   "state.loading.message": "Página {page} de {total}",
 
