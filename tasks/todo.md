@@ -109,8 +109,9 @@ Dep: F78 · M · `apps/mobile/src/screens/home/*`, `apps/mobile/src/components/C
 
 Dep: F78 · S · `apps/mobile/src/screens/home/*`
 
-- [ ] Las tarjetas salen del historial (una por serie, más reciente primero) en lugar de los datos de ejemplo
-- [ ] Al tocar: misma ruta que F79 (P-155: web directo al lector; móvil Detalles → lector)
+- [x] Las tarjetas salen del historial (una por serie, más reciente primero) en lugar de los datos de ejemplo
+- [x] Al tocar: misma ruta que F79 (P-155: web directo al lector; móvil Detalles → lector)
+> **Hecho dentro de F46/F78/F79:** las tarjetas salen de `listLastRead` y tocar usa `resumeRoutes`; verificado en el S25 (tarjeta → lector en la página guardada).
 - Verif: Vitest + 🧍 S25
 
 ### F81 Guarida: «Tesoros guardados» solo con las 3 carpetas con más series `[FE · Baja · N2]`
