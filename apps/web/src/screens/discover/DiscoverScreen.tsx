@@ -153,6 +153,13 @@ function DiscoverReady({
         </form>
       </div>
 
+      {/* F59: con `home()` sus secciones sustituyen a latest/popular (sin «Ver más» en la web todavía). */}
+      {view.sections.map((section) => (
+        <section className="discover-section" key={section.id}>
+          <h2 className="t-title-lg">{section.title}</h2>
+          <EntryGrid entries={section.entries} selectedModuleId={view.selectedModuleId} onOpenSeries={onOpenSeries} />
+        </section>
+      ))}
       {view.latest.length > 0 && (
         <section className="discover-section">
           <h2 className="t-title-lg">{t("discover.section.latest")}</h2>

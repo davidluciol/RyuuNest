@@ -39,6 +39,15 @@ export interface DiscoverEntry {
   cover?: { uri: string; headers?: Record<string, string> };
 }
 
+/** Sección de la portada propia del módulo (`home()`, F59). */
+export interface DiscoverSection {
+  id: string;
+  title: string;
+  entries: DiscoverEntry[];
+  /** Hay más series: se ofrece «Ver más» (`list`). */
+  hasMore: boolean;
+}
+
 /** Página del catálogo (búsqueda con paginación, RF-10). `page` empieza en 1. */
 export interface DiscoverPage {
   page: number;
@@ -67,6 +76,10 @@ export interface DiscoverReady {
   query: string;
   latest: readonly DiscoverEntry[];
   popular: readonly DiscoverEntry[];
+  /** Secciones de `home()` (F59); si hay, sustituyen a latest/popular. */
+  sections: readonly DiscoverSection[];
+  /** Sección abierta con «Ver más»; el catálogo es entonces su `list`. */
+  section?: { id: string; title: string };
   catalog: DiscoverPage;
 }
 
@@ -247,6 +260,7 @@ export const SAMPLE_DISCOVER_VIEW: DiscoverView = {
     query: "",
     latest: SAMPLE_DISCOVER_LATEST,
     popular: SAMPLE_DISCOVER_POPULAR,
+    sections: [],
     catalog: SAMPLE_DISCOVER_CATALOG,
   },
 };

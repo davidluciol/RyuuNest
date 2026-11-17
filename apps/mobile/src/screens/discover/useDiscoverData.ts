@@ -34,17 +34,23 @@ interface Request {
   moduleId: string | null;
   query: string;
   page: number;
+  /** F59: sección de `home()` abierta con «Ver más» (su catálogo es `list`). */
+  section: { id: string; title: string } | null;
   /** Se incrementa en cada reintento para relanzar la carga. */
   attempt: number;
 }
 
-const INITIAL_REQUEST: Request = { moduleId: null, query: "", page: 1, attempt: 0 };
+const INITIAL_REQUEST: Request = { moduleId: null, query: "", page: 1, section: null, attempt: 0 };
 
 export interface DiscoverActions {
   selectModule: (id: string) => void;
   search: (query: string) => void;
   nextPage: () => void;
   prevPage: () => void;
+  /** F59: abre una sección de `home()` (su `list` paginado). */
+  openSection: (id: string, title: string) => void;
+  /** F59: vuelve de la sección a la portada del módulo. */
+  closeSection: () => void;
   retry: () => void;
   /** Relee los módulos activos (al volver a la pestaña); recarga solo si cambiaron. */
   refreshModules: () => void;
@@ -128,7 +134,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
   // Carga del módulo elegido (o vacío si no hay ninguno visible).
   useEffect(() => {
     if (boot === null) return;
-    const { moduleId, query, page } = request;
+    const { moduleId, query, page, section } = request;
     if (moduleId === null) {
       setView({
         status: "empty",
@@ -140,7 +146,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     let cancelled = false;
     setView({ status: "loading" });
     boot.source
-      .load({ moduleId, query, page })
+      .load({ moduleId, query, page, sectionId: section?.id })
       .then((data) => {
         if (cancelled) return;
         setView({
@@ -151,6 +157,8 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
             query,
             latest: data.latest,
             popular: data.popular,
+            sections: data.sections,
+            ...(section === null ? {} : { section }),
             catalog: data.catalog,
           },
         });
@@ -173,7 +181,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
   }, [boot, request, nsfwVisible]);
 
   const selectModule = useCallback((id: string) => {
-    setRequest((current) => ({ moduleId: id, query: "", page: 1, attempt: current.attempt }));
+    setRequest((current) => ({ moduleId: id, query: "", page: 1, section: null, attempt: current.attempt }));
     // RF-9: el recuerdo es lo último; si la persistencia falla, la pantalla
     // ya cambió de módulo y el fallo queda avisado, no bloqueante.
     void bootRef.current?.source.rememberLastModule(id).catch((error: unknown) => {
@@ -182,7 +190,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
   }, []);
 
   const search = useCallback(
-    (query: string) => setRequest((current) => ({ ...current, query, page: 1 })),
+    (query: string) => setRequest((current) => ({ ...current, query, page: 1, section: null })),
     [],
   );
 
@@ -193,6 +201,17 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
 
   const prevPage = useCallback(
     () => setRequest((current) => ({ ...current, page: Math.max(1, current.page - 1) })),
+    [],
+  );
+
+  const openSection = useCallback(
+    (id: string, title: string) =>
+      setRequest((current) => ({ ...current, query: "", page: 1, section: { id, title } })),
+    [],
+  );
+
+  const closeSection = useCallback(
+    () => setRequest((current) => ({ ...current, page: 1, section: null })),
     [],
   );
 
@@ -218,5 +237,5 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     setRequest((current) => ({ ...current, attempt: current.attempt + 1 }));
   }, []);
 
-  return { view, selectModule, search, nextPage, prevPage, retry, refreshModules };
+  return { view, selectModule, search, nextPage, prevPage, openSection, closeSection, retry, refreshModules };
 }
