@@ -5,6 +5,8 @@
   "nav.sources": "Portales",
   "nav.settings": "Ajustes",
   "shell.brand": "RyuuNest",
+  "shell.search.open": "Buscar",
+  "shell.search.close": "Cerrar búsqueda",
 
   "a11y.dragonMarker": "Dragón marcador",
   "a11y.dragonTreasure": "Un dragón rebuscando entre sus gemas con una lupa",

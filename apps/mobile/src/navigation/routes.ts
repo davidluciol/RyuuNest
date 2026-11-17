@@ -30,6 +30,18 @@ export function shellDestination(
   return destinationForPath(path) ?? previous;
 }
 
+/**
+ * F60: parámetros de la ruta de Aventuras al buscar desde la cabecera. `ts` cambia en cada
+ * envío para que repetir la misma consulta vuelva a lanzarla (la pestaña sigue montada).
+ */
+export function discoverSearchParams(
+  query: string,
+  stamp: number,
+): { q: string; ts: string } | null {
+  const q = query.trim();
+  return q === "" ? null : { q, ts: String(stamp) };
+}
+
 export function destinationLabel(destination: BottomNavDestination): string {
   const labels: Record<BottomNavDestination, string> = {
     home: t("nav.home"),
