@@ -27,8 +27,7 @@ import {
   type ExtensionHttpOptions,
 } from "../ports/extensionHttp";
 import { createExtensionStatus, type ExtensionStatusStore } from "../ports/extensionStatus";
-import { createIdbByteStore, type ByteStore } from "./byteStore";
-import { openWebDatabase } from "./webDatabase";
+import { createIdbByteStore, openWebDatabase, type ByteStore } from "@ryuunest/web-db";
 import { createWebScriptLoader } from "./webScriptLoader";
 
 /**

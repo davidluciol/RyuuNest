@@ -24,6 +24,7 @@ export default defineConfig({
       "@ryuunest/ui-tokens": fileURLToPath(
         new URL("../../packages/ui-tokens/src/index.ts", import.meta.url),
       ),
+      "@ryuunest/web-db": fileURLToPath(new URL("../../packages/web-db/src/index.ts", import.meta.url)),
     },
   },
 });

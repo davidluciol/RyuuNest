@@ -1,7 +1,7 @@
 import { migrate, type SqlDriver, type SqlRunResult, type SqlValue } from "@ryuunest/core";
 import initSqlJs, { type Database, type SqlJsStatic } from "sql.js";
 
-import type { ByteStore } from "./byteStore";
+import type { ByteStore } from "./byteStore.js";
 
 /**
  * F25 — base de datos del cliente web: SQLite real sobre **sql.js** (WASM,

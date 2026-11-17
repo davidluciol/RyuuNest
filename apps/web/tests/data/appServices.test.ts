@@ -5,7 +5,7 @@ import { StubHttp } from "@ryuunest/core";
 import type { RequestMessage } from "@ryuunest/extension-protocol";
 
 import { openWebServices } from "../../src/data/appServices";
-import { createMemoryByteStore } from "../../src/data/byteStore";
+import { createMemoryByteStore } from "@ryuunest/web-db";
 import type { ExtensionChannel } from "../../src/ports/extensionHttp";
 
 /**

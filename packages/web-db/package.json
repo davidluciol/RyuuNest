@@ -1,0 +1,31 @@
+{
+  "name": "@ryuunest/web-db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Base de datos local para navegador: SQLite real (sql.js, WASM) persistida en IndexedDB. Compartida por apps/web y la web de apps/mobile (F49).",
+  "license": "GPL-3.0-only",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@ryuunest/core": "workspace:*",
+    "sql.js": "1.15.2"
+  },
+  "devDependencies": {
+    "@types/sql.js": "1.4.11"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "test": "vitest run --passWithNoTests"
+  }
+}
