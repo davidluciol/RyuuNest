@@ -33,8 +33,11 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.goto(`${baseURL}/library`);
       await page.getByText("Todo (3)").waitFor();
 
+      // Tocar una obra de Tesoros abre su ficha (antes no pasaba nada).
+      await page.getByRole("button", { name: "El dragón de ceniza", exact: true }).click();
+      await page.waitForURL(/\/series\/m-ejemplo-a\/dragon-de-ceniza$/);
+
       // Quitar de favoritos la obra de ejemplo, desde su ficha.
-      await page.goto(`${baseURL}/series/m-ejemplo-a/dragon-de-ceniza`);
       await page.getByRole("button", { name: "Guardada" }).click();
       await page.getByRole("button", { name: "Guardar" }).waitFor();
       await page.waitForTimeout(1500); // la base se guarda en IndexedDB con una pausa
