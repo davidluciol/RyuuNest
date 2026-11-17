@@ -2379,3 +2379,71 @@ Dep: — · S · `apps/mobile/tests/e2e/discover.cjs` (y los e2e que pinten port
 - [x] Seleccionarlo y **debería mostrar de nuevo la pantalla de detalle** para ese manga o cómic.
 - Verif: la obra guardada aparece en Biblioteca y al abrirla se ve su ficha (detalle) completa. — verificado por e2e `apps/web/tests/e2e/discover.cjs` (paso 4: busca en Biblioteca, abre la ficha con capítulos y «Guardada») a 1440/426 px; el bloqueo de «Favorito» ya lo resolvió P-126. Sin cambios nativos, no hay verificación en el teléfono.
 
+### F50 Botón de filtros por etiquetas en el buscador de Descubrir `[FE · Intermedia · N3]`
+
+Dep: F38 (botón «Buscar»), T43 (`filters()` en el contrato) · M · `apps/mobile/src/screens/discover/*`, `packages/core/src/contract/types.ts` (solo lectura)
+
+> Origen (petición del humano, 2026-11-16).
+
+- [x] Botón «Filtros» junto al buscador que abre una hoja con las etiquetas (p. ej. Sekai, Aventuras, Horror, Seinen, Shonen…), multiselección y «Limpiar»
+- [x] Las etiquetas salen de `ModuleApi.filters()` del módulo elegido (tipo `tags`); si el módulo no declara `filters`, el botón no aparece. **Pregunta abierta:** ¿lista fija común a todos los módulos o la de cada módulo? (recomendado: la de cada módulo, sin inventar etiquetas)
+- [x] `search(query, page, filters?)` recibe la selección; chip/contador de filtros activos y la búsqueda funciona también sin texto
+- [x] Textos en el catálogo i18n, componente en la galería con todos sus estados, solo tokens
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440 (declaran `filters`)
+
+> **Hecho (2026-11-17):** ver `MEMORY.md` P-171.
+
+
+### F59 Descubrir usa las capacidades `home`, `list` y `filters` de los módulos `[FE · Alta · N4]`
+
+Dep: T43 (hecha) · M · `apps/mobile/src/screens/discover/*`
+
+> Origen: lo dejó fuera de alcance T43. Los módulos M440 y ZonaTMO ya las declaran.
+
+- [x] Secciones de portada desde `home()` y listas paginadas desde `list(sectionId, page)`, con reserva a `popular`/`latest` si el módulo no las declara
+- [x] Los filtros de `filters()` alimentan F50 (no duplicar)
+- Verif: Vitest + 🧍 S25 con M440 o ZonaTMO
+
+> **Hecho (2026-11-17):** ver `MEMORY.md` P-171.
+
+
+### F38 Descubrir: refresco al recuperar el foco `[FE · Baja · N2]`
+
+- [x] Sin confirmar: `discover.tsx` llama a `refreshModules` al recuperar el foco; no se probó en el teléfono instalar/desinstalar en Portales y volver
+- Verif: S25 Ultra
+
+> **Hecho (2026-11-17):** ver `MEMORY.md` P-171.
+
+
+### F60 Búsqueda global de la cabecera `[FE · Intermedia · N3]`
+
+Dep: F38 · M · `apps/mobile/src/components/Header.tsx`
+
+> Origen: `MEMORY.md` §4 punto 8 («pendiente de F15»). **Comprobar al empezar si sigue vigente.**
+
+- [x] Búsqueda desde la cabecera que lleva a Aventuras con la consulta ya escrita
+- Verif: Vitest + Playwright 426/1440 px
+
+> **Hecho (2026-11-17):** ver `MEMORY.md` P-171.
+
+
+### F77 Descubrir: texto de error del lector de imagen en la web `[FE · Baja · N2]`
+
+- [x] Sin decidir: el error de imagen del lector web solo muestra el título; valorar el mismo mensaje por tipo que en móvil (ver también F39)
+- Verif: Playwright 1440/426 px
+
+> **Hecho (2026-11-17):** ver `MEMORY.md` P-171.
+
+
+### QAw3 Intercalar entre servidores: dos módulos y cambio de fuente `[FE/QA · Intermedia · N3]`
+
+- [x] Abrir la aplicación web; aparece la sección de Inicio.
+- [x] Instalar **2 módulos** en caso de que no haya ninguno (los módulos necesarios para la prueba).
+- [x] Navegar a la sección **Descubrir**.
+- [x] Por defecto se debe cargar un módulo si hay alguno instalado.
+- [x] Seleccionar en los filtros para cambiar de módulo.
+- [x] Verificar que cargan correctamente los mangas del **segundo** módulo.
+- Verif: el filtro de módulo cambia la fuente y la rejilla muestra series del módulo elegido, sin errores y sin mezclar resultados del anterior.
+
+> **Hecho (2026-11-17):** ver `MEMORY.md` P-171.
+
