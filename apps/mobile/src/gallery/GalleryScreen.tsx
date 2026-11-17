@@ -41,7 +41,7 @@ import HomeScreen from "../screens/home/HomeScreen";
 import { SAMPLE_HOME_DATA } from "../screens/home/homeFixtures";
 import LibraryCard from "../components/LibraryCard";
 import LibraryScreen from "../screens/library/LibraryScreen";
-import { SAMPLE_LIBRARY_DATA } from "../screens/library/libraryFixtures";
+import { SAMPLE_LIBRARY_DATA, type LibraryFilters } from "../screens/library/libraryFixtures";
 import ModulePicker from "../components/ModulePicker";
 import DiscoverScreen from "../screens/discover/DiscoverScreen";
 import {
@@ -69,6 +69,7 @@ import ConfirmSheet from "../components/ConfirmSheet";
 import DragonTreasure from "../components/DragonTreasure";
 import FloatingActionButton from "../components/FloatingActionButton";
 import type { MediaKind } from "@ryuunest/core";
+import SortSheet from "../components/SortSheet";
 import FilterSheet from "../components/FilterSheet";
 import NewFolderSheet from "../components/NewFolderSheet";
 import SeriesMenuSheet from "../components/SeriesMenuSheet";
@@ -140,6 +141,8 @@ export default function GalleryScreen() {
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   const [seriesMenuOpen, setSeriesMenuOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState<LibraryFilters["order"]>("lastRead");
   const [filterKinds, setFilterKinds] = useState<MediaKind[]>(["manhwa"]);
   const [filterModules, setFilterModules] = useState<string[]>([]);
   const [filterNsfw, setFilterNsfw] = useState(false);
@@ -753,6 +756,25 @@ export default function GalleryScreen() {
               if (patch.nsfwVisible !== undefined) setFilterNsfw(patch.nsfwVisible);
             }}
             onClose={() => setFilterOpen(false)}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.sortSheet")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.sortSheet.show")}
+            testID="gallery-show-sort-sheet"
+            onPress={() => setSortOpen(true)}
+          />
+          <SortSheet
+            visible={sortOpen}
+            order={sortOrder}
+            onSelect={(order) => {
+              setSortOrder(order);
+              setSortOpen(false);
+            }}
+            onClose={() => setSortOpen(false)}
           />
         </View>
 

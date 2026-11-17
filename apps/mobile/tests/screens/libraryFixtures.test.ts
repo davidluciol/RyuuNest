@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   DEFAULT_LIBRARY_FILTERS,
   GEMS_FOLDER_ID,
+  LIBRARY_ORDERS,
   SAMPLE_LIBRARY_DATA,
   filterLibrarySeries,
   libraryGridRows,
@@ -188,5 +189,12 @@ describe("toggleItem (F57)", () => {
     const original = ["manga", "manhwa"];
     expect(toggleItem(original, "manga")).toEqual(["manhwa"]);
     expect(original).toEqual(["manga", "manhwa"]);
+  });
+});
+
+/** F58 — los órdenes del menú son los de RF-28, en este orden. */
+describe("LIBRARY_ORDERS (F58)", () => {
+  it("nombre, último leído y fecha de adición", () => {
+    expect(LIBRARY_ORDERS).toEqual(["name", "lastRead", "addedAt"]);
   });
 });

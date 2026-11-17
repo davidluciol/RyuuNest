@@ -462,6 +462,9 @@ export function hasActiveFilters(filters: LibraryFilters): boolean {
   );
 }
 
+/** Órdenes de la biblioteca (RF-28), en el orden del menú. */
+export const LIBRARY_ORDERS: readonly LibraryFilters["order"][] = ["name", "lastRead", "addedAt"];
+
 /** Marca o desmarca un valor de una selección múltiple (tipo, fuente, categoría). */
 export function toggleItem<T>(list: readonly T[], item: T): T[] {
   return list.includes(item) ? list.filter((other) => other !== item) : [...list, item];
