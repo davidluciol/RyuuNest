@@ -85,11 +85,12 @@ Dep: F46 · XS · `apps/mobile/src/components/ContinueCard.tsx`
 Dep: F46 · M · `packages/core` (progreso + `ports`), `apps/mobile/src/screens/reader/*` (solo el gancho de guardado)
 
 > Origen (petición del humano, 2026-11-16). **Decisión:** registro propio, no solo la biblioteca, para que también cuente lo leído sin guardar.  Debe incluir lo necesario para abrir el capítulo y la página exacta (enlace del capítulo, P-155).
+> **Hecho con otra decisión (P-156):** sin tabla nueva; `listLastRead`/`getLastRead` unen `progress` y `series` (una fila por serie, cuenta lo no guardado). El lector ya guarda en `progress` y el respaldo ya la incluye; `recordLastRead` = `ProgressStore.save`.
 
-- [ ] Rojo: `recordLastRead(entry)` y `getLastRead()`; entrada = título del capítulo, portada, categoría, título de la serie, estado (en emisión, finalizado, en pausa…), página actual y páginas restantes, **módulo de origen** (lectorTMO, yupmangas, mangasin…) y **enlace de origen** (abre la serie/capítulo en su módulo)
-- [ ] El historial guarda **una entrada por serie** (la última lectura), ordenado por fecha; las lecturas de una misma serie reemplazan la anterior
-- [ ] El lector lo actualiza al guardar el progreso (sin animaciones ni trabajo extra en el lector)
-- [ ] Entra en el respaldo/`backup` y en la migración aditiva de la base (sin romper copias anteriores)
+- [x] Rojo: `recordLastRead(entry)` y `getLastRead()`; entrada = título del capítulo, portada, categoría, título de la serie, estado (en emisión, finalizado, en pausa…), página actual y páginas restantes, **módulo de origen** (lectorTMO, yupmangas, mangasin…) y **enlace de origen** (abre la serie/capítulo en su módulo)
+- [x] El historial guarda **una entrada por serie** (la última lectura), ordenado por fecha; las lecturas de una misma serie reemplazan la anterior
+- [x] El lector lo actualiza al guardar el progreso (sin animaciones ni trabajo extra en el lector)
+- [x] Entra en el respaldo/`backup` y en la migración aditiva de la base (sin romper copias anteriores)
 - Verif: Vitest en `packages/core` (orden, reemplazo por serie, vacío)
 
 ### F79 Guarida: «Continuar aventura» con datos reales y «Reanudar» exacto `[FE · Intermedia · N3]`
