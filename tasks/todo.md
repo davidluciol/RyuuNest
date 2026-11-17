@@ -416,7 +416,7 @@ Dep: F86 · S · `apps/mobile/src/screens/discover/*`
 
 Dep: F52 · M · `apps/mobile/src/screens/series/*` (ficha), `packages/core/src/library/{Favorites,Folders}.ts`
 
-> Origen (petición del humano, 2026-11-17). **Pregunta abierta P-170:** el humano habla de la carpeta «por defecto» y de «General», pero F52 creó **Favoritos** y **Gemas**; no existe «General». Recomendación: «Guardar» añade a **Gemas** (muestra todo) y no se crea «General»; confirmar antes de implementar.
+> Origen (petición del humano, 2026-11-17). **Decidido (P-170, humano 2026-11-17):** «Guardar» añade a **Gemas** (muestra todo); **no** se crea la carpeta «General».
 
 - [ ] Rojo: pulsar «Guardar» guarda la serie en la carpeta por defecto (según P-170) y el corazón queda relleno; pulsar de nuevo la quita (conserva el progreso, RF-30); idempotente
 - [ ] La ficha refleja el estado al abrirla y al volver (Tesoros lo relee por foco)
@@ -437,7 +437,7 @@ Dep: F95, F53 · M · `apps/mobile/src/screens/series/*`, `apps/mobile/src/compo
 
 Dep: F94 · S · `apps/mobile/src/screens/discover/*`
 
-> Origen (petición del humano, 2026-11-17, opcional; escribió «josie», se entiende **josei**). **Solo si esas etiquetas existen** en los datos del módulo: no inventar etiquetas.
+> Origen (petición del humano, 2026-11-17, opcional; la etiqueta es **josei**, confirmado). **Solo si esas etiquetas existen** en los datos del módulo: no inventar etiquetas.
 
 - [ ] Una serie de Aventuras con alguna etiqueta de la lista (hentai, seinen, josei) o `nsfw` lleva el borde naranja de F94 (misma regla: no solo color)
 - [ ] Comprobar con fixtures qué etiquetas llegan de los módulos y anotar el resultado; si no existen, cerrar la tarea con la nota
