@@ -222,9 +222,9 @@ Dep: F52 · M · `apps/mobile/src/screens/library/*`, `packages/core/src/library
 
 Dep: F55 · S · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`, `packages/i18n`
 
-- [ ] Sin resultados: texto **cómico** (analogía del dragón rebuscando entre sus tesoros y sin hallar nada; breve, sin ocultar la causa, SPEC 11.7) y un **SVG generado** centrado (ilustración propia del dragón, solo tokens de color; sin imágenes externas, RNF-5)
-- [ ] Componente en la galería (con y sin filtros activos); textos en el catálogo i18n
-- Verif: Playwright 426/1440 px sin overflow + 🧍 S25
+- [x] Sin resultados: texto **cómico** (analogía del dragón rebuscando entre sus tesoros y sin hallar nada; breve, sin ocultar la causa, SPEC 11.7) y un **SVG generado** centrado (ilustración propia del dragón, solo tokens de color; sin imágenes externas, RNF-5)
+- [x] Componente en la galería (con y sin filtros activos); textos en el catálogo i18n
+- Verif: ✅ Playwright 426/1440 px sin overflow (`library.cjs`) · 🧍 S25 pendiente (y revisión del texto por el humano, P-165)
 
 
 ### F57 Hoja de filtros real (tipo y fuente) y nombre visible de la fuente `[FE · Intermedia · N3]`

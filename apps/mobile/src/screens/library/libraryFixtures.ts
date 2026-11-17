@@ -451,6 +451,22 @@ export const DEFAULT_LIBRARY_FILTERS: LibraryFilters = {
   order: "name",
 };
 
+/** ¿Hay algún filtro (no el texto) que pueda dejar la lista sin series? «Gemas» no filtra (F56). */
+export function hasActiveFilters(filters: LibraryFilters): boolean {
+  return (
+    filters.tags.length > 0 ||
+    filters.kinds.length > 0 ||
+    filters.moduleIds.length > 0 ||
+    (filters.folderId !== undefined && filters.folderId !== GEMS_FOLDER_ID) ||
+    filters.chip !== "all"
+  );
+}
+
+/** Quita texto y filtros; el orden y el NSFW son preferencias y se respetan. */
+export function clearedFilters(filters: LibraryFilters): LibraryFilters {
+  return { ...DEFAULT_LIBRARY_FILTERS, order: filters.order, nsfwVisible: filters.nsfwVisible };
+}
+
 /**
  * F34 — filas de la cuadrícula de Biblioteca cuando la pantalla se muestra dentro de otro
  * contenedor con scroll (galería): se dibuja sin `FlatList` para no anidar listas virtualizadas.

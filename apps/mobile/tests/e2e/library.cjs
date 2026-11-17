@@ -98,6 +98,21 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await categorias.getByRole("button", { name: "Terror", exact: true }).click();
       await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
 
+      // F56: vacío de búsqueda, con texto solo y con filtros activos (el dragón sin tesoros).
+      await buscador.fill("zzz-no-existe");
+      await page.getByText("El dragón rebuscó todo su tesoro", { exact: true }).waitFor({ state: "visible" });
+      await page.getByRole("img", { name: /dragón rebuscando/ }).waitFor({ state: "visible" });
+      await page.screenshot({ path: process.env.F52_SHOT ? `${process.env.F52_SHOT}-vacio-${width}.png` : undefined });
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `vacío sin overflow @${width}`);
+      await page.getByRole("button", { name: "Limpiar búsqueda", exact: true }).click();
+      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
+      await categorias.getByRole("button", { name: "Terror", exact: true }).click();
+      await buscador.fill("zzz-no-existe");
+      await page.getByText("Ni una gema con esos filtros", { exact: true }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Quitar filtros", exact: true }).click();
+      await page.getByRole("button", { name: "Ciudad sin nombre", exact: true }).waitFor({ state: "visible" });
+      assert.equal(await buscador.inputValue(), "", `Quitar filtros limpia el texto @${width}`);
+
       // F54: menú de la serie (pulsación larga y «⋮» con foco): favoritos, mover, mover y crear, eliminar.
       const contar = async (nombre) => {
         const boton = page.getByRole("button", { name: new RegExp(`^${nombre}, \\d+ obras$`) });

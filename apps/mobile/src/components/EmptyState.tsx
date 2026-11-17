@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import Button from "./Button";
@@ -23,6 +24,8 @@ export interface EmptyStateProps {
   onAction?: () => void;
   /** Escala del dragón: mediano por defecto (§11.12). */
   scale?: StateScale;
+  /** Ilustración propia en lugar del dragón marcador (F56: «el dragón sin tesoros»). */
+  illustration?: ReactNode;
 }
 
 export default function EmptyState({
@@ -31,11 +34,12 @@ export default function EmptyState({
   actionLabel,
   onAction,
   scale = "md",
+  illustration,
 }: EmptyStateProps) {
   const shape = stateStyle(scale);
   return (
     <View style={[styles.block, { gap: shape.gap, padding: shape.padding }]}>
-      <DragonMarker size={shape.dragonSize} color={colors.dragon} />
+      {illustration ?? <DragonMarker size={shape.dragonSize} color={colors.dragon} />}
       <Text style={[styles.title, { color: colors.title }]} numberOfLines={2}>
         {title}
       </Text>

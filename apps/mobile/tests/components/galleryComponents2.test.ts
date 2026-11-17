@@ -53,6 +53,7 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.floatingButton",
       "gallery.component.newFolderSheet",
       "gallery.component.seriesMenu",
+      "gallery.component.searchEmpty",
       "gallery.component.logEventRow",
       "gallery.component.diagnosticsScreen",
       "gallery.component.chipScroller",
