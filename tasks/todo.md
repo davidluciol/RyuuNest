@@ -18,9 +18,9 @@ Las tareas pendientes se agrupan **por sección de la app**: **Guarida**, **Teso
 | Sección | Lote sugerido (una sesión) |
 |---|---|
 | Guarida | F46 → F78 → F79 → F80 → F81 → F82 (luego QAw2, F34, F40, F76) |
-| Tesoros | F52 → F54 → F53 → F55 → F56 → F57 → F58 (luego F47, F49) |
-| Aventuras | F59 → F50 → F38 → F60 → F77 → QAw3 · listas/filtros: F83 → F84 → F85 → F86 → F87 → F88 |
-| Portales | T42 → F61 → F63 → F64 → F45 → F42 |
+| Tesoros | F52 → F54 → F53 → F55 → F56 → F57 → F58 (luego F47, F49) · carpetas/filtros: F92 → F93 → F94 |
+| Aventuras | F59 → F50 → F38 → F60 → F77 → QAw3 · listas/filtros: F83 → F84 → F85 → F86 → F87 → F88 · ficha/carpetas: F95 → F96 → F97 |
+| Portales | T42 → F61 → F63 → F64 → F45 → F42 → F98 |
 | Ajustes | F65 → F66 → F67 → F68 → F69 · temas: F89 → F90 → F91 |
 | Lector y ficha | F17 → F51 → F39 → F43 → F23 |
 | Recursos | F70 → F71 → F72 → F73 → F74 → F75 (FA1 es 🧍) |
@@ -250,7 +250,38 @@ Dep: F52 · S · `apps/mobile/src/screens/library/*`, `packages/core/src/library
 - [x] `reading: true` **no** se pasa al núcleo (decisión del humano 2026-11-17, P-166): la pantalla filtra en memoria y el chip «Leyendo» ya funciona; el núcleo ya lo soporta
 - Verif: ✅ Vitest (`LIBRARY_ORDERS`) + ✅ Playwright 426/1440 px (`library.cjs`) · 🧍 S25 pendiente
 
-**Lote sugerido:** F52 → F54 → F53 → F55 → F56 → F57 → F58; F47 y F49 en sesiones propias (N4).
+### F92 Filtros de Tesoros en carrusel horizontal `[FE · Baja · N2]`
+
+Dep: F55 · S · `apps/mobile/src/screens/library/*`, `apps/mobile/src/components/ChipScroller.tsx`
+
+> Origen (petición del humano, 2026-11-17): los chips bajo el buscador se ven apretados.
+
+- [ ] Los chips de filtro bajo el buscador van en **una sola fila con scroll horizontal** (reutilizar `ChipScroller`; no crear componente), con separación de tokens, sin cortar el último chip y con foco visible/D-pad
+- [ ] Estados en la galería (pocos chips, desbordando); sin overflow vertical ni de página
+- Verif: Playwright 426/1440 px (`library.cjs`) + 🧍 S25
+
+### F93 «Gestionar» carpetas: ver, renombrar, dinámica y borrar `[FE/BE · Intermedia · N3]`
+
+Dep: F52, F53 · M · `apps/mobile/src/screens/library/*`, `packages/core/src/library/Folders.ts`, `packages/i18n`
+
+> Origen (petición del humano, 2026-11-17): el botón «Gestionar» (`library.folder.manage`) no hace nada.
+
+- [ ] Rojo (núcleo): `rename`, `setTags` (hacer **dinámica** = carpeta inteligente por etiquetas, o volverla manual) y `delete` de carpeta; **Favoritos y Gemas** no se renombran ni se borran (F52); al borrar una carpeta las series **no se borran** (siguen en Gemas, RF-30); nombre obligatorio y sin duplicados
+- [ ] Pantalla u hoja «Gestionar carpetas»: lista de carpetas (nombre, nº de series, icono de rayo si es dinámica) con editar (reutilizar el modal de F53 en modo edición) y eliminar con `ConfirmSheet`
+- [ ] Textos en i18n; componentes nuevos en la galería con todos sus estados; comprobar el respaldo (renombrar/borrar sobrevive a exportar-importar)
+- Verif: Vitest con SQLite real + Playwright 426/1440 px + 🧍 S25
+
+### F94 NSFW con borde naranja en Tesoros `[FE · Baja · N2]` (opcional)
+
+Dep: F92 · S · `packages/ui-tokens`, `apps/mobile/src/components/CoverCard.tsx`
+
+> Origen (petición del humano, 2026-11-17, opcional). **Leer `DESIGN_RULES.md` antes: decide cómo se usa el color.**
+
+- [ ] Las series `nsfw` de Tesoros llevan el **borde naranja** (token nuevo en `ui-tokens` si no existe; sin hexadecimales); **no solo color**: mantener la etiqueta/icono NSFW existente (accesibilidad)
+- [ ] Estado en la galería; Playwright 426/1440 px
+- Verif: Playwright + 🧍 S25
+
+**Lote sugerido:** F52 → F54 → F53 → F55 → F56 → F57 → F58; F47 y F49 en sesiones propias (N4). Carpetas y filtros: F92 → F93 → F94.
 
 ---
 
@@ -381,6 +412,37 @@ Dep: F86 · S · `apps/mobile/src/screens/discover/*`
 ---
 
 
+### F95 Ficha: botón «Guardar» (corazón) guarda en la carpeta por defecto `[FE/BE · Intermedia · N3]`
+
+Dep: F52 · M · `apps/mobile/src/screens/series/*` (ficha), `packages/core/src/library/{Favorites,Folders}.ts`
+
+> Origen (petición del humano, 2026-11-17). **Decidido (P-170, humano 2026-11-17):** «Guardar» añade a **Gemas** (muestra todo); **no** se crea la carpeta «General».
+
+- [ ] Rojo: pulsar «Guardar» guarda la serie en la carpeta por defecto (según P-170) y el corazón queda relleno; pulsar de nuevo la quita (conserva el progreso, RF-30); idempotente
+- [ ] La ficha refleja el estado al abrirla y al volver (Tesoros lo relee por foco)
+- Verif: Vitest con SQLite real + Playwright 426/1440 px (`persistence.cjs`: guardar → aparece en Tesoros) + 🧍 S25
+
+### F96 Ficha: botón «Carpeta» con hoja para elegir carpeta `[FE · Intermedia · N3]`
+
+Dep: F95, F53 · M · `apps/mobile/src/screens/series/*`, `apps/mobile/src/components/*`
+
+> Origen (petición del humano, 2026-11-17). Reutilizar la hoja «Mover» de F54.
+
+- [ ] «Carpeta» abre una hoja con la **lista de carpetas** del usuario (con casilla/marca en las que ya contienen la serie) y la acción «Nueva carpeta» (modal de F53); elegir guarda la serie en esa carpeta
+- [ ] Sin carpetas propias: la hoja muestra solo las por defecto y guarda en la carpeta por defecto de F95
+- [ ] Hoja en la galería (con carpetas, sin carpetas); textos en i18n
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+
+### F97 NSFW con borde naranja en Aventuras: hentai, seinen y josei `[FE · Baja · N2]` (opcional)
+
+Dep: F94 · S · `apps/mobile/src/screens/discover/*`
+
+> Origen (petición del humano, 2026-11-17, opcional; la etiqueta es **josei**, confirmado). **Solo si esas etiquetas existen** en los datos del módulo: no inventar etiquetas.
+
+- [ ] Una serie de Aventuras con alguna etiqueta de la lista (hentai, seinen, josei) o `nsfw` lleva el borde naranja de F94 (misma regla: no solo color)
+- [ ] Comprobar con fixtures qué etiquetas llegan de los módulos y anotar el resultado; si no existen, cerrar la tarea con la nota
+- Verif: Vitest (regla de etiquetas) + Playwright 426/1440 px
+
 **Lote sugerido:** F59 → F50 → F38 → F60 → F77 → QAw3 (F41/F44 esperan aprobación). Nuevo bloque de listas/filtros: F83 → F84 → F85 → F86 → F87 → F88.
 
 ---
@@ -437,7 +499,18 @@ Dep: F33 · S · `apps/mobile/src/screens/{sources,settings}/*`
 - [ ] Priorizar solo cuando el host soporte navegador o cambie el sitio
 - Verif: —
 
-**Lote sugerido:** T42 → F61 → F63 → F64 → F45 → F42.
+**Lote sugerido:** T42 → F61 → F63 → F64 → F45 → F42 → F98.
+
+---
+
+### F98 NSFW con borde naranja en los servidores de Portales `[FE · Baja · N2]` (opcional)
+
+Dep: F94 · S · `apps/mobile/src/screens/sources/*`
+
+> Origen (petición del humano, 2026-11-17, opcional). Reutiliza el token y la regla de F94.
+
+- [ ] Los módulos/servidores marcados `nsfw` en Portales llevan el borde naranja (más su etiqueta NSFW existente)
+- Verif: Playwright 426/1440 px + 🧍 S25
 
 ---
 
