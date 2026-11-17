@@ -141,6 +141,7 @@
   "gallery.component.sectionHeader": "encabezado de sección",
   "gallery.component.continueCard": "tarjeta hero (continuar)",
   "gallery.component.recentCard": "tarjeta de recientes",
+  "gallery.component.homeScreenEmpty": "pantalla de inicio vacía",
   "gallery.component.listScreen": "pantalla de lista (Ver todas)",
   "gallery.component.listScreenEmpty": "pantalla de lista vacía",
   "gallery.component.folderCard": "tarjeta de carpeta",

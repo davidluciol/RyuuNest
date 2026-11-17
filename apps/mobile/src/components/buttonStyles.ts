@@ -15,7 +15,8 @@ const colors = dragonNightColors;
 
 /** Un subconjunto de ViewStyle con lo que usan los botones (sin RN). */
 export interface ButtonStyleShape {
-  height: number;
+  minHeight: number;
+  paddingVertical: number;
   borderRadius: number;
   backgroundColor: string;
   borderColor?: string;
@@ -32,7 +33,9 @@ interface ButtonState {
 /** Estilo del contenedor por variante y estado. */
 export function buttonStyle(variant: ButtonVariant, state: ButtonState = {}): ButtonStyleShape {
   const base: ButtonStyleShape = {
-    height: BUTTON_MIN_HEIGHT,
+    // Alto mínimo: con el texto del sistema al 200 % la etiqueta se parte y el botón crece (F34).
+    minHeight: BUTTON_MIN_HEIGHT,
+    paddingVertical: spacing.xs,
     borderRadius: radii.control,
     paddingHorizontal: spacing.md,
     borderWidth: 0,

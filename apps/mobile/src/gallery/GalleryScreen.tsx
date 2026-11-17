@@ -436,6 +436,10 @@ export default function GalleryScreen() {
         <View style={styles.shellPreview}>
           <HomeScreen data={SAMPLE_HOME_DATA} />
         </View>
+        <Text style={styles.groupLabel}>{t("gallery.component.homeScreenEmpty")}</Text>
+        <View style={styles.shellPreview}>
+          <HomeScreen />
+        </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.libraryCard")}</Text>
         <View style={styles.row}>

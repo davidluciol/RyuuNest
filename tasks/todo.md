@@ -45,13 +45,14 @@ Dep: F48 · M · `apps/mobile/src/app/(tabs)/index.tsx`, `src/screens/home/{home
 
 ### QAw2 Ruta Inicio: vacío → instalar → leer → continuar leyendo `[FE/QA · Intermedia · N3]`
 
-- [ ] Al abrir la aplicación web, **Inicio debería estar vacío** (sin historial de lectura).
-- [ ] Ir a **Fuentes** e instalar un módulo en caso de que no exista ninguno.
-- [ ] Ir a la sección **Descubrir**.
-- [ ] Seleccionar un manga al azar.
-- [ ] Abrir un capítulo al azar y avanzar un poco en la lectura, para que quede registro de progreso.
-- [ ] Salir del lector y regresar a **Inicio**.
-- [ ] Verificar que el manga aparece para **continuar leyendo**.
+- [x] Al abrir la aplicación web, **Inicio debería estar vacío** (sin historial de lectura).
+- [x] Ir a **Fuentes** e instalar un módulo en caso de que no exista ninguno.
+- [x] Ir a la sección **Descubrir**.
+- [x] Seleccionar un manga al azar.
+- [x] Abrir un capítulo al azar y avanzar un poco en la lectura, para que quede registro de progreso.
+- [x] Salir del lector y regresar a **Inicio**.
+- [x] Verificar que el manga aparece para **continuar leyendo**.
+> **Hecho en el S25 (2026-11-16):** web de Expo no tiene base real (F49 acotada y aparcada, ver P-160), así que el recorrido se hizo en el móvil con m440 ya instalado: Aventuras → «Who Is the Liar?» → Empezar → 3 páginas → cerrar → Guarida lo muestra primero con «Continuar cap. 1» y reanuda a mitad. **No se ejecutaron** «Inicio vacío» ni «instalar módulo» (el módulo ya estaba y no se borraron datos).
 - Verif: Inicio muestra la obra con el progreso guardado y reanuda en el punto de lectura.
 
 
@@ -59,7 +60,8 @@ Dep: F48 · M · `apps/mobile/src/app/(tabs)/index.tsx`, `src/screens/home/{home
 
 > Resto de F34 (F34.1–F34.3 hechos; detalle en `todo.archive.md`).
 
-- [ ] **Inicio al 200 %**: recortes en «Continuar la Aventura», el botón «Continuar cap. 41» y las insignias (hallazgo de F34.3, fuera de su alcance)
+- [x] **Inicio al 200 %** (código: `Button`/`Badge` con `minHeight` en vez de `height` y título de sección sin `numberOfLines`): recortes en «Continuar la Aventura», el botón «Continuar cap. 41» y las insignias (hallazgo de F34.3, fuera de su alcance)
+- [ ] 🧍 Comprobar en el S25 con `font_scale 2.0` (no se pudo: Expo Go no volvió al primer plano en la sesión)
 - Verif: `focusAndScale.cjs` + `fontScale.test.ts` en verde · 🧍 S25 Ultra con `font_scale 2.0`
 
 ### F40 Estado vacío propio de Inicio y paridad web/nativo (propuesta de F33, sin aprobar) `[FE · Baja · N2]`
@@ -68,14 +70,16 @@ Dep: F46 · XS
 
 > Origen: `tasks/Analisis.md` §7. Los datos reales los cubre F46; aquí queda lo que F46 no hace.
 
-- [ ] 🧍 Aprobar F40 (decisión del humano). Después: estado vacío de Inicio con «instalar un módulo» + botón a Portales y paridad web/nativo comprobada con Playwright
+- [x] 🧍 Aprobar F40 → **aprobada** (2026-11-16): solo comprobar paridad; el vacío ya existía (F46). Estado vacío añadido a la galería. Pendiente de aprobación original: estado vacío de Inicio con «instalar un módulo» + botón a Portales y paridad web/nativo comprobada con Playwright
+> **Hecho:** web a 426 y 1440 px (galería «pantalla de inicio vacía»): sin overflow, botón 48 px, consola limpia. El vacío en el S25 no se verificó (exigiría borrar los datos del móvil).
 - Verif: Playwright 426/1440 px + 🧍 S25
 
 ### F76 Inicio: «Continuar leyendo» con progreso real en el borde de la tarjeta `[FE · Baja · N2]`
 
 Dep: F46 · XS · `apps/mobile/src/components/ContinueCard.tsx`
 
-- [ ] Comprobar que la tarjeta muestra capítulo y página guardados (no los de ejemplo) y que pulsar reanuda en esa página (RF-20); añadir el caso a la galería si falta
+- [x] Comprobar que la tarjeta muestra capítulo y página guardados (no los de ejemplo) y que pulsar reanuda en esa página (RF-20); añadir el caso a la galería si falta
+> **Hecho (cubierta por F79/F80, 2026-11-16):** la tarjeta muestra capítulo y página guardados y reanuda en esa página (S25); la galería ya tiene `ContinueCard` con página 12/38.
 - Verif: Vitest + 🧍 S25
 
 > **Nota:** F47 (portadas con cabeceras) afecta también a Guarida; vive en **Tesoros**.

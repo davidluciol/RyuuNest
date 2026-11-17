@@ -29,4 +29,13 @@ describe("escala de texto del sistema al 200 %", () => {
     expect(NAV_LABEL_MAX_FONT_SCALE).toBeLessThanOrEqual(1.5);
     expect(read("BottomNav.tsx")).toMatch(/maxFontSizeMultiplier=\{NAV_LABEL_MAX_FONT_SCALE\}/);
   });
+
+  it("botón e insignia crecen con el texto (alto mínimo, no fijo) para no recortarlo (F34)", () => {
+    expect(read("buttonStyles.ts")).not.toMatch(/^\s+height: BUTTON_MIN_HEIGHT/m);
+    expect(read("badgeStyles.ts")).not.toMatch(/^\s+height: BADGE_HEIGHT/m);
+  });
+
+  it("el título de sección de Inicio se ajusta en varias líneas en vez de acabar en «…» (F34)", () => {
+    expect(read("SectionHeader.tsx")).not.toMatch(/styles\.title[^>]*numberOfLines/);
+  });
 });

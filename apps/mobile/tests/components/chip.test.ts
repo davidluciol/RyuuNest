@@ -36,7 +36,7 @@ describe("chipStyle (chip de filtro, 36 px pill)", () => {
 describe("badgeStyle (insignia neutra, 24 px pill)", () => {
   it("fondo elevated y texto text-secondary (neutra, V1)", () => {
     expect(badgeStyle()).toMatchObject({
-      height: BADGE_HEIGHT,
+      minHeight: BADGE_HEIGHT,
       backgroundColor: "#1B2230",
       borderRadius: 9999,
     });
