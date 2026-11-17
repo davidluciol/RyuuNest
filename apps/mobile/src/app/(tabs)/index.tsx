@@ -1,10 +1,11 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { dragonNightColors } from "@ryuunest/ui-tokens";
 
 import ErrorState from "../../components/ErrorState";
 import { t } from "../../i18n";
+import { resumeRoutes } from "../../navigation/resume";
 import { destinationRoutes } from "../../navigation/routes";
 
 import HomeScreen from "../../screens/home/HomeScreen";
@@ -29,10 +30,13 @@ import { isNativePlatform } from "../../data/backupFilesPort";
  * en TV (SPEC §11.8: el primer uso en TV lo prioriza) y, para poder probarlo
  * en web, también en la galería; en el móvil nativo queda en Ajustes.
  */
-function openReader(item: HomeProgress): void {
-  router.push({
-    pathname: "/reader/[moduleId]/[seriesId]/[chapterId]",
-    params: { moduleId: item.moduleId, seriesId: item.seriesId, chapterId: item.chapterId },
+/** Pausa entre los pushes de «Reanudar» (Detalles → lector). */
+const RESUME_STEP_MS = 50;
+
+function resume(item: HomeProgress): void {
+  // Un push por ciclo: dos seguidos en el mismo tick se pisan y se pierde Detalles de la pila.
+  resumeRoutes(item, Platform.OS).forEach((route, i) => {
+    setTimeout(() => router.push(route), i * RESUME_STEP_MS);
   });
 }
 
@@ -45,8 +49,8 @@ function HomeContent() {
     return (
       <HomeScreen
         data={home.data}
-        onContinue={openReader}
-        onRecentPress={openReader}
+        onContinue={resume}
+        onRecentPress={resume}
         onFolderPress={() => router.push(destinationRoutes.library)}
         onSeeAllFolders={() => router.push(destinationRoutes.library)}
         onEmptyAction={() => router.push(destinationRoutes.sources)}

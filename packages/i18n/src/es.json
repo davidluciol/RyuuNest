@@ -92,6 +92,7 @@
   "home.section.folders": "Tesoros Guardados",
   "home.action.resume": "Retomar",
   "home.action.seeAll": "Ver todas",
+  "home.chapter.saved": "Capítulo guardado",
   "home.action.continueChapter": "Continuar cap. {number}",
 
   "error.detail.module": "módulo: {value}",

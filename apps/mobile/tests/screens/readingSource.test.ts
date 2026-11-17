@@ -64,8 +64,29 @@ function mounterFor(api: Partial<ModuleApi>): ModuleMounter {
 }
 
 describe("createReadingSource · loadSeries", () => {
+  it("al abrir la ficha guarda título, portada, tipo y estado de la serie, aunque no sea favorita", async () => {
+    const source = createReadingSource({
+      driver,
+      mounter: mounterFor({ details: async () => DETAILS }),
+    });
+
+    await source.loadSeries("m-a", "serie-1");
+
+    expect(
+      await driver.get("SELECT title, kind, status FROM series WHERE series_id = 'serie-1'"),
+    ).toEqual({
+      title: "La serie",
+      kind: "manhwa",
+      status: "ongoing",
+    });
+    expect(await driver.get("SELECT COUNT(*) AS n FROM favorite")).toEqual({ n: 0 });
+  });
+
   it("devuelve la ficha del módulo sin progreso ni leídos cuando aún no se ha leído nada", async () => {
-    const source = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    const source = createReadingSource({
+      driver,
+      mounter: mounterFor({ details: async () => DETAILS }),
+    });
 
     const view = await source.loadSeries("m-a", "serie-1");
 
@@ -90,7 +111,10 @@ describe("createReadingSource · loadSeries", () => {
       seriesId: "serie-1",
       chapterId: "ch-1",
     });
-    const source = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    const source = createReadingSource({
+      driver,
+      mounter: mounterFor({ details: async () => DETAILS }),
+    });
 
     const view = await source.loadSeries("m-a", "serie-1");
 
@@ -99,7 +123,10 @@ describe("createReadingSource · loadSeries", () => {
   });
 
   it("el favorito se guarda con su serie, la biblioteca lo lista y sobrevive a recargar (P-126)", async () => {
-    const source = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    const source = createReadingSource({
+      driver,
+      mounter: mounterFor({ details: async () => DETAILS }),
+    });
     expect((await source.loadSeries("m-a", "serie-1")).favorite).toBe(false);
 
     expect(await source.toggleFavorite("m-a", "serie-1", DETAILS)).toBe(true);
@@ -108,7 +135,10 @@ describe("createReadingSource · loadSeries", () => {
     expect(page.items.map((item) => [item.moduleId, item.seriesId, item.title])).toEqual([
       ["m-a", "serie-1", "La serie"],
     ]);
-    const reloaded = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    const reloaded = createReadingSource({
+      driver,
+      mounter: mounterFor({ details: async () => DETAILS }),
+    });
     expect((await reloaded.loadSeries("m-a", "serie-1")).favorite).toBe(true);
 
     expect(await source.toggleFavorite("m-a", "serie-1", DETAILS)).toBe(false);
@@ -116,17 +146,28 @@ describe("createReadingSource · loadSeries", () => {
   });
 
   it("la release preferida se guarda como grupo y sobrevive a recargar (F17)", async () => {
-    const source = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    const source = createReadingSource({
+      driver,
+      mounter: mounterFor({ details: async () => DETAILS }),
+    });
 
     await source.setPreferredRelease("m-a", "serie-1", { id: "r-1", group: "Equipo" });
 
-    expect((await new SeriesPrefs({ driver, clock }).get("m-a", "serie-1"))?.preferredGroup).toBe("Equipo");
-    const reloaded = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    expect((await new SeriesPrefs({ driver, clock }).get("m-a", "serie-1"))?.preferredGroup).toBe(
+      "Equipo",
+    );
+    const reloaded = createReadingSource({
+      driver,
+      mounter: mounterFor({ details: async () => DETAILS }),
+    });
     expect((await reloaded.loadSeries("m-a", "serie-1")).preferredReleaseId).toBe("Equipo");
   });
 
   it("una release sin grupo se guarda por su id", async () => {
-    const source = createReadingSource({ driver, mounter: mounterFor({ details: async () => DETAILS }) });
+    const source = createReadingSource({
+      driver,
+      mounter: mounterFor({ details: async () => DETAILS }),
+    });
 
     await source.setPreferredRelease("m-a", "serie-1", { id: "r-solo" });
 

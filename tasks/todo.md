@@ -100,9 +100,9 @@ Dep: F78 · M · `apps/mobile/src/screens/home/*`, `apps/mobile/src/components/C
 > Origen (petición del humano, 2026-11-16). Sustituye los datos de ejemplo poco a poco; amplía F46/F76.
 > **Resuelto (P-155, 2026-11-16):** web directo al lector; móvil Detalles → lector. En la web de Expo, sin base real hasta F49, se usa la reserva de ejemplo.
 
-- [ ] La tarjeta muestra el último leído de `getLastRead()` (capítulo, portada, categoría, título, estado, página y páginas restantes, módulo de origen)
-- [ ] «Reanudar» (P-155): en **web** va directo al lector en el capítulo y la **página exacta**; en **móvil** apila Detalles → lector (aterriza en la página exacta y «atrás» vuelve a Detalles). El registro de F78 guarda módulo, enlace del capítulo y página
-- [ ] Sin registro → estado vacío de Guarida (F40), nunca datos de ejemplo en nativo
+- [x] La tarjeta muestra el último leído de `getLastRead()` (capítulo, portada, categoría, título, estado, página y páginas restantes, módulo de origen)
+- [x] «Reanudar» (P-155): en **web** va directo al lector en el capítulo y la **página exacta**; en **móvil** apila Detalles → lector (aterriza en la página exacta y «atrás» vuelve a Detalles). El registro de F78 guarda módulo, enlace del capítulo y página
+- [x] Sin registro → estado vacío de Guarida (F40), nunca datos de ejemplo en nativo
 - Verif: Vitest + 🧍 S25 (leer páginas → Guarida → Reanudar abre la misma página)
 
 ### F80 Guarida: «Lecturas recientes» desde el historial de series `[FE · Baja · N2]`
