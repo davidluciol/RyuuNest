@@ -1,7 +1,7 @@
 import { StubHttp } from "@ryuunest/core";
 import { describe, expect, it } from "vitest";
 
-import { fetchImageBlob } from "../../src/screens/reader/readerImage";
+import { fetchImageBlob, imageErrorKey } from "../../src/screens/reader/readerImage";
 
 /**
  * F27 — las imágenes del lector que piden cabeceras (RF-24: `Referer` y similares)
@@ -66,5 +66,20 @@ describe("fetchImageBlob", () => {
     } finally {
       globalThis.fetch = original;
     }
+  });
+});
+
+/** F77 — el error de imagen del lector web usa el mismo mensaje por tipo que móvil (F32). */
+describe("imageErrorKey", () => {
+  it("clasifica por tipo con las claves compartidas con móvil", () => {
+    expect(imageErrorKey(new Error("HTTP 403"))).toBe("reader.image.error.denied");
+    expect(imageErrorKey(new Error("HTTP 404"))).toBe("reader.image.error.missing");
+    expect(imageErrorKey(new TypeError("Failed to fetch"))).toBe("reader.image.error.network");
+    expect(imageErrorKey(new Error("HTTP 500"))).toBe("reader.image.error.unknown");
+  });
+
+  it("sin error conocido (p. ej. <img onError>) cae en el mensaje genérico", () => {
+    expect(imageErrorKey(undefined)).toBe("reader.image.error.unknown");
+    expect(imageErrorKey("algo raro")).toBe("reader.image.error.unknown");
   });
 });
