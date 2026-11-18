@@ -93,3 +93,84 @@ describe("loadFromApi · list(sectionId, page)", () => {
     expect(data.sections).toEqual([]);
   });
 });
+
+describe("loadFromApi · filters() (F50)", () => {
+  const FILTERS = [
+    {
+      id: "genre",
+      label: "Género",
+      type: "tags" as const,
+      options: [
+        { value: "horror", label: "Horror" },
+        { value: "seinen", label: "Seinen" },
+      ],
+    },
+    {
+      id: "sort",
+      label: "Orden",
+      type: "select" as const,
+      options: [
+        { value: "name", label: "Nombre" },
+        { value: "views", label: "Vistas" },
+      ],
+    },
+    { id: "q", label: "Texto", type: "text" as const },
+    { id: "empty", label: "Sin opciones", type: "tags" as const },
+  ];
+  const FLAGS_F = { ...FLAGS, hasFilters: true };
+
+  it("devuelve los grupos `tags`/`select` con opciones (select = elección única)", async () => {
+    const data = await loadFromApi(handle({ filters: async () => FILTERS }), FLAGS_F, "m", "", 1);
+    expect(data.filters).toEqual([
+      {
+        id: "genre",
+        label: "Género",
+        multi: true,
+        options: [
+          { value: "horror", label: "Horror" },
+          { value: "seinen", label: "Seinen" },
+        ],
+      },
+      {
+        id: "sort",
+        label: "Orden",
+        multi: false,
+        options: [
+          { value: "name", label: "Nombre" },
+          { value: "views", label: "Vistas" },
+        ],
+      },
+    ]);
+  });
+
+  it("sin `filters` declarado no hay filtros ni se llama a filters()", async () => {
+    const filters = vi.fn(async () => FILTERS);
+    const data = await loadFromApi(handle({ filters }), FLAGS, "m", "", 1);
+    expect(data.filters).toEqual([]);
+    expect(filters).not.toHaveBeenCalled();
+  });
+
+  it("la selección llega a search(query, page, filters), también sin texto, y apaga home()", async () => {
+    const search = vi.fn(async () => page(["h1"]));
+    const home = vi.fn();
+    const selected = { genre: ["horror"], sort: ["views"] };
+    await loadFromApi(
+      handle({ search, home, filters: async () => FILTERS }),
+      { ...FLAGS_F, hasHome: true },
+      "m",
+      "",
+      1,
+      undefined,
+      selected,
+    );
+    // `select` viaja como texto (así lo leen los módulos); `tags`, como lista.
+    expect(search).toHaveBeenCalledWith("", 1, { genre: ["horror"], sort: "views" });
+    expect(home).not.toHaveBeenCalled();
+  });
+
+  it("sin selección, search se llama sin el tercer argumento", async () => {
+    const search = vi.fn(async () => page([]));
+    await loadFromApi(handle({ search }), FLAGS, "m", "x", 1);
+    expect(search).toHaveBeenCalledWith("x", 1);
+  });
+});

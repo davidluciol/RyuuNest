@@ -48,6 +48,54 @@ export interface DiscoverSection {
   hasMore: boolean;
 }
 
+/** Grupo que el módulo declara en `filters()` (F50): `tags`/`multi` eligen varias, `select` una. */
+export interface DiscoverFilter {
+  id: string;
+  label: string;
+  /** Varias opciones a la vez; `false` = elección única. */
+  multi: boolean;
+  options: { value: string; label: string }[];
+}
+
+/** Etiquetas elegidas por grupo: `{ [filterId]: valores }` (compatible con `SearchFilterValues`). */
+export type DiscoverFilterValues = Record<string, string[]>;
+
+/** Añade o quita una opción (en elección única, reemplaza); un grupo sin etiquetas desaparece. */
+export function toggleFilterValue(
+  values: DiscoverFilterValues,
+  filterId: string,
+  value: string,
+  multi = true,
+): DiscoverFilterValues {
+  const current = values[filterId] ?? [];
+  const next = current.includes(value)
+    ? current.filter((v) => v !== value)
+    : multi
+      ? [...current, value]
+      : [value];
+  const { [filterId]: _removed, ...rest } = values;
+  return next.length === 0 ? rest : { ...rest, [filterId]: next };
+}
+
+export function countActiveFilters(values: DiscoverFilterValues): number {
+  return Object.values(values).reduce((total, group) => total + group.length, 0);
+}
+
+/** Etiquetas de ejemplo para la galería (las del enunciado de F50; no son de ningún módulo real). */
+export const SAMPLE_TAG_FILTERS: readonly DiscoverFilter[] = [
+  {
+    id: "genre",
+    label: "Género",
+    multi: true,
+    options: [
+      { value: "sekai", label: "Sekai" },
+      { value: "horror", label: "Horror" },
+      { value: "seinen", label: "Seinen" },
+      { value: "shonen", label: "Shonen" },
+    ],
+  },
+];
+
 /** Página del catálogo (búsqueda con paginación, RF-10). `page` empieza en 1. */
 export interface DiscoverPage {
   page: number;
@@ -78,6 +126,10 @@ export interface DiscoverReady {
   popular: readonly DiscoverEntry[];
   /** Secciones de `home()` (F59); si hay, sustituyen a latest/popular. */
   sections: readonly DiscoverSection[];
+  /** Grupos de etiquetas del módulo (F50); vacío = el botón «Filtros» no aparece. */
+  filters: readonly DiscoverFilter[];
+  /** Etiquetas aplicadas a la búsqueda. */
+  activeFilters: DiscoverFilterValues;
   /** Sección abierta con «Ver más»; el catálogo es entonces su `list`. */
   section?: { id: string; title: string };
   catalog: DiscoverPage;
@@ -133,6 +185,21 @@ export function moduleErrorView(
   };
 }
 
+/**
+ * Vista mientras se recarga. Si cambian los filtros se conserva la pantalla (y con ella la hoja
+ * abierta, para poder elegir varias etiquetas seguidas); en lo demás, «Cargando…».
+ */
+export function viewWhileReloading(current: DiscoverView, keep: boolean): DiscoverView {
+  return keep && current.status === "ready" ? current : { status: "loading" };
+}
+
+/** Refleja al instante la selección de filtros en la vista lista, sin esperar a los datos. */
+export function withActiveFilters(view: DiscoverView, filters: DiscoverFilterValues): DiscoverView {
+  return view.status === "ready"
+    ? { status: "ready", ready: { ...view.ready, activeFilters: filters } }
+    : view;
+}
+
 /** Página vacía: primera, sin entradas ni siguiente. */
 export const EMPTY_DISCOVER_PAGE: DiscoverPage = { page: 1, entries: [], hasNext: false };
 
@@ -146,9 +213,9 @@ export function visibleDiscoverModules(
   return nsfwVisible ? [...modules] : modules.filter((module) => !module.nsfw);
 }
 
-/** Con una consulta activa solo se ven los resultados, sin las filas «Más recientes/Populares» (F38). */
-export function showDiscoverRows(query: string): boolean {
-  return query.trim() === "";
+/** Con una consulta o filtros activos solo se ven los resultados, sin las filas «Más recientes/Populares» (F38). */
+export function showDiscoverRows(query: string, filters: DiscoverFilterValues = {}): boolean {
+  return query.trim() === "" && countActiveFilters(filters) === 0;
 }
 
 /** Lo mismo para las filas de series que devuelve un módulo. */
@@ -261,6 +328,8 @@ export const SAMPLE_DISCOVER_VIEW: DiscoverView = {
     latest: SAMPLE_DISCOVER_LATEST,
     popular: SAMPLE_DISCOVER_POPULAR,
     sections: [],
+    filters: [],
+    activeFilters: {},
     catalog: SAMPLE_DISCOVER_CATALOG,
   },
 };
