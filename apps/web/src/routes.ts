@@ -25,6 +25,12 @@ export const TAB_ROUTES: readonly TabRoute[] = [
   { path: "/settings", id: "settings", labelKey: "nav.settings", icon: "settings" },
 ];
 
+/** F60: ruta de Aventuras al buscar desde la cabecera; `ts` repite la misma consulta. `null` si está vacía. */
+export function discoverSearchPath(query: string, stamp: number): string | null {
+  const q = query.trim();
+  return q === "" ? null : `/discover?${new URLSearchParams({ q, ts: String(stamp) }).toString()}`;
+}
+
 export const DIAGNOSTICS_PATH = "/diagnostics";
 
 export function seriesPath(moduleId: string, seriesId: string): string {
