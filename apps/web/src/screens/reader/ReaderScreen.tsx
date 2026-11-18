@@ -11,7 +11,7 @@ import { readerPath } from "../../routes";
 import { useServices } from "../../services/ServicesContext";
 import "./reader.css";
 import { type ReaderPageImage } from "./readerData";
-import { fetchImageBlob } from "./readerImage";
+import { fetchImageBlob, imageErrorKey } from "./readerImage";
 import { useReader, type ReaderReadyView } from "./useReader";
 
 /**
@@ -230,7 +230,8 @@ function PagedCanvas({
 function ReaderImageView({ image, index }: { image: ReaderPageImage; index: number }) {
   const services = useServices();
   const [src, setSrc] = useState<string | null>(image.headers === undefined ? image.url : null);
-  const [failed, setFailed] = useState(false);
+  // Clave del mensaje del fallo (F77); `null` = la imagen no ha fallado.
+  const [failed, setFailed] = useState<string | null>(null);
   const [nonce, setNonce] = useState(0);
   const reported = useRef(false);
 
@@ -248,8 +249,8 @@ function ReaderImageView({ image, index }: { image: ReaderPageImage; index: numb
         if (cancelled) return;
         objectUrl = URL.createObjectURL(blob);
         setSrc(objectUrl);
-      } catch {
-        if (!cancelled) setFailed(true);
+      } catch (error) {
+        if (!cancelled) setFailed(imageErrorKey(error));
       }
     })();
     return () => {
@@ -259,7 +260,7 @@ function ReaderImageView({ image, index }: { image: ReaderPageImage; index: numb
   }, [image.url, image.headers, nonce, services.http]);
 
 
-  if (failed) {
+  if (failed !== null) {
     if (!reported.current) {
       reported.current = true;
       // RF-23 + F31: cada imagen fallida queda registrada (saneada) en `log`.
@@ -271,7 +272,8 @@ function ReaderImageView({ image, index }: { image: ReaderPageImage; index: numb
     return (
       <div className="reader-page reader-page-error" data-page-index={index} data-testid={`reader-image-error-${index}`}>
         <p className="t-body-md">{t("reader.image.error", { number: index + 1 })}</p>
-        <Button label={t("actions.retry")} onClick={() => { setFailed(false); setNonce((v) => v + 1); }} testID={`reader-image-retry-${index}`} />
+        <p className="t-body-sm" data-testid={`reader-image-error-message-${index}`}>{t(failed)}</p>
+        <Button label={t("actions.retry")} onClick={() => { setFailed(null); setNonce((v) => v + 1); }} testID={`reader-image-retry-${index}`} />
       </div>
     );
   }
@@ -282,7 +284,7 @@ function ReaderImageView({ image, index }: { image: ReaderPageImage; index: numb
         <img
           src={src}
           alt={t("reader.page.label", { number: index + 1 })}
-          onError={() => setFailed(true)}
+          onError={() => setFailed(imageErrorKey(undefined))}
           data-testid={`reader-image-${index}`}
         />
       )}

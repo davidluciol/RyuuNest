@@ -1,4 +1,8 @@
 import type { Http } from "@ryuunest/core";
+import {
+  PAGE_ERROR_MESSAGE_KEYS,
+  pageErrorKind,
+} from "@ryuunest/mobile-src/reader/pageImage";
 
 import type { ReaderPageImage } from "./readerData";
 
@@ -19,4 +23,9 @@ export async function fetchImageBlob(http: Http, image: ReaderPageImage): Promis
   }
   const bytes = await response.bytes();
   return new Blob([bytes as BlobPart], { type: response.headers["content-type"] ?? "" });
+}
+
+/** F77: clave del mensaje por tipo de fallo (la misma clasificación que el lector móvil, F32). */
+export function imageErrorKey(error: unknown): string {
+  return PAGE_ERROR_MESSAGE_KEYS[pageErrorKind(error instanceof Error ? error.message : "")];
 }
