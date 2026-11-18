@@ -19,7 +19,7 @@ Las tareas pendientes se agrupan **por sección de la app**: **Guarida**, **Teso
 |---|---|
 | Guarida | F46 → F78 → F79 → F80 → F81 → F82 (luego QAw2, F34, F40, F76) |
 | Tesoros | F52 → F54 → F53 → F55 → F56 → F57 → F58 (luego F47, F49) · carpetas/filtros: F92 → F93 → F94 |
-| Aventuras | F59 → F50 → F38 → F60 → F77 → QAw3 · listas/filtros: F83 → F84 → F85 → F86 → F87 → F88 · ficha/carpetas: F95 → F96 → F97 |
+| Aventuras | listas/filtros: F83 → F84 → F85 → F86 → F87 → F88 · ficha/carpetas: F95 → F96 → F97 |
 | Portales | T42 → F61 → F63 → F64 → F45 → F42 → F98 |
 | Ajustes | F65 → F66 → F67 → F68 → F69 · temas: F89 → F90 → F91 |
 | Lector y ficha | F17 → F51 → F39 → F43 → F23 |
@@ -287,43 +287,6 @@ Dep: F92 · S · `packages/ui-tokens`, `apps/mobile/src/components/CoverCard.tsx
 
 ## 🧭 Aventuras (Descubrir)
 
-### F50 Botón de filtros por etiquetas en el buscador de Descubrir `[FE · Intermedia · N3]`
-
-Dep: F38 (botón «Buscar»), T43 (`filters()` en el contrato) · M · `apps/mobile/src/screens/discover/*`, `packages/core/src/contract/types.ts` (solo lectura)
-
-> Origen (petición del humano, 2026-11-16).
-
-- [ ] Botón «Filtros» junto al buscador que abre una hoja con las etiquetas (p. ej. Sekai, Aventuras, Horror, Seinen, Shonen…), multiselección y «Limpiar»
-- [ ] Las etiquetas salen de `ModuleApi.filters()` del módulo elegido (tipo `tags`); si el módulo no declara `filters`, el botón no aparece. **Pregunta abierta:** ¿lista fija común a todos los módulos o la de cada módulo? (recomendado: la de cada módulo, sin inventar etiquetas)
-- [ ] `search(query, page, filters?)` recibe la selección; chip/contador de filtros activos y la búsqueda funciona también sin texto
-- [ ] Textos en el catálogo i18n, componente en la galería con todos sus estados, solo tokens
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440 (declaran `filters`)
-
-
-### F59 Descubrir usa las capacidades `home`, `list` y `filters` de los módulos `[FE · Alta · N4]`
-
-Dep: T43 (hecha) · M · `apps/mobile/src/screens/discover/*`
-
-> Origen: lo dejó fuera de alcance T43. Los módulos M440 y ZonaTMO ya las declaran.
-
-- [ ] Secciones de portada desde `home()` y listas paginadas desde `list(sectionId, page)`, con reserva a `popular`/`latest` si el módulo no las declara
-- [x] Los filtros de `filters()` alimentan F50 (no duplicar)
-- Verif: Vitest + 🧍 S25 con M440 o ZonaTMO
-
-### F38 Descubrir: refresco al recuperar el foco `[FE · Baja · N2]`
-
-- [ ] Sin confirmar: `discover.tsx` llama a `refreshModules` al recuperar el foco; no se probó en el teléfono instalar/desinstalar en Portales y volver
-- Verif: S25 Ultra
-
-### F60 Búsqueda global de la cabecera `[FE · Intermedia · N3]`
-
-Dep: F38 · M · `apps/mobile/src/components/Header.tsx`
-
-> Origen: `MEMORY.md` §4 punto 8 («pendiente de F15»). **Comprobar al empezar si sigue vigente.**
-
-- [ ] Búsqueda desde la cabecera que lleva a Aventuras con la consulta ya escrita
-- Verif: Vitest + Playwright 426/1440 px
-
 ### F41 Descubrir y ficha en la web: portada y sinopsis (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
 
 Dep: F33 · M · `apps/web/*`
@@ -335,21 +298,6 @@ Dep: F33 · M · `apps/web/*`
 
 - [ ] ❓ Dar el formato y la URL del índice y autorizar el cambio de **RNF-5** en el SPEC (sin servidor propio ni terceros) antes de empezar
 - Verif: según la decisión
-
-### F77 Descubrir: texto de error del lector de imagen en la web `[FE · Baja · N2]`
-
-- [ ] Sin decidir: el error de imagen del lector web solo muestra el título; valorar el mismo mensaje por tipo que en móvil (ver también F39)
-- Verif: Playwright 1440/426 px
-
-### QAw3 Intercalar entre servidores: dos módulos y cambio de fuente `[FE/QA · Intermedia · N3]`
-
-- [ ] Abrir la aplicación web; aparece la sección de Inicio.
-- [ ] Instalar **2 módulos** en caso de que no haya ninguno (los módulos necesarios para la prueba).
-- [ ] Navegar a la sección **Descubrir**.
-- [ ] Por defecto se debe cargar un módulo si hay alguno instalado.
-- [ ] Seleccionar en los filtros para cambiar de módulo.
-- [ ] Verificar que cargan correctamente los mangas del **segundo** módulo.
-- Verif: el filtro de módulo cambia la fuente y la rejilla muestra series del módulo elegido, sin errores y sin mezclar resultados del anterior.
 
 ### F83 Contrato de módulo: paginación y orden «más reciente» declarados `[BE · Intermedia · N3]`
 
@@ -443,7 +391,7 @@ Dep: F94 · S · `apps/mobile/src/screens/discover/*`
 - [ ] Comprobar con fixtures qué etiquetas llegan de los módulos y anotar el resultado; si no existen, cerrar la tarea con la nota
 - Verif: Vitest (regla de etiquetas) + Playwright 426/1440 px
 
-**Lote sugerido:** F59 → F50 → F38 → F60 → F77 → QAw3 (F41/F44 esperan aprobación). Nuevo bloque de listas/filtros: F83 → F84 → F85 → F86 → F87 → F88.
+**Lote sugerido:** (F41/F44 esperan aprobación). Bloque de listas/filtros: F83 → F84 → F85 → F86 → F87 → F88.
 
 ---
 

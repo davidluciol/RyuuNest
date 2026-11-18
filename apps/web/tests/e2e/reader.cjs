@@ -157,6 +157,11 @@ async function installDemo(page, index, zip) {
       // Avanzar a la página 2: la imagen está rota → reintento individual (RF-23).
       await page.locator(".reader-zone-right").click();
       await page.getByTestId("reader-image-error-1").waitFor({ state: "visible" });
+      // F77: el fallo muestra el mensaje por tipo (aquí <img onError> → genérico), no solo el título.
+      await page
+        .getByTestId("reader-image-error-message-1")
+        .getByText("La imagen no se pudo descargar. Inténtalo de nuevo.")
+        .waitFor({ state: "visible" });
       breakSecondImage = false;
       await page.getByTestId("reader-image-retry-1").click();
       await page.getByTestId("reader-image-1").waitFor({ state: "visible" });
