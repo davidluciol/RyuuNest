@@ -9,6 +9,7 @@ import {
   type Http,
   type ModuleApiHandle,
   type ModuleManifest,
+  type SearchFilterValues,
   type ScriptLoader,
   type SeriesSummary,
   type SqlDriver,
@@ -30,7 +31,10 @@ import {
   type DiscoverError,
   type DiscoverModule,
   type DiscoverPage,
+  type DiscoverFilter,
+  type DiscoverFilterValues,
   type DiscoverSection,
+  countActiveFilters,
 } from "./discoverFixtures";
 
 /**
@@ -72,6 +76,8 @@ export interface DiscoverLoadResult {
   popular: DiscoverEntry[];
   /** Secciones de `home()` (F59); vacío si el módulo no la declara: entonces valen latest/popular. */
   sections: DiscoverSection[];
+  /** Grupos `tags` de `filters()` (F50); vacío si el módulo no los declara. */
+  filters: DiscoverFilter[];
   catalog: DiscoverPage;
 }
 
@@ -83,6 +89,8 @@ export interface DiscoverLoadOptions {
   page: number;
   /** F59: sección de `home()` abierta con «Ver más»; el catálogo sale de `list(sectionId, page)`. */
   sectionId?: string | undefined;
+  /** F50: etiquetas aplicadas; `search` las recibe, también sin texto. */
+  filters?: DiscoverFilterValues | undefined;
 }
 
 // — Compartido: mapeo de `SeriesSummary` y carga sobre una API montada —
@@ -108,23 +116,56 @@ function toEntry(moduleId: string, series: SeriesSummary): DiscoverEntry {
 
 export async function loadFromApi(
   handle: ModuleApiHandle,
-  flags: { hasLatest: boolean; hasPopular: boolean; hasHome: boolean },
+  flags: { hasLatest: boolean; hasPopular: boolean; hasHome: boolean; hasFilters?: boolean },
   moduleId: string,
   query: string,
   page: number,
   sectionId?: string,
+  selected: DiscoverFilterValues = {},
 ): Promise<DiscoverLoadResult> {
   const { api } = handle;
   const inSection = sectionId !== undefined && api.list !== undefined;
   // F59: con `home()` sus secciones sustituyen a latest/popular; dentro de una
   // sección (`list`) o con consulta solo se ve el catálogo, sin filas.
-  const useHome = flags.hasHome && api.home !== undefined && !inSection && query.trim() === "";
+  const filtering = countActiveFilters(selected) > 0;
+  const useHome =
+    flags.hasHome && api.home !== undefined && !inSection && query.trim() === "" && !filtering;
   const rows = !inSection;
+  // Los grupos se leen antes de buscar: de ellos depende cómo viaja cada selección.
+  const filterGroups: DiscoverFilter[] =
+    !inSection && flags.hasFilters === true && api.filters
+      ? (await api.filters()).flatMap((group) =>
+          group.options !== undefined &&
+          group.options.length > 0 &&
+          (group.type === "tags" || group.type === "multi" || group.type === "select")
+            ? [
+                {
+                  id: group.id,
+                  label: group.label,
+                  multi: group.type !== "select",
+                  options: group.options,
+                },
+              ]
+            : [],
+        )
+      : [];
+  // `select` viaja como texto (así lo leen los módulos publicados); `tags`/`multi`, como lista.
+  const searchFilters: SearchFilterValues = {};
+  for (const group of filterGroups) {
+    const chosen = selected[group.id];
+    if (chosen !== undefined && chosen.length > 0) {
+      searchFilters[group.id] = group.multi ? chosen : (chosen[0] ?? "");
+    }
+  }
   const [latest, popular, home, catalogPage] = await Promise.all([
     rows && !useHome && flags.hasLatest && api.latest ? api.latest(1).then((p) => p.items) : Promise.resolve([]),
     rows && !useHome && flags.hasPopular && api.popular ? api.popular(1).then((p) => p.items) : Promise.resolve([]),
     useHome && api.home ? api.home().then((h) => h.sections) : Promise.resolve([]),
-    inSection && api.list ? api.list(sectionId, page) : api.search(query, page),
+    inSection && api.list
+      ? api.list(sectionId, page)
+      : filtering
+        ? api.search(query, page, searchFilters)
+        : api.search(query, page),
   ]);
 
   return {
@@ -136,6 +177,7 @@ export async function loadFromApi(
       hasMore: section.hasNext,
       entries: section.items.map((series) => toEntry(moduleId, series)),
     })),
+    filters: filterGroups,
     catalog: {
       page,
       entries: catalogPage.items.map((series) => toEntry(moduleId, series)),
@@ -238,13 +280,13 @@ export function createSampleMounter(): ModuleMounter {
  * del catálogo. Los fallos del módulo salen como `ModuleError` (SPEC §6.4).
  */
 export async function loadDiscoverData(options: DiscoverLoadOptions): Promise<DiscoverLoadResult> {
-  const { moduleId, query, page, sectionId } = options;
+  const { moduleId, query, page, sectionId, filters } = options;
   const source = SAMPLE_DISCOVER_MODULES.find((module) => module.id === moduleId);
   if (source === undefined) {
     throw new ModuleError("NOT_FOUND", `El módulo de ejemplo ${moduleId} no existe`);
   }
   const handle = await mountSample(moduleId);
-  return loadFromApi(handle, { ...source, hasHome: false }, moduleId, query, page, sectionId);
+  return loadFromApi(handle, { ...source, hasHome: false }, moduleId, query, page, sectionId, filters);
 }
 
 /** El último módulo elegido sobrevive a cambiar de pestaña en la sesión. */
@@ -305,7 +347,7 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
           hasLatest: pkg.manifest.capabilities.includes("latest"),
         }));
     },
-    async load({ moduleId, query, page, sectionId }) {
+    async load({ moduleId, query, page, sectionId, filters }) {
       const { handle, manifest } = await mounter.mount(moduleId);
       return loadFromApi(
         handle,
@@ -313,11 +355,13 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
           hasLatest: manifest.capabilities.includes("latest"),
           hasPopular: manifest.capabilities.includes("popular"),
           hasHome: manifest.capabilities.includes("home"),
+          hasFilters: manifest.capabilities.includes("filters"),
         },
         moduleId,
         query,
         page,
         sectionId,
+        filters,
       );
     },
     async recallLastModule() {

@@ -5,7 +5,13 @@ import {
   countHiddenNsfwModules,
   moduleErrorView,
   sameDiscoverModules,
+  countActiveFilters,
   showDiscoverRows,
+  toggleFilterValue,
+  viewWhileReloading,
+  withActiveFilters,
+  SAMPLE_DISCOVER_VIEW,
+  type DiscoverView,
   reconcileSelectedModuleId,
   resolveSelectedModuleId,
   SAMPLE_DISCOVER_MODULES,
@@ -164,5 +170,50 @@ describe("showDiscoverRows (F38)", () => {
     expect(showDiscoverRows("")).toBe(true);
     expect(showDiscoverRows("   ")).toBe(true);
     expect(showDiscoverRows("dragon")).toBe(false);
+  });
+});
+
+describe("filtros de etiquetas (F50)", () => {
+  it("toggleFilterValue añade, quita y borra el grupo vacío", () => {
+    const a = toggleFilterValue({}, "genre", "horror");
+    expect(a).toEqual({ genre: ["horror"] });
+    const b = toggleFilterValue(a, "genre", "seinen");
+    expect(b).toEqual({ genre: ["horror", "seinen"] });
+    expect(toggleFilterValue(b, "genre", "horror")).toEqual({ genre: ["seinen"] });
+    expect(toggleFilterValue({ genre: ["horror"] }, "genre", "horror")).toEqual({});
+  });
+
+  it("en un grupo de elección única (select) elegir otra opción reemplaza y repetir deselecciona", () => {
+    const a = toggleFilterValue({}, "sort", "name", false);
+    expect(a).toEqual({ sort: ["name"] });
+    expect(toggleFilterValue(a, "sort", "views", false)).toEqual({ sort: ["views"] });
+    expect(toggleFilterValue(a, "sort", "name", false)).toEqual({});
+  });
+
+  it("countActiveFilters suma las etiquetas elegidas de todos los grupos", () => {
+    expect(countActiveFilters({})).toBe(0);
+    expect(countActiveFilters({ genre: ["a", "b"], demo: ["c"] })).toBe(3);
+  });
+
+  it("con filtros activos se ocultan las filas, igual que con consulta", () => {
+    expect(showDiscoverRows("", {})).toBe(true);
+    expect(showDiscoverRows("", { genre: ["horror"] })).toBe(false);
+    expect(showDiscoverRows("x", {})).toBe(false);
+  });
+});
+
+describe("recarga al cambiar filtros (F50)", () => {
+  const ready: DiscoverView = SAMPLE_DISCOVER_VIEW;
+
+  it("al cambiar filtros se conserva la pantalla (y la hoja abierta) mientras recarga", () => {
+    expect(viewWhileReloading(ready, true)).toBe(ready);
+    expect(viewWhileReloading(ready, false)).toEqual({ status: "loading" });
+    expect(viewWhileReloading({ status: "loading" }, true)).toEqual({ status: "loading" });
+  });
+
+  it("la selección se refleja al instante en la vista, sin esperar a los datos", () => {
+    const next = withActiveFilters(ready, { genre: ["horror"] });
+    expect(next.status === "ready" && next.ready.activeFilters).toEqual({ genre: ["horror"] });
+    expect(withActiveFilters({ status: "loading" }, { genre: ["a"] })).toEqual({ status: "loading" });
   });
 });

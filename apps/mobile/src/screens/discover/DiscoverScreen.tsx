@@ -15,16 +15,19 @@ import LibraryCard from "../../components/LibraryCard";
 import LoadingState from "../../components/LoadingState";
 import ModulePicker from "../../components/ModulePicker";
 import SectionHeader from "../../components/SectionHeader";
+import TagFilterSheet from "../../components/TagFilterSheet";
 import TextField from "../../components/TextField";
 import { recentCardStyle } from "../../components/recentCardStyles";
 import { kindLabel } from "../../components/kindLabel";
 import { Search } from "../../icons";
 import { t } from "../../i18n";
 import {
+  countActiveFilters,
   showDiscoverRows,
   visibleDiscoverEntries,
   visibleDiscoverModules,
   type DiscoverEntry,
+  type DiscoverFilterValues,
   type DiscoverView,
 } from "./discoverFixtures";
 import { textStyle } from "../../components/textStyle";
@@ -74,6 +77,8 @@ export interface DiscoverScreenProps {
   /** F59: «Ver más» de una sección de `home()` y vuelta a la portada. */
   onOpenSection?: (id: string, title: string) => void;
   onCloseSection?: () => void;
+  /** F50: aplica las etiquetas elegidas en la hoja de filtros. */
+  onApplyFilters?: (filters: DiscoverFilterValues) => void;
   onRetry?: () => void;
   onSeriesPress?: (entry: DiscoverEntry) => void;
   /** Acción del vacío: ir a añadir un repositorio. */
@@ -91,6 +96,7 @@ export default function DiscoverScreen({
   onPrevPage,
   onOpenSection,
   onCloseSection,
+  onApplyFilters,
   onRetry,
   onSeriesPress,
   onEmptyAction,
@@ -176,6 +182,7 @@ export default function DiscoverScreen({
       onPrevPage={onPrevPage}
       onOpenSection={onOpenSection}
       onCloseSection={onCloseSection}
+      onApplyFilters={onApplyFilters}
       onSeriesPress={onSeriesPress}
     />
   );
@@ -192,6 +199,7 @@ interface DiscoverReadyProps {
   onPrevPage?: () => void;
   onOpenSection?: (id: string, title: string) => void;
   onCloseSection?: () => void;
+  onApplyFilters?: (filters: DiscoverFilterValues) => void;
   onSeriesPress?: (entry: DiscoverEntry) => void;
 }
 
@@ -206,6 +214,7 @@ function DiscoverReady({
   onPrevPage,
   onOpenSection,
   onCloseSection,
+  onApplyFilters,
   onSeriesPress,
 }: DiscoverReadyProps) {
   // Borrador del campo: se entrega con Entrar (RF-10); al cambiar de módulo o
@@ -222,7 +231,9 @@ function DiscoverReady({
     entries: visibleDiscoverEntries(ready.catalog.entries, nsfwVisible),
   };
   const selectedModule = ready.modules.find((module) => module.id === selected?.id);
-  const rows = showDiscoverRows(ready.query);
+  const rows = showDiscoverRows(ready.query, ready.activeFilters);
+  const activeCount = countActiveFilters(ready.activeFilters);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   // F59: con `home()` las secciones del módulo sustituyen a latest/popular.
   const sections = rows
     ? ready.sections
@@ -274,10 +285,35 @@ function DiscoverReady({
             onSelect={(id) => onModuleSelect?.(id)}
           />
         </View>
-        <Button
-          variant="secondary"
-          label={t("discover.search.submit")}
-          onPress={() => onSearch?.(draft.trim())}
+        <View style={styles.actionsRow}>
+          <View style={styles.actionItem}>
+            <Button
+              variant="secondary"
+              label={t("discover.search.submit")}
+              onPress={() => onSearch?.(draft.trim())}
+            />
+          </View>
+          {ready.filters.length > 0 ? (
+            <View style={styles.actionItem}>
+              <Button
+                variant="secondary"
+                label={
+                  activeCount > 0
+                    ? t("discover.filter.buttonCount", { count: activeCount })
+                    : t("discover.filter.button")
+                }
+                onPress={() => setFiltersOpen(true)}
+                testID="discover-filters-button"
+              />
+            </View>
+          ) : null}
+        </View>
+        <TagFilterSheet
+          visible={filtersOpen}
+          groups={ready.filters}
+          selected={ready.activeFilters}
+          onChange={(next) => onApplyFilters?.(next)}
+          onClose={() => setFiltersOpen(false)}
         />
 
         {sections.map((section) => (
@@ -429,6 +465,8 @@ const styles = StyleSheet.create({
   },
   errorScreen: { flex: 1, backgroundColor: colors.bg },
   errorPicker: { alignSelf: "stretch", alignItems: "flex-end", paddingTop: spacing.md },
+  actionsRow: { flexDirection: "row", gap: spacing.sm },
+  actionItem: { flex: 1 },
   searchWrap: {
     flex: 1,
     minWidth: 0,

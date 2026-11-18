@@ -307,7 +307,7 @@ Dep: T43 (hecha) · M · `apps/mobile/src/screens/discover/*`
 > Origen: lo dejó fuera de alcance T43. Los módulos M440 y ZonaTMO ya las declaran.
 
 - [ ] Secciones de portada desde `home()` y listas paginadas desde `list(sectionId, page)`, con reserva a `popular`/`latest` si el módulo no las declara
-- [ ] Los filtros de `filters()` alimentan F50 (no duplicar)
+- [x] Los filtros de `filters()` alimentan F50 (no duplicar)
 - Verif: Vitest + 🧍 S25 con M440 o ZonaTMO
 
 ### F38 Descubrir: refresco al recuperar el foco `[FE · Baja · N2]`

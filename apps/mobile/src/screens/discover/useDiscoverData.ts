@@ -11,7 +11,10 @@ import {
   moduleErrorView,
   reconcileSelectedModuleId,
   sameDiscoverModules,
+  type DiscoverFilterValues,
   type DiscoverModule,
+  viewWhileReloading,
+  withActiveFilters,
   type DiscoverView,
 } from "./discoverFixtures";
 
@@ -36,11 +39,13 @@ interface Request {
   page: number;
   /** F59: sección de `home()` abierta con «Ver más» (su catálogo es `list`). */
   section: { id: string; title: string } | null;
+  /** F50: etiquetas aplicadas a la búsqueda. */
+  filters: DiscoverFilterValues;
   /** Se incrementa en cada reintento para relanzar la carga. */
   attempt: number;
 }
 
-const INITIAL_REQUEST: Request = { moduleId: null, query: "", page: 1, section: null, attempt: 0 };
+const INITIAL_REQUEST: Request = { moduleId: null, query: "", page: 1, section: null, filters: {}, attempt: 0 };
 
 export interface DiscoverActions {
   selectModule: (id: string) => void;
@@ -48,6 +53,8 @@ export interface DiscoverActions {
   nextPage: () => void;
   prevPage: () => void;
   /** F59: abre una sección de `home()` (su `list` paginado). */
+  /** F50: aplica las etiquetas del módulo y vuelve a la página 1. */
+  applyFilters: (filters: DiscoverFilterValues) => void;
   openSection: (id: string, title: string) => void;
   /** F59: vuelve de la sección a la portada del módulo. */
   closeSection: () => void;
@@ -78,6 +85,8 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
   const bootRef = useRef<Boot | null>(null);
   const reporterRef = useRef<ErrorReporter | null>(null);
   const rememberedRef = useRef<string | null>(null);
+  // F50: el próximo reload es por cambio de filtros, así que no se vacía la pantalla.
+  const keepOnReloadRef = useRef(false);
 
   // Arranque: fuente (inyectada en apps/web, de plataforma en móvil) + módulos
   // elegibles + último recordado; el reporter del registro `log` (F31, P-72).
@@ -134,7 +143,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
   // Carga del módulo elegido (o vacío si no hay ninguno visible).
   useEffect(() => {
     if (boot === null) return;
-    const { moduleId, query, page, section } = request;
+    const { moduleId, query, page, section, filters } = request;
     if (moduleId === null) {
       setView({
         status: "empty",
@@ -144,9 +153,17 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     }
 
     let cancelled = false;
-    setView({ status: "loading" });
+    const keep = keepOnReloadRef.current;
+    keepOnReloadRef.current = false;
+    // Solo se conserva la pantalla del mismo módulo: nunca se mezclan series de otro.
+    setView((current) =>
+      viewWhileReloading(
+        current,
+        keep && current.status === "ready" && current.ready.selectedModuleId === moduleId,
+      ),
+    );
     boot.source
-      .load({ moduleId, query, page, sectionId: section?.id })
+      .load({ moduleId, query, page, sectionId: section?.id, filters })
       .then((data) => {
         if (cancelled) return;
         setView({
@@ -158,6 +175,8 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
             latest: data.latest,
             popular: data.popular,
             sections: data.sections,
+            filters: data.filters,
+            activeFilters: filters,
             ...(section === null ? {} : { section }),
             catalog: data.catalog,
           },
@@ -181,7 +200,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
   }, [boot, request, nsfwVisible]);
 
   const selectModule = useCallback((id: string) => {
-    setRequest((current) => ({ moduleId: id, query: "", page: 1, section: null, attempt: current.attempt }));
+    setRequest((current) => ({ moduleId: id, query: "", page: 1, section: null, filters: {}, attempt: current.attempt }));
     // RF-9: el recuerdo es lo último; si la persistencia falla, la pantalla
     // ya cambió de módulo y el fallo queda avisado, no bloqueante.
     void bootRef.current?.source.rememberLastModule(id).catch((error: unknown) => {
@@ -201,6 +220,15 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
 
   const prevPage = useCallback(
     () => setRequest((current) => ({ ...current, page: Math.max(1, current.page - 1) })),
+    [],
+  );
+
+  const applyFilters = useCallback(
+    (filters: DiscoverFilterValues) => {
+      keepOnReloadRef.current = true;
+      setView((current) => withActiveFilters(current, filters));
+      setRequest((current) => ({ ...current, filters, page: 1, section: null }));
+    },
     [],
   );
 
@@ -237,5 +265,5 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     setRequest((current) => ({ ...current, attempt: current.attempt + 1 }));
   }, []);
 
-  return { view, selectModule, search, nextPage, prevPage, openSection, closeSection, retry, refreshModules };
+  return { view, selectModule, search, nextPage, prevPage, applyFilters, openSection, closeSection, retry, refreshModules };
 }

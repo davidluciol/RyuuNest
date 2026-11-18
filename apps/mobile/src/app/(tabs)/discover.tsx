@@ -1,5 +1,5 @@
-import { router, useFocusEffect } from "expo-router";
-import { useCallback } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect } from "react";
 
 import { resolveErrorReporter } from "../../data/errorLog";
 import { destinationRoutes } from "../../navigation/routes";
@@ -14,10 +14,16 @@ import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
  */
 export default function DiscoverRoute() {
   const settings = useSettingsPreferences();
-  const { view, selectModule, search, nextPage, prevPage, openSection, closeSection, retry, refreshModules } = useDiscoverData({
+  const { view, selectModule, search, nextPage, prevPage, applyFilters, openSection, closeSection, retry, refreshModules } = useDiscoverData({
     resolveReporter: resolveErrorReporter,
     nsfwVisible: settings.nsfwVisible,
   });
+
+  // F60: la búsqueda de la cabecera llega como `q`; `ts` cambia en cada envío.
+  const { q, ts } = useLocalSearchParams<{ q?: string; ts?: string }>();
+  useEffect(() => {
+    if (q !== undefined) search(q);
+  }, [q, ts, search]);
 
   // Las pestañas siguen montadas: al volver se releen los módulos por si se
   // activó, desactivó, instaló o desinstaló alguno en Portales (F32).
@@ -35,6 +41,7 @@ export default function DiscoverRoute() {
       onSearch={search}
       onNextPage={nextPage}
       onPrevPage={prevPage}
+      onApplyFilters={applyFilters}
       onOpenSection={openSection}
       onCloseSection={closeSection}
       onRetry={retry}
