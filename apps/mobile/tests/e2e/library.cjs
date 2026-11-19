@@ -91,7 +91,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await oculta("Crónicas del Cielo"); // tras la pausa del debounce
       await buscador.fill("");
       await page.getByRole("button", { name: "Crónicas del Cielo", exact: true }).waitFor({ state: "visible" });
-      const categorias = page.getByTestId("library-categories");
+      const categorias = page.getByTestId("library-filters");
       await categorias.getByRole("button", { name: "Seinen", exact: true }).click();
       await page.getByRole("button", { name: "El dragón de ceniza", exact: true }).waitFor({ state: "visible" });
       await oculta("Crónicas del Cielo");

@@ -210,9 +210,13 @@ export default function LibraryScreen({
         />
       </View>
 
-      {/* Chips Todo · Leyendo · Carpetas (RF-26). */}
-      <View style={[styles.chipsWrap, { paddingHorizontal: layout.margin }]}>
-        <ChipScroller contentContainerStyle={styles.chipsRow}>
+      {/* F92: una sola fila con scroll horizontal: Todo · Leyendo · Carpetas (RF-26),
+          tipo, fuente, orden, NSFW (RF-27, RF-28) y categorías (F55). */}
+      <View
+        testID="library-filters"
+        style={[styles.filtersWrap, { paddingHorizontal: layout.margin }]}
+      >
+        <ChipScroller contentContainerStyle={styles.filtersRow}>
           <Chip
             label={t("library.chip.all", { count: totalCount })}
             selected={filters.chip === "all"}
@@ -228,12 +232,6 @@ export default function LibraryScreen({
             selected={filters.chip === "folders"}
             onPress={() => updateFilters({ chip: "folders" })}
           />
-        </ChipScroller>
-      </View>
-
-      {/* Filtros secundarios: tipo, fuente, orden, NSFW (RF-27, RF-28). */}
-      <View style={[styles.filtersWrap, { paddingHorizontal: layout.margin }]}>
-        <ChipScroller contentContainerStyle={styles.filtersRow}>
           <Chip
             label={t("library.filter.kind")}
             selected={filters.kinds.length > 0}
@@ -254,32 +252,17 @@ export default function LibraryScreen({
             selected={filters.nsfwVisible}
             onPress={() => updateFilters({ nsfwVisible: !filters.nsfwVisible })}
           />
+          {/* Categorías (F55): etiquetas de las series guardadas; sale la serie con alguna marcada. */}
+          {data.tags.map((tag) => (
+            <Chip
+              key={tag}
+              label={tag}
+              selected={filters.tags.includes(tag)}
+              onPress={() => updateFilters({ tags: toggleItem(filters.tags, tag) })}
+            />
+          ))}
         </ChipScroller>
       </View>
-
-      {/* Categorías (F55): etiquetas de las series guardadas; sale la serie con alguna marcada. */}
-      {data.tags.length > 0 ? (
-        <View
-          testID="library-categories"
-          accessibilityLabel={t("library.section.categories")}
-          style={[styles.filtersWrap, { paddingHorizontal: layout.margin }]}
-        >
-          <ChipScroller contentContainerStyle={styles.filtersRow}>
-            {data.tags.map((tag) => (
-              <Chip
-                key={tag}
-                label={tag}
-                selected={filters.tags.includes(tag)}
-                onPress={() =>
-                  updateFilters({
-                    tags: toggleItem(filters.tags, tag),
-                  })
-                }
-              />
-            ))}
-          </ChipScroller>
-        </View>
-      ) : null}
 
       {/* Sección de carpetas (F14b, V6: un solo acceso). */}
       {data.folders.length > 0 ? (
@@ -516,17 +499,12 @@ const styles = StyleSheet.create({
     paddingTop: spacing.sm,
     paddingBottom: spacing.xs,
   },
-  chipsWrap: {
-    paddingBottom: spacing.xs,
-  },
-  chipsRow: {
-    gap: spacing.xs,
-  },
   filtersWrap: {
     paddingBottom: spacing.sm,
   },
   filtersRow: {
-    gap: spacing.xs,
+    gap: spacing.sm,
+    paddingRight: spacing.xl, // el último chip no queda bajo el degradado
   },
   foldersSection: {
     paddingBottom: spacing.sm,
