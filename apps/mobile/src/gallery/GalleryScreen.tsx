@@ -497,9 +497,14 @@ export default function GalleryScreen() {
           <View style={styles.libraryCardWrap}>
             <LibraryCard kind={t("kind.comic")} title="Noche de ámbar" />
           </View>
+        </View>
+        {/* Fila propia: la cuadrícula real es de 3 columnas (la 4.ª tarjeta apretaba las insignias). */}
+        <View style={styles.row}>
           <View style={styles.libraryCardWrap}>
             <LibraryCard kind={t("kind.manga")} title="Sombras de medianoche" progress={0.5} nsfw />
           </View>
+          <View style={styles.libraryCardWrap} />
+          <View style={styles.libraryCardWrap} />
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.libraryScreen")}</Text>
