@@ -191,6 +191,7 @@ export default function LibraryScreen({
           : 0
       }
       accessibilityLabel={item.title}
+      nsfw={item.nsfw}
       onPress={() => onSeriesPress?.(item.seriesId, item.moduleId)}
       {...(seriesActions === undefined
         ? {}

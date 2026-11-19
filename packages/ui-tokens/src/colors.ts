@@ -52,3 +52,11 @@ export const dragonNightColors: ThemeColors = {
   warning: "#F5C451",
   error: "#F06A6A",
 };
+
+/**
+ * Borde de las series NSFW en Tesoros (F94, petición del humano 2026-11-19): naranja más
+ * rojizo que el ámbar `progress` para no confundirse con la barra de avance (`DESIGN_RULES.md`
+ * V1). No es un token semántico del SPEC §11.9: es una marca de contenido y siempre va con la
+ * insignia «18+» (no solo color).
+ */
+export const nsfwColor = "#FF6B1A";

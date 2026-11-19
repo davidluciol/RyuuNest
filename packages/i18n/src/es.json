@@ -154,6 +154,8 @@
 
   "library.search.placeholder": "Buscar en tus tesoros…",
   "library.folder.dynamic": "Carpeta dinámica",
+  "library.nsfw.badge": "18+",
+  "library.nsfw.a11y": "contenido para adultos (NSFW)",
   "library.chip.all": "Todo ({count})",
   "library.chip.reading": "Leyendo ({count})",
   "library.chip.folders": "Carpetas ({count})",

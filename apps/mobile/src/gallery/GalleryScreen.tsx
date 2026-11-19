@@ -497,6 +497,9 @@ export default function GalleryScreen() {
           <View style={styles.libraryCardWrap}>
             <LibraryCard kind={t("kind.comic")} title="Noche de ámbar" />
           </View>
+          <View style={styles.libraryCardWrap}>
+            <LibraryCard kind={t("kind.manga")} title="Sombras de medianoche" progress={0.5} nsfw />
+          </View>
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.libraryScreen")}</Text>
