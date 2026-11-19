@@ -259,6 +259,11 @@ export default function GalleryScreen() {
 
         <Text style={styles.groupLabel}>{t("gallery.component.chipScroller")}</Text>
         <ChipScroller contentContainerStyle={styles.chipScrollerRow}>
+          {[1, 2, 3].map((n) => (
+            <Chip key={n} label={t("gallery.chipScroller.few", { n })} selected={n === 1} />
+          ))}
+        </ChipScroller>
+        <ChipScroller contentContainerStyle={styles.chipScrollerRow}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
             <Chip key={n} label={t("gallery.chipScroller.item", { n })} selected={n === 1} />
           ))}
