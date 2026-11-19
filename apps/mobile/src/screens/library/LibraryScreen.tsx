@@ -4,6 +4,7 @@ import {
   dragonNightColors,
   layoutForWidth,
   spacing,
+  touchTarget,
   typography,
 } from "@ryuunest/ui-tokens";
 
@@ -18,7 +19,9 @@ import ErrorBanner from "../../components/ErrorBanner";
 import FilterSheet from "../../components/FilterSheet";
 import FloatingActionButton from "../../components/FloatingActionButton";
 import { FAB_SIZE } from "../../components/floatingButtonStyles";
+import FocusPressable from "../../components/FocusPressable";
 import FolderCard from "../../components/FolderCard";
+import ManageFoldersSheet from "../../components/ManageFoldersSheet";
 import NewFolderSheet from "../../components/NewFolderSheet";
 import SeriesMenuSheet from "../../components/SeriesMenuSheet";
 import SortSheet, { ORDER_KEYS } from "../../components/SortSheet";
@@ -38,6 +41,7 @@ import {
   libraryGridRows,
   type LibraryData,
   type LibraryFilters,
+  type LibraryFolder,
   type LibrarySeries,
 } from "./libraryFixtures";
 import { textStyle } from "../../components/textStyle";
@@ -52,6 +56,14 @@ import { useDebouncedValue } from "./debounce";
  */
 
 const colors = dragonNightColors;
+
+/** F93 — acciones de «Gestionar carpetas»; sin ellas «Gestionar» no abre la hoja. */
+export interface LibraryFolderActions {
+  /** Renombra y cambia las etiquetas (con alguna es dinámica). Devuelve el problema del nombre si lo hay. */
+  update: (id: string, name: string, tags: string[]) => Promise<FolderNameProblem | null>;
+  /** Borra la carpeta; sus series no se borran (RF-30). */
+  remove: (id: string) => Promise<void>;
+}
 
 /** F54 — acciones del menú de una serie; sin ellas no hay menú ni «⋮». */
 export interface LibrarySeriesActions {
@@ -85,6 +97,8 @@ export interface LibraryScreenProps {
   onCreateFolder?: (name: string, tags: string[]) => Promise<FolderNameProblem | null>;
   /** F54 — menú de pulsación larga de cada serie (mover, favoritos, eliminar). */
   seriesActions?: LibrarySeriesActions;
+  /** F93 — «Gestionar carpetas»: editar y eliminar. */
+  folderActions?: LibraryFolderActions;
   /** Callback del estado vacío (añadir repositorio). */
   onEmptyAction?: () => void;
   /** Callback al cambiar los filtros (para persistir estado). */
@@ -105,6 +119,7 @@ export default function LibraryScreen({
   onManageFolders,
   onCreateFolder,
   seriesActions,
+  folderActions,
   onEmptyAction,
   onFiltersChange,
   virtualize = true,
@@ -136,6 +151,10 @@ export default function LibraryScreen({
   const [removing, setRemoving] = useState<LibrarySeries | null>(null);
   const [creatingFor, setCreatingFor] = useState<LibrarySeries | null>(null);
   const [actionFailed, setActionFailed] = useState(false);
+  // F93: «Gestionar» abierto y la carpeta que se edita o se va a eliminar (la lista se oculta mientras).
+  const [managing, setManaging] = useState(false);
+  const [editingFolder, setEditingFolder] = useState<LibraryFolder | null>(null);
+  const [deletingFolder, setDeletingFolder] = useState<LibraryFolder | null>(null);
 
   /** Ejecuta una acción de serie; si falla, avisa y no pierde nada. */
   const run = (action: () => Promise<unknown>) => {
@@ -269,9 +288,17 @@ export default function LibraryScreen({
         <View style={[styles.foldersSection, { paddingHorizontal: layout.margin }]}>
           <View style={styles.foldersHeader}>
             <Text style={styles.foldersTitle}>{t("library.section.folders")}</Text>
-            <Text style={styles.foldersManage} onPress={onManageFolders}>
-              {t("library.folder.manage")}
-            </Text>
+            <FocusPressable
+              accessibilityRole="button"
+              style={styles.foldersManageHit}
+              testID="library-manage-folders"
+              onPress={() => {
+                onManageFolders?.();
+                if (folderActions !== undefined) setManaging(true);
+              }}
+            >
+              <Text style={styles.foldersManage}>{t("library.folder.manage")}</Text>
+            </FocusPressable>
           </View>
           <ChipScroller contentContainerStyle={{ gap: layout.gap }}>
             {data.folders.map((folder) => (
@@ -434,6 +461,46 @@ export default function LibraryScreen({
         />
       ) : null}
 
+      {folderActions !== undefined ? (
+        <>
+          <ManageFoldersSheet
+            visible={managing && editingFolder === null && deletingFolder === null}
+            folders={data.folders.filter((f) => f.kind !== "gems")}
+            onEdit={setEditingFolder}
+            onDelete={setDeletingFolder}
+            onClose={() => setManaging(false)}
+          />
+          {editingFolder !== null ? (
+            <NewFolderSheet
+              key={editingFolder.id}
+              visible
+              folder={{ name: editingFolder.name, tags: editingFolder.tags ?? [] }}
+              existingNames={data.folders.filter((f) => f.id !== editingFolder.id).map((f) => f.name)}
+              availableTags={[...new Set([...data.tags, ...(editingFolder.tags ?? [])])]}
+              onSubmit={(name, tags) => folderActions.update(editingFolder.id, name, tags)}
+              onClose={() => setEditingFolder(null)}
+            />
+          ) : null}
+          <ConfirmSheet
+            visible={deletingFolder !== null}
+            title={t("library.folder.delete.title")}
+            message={t("library.folder.delete.message")}
+            subject={deletingFolder?.name}
+            confirmLabel={t("library.folder.delete.confirm")}
+            onConfirm={() => {
+              const folder = deletingFolder;
+              setDeletingFolder(null);
+              if (folder === null) return;
+              if (filters.folderId === folder.id) updateFilters({ folderId: undefined });
+              run(() => folderActions.remove(folder.id));
+            }}
+            onCancel={() => setDeletingFolder(null)}
+            testID="library-delete-folder-confirm"
+            confirmTestID="library-delete-folder-submit"
+          />
+        </>
+      ) : null}
+
       {seriesActions !== undefined && menuSeries !== null ? (
         <SeriesMenuSheet
           visible
@@ -518,6 +585,12 @@ const styles = StyleSheet.create({
   foldersTitle: {
     ...textStyle(typography.titleLg),
     color: colors.textPrimary,
+  },
+  foldersManageHit: {
+    minHeight: touchTarget.min,
+    minWidth: touchTarget.min,
+    justifyContent: "center",
+    alignItems: "flex-end",
   },
   foldersManage: {
     ...textStyle(typography.labelMd),

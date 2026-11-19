@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { exportBackup } from "../../src/backup/export";
+import { importBackup } from "../../src/backup/import";
 import { BACKUP_FORMAT, BACKUP_VERSION } from "../../src/backup/schema";
 import type { ModuleManifest } from "../../src/contract/types";
 import { moduleKey, type InstalledPackage } from "../../src/install/PackageInstaller";
@@ -257,5 +258,26 @@ describe("exportBackup · filas de usuario", () => {
     expect(backup.series[0]).toMatchObject({ coverUrl: null, kind: null, status: null });
     expect(backup.progress[0]).toMatchObject({ releaseId: null, chapterTitle: null, pageTotal: null });
     expect(backup.prefs[0]).toMatchObject({ preferredGroup: null });
+  });
+});
+
+describe("F93 · gestionar carpetas sobrevive al respaldo", () => {
+  it("renombrar, volver dinámica y borrar se conservan al exportar e importar", async () => {
+    const folders = new Folders({ driver, clock });
+    const viejo = await folders.create("Viejo");
+    const borrada = await folders.create("Borrada");
+    await folders.rename(viejo, "Nuevo nombre");
+    await folders.setTags(viejo, ["Acción"]);
+    await folders.remove(borrada);
+
+    const exportado = await exportBackup({ driver, storage: new MemoryStorage(), clock });
+    const limpio = await openMigratedDriver();
+    const result = await importBackup({ driver: limpio, mode: "replace" }, JSON.stringify(exportado));
+
+    expect(result.ok).toBe(true);
+    const restauradas = new Folders({ driver: limpio, clock });
+    const usuario = (await restauradas.list()).filter((carpeta) => carpeta.system === null);
+    expect(usuario.map((carpeta) => carpeta.name)).toEqual(["Nuevo nombre"]);
+    await expect(restauradas.tags(usuario[0]!.id)).resolves.toEqual(["Acción"]);
   });
 });

@@ -74,6 +74,7 @@ import type { MediaKind } from "@ryuunest/core";
 import SortSheet from "../components/SortSheet";
 import FilterSheet from "../components/FilterSheet";
 import TagFilterSheet from "../components/TagFilterSheet";
+import ManageFoldersSheet from "../components/ManageFoldersSheet";
 import NewFolderSheet from "../components/NewFolderSheet";
 import SeriesMenuSheet from "../components/SeriesMenuSheet";
 import ErrorDialog from "../components/ErrorDialog";
@@ -142,6 +143,8 @@ export default function GalleryScreen() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [newFolderOpen, setNewFolderOpen] = useState(false);
+  // F93: «Gestionar carpetas» con carpetas propias, sin ellas y la hoja de edición.
+  const [manageOpen, setManageOpen] = useState<"list" | "empty" | "edit" | null>(null);
   const [seriesMenuOpen, setSeriesMenuOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [tagFilterOpen, setTagFilterOpen] = useState(false);
@@ -728,6 +731,47 @@ export default function GalleryScreen() {
             onSubmit={async () => null}
             onClose={() => setNewFolderOpen(false)}
           />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.manageFoldersSheet")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.manageFolders.show")}
+            testID="gallery-show-manage-folders"
+            onPress={() => setManageOpen("list")}
+          />
+          <Button
+            variant="secondary"
+            label={t("gallery.manageFolders.showEmpty")}
+            testID="gallery-show-manage-folders-empty"
+            onPress={() => setManageOpen("empty")}
+          />
+          <Button
+            variant="secondary"
+            label={t("gallery.manageFolders.showEdit")}
+            testID="gallery-show-edit-folder"
+            onPress={() => setManageOpen("edit")}
+          />
+          <ManageFoldersSheet
+            visible={manageOpen === "list" || manageOpen === "empty"}
+            folders={SAMPLE_LIBRARY_DATA.folders.filter(
+              (folder) => folder.kind !== "gems" && (manageOpen === "list" || folder.kind !== undefined),
+            )}
+            onEdit={() => setManageOpen("edit")}
+            onDelete={() => setManageOpen(null)}
+            onClose={() => setManageOpen(null)}
+          />
+          {manageOpen === "edit" ? (
+            <NewFolderSheet
+              visible
+              folder={{ name: SAMPLE_LIBRARY_DATA.folders[1]?.name ?? "", tags: ["Acción"] }}
+              existingNames={[]}
+              availableTags={SAMPLE_LIBRARY_DATA.tags}
+              onSubmit={async () => null}
+              onClose={() => setManageOpen(null)}
+            />
+          ) : null}
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.seriesMenu")}</Text>

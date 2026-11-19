@@ -419,6 +419,44 @@ export function removeSampleSeries(data: LibraryData, key: SeriesKey): LibraryDa
   };
 }
 
+/**
+ * F93 (web sin base): renombra la carpeta y cambia sus etiquetas (con alguna es dinámica; sin
+ * ninguna, manual). Mismo contrato que `Folders.rename` + `setTags`; el propio nombre no choca.
+ */
+export function updateSampleFolder(
+  data: LibraryData,
+  id: string,
+  name: string,
+  tags: readonly string[],
+): { ok: true; data: LibraryData } | { ok: false; reason: FolderNameProblem } {
+  const problem = validateFolderName(
+    name,
+    data.folders.filter((f) => f.id !== id).map((f) => f.name),
+  );
+  if (problem !== null) return { ok: false, reason: problem };
+  return {
+    ok: true,
+    data: {
+      ...data,
+      folders: data.folders.map((f) => {
+        if (f.id !== id) return f;
+        const { tags: _old, ...rest } = f;
+        const edited: LibraryFolder = tags.length > 0 ? { ...rest, name: name.trim(), tags: [...tags] } : { ...rest, name: name.trim() };
+        return { ...edited, count: folderCount(data.series, edited, true) };
+      }),
+    },
+  };
+}
+
+/** F93 (web sin base): borra la carpeta; sus series no se borran, quedan sin carpeta (RF-30). */
+export function removeSampleFolder(data: LibraryData, id: string): LibraryData {
+  return {
+    ...data,
+    series: data.series.map((s) => (s.folderId === id ? { ...s, folderId: null } : s)),
+    folders: data.folders.filter((f) => f.id !== id),
+  };
+}
+
 /** Filtros activos de la pantalla Biblioteca. */
 export interface LibraryFilters {
   /** Búsqueda por título. */

@@ -9,6 +9,8 @@ import {
   hasActiveFilters,
   moveSampleSeries,
   removeSampleSeries,
+  removeSampleFolder,
+  updateSampleFolder,
   folderCount,
   seriesInFolder,
   validateFolderName,
@@ -178,5 +180,42 @@ describe("filtros activos del vacío de búsqueda (F56)", () => {
       order: "addedAt",
       nsfwVisible: true,
     });
+  });
+});
+
+describe("F93 · editar y borrar carpetas en los datos de ejemplo", () => {
+  const mine: LibraryFolder = { id: "x", name: "Mías", count: 1 };
+  const other: LibraryFolder = { id: "y", name: "Otras", count: 0 };
+  const data = {
+    series: [{ ...base, folderId: "x", tags: ["Acción"] }, { ...base, seriesId: "b", tags: ["Acción"] }],
+    folders: [mine, other],
+    sources: [],
+    tags: ["Acción"],
+  };
+
+  it("renombra y la vuelve dinámica; el recuento se recalcula con las etiquetas", () => {
+    const done = updateSampleFolder(data, "x", "Nuevo nombre", ["Acción"]);
+    expect(done.ok).toBe(true);
+    if (!done.ok) return;
+    expect(done.data.folders[0]).toMatchObject({ name: "Nuevo nombre", tags: ["Acción"], count: 2 });
+  });
+
+  it("sin etiquetas vuelve a ser manual (sin tags)", () => {
+    const dynamic = { ...data, folders: [{ ...mine, tags: ["Acción"] }, other] };
+    const done = updateSampleFolder(dynamic, "x", "Mías", []);
+    expect(done.ok && done.data.folders[0]?.tags).toBeUndefined();
+  });
+
+  it("rechaza nombre vacío o repetido, pero no el propio nombre", () => {
+    expect(updateSampleFolder(data, "x", " ", [])).toEqual({ ok: false, reason: "EMPTY" });
+    expect(updateSampleFolder(data, "x", "otras", [])).toEqual({ ok: false, reason: "DUPLICATE" });
+    expect(updateSampleFolder(data, "x", "mías", []).ok).toBe(true);
+  });
+
+  it("borrar quita la carpeta y deja las series sin carpeta (siguen en Gemas)", () => {
+    const next = removeSampleFolder(data, "x");
+    expect(next.folders.map((f) => f.id)).toEqual(["y"]);
+    expect(next.series).toHaveLength(2);
+    expect(next.series[0]?.folderId).toBeNull();
   });
 });
