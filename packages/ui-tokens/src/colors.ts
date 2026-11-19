@@ -6,7 +6,7 @@
  * se contradicen entre sí y **no** se implementan (P2-1).
  */
 
-/** Los 13 colores semánticos que consumen los componentes. */
+/** Los 14 colores semánticos que consumen los componentes. */
 export interface ThemeColors {
   /** Nivel 0: fondo, lector y tinta sobre acentos. */
   readonly bg: string;
@@ -34,6 +34,8 @@ export interface ThemeColors {
   readonly warning: string;
   /** Error y acciones destructivas. */
   readonly error: string;
+  /** Borde de las series NSFW (siempre con la insignia «18+»); distinto de `progress` (P-173). */
+  readonly nsfw: string;
 }
 
 /** Paleta Dragon Night, el único tema de la v1 (P-29). */
@@ -51,12 +53,6 @@ export const dragonNightColors: ThemeColors = {
   positive: "#4DD599",
   warning: "#F5C451",
   error: "#F06A6A",
+  nsfw: "#FF6B1A",
 };
 
-/**
- * Borde de las series NSFW en Tesoros (F94, petición del humano 2026-11-19): naranja más
- * rojizo que el ámbar `progress` para no confundirse con la barra de avance (`DESIGN_RULES.md`
- * V1). No es un token semántico del SPEC §11.9: es una marca de contenido y siempre va con la
- * insignia «18+» (no solo color).
- */
-export const nsfwColor = "#FF6B1A";

@@ -6,7 +6,6 @@ import {
   touchTarget,
   typography,
   dragonNightColors,
-  nsfwColor,
   type TypeStyle,
 } from "@ryuunest/ui-tokens";
 
@@ -48,7 +47,7 @@ export function libraryCardStyle(nsfw = false): LibraryCardStyleShape {
     aspectRatio: coverAspectRatio.width / coverAspectRatio.height,
     borderRadius: radii.cover,
     borderWidth: nsfw ? 2 : 1,
-    borderColor: nsfw ? nsfwColor : colors.border,
+    borderColor: nsfw ? colors.nsfw : colors.border,
     backgroundColor: colors.surface,
   };
 }

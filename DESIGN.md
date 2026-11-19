@@ -59,6 +59,7 @@ colors:
   accent: '#35C98A'
   progress: '#FF9F43'
   accent-alt: '#9B7BFF'
+  nsfw: '#FF6B1A'
   bg: '#0B0E14'
   elevated: '#1B2230'
   positive: '#4DD599'

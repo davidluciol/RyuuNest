@@ -714,6 +714,7 @@ El front-matter de `DESIGN.md` mezcla tokens propios con tokens genéricos gener
 | `positive` | `#4DD599` | Éxito y capítulo completado |
 | `warning` | `#F5C451` | Advertencia |
 | `error` | `#F06A6A` | Error y acciones destructivas |
+| `nsfw` | `#FF6B1A` | Borde de las series NSFW en Tesoros, siempre con la insignia «18+» (petición del humano, F94, P-173); no se confunde con `progress` |
 
 **Reglas de color**
 
