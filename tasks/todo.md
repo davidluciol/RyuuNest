@@ -256,9 +256,9 @@ Dep: F55 · S · `apps/mobile/src/screens/library/*`, `apps/mobile/src/component
 
 > Origen (petición del humano, 2026-11-17): los chips bajo el buscador se ven apretados.
 
-- [ ] Los chips de filtro bajo el buscador van en **una sola fila con scroll horizontal** (reutilizar `ChipScroller`; no crear componente), con separación de tokens, sin cortar el último chip y con foco visible/D-pad
-- [ ] Estados en la galería (pocos chips, desbordando); sin overflow vertical ni de página
-- Verif: Playwright 426/1440 px (`library.cjs`) + 🧍 S25
+- [x] Los chips de filtro bajo el buscador van en **una sola fila con scroll horizontal** (reutilizar `ChipScroller`; no crear componente), con separación de tokens, sin cortar el último chip y con foco visible/D-pad
+- [x] Estados en la galería (pocos chips, desbordando); sin overflow vertical ni de página
+- Verif: ✅ Vitest (`libraryChipsRow`) + ✅ Playwright 426/1440 px (`library.cjs`, `chipScroller.cjs`) · 🧍 S25 pendiente (PR #120)
 
 ### F93 «Gestionar» carpetas: ver, renombrar, dinámica y borrar `[FE/BE · Intermedia · N3]`
 
@@ -266,10 +266,10 @@ Dep: F52, F53 · M · `apps/mobile/src/screens/library/*`, `packages/core/src/li
 
 > Origen (petición del humano, 2026-11-17): el botón «Gestionar» (`library.folder.manage`) no hace nada.
 
-- [ ] Rojo (núcleo): `rename`, `setTags` (hacer **dinámica** = carpeta inteligente por etiquetas, o volverla manual) y `delete` de carpeta; **Favoritos y Gemas** no se renombran ni se borran (F52); al borrar una carpeta las series **no se borran** (siguen en Gemas, RF-30); nombre obligatorio y sin duplicados
-- [ ] Pantalla u hoja «Gestionar carpetas»: lista de carpetas (nombre, nº de series, icono de rayo si es dinámica) con editar (reutilizar el modal de F53 en modo edición) y eliminar con `ConfirmSheet`
-- [ ] Textos en i18n; componentes nuevos en la galería con todos sus estados; comprobar el respaldo (renombrar/borrar sobrevive a exportar-importar)
-- Verif: Vitest con SQLite real + Playwright 426/1440 px + 🧍 S25
+- [x] Rojo (núcleo): `rename`, `setTags` (hacer **dinámica** = carpeta inteligente por etiquetas, o volverla manual) y `delete` de carpeta; **Favoritos y Gemas** no se renombran ni se borran (F52); al borrar una carpeta las series **no se borran** (siguen en Gemas, RF-30); nombre obligatorio y sin duplicados
+- [x] Pantalla u hoja «Gestionar carpetas»: lista de carpetas (nombre, nº de series, icono de rayo si es dinámica) con editar (reutilizar el modal de F53 en modo edición) y eliminar con `ConfirmSheet`
+- [x] Textos en i18n; componentes nuevos en la galería con todos sus estados; comprobar el respaldo (renombrar/borrar sobrevive a exportar-importar)
+- Verif: ✅ Vitest con SQLite real (`setTags`, Favoritos protegido, respaldo exportar→importar) + ✅ Playwright 426/1440 px (`library.cjs`: editar, volver manual, eliminar) · 🧍 S25 pendiente (PR #121)
 
 ### F94 NSFW con borde naranja en Tesoros `[FE · Baja · N2]` (opcional)
 
@@ -277,9 +277,9 @@ Dep: F92 · S · `packages/ui-tokens`, `apps/mobile/src/components/CoverCard.tsx
 
 > Origen (petición del humano, 2026-11-17, opcional). **Leer `DESIGN_RULES.md` antes: decide cómo se usa el color.**
 
-- [ ] Las series `nsfw` de Tesoros llevan el **borde naranja** (token nuevo en `ui-tokens` si no existe; sin hexadecimales); **no solo color**: mantener la etiqueta/icono NSFW existente (accesibilidad)
-- [ ] Estado en la galería; Playwright 426/1440 px
-- Verif: Playwright + 🧍 S25
+- [x] Las series `nsfw` de Tesoros llevan el **borde naranja** (token nuevo en `ui-tokens` si no existe; sin hexadecimales); **no solo color**: mantener la etiqueta/icono NSFW existente (accesibilidad)
+- [x] Estado en la galería; Playwright 426/1440 px
+- Verif: ✅ Vitest (`nsfw.test.ts`, `libraryCard.test.ts`) + ✅ Playwright 426/1440 px (`nsfwCard.cjs` en la galería, `library.cjs`) · 🧍 S25 pendiente (PR #122)
 
 **Lote sugerido:** F52 → F54 → F53 → F55 → F56 → F57 → F58; F47 y F49 en sesiones propias (N4). Carpetas y filtros: F92 → F93 → F94.
 
