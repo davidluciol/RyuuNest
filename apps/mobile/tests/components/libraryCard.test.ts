@@ -8,6 +8,7 @@ import {
   libraryCardStyle,
   libraryCardTitleStyle,
   libraryCardBadgeStyle,
+  libraryCardNsfwBadgeStyle,
   libraryCardProgressStyle,
   libraryCardMetaStyle,
   libraryCardGridColumns,
@@ -108,5 +109,25 @@ describe("libraryCardGridColumns (cuadrícula)", () => {
 
   it("escritorio: 8 columnas", () => {
     expect(libraryCardGridColumns(1440)).toBe(8);
+  });
+});
+
+describe("F94 · series NSFW en Tesoros", () => {
+  it("sin NSFW la tarjeta no cambia (borde 1 px border)", () => {
+    expect(libraryCardStyle()).toMatchObject({ borderWidth: 1, borderColor: "#263147" });
+  });
+
+  it("con NSFW el borde es naranja y más grueso", () => {
+    expect(libraryCardStyle(true)).toMatchObject({ borderWidth: 2, borderColor: "#FF6B1A" });
+  });
+
+  it("la insignia NSFW va bajo la de tipo, neutra y a su misma altura", () => {
+    const kind = libraryCardBadgeStyle();
+    expect(libraryCardNsfwBadgeStyle()).toMatchObject({
+      left: kind.left,
+      height: kind.height,
+      backgroundColor: kind.backgroundColor,
+    });
+    expect(libraryCardNsfwBadgeStyle().top).toBeGreaterThan(kind.top + kind.height);
   });
 });

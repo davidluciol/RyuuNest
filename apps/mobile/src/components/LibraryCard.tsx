@@ -5,12 +5,14 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 
 import { MoreVertical } from "../icons";
+import { t } from "../i18n";
 import { spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "./Badge";
 import {
   LIBRARY_CARD_TITLE_LINES,
   libraryCardBadgeStyle,
+  libraryCardNsfwBadgeStyle,
   libraryCardMenuStyle,
   libraryCardMetaStyle,
   libraryCardProgressStyle,
@@ -50,6 +52,8 @@ export interface LibraryCardProps {
   onMenuPress?: () => void;
   /** Etiqueta accesible del «⋮». */
   menuLabel?: string;
+  /** F94 — serie NSFW: borde naranja e insignia «18+» (el color nunca va solo). */
+  nsfw?: boolean;
 }
 
 export default function LibraryCard({
@@ -63,12 +67,14 @@ export default function LibraryCard({
   onLongPress,
   onMenuPress,
   menuLabel,
+  nsfw = false,
 }: LibraryCardProps) {
   const [cardFocused, setCardFocused] = useState(false);
   const [menuFocused, setMenuFocused] = useState(false);
   const menuStyle = libraryCardMenuStyle();
   const menuVisible = cardFocused || menuFocused;
-  const cardStyle = libraryCardStyle();
+  const cardStyle = libraryCardStyle(nsfw);
+  const nsfwBadgeStyle = libraryCardNsfwBadgeStyle();
   const titleStyle = libraryCardTitleStyle();
   const badgeStyle = libraryCardBadgeStyle();
   const metaStyle = libraryCardMetaStyle();
@@ -77,7 +83,9 @@ export default function LibraryCard({
   return (
     <FocusPressable
       accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel ?? title}
+      accessibilityLabel={
+        nsfw ? `${accessibilityLabel ?? title}, ${t("library.nsfw.a11y")}` : (accessibilityLabel ?? title)
+      }
       onPress={onPress}
       onLongPress={onLongPress}
       onFocus={() => setCardFocused(true)}
@@ -111,6 +119,23 @@ export default function LibraryCard({
             ]}
           >
             <Badge label={kind} />
+          </View>
+        ) : null}
+        {nsfw ? (
+          <View
+            testID="library-card-nsfw"
+            style={[
+              styles.badgeWrap,
+              {
+                top: nsfwBadgeStyle.top,
+                left: nsfwBadgeStyle.left,
+                height: nsfwBadgeStyle.height,
+                borderRadius: nsfwBadgeStyle.borderRadius,
+                backgroundColor: nsfwBadgeStyle.backgroundColor,
+              },
+            ]}
+          >
+            <Badge label={t("library.nsfw.badge")} />
           </View>
         ) : null}
         {hasProgress ? (

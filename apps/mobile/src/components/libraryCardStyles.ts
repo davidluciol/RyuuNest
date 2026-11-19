@@ -6,6 +6,7 @@ import {
   touchTarget,
   typography,
   dragonNightColors,
+  nsfwColor,
   type TypeStyle,
 } from "@ryuunest/ui-tokens";
 
@@ -38,13 +39,16 @@ export interface LibraryCardStyleShape {
   backgroundColor: string;
 }
 
-/** Estilo de la portada de la tarjeta (2:3, radio 12, borde `border`). */
-export function libraryCardStyle(): LibraryCardStyleShape {
+/**
+ * Estilo de la portada de la tarjeta (2:3, radio 12, borde `border`). F94: una serie NSFW lleva
+ * borde naranja de 2 px (siempre junto a la insignia «18+», no solo color).
+ */
+export function libraryCardStyle(nsfw = false): LibraryCardStyleShape {
   return {
     aspectRatio: coverAspectRatio.width / coverAspectRatio.height,
     borderRadius: radii.cover,
-    borderWidth: 1,
-    borderColor: colors.border,
+    borderWidth: nsfw ? 2 : 1,
+    borderColor: nsfw ? nsfwColor : colors.border,
     backgroundColor: colors.surface,
   };
 }
@@ -82,6 +86,12 @@ export function libraryCardBadgeStyle(): LibraryCardBadgeStyleShape {
     borderRadius: radii.pill,
     backgroundColor: colors.elevated,
   };
+}
+
+/** F94 — insignia «18+»: neutra como la de tipo, justo debajo de ella. */
+export function libraryCardNsfwBadgeStyle(): LibraryCardBadgeStyleShape {
+  const kind = libraryCardBadgeStyle();
+  return { ...kind, top: kind.top + kind.height + spacing.xs };
 }
 
 export interface LibraryCardProgressStyleShape {

@@ -6,7 +6,7 @@
  * importan de aquí (AC-13, P2-4; el lint que lo fuerza llega en F09).
  */
 
-export { dragonNightColors, type ThemeColors } from "./colors";
+export { dragonNightColors, nsfwColor, type ThemeColors } from "./colors";
 export { fonts, typography, type FontFamily, type TypeStyle, type TypeToken } from "./typography";
 export { fontFiles, fontLicenses, type FontFile } from "./fonts";
 export { spacing, type SpacingToken } from "./spacing";
