@@ -148,6 +148,18 @@ export class Folders {
     ]);
   }
 
+  /**
+   * Cambia las etiquetas de la carpeta (F93): con alguna es **dinámica** (muestra las series
+   * que las tengan); con la lista vacía vuelve a ser manual. Las carpetas del sistema no.
+   */
+  async setTags(id: number, tags: readonly string[]): Promise<void> {
+    await this.#assertUserFolder(id, "cambiar las etiquetas de");
+    await withTransaction(this.#driver, async () => {
+      await replaceTags(this.#driver, "folder_tag", [id], tags);
+      await this.#driver.run("UPDATE folder SET updated_at = ? WHERE id = ?", [this.#clock.now(), id]);
+    });
+  }
+
   /** Las carpetas del sistema (F52) no se tocan: se rechaza antes de escribir. */
   async #assertUserFolder(id: number, accion: string): Promise<void> {
     const carpeta = await this.get(id);

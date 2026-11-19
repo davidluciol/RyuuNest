@@ -33,6 +33,11 @@ export interface NewFolderSheetProps {
   /** Crea la carpeta; si lanza o devuelve un problema, la hoja lo muestra y sigue abierta. */
   onSubmit: (name: string, tags: string[]) => Promise<FolderNameProblem | null>;
   onClose: () => void;
+  /**
+   * F93 — modo edición: nombre y etiquetas de la carpeta que se edita. Quien lo usa pone
+   * `key={id}` para que cada carpeta arranque con sus valores, y quita su nombre de `existingNames`.
+   */
+  folder?: { name: string; tags: readonly string[] };
 }
 
 export default function NewFolderSheet({
@@ -41,15 +46,18 @@ export default function NewFolderSheet({
   availableTags,
   onSubmit,
   onClose,
+  folder,
 }: NewFolderSheetProps) {
-  const [name, setName] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const editing = folder !== undefined;
+  const [name, setName] = useState(folder?.name ?? "");
+  const [tags, setTags] = useState<string[]>([...(folder?.tags ?? [])]);
   const [problem, setProblem] = useState<FolderNameProblem | "FAILED" | null>(null);
   const [busy, setBusy] = useState(false);
 
   const close = () => {
-    setName("");
-    setTags([]);
+    // Al crear se vacía el formulario; al editar vuelve a los valores de la carpeta.
+    setName(folder?.name ?? "");
+    setTags([...(folder?.tags ?? [])]);
     setProblem(null);
     onClose();
   };
@@ -80,7 +88,7 @@ export default function NewFolderSheet({
   return (
     <SheetModal
       visible={visible}
-      title={t("library.folder.new.title")}
+      title={t(editing ? "library.folder.edit.title" : "library.folder.new.title")}
       onClose={close}
       busy={busy}
       testID="new-folder-sheet"
@@ -100,7 +108,7 @@ export default function NewFolderSheet({
       />
       {problem !== null ? (
         <Text accessibilityRole="alert" style={styles.error} testID="new-folder-error">
-          {t(PROBLEM_KEYS[problem])}
+          {t(problem === "FAILED" && editing ? "library.folder.edit.error.failed" : PROBLEM_KEYS[problem])}
         </Text>
       ) : null}
 
@@ -126,7 +134,7 @@ export default function NewFolderSheet({
       <View style={styles.actions}>
         <Button variant="secondary" label={t("confirm.cancel")} disabled={busy} onPress={close} />
         <Button
-          label={t("library.folder.new.create")}
+          label={t(editing ? "library.folder.edit.save" : "library.folder.new.create")}
           disabled={busy}
           onPress={() => void submit()}
           testID="new-folder-create"

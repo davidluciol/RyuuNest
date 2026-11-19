@@ -83,6 +83,43 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByTestId("new-folder-create").click();
       await sheet.waitFor({ state: "hidden" });
       await page.getByRole("button", { name: /^Mis acción, \d+ obras(, Carpeta dinámica)?$/ }).waitFor({ state: "visible" });
+      // F93: «Gestionar»: lista con rayo, editar (renombrar y volver manual) y eliminar con confirmación.
+      const manage = page.getByTestId("library-manage-folders");
+      const manageBox = await manage.boundingBox();
+      assert.ok(manageBox && manageBox.height >= 48 && manageBox.width >= 48, `Gestionar ≥ 48 @${width}`);
+      await manage.click();
+      const gestion = page.getByTestId("manage-folders-sheet");
+      await gestion.waitFor({ state: "visible" });
+      await gestion.getByRole("button", { name: "Editar Favoritos" }).waitFor({ state: "hidden" }); // del sistema: sin acciones
+      const fila = gestion.locator('[data-testid^="manage-folder-"]').filter({ hasText: "Mis acción" });
+      assert.equal(await fila.getByTestId("manage-folder-dynamic").count(), 1, `rayo en la dinámica @${width}`);
+      await page.waitForTimeout(400); // fin de la animación de la hoja
+      await page.screenshot({ path: process.env.F52_SHOT ? `${process.env.F52_SHOT}-gestionar-${width}.png` : undefined });
+      await gestion.getByRole("button", { name: "Editar Mis acción", exact: true }).click();
+      await sheet.waitFor({ state: "visible" });
+      assert.equal(await page.getByTestId("new-folder-name").inputValue(), "Mis acción", `edición parte del nombre @${width}`);
+      await page.getByTestId("new-folder-name").fill("gemas");
+      await page.getByTestId("new-folder-create").click();
+      assert.match(await page.getByTestId("new-folder-error").innerText(), /ya tienes/i, `edición rechaza repetidos @${width}`);
+      await page.getByTestId("new-folder-name").fill("Mis acción 2");
+      await page.getByTestId("new-folder-tags").getByRole("button", { name: "Acción", exact: true }).click(); // vuelve manual
+      await page.getByTestId("new-folder-create").click();
+      await sheet.waitFor({ state: "hidden" });
+      await gestion.waitFor({ state: "visible" });
+      const editada = gestion.locator('[data-testid^="manage-folder-"]').filter({ hasText: "Mis acción 2" });
+      await editada.waitFor({ state: "visible" });
+      assert.equal(await editada.getByTestId("manage-folder-dynamic").count(), 0, `ya no es dinámica @${width}`);
+      await gestion.getByRole("button", { name: "Eliminar Mis acción 2", exact: true }).click();
+      const confirmar = page.getByTestId("library-delete-folder-confirm");
+      await confirmar.waitFor({ state: "visible" });
+      await page.getByTestId("library-delete-folder-submit").click();
+      await confirmar.waitFor({ state: "hidden" });
+      await gestion.waitFor({ state: "visible" });
+      await editada.waitFor({ state: "hidden" });
+      await gestion.getByRole("button", { name: "Cerrar", exact: true }).click();
+      await gestion.waitFor({ state: "hidden" });
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `gestionar sin overflow @${width}`);
+
       // F55: búsqueda en tiempo real por palabras y filtro por categoría (alguna de las marcadas).
       const buscador = page.getByPlaceholder("Buscar en tus tesoros…");
       const oculta = (titulo) => page.getByRole("button", { name: titulo, exact: true }).waitFor({ state: "hidden" });

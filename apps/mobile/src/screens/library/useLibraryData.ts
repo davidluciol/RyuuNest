@@ -9,11 +9,13 @@ import {
   SAMPLE_LIBRARY_DATA,
   addSampleFolder,
   moveSampleSeries,
+  removeSampleFolder,
   removeSampleSeries,
+  updateSampleFolder,
   type FolderNameProblem,
   type LibraryData,
 } from "./libraryFixtures";
-import type { LibrarySeriesActions } from "./LibraryScreen";
+import type { LibraryFolderActions, LibrarySeriesActions } from "./LibraryScreen";
 
 /** F14c — estado de carga de la pantalla Biblioteca. */
 export type LibraryLoad =
@@ -30,6 +32,8 @@ export interface LibraryActions {
   createFolder: (name: string, tags: string[]) => Promise<FolderNameProblem | null>;
   /** F54 — acciones del menú de cada serie (mover, favoritos, eliminar). */
   seriesActions: LibrarySeriesActions;
+  /** F93 — editar y borrar carpetas desde «Gestionar». */
+  folderActions: LibraryFolderActions;
 }
 
 /**
@@ -152,5 +156,34 @@ export function useLibraryData(): LibraryLoad & LibraryActions {
     },
   };
 
-  return { ...state, reload, createFolder, seriesActions };
+  // F93 — «Gestionar»: editar (nombre y etiquetas) y borrar una carpeta del usuario.
+  const folderActions: LibraryFolderActions = {
+    update: async (id, name, tags) => {
+      const driver = await openAppDatabase();
+      if (driver === null) {
+        if (state.status !== "ready") return null;
+        const edited = updateSampleFolder(state.data, id, name, tags);
+        if (!edited.ok) return edited.reason;
+        setState({ status: "ready", data: edited.data });
+        return null;
+      }
+      const folders = new Folders({ driver, clock });
+      try {
+        await folders.rename(Number(id), name);
+        await folders.setTags(Number(id), tags);
+      } catch (error) {
+        if (error instanceof FolderNameError) return error.reason;
+        throw error;
+      }
+      await refresh();
+      return null;
+    },
+    remove: (id) =>
+      act(
+        (driver) => new Folders({ driver, clock }).remove(Number(id)),
+        (data) => removeSampleFolder(data, id),
+      ),
+  };
+
+  return { ...state, reload, createFolder, seriesActions, folderActions };
 }

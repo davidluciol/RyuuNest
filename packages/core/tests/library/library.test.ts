@@ -207,6 +207,27 @@ describe("Folders · crear, renombrar, reordenar y borrar (RF-29)", () => {
     await expect(favoritos.get(MODULO, "s2")).resolves.toMatchObject({ folderId: null });
   });
 
+  it("setTags vuelve dinámica una carpeta manual y de vuelta (F93)", async () => {
+    const id = await carpetas.create("Mis cosas");
+    clock.set(4_000);
+
+    await carpetas.setTags(id, ["Acción", "Seinen"]);
+    await expect(carpetas.tags(id)).resolves.toEqual(["Acción", "Seinen"]);
+    await expect(carpetas.get(id)).resolves.toMatchObject({ updatedAt: 4_000 });
+
+    await carpetas.setTags(id, []);
+    await expect(carpetas.tags(id)).resolves.toEqual([]);
+  });
+
+  it("Favoritos no se renombra, no se borra y no admite etiquetas (F52, F93)", async () => {
+    const favoritas = (await carpetas.list()).find((carpeta) => carpeta.system === "favorites");
+
+    await expect(carpetas.rename(favoritas!.id, "Otro")).rejects.toThrow(/sistema/);
+    await expect(carpetas.remove(favoritas!.id)).rejects.toThrow(/sistema/);
+    await expect(carpetas.setTags(favoritas!.id, ["Acción"])).rejects.toThrow(/sistema/);
+    await expect(carpetas.tags(favoritas!.id)).resolves.toEqual([]);
+  });
+
   it("asignar una carpeta que no existe se rechaza (la clave foránea manda)", async () => {
     await series.upsert({ moduleId: MODULO, seriesId: "s", title: "S", nsfw: false });
 

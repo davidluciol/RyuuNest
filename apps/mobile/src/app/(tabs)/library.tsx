@@ -20,6 +20,7 @@ export default function LibraryRoute() {
         initialFilters={{ nsfwVisible: settings.nsfwVisible }}
         onCreateFolder={library.createFolder}
         seriesActions={library.seriesActions}
+        folderActions={library.folderActions}
         onSeriesPress={(seriesId, moduleId) =>
           router.push({ pathname: "/series/[moduleId]/[seriesId]", params: { moduleId, seriesId } })
         }
