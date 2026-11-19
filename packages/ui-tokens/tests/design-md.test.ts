@@ -108,10 +108,12 @@ const COLOR_ALIASES: Record<string, string> = {
   warning: "warning",
   // `error` es genérico (#ffb4ab) y contradice al SPEC; el propio es `status-error`.
   error: "status-error",
+  // F94: marca de contenido para adultos (P-173).
+  nsfw: "nsfw",
 };
 
 describe("colores de ui-tokens vs DESIGN.md", () => {
-  it("los 13 tokens semánticos coinciden con sus contrapartes propias del diseño", () => {
+  it("los 14 tokens semánticos coinciden con sus contrapartes propias del diseño", () => {
     for (const [token, value] of Object.entries(dragonNightColors)) {
       const designKey = COLOR_ALIASES[token];
       expect(designKey, `falta el alias de ${token}`).toBeDefined();

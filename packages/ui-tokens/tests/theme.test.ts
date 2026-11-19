@@ -7,11 +7,11 @@ import { defaultTheme, dragonNight, getTheme, themes } from "../src/theme";
  * de temas debe permitir añadir otros sin cambiar los componentes.
  */
 describe("temas (SPEC §11.9)", () => {
-  it("Dragon Night existe y reutiliza los 13 colores semánticos", () => {
+  it("Dragon Night existe y reutiliza los 14 colores semánticos", () => {
     expect(dragonNight.id).toBe("dragon-night");
     expect(dragonNight.name).toBe("Dragon Night");
     expect(dragonNight.colors.bg).toBe("#0B0E14");
-    expect(Object.keys(dragonNight.colors)).toHaveLength(13);
+    expect(Object.keys(dragonNight.colors)).toHaveLength(14);
   });
 
   it("el registro `themes` expone Dragon Night como único tema de la v1", () => {

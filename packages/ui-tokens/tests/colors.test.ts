@@ -5,7 +5,7 @@ import { dragonNightColors } from "../src/colors.js";
 /**
  * F01 — los colores semánticos salen de la tabla de SPEC §11.9.
  * Los genéricos del front-matter de `DESIGN.md` (surface-dim, primary-container,
- * background, error #ffb4ab…) no se usan: la única fuente son estos 13 tokens.
+ * background, error #ffb4ab…) no se usan: la única fuente son estos 14 tokens.
  */
 describe("tokens de color (SPEC §11.9)", () => {
   it.each([
@@ -22,11 +22,12 @@ describe("tokens de color (SPEC §11.9)", () => {
     ["positive", "#4DD599"],
     ["warning", "#F5C451"],
     ["error", "#F06A6A"],
+    ["nsfw", "#FF6B1A"],
   ] as const)("dragonNightColors.%s es %s", (token, value) => {
     expect(dragonNightColors[token]).toBe(value);
   });
 
-  it("solo expone los 13 tokens semánticos del SPEC (ni genéricos ni extras)", () => {
+  it("solo expone los 14 tokens semánticos del SPEC (ni genéricos ni extras)", () => {
     expect(Object.keys(dragonNightColors).sort()).toEqual(
       [
         "accent",
@@ -36,6 +37,7 @@ describe("tokens de color (SPEC §11.9)", () => {
         "border",
         "error",
         "elevated",
+        "nsfw",
         "positive",
         "progress",
         "surface",

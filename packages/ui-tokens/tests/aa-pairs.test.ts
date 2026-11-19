@@ -38,6 +38,9 @@ const NON_TEXT_PAIRS: ReadonlyArray<readonly [Foreground, keyof typeof c, string
   ["progress", "surface", "barra de progreso sobre tarjetas"],
   ["positive", "bg", "marca de capítulo completado"],
   ["warning", "bg", "icono de advertencia"],
+  ["nsfw", "bg", "borde NSFW sobre el fondo"],
+  ["nsfw", "surface", "borde NSFW sobre tarjetas"],
+  ["nsfw", "elevated", "borde NSFW sobre hojas"],
 ];
 
 describe("contraste AA de los pares usados (Dragon Night)", () => {
