@@ -370,16 +370,16 @@ Dep: F52 · M · `apps/mobile/src/screens/series/*` (ficha), `packages/core/src/
 - [x] La ficha refleja el estado al abrirla y al volver (Tesoros lo relee por foco)
 - Verif: ✅ Vitest con SQLite real + ✅ Playwright 426/1440 px (`persistence.cjs`, `series.cjs`) · 🧍 S25 (agent-device) pendiente
 
-### F96 Ficha: botón «Carpeta» con hoja para elegir carpeta `[FE · Intermedia · N3]`
+### F96 Ficha: botón «Guardar» con hoja para elegir carpeta `[FE · Intermedia · N3]`
 
 Dep: F95, F53 · M · `apps/mobile/src/screens/series/*`, `apps/mobile/src/components/*`
 
-> Origen (petición del humano, 2026-11-17). Reutilizar la hoja «Mover» de F54.
+> Origen (petición del humano, 2026-11-17). **Cambiado (P-174, 2026-11-19):** el botón «Carpeta» se llama **«Guardar»**; el corazón pasa a llamarse «Favorito» / «En favoritos».
 
-- [ ] «Carpeta» abre una hoja con la **lista de carpetas** del usuario (con casilla/marca en las que ya contienen la serie) y la acción «Nueva carpeta» (modal de F53); elegir guarda la serie en esa carpeta
-- [ ] Sin carpetas propias: la hoja muestra solo las por defecto y guarda en la carpeta por defecto de F95
-- [ ] Hoja en la galería (con carpetas, sin carpetas); textos en i18n
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+- [x] «Guardar» abre una hoja con **Gemas, Favoritos y las carpetas del usuario** (la actual marcada) y «Nueva carpeta» (modal de F53); elegir guarda la serie ahí (o la mueve): una sola carpeta (D-12)
+- [x] Sin carpetas propias la hoja muestra Gemas y Favoritos, con Gemas como actual (guardado por defecto)
+- [x] Hoja `SaveFolderSheet` en la galería (con carpetas, sin carpetas); textos en i18n
+- Verif: ✅ Vitest (`saveFolder.test.ts`, SQLite real) + ✅ Playwright 426/1440 px (`series.cjs`: mover, crear y guardar, volver a Favoritos) · 🧍 S25 (agent-device) pendiente
 
 ### F97 NSFW con borde naranja en Aventuras: hentai, seinen y josei `[FE · Baja · N2]` (opcional)
 

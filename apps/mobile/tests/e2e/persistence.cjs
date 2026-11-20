@@ -38,8 +38,8 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.waitForURL(/\/series\/m-ejemplo-a\/dragon-de-ceniza$/);
 
       // F95: el corazón guarda en Favoritos (estaba en otra carpeta; sigue guardada: Todo (3)).
-      await page.getByRole("button", { name: "Guardar" }).click();
-      await page.getByRole("button", { name: "Guardada" }).waitFor();
+      await page.getByRole("button", { name: "Favorito", exact: true }).click();
+      await page.getByRole("button", { name: "En favoritos" }).waitFor();
       await page.waitForTimeout(1500); // la base se guarda en IndexedDB con una pausa
 
       // Al volver a Tesoros se relee la base sin recargar la página (la ficha guarda cambios).
@@ -50,11 +50,11 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.reload();
       await page.getByText("Todo (3)").waitFor();
       await page.getByRole("button", { name: "El dragón de ceniza", exact: true }).click();
-      await page.getByRole("button", { name: "Guardada" }).waitFor();
+      await page.getByRole("button", { name: "En favoritos" }).waitFor();
 
       // Quitar el corazón la deja en Gemas: sigue guardada.
-      await page.getByRole("button", { name: "Guardada" }).click();
-      await page.getByRole("button", { name: "Guardar" }).waitFor();
+      await page.getByRole("button", { name: "En favoritos" }).click();
+      await page.getByRole("button", { name: "Favorito", exact: true }).waitFor();
       await page.waitForTimeout(1500);
       await page.goBack();
       await page.getByText("Todo (3)").waitFor();

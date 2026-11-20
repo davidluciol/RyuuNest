@@ -76,6 +76,7 @@ import FilterSheet from "../components/FilterSheet";
 import TagFilterSheet from "../components/TagFilterSheet";
 import ManageFoldersSheet from "../components/ManageFoldersSheet";
 import NewFolderSheet from "../components/NewFolderSheet";
+import SaveFolderSheet from "../components/SaveFolderSheet";
 import SeriesMenuSheet from "../components/SeriesMenuSheet";
 import ErrorDialog from "../components/ErrorDialog";
 import LogEventRow from "../components/LogEventRow";
@@ -146,6 +147,7 @@ export default function GalleryScreen() {
   // F93: «Gestionar carpetas» con carpetas propias, sin ellas y la hoja de edición.
   const [manageOpen, setManageOpen] = useState<"list" | "empty" | "edit" | null>(null);
   const [seriesMenuOpen, setSeriesMenuOpen] = useState(false);
+  const [saveSheet, setSaveSheet] = useState<"with" | "without" | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [tagFilterOpen, setTagFilterOpen] = useState(false);
   const [tagFilters, setTagFilters] = useState<DiscoverFilterValues>({ genre: ["horror"] });
@@ -764,7 +766,8 @@ export default function GalleryScreen() {
           <ManageFoldersSheet
             visible={manageOpen === "list" || manageOpen === "empty"}
             folders={SAMPLE_LIBRARY_DATA.folders.filter(
-              (folder) => folder.kind !== "gems" && (manageOpen === "list" || folder.kind !== undefined),
+              (folder) =>
+                folder.kind !== "gems" && (manageOpen === "list" || folder.kind !== undefined),
             )}
             onEdit={() => setManageOpen("edit")}
             onDelete={() => setManageOpen(null)}
@@ -801,6 +804,38 @@ export default function GalleryScreen() {
             onAddToFavorites={() => setSeriesMenuOpen(false)}
             onRemove={() => setSeriesMenuOpen(false)}
             onClose={() => setSeriesMenuOpen(false)}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.saveSheet")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.saveSheet.withFolders")}
+            testID="gallery-show-save-sheet"
+            onPress={() => setSaveSheet("with")}
+          />
+          <Button
+            variant="secondary"
+            label={t("gallery.saveSheet.withoutFolders")}
+            testID="gallery-show-save-sheet-empty"
+            onPress={() => setSaveSheet("without")}
+          />
+          <SaveFolderSheet
+            visible={saveSheet !== null}
+            options={[
+              { id: "gems", name: t("library.folder.gems") },
+              { id: "1", name: t("library.folder.favorites") },
+              ...(saveSheet === "with"
+                ? SAMPLE_LIBRARY_DATA.folders
+                    .filter((f) => f.kind === undefined)
+                    .map((f) => ({ id: f.id, name: f.name }))
+                : []),
+            ]}
+            currentId="gems"
+            onSelect={() => setSaveSheet(null)}
+            onCreate={() => setSaveSheet(null)}
+            onClose={() => setSaveSheet(null)}
           />
         </View>
 

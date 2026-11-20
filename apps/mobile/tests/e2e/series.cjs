@@ -38,18 +38,34 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByText("● 50%").waitFor({ state: "visible" });
 
       // F95: la serie sembrada está en una carpeta propia, así que el corazón arranca vacío.
-      await page.getByRole("button", { name: "Guardar" }).click();
-      await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
-      await page.getByRole("button", { name: "Carpeta" }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Favorito", exact: true }).click();
+      await page.getByRole("button", { name: "En favoritos" }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Guardar", exact: true }).waitFor({ state: "visible" });
+
+      // F96: «Guardar» abre la hoja de carpetas; el corazón ya la dejó en Favoritos y elegir mueve.
+      await page.getByRole("button", { name: "Guardar", exact: true }).click();
+      await page.getByTestId("save-folder-sheet").waitFor({ state: "visible" });
+      await page.getByRole("button", { name: /^Favoritos · actual$/ }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Lectura Nocturna", exact: true }).click(); // mueve: ya no es favorito
+      await page.getByRole("button", { name: "Favorito", exact: true }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Guardar", exact: true }).click();
+      await page.getByRole("button", { name: /^Lectura Nocturna · actual$/ }).waitFor({ state: "visible" });
+      await page.getByTestId("save-folder-new").click();
+      await page.getByTestId("new-folder-name").fill("Pendientes");
+      await page.getByRole("button", { name: "Crear carpeta", exact: true }).click();
+      await page.getByRole("button", { name: "Guardar", exact: true }).click();
+      await page.getByRole("button", { name: /^Pendientes · actual$/ }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Favoritos", exact: true }).click(); // vuelve a Favoritos para el resto
+      await page.getByRole("button", { name: "En favoritos", exact: true }).waitFor({ state: "visible" });
 
       // P-126: el favorito se guarda (con su serie) y no se pierde al salir de la ficha y volver.
       await page.getByText("Capítulo 1: Capítulo 1").click();
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
       await page.goBack();
       await page.getByTestId("screen-series").waitFor({ state: "visible" });
-      await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
-      await page.getByRole("button", { name: "Guardada" }).click();
-      await page.getByRole("button", { name: "Guardar" }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "En favoritos" }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "En favoritos" }).click();
+      await page.getByRole("button", { name: "Favorito", exact: true }).waitFor({ state: "visible" });
 
       assert.equal(
         await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth),

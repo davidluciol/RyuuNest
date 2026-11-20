@@ -209,7 +209,7 @@ async function installModule(page, id) {
       await page.getByTestId("discover-entry-s-dragon").click();
       await page.getByTestId("screen-series").waitFor({ state: "visible" });
       await page.getByTestId("series-favorite").click();
-      await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "En favoritos" }).waitFor({ state: "visible" });
       await page.goto(`${baseURL}/library`);
       await page.getByTestId("library-card-s-dragon").waitFor({ state: "visible" });
       await page.reload();
@@ -225,7 +225,7 @@ async function installModule(page, id) {
       await page.getByTestId("screen-series").waitFor({ state: "visible" });
       await page.getByText("Serie s-dragon").first().waitFor({ state: "visible" });
       await page.getByTestId("series-chapter-ch-1").waitFor({ state: "visible" });
-      await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "En favoritos" }).waitFor({ state: "visible" });
 
       // 5) F39: instalar un 2.º módulo en Fuentes se refleja al volver a Descubrir
       //    (la ruta monta de nuevo); si ese módulo falla, los chips siguen
