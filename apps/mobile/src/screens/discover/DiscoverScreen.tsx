@@ -330,6 +330,12 @@ function DiscoverReady({
                 size={20}
                 color={activeCount > 0 ? colors.accent : colors.textSecondary}
               />
+              {/* F87: contador de activos visible junto al icono. */}
+              {activeCount > 0 ? (
+                <Text style={styles.filterCount} testID="discover-filters-count">
+                  {activeCount}
+                </Text>
+              ) : null}
             </FocusPressable>
           ) : null}
           <FocusPressable
@@ -561,7 +567,8 @@ const styles = StyleSheet.create({
   },
   errorScreen: { flex: 1, backgroundColor: colors.bg },
   errorPicker: { alignSelf: "stretch", alignItems: "flex-end", paddingTop: spacing.md },
-  searchButtonActive: { borderColor: colors.accent },
+  searchButtonActive: { borderColor: colors.accent, flexDirection: "row", gap: spacing.xxs },
+  filterCount: { ...textStyle(typography.labelSm), color: colors.accent },
   searchButton: {
     width: touchTarget.min,
     height: touchTarget.min,

@@ -85,17 +85,53 @@ export function countActiveFilters(values: DiscoverFilterValues): number {
   return Object.values(values).reduce((total, group) => total + group.length, 0);
 }
 
-/** Etiquetas de ejemplo para la galería (las del enunciado de F50; no son de ningún módulo real). */
+/**
+ * Filtros de ejemplo para la galería: los cuatro grupos del enunciado de F87 (SFW/NSFW de
+ * elección única, género, estado y tipo). No son de ningún módulo real; las etiquetas imitan
+ * las que manda un sitio (no son copy de la app, por eso no van en i18n).
+ */
 export const SAMPLE_TAG_FILTERS: readonly DiscoverFilter[] = [
+  {
+    id: "content",
+    label: "Contenido",
+    multi: false,
+    options: [
+      { value: "sfw", label: "SFW" },
+      { value: "nsfw", label: "NSFW (+18)" },
+    ],
+  },
   {
     id: "genre",
     label: "Género",
     multi: true,
     options: [
-      { value: "sekai", label: "Sekai" },
-      { value: "horror", label: "Horror" },
-      { value: "seinen", label: "Seinen" },
-      { value: "shonen", label: "Shonen" },
+      { value: "horror", label: "Terror" },
+      { value: "adventure", label: "Aventura" },
+      { value: "harem", label: "Harem" },
+      { value: "ecchi", label: "Ecchi" },
+    ],
+  },
+  {
+    id: "status",
+    label: "Estado",
+    multi: true,
+    options: [
+      { value: "ongoing", label: "En emisión" },
+      { value: "completed", label: "Finalizado" },
+      { value: "hiatus", label: "En pausa" },
+      { value: "dropped", label: "Abandonado" },
+    ],
+  },
+  {
+    id: "type",
+    label: "Tipo de serie",
+    multi: true,
+    options: [
+      { value: "manga", label: "MANGA" },
+      { value: "manhua", label: "MANHUA" },
+      { value: "manhwa", label: "MANHWA" },
+      { value: "webtoon", label: "WEBTOON" },
+      { value: "comic", label: "CÓMIC" },
     ],
   },
 ];
