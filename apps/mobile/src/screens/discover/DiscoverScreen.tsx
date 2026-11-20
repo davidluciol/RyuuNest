@@ -10,6 +10,7 @@ import {
 import {
   dragonNightColors,
   layoutForWidth,
+  radii,
   spacing,
   touchTarget,
   typography,
@@ -20,13 +21,14 @@ import EmptyState from "../../components/EmptyState";
 import ErrorState from "../../components/ErrorState";
 import LibraryCard from "../../components/LibraryCard";
 import LoadingState from "../../components/LoadingState";
+import FocusPressable from "../../components/FocusPressable";
 import ModulePicker from "../../components/ModulePicker";
 import SectionHeader from "../../components/SectionHeader";
 import TagFilterSheet from "../../components/TagFilterSheet";
 import TextField from "../../components/TextField";
 import { recentCardStyle } from "../../components/recentCardStyles";
 import { kindLabel } from "../../components/kindLabel";
-import { Search } from "../../icons";
+import { Search, SlidersHorizontal } from "../../icons";
 import { t } from "../../i18n";
 import {
   countActiveFilters,
@@ -191,7 +193,6 @@ export default function DiscoverScreen({
       nsfwVisible={nsfwVisible}
       sidePadding={layout.margin}
       gap={layout.gap}
-      onModuleSelect={onModuleSelect}
       onSearch={onSearch}
       more={more}
       onLoadMore={onLoadMore}
@@ -210,7 +211,6 @@ interface DiscoverReadyProps {
   nsfwVisible: boolean;
   sidePadding: number;
   gap: number;
-  onModuleSelect?: (id: string) => void;
   onSearch?: (query: string) => void;
   more: DiscoverMoreStatus;
   onLoadMore?: () => void;
@@ -227,7 +227,6 @@ function DiscoverReady({
   nsfwVisible,
   sidePadding,
   gap,
-  onModuleSelect,
   onSearch,
   more,
   onLoadMore,
@@ -303,7 +302,7 @@ function DiscoverReady({
           if (remaining < layoutMeasurement.height && more === "idle") onLoadMore?.();
         }}
       >
-        {/* Búsqueda del módulo + selector (RF-9, RF-10). */}
+        {/* F86 (variante B) + F88: barra y lupa de 48×48; el selector de módulo está en la cabecera. */}
         <View style={styles.topRow}>
           <View style={styles.searchWrap}>
             <TextField
@@ -313,37 +312,34 @@ function DiscoverReady({
               onSubmitEditing={() => onSearch?.(draft.trim())}
               returnKeyType="search"
               accessibilityLabel={t("discover.search.placeholder")}
-              leadingIcon={<Search size={20} color={colors.textSecondary} />}
-            />
-          </View>
-          <ModulePicker
-            modules={modules.map((module) => ({ id: module.id, name: module.name }))}
-            selectedId={selected.id}
-            onSelect={(id) => onModuleSelect?.(id)}
-          />
-        </View>
-        <View style={styles.actionsRow}>
-          <View style={styles.actionItem}>
-            <Button
-              variant="secondary"
-              label={t("discover.search.submit")}
-              onPress={() => onSearch?.(draft.trim())}
             />
           </View>
           {ready.filters.length > 0 ? (
-            <View style={styles.actionItem}>
-              <Button
-                variant="secondary"
-                label={
-                  activeCount > 0
-                    ? t("discover.filter.buttonCount", { count: activeCount })
-                    : t("discover.filter.button")
-                }
-                onPress={() => setFiltersOpen(true)}
-                testID="discover-filters-button"
+            <FocusPressable
+              accessibilityRole="button"
+              accessibilityLabel={
+                activeCount > 0
+                  ? t("discover.filter.buttonCount", { count: activeCount })
+                  : t("discover.filter.button")
+              }
+              onPress={() => setFiltersOpen(true)}
+              style={[styles.searchButton, activeCount > 0 && styles.searchButtonActive]}
+              testID="discover-filters-button"
+            >
+              <SlidersHorizontal
+                size={20}
+                color={activeCount > 0 ? colors.accent : colors.textSecondary}
               />
-            </View>
+            </FocusPressable>
           ) : null}
+          <FocusPressable
+            accessibilityRole="button"
+            accessibilityLabel={t("discover.search.submit")}
+            onPress={() => onSearch?.(draft.trim())}
+            style={styles.searchButton}
+          >
+            <Search size={20} color={colors.textPrimary} />
+          </FocusPressable>
         </View>
         <TagFilterSheet
           visible={filtersOpen}
@@ -565,8 +561,17 @@ const styles = StyleSheet.create({
   },
   errorScreen: { flex: 1, backgroundColor: colors.bg },
   errorPicker: { alignSelf: "stretch", alignItems: "flex-end", paddingTop: spacing.md },
-  actionsRow: { flexDirection: "row", gap: spacing.sm },
-  actionItem: { flex: 1 },
+  searchButtonActive: { borderColor: colors.accent },
+  searchButton: {
+    width: touchTarget.min,
+    height: touchTarget.min,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: radii.control,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   searchWrap: {
     flex: 1,
     minWidth: 0,

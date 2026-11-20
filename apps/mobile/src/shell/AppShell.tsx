@@ -10,13 +10,13 @@ export default function AppShell({
   section,
   children,
   style,
-  onSearch,
+  right,
 }: {
   section: string;
   children: React.ReactNode;
   style?: ViewStyle;
-  /** Búsqueda global de la cabecera (F60). */
-  onSearch?: (query: string) => void;
+  /** Contenido de la derecha de la cabecera (F88: selector de módulo en Aventuras). */
+  right?: React.ReactNode;
 }) {
   return (
     <View testID="app-shell" style={[styles.screen, style]}>
@@ -24,7 +24,7 @@ export default function AppShell({
         <Header
           title={t("shell.brand")}
           subtitle={section}
-          {...(onSearch === undefined ? {} : { onSearch })}
+          right={right}
           leading={<DragonMarker size={spacing.xl} color={dragonNightColors.textSecondary} />}
         />
       </View>

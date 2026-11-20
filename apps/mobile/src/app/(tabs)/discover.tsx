@@ -2,8 +2,10 @@ import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect } from "react";
 
 import { resolveErrorReporter } from "../../data/errorLog";
+import { clearModuleSwitcher, publishModuleSwitcher } from "../../navigation/moduleSwitcherStore";
 import { destinationRoutes } from "../../navigation/routes";
 import DiscoverScreen from "../../screens/discover/DiscoverScreen";
+import { visibleDiscoverModules } from "../../screens/discover/discoverFixtures";
 import { useDiscoverData } from "../../screens/discover/useDiscoverData";
 import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
 
@@ -31,6 +33,23 @@ export default function DiscoverRoute() {
     resolveReporter: resolveErrorReporter,
     nsfwVisible: settings.nsfwVisible,
   });
+
+  // F88: el selector de módulo vive en la cabecera mientras Aventuras tenga módulos listos.
+  useEffect(() => {
+    if (view.status !== "ready") {
+      clearModuleSwitcher();
+      return;
+    }
+    publishModuleSwitcher({
+      modules: visibleDiscoverModules(view.ready.modules, settings.nsfwVisible).map((module) => ({
+        id: module.id,
+        name: module.name,
+      })),
+      selectedId: view.ready.selectedModuleId,
+      onSelect: selectModule,
+    });
+  }, [view, settings.nsfwVisible, selectModule]);
+  useEffect(() => clearModuleSwitcher, []);
 
   // F60: la búsqueda de la cabecera llega como `q`; `ts` cambia en cada envío.
   const { q, ts } = useLocalSearchParams<{ q?: string; ts?: string }>();

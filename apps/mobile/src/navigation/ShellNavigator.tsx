@@ -7,6 +7,7 @@ import { dragonNightColors } from "@ryuunest/ui-tokens";
 import BottomNav from "../components/BottomNav";
 import { BOTTOM_NAV_DESTINATIONS, type BottomNavDestination } from "../components/shellStyles";
 import AppShell from "../shell/AppShell";
+import HeaderModuleSwitcher from "./HeaderModuleSwitcher";
 import { destinationLabel, shellDestination } from "./routes";
 
 export default function ShellNavigator() {
@@ -16,7 +17,10 @@ export default function ShellNavigator() {
   if (destination === null) return null;
   return (
     <SafeAreaView edges={["top", "left", "right", "bottom"]} style={styles.screen}>
-      <AppShell section={destinationLabel(destination)}>
+      <AppShell
+        section={destinationLabel(destination)}
+        right={destination === "discover" ? <HeaderModuleSwitcher /> : undefined}
+      >
         <Tabs
           backBehavior="history"
           screenOptions={{ headerShown: false, animation: "none", sceneStyle: styles.scene }}
