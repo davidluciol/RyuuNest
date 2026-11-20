@@ -12,6 +12,7 @@ import {
   type SourcesService,
 } from "@ryuunest/mobile-src/screens/sources/sourcesData";
 import { reportSourcesError } from "@ryuunest/mobile-src/screens/sources/sourcesErrors";
+import type { RecommendedView } from "@ryuunest/mobile-src/screens/sources/sourcesFixtures";
 import {
   INITIAL_SOURCES_FLOW,
   sourcesFlowReducer,
@@ -38,6 +39,9 @@ export interface SourcesState {
   notice: string | null;
   controller: SourcesController | null;
   retry: () => void;
+  /** F44: «Recomendados», descargado al abrir Portales y al pedirlo. */
+  recommended: RecommendedView;
+  refreshRecommended: () => void;
 }
 
 export function useSourcesData(): SourcesState {
@@ -100,5 +104,18 @@ export function useSourcesData(): SourcesState {
 
   const retry = useCallback(() => setNonce((value) => value + 1), []);
 
-  return { view, flow, notice, controller, retry };
+  const [recommended, setRecommended] = useState<RecommendedView>({ status: "loading" });
+  const refreshRecommended = useCallback(() => {
+    setRecommended({ status: "loading" });
+    service.loadRecommended().then(
+      (repos) => setRecommended({ status: "ready", repos }),
+      (error: unknown) => {
+        reportSourcesError(reporter, "recommended", error);
+        setRecommended({ status: "offline" });
+      },
+    );
+  }, [service, reporter]);
+  useEffect(refreshRecommended, [refreshRecommended]);
+
+  return { view, flow, notice, controller, retry, recommended, refreshRecommended };
 }

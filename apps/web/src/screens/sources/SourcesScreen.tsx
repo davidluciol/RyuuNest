@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 import { t } from "@ryuunest/i18n";
-import type { InstallPreview, UpdatePreview } from "@ryuunest/core";
+import { isRecommendedAdded, type InstallPreview, type UpdatePreview } from "@ryuunest/core";
+import type { RecommendedView } from "@ryuunest/mobile-src/screens/sources/sourcesFixtures";
 import { kindLabel } from "@ryuunest/mobile-src/components/kindLabel";
 import type { SourceModule, SourcesData } from "@ryuunest/mobile-src/screens/sources/sourcesData";
 import {
@@ -60,6 +61,15 @@ export default function SourcesScreen() {
 
       {view.status === "ready" && controller !== null && (
         <SourcesReady data={view.data} controller={controller} />
+      )}
+
+      {view.status === "ready" && controller !== null && (
+        <RecommendedSection
+          view={state.recommended}
+          repos={view.data.repos}
+          onRefresh={state.refreshRecommended}
+          onAdd={(url) => controller.openAddRepo(url)}
+        />
       )}
 
       {notice !== null && controller !== null && (
@@ -132,7 +142,7 @@ function SourcesReady({
         title={t(data.officialRepoDismissed ? "sources.empty.dismissedTitle" : "sources.empty.title")}
         message={t(data.officialRepoDismissed ? "sources.empty.dismissedMessage" : "sources.empty.message")}
         actionLabel={t("actions.addRepository")}
-        onAction={controller.openAddRepo}
+        onAction={() => controller.openAddRepo()}
         testID="sources-empty"
       />
     );
@@ -151,7 +161,7 @@ function SourcesReady({
           variant="primary"
           label={t("actions.addRepository")}
           icon={<Plus size={18} aria-hidden />}
-          onClick={controller.openAddRepo}
+          onClick={() => controller.openAddRepo()}
           testID="sources-add-repo"
         />
       </div>
@@ -267,7 +277,7 @@ function AddRepoDialog({
   flow: Extract<SourcesFlow, { sheet: "add-repo" }>;
   controller: SourcesController;
 }) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(flow.url ?? "");
   return (
     <Dialog title={t("sources.add.title")} onClose={controller.close} testID="add-repo-dialog">
       <p className="t-body-md sources-dialog-text">{t("sources.add.description")}</p>
@@ -286,6 +296,71 @@ function AddRepoDialog({
         testID="add-repo-submit"
       />
     </Dialog>
+  );
+}
+
+/** F44: «Recomendados» (P-179); un fallo de red no bloquea la pantalla. */
+function RecommendedSection({
+  view,
+  repos,
+  onRefresh,
+  onAdd,
+}: {
+  view: RecommendedView;
+  repos: readonly { url: string }[];
+  onRefresh: () => void;
+  onAdd: (url: string) => void;
+}) {
+  return (
+    <section className="sources-section" aria-label={t("sources.section.recommended")} data-testid="sources-recommended">
+      <h2 className="t-title-lg">{t("sources.section.recommended")}</h2>
+      {view.status === "loading" && <LoadingState label={t("sources.recommended.loading")} testID="recommended-loading" />}
+      {view.status === "offline" && (
+        <EmptyState
+          title={t("sources.recommended.offlineTitle")}
+          message={t("sources.recommended.offlineMessage")}
+          actionLabel={t("actions.retry")}
+          onAction={onRefresh}
+          testID="recommended-offline"
+        />
+      )}
+      {view.status === "ready" && view.repos.length === 0 && (
+        <EmptyState
+          title={t("sources.recommended.emptyTitle")}
+          actionLabel={t("sources.recommended.refresh")}
+          onAction={onRefresh}
+          testID="recommended-empty"
+        />
+      )}
+      {view.status === "ready" && view.repos.length > 0 && (
+        <>
+          <ul className="sources-list">
+            {view.repos.map((repo) => (
+              <li key={repo.indexUrl} className="sources-row" data-testid={`recommended-${repo.indexUrl}`}>
+                <div className="sources-row-main">
+                  <span className="t-body-lg sources-row-title">{repo.name}</span>
+                  <span className="t-body-sm sources-row-meta">{repo.description}</span>
+                  <span className="t-body-sm sources-row-meta">{repo.indexUrl}</span>
+                  {repo.nsfw && (
+                    <span className="sources-row-badges">
+                      <Badge label={t(BADGE_LABEL_KEYS.nsfw)} tone="neutral" />
+                    </span>
+                  )}
+                </div>
+                <div className="sources-row-actions">
+                  {isRecommendedAdded(repos, repo.indexUrl) ? (
+                    <Button variant="secondary" label={t("sources.recommended.added")} disabled />
+                  ) : (
+                    <Button variant="secondary" label={t("sources.recommended.add")} onClick={() => onAdd(repo.indexUrl)} />
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+          <Button variant="secondary" label={t("sources.recommended.refresh")} onClick={onRefresh} testID="recommended-refresh" />
+        </>
+      )}
+    </section>
   );
 }
 

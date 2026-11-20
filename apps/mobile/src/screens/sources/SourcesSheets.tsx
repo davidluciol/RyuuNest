@@ -34,12 +34,15 @@ export interface SourcesSheetsProps {
 /** Hoja propia: al cerrarse se desmonta y el campo no arrastra la URL anterior. */
 function AddRepoSheet({
   error,
+  initialUrl = "",
   controller,
 }: {
   error: string | null;
+  /** F44: URL de un recomendado; el usuario la revisa y confirma. */
+  initialUrl?: string | undefined;
   controller: SourcesController;
 }) {
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState(initialUrl);
   return (
     <SheetModal
       visible
@@ -75,7 +78,7 @@ export default function SourcesSheets({ flow, controller, modules }: SourcesShee
   if (flow.sheet === "none") return null;
 
   if (flow.sheet === "add-repo") {
-    return <AddRepoSheet error={flow.error} controller={controller} />;
+    return <AddRepoSheet error={flow.error} initialUrl={flow.url} controller={controller} />;
   }
 
   if (flow.sheet === "install") {

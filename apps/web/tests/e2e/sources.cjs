@@ -14,6 +14,9 @@ const { installFakeExtension } = require("./fakeExtension.cjs");
 const baseURL = process.env.WEB_URL || "http://127.0.0.1:4173";
 const REPO_HOST = "raw.githubusercontent.com";
 const output = path.resolve(__dirname, "../../../../docs/capturasF24");
+const RECOMMENDED = JSON.stringify([
+  { name: "Repo de prueba", indexUrl: "https://repo.test/index.json", description: "Fixture F44", nsfw: true },
+]);
 
 (async () => {
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
@@ -35,6 +38,10 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF24");
           external.push(url.href);
           return route.abort();
         }
+        // F44: `recommended.json` se sirve desde un fixture (nunca el archivo real).
+        if (url.pathname.endsWith("/recommended.json")) {
+          return route.fulfill({ contentType: "application/json", body: RECOMMENDED });
+        }
         return route.continue();
       });
 
@@ -44,6 +51,14 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF24");
       // P-85: sin repos, se registra solo el oficial y listan sus módulos.
       await page.locator('[data-testid^="repo-"]').first().waitFor({ state: "visible" });
       await page.getByTestId("module-zonatmo").waitFor({ state: "visible" });
+
+      // F44: «Recomendados» se descarga al abrir Portales; «Añadir» rellena la URL
+      // y no añade nada hasta confirmar. La entrada NSFW va marcada.
+      const recommended = page.getByTestId("recommended-https://repo.test/index.json");
+      await recommended.getByText("NSFW").waitFor({ state: "visible" });
+      await recommended.getByRole("button", { name: "Añadir" }).click();
+      assert.equal(await page.getByTestId("add-repo-url").inputValue(), "https://repo.test/index.json");
+      await page.getByTestId("add-repo-dialog").locator("button[aria-label]").first().click();
 
       // Diálogo "Añadir repositorio": URL inválida muestra su error y no rompe.
       await page.getByTestId("sources-add-repo").click();

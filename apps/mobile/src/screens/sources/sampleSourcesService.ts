@@ -1,7 +1,7 @@
 import { ModuleError, type InstallPreview } from "@ryuunest/core";
 
 import type { SourceModule, SourcesData, SourcesService, SourcesUpdateResult } from "./sourcesData";
-import { SAMPLE_SOURCES_DATA } from "./sourcesFixtures";
+import { SAMPLE_RECOMMENDED, SAMPLE_SOURCES_DATA } from "./sourcesFixtures";
 
 /**
  * F16 — `SourcesService` en memoria para la web (sin SQLite: F14c, P-79) y la
@@ -189,5 +189,7 @@ export function createSampleSourcesService(
         return message === undefined ? rest : { ...rest, lastError: message };
       });
     },
+
+    loadRecommended: async () => SAMPLE_RECOMMENDED.map((repo) => ({ ...repo })),
   };
 }

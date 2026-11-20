@@ -18,7 +18,7 @@ import {
 } from "./sourcesData";
 import { reportSourcesError } from "./sourcesErrors";
 import { INITIAL_SOURCES_FLOW, sourcesFlowReducer, type SourcesFlow } from "./sourcesFlow";
-import type { SourcesView } from "./sourcesFixtures";
+import type { RecommendedView, SourcesView } from "./sourcesFixtures";
 
 /**
  * F16 — estado de la pantalla Fuentes: elige el servicio por plataforma (en el
@@ -59,6 +59,9 @@ export interface SourcesState {
   /** `null` mientras carga el servicio. */
   controller: SourcesController | null;
   retry: () => void;
+  /** F44: sección «Recomendados»; se descarga al abrir Portales y al pedirlo. */
+  recommended: RecommendedView;
+  refreshRecommended: () => void;
 }
 
 export function useSourcesData(): SourcesState {
@@ -131,5 +134,20 @@ export function useSourcesData(): SourcesState {
 
   const retry = useCallback(() => setNonce((value) => value + 1), []);
 
-  return { view, flow, notice, controller, retry };
+  // F44 (RNF-5): solo al abrir Portales (servicio listo) o al pulsar «Actualizar».
+  const [recommended, setRecommended] = useState<RecommendedView>({ status: "loading" });
+  const refreshRecommended = useCallback(() => {
+    if (service === null) return;
+    setRecommended({ status: "loading" });
+    service.loadRecommended().then(
+      (repos) => setRecommended({ status: "ready", repos }),
+      (error: unknown) => {
+        reportSourcesError(reporterRef.current, "recommended", error);
+        setRecommended({ status: "offline" });
+      },
+    );
+  }, [service]);
+  useEffect(refreshRecommended, [refreshRecommended]);
+
+  return { view, flow, notice, controller, retry, recommended, refreshRecommended };
 }

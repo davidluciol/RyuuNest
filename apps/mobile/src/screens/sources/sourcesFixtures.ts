@@ -1,4 +1,4 @@
-import type { MediaKind } from "@ryuunest/core";
+import type { MediaKind, RecommendedRepo } from "@ryuunest/core";
 
 import type { SourceModule, SourcesData } from "./sourcesData";
 
@@ -135,3 +135,25 @@ export const SAMPLE_SOURCES_DATA: SourcesData = {
     sampleModule({ id: "portal-fresno", name: "Portal Fresno", kinds: ["comic"] }),
   ],
 };
+
+/** F44: estado de la sección «Recomendados»; un fallo no bloquea la pantalla. */
+export type RecommendedView =
+  | { status: "loading" }
+  | { status: "ready"; repos: readonly RecommendedRepo[] }
+  | { status: "offline" };
+
+/** F44: «Recomendados» de ejemplo (web y galería). Inventados, sin red. */
+export const SAMPLE_RECOMMENDED: readonly RecommendedRepo[] = [
+  {
+    name: "Repositorio Comunitario B",
+    indexUrl: "https://repo-b.test/index.json",
+    description: "Portales de manhwa y cómic",
+    nsfw: false,
+  },
+  {
+    name: "Repositorio Nocturno",
+    indexUrl: "https://repo-nocturno.test/index.json",
+    description: "Portales para adultos",
+    nsfw: true,
+  },
+];

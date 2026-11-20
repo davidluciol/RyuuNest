@@ -56,7 +56,11 @@ import RepoCard from "../components/RepoCard";
 import { kindLabel } from "../components/kindLabel";
 import SourcesScreen from "../screens/sources/SourcesScreen";
 import { INITIAL_SOURCES_FLOW } from "../screens/sources/sourcesFlow";
-import { EMPTY_SOURCES_DATA, SAMPLE_SOURCES_DATA } from "../screens/sources/sourcesFixtures";
+import {
+  EMPTY_SOURCES_DATA,
+  SAMPLE_RECOMMENDED,
+  SAMPLE_SOURCES_DATA,
+} from "../screens/sources/sourcesFixtures";
 import SettingsScreen from "../screens/settings/SettingsScreen";
 import {
   NO_LOCK_SETTINGS_DATA,
@@ -593,6 +597,7 @@ export default function GalleryScreen() {
             view={{ status: "ready", data: SAMPLE_SOURCES_DATA }}
             flow={INITIAL_SOURCES_FLOW}
             controller={null}
+            recommended={{ status: "ready", repos: SAMPLE_RECOMMENDED }}
           />
         </View>
         <View style={styles.shellPreview}>
@@ -603,6 +608,23 @@ export default function GalleryScreen() {
             }}
             flow={INITIAL_SOURCES_FLOW}
             controller={null}
+            recommended={{ status: "offline" }}
+          />
+        </View>
+        <View style={styles.shellPreview}>
+          <SourcesScreen
+            view={{ status: "ready", data: EMPTY_SOURCES_DATA }}
+            flow={INITIAL_SOURCES_FLOW}
+            controller={null}
+            recommended={{ status: "ready", repos: [] }}
+          />
+        </View>
+        <View style={styles.shellPreview}>
+          <SourcesScreen
+            view={{ status: "ready", data: EMPTY_SOURCES_DATA }}
+            flow={INITIAL_SOURCES_FLOW}
+            controller={null}
+            recommended={{ status: "loading" }}
           />
         </View>
 
