@@ -29,9 +29,30 @@ import {
  */
 
 const MODULES: DiscoverModule[] = [
-  { id: "m-a", name: "Módulo de ejemplo A", nsfw: false, hasPopular: true, hasLatest: true },
-  { id: "m-b", name: "Módulo de ejemplo B", nsfw: false, hasPopular: false, hasLatest: true },
-  { id: "m-x", name: "Módulo para mayores", nsfw: true, hasPopular: true, hasLatest: true },
+  {
+    id: "m-a",
+    name: "Módulo de ejemplo A",
+    nsfw: false,
+    hasPopular: true,
+    hasLatest: true,
+    paginates: true,
+  },
+  {
+    id: "m-b",
+    name: "Módulo de ejemplo B",
+    nsfw: false,
+    hasPopular: false,
+    hasLatest: true,
+    paginates: true,
+  },
+  {
+    id: "m-x",
+    name: "Módulo para mayores",
+    nsfw: true,
+    hasPopular: true,
+    hasLatest: true,
+    paginates: true,
+  },
 ];
 
 function entry(overrides: Partial<DiscoverEntry> & { seriesId: string }): DiscoverEntry {
@@ -100,7 +121,14 @@ describe("página del catálogo", () => {
 
 describe("reconcileSelectedModuleId (RF-35: el selector sigue al ajuste NSFW)", () => {
   const ONLY_NSFW: DiscoverModule[] = [
-    { id: "m-x", name: "Solo adultos", nsfw: true, hasPopular: true, hasLatest: true },
+    {
+      id: "m-x",
+      name: "Solo adultos",
+      nsfw: true,
+      hasPopular: true,
+      hasLatest: true,
+      paginates: true,
+    },
   ];
 
   it("con solo módulos NSFW y el filtro apagado no hay selección", () => {
@@ -215,7 +243,9 @@ describe("recarga al cambiar filtros (F50)", () => {
   it("la selección se refleja al instante en la vista, sin esperar a los datos", () => {
     const next = withActiveFilters(ready, { genre: ["horror"] });
     expect(next.status === "ready" && next.ready.activeFilters).toEqual({ genre: ["horror"] });
-    expect(withActiveFilters({ status: "loading" }, { genre: ["a"] })).toEqual({ status: "loading" });
+    expect(withActiveFilters({ status: "loading" }, { genre: ["a"] })).toEqual({
+      status: "loading",
+    });
   });
 });
 

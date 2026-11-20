@@ -41,6 +41,8 @@ export const MODULE_CAPABILITIES = [
   "home",
   "list",
   "filters",
+  "paginated",
+  "sortLatest",
 ] as const satisfies readonly ModuleCapability[];
 
 export interface ValidateOptions {

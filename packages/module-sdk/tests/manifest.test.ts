@@ -85,6 +85,13 @@ describe("manifest · válido", () => {
     expect(result.ok).toBe(true);
   });
 
+  it("acepta `paginated` y `sortLatest` (F83: paginación y orden más reciente declarados)", () => {
+    const capabilities = ["search", "paginated", "sortLatest"];
+    const result = validateManifest({ ...validManifest, capabilities });
+
+    expect(result.ok).toBe(true);
+  });
+
   it("acepta un manifest que solo declara `details` y `pages`", () => {
     expect(validateManifest({ ...validManifest, capabilities: ["details", "pages"] }).ok).toBe(
       true,

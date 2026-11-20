@@ -29,7 +29,7 @@ function scriptPackage(): InstalledPackage {
       runtime: "script",
       entry: "module.js",
       baseUrl: "https://sitio.test/",
-      capabilities: ["search", "popular"],
+      capabilities: ["search", "popular", "paginated"],
       permissions: { domains: ["sitio.test"] },
       kinds: ["manga"],
       lang: "es",
