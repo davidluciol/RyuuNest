@@ -298,7 +298,7 @@ function AddRepoDialog({
   );
 }
 
-/** F44: «Recomendados» (P-178); un fallo de red no bloquea la pantalla. */
+/** F44: «Recomendados» (P-179); un fallo de red no bloquea la pantalla. */
 function RecommendedSection({
   view,
   onRefresh,

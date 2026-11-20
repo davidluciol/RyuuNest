@@ -1,5 +1,5 @@
 /**
- * F44 — «Recomendados» (P-178): `recommended.json` del repo oficial, una lista de
+ * F44 — «Recomendados» (P-179): `recommended.json` del repo oficial, una lista de
  * repositorios que el autor aprueba o recomienda. Solo se descarga al abrir
  * Portales o a petición del usuario (RNF-5) y **no instala nada**: añadir uno pasa
  * por «Añadir repositorio» con confirmación manual.

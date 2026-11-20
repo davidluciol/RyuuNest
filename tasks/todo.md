@@ -296,7 +296,7 @@ Dep: F33 · M · `apps/web/*`
 
 ### F44 «Recomendados» como índice remoto `[BE/FE · Alta · N4]`
 
-- [x] Decisión del humano (2026-11-20, P-178): `recommended.json` en `RyuuNest-Models` junto a `index.json`, lista de `{ name, indexUrl, description, nsfw }`; SPEC **RNF-5** con la excepción y **RF-2b** nuevo
+- [x] Decisión del humano (2026-11-20, P-179): `recommended.json` en `RyuuNest-Models` junto a `index.json`, lista de `{ name, indexUrl, description, nsfw }`; SPEC **RNF-5** con la excepción y **RF-2b** nuevo
 - [x] Núcleo: `parseRecommended`/`fetchRecommended` (`packages/core/src/repo/recommended.ts`), tolerancia por entrada como T38, fixture guardado
 - [x] Portales (móvil y `apps/web`): sección «Recomendados» con cargando / lista / sin conexión / vacío y «Actualizar recomendados»; se descarga solo al abrir Portales o al pulsarlo; «Añadir» abre «Añadir repositorio» con la URL rellena (confirmación manual); NSFW con insignia. Estados en la galería (vista de Portales)
 - [ ] 🧍 Fusionar el PR de `recommended.json` en `RyuuNest-Models` y verificar en el S25 (agent-device) la lista real
