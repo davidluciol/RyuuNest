@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
-import { spacing, typography } from "@ryuunest/ui-tokens";
+import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "./Badge";
 import Button from "./Button";
+import { TriangleAlert } from "../icons";
 import { moduleRowStyle, moduleRowTextColors } from "./moduleRowStyles";
 import { textStyle } from "./textStyle";
 
@@ -19,6 +20,8 @@ export interface ModuleRowProps {
   meta: string;
   /** Etiquetas ya traducidas; el tope de señales lo aplica quien las calcula. */
   badges?: readonly string[];
+  /** F42/N9: permisos ya traducidos («Ejecuta código», «Para adultos»), con icono de aviso. */
+  permissions?: readonly string[];
   /** Último error del módulo (RF-5). */
   error?: string;
   /** F21: texto secundario bajo los metadatos (p. ej. «Instálalo desde Fuentes»). */
@@ -36,6 +39,7 @@ export default function ModuleRow({
   name,
   meta,
   badges = [],
+  permissions = [],
   error,
   hint,
   actionLabel,
@@ -60,6 +64,19 @@ export default function ModuleRow({
             ))}
           </View>
         ) : null}
+        {permissions.length > 0 ? (
+          <View
+            style={styles.permissions}
+            testID={testID === undefined ? undefined : `${testID}-permissions`}
+          >
+            {permissions.map((label) => (
+              <View key={label} style={styles.permission}>
+                <TriangleAlert size={spacing.sm} color={dragonNightColors.progress} />
+                <Text style={[styles.meta, { color: text.meta }]}>{label}</Text>
+              </View>
+            ))}
+          </View>
+        ) : null}
         {error ? <Text style={[styles.meta, { color: text.error }]}>{error}</Text> : null}
       </View>
       {actionLabel === undefined ? null : (
@@ -79,5 +96,7 @@ const styles = StyleSheet.create({
   texts: { flex: 1, minWidth: 0, gap: spacing.xxs },
   name: { ...textStyle(typography.labelLg) },
   meta: { ...textStyle(typography.bodySm) },
+  permissions: { flexDirection: "row", flexWrap: "wrap", columnGap: spacing.sm },
+  permission: { flexDirection: "row", alignItems: "center", gap: spacing.xxs },
   badges: { flexDirection: "row", flexWrap: "wrap", gap: spacing.xs },
 });

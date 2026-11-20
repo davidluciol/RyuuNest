@@ -25,6 +25,26 @@ export const ROW_ACTION_KEYS: Record<"install" | "manage", string> = {
   manage: "sources.module.manage",
 };
 
+/** F42/N9: permisos de un módulo (RF-3); van en su propia línea, no entre las insignias. */
+export type ModulePermission = "script" | "nsfw";
+
+export const PERMISSION_LABEL_KEYS: Record<ModulePermission, string> = {
+  script: "sources.permission.script",
+  nsfw: "sources.permission.nsfw",
+};
+
+export function modulePermissions(module: SourceModule): ModulePermission[] {
+  const permissions: ModulePermission[] = [];
+  if (module.runtime === "script") permissions.push("script");
+  if (module.nsfw) permissions.push("nsfw");
+  return permissions;
+}
+
+/** Insignias de estado (error, actualización…) sin los permisos, que ya salen aparte. */
+export function moduleStatusBadges(module: SourceModule): ModuleBadge[] {
+  return moduleBadges(module).filter((badge) => badge !== "script" && badge !== "nsfw");
+}
+
 /** F61: etiqueta de un módulo que esta versión de la app no puede instalar. */
 export const INCOMPATIBLE_LABEL_KEY = "sources.incompatible.label";
 

@@ -34,8 +34,10 @@ import {
   BADGE_LABEL_KEYS,
   INCOMPATIBLE_LABEL_KEY,
   ROW_ACTION_KEYS,
-  moduleBadges,
+  PERMISSION_LABEL_KEYS,
+  modulePermissions,
   moduleRowAction,
+  moduleStatusBadges,
 } from "./sourcesView";
 
 /**
@@ -130,9 +132,6 @@ export default function SourcesScreen({
       >
         <View style={styles.header}>
           <View style={styles.headerTexts}>
-            <Text accessibilityRole="header" style={styles.title}>
-              {t("nav.sources")}
-            </Text>
             {modules.length > 0 ? (
               <Text style={styles.summary}>
                 {t("sources.summary", {
@@ -228,7 +227,10 @@ export default function SourcesScreen({
                       testID={`module-${module.id}`}
                       name={module.name}
                       meta={moduleMeta(module)}
-                      badges={moduleBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
+                      badges={moduleStatusBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
+                      permissions={modulePermissions(module).map((permission) =>
+                        t(PERMISSION_LABEL_KEYS[permission]),
+                      )}
                       {...(module.lastError === undefined || module.status !== "installed"
                         ? {}
                         : { error: module.lastError })}
@@ -330,7 +332,6 @@ const styles = StyleSheet.create({
   },
   header: { gap: spacing.sm },
   headerTexts: { gap: spacing.xxs },
-  title: { ...textStyle(typography.headlineMd), color: colors.textPrimary },
   summary: { ...textStyle(typography.labelMd), color: colors.accent },
   subtitle: { ...textStyle(typography.bodySm), color: colors.textSecondary },
   section: { gap: spacing.xs },

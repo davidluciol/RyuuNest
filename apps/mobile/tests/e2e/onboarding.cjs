@@ -59,7 +59,7 @@ async function prepare(page) {
       // Paso 2: la URL del repo oficial ya puesta; Continuar añade el repo.
       await scope.getByRole("button", { name: "Empezar" }).click();
       await scope.getByTestId("onboarding-step-2").waitFor({ state: "visible" });
-      const urlField = scope.getByLabel("URL del índice");
+      const urlField = scope.getByLabel("Enlace del repositorio");
       assert.match(await urlField.inputValue(), /^https:\/\/.*index\.json$/, `URL sugerida @${width}`);
 
       // F21b: «Importar respaldo» se ofrece en el paso 2 (en web/galería
