@@ -1,5 +1,5 @@
 import FocusPressable from "./FocusPressable";
-import { Modal, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Modal, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { X } from "../icons";
@@ -16,6 +16,7 @@ import { textStyle } from "./textStyle";
  */
 
 const colors = dragonNightColors;
+const BODY_MAX = spacing.xl * 16;
 
 export interface SheetModalProps {
   visible: boolean;
@@ -26,6 +27,8 @@ export interface SheetModalProps {
   /** La hoja entra deslizando; el lector la pide sin animación. */
   animated?: boolean;
   testID?: string;
+  /** Acciones fijas bajo el contenido desplazable (siempre visibles). */
+  footer?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -36,8 +39,10 @@ export default function SheetModal({
   busy = false,
   animated = true,
   testID,
+  footer,
   children,
 }: SheetModalProps) {
+  const { height } = useWindowDimensions();
   const close = () => {
     if (!busy) onClose();
   };
@@ -72,9 +77,14 @@ export default function SheetModal({
                 <X size={spacing.md} color={colors.textSecondary} />
               </FocusPressable>
             </View>
-            <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}>
+            <ScrollView
+              // Con pie fijo, el contenido cede altura para que las acciones quepan en pantalla (S25).
+              style={[styles.body, footer ? { maxHeight: Math.min(BODY_MAX, height / 2) } : null]}
+              contentContainerStyle={styles.bodyContent}
+            >
               {children}
             </ScrollView>
+            {footer}
           </Sheet>
         </FocusPressable>
       </FocusPressable>
@@ -102,6 +112,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  body: { maxHeight: spacing.xl * 16 },
+  body: { maxHeight: BODY_MAX },
   bodyContent: { gap: spacing.sm, paddingBottom: spacing.xs },
 });

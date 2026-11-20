@@ -336,10 +336,10 @@ Dep: F50 · S
 
 > Origen (petición del humano, 2026-11-16: «revisarlo con un especialista»). Decisión: crítica con las skills de diseño/UX y 2–3 variantes; luego aprobación humana.
 
-- [ ] Barra de búsqueda visible por defecto + botón de búsqueda con icono más pequeño y rápido de pulsar (área ≥48×48) + botón de filtros oculto por defecto junto a él
-- [ ] 2–3 variantes con crítica (jerarquía, alcance con el pulgar, TV/D-pad) y recomendación; registrar diferencias en `design/stitch/DIFFS.md`
-- [ ] 🧍 El humano elige la variante antes de F87/F88
-- Verif: capturas de las variantes + decisión en `MEMORY.md`
+- [x] Barra de búsqueda visible por defecto + botón de búsqueda con icono de 48×48 (`touchTarget.min`) + botón de filtros solo con icono junto a la lupa (aparece cuando el módulo declara filtros; **cambiado por P-177:** ya no nace oculto)
+- [x] 3 variantes (A, B, C) en la galería (`SearchBarVariants`) con crítica y recomendación; diferencias en `design/stitch/DIFFS.md`
+- [x] 🧍 El humano eligió la variante **B** (P-177, 2026-11-20)
+- Verif: ✅ capturas de las variantes a 426 px en `docs/capturasF86/` (`variante-a|b|c.png`, Expo web + Playwright) · ✅ decisión en `MEMORY.md` (P-177) · ✅ código revisado en `DiscoverScreen.tsx`
 
 ### F87 Filtros desplegables con casillas, declarados por el módulo `[FE · Alta · N4]`
 
@@ -347,10 +347,10 @@ Dep: F86, F50, F59 · M · `apps/mobile/src/screens/discover/*`, `packages/core/
 
 > Origen (petición del humano, 2026-11-16). Amplía F50 (etiquetas) con más tipos de filtro; **no duplicar F50**.
 
-- [ ] Al pulsar «Filtros» aparecen desplegables con casillas: **SFW/NSFW** (NSFW solo si el sitio lo permite), **género** (terror, aventura, harem, ecchi…), **estado** (en emisión, finalizado, en pausa, abandonado y lo que permita el sitio) y **tipo** (manga, manhua, manhwa, webtoon, cómic)
-- [ ] Todo sale de `ModuleApi.filters()`; lo que el módulo no declare no aparece; «Limpiar» y contador de activos
-- [ ] Componentes nuevos en la galería con todos sus estados; textos en i18n; solo tokens
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440
+- [x] Al pulsar «Filtros» aparecen desplegables con casillas: **SFW/NSFW** (NSFW solo si el sitio lo permite), **género** (terror, aventura, harem, ecchi…), **estado** (en emisión, finalizado, en pausa, abandonado y lo que permita el sitio) y **tipo** (manga, manhua, manhwa, webtoon, cómic)
+- [x] Todo sale de `ModuleApi.filters()`; lo que el módulo no declare no aparece; «Limpiar» y contador de activos
+- [x] Componentes nuevos en la galería con todos sus estados; textos en i18n; solo tokens
+- Verif: ✅ Vitest (`tests/components/tagFilterSheet.test.ts`; carga/envío de grupos ya cubiertos en `discoverHome.test.ts`) · ✅ Playwright 426/1440 px sobre la galería (Expo web: desplegables cerrados, casillas y radio, «Limpiar», filas ≥48, sin overflow, consola limpia, cero peticiones externas) · ✅ S25 con ZonaTMO (2026-11-20, agent-device): desplegables, radio, «Género, activos: 1», contador en el botón, recarga y «Limpiar»; corregido en el teléfono que «Limpiar»/«Listo» quedaban fuera de pantalla con listas largas (pie fijo en `SheetModal`) (P-178). Sin cambio de contrato; `apps/web` no tiene filtros (P-171)
 
 ### F88 Reubicar el selector de servidor/módulo en Aventuras `[FE · Baja · N2]`
 
@@ -358,8 +358,8 @@ Dep: F86 · S · `apps/mobile/src/screens/discover/*`
 
 > Origen (petición del humano, 2026-11-16: «reorganizar el desplegable para cambiar de servidor o módulo»). Posición final según la variante de F86.
 
-- [ ] Mover el desplegable de módulo fuera de los filtros (según F86); cambiar de módulo recarga la rejilla sin mezclar resultados (cubre QAw3)
-- Verif: Vitest + Playwright 426/1440 px
+- [x] Selector de módulo movido a la cabecera, solo en Aventuras (`moduleSwitcherStore` + `HeaderModuleSwitcher`, montado en `ShellNavigator` con `destination === "discover"`); `selectModule` reinicia consulta, página, sección y filtros, así que cambiar de módulo recarga la rejilla sin mezclar resultados (QAw3)
+- Verif: ✅ Vitest `moduleSwitcherStore.test.ts` · ✅ revisión de código (`useDiscoverData.selectModule`) · ⚠️ sin test unitario del hook `useDiscoverData` (no hay renderer de hooks en el móvil); el no-mezclado queda cubierto por la lógica de reinicio y por la verificación manual previa del PR #139
 
 ---
 
