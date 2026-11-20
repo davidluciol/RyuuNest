@@ -23,6 +23,7 @@ import { Search } from "../../icons";
 import { t } from "../../i18n";
 import {
   countActiveFilters,
+  hasNsfwBorder,
   showDiscoverRows,
   visibleDiscoverEntries,
   visibleDiscoverModules,
@@ -440,6 +441,7 @@ function DiscoverCard({
       kind={entry.kind === null ? undefined : kindLabel(entry.kind)}
       title={entry.title}
       meta={entryMeta(entry)}
+      nsfw={hasNsfwBorder(entry)}
       accessibilityLabel={entry.title}
       onPress={() => onPress?.(entry)}
     />

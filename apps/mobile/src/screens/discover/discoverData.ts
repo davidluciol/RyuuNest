@@ -102,6 +102,7 @@ function toEntry(moduleId: string, series: SeriesSummary): DiscoverEntry {
     title: series.title,
     kind: series.kind ?? null,
     nsfw: series.nsfw ?? false,
+    ...(series.badges === undefined ? {} : { badges: series.badges }),
     hint: series.hint ?? null,
     ...(series.cover === undefined
       ? {}

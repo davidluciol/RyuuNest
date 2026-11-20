@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   EMPTY_DISCOVER_PAGE,
+  hasNsfwBorder,
   countHiddenNsfwModules,
   moduleErrorView,
   sameDiscoverModules,
@@ -215,5 +216,21 @@ describe("recarga al cambiar filtros (F50)", () => {
     const next = withActiveFilters(ready, { genre: ["horror"] });
     expect(next.status === "ready" && next.ready.activeFilters).toEqual({ genre: ["horror"] });
     expect(withActiveFilters({ status: "loading" }, { genre: ["a"] })).toEqual({ status: "loading" });
+  });
+});
+
+describe("hasNsfwBorder · borde naranja en Aventuras (F97)", () => {
+  const base = { seriesId: "s", moduleId: "m", title: "T", kind: null, nsfw: false, hint: null };
+
+  it("lleva borde si el módulo lo marca nsfw o trae hentai, seinen o josei (sin mayúsculas ni acentos)", () => {
+    expect(hasNsfwBorder({ ...base, nsfw: true })).toBe(true);
+    expect(hasNsfwBorder({ ...base, badges: ["Acción", "SEINEN"] })).toBe(true);
+    expect(hasNsfwBorder({ ...base, badges: ["Hentai"] })).toBe(true);
+    expect(hasNsfwBorder({ ...base, badges: [" josei "] })).toBe(true);
+  });
+
+  it("sin esas etiquetas ni nsfw no lleva borde, y no inventa etiquetas parecidas", () => {
+    expect(hasNsfwBorder(base)).toBe(false);
+    expect(hasNsfwBorder({ ...base, badges: ["Shounen", "★ 8.1", "Seinen Plus"] })).toBe(false);
   });
 });
