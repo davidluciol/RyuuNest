@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { dragonNightColors, layoutForWidth, spacing, typography } from "@ryuunest/ui-tokens";
+import { isRecommendedAdded } from "@ryuunest/core";
 
 import Button from "../../components/Button";
 import { contentColumnStyle } from "../../components/cardStyles";
@@ -261,19 +262,25 @@ export default function SourcesScreen({
               />
             ) : (
               <>
-                {recommended.repos.map((repo) => (
-                  <ModuleRow
-                    key={repo.indexUrl}
-                    testID={`recommended-${repo.indexUrl}`}
-                    name={repo.name}
-                    meta={repo.description}
-                    hint={repo.indexUrl}
-                    badges={repo.nsfw ? [t(BADGE_LABEL_KEYS.nsfw)] : []}
-                    actionLabel={t("sources.recommended.add")}
-                    actionVariant="secondary"
-                    onAction={() => controller?.openAddRepo(repo.indexUrl)}
-                  />
-                ))}
+                {recommended.repos.map((repo) => {
+                  const added = isRecommendedAdded(data?.repos ?? [], repo.indexUrl);
+                  return (
+                    <ModuleRow
+                      key={repo.indexUrl}
+                      testID={`recommended-${repo.indexUrl}`}
+                      name={repo.name}
+                      meta={repo.description}
+                      hint={repo.indexUrl}
+                      badges={repo.nsfw ? [t(BADGE_LABEL_KEYS.nsfw)] : []}
+                      actionLabel={t(
+                        added ? "sources.recommended.added" : "sources.recommended.add",
+                      )}
+                      actionVariant="secondary"
+                      actionDisabled={added}
+                      onAction={() => controller?.openAddRepo(repo.indexUrl)}
+                    />
+                  );
+                })}
                 <Button
                   variant="secondary"
                   label={t("sources.recommended.refresh")}

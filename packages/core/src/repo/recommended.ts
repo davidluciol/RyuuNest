@@ -60,6 +60,11 @@ export function parseRecommended(value: unknown): ValidationResult<RecommendedLi
   return { ok: true, value: { repos, warnings } };
 }
 
+/** ¿El recomendado ya está entre los repos añadidos? (la UI muestra «Añadido»). */
+export function isRecommendedAdded(repos: readonly { url: string }[], indexUrl: string): boolean {
+  return repos.some((repo) => repo.url === indexUrl);
+}
+
 /** Descarga y valida `recommended.json`. Lanza `ModuleError` (red, HTTP o `PARSE`). */
 export async function fetchRecommended(http: Http, url: string): Promise<RecommendedRepo[]> {
   const response = await http.request(url);

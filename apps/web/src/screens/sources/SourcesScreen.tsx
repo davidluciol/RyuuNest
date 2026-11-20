@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { t } from "@ryuunest/i18n";
-import type { InstallPreview, UpdatePreview } from "@ryuunest/core";
+import { isRecommendedAdded, type InstallPreview, type UpdatePreview } from "@ryuunest/core";
 import type { RecommendedView } from "@ryuunest/mobile-src/screens/sources/sourcesFixtures";
 import { kindLabel } from "@ryuunest/mobile-src/components/kindLabel";
 import type { SourceModule, SourcesData } from "@ryuunest/mobile-src/screens/sources/sourcesData";
@@ -47,7 +47,9 @@ export default function SourcesScreen() {
         <p className="t-body-md screen-subtitle">{t("sources.subtitle")}</p>
       </header>
 
-      {view.status === "loading" && <LoadingState label={t("state.loading.title")} testID="sources-loading" />}
+      {view.status === "loading" && (
+        <LoadingState label={t("state.loading.title")} testID="sources-loading" />
+      )}
 
       {view.status === "error" && (
         <ErrorState
@@ -66,6 +68,7 @@ export default function SourcesScreen() {
       {view.status === "ready" && controller !== null && (
         <RecommendedSection
           view={state.recommended}
+          repos={view.data.repos}
           onRefresh={state.refreshRecommended}
           onAdd={(url) => controller.openAddRepo(url)}
         />
@@ -79,19 +82,39 @@ export default function SourcesScreen() {
         <AddRepoDialog flow={flow} controller={controller} />
       )}
       {controller !== null && flow.sheet === "install" && (
-        <InstallDialog preview={flow.preview} busy={flow.busy} error={flow.error} controller={controller} />
+        <InstallDialog
+          preview={flow.preview}
+          busy={flow.busy}
+          error={flow.error}
+          controller={controller}
+        />
       )}
       {controller !== null && flow.sheet === "manage" && (
-        <ManageDialog moduleId={flow.moduleId} busy={flow.busy} error={flow.error} controller={controller} data={view.status === "ready" ? view.data : null} />
+        <ManageDialog
+          moduleId={flow.moduleId}
+          busy={flow.busy}
+          error={flow.error}
+          controller={controller}
+          data={view.status === "ready" ? view.data : null}
+        />
       )}
       {controller !== null && flow.sheet === "update" && (
-        <UpdateDialog preview={flow.preview} busy={flow.busy} error={flow.error} controller={controller} />
+        <UpdateDialog
+          preview={flow.preview}
+          busy={flow.busy}
+          error={flow.error}
+          controller={controller}
+        />
       )}
       {controller !== null && flow.sheet === "uninstall" && (
         <ConfirmDialog
           title={t("sources.uninstall.title")}
           message={t("sources.uninstall.message")}
-          subject={view.status === "ready" ? view.data.modules.find((module) => module.id === flow.moduleId)?.name : undefined}
+          subject={
+            view.status === "ready"
+              ? view.data.modules.find((module) => module.id === flow.moduleId)?.name
+              : undefined
+          }
           confirmLabel={t("sources.uninstall.submit")}
           cancelLabel={t("sources.sheet.cancel")}
           busy={flow.busy}
@@ -123,23 +146,23 @@ export default function SourcesScreen() {
   );
 }
 
-function SourcesReady({
-  data,
-  controller,
-}: {
-  data: SourcesData;
-  controller: SourcesController;
-}) {
+function SourcesReady({ data, controller }: { data: SourcesData; controller: SourcesController }) {
   const [kindFilter, setKindFilter] = useState<string>("all");
   const kinds = Array.from(new Set(data.modules.flatMap((m) => m.kinds)));
   const visible =
-    kindFilter === "all" ? data.modules : data.modules.filter((m) => m.kinds.includes(kindFilter as never));
+    kindFilter === "all"
+      ? data.modules
+      : data.modules.filter((m) => m.kinds.includes(kindFilter as never));
 
   if (data.repos.length === 0) {
     return (
       <EmptyState
-        title={t(data.officialRepoDismissed ? "sources.empty.dismissedTitle" : "sources.empty.title")}
-        message={t(data.officialRepoDismissed ? "sources.empty.dismissedMessage" : "sources.empty.message")}
+        title={t(
+          data.officialRepoDismissed ? "sources.empty.dismissedTitle" : "sources.empty.title",
+        )}
+        message={t(
+          data.officialRepoDismissed ? "sources.empty.dismissedMessage" : "sources.empty.message",
+        )}
         actionLabel={t("actions.addRepository")}
         onAction={() => controller.openAddRepo()}
         testID="sources-empty"
@@ -173,7 +196,9 @@ function SourcesReady({
               <div className="sources-row-main">
                 <span className="t-body-lg sources-row-title">{repo.name}</span>
                 <span className="t-body-sm sources-row-meta">{repo.url}</span>
-                <span className="t-body-sm sources-row-meta">{t("sources.repo.modules", { count: repo.moduleCount })}</span>
+                <span className="t-body-sm sources-row-meta">
+                  {t("sources.repo.modules", { count: repo.moduleCount })}
+                </span>
               </div>
               <div className="sources-row-actions">
                 <Button
@@ -249,11 +274,19 @@ function ModuleRow({ module, onAction }: { module: SourceModule; onAction: () =>
       <div className="sources-row-main">
         <span className="t-body-lg sources-row-title">{module.name}</span>
         <span className="t-body-sm sources-row-meta">
-          {t("sources.module.meta", { kind: kindLabel(module.kinds[0] ?? "manga"), lang: module.lang, version: module.version })}
+          {t("sources.module.meta", {
+            kind: kindLabel(module.kinds[0] ?? "manga"),
+            lang: module.lang,
+            version: module.version,
+          })}
         </span>
         <span className="sources-row-badges">
           {moduleBadges(module).map((badge) => (
-            <Badge key={badge} label={t(BADGE_LABEL_KEYS[badge])} tone={badge === "error" ? "error" : badge === "update" ? "warning" : "neutral"} />
+            <Badge
+              key={badge}
+              label={t(BADGE_LABEL_KEYS[badge])}
+              tone={badge === "error" ? "error" : badge === "update" ? "warning" : "neutral"}
+            />
           ))}
         </span>
       </div>
@@ -301,17 +334,25 @@ function AddRepoDialog({
 /** F44: «Recomendados» (P-179); un fallo de red no bloquea la pantalla. */
 function RecommendedSection({
   view,
+  repos,
   onRefresh,
   onAdd,
 }: {
   view: RecommendedView;
+  repos: readonly { url: string }[];
   onRefresh: () => void;
   onAdd: (url: string) => void;
 }) {
   return (
-    <section className="sources-section" aria-label={t("sources.section.recommended")} data-testid="sources-recommended">
+    <section
+      className="sources-section"
+      aria-label={t("sources.section.recommended")}
+      data-testid="sources-recommended"
+    >
       <h2 className="t-title-lg">{t("sources.section.recommended")}</h2>
-      {view.status === "loading" && <LoadingState label={t("sources.recommended.loading")} testID="recommended-loading" />}
+      {view.status === "loading" && (
+        <LoadingState label={t("sources.recommended.loading")} testID="recommended-loading" />
+      )}
       {view.status === "offline" && (
         <EmptyState
           title={t("sources.recommended.offlineTitle")}
@@ -333,7 +374,11 @@ function RecommendedSection({
         <>
           <ul className="sources-list">
             {view.repos.map((repo) => (
-              <li key={repo.indexUrl} className="sources-row" data-testid={`recommended-${repo.indexUrl}`}>
+              <li
+                key={repo.indexUrl}
+                className="sources-row"
+                data-testid={`recommended-${repo.indexUrl}`}
+              >
                 <div className="sources-row-main">
                   <span className="t-body-lg sources-row-title">{repo.name}</span>
                   <span className="t-body-sm sources-row-meta">{repo.description}</span>
@@ -345,12 +390,25 @@ function RecommendedSection({
                   )}
                 </div>
                 <div className="sources-row-actions">
-                  <Button variant="secondary" label={t("sources.recommended.add")} onClick={() => onAdd(repo.indexUrl)} />
+                  {isRecommendedAdded(repos, repo.indexUrl) ? (
+                    <Button variant="secondary" label={t("sources.recommended.added")} disabled />
+                  ) : (
+                    <Button
+                      variant="secondary"
+                      label={t("sources.recommended.add")}
+                      onClick={() => onAdd(repo.indexUrl)}
+                    />
+                  )}
                 </div>
               </li>
             ))}
           </ul>
-          <Button variant="secondary" label={t("sources.recommended.refresh")} onClick={onRefresh} testID="recommended-refresh" />
+          <Button
+            variant="secondary"
+            label={t("sources.recommended.refresh")}
+            onClick={onRefresh}
+            testID="recommended-refresh"
+          />
         </>
       )}
     </section>
@@ -366,7 +424,11 @@ function PreviewRows({ preview }: { preview: InstallPreview }) {
       </div>
       <div className="sources-detail-row">
         <dt className="t-label-md">{t("sources.detail.runtime")}</dt>
-        <dd className="t-body-md">{t(preview.runtime === "script" ? "sources.runtime.script" : "sources.runtime.declarative")}</dd>
+        <dd className="t-body-md">
+          {t(
+            preview.runtime === "script" ? "sources.runtime.script" : "sources.runtime.declarative",
+          )}
+        </dd>
       </div>
       <div className="sources-detail-row">
         <dt className="t-label-md">{t("sources.detail.permissions")}</dt>
@@ -395,8 +457,14 @@ function InstallDialog({
     <Dialog title={t("sources.install.title")} onClose={controller.close} testID="install-dialog">
       <p className="t-body-lg">{preview.name}</p>
       <PreviewRows preview={preview} />
-      {preview.reinforced && <p className="t-body-sm sources-warning">{t("sources.install.scriptWarning")}</p>}
-      {error !== null && <p className="t-body-sm field-error" role="alert">{error}</p>}
+      {preview.reinforced && (
+        <p className="t-body-sm sources-warning">{t("sources.install.scriptWarning")}</p>
+      )}
+      {error !== null && (
+        <p className="t-body-sm field-error" role="alert">
+          {error}
+        </p>
+      )}
       {preview.reinforced ? (
         <HoldToConfirm
           label={t("sources.install.hold")}
@@ -434,7 +502,11 @@ function ManageDialog({
   if (module === undefined) return null;
   return (
     <Dialog title={module.name} onClose={controller.close} testID="manage-dialog">
-      {error !== null && <p className="t-body-sm field-error" role="alert">{error}</p>}
+      {error !== null && (
+        <p className="t-body-sm field-error" role="alert">
+          {error}
+        </p>
+      )}
       <div className="sources-dialog-actions">
         <Button
           variant="secondary"
@@ -487,7 +559,11 @@ function UpdateDialog({
           ))}
         </ul>
       )}
-      {error !== null && <p className="t-body-sm field-error" role="alert">{error}</p>}
+      {error !== null && (
+        <p className="t-body-sm field-error" role="alert">
+          {error}
+        </p>
+      )}
       {preview.reinforced ? (
         <HoldToConfirm
           label={t("sources.update.hold")}
@@ -507,4 +583,3 @@ function UpdateDialog({
     </Dialog>
   );
 }
-

@@ -26,6 +26,8 @@ export interface ModuleRowProps {
   actionLabel: string;
   actionVariant?: "primary" | "secondary";
   onAction?: () => void;
+  /** La acción no aplica (p. ej. recomendado ya añadido). */
+  actionDisabled?: boolean;
   testID?: string;
 }
 
@@ -38,6 +40,7 @@ export default function ModuleRow({
   actionLabel,
   actionVariant = "secondary",
   onAction,
+  actionDisabled = false,
   testID,
 }: ModuleRowProps) {
   const text = moduleRowTextColors();
@@ -58,7 +61,12 @@ export default function ModuleRow({
         ) : null}
         {error ? <Text style={[styles.meta, { color: text.error }]}>{error}</Text> : null}
       </View>
-      <Button variant={actionVariant} label={actionLabel} onPress={onAction} />
+      <Button
+        variant={actionVariant}
+        label={actionLabel}
+        onPress={onAction}
+        disabled={actionDisabled}
+      />
     </View>
   );
 }

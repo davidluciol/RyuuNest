@@ -293,6 +293,7 @@
   "sources.recommended.emptyTitle": "No hay recomendados por ahora",
   "sources.recommended.refresh": "Actualizar recomendados",
   "sources.recommended.add": "Añadir",
+  "sources.recommended.added": "Añadido",
   "sources.repo.modules": "Módulos: {count}",
   "sources.repo.sync": "Sincronizar repositorio",
   "sources.repo.remove": "Quitar repositorio",

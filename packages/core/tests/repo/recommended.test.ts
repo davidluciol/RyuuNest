@@ -6,7 +6,15 @@ import { describe, expect, it } from "vitest";
 
 import { ModuleError } from "../../src/contract/errors";
 import { StubHttp } from "../../src/ports/fakes";
-import { fetchRecommended, parseRecommended } from "../../src/repo/recommended";
+import { fetchRecommended, isRecommendedAdded, parseRecommended } from "../../src/repo/recommended";
+
+describe("isRecommendedAdded", () => {
+  const repos = [{ url: "https://a.test/index.json" }];
+  it("marca como añadido el recomendado cuyo índice ya está en la lista de repos", () => {
+    expect(isRecommendedAdded(repos, "https://a.test/index.json")).toBe(true);
+    expect(isRecommendedAdded(repos, "https://b.test/index.json")).toBe(false);
+  });
+});
 
 /**
  * F44 — «Recomendados» (`recommended.json` del repo oficial): lista de
