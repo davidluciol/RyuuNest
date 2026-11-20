@@ -1,4 +1,7 @@
 import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
 import { ModuleError } from "../../src/contract/errors";
@@ -10,7 +13,10 @@ import { fetchRecommended, parseRecommended } from "../../src/repo/recommended";
  * `{ name, indexUrl, description, nsfw }`. Fixture guardado, nunca red real.
  */
 
-const FIXTURE = readFileSync(new URL("./fixtures/recommended.json", import.meta.url), "utf8");
+const FIXTURE = readFileSync(
+  resolve(dirname(fileURLToPath(import.meta.url)), "fixtures/recommended.json"),
+  "utf8",
+);
 const URL_ = "https://repo.example.com/recommended.json";
 
 describe("parseRecommended", () => {
