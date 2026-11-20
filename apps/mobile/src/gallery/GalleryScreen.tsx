@@ -74,6 +74,7 @@ import type { MediaKind } from "@ryuunest/core";
 import SortSheet from "../components/SortSheet";
 import FilterSheet from "../components/FilterSheet";
 import TagFilterSheet from "../components/TagFilterSheet";
+import SearchBarVariants from "./SearchBarVariants";
 import ManageFoldersSheet from "../components/ManageFoldersSheet";
 import NewFolderSheet from "../components/NewFolderSheet";
 import SaveFolderSheet from "../components/SaveFolderSheet";
@@ -878,6 +879,9 @@ export default function GalleryScreen() {
             onClose={() => setTagFilterOpen(false)}
           />
         </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.searchVariants")}</Text>
+        <SearchBarVariants />
 
         <Text style={styles.groupLabel}>{t("gallery.component.sortSheet")}</Text>
         <View style={styles.componentColumn}>
