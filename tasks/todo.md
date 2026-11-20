@@ -20,7 +20,7 @@ Las tareas pendientes se agrupan **por sección de la app**: **Guarida**, **Teso
 | Guarida | F46 → F78 → F79 → F80 → F81 → F82 (luego QAw2, F34, F40, F76) |
 | Tesoros | F52 → F54 → F53 → F55 → F56 → F57 → F58 (luego F47, F49) · carpetas/filtros: F92 → F93 → F94 |
 | Aventuras | listas/filtros: F83 → F84 → F85 → F86 → F87 → F88 · ficha/carpetas: F95 → F96 → F97 |
-| Portales | T42 → F61 → F63 → F64 → F45 → F42 → F98 |
+| Portales | T42 → F61 → F63 → F64 → F45 → F42 → F98 → F99 |
 | Ajustes | F65 → F66 → F67 → F68 → F69 · temas: F89 → F90 → F91 |
 | Lector y ficha | F17 → F51 → F39 → F43 → F23 |
 | Recursos | F70 → F71 → F72 → F73 → F74 → F75 (FA1 es 🧍) |
@@ -459,6 +459,18 @@ Dep: F94 · S · `apps/mobile/src/screens/sources/*`
 
 - [ ] Los módulos/servidores marcados `nsfw` en Portales llevan el borde naranja (más su etiqueta NSFW existente)
 - Verif: Playwright 426/1440 px + 🧍 S25
+
+### F99 Avisar de versiones nuevas de un módulo y recomendar actualizar `[FE · Intermedia · N3]`
+
+Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/*`, `packages/core` (comparación semver)
+
+> Origen (petición del humano, 2026-11-20): si ZonaTMO instalado es 1.2.3 y el repo publica 1.3.1, avisar al usuario y recomendar actualizar. **Ya existe** la insignia `update` por módulo (`sourcesView.ts`) y la hoja «Actualizar módulo»; falta que el aviso se vea sin entrar a Portales.
+
+- [ ] Rojo: comparar la versión instalada con la del índice del repo con semver (`module-sdk`), sin falsos positivos con prerelease ni con versiones iguales
+- [ ] Aviso visible fuera de Portales (p. ej. punto en la pestaña Portales y banner «Hay N actualizaciones» con «Ver») que lleve a la hoja de actualizar existente; **nada se actualiza solo** (confirmación manual, SPEC §7)
+- [ ] Solo se consulta el índice cuando ya se consulta hoy (abrir Portales / acción del usuario); nada en segundo plano (RNF-5)
+- [ ] Textos en i18n, solo tokens, estados en la galería
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 (subir una versión de prueba en un índice local, como pide F33 R1)
 
 ---
 
