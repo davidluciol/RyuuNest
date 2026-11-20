@@ -356,7 +356,7 @@
   "settings.section.backup": "Respaldo",
   "settings.backup.export": "Exportar respaldo",
   "settings.backup.exportAction": "Exportar",
-  "settings.backup.exportHint": "Guarda tus tesoros, progreso y ajustes en un archivo JSON para compartirlo o guardarlo.",
+  "settings.backup.exportHint": "Guarda tus tesoros, progreso y ajustes en un archivo de respaldo para compartirlo o guardarlo.",
   "settings.backup.import": "Importar respaldo",
   "settings.backup.importAction": "Importar",
   "settings.backup.importHint": "Recupera tus tesoros, progreso y ajustes desde un archivo de respaldo.",

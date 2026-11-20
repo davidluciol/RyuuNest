@@ -32,7 +32,8 @@ export default function SettingsRow({
   onPress,
 }: SettingsRowProps) {
   const { width } = useWindowDimensions();
-  const stacked = settingsRowLayout(width) === "stacked";
+  // R8: con `onPress` el chevrón va siempre a la derecha, también en pantallas estrechas.
+  const stacked = onPress === undefined && settingsRowLayout(width) === "stacked";
   const texts = (
     <View style={[styles.textBlock, stacked ? styles.textBlockStacked : null]}>
       <Text style={styles.label}>{label}</Text>
