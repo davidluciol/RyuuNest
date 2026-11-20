@@ -22,8 +22,8 @@ import { kindLabel } from "../../components/kindLabel";
 import { Search } from "../../icons";
 import { t } from "../../i18n";
 import {
-  hasNsfwBorder,
   countActiveFilters,
+  hasNsfwBorder,
   showDiscoverRows,
   visibleDiscoverEntries,
   visibleDiscoverModules,
@@ -238,16 +238,12 @@ function DiscoverReady({
   // F59: con `home()` las secciones del módulo sustituyen a latest/popular.
   const sections = rows
     ? ready.sections
-        .map((section) => ({
-          ...section,
-          entries: visibleDiscoverEntries(section.entries, nsfwVisible),
-        }))
+        .map((section) => ({ ...section, entries: visibleDiscoverEntries(section.entries, nsfwVisible) }))
         .filter((section) => section.entries.length > 0)
     : [];
   const hasHome = sections.length > 0;
   const showLatest = rows && !hasHome && (selectedModule?.hasLatest ?? false) && latest.length > 0;
-  const showPopular =
-    rows && !hasHome && (selectedModule?.hasPopular ?? false) && popular.length > 0;
+  const showPopular = rows && !hasHome && (selectedModule?.hasPopular ?? false) && popular.length > 0;
 
   if (!selected || modules.length === 0) {
     return (
@@ -326,10 +322,7 @@ function DiscoverReady({
             <SectionHeader
               title={section.title}
               {...(section.hasMore
-                ? {
-                    actionLabel: t("discover.section.seeMore"),
-                    onAction: () => onOpenSection?.(section.id, section.title),
-                  }
+                ? { actionLabel: t("discover.section.seeMore"), onAction: () => onOpenSection?.(section.id, section.title) }
                 : {})}
             />
             <ScrollView

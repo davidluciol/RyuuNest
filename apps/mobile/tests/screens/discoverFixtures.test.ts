@@ -215,9 +215,7 @@ describe("recarga al cambiar filtros (F50)", () => {
   it("la selección se refleja al instante en la vista, sin esperar a los datos", () => {
     const next = withActiveFilters(ready, { genre: ["horror"] });
     expect(next.status === "ready" && next.ready.activeFilters).toEqual({ genre: ["horror"] });
-    expect(withActiveFilters({ status: "loading" }, { genre: ["a"] })).toEqual({
-      status: "loading",
-    });
+    expect(withActiveFilters({ status: "loading" }, { genre: ["a"] })).toEqual({ status: "loading" });
   });
 });
 

@@ -159,12 +159,8 @@ export async function loadFromApi(
     }
   }
   const [latest, popular, home, catalogPage] = await Promise.all([
-    rows && !useHome && flags.hasLatest && api.latest
-      ? api.latest(1).then((p) => p.items)
-      : Promise.resolve([]),
-    rows && !useHome && flags.hasPopular && api.popular
-      ? api.popular(1).then((p) => p.items)
-      : Promise.resolve([]),
+    rows && !useHome && flags.hasLatest && api.latest ? api.latest(1).then((p) => p.items) : Promise.resolve([]),
+    rows && !useHome && flags.hasPopular && api.popular ? api.popular(1).then((p) => p.items) : Promise.resolve([]),
     useHome && api.home ? api.home().then((h) => h.sections) : Promise.resolve([]),
     inSection && api.list
       ? api.list(sectionId, page)
@@ -291,15 +287,7 @@ export async function loadDiscoverData(options: DiscoverLoadOptions): Promise<Di
     throw new ModuleError("NOT_FOUND", `El módulo de ejemplo ${moduleId} no existe`);
   }
   const handle = await mountSample(moduleId);
-  return loadFromApi(
-    handle,
-    { ...source, hasHome: false },
-    moduleId,
-    query,
-    page,
-    sectionId,
-    filters,
-  );
+  return loadFromApi(handle, { ...source, hasHome: false }, moduleId, query, page, sectionId, filters);
 }
 
 /** El último módulo elegido sobrevive a cambiar de pestaña en la sesión. */

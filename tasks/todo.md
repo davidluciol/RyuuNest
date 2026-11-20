@@ -387,9 +387,9 @@ Dep: F94 · S · `apps/mobile/src/screens/discover/*`
 
 > Origen (petición del humano, 2026-11-17, opcional; la etiqueta es **josei**, confirmado). **Solo si esas etiquetas existen** en los datos del módulo: no inventar etiquetas.
 
-- [ ] Una serie de Aventuras con alguna etiqueta de la lista (hentai, seinen, josei) o `nsfw` lleva el borde naranja de F94 (misma regla: no solo color)
-- [ ] Comprobar con fixtures qué etiquetas llegan de los módulos y anotar el resultado; si no existen, cerrar la tarea con la nota
-- Verif: Vitest (regla de etiquetas) + Playwright 426/1440 px
+- [x] Una serie de Aventuras con alguna etiqueta de la lista (hentai, seinen, josei) o `nsfw` lleva el borde naranja de F94 con la insignia «18+» (`hasNsfwBorder`, comparación sin mayúsculas ni acentos, etiqueta completa)
+- [x] Etiquetas que llegan hoy: el contrato (`SeriesSummary.badges`) solo cita «Seinen» como ejemplo y el filtro de ejemplo ofrece «Seinen»; **hentai y josei no aparecen en ningún módulo ni fixture** (ni `modules/` ni `test-site`). La regla es por datos: si un módulo las trae, se aplica sin más cambios. Se conserva el filtro NSFW existente (solo cambia el borde)
+- Verif: ✅ Vitest (`discoverFixtures.test.ts`) + ✅ Playwright 426/1440 px (`discoverNsfw.cjs`, galería: «Sombras de Arcano» con Seinen) · 🧍 S25 pendiente
 
 **Lote sugerido:** (F41/F44 esperan aprobación). Bloque de listas/filtros: F83 → F84 → F85 → F86 → F87 → F88.
 

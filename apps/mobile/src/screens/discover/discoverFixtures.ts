@@ -228,7 +228,13 @@ export function hasNsfwBorder(entry: DiscoverEntry): boolean {
   return (
     entry.nsfw ||
     (entry.badges ?? []).some((badge) =>
-      NSFW_BORDER_BADGES.includes(badge.normalize("NFD").replace(/[̀-ͯ]/g, "").trim().toLowerCase()),
+      NSFW_BORDER_BADGES.includes(
+        badge
+          .normalize("NFD")
+          .replace(/[̀-ͯ]/g, "")
+          .trim()
+          .toLowerCase(),
+      ),
     )
   );
 }
@@ -299,20 +305,8 @@ const moduleEntry = (
 });
 
 export const SAMPLE_DISCOVER_MODULES: readonly DiscoverModule[] = [
-  {
-    id: "m-ejemplo-a",
-    name: "Módulo de ejemplo A",
-    nsfw: false,
-    hasPopular: true,
-    hasLatest: true,
-  },
-  {
-    id: "m-ejemplo-b",
-    name: "Módulo de ejemplo B",
-    nsfw: true,
-    hasPopular: false,
-    hasLatest: true,
-  },
+  { id: "m-ejemplo-a", name: "Módulo de ejemplo A", nsfw: false, hasPopular: true, hasLatest: true },
+  { id: "m-ejemplo-b", name: "Módulo de ejemplo B", nsfw: true, hasPopular: false, hasLatest: true },
 ];
 
 /**
@@ -323,12 +317,7 @@ export const SAMPLE_DISCOVER_MODULES: readonly DiscoverModule[] = [
 export const SAMPLE_DISCOVER_LATEST: readonly DiscoverEntry[] = [
   moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 d · Equipo Ryuu"),
   moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "hace 6 h · Nido Editorial"),
-  moduleEntry(
-    "cronicas-de-moonlit",
-    "Crónicas de Moonlit",
-    "manhua",
-    "hace 3 d · Estudio Linterna",
-  ),
+  moduleEntry("cronicas-de-moonlit", "Crónicas de Moonlit", "manhua", "hace 3 d · Estudio Linterna"),
   moduleEntry("noche-de-ambar", "Noche de ámbar", "comic", "hace 1 sem · Taller Ámbar"),
 ];
 
@@ -345,18 +334,8 @@ export const SAMPLE_DISCOVER_CATALOG: DiscoverPage = {
   hasNext: true,
   entries: [
     moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 d · Equipo Ryuu"),
-    moduleEntry(
-      "guardiana-del-nido",
-      "La guardiana del nido",
-      "manga",
-      "hace 6 h · Nido Editorial",
-    ),
-    moduleEntry(
-      "cronicas-de-moonlit",
-      "Crónicas de Moonlit",
-      "manhua",
-      "hace 3 d · Estudio Linterna",
-    ),
+    moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "hace 6 h · Nido Editorial"),
+    moduleEntry("cronicas-de-moonlit", "Crónicas de Moonlit", "manhua", "hace 3 d · Estudio Linterna"),
     moduleEntry("noche-de-ambar", "Noche de ámbar", "comic", "hace 1 sem · Taller Ámbar"),
     {
       seriesId: "draco-de-jade",
