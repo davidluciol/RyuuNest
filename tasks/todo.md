@@ -332,10 +332,10 @@ Dep: F50 · S
 
 > Origen (petición del humano, 2026-11-16: «revisarlo con un especialista»). Decisión: crítica con las skills de diseño/UX y 2–3 variantes; luego aprobación humana.
 
-- [ ] Barra de búsqueda visible por defecto + botón de búsqueda con icono más pequeño y rápido de pulsar (área ≥48×48) + botón de filtros oculto por defecto junto a él
-- [ ] 2–3 variantes con crítica (jerarquía, alcance con el pulgar, TV/D-pad) y recomendación; registrar diferencias en `design/stitch/DIFFS.md`
-- [ ] 🧍 El humano elige la variante antes de F87/F88
-- Verif: capturas de las variantes + decisión en `MEMORY.md`
+- [x] Barra de búsqueda visible por defecto + botón de búsqueda con icono de 48×48 (`touchTarget.min`) + botón de filtros solo con icono junto a la lupa (aparece cuando el módulo declara filtros; **cambiado por P-177:** ya no nace oculto)
+- [x] 3 variantes (A, B, C) en la galería (`SearchBarVariants`) con crítica y recomendación; diferencias en `design/stitch/DIFFS.md`
+- [x] 🧍 El humano eligió la variante **B** (P-177, 2026-11-20)
+- Verif: ✅ capturas de las variantes a 426 px en `docs/capturasF86/` (`variante-a|b|c.png`, Expo web + Playwright) · ✅ decisión en `MEMORY.md` (P-177) · ✅ código revisado en `DiscoverScreen.tsx`
 
 ### F87 Filtros desplegables con casillas, declarados por el módulo `[FE · Alta · N4]`
 
@@ -354,8 +354,8 @@ Dep: F86 · S · `apps/mobile/src/screens/discover/*`
 
 > Origen (petición del humano, 2026-11-16: «reorganizar el desplegable para cambiar de servidor o módulo»). Posición final según la variante de F86.
 
-- [ ] Mover el desplegable de módulo fuera de los filtros (según F86); cambiar de módulo recarga la rejilla sin mezclar resultados (cubre QAw3)
-- Verif: Vitest + Playwright 426/1440 px
+- [x] Selector de módulo movido a la cabecera, solo en Aventuras (`moduleSwitcherStore` + `HeaderModuleSwitcher`, montado en `ShellNavigator` con `destination === "discover"`); `selectModule` reinicia consulta, página, sección y filtros, así que cambiar de módulo recarga la rejilla sin mezclar resultados (QAw3)
+- Verif: ✅ Vitest `moduleSwitcherStore.test.ts` · ✅ revisión de código (`useDiscoverData.selectModule`) · ⚠️ sin test unitario del hook `useDiscoverData` (no hay renderer de hooks en el móvil); el no-mezclado queda cubierto por la lógica de reinicio y por la verificación manual previa del PR #139
 
 ---
 
