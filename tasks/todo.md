@@ -317,7 +317,7 @@ Dep: F83 · M · `apps/mobile/src/screens/discover/*`
 
 - [x] Resultados del buscador del sitio; al acercarse al final se pide la página siguiente, hasta agotar (sin duplicados ni peticiones repetidas: `catalogPaging.ts`, `catalogOnly` en la carga)
 - [x] Estados: cargando más, error con reintento, fin de lista; sin animaciones (el pie de páginas de móvil desaparece; web conserva el suyo hasta F41)
-- Verif: ✅ Vitest (paginación) · 🧍 S25 (agent-device) pendiente · Playwright 426/1440 px pendiente (tras el móvil)
+- Verif: ✅ Vitest (paginación) · ✅ S25 (agent-device, M440 con «one»: carga páginas y sale «Has llegado al final») · ✅ Playwright 426/1440 px (`discover.cjs`)
 
 ### F85 «Más reciente» y «Popular» con scroll infinito en vez de carrusel `[FE · Intermedia · N3]`
 

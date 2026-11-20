@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import {
   dragonNightColors,
   layoutForWidth,
@@ -222,6 +229,7 @@ function DiscoverReady({
 }: DiscoverReadyProps) {
   // Borrador del campo: se entrega con Entrar (RF-10); al cambiar de módulo o
   // limpiarse desde fuera, el campo sigue a la consulta activa.
+  const { height: windowHeight } = useWindowDimensions();
   const [draft, setDraft] = useState(ready.query);
   useEffect(() => setDraft(ready.query), [ready.query]);
 
@@ -273,6 +281,10 @@ function DiscoverReady({
           gap: spacing.lg,
         }}
         scrollEventThrottle={100}
+        onContentSizeChange={(_width, contentHeight) => {
+          // Si la lista no llena la pantalla no habrá scroll: se sigue pidiendo hasta llenarla o agotarla.
+          if (contentHeight < windowHeight && catalog.hasNext && more === "idle") onLoadMore?.();
+        }}
         onScroll={(event) => {
           // F84: al acercarse al final se pide la página siguiente (con el fallo, solo con «Reintentar»).
           const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -423,7 +435,7 @@ function DiscoverReady({
             </View>
           )}
 
-          {(selectedModule?.paginates ?? true) && catalog.entries.length > 0 ? (
+          {catalog.entries.length > 0 ? (
             <CatalogFooter hasNext={catalog.hasNext} more={more} onRetry={onLoadMore} />
           ) : null}
         </View>
