@@ -294,10 +294,13 @@ Dep: F33 · M · `apps/web/*`
 - [x] Aprobada (humano, 2026-11-19). Web: portada en las tarjetas de Descubrir (2:3, `discover-card-cover`); la ficha web ya mostraba portada y sinopsis (F25)
 - Verif: ✅ Playwright 426/1440 px (`apps/web/tests/e2e/discover.cjs`) + Vitest web
 
-### F44 «Recomendados» como índice remoto (propuesta de F33, sin aprobar) `[BE/FE · Alta · N4]`
+### F44 «Recomendados» como índice remoto `[BE/FE · Alta · N4]`
 
-- [ ] ❓ Dar el formato y la URL del índice y autorizar el cambio de **RNF-5** en el SPEC (sin servidor propio ni terceros) antes de empezar
-- Verif: según la decisión
+- [x] Decisión del humano (2026-11-20, P-178): `recommended.json` en `RyuuNest-Models` junto a `index.json`, lista de `{ name, indexUrl, description, nsfw }`; SPEC **RNF-5** con la excepción y **RF-2b** nuevo
+- [x] Núcleo: `parseRecommended`/`fetchRecommended` (`packages/core/src/repo/recommended.ts`), tolerancia por entrada como T38, fixture guardado
+- [x] Portales (móvil y `apps/web`): sección «Recomendados» con cargando / lista / sin conexión / vacío y «Actualizar recomendados»; se descarga solo al abrir Portales o al pulsarlo; «Añadir» abre «Añadir repositorio» con la URL rellena (confirmación manual); NSFW con insignia. Estados en la galería (vista de Portales)
+- [ ] 🧍 Fusionar el PR de `recommended.json` en `RyuuNest-Models` y verificar en el S25 (agent-device) la lista real
+- Verif: ✅ Vitest (núcleo `recommended.test.ts`; móvil `sourcesData`/`sourcesFlow`/`sampleSourcesService`) · ✅ Playwright 426/1440 px (`apps/mobile/tests/e2e/sources.cjs`, `apps/web/tests/e2e/sources.cjs` con fixture) · ⏳ nativo sin verificar
 
 ### F83 Contrato de módulo: paginación y orden «más reciente» declarados `[BE · Intermedia · N3]`
 
