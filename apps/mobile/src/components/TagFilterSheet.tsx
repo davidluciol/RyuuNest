@@ -48,6 +48,21 @@ export default function TagFilterSheet({
       title={t("discover.filter.sheet.title")}
       onClose={onClose}
       testID="tag-filter-sheet"
+      footer={
+        <View style={styles.actions}>
+          <Button
+            variant="secondary"
+            label={t("discover.filter.sheet.clear")}
+            onPress={() => onChange({})}
+            testID="tag-filter-clear"
+          />
+          <Button
+            label={t("discover.filter.sheet.done")}
+            onPress={onClose}
+            testID="tag-filter-done"
+          />
+        </View>
+      }
     >
       {groups.map((group) => {
         const expanded = open.includes(group.id);
@@ -107,20 +122,6 @@ export default function TagFilterSheet({
           </View>
         );
       })}
-
-      <View style={styles.actions}>
-        <Button
-          variant="secondary"
-          label={t("discover.filter.sheet.clear")}
-          onPress={() => onChange({})}
-          testID="tag-filter-clear"
-        />
-        <Button
-          label={t("discover.filter.sheet.done")}
-          onPress={onClose}
-          testID="tag-filter-done"
-        />
-      </View>
     </SheetModal>
   );
 }
@@ -136,5 +137,10 @@ const styles = StyleSheet.create({
   count: { ...textStyle(typography.labelSm), color: colors.accent },
   box: { alignItems: "center", justifyContent: "center" },
   option: { ...textStyle(typography.bodyMd), color: colors.textPrimary, flex: 1 },
-  actions: { flexDirection: "row", justifyContent: "flex-end", gap: spacing.sm },
+  actions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: spacing.sm,
+    paddingTop: spacing.sm,
+  },
 });
