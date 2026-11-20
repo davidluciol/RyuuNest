@@ -248,7 +248,7 @@
   "discover.filter.sheet.title": "Filtros",
   "discover.filter.sheet.clear": "Limpiar",
   "discover.filter.sheet.done": "Listo",
-  "discover.filter.sheet.groupCount": "{label} ({count} activos)",
+  "discover.filter.sheet.groupCount": "{label}, activos: {count}",
   "discover.page.label": "Página {page}",
   "discover.page.previous": "Anterior",
   "discover.page.next": "Siguiente",
