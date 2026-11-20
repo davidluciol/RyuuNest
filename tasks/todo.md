@@ -343,10 +343,10 @@ Dep: F86, F50, F59 · M · `apps/mobile/src/screens/discover/*`, `packages/core/
 
 > Origen (petición del humano, 2026-11-16). Amplía F50 (etiquetas) con más tipos de filtro; **no duplicar F50**.
 
-- [ ] Al pulsar «Filtros» aparecen desplegables con casillas: **SFW/NSFW** (NSFW solo si el sitio lo permite), **género** (terror, aventura, harem, ecchi…), **estado** (en emisión, finalizado, en pausa, abandonado y lo que permita el sitio) y **tipo** (manga, manhua, manhwa, webtoon, cómic)
-- [ ] Todo sale de `ModuleApi.filters()`; lo que el módulo no declare no aparece; «Limpiar» y contador de activos
-- [ ] Componentes nuevos en la galería con todos sus estados; textos en i18n; solo tokens
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 con ZonaTMO o M440
+- [x] Al pulsar «Filtros» aparecen desplegables con casillas: **SFW/NSFW** (NSFW solo si el sitio lo permite), **género** (terror, aventura, harem, ecchi…), **estado** (en emisión, finalizado, en pausa, abandonado y lo que permita el sitio) y **tipo** (manga, manhua, manhwa, webtoon, cómic)
+- [x] Todo sale de `ModuleApi.filters()`; lo que el módulo no declare no aparece; «Limpiar» y contador de activos
+- [x] Componentes nuevos en la galería con todos sus estados; textos en i18n; solo tokens
+- Verif: ✅ Vitest (`tests/components/tagFilterSheet.test.ts`; carga/envío de grupos ya cubiertos en `discoverHome.test.ts`) · ✅ Playwright 426/1440 px sobre la galería (Expo web: desplegables cerrados, casillas y radio, «Limpiar», filas ≥48, sin overflow, consola limpia, cero peticiones externas) · ⏳ 🧍 S25 con ZonaTMO o M440 (P-178). Sin cambio de contrato; `apps/web` no tiene filtros (P-171)
 
 ### F88 Reubicar el selector de servidor/módulo en Aventuras `[FE · Baja · N2]`
 

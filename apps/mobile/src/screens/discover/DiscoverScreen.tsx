@@ -35,6 +35,7 @@ import {
   hasNsfwBorder,
   showDiscoverRows,
   visibleDiscoverEntries,
+  visibleDiscoverFilters,
   visibleDiscoverModules,
   type DiscoverEntry,
   type DiscoverFilterValues,
@@ -254,6 +255,7 @@ function DiscoverReady({
   const selectedModule = ready.modules.find((module) => module.id === selected?.id);
   const rows = showDiscoverRows(ready.query, ready.activeFilters);
   const activeCount = countActiveFilters(ready.activeFilters);
+  const filterGroups = visibleDiscoverFilters(ready.filters, nsfwVisible);
   const [filtersOpen, setFiltersOpen] = useState(false);
   // F59: con `home()` las secciones del módulo sustituyen a latest/popular.
   const sections = rows
@@ -314,7 +316,7 @@ function DiscoverReady({
               accessibilityLabel={t("discover.search.placeholder")}
             />
           </View>
-          {ready.filters.length > 0 ? (
+          {filterGroups.length > 0 ? (
             <FocusPressable
               accessibilityRole="button"
               accessibilityLabel={
@@ -330,6 +332,12 @@ function DiscoverReady({
                 size={20}
                 color={activeCount > 0 ? colors.accent : colors.textSecondary}
               />
+              {/* F87: contador de activos visible junto al icono. */}
+              {activeCount > 0 ? (
+                <Text style={styles.filterCount} testID="discover-filters-count">
+                  {activeCount}
+                </Text>
+              ) : null}
             </FocusPressable>
           ) : null}
           <FocusPressable
@@ -343,7 +351,7 @@ function DiscoverReady({
         </View>
         <TagFilterSheet
           visible={filtersOpen}
-          groups={ready.filters}
+          groups={filterGroups}
           selected={ready.activeFilters}
           onChange={(next) => onApplyFilters?.(next)}
           onClose={() => setFiltersOpen(false)}
@@ -561,7 +569,8 @@ const styles = StyleSheet.create({
   },
   errorScreen: { flex: 1, backgroundColor: colors.bg },
   errorPicker: { alignSelf: "stretch", alignItems: "flex-end", paddingTop: spacing.md },
-  searchButtonActive: { borderColor: colors.accent },
+  searchButtonActive: { borderColor: colors.accent, flexDirection: "row", gap: spacing.xxs },
+  filterCount: { ...textStyle(typography.labelSm), color: colors.accent },
   searchButton: {
     width: touchTarget.min,
     height: touchTarget.min,
