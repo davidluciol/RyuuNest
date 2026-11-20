@@ -122,3 +122,18 @@ describe("toDiscoverError (RF-11: causa, código y detalle)", () => {
     expect(view).toEqual({ moduleName: "Módulo de ejemplo A", cause: "Rara", code: "INTERNAL" });
   });
 });
+
+describe("loadDiscoverData — F84 solo catálogo", () => {
+  it("con `catalogOnly` no trae filas Reciente/Popular, solo la página pedida", async () => {
+    const data = await loadDiscoverData({
+      moduleId: "m-ejemplo-a",
+      query: "",
+      page: 1,
+      catalogOnly: true,
+    });
+
+    expect(data.latest).toEqual([]);
+    expect(data.popular).toEqual([]);
+    expect(data.catalog.entries.length).toBeGreaterThan(0);
+  });
+});

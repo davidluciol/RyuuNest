@@ -14,7 +14,7 @@ import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
  */
 export default function DiscoverRoute() {
   const settings = useSettingsPreferences();
-  const { view, selectModule, search, nextPage, prevPage, applyFilters, openSection, closeSection, retry, refreshModules } = useDiscoverData({
+  const { view, more, loadMore, selectModule, search, applyFilters, openSection, closeSection, retry, refreshModules } = useDiscoverData({
     resolveReporter: resolveErrorReporter,
     nsfwVisible: settings.nsfwVisible,
   });
@@ -39,8 +39,8 @@ export default function DiscoverRoute() {
       nsfwVisible={settings.nsfwVisible}
       onModuleSelect={selectModule}
       onSearch={search}
-      onNextPage={nextPage}
-      onPrevPage={prevPage}
+      more={more}
+      onLoadMore={loadMore}
       onApplyFilters={applyFilters}
       onOpenSection={openSection}
       onCloseSection={closeSection}
