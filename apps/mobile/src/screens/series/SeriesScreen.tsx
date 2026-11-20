@@ -58,7 +58,7 @@ export interface SeriesScreenProps {
   onBack?: () => void;
   onContinue?: () => void;
   onFavoriteToggle?: () => void;
-  onFolderLongPress?: () => void;
+  onSave?: () => void;
   onReleaseSelect?: (chapterId: string, releaseId: string) => void;
   onChapterPress?: (chapterId: string, releaseId: string) => void;
 }
@@ -69,7 +69,7 @@ export default function SeriesScreen({
   onBack,
   onContinue,
   onFavoriteToggle,
-  onFolderLongPress,
+  onSave,
   onReleaseSelect,
   onChapterPress,
 }: SeriesScreenProps) {
@@ -180,14 +180,13 @@ export default function SeriesScreen({
         </FocusPressable>
         <FocusPressable
           style={styles.actionButton}
-          onLongPress={onFolderLongPress}
-          delayLongPress={400}
+          onPress={onSave}
           hitSlop={touchTarget.min / 4}
           accessibilityRole="button"
-          accessibilityLabel={t("series.folder")}
+          accessibilityLabel={t("series.save")}
         >
           <Folder size={20} color={colors.accent} />
-          <Text style={styles.actionLabel}>{t("series.folder")}</Text>
+          <Text style={styles.actionLabel}>{t("series.save")}</Text>
         </FocusPressable>
       </View>
 
