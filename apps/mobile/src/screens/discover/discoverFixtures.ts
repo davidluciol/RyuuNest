@@ -81,6 +81,25 @@ export function toggleFilterValue(
   return next.length === 0 ? rest : { ...rest, [filterId]: next };
 }
 
+/** shortcut: reconoce NSFW por valor o etiqueta; si un módulo usa otro nombre, añadirlo aquí. */
+const NSFW_OPTION = /nsfw|\+18|adult|hentai|erotic|erótic/i;
+
+/** F87 (RF-35): con el ajuste NSFW apagado se ocultan sus opciones y los grupos que quedan vacíos. */
+export function visibleDiscoverFilters(
+  groups: readonly DiscoverFilter[],
+  nsfwVisible: boolean,
+): DiscoverFilter[] {
+  if (nsfwVisible) return [...groups];
+  return groups
+    .map((group) => ({
+      ...group,
+      options: group.options.filter(
+        (option) => !NSFW_OPTION.test(option.value) && !NSFW_OPTION.test(option.label),
+      ),
+    }))
+    .filter((group) => group.options.length > 0);
+}
+
 export function countActiveFilters(values: DiscoverFilterValues): number {
   return Object.values(values).reduce((total, group) => total + group.length, 0);
 }

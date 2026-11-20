@@ -17,10 +17,39 @@ import {
   resolveSelectedModuleId,
   SAMPLE_DISCOVER_MODULES,
   visibleDiscoverEntries,
+  visibleDiscoverFilters,
   visibleDiscoverModules,
   type DiscoverEntry,
+  type DiscoverFilter,
   type DiscoverModule,
 } from "../../src/screens/discover/discoverFixtures";
+
+describe("visibleDiscoverFilters (F87, RF-35)", () => {
+  const groups: DiscoverFilter[] = [
+    {
+      id: "content",
+      label: "Contenido",
+      multi: false,
+      options: [
+        { value: "sfw", label: "SFW" },
+        { value: "nsfw", label: "NSFW (+18)" },
+      ],
+    },
+    { id: "adult", label: "Adultos", multi: false, options: [{ value: "x", label: "+18" }] },
+    { id: "genre", label: "Género", multi: true, options: [{ value: "horror", label: "Terror" }] },
+  ];
+
+  it("con el ajuste NSFW encendido deja todas las opciones", () => {
+    expect(visibleDiscoverFilters(groups, true)).toEqual(groups);
+  });
+
+  it("con el ajuste apagado quita las opciones NSFW y los grupos que quedan vacíos", () => {
+    expect(visibleDiscoverFilters(groups, false)).toEqual([
+      { ...groups[0], options: [{ value: "sfw", label: "SFW" }] },
+      groups[2],
+    ]);
+  });
+});
 
 /**
  * F15 — lógica pura de la pantalla Descubrir (RF-9 a RF-11, RF-35):

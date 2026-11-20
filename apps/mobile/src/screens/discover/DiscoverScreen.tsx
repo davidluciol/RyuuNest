@@ -35,6 +35,7 @@ import {
   hasNsfwBorder,
   showDiscoverRows,
   visibleDiscoverEntries,
+  visibleDiscoverFilters,
   visibleDiscoverModules,
   type DiscoverEntry,
   type DiscoverFilterValues,
@@ -254,6 +255,7 @@ function DiscoverReady({
   const selectedModule = ready.modules.find((module) => module.id === selected?.id);
   const rows = showDiscoverRows(ready.query, ready.activeFilters);
   const activeCount = countActiveFilters(ready.activeFilters);
+  const filterGroups = visibleDiscoverFilters(ready.filters, nsfwVisible);
   const [filtersOpen, setFiltersOpen] = useState(false);
   // F59: con `home()` las secciones del módulo sustituyen a latest/popular.
   const sections = rows
@@ -314,7 +316,7 @@ function DiscoverReady({
               accessibilityLabel={t("discover.search.placeholder")}
             />
           </View>
-          {ready.filters.length > 0 ? (
+          {filterGroups.length > 0 ? (
             <FocusPressable
               accessibilityRole="button"
               accessibilityLabel={
@@ -349,7 +351,7 @@ function DiscoverReady({
         </View>
         <TagFilterSheet
           visible={filtersOpen}
-          groups={ready.filters}
+          groups={filterGroups}
           selected={ready.activeFilters}
           onChange={(next) => onApplyFilters?.(next)}
           onClose={() => setFiltersOpen(false)}
