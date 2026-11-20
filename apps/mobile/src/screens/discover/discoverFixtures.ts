@@ -128,6 +128,9 @@ export interface DiscoverReady {
   query: string;
   latest: readonly DiscoverEntry[];
   popular: readonly DiscoverEntry[];
+  /** F85: páginas ya cargadas de cada fila y si quedan más (ausente = sin más). */
+  latestMore?: { page: number; hasNext: boolean };
+  popularMore?: { page: number; hasNext: boolean };
   /** Secciones de `home()` (F59); si hay, sustituyen a latest/popular. */
   sections: readonly DiscoverSection[];
   /** Grupos de etiquetas del módulo (F50); vacío = el botón «Filtros» no aparece. */

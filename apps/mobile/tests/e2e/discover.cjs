@@ -64,6 +64,16 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF15");
       await page.getByRole("button", { name: "Cambiar de módulo" }).waitFor({ state: "visible" });
       assert.equal(await page.getByText("Módulo de ejemplo B").count(), 0);
 
+      // F85: las filas Reciente/Popular son rejillas y «Cargar más» añade portadas.
+      const loadMore = page.getByRole("button", { name: "Cargar más" }).first();
+      await loadMore.waitFor({ state: "visible" });
+      const before = await page.getByRole("button").count();
+      await loadMore.click();
+      await page.waitForFunction(
+        (count) => document.querySelectorAll('[role="button"], button').length > count,
+        before,
+      );
+
       // F84: scroll infinito del catálogo; al agotarse sale el aviso de fin de lista.
       await page
         .getByTestId("discover-more-idle")
