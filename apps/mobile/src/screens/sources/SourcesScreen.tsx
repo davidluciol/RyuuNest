@@ -30,7 +30,13 @@ import {
   type SourcesView,
 } from "./sourcesFixtures";
 import SourcesSheets from "./SourcesSheets";
-import { BADGE_LABEL_KEYS, ROW_ACTION_KEYS, moduleBadges, moduleRowAction } from "./sourcesView";
+import {
+  BADGE_LABEL_KEYS,
+  INCOMPATIBLE_LABEL_KEY,
+  ROW_ACTION_KEYS,
+  moduleBadges,
+  moduleRowAction,
+} from "./sourcesView";
 
 /**
  * F16 — pantalla Fuentes (RF-1 a RF-8, SPEC §11.5): cabecera con resumen y un
@@ -108,7 +114,7 @@ export default function SourcesScreen({
     );
   }
 
-  const { repos, modules } = view.data;
+  const { repos, modules, incompatible = [] } = view.data;
   const summary = sourcesSummary(modules);
 
   return (
@@ -238,6 +244,21 @@ export default function SourcesScreen({
               )}
             </View>
           </>
+        )}
+
+        {incompatible.length === 0 ? null : (
+          <View style={styles.section} testID="sources-incompatible">
+            <SectionHeader title={t("sources.section.incompatible")} />
+            {incompatible.map((item) => (
+              <ModuleRow
+                key={`${item.repoId}/${item.id}`}
+                testID={`incompatible-${item.id}`}
+                name={item.name}
+                meta={t(INCOMPATIBLE_LABEL_KEY)}
+                hint={item.reason}
+              />
+            ))}
+          </View>
         )}
 
         {recommended !== undefined ? (

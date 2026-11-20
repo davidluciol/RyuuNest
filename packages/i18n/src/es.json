@@ -287,6 +287,8 @@
   "sources.subtitle": "Gestión de repositorios y módulos independientes para tus tesoros locales.",
   "sources.section.repos": "Repositorios",
   "sources.section.modules": "Módulos",
+  "sources.section.incompatible": "No compatibles",
+  "sources.incompatible.label": "No compatible con esta versión",
   "sources.section.recommended": "Recomendados",
   "sources.recommended.loading": "Cargando recomendados…",
   "sources.recommended.offlineTitle": "Sin conexión",

@@ -23,7 +23,8 @@ export interface ModuleRowProps {
   error?: string;
   /** F21: texto secundario bajo los metadatos (p. ej. «Instálalo desde Fuentes»). */
   hint?: string;
-  actionLabel: string;
+  /** Sin etiqueta no hay botón (p. ej. módulo no compatible, F61). */
+  actionLabel?: string;
   actionVariant?: "primary" | "secondary";
   onAction?: () => void;
   /** La acción no aplica (p. ej. recomendado ya añadido). */
@@ -61,12 +62,14 @@ export default function ModuleRow({
         ) : null}
         {error ? <Text style={[styles.meta, { color: text.error }]}>{error}</Text> : null}
       </View>
-      <Button
-        variant={actionVariant}
-        label={actionLabel}
-        onPress={onAction}
-        disabled={actionDisabled}
-      />
+      {actionLabel === undefined ? null : (
+        <Button
+          variant={actionVariant}
+          label={actionLabel}
+          onPress={onAction}
+          disabled={actionDisabled}
+        />
+      )}
     </View>
   );
 }

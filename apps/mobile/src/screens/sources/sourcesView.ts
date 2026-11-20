@@ -25,6 +25,9 @@ export const ROW_ACTION_KEYS: Record<"install" | "manage", string> = {
   manage: "sources.module.manage",
 };
 
+/** F61: etiqueta de un módulo que esta versión de la app no puede instalar. */
+export const INCOMPATIBLE_LABEL_KEY = "sources.incompatible.label";
+
 /** Tope de señales por fila (V8/V9 de `DESIGN_RULES.md`: máximo dos). */
 export const MAX_ROW_BADGES = 2;
 

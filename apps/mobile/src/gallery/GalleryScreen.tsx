@@ -91,6 +91,7 @@ import { eventLevel } from "../screens/settings/diagnostics/diagnosticsView";
 import DiagnosticsSample from "../screens/settings/diagnostics/DiagnosticsSample";
 import {
   BADGE_LABEL_KEYS,
+  INCOMPATIBLE_LABEL_KEY,
   ROW_ACTION_KEYS,
   moduleBadges,
   moduleRowAction,
@@ -567,6 +568,14 @@ export default function GalleryScreen() {
               badges={moduleBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
               {...(module.lastError === undefined ? {} : { error: module.lastError })}
               actionLabel={t(ROW_ACTION_KEYS[moduleRowAction(module)])}
+            />
+          ))}
+          {SAMPLE_SOURCES_DATA.incompatible?.slice(0, 1).map((item) => (
+            <ModuleRow
+              key={item.id}
+              name={item.name}
+              meta={t(INCOMPATIBLE_LABEL_KEY)}
+              hint={item.reason}
             />
           ))}
         </View>

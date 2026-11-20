@@ -4,6 +4,7 @@ import type { SourceModule } from "../../src/screens/sources/sourcesData";
 import { t } from "../../src/i18n";
 import {
   BADGE_LABEL_KEYS,
+  INCOMPATIBLE_LABEL_KEY,
   MAX_ROW_BADGES,
   moduleBadges,
   moduleRowAction,
@@ -137,5 +138,11 @@ describe("claves de traducción de la fila", () => {
 
   it("el texto de script no usa jerga (T5): dice que ejecuta código", () => {
     expect(t(BADGE_LABEL_KEYS.script)).toBe("Ejecuta código");
+  });
+});
+
+describe("módulos no compatibles (F61)", () => {
+  it("la etiqueta dice que no es compatible con esta versión", () => {
+    expect(t(INCOMPATIBLE_LABEL_KEY)).toBe("No compatible con esta versión");
   });
 });
