@@ -323,8 +323,8 @@ Dep: F83 · M · `apps/mobile/src/screens/discover/*`
 
 Dep: F83, F84 · M · `apps/mobile/src/screens/discover/*`
 
-- [ ] Sustituir los carruseles por listas con scroll infinito reutilizando la lógica de F84; rejilla de portadas (T7: 3 líneas)
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+- [x] Las filas Reciente/Popular son rejillas de 3 columnas (T7) que reutilizan `catalogPaging` con «Cargar más» (decisión del humano 2026-11-19: tres rejillas apiladas; solo el catálogo hace scroll infinito automático). Las secciones `home()` conservan su carrusel + «Ver más» (F59)
+- Verif: ✅ Vitest · ✅ Playwright 426/1440 px (`discover.cjs`) · ✅ S25: lista de sección de ZonaTMO («Ver más») con scroll infinito; las filas Reciente/Popular no se ven en M440/YupManga/ZonaTMO (usan `home()` o no declaran `paginated`)
 
 ### F86 Propuesta UX de búsqueda y filtros (revisión de diseño) `[Diseño · Intermedia · N3]` 🧍
 

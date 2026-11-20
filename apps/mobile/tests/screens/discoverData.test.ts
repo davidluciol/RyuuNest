@@ -137,3 +137,34 @@ describe("loadDiscoverData — F84 solo catálogo", () => {
     expect(data.catalog.entries.length).toBeGreaterThan(0);
   });
 });
+
+describe("loadDiscoverData — F85 filas Reciente y Popular paginadas", () => {
+  it("informa si hay más páginas en cada fila", async () => {
+    const data = await loadDiscoverData({ moduleId: "m-ejemplo-a", query: "", page: 1 });
+
+    expect(typeof data.latestHasNext).toBe("boolean");
+    expect(typeof data.popularHasNext).toBe("boolean");
+  });
+
+  it("`row` pide la página de esa fila y no la del catálogo", async () => {
+    const first = await loadDiscoverData({ moduleId: "m-ejemplo-a", query: "", page: 1 });
+    const latest = await loadDiscoverData({
+      moduleId: "m-ejemplo-a",
+      query: "",
+      page: 1,
+      catalogOnly: true,
+      row: "latest",
+    });
+    const popular = await loadDiscoverData({
+      moduleId: "m-ejemplo-a",
+      query: "",
+      page: 1,
+      catalogOnly: true,
+      row: "popular",
+    });
+
+    expect(latest.catalog.entries).toEqual(first.latest);
+    expect(popular.catalog.entries).toEqual(first.popular);
+    expect(latest.catalog.hasNext).toBe(first.latestHasNext);
+  });
+});

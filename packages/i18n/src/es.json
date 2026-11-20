@@ -253,6 +253,7 @@
   "discover.page.next": "Siguiente",
   "discover.more.loading": "Cargando más…",
   "discover.more.error": "No se pudo cargar más",
+  "discover.more.load": "Cargar más",
   "discover.more.retry": "Reintentar",
   "discover.more.end": "Has llegado al final",
   "state.empty.discover.title": "Todavía no hay portales",

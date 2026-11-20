@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { ErrorReporter } from "../../data/errorLogPort";
-import {
-  resolveDiscoverSource,
-  type DiscoverDataSource,
-} from "./discoverData";
+import { resolveDiscoverSource, type DiscoverDataSource } from "./discoverData";
 import { createCatalogPager } from "./catalogPaging";
 import { reportDiscoverError } from "./discoverErrors";
 import {
@@ -46,12 +43,24 @@ interface Request {
   attempt: number;
 }
 
-const INITIAL_REQUEST: Request = { moduleId: null, query: "", page: 1, section: null, filters: {}, attempt: 0 };
+const INITIAL_REQUEST: Request = {
+  moduleId: null,
+  query: "",
+  page: 1,
+  section: null,
+  filters: {},
+  attempt: 0,
+};
 
 /** F84: estado de «cargar más» del catálogo (el fin de lista sale de `catalog.hasNext`). */
 export type DiscoverMoreStatus = "idle" | "loading" | "error";
 
+/** F85: filas que también cargan más páginas. */
+export type DiscoverRow = "latest" | "popular";
+
 export interface DiscoverActions {
+  /** F85: pide la página siguiente de la fila Reciente o Popular. */
+  loadMoreRow: (row: DiscoverRow) => void;
   /** F84: pide la página siguiente del catálogo (scroll infinito); no hace nada si no hay más o ya se pidió. */
   loadMore: () => void;
   selectModule: (id: string) => void;
@@ -82,15 +91,21 @@ export interface DiscoverDataDeps {
   nsfwVisible?: boolean | undefined;
 }
 
-export function useDiscoverData(
-  deps: DiscoverDataDeps = {},
-): { view: DiscoverView; more: DiscoverMoreStatus } & DiscoverActions {
+export function useDiscoverData(deps: DiscoverDataDeps = {}): {
+  view: DiscoverView;
+  more: DiscoverMoreStatus;
+  rowMore: Record<DiscoverRow, DiscoverMoreStatus>;
+} & DiscoverActions {
   const { source, reporter, resolveReporter, nsfwVisible = false } = deps;
   const [boot, setBoot] = useState<Boot | null>(null);
   const [nonce, setNonce] = useState(0);
   const [request, setRequest] = useState<Request>(INITIAL_REQUEST);
   const [view, setView] = useState<DiscoverView>({ status: "loading" });
   const [more, setMore] = useState<DiscoverMoreStatus>("idle");
+  const [rowMore, setRowMore] = useState<Record<DiscoverRow, DiscoverMoreStatus>>({
+    latest: "idle",
+    popular: "idle",
+  });
   const viewRef = useRef(view);
   viewRef.current = view;
   // Cada carga nueva (módulo, búsqueda, filtros) invalida lo que «cargar más» tenía en vuelo.
@@ -168,6 +183,7 @@ export function useDiscoverData(
     let cancelled = false;
     loadTokenRef.current += 1;
     setMore("idle");
+    setRowMore({ latest: "idle", popular: "idle" });
     const keep = keepOnReloadRef.current;
     keepOnReloadRef.current = false;
     // Solo se conserva la pantalla del mismo módulo: nunca se mezclan series de otro.
@@ -189,6 +205,8 @@ export function useDiscoverData(
             query,
             latest: data.latest,
             popular: data.popular,
+            latestMore: { page: 1, hasNext: data.latestHasNext },
+            popularMore: { page: 1, hasNext: data.popularHasNext },
             sections: data.sections,
             filters: data.filters,
             activeFilters: filters,
@@ -215,7 +233,14 @@ export function useDiscoverData(
   }, [boot, request, nsfwVisible]);
 
   const selectModule = useCallback((id: string) => {
-    setRequest((current) => ({ moduleId: id, query: "", page: 1, section: null, filters: {}, attempt: current.attempt }));
+    setRequest((current) => ({
+      moduleId: id,
+      query: "",
+      page: 1,
+      section: null,
+      filters: {},
+      attempt: current.attempt,
+    }));
     // RF-9: el recuerdo es lo último; si la persistencia falla, la pantalla
     // ya cambió de módulo y el fallo queda avisado, no bloqueante.
     void bootRef.current?.source.rememberLastModule(id).catch((error: unknown) => {
@@ -272,26 +297,90 @@ export function useDiscoverData(
           return;
         }
         setView((latest) =>
-          latest.status === "ready" ? { status: "ready", ready: { ...latest.ready, catalog: next } } : latest,
+          latest.status === "ready"
+            ? { status: "ready", ready: { ...latest.ready, catalog: next } }
+            : latest,
         );
         setMore("idle");
       })
       .catch((error: unknown) => {
         if (loadTokenRef.current !== token) return;
-        const name = currentBoot.modules.find((module) => module.id === selectedModuleId)?.name ?? "";
+        const name =
+          currentBoot.modules.find((module) => module.id === selectedModuleId)?.name ?? "";
         reportDiscoverError(reporterRef.current, error, name, { moduleId: selectedModuleId });
         setMore("error");
       });
   }, []);
 
-  const applyFilters = useCallback(
-    (filters: DiscoverFilterValues) => {
-      keepOnReloadRef.current = true;
-      setView((current) => withActiveFilters(current, filters));
-      setRequest((current) => ({ ...current, filters, page: 1, section: null }));
-    },
-    [],
-  );
+  const rowPagersRef = useRef<{
+    key: number;
+    run: Record<DiscoverRow, ReturnType<typeof createCatalogPager>>;
+  } | null>(null);
+
+  const loadMoreRow = useCallback((row: DiscoverRow) => {
+    const current = viewRef.current;
+    const currentBoot = bootRef.current;
+    if (current.status !== "ready" || currentBoot === null) return;
+    const { selectedModuleId, query, activeFilters } = current.ready;
+    const token = loadTokenRef.current;
+    if (rowPagersRef.current?.key !== token) {
+      const make = (kind: DiscoverRow) =>
+        createCatalogPager(async (page) => {
+          const data = await currentBoot.source.load({
+            moduleId: selectedModuleId,
+            query,
+            page,
+            filters: activeFilters,
+            catalogOnly: true,
+            row: kind,
+          });
+          return data.catalog;
+        });
+      rowPagersRef.current = {
+        key: token,
+        run: { latest: make("latest"), popular: make("popular") },
+      };
+    }
+    const more = row === "latest" ? current.ready.latestMore : current.ready.popularMore;
+    const entries = row === "latest" ? current.ready.latest : current.ready.popular;
+    const page = { page: more?.page ?? 1, hasNext: more?.hasNext ?? false, entries: [...entries] };
+    setRowMore((state) => ({ ...state, [row]: "loading" }));
+    rowPagersRef.current.run[row](page)
+      .then((next) => {
+        if (loadTokenRef.current !== token) return;
+        if (next !== null) {
+          setView((latest) =>
+            latest.status === "ready"
+              ? {
+                  status: "ready",
+                  ready: {
+                    ...latest.ready,
+                    [row]: next.entries,
+                    [row === "latest" ? "latestMore" : "popularMore"]: {
+                      page: next.page,
+                      hasNext: next.hasNext,
+                    },
+                  },
+                }
+              : latest,
+          );
+        }
+        setRowMore((state) => ({ ...state, [row]: "idle" }));
+      })
+      .catch((error: unknown) => {
+        if (loadTokenRef.current !== token) return;
+        const name =
+          currentBoot.modules.find((module) => module.id === selectedModuleId)?.name ?? "";
+        reportDiscoverError(reporterRef.current, error, name, { moduleId: selectedModuleId, row });
+        setRowMore((state) => ({ ...state, [row]: "error" }));
+      });
+  }, []);
+
+  const applyFilters = useCallback((filters: DiscoverFilterValues) => {
+    keepOnReloadRef.current = true;
+    setView((current) => withActiveFilters(current, filters));
+    setRequest((current) => ({ ...current, filters, page: 1, section: null }));
+  }, []);
 
   const openSection = useCallback(
     (id: string, title: string) =>
@@ -326,5 +415,20 @@ export function useDiscoverData(
     setRequest((current) => ({ ...current, attempt: current.attempt + 1 }));
   }, []);
 
-  return { view, more, loadMore, selectModule, search, nextPage, prevPage, applyFilters, openSection, closeSection, retry, refreshModules };
+  return {
+    view,
+    more,
+    rowMore,
+    loadMoreRow,
+    loadMore,
+    selectModule,
+    search,
+    nextPage,
+    prevPage,
+    applyFilters,
+    openSection,
+    closeSection,
+    retry,
+    refreshModules,
+  };
 }

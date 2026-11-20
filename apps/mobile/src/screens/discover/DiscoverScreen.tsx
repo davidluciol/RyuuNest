@@ -38,7 +38,7 @@ import {
   type DiscoverFilterValues,
   type DiscoverView,
 } from "./discoverFixtures";
-import type { DiscoverMoreStatus } from "./useDiscoverData";
+import type { DiscoverMoreStatus, DiscoverRow } from "./useDiscoverData";
 import { textStyle } from "../../components/textStyle";
 
 /**
@@ -84,6 +84,9 @@ export interface DiscoverScreenProps {
   /** F84: estado de «cargar más» y la petición de la página siguiente (scroll infinito). */
   more?: DiscoverMoreStatus;
   onLoadMore?: () => void;
+  /** F85: estado y petición de «Cargar más» de las filas Reciente/Popular. */
+  rowMore?: Record<DiscoverRow, DiscoverMoreStatus>;
+  onLoadMoreRow?: (row: DiscoverRow) => void;
   /** F59: «Ver más» de una sección de `home()` y vuelta a la portada. */
   onOpenSection?: (id: string, title: string) => void;
   onCloseSection?: () => void;
@@ -104,6 +107,8 @@ export default function DiscoverScreen({
   onSearch,
   more = "idle",
   onLoadMore,
+  rowMore = { latest: "idle", popular: "idle" },
+  onLoadMoreRow,
   onOpenSection,
   onCloseSection,
   onApplyFilters,
@@ -190,6 +195,8 @@ export default function DiscoverScreen({
       onSearch={onSearch}
       more={more}
       onLoadMore={onLoadMore}
+      rowMore={rowMore}
+      onLoadMoreRow={onLoadMoreRow}
       onOpenSection={onOpenSection}
       onCloseSection={onCloseSection}
       onApplyFilters={onApplyFilters}
@@ -207,6 +214,8 @@ interface DiscoverReadyProps {
   onSearch?: (query: string) => void;
   more: DiscoverMoreStatus;
   onLoadMore?: () => void;
+  rowMore: Record<DiscoverRow, DiscoverMoreStatus>;
+  onLoadMoreRow?: (row: DiscoverRow) => void;
   onOpenSection?: (id: string, title: string) => void;
   onCloseSection?: () => void;
   onApplyFilters?: (filters: DiscoverFilterValues) => void;
@@ -222,6 +231,8 @@ function DiscoverReady({
   onSearch,
   more,
   onLoadMore,
+  rowMore,
+  onLoadMoreRow,
   onOpenSection,
   onCloseSection,
   onApplyFilters,
@@ -370,34 +381,24 @@ function DiscoverReady({
         {showLatest ? (
           <View style={styles.section}>
             <SectionHeader title={t("discover.section.latest")} />
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.rowScroller}
-            >
-              {latest.map((entry) => (
-                <View key={entry.seriesId} style={{ width: ROW_CARD_WIDTH }}>
-                  <DiscoverCard entry={entry} onPress={onSeriesPress} />
-                </View>
-              ))}
-            </ScrollView>
+            <CoverGrid entries={latest} gap={gap} onSeriesPress={onSeriesPress} />
+            <MoreRowFooter
+              hasNext={ready.latestMore?.hasNext ?? false}
+              status={rowMore.latest}
+              onLoadMore={() => onLoadMoreRow?.("latest")}
+            />
           </View>
         ) : null}
 
         {showPopular ? (
           <View style={styles.section}>
             <SectionHeader title={t("discover.section.popular")} />
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.rowScroller}
-            >
-              {popular.map((entry) => (
-                <View key={entry.seriesId} style={{ width: ROW_CARD_WIDTH }}>
-                  <DiscoverCard entry={entry} onPress={onSeriesPress} />
-                </View>
-              ))}
-            </ScrollView>
+            <CoverGrid entries={popular} gap={gap} onSeriesPress={onSeriesPress} />
+            <MoreRowFooter
+              hasNext={ready.popularMore?.hasNext ?? false}
+              status={rowMore.popular}
+              onLoadMore={() => onLoadMoreRow?.("popular")}
+            />
           </View>
         ) : null}
 
@@ -418,21 +419,7 @@ function DiscoverReady({
               scale="sm"
             />
           ) : (
-            <View style={{ gap }}>
-              {chunk(catalog.entries, CATALOG_COLUMNS).map((row, rowIndex) => (
-                <View key={rowIndex} style={styles.catalogRow}>
-                  {row.map((entry) => (
-                    <View key={entry.seriesId} style={styles.catalogItem}>
-                      <DiscoverCard entry={entry} onPress={onSeriesPress} />
-                    </View>
-                  ))}
-                  {/* Relleno para que la última fila no deforme las tarjetas. */}
-                  {Array.from({ length: CATALOG_COLUMNS - row.length }).map((_, i) => (
-                    <View key={`spacer-${i}`} style={styles.catalogItem} />
-                  ))}
-                </View>
-              ))}
-            </View>
+            <CoverGrid entries={catalog.entries} gap={gap} onSeriesPress={onSeriesPress} />
           )}
 
           {catalog.entries.length > 0 ? (
@@ -442,6 +429,65 @@ function DiscoverReady({
       </ScrollView>
     </View>
   );
+}
+
+/** F85: rejilla de portadas (3 columnas, T7: 3 líneas) compartida por filas y catálogo. */
+function CoverGrid({
+  entries,
+  gap,
+  onSeriesPress,
+}: {
+  entries: readonly DiscoverEntry[];
+  gap: number;
+  onSeriesPress?: ((entry: DiscoverEntry) => void) | undefined;
+}) {
+  return (
+    <View style={{ gap }}>
+      {chunk(entries, CATALOG_COLUMNS).map((row, rowIndex) => (
+        <View key={rowIndex} style={styles.catalogRow}>
+          {row.map((entry) => (
+            <View key={entry.seriesId} style={styles.catalogItem}>
+              <DiscoverCard entry={entry} onPress={onSeriesPress} />
+            </View>
+          ))}
+          {/* Relleno para que la última fila no deforme las tarjetas. */}
+          {Array.from({ length: CATALOG_COLUMNS - row.length }).map((_, i) => (
+            <View key={`spacer-${i}`} style={styles.catalogItem} />
+          ))}
+        </View>
+      ))}
+    </View>
+  );
+}
+
+/** F85: «Cargar más» de una fila Reciente/Popular (el scroll infinito es del catálogo). */
+function MoreRowFooter({
+  hasNext,
+  status,
+  onLoadMore,
+}: {
+  hasNext: boolean;
+  status: DiscoverMoreStatus;
+  onLoadMore: () => void;
+}) {
+  if (status === "loading") {
+    return (
+      <View style={styles.footerRow}>
+        <ActivityIndicator color={colors.textSecondary} />
+        <Text style={styles.footerText}>{t("discover.more.loading")}</Text>
+      </View>
+    );
+  }
+  if (status === "error") {
+    return (
+      <View style={styles.footerRow}>
+        <Text style={styles.footerText}>{t("discover.more.error")}</Text>
+        <Button variant="secondary" label={t("discover.more.retry")} onPress={onLoadMore} />
+      </View>
+    );
+  }
+  if (!hasNext) return null;
+  return <Button variant="secondary" label={t("discover.more.load")} onPress={onLoadMore} />;
 }
 
 /** F84: pie del catálogo con scroll infinito: cargando más, error con reintento o fin de lista. */
