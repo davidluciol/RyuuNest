@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, radii, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
+import FocusPressable from "../components/FocusPressable";
 import ModulePicker from "../components/ModulePicker";
 import TextField from "../components/TextField";
 import { textStyle } from "../components/textStyle";
@@ -33,14 +34,14 @@ function IconButton({
   testID?: string;
 }) {
   return (
-    <Pressable
+    <FocusPressable
       accessibilityRole="button"
       accessibilityLabel={label}
       testID={testID}
       style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
     >
       {icon}
-    </Pressable>
+    </FocusPressable>
   );
 }
 
@@ -103,10 +104,10 @@ function VariantB() {
         />
       </View>
       {draft.showFilters ? (
-        <Pressable accessibilityRole="button" style={styles.chip}>
+        <FocusPressable accessibilityRole="button" style={styles.chip}>
           <SlidersHorizontal size={16} color={colors.textSecondary} />
           <Text style={styles.chipLabel}>{t("discover.filter.button")}</Text>
-        </Pressable>
+        </FocusPressable>
       ) : null}
     </View>
   );
