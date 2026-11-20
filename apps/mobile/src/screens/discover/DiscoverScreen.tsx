@@ -10,6 +10,7 @@ import {
 import {
   dragonNightColors,
   layoutForWidth,
+  radii,
   spacing,
   touchTarget,
   typography,
@@ -20,6 +21,7 @@ import EmptyState from "../../components/EmptyState";
 import ErrorState from "../../components/ErrorState";
 import LibraryCard from "../../components/LibraryCard";
 import LoadingState from "../../components/LoadingState";
+import FocusPressable from "../../components/FocusPressable";
 import ModulePicker from "../../components/ModulePicker";
 import SectionHeader from "../../components/SectionHeader";
 import TagFilterSheet from "../../components/TagFilterSheet";
@@ -256,6 +258,7 @@ function DiscoverReady({
   const rows = showDiscoverRows(ready.query, ready.activeFilters);
   const activeCount = countActiveFilters(ready.activeFilters);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
   // F59: con `home()` las secciones del módulo sustituyen a latest/popular.
   const sections = rows
     ? ready.sections
@@ -303,48 +306,43 @@ function DiscoverReady({
           if (remaining < layoutMeasurement.height && more === "idle") onLoadMore?.();
         }}
       >
-        {/* Búsqueda del módulo + selector (RF-9, RF-10). */}
+        {/* F86 (variante B) + F88: barra y lupa de 48×48; el selector de módulo está en la cabecera. */}
         <View style={styles.topRow}>
           <View style={styles.searchWrap}>
             <TextField
               placeholder={t("discover.search.placeholder")}
               value={draft}
               onChangeText={setDraft}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
               onSubmitEditing={() => onSearch?.(draft.trim())}
               returnKeyType="search"
               accessibilityLabel={t("discover.search.placeholder")}
-              leadingIcon={<Search size={20} color={colors.textSecondary} />}
             />
           </View>
-          <ModulePicker
-            modules={modules.map((module) => ({ id: module.id, name: module.name }))}
-            selectedId={selected.id}
-            onSelect={(id) => onModuleSelect?.(id)}
-          />
+          <FocusPressable
+            accessibilityRole="button"
+            accessibilityLabel={t("discover.search.submit")}
+            onPress={() => onSearch?.(draft.trim())}
+            style={styles.searchButton}
+          >
+            <Search size={20} color={colors.textPrimary} />
+          </FocusPressable>
         </View>
-        <View style={styles.actionsRow}>
-          <View style={styles.actionItem}>
+        {ready.filters.length > 0 && (searchFocused || draft.length > 0 || activeCount > 0) ? (
+          <View style={styles.filterChipRow}>
             <Button
               variant="secondary"
-              label={t("discover.search.submit")}
-              onPress={() => onSearch?.(draft.trim())}
+              label={
+                activeCount > 0
+                  ? t("discover.filter.buttonCount", { count: activeCount })
+                  : t("discover.filter.button")
+              }
+              onPress={() => setFiltersOpen(true)}
+              testID="discover-filters-button"
             />
           </View>
-          {ready.filters.length > 0 ? (
-            <View style={styles.actionItem}>
-              <Button
-                variant="secondary"
-                label={
-                  activeCount > 0
-                    ? t("discover.filter.buttonCount", { count: activeCount })
-                    : t("discover.filter.button")
-                }
-                onPress={() => setFiltersOpen(true)}
-                testID="discover-filters-button"
-              />
-            </View>
-          ) : null}
-        </View>
+        ) : null}
         <TagFilterSheet
           visible={filtersOpen}
           groups={ready.filters}
@@ -565,8 +563,17 @@ const styles = StyleSheet.create({
   },
   errorScreen: { flex: 1, backgroundColor: colors.bg },
   errorPicker: { alignSelf: "stretch", alignItems: "flex-end", paddingTop: spacing.md },
-  actionsRow: { flexDirection: "row", gap: spacing.sm },
-  actionItem: { flex: 1 },
+  filterChipRow: { alignItems: "flex-start" },
+  searchButton: {
+    width: touchTarget.min,
+    height: touchTarget.min,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: radii.control,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   searchWrap: {
     flex: 1,
     minWidth: 0,
