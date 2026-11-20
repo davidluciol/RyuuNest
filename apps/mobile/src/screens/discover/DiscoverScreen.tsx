@@ -28,7 +28,7 @@ import TagFilterSheet from "../../components/TagFilterSheet";
 import TextField from "../../components/TextField";
 import { recentCardStyle } from "../../components/recentCardStyles";
 import { kindLabel } from "../../components/kindLabel";
-import { Search } from "../../icons";
+import { Search, SlidersHorizontal } from "../../icons";
 import { t } from "../../i18n";
 import {
   countActiveFilters,
@@ -193,7 +193,6 @@ export default function DiscoverScreen({
       nsfwVisible={nsfwVisible}
       sidePadding={layout.margin}
       gap={layout.gap}
-      onModuleSelect={onModuleSelect}
       onSearch={onSearch}
       more={more}
       onLoadMore={onLoadMore}
@@ -212,7 +211,6 @@ interface DiscoverReadyProps {
   nsfwVisible: boolean;
   sidePadding: number;
   gap: number;
-  onModuleSelect?: (id: string) => void;
   onSearch?: (query: string) => void;
   more: DiscoverMoreStatus;
   onLoadMore?: () => void;
@@ -229,7 +227,6 @@ function DiscoverReady({
   nsfwVisible,
   sidePadding,
   gap,
-  onModuleSelect,
   onSearch,
   more,
   onLoadMore,
@@ -258,7 +255,6 @@ function DiscoverReady({
   const rows = showDiscoverRows(ready.query, ready.activeFilters);
   const activeCount = countActiveFilters(ready.activeFilters);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
   // F59: con `home()` las secciones del módulo sustituyen a latest/popular.
   const sections = rows
     ? ready.sections
@@ -313,13 +309,29 @@ function DiscoverReady({
               placeholder={t("discover.search.placeholder")}
               value={draft}
               onChangeText={setDraft}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
               onSubmitEditing={() => onSearch?.(draft.trim())}
               returnKeyType="search"
               accessibilityLabel={t("discover.search.placeholder")}
             />
           </View>
+          {ready.filters.length > 0 ? (
+            <FocusPressable
+              accessibilityRole="button"
+              accessibilityLabel={
+                activeCount > 0
+                  ? t("discover.filter.buttonCount", { count: activeCount })
+                  : t("discover.filter.button")
+              }
+              onPress={() => setFiltersOpen(true)}
+              style={[styles.searchButton, activeCount > 0 && styles.searchButtonActive]}
+              testID="discover-filters-button"
+            >
+              <SlidersHorizontal
+                size={20}
+                color={activeCount > 0 ? colors.accent : colors.textSecondary}
+              />
+            </FocusPressable>
+          ) : null}
           <FocusPressable
             accessibilityRole="button"
             accessibilityLabel={t("discover.search.submit")}
@@ -329,20 +341,6 @@ function DiscoverReady({
             <Search size={20} color={colors.textPrimary} />
           </FocusPressable>
         </View>
-        {ready.filters.length > 0 && (searchFocused || draft.length > 0 || activeCount > 0) ? (
-          <View style={styles.filterChipRow}>
-            <Button
-              variant="secondary"
-              label={
-                activeCount > 0
-                  ? t("discover.filter.buttonCount", { count: activeCount })
-                  : t("discover.filter.button")
-              }
-              onPress={() => setFiltersOpen(true)}
-              testID="discover-filters-button"
-            />
-          </View>
-        ) : null}
         <TagFilterSheet
           visible={filtersOpen}
           groups={ready.filters}
@@ -563,7 +561,7 @@ const styles = StyleSheet.create({
   },
   errorScreen: { flex: 1, backgroundColor: colors.bg },
   errorPicker: { alignSelf: "stretch", alignItems: "flex-end", paddingTop: spacing.md },
-  filterChipRow: { alignItems: "flex-start" },
+  searchButtonActive: { borderColor: colors.accent },
   searchButton: {
     width: touchTarget.min,
     height: touchTarget.min,
