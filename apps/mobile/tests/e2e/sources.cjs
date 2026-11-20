@@ -50,6 +50,24 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF16");
       await page.getByTestId("module-portal-aurora").waitFor({ state: "visible" });
       await shot("fuentes", { fullPage: true });
 
+      // F44: «Recomendados» (ejemplo, sin red). «Añadir» abre la hoja con la URL
+      // rellena y no añade nada hasta confirmar; la entrada NSFW va marcada.
+      const recommendedRow = page.getByTestId("recommended-https://repo-nocturno.test/index.json");
+      await recommendedRow.getByText("NSFW").waitFor({ state: "visible" });
+      const addButton = recommendedRow.getByRole("button", { name: "Añadir" });
+      const addBox = await addButton.boundingBox();
+      assert.ok(addBox && addBox.height >= 48 && addBox.width >= 48, `«Añadir» < 48 dp @${width}`);
+      await page.getByRole("button", { name: "Actualizar recomendados" }).waitFor({ state: "visible" });
+      await addButton.click();
+      await page.getByTestId("sheet-add-repo").waitFor({ state: "visible" });
+      assert.equal(
+        await page.getByTestId("sheet-add-repo").locator("input").inputValue(),
+        "https://repo-nocturno.test/index.json",
+      );
+      await shot("recomendados-anadir");
+      await page.getByRole("button", { name: "Cancelar" }).click();
+      await page.getByTestId("sheet-add-repo").waitFor({ state: "detached" });
+
       // Filtro por tipo con contador: Cómic deja solo un módulo.
       await page.getByRole("button", { name: "Cómic (1)" }).click();
       await page.getByTestId("module-portal-fresno").waitFor({ state: "visible" });
@@ -123,11 +141,11 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF16");
       await page.getByRole("button", { name: "Añadir repositorio" }).first().click();
       await page.getByTestId("sheet-add-repo").waitFor({ state: "visible" });
       await page.getByPlaceholder("https://ejemplo.com/repo/index.json").fill("http://repo.test/x.json");
-      await page.getByRole("button", { name: "Añadir", exact: true }).click();
+      await page.getByTestId("sheet-add-repo").getByRole("button", { name: "Añadir", exact: true }).click();
       await page.getByText("El repositorio debe usar HTTPS.").waitFor({ state: "visible" });
       await shot("anadir-repositorio");
       await page.getByPlaceholder("https://ejemplo.com/repo/index.json").fill("https://repo.ejemplo.org/indice.json");
-      await page.getByRole("button", { name: "Añadir", exact: true }).click();
+      await page.getByTestId("sheet-add-repo").getByRole("button", { name: "Añadir", exact: true }).click();
       await page.getByTestId("sheet-add-repo").waitFor({ state: "detached" });
       await page.getByText("Repositorio Comunitario A").waitFor({ state: "visible" });
 

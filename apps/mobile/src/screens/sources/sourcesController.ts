@@ -26,7 +26,8 @@ export interface SourcesControllerDeps {
 }
 
 export interface SourcesController {
-  openAddRepo(): void;
+  /** Con `url` (un recomendado, F44) la hoja sale rellena; añadir sigue pidiendo confirmar. */
+  openAddRepo(url?: string): void;
   submitAddRepo(input: string): Promise<void>;
   openInstall(repoId: string, moduleId: string): Promise<void>;
   confirmInstall(reinforced: boolean): Promise<void>;
@@ -76,7 +77,8 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
   }
 
   return {
-    openAddRepo: () => dispatch({ type: "open-add-repo" }),
+    openAddRepo: (url) =>
+      dispatch(url === undefined ? { type: "open-add-repo" } : { type: "open-add-repo", url }),
 
     async submitAddRepo(input) {
       const check = validateRepoUrl(input);

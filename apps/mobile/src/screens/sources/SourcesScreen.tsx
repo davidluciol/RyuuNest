@@ -24,6 +24,7 @@ import {
   filterSourceModules,
   kindFilterCounts,
   sourcesSummary,
+  type RecommendedView,
   type SourceKindFilter,
   type SourcesView,
 } from "./sourcesFixtures";
@@ -63,6 +64,9 @@ export interface SourcesScreenProps {
   /** Aviso transitorio (errores del servicio fuera de una hoja). */
   notice?: string | null;
   onRetry?: () => void;
+  /** F44: sección «Recomendados»; sin ella (galería, primer uso) no se pinta. */
+  recommended?: RecommendedView;
+  onRefreshRecommended?: () => void;
 }
 
 export default function SourcesScreen({
@@ -71,6 +75,8 @@ export default function SourcesScreen({
   controller,
   notice = null,
   onRetry,
+  recommended,
+  onRefreshRecommended,
 }: SourcesScreenProps) {
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
@@ -133,7 +139,7 @@ export default function SourcesScreen({
           <Button
             label={t("actions.addRepository")}
             icon={<Plus size={spacing.md} color={colors.bg} />}
-            onPress={controller?.openAddRepo}
+            onPress={() => controller?.openAddRepo()}
             disabled={controller === null}
           />
         </View>
@@ -155,14 +161,14 @@ export default function SourcesScreen({
               title={t("sources.empty.dismissedTitle")}
               message={t("sources.empty.dismissedMessage")}
               actionLabel={t("actions.addRepository")}
-              onAction={controller?.openAddRepo}
+              onAction={() => controller?.openAddRepo()}
             />
           ) : (
             <EmptyState
               title={t("sources.empty.title")}
               message={t("sources.empty.message")}
               actionLabel={t("actions.addRepository")}
-              onAction={controller?.openAddRepo}
+              onAction={() => controller?.openAddRepo()}
             />
           )
         ) : (
@@ -232,6 +238,51 @@ export default function SourcesScreen({
             </View>
           </>
         )}
+
+        {recommended !== undefined ? (
+          <View style={styles.section} testID="sources-recommended">
+            <SectionHeader title={t("sources.section.recommended")} />
+            {recommended.status === "loading" ? (
+              <LoadingState title={t("sources.recommended.loading")} />
+            ) : recommended.status === "offline" ? (
+              <EmptyState
+                title={t("sources.recommended.offlineTitle")}
+                message={t("sources.recommended.offlineMessage")}
+                actionLabel={t("actions.retry")}
+                onAction={onRefreshRecommended}
+                scale="sm"
+              />
+            ) : recommended.repos.length === 0 ? (
+              <EmptyState
+                title={t("sources.recommended.emptyTitle")}
+                actionLabel={t("sources.recommended.refresh")}
+                onAction={onRefreshRecommended}
+                scale="sm"
+              />
+            ) : (
+              <>
+                {recommended.repos.map((repo) => (
+                  <ModuleRow
+                    key={repo.indexUrl}
+                    testID={`recommended-${repo.indexUrl}`}
+                    name={repo.name}
+                    meta={repo.description}
+                    hint={repo.indexUrl}
+                    badges={repo.nsfw ? [t(BADGE_LABEL_KEYS.nsfw)] : []}
+                    actionLabel={t("sources.recommended.add")}
+                    actionVariant="secondary"
+                    onAction={() => controller?.openAddRepo(repo.indexUrl)}
+                  />
+                ))}
+                <Button
+                  variant="secondary"
+                  label={t("sources.recommended.refresh")}
+                  onPress={onRefreshRecommended}
+                />
+              </>
+            )}
+          </View>
+        ) : null}
       </ScrollView>
 
       {controller !== null ? (

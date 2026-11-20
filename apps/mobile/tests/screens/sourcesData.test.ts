@@ -7,7 +7,7 @@ import { ModuleError, StubHttp, type SecureLock } from "@ryuunest/core";
 
 import { openMigratedDriver } from "../../../../packages/core/tests/support/nodeSqliteDriver";
 import { createFflateArchive } from "../../src/data/fflateArchive";
-import { OFFICIAL_REPO_URL } from "../../src/data/officialRepo";
+import { OFFICIAL_REPO_URL, RECOMMENDED_URL } from "../../src/data/officialRepo";
 import {
   INSTALL_PROTECTION_SETTING,
   createSourcesService,
@@ -105,6 +105,11 @@ class Repo {
     this.routes[OFFICIAL_REPO_URL] = {
       body: JSON.stringify(this.indexBody("Repo oficial de prueba", versions)),
     };
+  }
+
+  /** Sirve `recommended.json` del repo oficial (F44). */
+  serveRecommended(body: unknown): void {
+    this.routes[RECOMMENDED_URL] = { body: JSON.stringify(body) };
   }
 
   /** El índice del repo oficial deja de responder bien (error 500). */
@@ -582,5 +587,29 @@ describe("loadSourcesWithOfficialRepo · carga inicial de Fuentes (P-85)", () =>
     expect(result.officialRepoFailed).toBe(false);
     expect(result.data.repos).toEqual([]);
     expect(repo.http.requests).toEqual([]);
+  });
+});
+
+describe("Recomendados (F44)", () => {
+  const entry = {
+    name: "Repo recomendado",
+    indexUrl: "https://recomendado.test/index.json",
+    description: "Prueba",
+    nsfw: true,
+  };
+
+  it("descarga recommended.json del repo oficial solo cuando se pide", async () => {
+    const repo = new Repo([]);
+    repo.serveRecommended([entry, { name: "rota" }]);
+    const service = build(repo);
+    expect(repo.http.requests).toHaveLength(0);
+
+    expect(await service.loadRecommended()).toEqual([entry]);
+    expect(repo.http.requests.map((request) => request.url)).toEqual([RECOMMENDED_URL]);
+  });
+
+  it("sin red o con error lanza para que la pantalla muestre «sin conexión»", async () => {
+    const service = build(new Repo([]));
+    await expect(service.loadRecommended()).rejects.toBeInstanceOf(ModuleError);
   });
 });
