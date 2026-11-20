@@ -33,6 +33,8 @@ export interface DiscoverEntry {
   /** Tipo declarado por el módulo; `null` si no lo declara. */
   kind: MediaKind | null;
   nsfw: boolean;
+  /** Etiquetas cortas del módulo (`SeriesSummary.badges`), p. ej. «Seinen» (F97). */
+  badges?: string[];
   /** Texto secundario del módulo (p. ej. «hace 2 h»); `null` si no trae. */
   hint: string | null;
   /** Portada del módulo (URI absoluta y cabeceras opcionales); ausente si no trae. */
@@ -218,6 +220,19 @@ export function showDiscoverRows(query: string, filters: DiscoverFilterValues = 
   return query.trim() === "" && countActiveFilters(filters) === 0;
 }
 
+/** Etiquetas que dan borde naranja en Aventuras (F97, P-172); solo cuentan si el módulo las trae. */
+const NSFW_BORDER_BADGES: readonly string[] = ["hentai", "seinen", "josei"];
+
+/** ¿La tarjeta de Aventuras lleva el borde naranja de F94? `nsfw` o alguna etiqueta de la lista. */
+export function hasNsfwBorder(entry: DiscoverEntry): boolean {
+  return (
+    entry.nsfw ||
+    (entry.badges ?? []).some((badge) =>
+      NSFW_BORDER_BADGES.includes(badge.normalize("NFD").replace(/[̀-ͯ]/g, "").trim().toLowerCase()),
+    )
+  );
+}
+
 /** Lo mismo para las filas de series que devuelve un módulo. */
 export function visibleDiscoverEntries(
   entries: readonly DiscoverEntry[],
@@ -272,11 +287,32 @@ const moduleEntry = (
   title: string,
   kind: MediaKind | null,
   hint: string | null = null,
-): DiscoverEntry => ({ seriesId, moduleId: "m-ejemplo-a", title, kind, nsfw: false, hint });
+  badges?: string[],
+): DiscoverEntry => ({
+  seriesId,
+  moduleId: "m-ejemplo-a",
+  title,
+  kind,
+  nsfw: false,
+  hint,
+  ...(badges === undefined ? {} : { badges }),
+});
 
 export const SAMPLE_DISCOVER_MODULES: readonly DiscoverModule[] = [
-  { id: "m-ejemplo-a", name: "Módulo de ejemplo A", nsfw: false, hasPopular: true, hasLatest: true },
-  { id: "m-ejemplo-b", name: "Módulo de ejemplo B", nsfw: true, hasPopular: false, hasLatest: true },
+  {
+    id: "m-ejemplo-a",
+    name: "Módulo de ejemplo A",
+    nsfw: false,
+    hasPopular: true,
+    hasLatest: true,
+  },
+  {
+    id: "m-ejemplo-b",
+    name: "Módulo de ejemplo B",
+    nsfw: true,
+    hasPopular: false,
+    hasLatest: true,
+  },
 ];
 
 /**
@@ -287,14 +323,20 @@ export const SAMPLE_DISCOVER_MODULES: readonly DiscoverModule[] = [
 export const SAMPLE_DISCOVER_LATEST: readonly DiscoverEntry[] = [
   moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 d · Equipo Ryuu"),
   moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "hace 6 h · Nido Editorial"),
-  moduleEntry("cronicas-de-moonlit", "Crónicas de Moonlit", "manhua", "hace 3 d · Estudio Linterna"),
+  moduleEntry(
+    "cronicas-de-moonlit",
+    "Crónicas de Moonlit",
+    "manhua",
+    "hace 3 d · Estudio Linterna",
+  ),
   moduleEntry("noche-de-ambar", "Noche de ámbar", "comic", "hace 1 sem · Taller Ámbar"),
 ];
 
 export const SAMPLE_DISCOVER_POPULAR: readonly DiscoverEntry[] = [
   moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "★ 8.4"),
   moduleEntry("la-forja-perdida", "La forja perdida", "manga", "★ 8.1"),
-  moduleEntry("sombras-de-arcano", "Sombras de Arcano", "manhwa", "★ 7.9"),
+  // Etiqueta «Seinen» de un módulo: lleva el borde naranja de F94 (F97).
+  moduleEntry("sombras-de-arcano", "Sombras de Arcano", "manhwa", "★ 7.9", ["Seinen"]),
   moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "★ 7.6"),
 ];
 
@@ -303,8 +345,18 @@ export const SAMPLE_DISCOVER_CATALOG: DiscoverPage = {
   hasNext: true,
   entries: [
     moduleEntry("dragon-de-ceniza", "El dragón de ceniza", "manhwa", "hace 2 d · Equipo Ryuu"),
-    moduleEntry("guardiana-del-nido", "La guardiana del nido", "manga", "hace 6 h · Nido Editorial"),
-    moduleEntry("cronicas-de-moonlit", "Crónicas de Moonlit", "manhua", "hace 3 d · Estudio Linterna"),
+    moduleEntry(
+      "guardiana-del-nido",
+      "La guardiana del nido",
+      "manga",
+      "hace 6 h · Nido Editorial",
+    ),
+    moduleEntry(
+      "cronicas-de-moonlit",
+      "Crónicas de Moonlit",
+      "manhua",
+      "hace 3 d · Estudio Linterna",
+    ),
     moduleEntry("noche-de-ambar", "Noche de ámbar", "comic", "hace 1 sem · Taller Ámbar"),
     {
       seriesId: "draco-de-jade",
