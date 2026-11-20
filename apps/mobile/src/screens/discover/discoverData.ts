@@ -92,6 +92,8 @@ export interface DiscoverLoadOptions {
   sectionId?: string | undefined;
   /** F50: etiquetas aplicadas; `search` las recibe, también sin texto. */
   filters?: DiscoverFilterValues | undefined;
+  /** F84: solo la página del catálogo (scroll infinito); sin filas, secciones ni reconsultar el módulo. */
+  catalogOnly?: boolean | undefined;
 }
 
 // — Compartido: mapeo de `SeriesSummary` y carga sobre una API montada —
@@ -124,6 +126,7 @@ export async function loadFromApi(
   page: number,
   sectionId?: string,
   selected: DiscoverFilterValues = {},
+  catalogOnly = false,
 ): Promise<DiscoverLoadResult> {
   const { api } = handle;
   const inSection = sectionId !== undefined && api.list !== undefined;
@@ -131,8 +134,13 @@ export async function loadFromApi(
   // sección (`list`) o con consulta solo se ve el catálogo, sin filas.
   const filtering = countActiveFilters(selected) > 0;
   const useHome =
-    flags.hasHome && api.home !== undefined && !inSection && query.trim() === "" && !filtering;
-  const rows = !inSection;
+    flags.hasHome &&
+    api.home !== undefined &&
+    !inSection &&
+    !catalogOnly &&
+    query.trim() === "" &&
+    !filtering;
+  const rows = !inSection && !catalogOnly;
   // Los grupos se leen antes de buscar: de ellos depende cómo viaja cada selección.
   const filterGroups: DiscoverFilter[] =
     !inSection && flags.hasFilters === true && api.filters
@@ -286,7 +294,7 @@ export function createSampleMounter(): ModuleMounter {
  * del catálogo. Los fallos del módulo salen como `ModuleError` (SPEC §6.4).
  */
 export async function loadDiscoverData(options: DiscoverLoadOptions): Promise<DiscoverLoadResult> {
-  const { moduleId, query, page, sectionId, filters } = options;
+  const { moduleId, query, page, sectionId, filters, catalogOnly } = options;
   const source = SAMPLE_DISCOVER_MODULES.find((module) => module.id === moduleId);
   if (source === undefined) {
     throw new ModuleError("NOT_FOUND", `El módulo de ejemplo ${moduleId} no existe`);
@@ -300,6 +308,7 @@ export async function loadDiscoverData(options: DiscoverLoadOptions): Promise<Di
     page,
     sectionId,
     filters,
+    catalogOnly,
   );
 }
 
@@ -367,7 +376,7 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
           paginates: modulePaging(pkg.manifest.capabilities).paginates,
         }));
     },
-    async load({ moduleId, query, page, sectionId, filters }) {
+    async load({ moduleId, query, page, sectionId, filters, catalogOnly }) {
       const { handle, manifest } = await mounter.mount(moduleId);
       return loadFromApi(
         handle,
@@ -386,6 +395,7 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
         page,
         sectionId,
         filters,
+        catalogOnly,
       );
     },
     async recallLastModule() {

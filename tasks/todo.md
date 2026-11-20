@@ -315,9 +315,9 @@ Dep: F83 · M · `apps/mobile/src/screens/discover/*`
 
 > Origen (petición del humano, 2026-11-16). Una página del buscador del sitio por lote.
 
-- [ ] Resultados del buscador del sitio en orden más reciente; al llegar al final se pide la página siguiente, hasta agotar (sin duplicados ni peticiones repetidas)
-- [ ] Estados: cargando más, error con reintento, fin de lista; sin overflow, sin animaciones salvo `transform`/`opacity`
-- Verif: Vitest (paginación) + Playwright 426/1440 px + 🧍 S25
+- [x] Resultados del buscador del sitio; al acercarse al final se pide la página siguiente, hasta agotar (sin duplicados ni peticiones repetidas: `catalogPaging.ts`, `catalogOnly` en la carga)
+- [x] Estados: cargando más, error con reintento, fin de lista; sin animaciones (el pie de páginas de móvil desaparece; web conserva el suyo hasta F41)
+- Verif: ✅ Vitest (paginación) · ✅ S25 (agent-device, M440 con «one»: carga páginas y sale «Has llegado al final») · ✅ Playwright 426/1440 px (`discover.cjs`)
 
 ### F85 «Más reciente» y «Popular» con scroll infinito en vez de carrusel `[FE · Intermedia · N3]`
 

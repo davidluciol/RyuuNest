@@ -5,6 +5,7 @@ import {
   resolveDiscoverSource,
   type DiscoverDataSource,
 } from "./discoverData";
+import { createCatalogPager } from "./catalogPaging";
 import { reportDiscoverError } from "./discoverErrors";
 import {
   countHiddenNsfwModules,
@@ -47,7 +48,12 @@ interface Request {
 
 const INITIAL_REQUEST: Request = { moduleId: null, query: "", page: 1, section: null, filters: {}, attempt: 0 };
 
+/** F84: estado de «cargar más» del catálogo (el fin de lista sale de `catalog.hasNext`). */
+export type DiscoverMoreStatus = "idle" | "loading" | "error";
+
 export interface DiscoverActions {
+  /** F84: pide la página siguiente del catálogo (scroll infinito); no hace nada si no hay más o ya se pidió. */
+  loadMore: () => void;
   selectModule: (id: string) => void;
   search: (query: string) => void;
   nextPage: () => void;
@@ -76,12 +82,19 @@ export interface DiscoverDataDeps {
   nsfwVisible?: boolean | undefined;
 }
 
-export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverView } & DiscoverActions {
+export function useDiscoverData(
+  deps: DiscoverDataDeps = {},
+): { view: DiscoverView; more: DiscoverMoreStatus } & DiscoverActions {
   const { source, reporter, resolveReporter, nsfwVisible = false } = deps;
   const [boot, setBoot] = useState<Boot | null>(null);
   const [nonce, setNonce] = useState(0);
   const [request, setRequest] = useState<Request>(INITIAL_REQUEST);
   const [view, setView] = useState<DiscoverView>({ status: "loading" });
+  const [more, setMore] = useState<DiscoverMoreStatus>("idle");
+  const viewRef = useRef(view);
+  viewRef.current = view;
+  // Cada carga nueva (módulo, búsqueda, filtros) invalida lo que «cargar más» tenía en vuelo.
+  const loadTokenRef = useRef(0);
   const bootRef = useRef<Boot | null>(null);
   const reporterRef = useRef<ErrorReporter | null>(null);
   const rememberedRef = useRef<string | null>(null);
@@ -153,6 +166,8 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     }
 
     let cancelled = false;
+    loadTokenRef.current += 1;
+    setMore("idle");
     const keep = keepOnReloadRef.current;
     keepOnReloadRef.current = false;
     // Solo se conserva la pantalla del mismo módulo: nunca se mezclan series de otro.
@@ -223,6 +238,52 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     [],
   );
 
+  const pagerRef = useRef<{ key: number; run: ReturnType<typeof createCatalogPager> } | null>(null);
+
+  const loadMore = useCallback(() => {
+    const current = viewRef.current;
+    const currentBoot = bootRef.current;
+    if (current.status !== "ready" || currentBoot === null) return;
+    const { selectedModuleId, query, section, activeFilters, catalog } = current.ready;
+    const token = loadTokenRef.current;
+    if (pagerRef.current?.key !== token) {
+      pagerRef.current = {
+        key: token,
+        run: createCatalogPager(async (page) => {
+          const data = await currentBoot.source.load({
+            moduleId: selectedModuleId,
+            query,
+            page,
+            sectionId: section?.id,
+            filters: activeFilters,
+            catalogOnly: true,
+          });
+          return data.catalog;
+        }),
+      };
+    }
+    const run = pagerRef.current.run;
+    setMore("loading");
+    run(catalog)
+      .then((next) => {
+        if (loadTokenRef.current !== token) return;
+        if (next === null) {
+          setMore((status) => (status === "loading" ? "idle" : status));
+          return;
+        }
+        setView((latest) =>
+          latest.status === "ready" ? { status: "ready", ready: { ...latest.ready, catalog: next } } : latest,
+        );
+        setMore("idle");
+      })
+      .catch((error: unknown) => {
+        if (loadTokenRef.current !== token) return;
+        const name = currentBoot.modules.find((module) => module.id === selectedModuleId)?.name ?? "";
+        reportDiscoverError(reporterRef.current, error, name, { moduleId: selectedModuleId });
+        setMore("error");
+      });
+  }, []);
+
   const applyFilters = useCallback(
     (filters: DiscoverFilterValues) => {
       keepOnReloadRef.current = true;
@@ -265,5 +326,5 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): { view: DiscoverVi
     setRequest((current) => ({ ...current, attempt: current.attempt + 1 }));
   }, []);
 
-  return { view, selectModule, search, nextPage, prevPage, applyFilters, openSection, closeSection, retry, refreshModules };
+  return { view, more, loadMore, selectModule, search, nextPage, prevPage, applyFilters, openSection, closeSection, retry, refreshModules };
 }

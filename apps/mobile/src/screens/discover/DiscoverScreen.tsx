@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import {
   dragonNightColors,
   layoutForWidth,
@@ -31,6 +38,7 @@ import {
   type DiscoverFilterValues,
   type DiscoverView,
 } from "./discoverFixtures";
+import type { DiscoverMoreStatus } from "./useDiscoverData";
 import { textStyle } from "../../components/textStyle";
 
 /**
@@ -73,8 +81,9 @@ export interface DiscoverScreenProps {
   nsfwVisible?: boolean;
   onModuleSelect?: (id: string) => void;
   onSearch?: (query: string) => void;
-  onNextPage?: () => void;
-  onPrevPage?: () => void;
+  /** F84: estado de «cargar más» y la petición de la página siguiente (scroll infinito). */
+  more?: DiscoverMoreStatus;
+  onLoadMore?: () => void;
   /** F59: «Ver más» de una sección de `home()` y vuelta a la portada. */
   onOpenSection?: (id: string, title: string) => void;
   onCloseSection?: () => void;
@@ -93,8 +102,8 @@ export default function DiscoverScreen({
   nsfwVisible = false,
   onModuleSelect,
   onSearch,
-  onNextPage,
-  onPrevPage,
+  more = "idle",
+  onLoadMore,
   onOpenSection,
   onCloseSection,
   onApplyFilters,
@@ -179,8 +188,8 @@ export default function DiscoverScreen({
       gap={layout.gap}
       onModuleSelect={onModuleSelect}
       onSearch={onSearch}
-      onNextPage={onNextPage}
-      onPrevPage={onPrevPage}
+      more={more}
+      onLoadMore={onLoadMore}
       onOpenSection={onOpenSection}
       onCloseSection={onCloseSection}
       onApplyFilters={onApplyFilters}
@@ -196,8 +205,8 @@ interface DiscoverReadyProps {
   gap: number;
   onModuleSelect?: (id: string) => void;
   onSearch?: (query: string) => void;
-  onNextPage?: () => void;
-  onPrevPage?: () => void;
+  more: DiscoverMoreStatus;
+  onLoadMore?: () => void;
   onOpenSection?: (id: string, title: string) => void;
   onCloseSection?: () => void;
   onApplyFilters?: (filters: DiscoverFilterValues) => void;
@@ -211,8 +220,8 @@ function DiscoverReady({
   gap,
   onModuleSelect,
   onSearch,
-  onNextPage,
-  onPrevPage,
+  more,
+  onLoadMore,
   onOpenSection,
   onCloseSection,
   onApplyFilters,
@@ -220,6 +229,7 @@ function DiscoverReady({
 }: DiscoverReadyProps) {
   // Borrador del campo: se entrega con Entrar (RF-10); al cambiar de módulo o
   // limpiarse desde fuera, el campo sigue a la consulta activa.
+  const { height: windowHeight } = useWindowDimensions();
   const [draft, setDraft] = useState(ready.query);
   useEffect(() => setDraft(ready.query), [ready.query]);
 
@@ -269,6 +279,17 @@ function DiscoverReady({
           paddingHorizontal: sidePadding,
           paddingBottom: spacing.xl,
           gap: spacing.lg,
+        }}
+        scrollEventThrottle={100}
+        onContentSizeChange={(_width, contentHeight) => {
+          // Si la lista no llena la pantalla no habrá scroll: se sigue pidiendo hasta llenarla o agotarla.
+          if (contentHeight < windowHeight && catalog.hasNext && more === "idle") onLoadMore?.();
+        }}
+        onScroll={(event) => {
+          // F84: al acercarse al final se pide la página siguiente (con el fallo, solo con «Reintentar»).
+          const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+          const remaining = contentSize.height - (contentOffset.y + layoutMeasurement.height);
+          if (remaining < layoutMeasurement.height && more === "idle") onLoadMore?.();
         }}
       >
         {/* Búsqueda del módulo + selector (RF-9, RF-10). */}
@@ -414,29 +435,49 @@ function DiscoverReady({
             </View>
           )}
 
-          {(selectedModule?.paginates ?? true) ? (
-            <View style={styles.pagerRow}>
-              <Button
-                variant="secondary"
-                label={t("discover.page.previous")}
-                disabled={catalog.page <= 1}
-                onPress={onPrevPage}
-              />
-              <Text style={styles.pageLabel}>
-                {t("discover.page.label", { page: catalog.page })}
-              </Text>
-              <Button
-                variant="secondary"
-                label={t("discover.page.next")}
-                disabled={!catalog.hasNext}
-                onPress={onNextPage}
-              />
-            </View>
+          {catalog.entries.length > 0 ? (
+            <CatalogFooter hasNext={catalog.hasNext} more={more} onRetry={onLoadMore} />
           ) : null}
         </View>
       </ScrollView>
     </View>
   );
+}
+
+/** F84: pie del catálogo con scroll infinito: cargando más, error con reintento o fin de lista. */
+function CatalogFooter({
+  hasNext,
+  more,
+  onRetry,
+}: {
+  hasNext: boolean;
+  more: DiscoverMoreStatus;
+  onRetry?: (() => void) | undefined;
+}) {
+  if (more === "error") {
+    return (
+      <View style={styles.footerRow} testID="discover-more-error">
+        <Text style={styles.footerText}>{t("discover.more.error")}</Text>
+        <Button variant="secondary" label={t("discover.more.retry")} onPress={onRetry} />
+      </View>
+    );
+  }
+  if (more === "loading") {
+    return (
+      <View style={styles.footerRow} testID="discover-more-loading">
+        <ActivityIndicator color={colors.textSecondary} />
+        <Text style={styles.footerText}>{t("discover.more.loading")}</Text>
+      </View>
+    );
+  }
+  if (!hasNext) {
+    return (
+      <View style={styles.footerRow} testID="discover-more-end">
+        <Text style={styles.footerText}>{t("discover.more.end")}</Text>
+      </View>
+    );
+  }
+  return <View style={styles.footerRow} testID="discover-more-idle" />;
 }
 
 function DiscoverCard({
@@ -499,14 +540,14 @@ const styles = StyleSheet.create({
     flex: 1 / CATALOG_COLUMNS,
     minWidth: 0,
   },
-  pagerRow: {
+  footerRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     minHeight: touchTarget.min,
     gap: spacing.sm,
   },
-  pageLabel: {
+  footerText: {
     ...textStyle(typography.labelMd),
     color: colors.textSecondary,
   },

@@ -64,12 +64,28 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF15");
       await page.getByRole("button", { name: "Cambiar de módulo" }).waitFor({ state: "visible" });
       assert.equal(await page.getByText("Módulo de ejemplo B").count(), 0);
 
-      // Paginación (RF-10): página 1 con siguiente; al avanzar, anterior activa.
-      await page.getByText("Página 1").waitFor({ state: "visible" });
-      await page.getByRole("button", { name: "Siguiente" }).click();
-      await page.getByText("Página 2").waitFor({ state: "visible" });
-      await page.getByRole("button", { name: "Anterior" }).click();
-      await page.getByText("Página 1").waitFor({ state: "visible" });
+      // F84: scroll infinito del catálogo; al agotarse sale el aviso de fin de lista.
+      await page
+        .getByTestId("discover-more-idle")
+        .or(page.getByTestId("discover-more-end"))
+        .waitFor({ state: "attached" });
+      const scrollToEnd = () =>
+        page.evaluate(() => {
+          for (const el of document.querySelectorAll("div")) {
+            if (
+              el.scrollHeight > el.clientHeight + 50 &&
+              getComputedStyle(el).overflowY !== "visible"
+            ) {
+              el.scrollTop = el.scrollHeight;
+            }
+          }
+        });
+      for (let i = 0; i < 6 && (await page.getByTestId("discover-more-end").count()) === 0; i++) {
+        await scrollToEnd();
+        await page.waitForTimeout(400);
+      }
+      await page.getByTestId("discover-more-end").waitFor({ state: "attached" });
+      assert.equal(await page.getByRole("button", { name: "Siguiente" }).count(), 0);
 
       // Búsqueda dentro del módulo (RF-10).
       await page.getByPlaceholder("Buscar obras…").fill("quimera");
