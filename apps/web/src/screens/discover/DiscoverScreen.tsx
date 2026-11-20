@@ -231,6 +231,9 @@ function EntryGrid({
             onClick={() => onOpenSeries(entry.moduleId ?? selectedModuleId, entry.seriesId)}
             data-testid={`discover-entry-${entry.seriesId}`}
           >
+            {entry.cover !== undefined && (
+              <img className="discover-card-cover" src={entry.cover.uri} alt="" loading="lazy" />
+            )}
             <span className="t-body-md discover-card-title">{entry.title}</span>
             <span className="discover-card-meta">
               {entry.kind !== null && <Badge label={kindLabel(entry.kind)} />}

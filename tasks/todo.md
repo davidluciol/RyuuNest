@@ -291,8 +291,8 @@ Dep: F92 · S · `packages/ui-tokens`, `apps/mobile/src/components/CoverCard.tsx
 
 Dep: F33 · M · `apps/web/*`
 
-- [ ] 🧍 Aprobar F41. Después: web con portada y sinopsis en Descubrir y en la ficha (incluye la ficha web de F17)
-- Verif: Playwright 426/1440 px
+- [x] Aprobada (humano, 2026-11-19). Web: portada en las tarjetas de Descubrir (2:3, `discover-card-cover`); la ficha web ya mostraba portada y sinopsis (F25)
+- Verif: ✅ Playwright 426/1440 px (`apps/web/tests/e2e/discover.cjs`) + Vitest web
 
 ### F44 «Recomendados» como índice remoto (propuesta de F33, sin aprobar) `[BE/FE · Alta · N4]`
 

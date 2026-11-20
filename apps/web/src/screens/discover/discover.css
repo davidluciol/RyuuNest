@@ -95,3 +95,12 @@
 .discover-page-label {
   color: var(--color-text-secondary);
 }
+
+/* F41 — portada de la tarjeta (2:3, sin deformar). */
+.discover-card-cover {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-cover);
+  background: var(--color-elevated);
+}
