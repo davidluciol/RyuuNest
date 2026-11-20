@@ -56,6 +56,16 @@ describe("sourcesFlowReducer", () => {
     expect(run({ type: "open-add-repo" }, { type: "close" })).toEqual({ sheet: "none" });
   });
 
+  it("abre la hoja de añadir con la URL de un recomendado (F44) y la conserva al fallar", () => {
+    const url = "https://recomendado.test/index.json";
+    expect(run({ type: "open-add-repo", url })).toEqual({ sheet: "add-repo", error: null, url });
+    expect(run({ type: "open-add-repo", url }, { type: "fail", message: "x" })).toEqual({
+      sheet: "add-repo",
+      error: "x",
+      url,
+    });
+  });
+
   it("un fallo al añadir el repo se queda en la hoja con su mensaje", () => {
     const state = run(
       { type: "open-add-repo" },

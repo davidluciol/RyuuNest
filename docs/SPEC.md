@@ -80,6 +80,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 
 - **RF-1 (M)** La app se instala **sin módulos**. Mientras no haya ninguno, las pantallas muestran el estado vacío que lleva a "Añadir repositorio".
 - **RF-2 (M)** Añadir un repositorio por URL HTTPS. La app descarga y valida `index.json` y lo guarda como `repo`.
+- **RF-2b (S)** «Recomendados» (F44, P-179): Portales lista los repositorios del `recommended.json` del repo oficial (junto a su `index.json`; cada entrada `{ name, indexUrl, description, nsfw }`, las NSFW marcadas). Se descarga **solo al abrir Portales o al pulsar «Actualizar recomendados»**, nunca en segundo plano; sin red o con un archivo inválido muestra «sin conexión» sin bloquear la pantalla. «Añadir» abre «Añadir repositorio» con la URL rellena y exige confirmarlo (RF-2, RF-7): nada se instala solo.
 - **RF-3 (M)** Listar los módulos de un repo con nombre, tipo, idioma, marca NSFW, runtime (declarativo o script) y permisos.
 - **RF-4 (M)** Instalar un módulo con el flujo de la sección 7, con confirmación manual.
 - **RF-5 (M)** Activar, desactivar y desinstalar módulos. Mostrar el último error de cada módulo.
@@ -157,7 +158,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 | RNF-2 | Memoria del proceso | Sin cierres por memoria en la MiBox 4 (2 GB) leyendo 60 imágenes seguidas; presupuesto medido y registrado en la Fase 0 |
 | RNF-3 | Fluidez | Desplazamiento de listas sin pérdidas visibles de cuadros en el teléfono; en TV, navegación con foco sin retrasos perceptibles |
 | RNF-4 | Almacenamiento | Caché de imágenes con tope configurable (por defecto menor en TV) y botón para vaciarla |
-| RNF-5 | Privacidad | Sin telemetría, sin cuentas, sin servicios de terceros; los datos solo salen del dispositivo por exportación manual. Fuentes e iconos van empaquetados: nunca se cargan desde un CDN (tampoco en la web) |
+| RNF-5 | Privacidad | Sin telemetría, sin cuentas, sin servicios de terceros; los datos solo salen del dispositivo por exportación manual. Fuentes e iconos van empaquetados: nunca se cargan desde un CDN (tampoco en la web). Peticiones de red permitidas: los repositorios y módulos que el usuario añade o instala y, como **única excepción** de primera parte, `recommended.json` del repo oficial (RF-2b), solo al abrir Portales o a petición del usuario y nunca en segundo plano |
 | RNF-6 | Seguridad | Modelo de la sección 7; nada se instala sin confirmación |
 | RNF-7 | Accesibilidad | Contraste WCAG AA; áreas táctiles de al menos 48 × 48 dp (con `hitSlop` cuando el elemento visible es menor, como los chips de 36 px o las insignias de 24 px); etiquetas accesibles en botones con icono; estados nunca solo por color; `prefers-reduced-motion` |
 | RNF-8 | Resiliencia | Un módulo roto, lento o bloqueado no tumba la app: tiempo límite, errores contenidos y reintento manual |

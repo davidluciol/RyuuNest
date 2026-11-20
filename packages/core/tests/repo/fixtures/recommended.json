@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Repo de ejemplo",
+    "indexUrl": "https://repo.example.com/index.json",
+    "description": "Módulos de prueba",
+    "nsfw": false
+  },
+  {
+    "name": "Repo adulto",
+    "indexUrl": "https://adultos.example.com/index.json",
+    "description": "Solo para mayores",
+    "nsfw": true
+  },
+  {
+    "name": "Sin HTTPS",
+    "indexUrl": "http://inseguro.example.com/index.json",
+    "description": "Se descarta",
+    "nsfw": false
+  },
+  { "name": "", "indexUrl": "https://vacio.example.com/index.json" }
+]

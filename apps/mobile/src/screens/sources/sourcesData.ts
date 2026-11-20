@@ -5,19 +5,25 @@ import {
   PackageInstaller,
   RepoRegistry,
   SqliteStorage,
+  fetchRecommended,
   type Archive,
   type Clock,
   type Http,
   type InstallConfirmation,
   type InstallPreview,
   type MediaKind,
+  type RecommendedRepo,
   type SecureLock,
   type SqlDriver,
   type UpdatePreview,
 } from "@ryuunest/core";
 import { validateManifest, validateRepoIndex } from "@ryuunest/module-sdk";
 
-import { OFFICIAL_REPO_DISMISSAL_SETTING, OFFICIAL_REPO_URL } from "../../data/officialRepo";
+import {
+  OFFICIAL_REPO_DISMISSAL_SETTING,
+  OFFICIAL_REPO_URL,
+  RECOMMENDED_URL,
+} from "../../data/officialRepo";
 
 /**
  * F16 — capa de datos de Fuentes (RF-1 a RF-8). Junta el núcleo (T12–T15) con
@@ -108,6 +114,8 @@ export interface SourcesService {
     confirmation: Partial<InstallConfirmation>,
   ): Promise<SourcesUpdateResult>;
   recordModuleError(moduleId: string, message: string | undefined): Promise<void>;
+  /** F44: descarga `recommended.json`; lanza sin red o si es inválido. No instala nada. */
+  loadRecommended(): Promise<RecommendedRepo[]>;
 }
 
 export interface SourcesServiceDeps {
@@ -316,6 +324,8 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
     async recordModuleError(moduleId, message) {
       await modules.setLastError(moduleId, message);
     },
+
+    loadRecommended: () => fetchRecommended(http, RECOMMENDED_URL),
   };
 }
 

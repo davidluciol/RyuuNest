@@ -18,5 +18,11 @@ export const OFFICIAL_REPO_URL = [
   "index.json",
 ].join("/");
 
+/**
+ * F44 (P-179): `recommended.json` junto al `index.json` del repo oficial. Solo se
+ * descarga al abrir Portales o al pulsar «Actualizar recomendados» (RNF-5).
+ */
+export const RECOMMENDED_URL = OFFICIAL_REPO_URL.replace(/index\.json$/, "recommended.json");
+
 /** Ajuste (tabla `setting`) que recuerda que el usuario quitó el repo oficial. */
 export const OFFICIAL_REPO_DISMISSAL_SETTING = ["sources", "officialRepoDismissed"].join(".");

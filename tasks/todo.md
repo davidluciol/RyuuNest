@@ -294,10 +294,14 @@ Dep: F33 · M · `apps/web/*`
 - [x] Aprobada (humano, 2026-11-19). Web: portada en las tarjetas de Descubrir (2:3, `discover-card-cover`); la ficha web ya mostraba portada y sinopsis (F25)
 - Verif: ✅ Playwright 426/1440 px (`apps/web/tests/e2e/discover.cjs`) + Vitest web
 
-### F44 «Recomendados» como índice remoto (propuesta de F33, sin aprobar) `[BE/FE · Alta · N4]`
+### F44 «Recomendados» como índice remoto `[BE/FE · Alta · N4]`
 
-- [ ] ❓ Dar el formato y la URL del índice y autorizar el cambio de **RNF-5** en el SPEC (sin servidor propio ni terceros) antes de empezar
-- Verif: según la decisión
+- [x] Decisión del humano (2026-11-20, P-179): `recommended.json` en `RyuuNest-Models` junto a `index.json`, lista de `{ name, indexUrl, description, nsfw }`; SPEC **RNF-5** con la excepción y **RF-2b** nuevo
+- [x] Núcleo: `parseRecommended`/`fetchRecommended` (`packages/core/src/repo/recommended.ts`), tolerancia por entrada como T38, fixture guardado
+- [x] Portales (móvil y `apps/web`): sección «Recomendados» con cargando / lista / sin conexión / vacío y «Actualizar recomendados»; se descarga solo al abrir Portales o al pulsarlo; «Añadir» abre «Añadir repositorio» con la URL rellena (confirmación manual); NSFW con insignia. Estados en la galería (vista de Portales)
+- [x] PR de `recommended.json` fusionado en `RyuuNest-Models` (#8); repo oficial con `nsfw: false` en Models #9 (pendiente de fusionar)
+- [x] Un recomendado ya añadido muestra «Añadido» desactivado (`isRecommendedAdded`, P-179)
+- Verif: ✅ Vitest (núcleo `recommended.test.ts`; móvil `sourcesData`/`sourcesFlow`/`sampleSourcesService`) · ✅ Playwright 426/1440 px (`apps/mobile/tests/e2e/sources.cjs`, `apps/web/tests/e2e/sources.cjs` con fixture) · ✅ S25 (2026-11-20): Portales descarga la lista real de GitHub y el oficial sale «Añadido» · ⚠️ «Sin conexión» no se pudo ver en el S25 (sin red Android devolvió la respuesta en caché); cubierto por Vitest
 
 ### F83 Contrato de módulo: paginación y orden «más reciente» declarados `[BE · Intermedia · N3]`
 
@@ -346,7 +350,7 @@ Dep: F86, F50, F59 · M · `apps/mobile/src/screens/discover/*`, `packages/core/
 - [x] Al pulsar «Filtros» aparecen desplegables con casillas: **SFW/NSFW** (NSFW solo si el sitio lo permite), **género** (terror, aventura, harem, ecchi…), **estado** (en emisión, finalizado, en pausa, abandonado y lo que permita el sitio) y **tipo** (manga, manhua, manhwa, webtoon, cómic)
 - [x] Todo sale de `ModuleApi.filters()`; lo que el módulo no declare no aparece; «Limpiar» y contador de activos
 - [x] Componentes nuevos en la galería con todos sus estados; textos en i18n; solo tokens
-- Verif: ✅ Vitest (`tests/components/tagFilterSheet.test.ts`; carga/envío de grupos ya cubiertos en `discoverHome.test.ts`) · ✅ Playwright 426/1440 px sobre la galería (Expo web: desplegables cerrados, casillas y radio, «Limpiar», filas ≥48, sin overflow, consola limpia, cero peticiones externas) · ⏳ 🧍 S25 con ZonaTMO o M440 (P-178). Sin cambio de contrato; `apps/web` no tiene filtros (P-171)
+- Verif: ✅ Vitest (`tests/components/tagFilterSheet.test.ts`; carga/envío de grupos ya cubiertos en `discoverHome.test.ts`) · ✅ Playwright 426/1440 px sobre la galería (Expo web: desplegables cerrados, casillas y radio, «Limpiar», filas ≥48, sin overflow, consola limpia, cero peticiones externas) · ✅ S25 con ZonaTMO (2026-11-20, agent-device): desplegables, radio, «Género, activos: 1», contador en el botón, recarga y «Limpiar»; corregido en el teléfono que «Limpiar»/«Listo» quedaban fuera de pantalla con listas largas (pie fijo en `SheetModal`) (P-178). Sin cambio de contrato; `apps/web` no tiene filtros (P-171)
 
 ### F88 Reubicar el selector de servidor/módulo en Aventuras `[FE · Baja · N2]`
 

@@ -23,6 +23,12 @@ describe("createSampleSourcesService", () => {
     );
   });
 
+  it("lista recomendados de ejemplo sin red (F44)", async () => {
+    const repos = await createSampleSourcesService().loadRecommended();
+    expect(repos.length).toBeGreaterThan(0);
+    expect(repos.some((repo) => repo.nsfw)).toBe(true);
+  });
+
   it("puede arrancar vacío para probar el estado vacío (RF-1)", async () => {
     const service = createSampleSourcesService(EMPTY_SOURCES_DATA);
 

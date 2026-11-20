@@ -38,6 +38,7 @@ export * from "./progress/lastRead.js";
 export * from "./progress/ProgressStore.js";
 export * from "./reader/ReaderState.js";
 export * from "./repo/RepoRegistry.js";
+export * from "./repo/recommended.js";
 export * from "./runtimes/DeclarativeRuntime.js";
 export * from "./runtimes/errorMapping.js";
 export * from "./runtimes/functionScriptLoader.js";

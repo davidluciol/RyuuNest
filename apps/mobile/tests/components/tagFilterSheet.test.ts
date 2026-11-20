@@ -25,6 +25,11 @@ describe("TagFilterSheet como desplegables con casillas (F87)", () => {
     expect(src).toMatch(/group\.multi \? checkboxStyle\(checked\) : radioStyle\(checked\)/);
     expect(src).not.toMatch(/<Chip/);
   });
+
+  it("«Limpiar» y «Listo» quedan fijos al pie, fuera del desplazamiento (S25: listas largas)", () => {
+    expect(src).toMatch(/footer=\{/);
+    expect(read("src/components/SheetModal.tsx")).toMatch(/<\/ScrollView>\s*\{footer\}/);
+  });
 });
 
 describe("contador de filtros activos visible (F87)", () => {

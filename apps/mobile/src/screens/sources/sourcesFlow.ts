@@ -12,7 +12,7 @@ import type { InstallPreview, UpdatePreview } from "@ryuunest/core";
 
 export type SourcesFlow =
   | { sheet: "none" }
-  | { sheet: "add-repo"; error: string | null }
+  | { sheet: "add-repo"; error: string | null; url?: string }
   | { sheet: "install"; preview: InstallPreview; busy: boolean; error: string | null }
   | { sheet: "manage"; moduleId: string; busy: boolean; error: string | null }
   | {
@@ -26,7 +26,7 @@ export type SourcesFlow =
   | { sheet: "remove-repo"; repoId: string; busy: boolean; error: string | null };
 
 export type SourcesFlowAction =
-  | { type: "open-add-repo" }
+  | { type: "open-add-repo"; url?: string }
   | { type: "submit-add-repo" }
   | { type: "open-install"; preview: InstallPreview }
   | { type: "submit-install" }
@@ -47,7 +47,10 @@ export const INITIAL_SOURCES_FLOW: SourcesFlow = { sheet: "none" };
 export function sourcesFlowReducer(state: SourcesFlow, action: SourcesFlowAction): SourcesFlow {
   switch (action.type) {
     case "open-add-repo":
-      return { sheet: "add-repo", error: null };
+      // F44: «Añadir» de un recomendado rellena la URL; el usuario confirma en la hoja.
+      return action.url === undefined
+        ? { sheet: "add-repo", error: null }
+        : { sheet: "add-repo", error: null, url: action.url };
 
     case "open-install":
       return { sheet: "install", preview: action.preview, busy: false, error: null };

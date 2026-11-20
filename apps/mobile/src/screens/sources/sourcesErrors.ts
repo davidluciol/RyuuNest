@@ -17,7 +17,8 @@ export type SourcesErrorAction =
   | "uninstall"
   | "sync"
   | "remove-repo"
-  | "set-enabled";
+  | "set-enabled"
+  | "recommended";
 
 function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
