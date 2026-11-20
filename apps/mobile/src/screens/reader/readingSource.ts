@@ -49,7 +49,7 @@ export interface ReadingSource {
   /** Ficha de la serie con el progreso y los capítulos leídos (F17). */
   loadSeries(moduleId: string, seriesId: string): Promise<SeriesViewData>;
   /**
-   * Marca o desmarca la serie como favorita y devuelve el estado nuevo. Al marcar guarda antes la
+   * Corazón (F95): pasa la serie a «Favoritos» o, si ya estaba, a «Gemas» y devuelve el estado nuevo. Al marcar guarda antes la
    * serie en `series`: la biblioteca une `favorite` con `series` (P-126).
    */
   toggleFavorite(moduleId: string, seriesId: string, details: SeriesDetails): Promise<boolean>;
@@ -93,7 +93,7 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
       const [saved, read, favorite, pref] = await Promise.all([
         progress.get(moduleId, seriesId),
         chaptersRead.readIn(moduleId, seriesId),
-        favorites.get(moduleId, seriesId),
+        favorites.isHearted(moduleId, seriesId),
         prefs.get(moduleId, seriesId),
       ]);
       return {
@@ -110,18 +110,15 @@ export function createReadingSource(deps: ReadingSourceDeps): ReadingSource {
               },
         readChapterIds: read,
         preferredReleaseId: pref?.preferredGroup ?? null,
-        favorite: favorite !== undefined,
+        favorite,
       };
     },
 
     async toggleFavorite(moduleId, seriesId, details) {
-      if ((await favorites.get(moduleId, seriesId)) !== undefined) {
-        await favorites.remove(moduleId, seriesId);
-        return false;
+      if (!(await favorites.isHearted(moduleId, seriesId))) {
+        await seriesStore.saveFromDetails(moduleId, { ...details, id: seriesId });
       }
-      await seriesStore.saveFromDetails(moduleId, { ...details, id: seriesId });
-      await favorites.add(moduleId, seriesId, null);
-      return true;
+      return favorites.toggleHeart(moduleId, seriesId);
     },
 
     async setPreferredRelease(moduleId, seriesId, release) {

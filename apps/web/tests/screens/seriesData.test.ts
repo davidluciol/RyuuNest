@@ -149,7 +149,7 @@ describe("seriesData web (ficha sobre base real)", () => {
     expect(driver).toBeDefined();
   });
 
-  it("marcar favorito guarda la serie y la biblioteca la lista; quitarlo la saca (P-126)", async () => {
+  it("marcar favorito guarda la serie y la biblioteca la lista; quitarlo la deja en Gemas (P-126, F95)", async () => {
     const { driver, services } = await setup();
     await toggleFavorite(services, "demo", "s-1", details);
 
@@ -163,8 +163,8 @@ describe("seriesData web (ficha sobre base real)", () => {
       kind: "manga",
     });
 
-    await toggleFavorite(services, "demo", "s-1", details);
-    expect((await browseLibrary(driver, { limit: 10 })).items).toEqual([]);
+    expect(await toggleFavorite(services, "demo", "s-1", details)).toBe(false);
+    expect((await browseLibrary(driver, { limit: 10 })).items).toHaveLength(1);
   });
 
   it("un módulo que falla da el error contenido (RF-11)", async () => {

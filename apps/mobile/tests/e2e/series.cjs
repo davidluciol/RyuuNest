@@ -37,7 +37,7 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       // Progreso de ejemplo de la fuente de lectura: capítulo 2, página 3 de 4 (2 / 4).
       await page.getByText("● 50%").waitFor({ state: "visible" });
 
-      await page.getByRole("button", { name: "Guardada" }).click(); // la serie sembrada ya es favorita
+      // F95: la serie sembrada está en una carpeta propia, así que el corazón arranca vacío.
       await page.getByRole("button", { name: "Guardar" }).click();
       await page.getByRole("button", { name: "Guardada" }).waitFor({ state: "visible" });
       await page.getByRole("button", { name: "Carpeta" }).waitFor({ state: "visible" });

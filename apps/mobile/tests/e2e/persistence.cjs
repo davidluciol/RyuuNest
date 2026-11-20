@@ -37,18 +37,27 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByRole("button", { name: "El dragón de ceniza", exact: true }).click();
       await page.waitForURL(/\/series\/m-ejemplo-a\/dragon-de-ceniza$/);
 
-      // Quitar de favoritos la obra de ejemplo, desde su ficha.
-      await page.getByRole("button", { name: "Guardada" }).click();
-      await page.getByRole("button", { name: "Guardar" }).waitFor();
+      // F95: el corazón guarda en Favoritos (estaba en otra carpeta; sigue guardada: Todo (3)).
+      await page.getByRole("button", { name: "Guardar" }).click();
+      await page.getByRole("button", { name: "Guardada" }).waitFor();
       await page.waitForTimeout(1500); // la base se guarda en IndexedDB con una pausa
 
       // Al volver a Tesoros se relee la base sin recargar la página (la ficha guarda cambios).
       await page.goBack();
-      await page.getByText("Todo (2)").waitFor();
+      await page.getByText("Todo (3)").waitFor();
 
-      // Tras recargar, la base sigue sin esa obra (y no se vuelve a sembrar).
+      // Tras recargar sigue en Favoritos: su ficha lo muestra con el corazón lleno.
       await page.reload();
-      await page.getByText("Todo (2)").waitFor();
+      await page.getByText("Todo (3)").waitFor();
+      await page.getByRole("button", { name: "El dragón de ceniza", exact: true }).click();
+      await page.getByRole("button", { name: "Guardada" }).waitFor();
+
+      // Quitar el corazón la deja en Gemas: sigue guardada.
+      await page.getByRole("button", { name: "Guardada" }).click();
+      await page.getByRole("button", { name: "Guardar" }).waitFor();
+      await page.waitForTimeout(1500);
+      await page.goBack();
+      await page.getByText("Todo (3)").waitFor();
 
       assert.deepEqual(errors, [], `errores de consola @${width}`);
       assert.deepEqual(external, [], `peticiones externas @${width}`);

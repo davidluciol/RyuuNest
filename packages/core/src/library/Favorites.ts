@@ -90,6 +90,30 @@ export class Favorites {
     );
   }
 
+  /** ¿La serie está en la carpeta del sistema «Favoritos»? (estado del corazón de la ficha, F95) */
+  async isHearted(moduleId: string, seriesId: string): Promise<boolean> {
+    const fila = await this.#driver.get(
+      `SELECT 1 AS ok FROM favorite f JOIN folder d ON d.id = f.folder_id
+       WHERE f.module_id = ? AND f.series_id = ? AND d.system = 'favorites'`,
+      [moduleId, seriesId],
+    );
+    return fila !== undefined;
+  }
+
+  /**
+   * Corazón de la ficha (F95): sin corazón la deja en «Favoritos» (la guarde ya o no); con él, la
+   * devuelve a «Gemas» (sin carpeta) sin perder la serie ni su progreso. Devuelve el estado nuevo.
+   */
+  async toggleHeart(moduleId: string, seriesId: string): Promise<boolean> {
+    if (await this.isHearted(moduleId, seriesId)) {
+      await this.move(moduleId, seriesId, null);
+      return false;
+    }
+    await this.add(moduleId, seriesId, null);
+    await this.moveToFavorites(moduleId, seriesId);
+    return true;
+  }
+
   async get(moduleId: string, seriesId: string): Promise<FavoriteRecord | undefined> {
     const fila = await this.#driver.get<FavoriteRow>(
       "SELECT * FROM favorite WHERE module_id = ? AND series_id = ?",

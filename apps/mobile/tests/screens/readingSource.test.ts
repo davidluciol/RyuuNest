@@ -141,8 +141,10 @@ describe("createReadingSource · loadSeries", () => {
     });
     expect((await reloaded.loadSeries("m-a", "serie-1")).favorite).toBe(true);
 
+    // F95: quitar el corazón deja la serie en Gemas, no la elimina.
     expect(await source.toggleFavorite("m-a", "serie-1", DETAILS)).toBe(false);
-    expect((await browseLibrary(driver, { limit: 10 })).items).toEqual([]);
+    expect((await reloaded.loadSeries("m-a", "serie-1")).favorite).toBe(false);
+    expect((await browseLibrary(driver, { limit: 10 })).items).toHaveLength(1);
   });
 
   it("la release preferida se guarda como grupo y sobrevive a recargar (F17)", async () => {

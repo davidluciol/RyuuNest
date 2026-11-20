@@ -67,7 +67,7 @@ export async function loadSeries(
     progress.get(moduleId, seriesId),
     chaptersRead.readIn(moduleId, seriesId),
     prefs.get(moduleId, seriesId),
-    favorites.get(moduleId, seriesId),
+    favorites.isHearted(moduleId, seriesId),
   ]);
 
   return {
@@ -83,7 +83,7 @@ export async function loadSeries(
           },
     readChapterIds: read,
     preferredReleaseId: pref?.preferredGroup ?? null,
-    favorite: favorite !== undefined,
+    favorite,
   };
 }
 
@@ -100,14 +100,10 @@ export async function toggleFavorite(
 ): Promise<boolean> {
   const clock = { now: () => Date.now() };
   const favorites = new Favorites({ driver: services.driver, clock });
-  const current = await favorites.get(moduleId, seriesId);
-  if (current === undefined) {
+  if (!(await favorites.isHearted(moduleId, seriesId))) {
     await new SeriesStore({ driver: services.driver, clock }).saveFromDetails(moduleId, { ...details, id: seriesId });
-    await favorites.add(moduleId, seriesId, null);
-    return true;
   }
-  await favorites.remove(moduleId, seriesId);
-  return false;
+  return favorites.toggleHeart(moduleId, seriesId);
 }
 
 export async function setPreferredRelease(

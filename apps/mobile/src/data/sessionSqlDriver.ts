@@ -16,6 +16,9 @@ function unknownStatement(sql: string): Error {
   return new Error(`El driver de sesión no conoce esta sentencia: ${sql.trim().slice(0, 80)}`);
 }
 
+/** La sesión no tiene tabla `folder`: «Favoritos» (F52) se representa con este id fijo (F95). */
+const FAVORITES_FOLDER_ID = 1;
+
 function key(...parts: readonly SqlValue[]): string {
   return parts.map(String).join("\u0000");
 }
@@ -79,6 +82,16 @@ export function createSessionSqlDriver(): SqlDriver {
         });
         return ONE_CHANGE;
       }
+      if (sql.includes("UPDATE favorite SET")) {
+        // F95: `move` (carpeta en el primer parámetro) y `moveToFavorites` (carpeta fija, sin parámetro).
+        const toFavorites = sql.includes("SELECT id FROM folder WHERE system = 'favorites'");
+        const [folderId, updatedAt, moduleId, seriesId] = toFavorites ? [FAVORITES_FOLDER_ID, ...params] : params;
+        const id = key(moduleId as string, seriesId as string);
+        const current = favorites.get(id);
+        if (current === undefined) return NO_CHANGES;
+        favorites.set(id, { ...current, folder_id: toFavorites ? FAVORITES_FOLDER_ID : folderId, updated_at: updatedAt });
+        return ONE_CHANGE;
+      }
       if (sql.includes("DELETE FROM favorite WHERE module_id = ? AND series_id = ?")) {
         return favorites.delete(key(params[0] as string, params[1] as string)) ? ONE_CHANGE : NO_CHANGES;
       }
@@ -135,6 +148,10 @@ export function createSessionSqlDriver(): SqlDriver {
     async get<T = SqlRow>(sql: string, params: readonly SqlValue[] = []): Promise<T | undefined> {
       if (sql.includes("FROM series WHERE module_id = ? AND series_id = ?")) {
         return series.get(key(params[0] as string, params[1] as string)) as T | undefined;
+      }
+      if (sql.includes("FROM favorite f JOIN folder d")) {
+        const row = favorites.get(key(params[0] as string, params[1] as string));
+        return (row?.folder_id === FAVORITES_FOLDER_ID ? { ok: 1 } : undefined) as T | undefined;
       }
       if (sql.includes("FROM favorite WHERE module_id = ? AND series_id = ?")) {
         return favorites.get(key(params[0] as string, params[1] as string)) as T | undefined;
