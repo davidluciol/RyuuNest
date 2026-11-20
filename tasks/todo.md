@@ -364,11 +364,11 @@ Dep: F86 · S · `apps/mobile/src/screens/discover/*`
 
 Dep: F52 · M · `apps/mobile/src/screens/series/*` (ficha), `packages/core/src/library/{Favorites,Folders}.ts`
 
-> Origen (petición del humano, 2026-11-17). **Decidido (P-170, humano 2026-11-17):** «Guardar» añade a **Gemas** (muestra todo); **no** se crea la carpeta «General».
+> Origen (petición del humano, 2026-11-17). **Cambiado (P-174, humano 2026-11-19; reemplaza P-170):** el corazón guarda en **Favoritos**; pulsarlo de nuevo la deja en **Gemas** (no la elimina). «Guardar» con carpeta es F96.
 
-- [ ] Rojo: pulsar «Guardar» guarda la serie en la carpeta por defecto (según P-170) y el corazón queda relleno; pulsar de nuevo la quita (conserva el progreso, RF-30); idempotente
-- [ ] La ficha refleja el estado al abrirla y al volver (Tesoros lo relee por foco)
-- Verif: Vitest con SQLite real + Playwright 426/1440 px (`persistence.cjs`: guardar → aparece en Tesoros) + 🧍 S25
+- [x] Rojo: pulsar el corazón guarda la serie en Favoritos (venga de Gemas, de otra carpeta o sin guardar) y queda relleno; pulsar de nuevo la pasa a Gemas (conserva el progreso, RF-30); idempotente (`heart.test.ts`)
+- [x] La ficha refleja el estado al abrirla y al volver (Tesoros lo relee por foco)
+- Verif: ✅ Vitest con SQLite real + ✅ Playwright 426/1440 px (`persistence.cjs`, `series.cjs`) · 🧍 S25 (agent-device) pendiente
 
 ### F96 Ficha: botón «Carpeta» con hoja para elegir carpeta `[FE · Intermedia · N3]`
 
