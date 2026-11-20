@@ -299,8 +299,9 @@ Dep: F33 · M · `apps/web/*`
 - [x] Decisión del humano (2026-11-20, P-179): `recommended.json` en `RyuuNest-Models` junto a `index.json`, lista de `{ name, indexUrl, description, nsfw }`; SPEC **RNF-5** con la excepción y **RF-2b** nuevo
 - [x] Núcleo: `parseRecommended`/`fetchRecommended` (`packages/core/src/repo/recommended.ts`), tolerancia por entrada como T38, fixture guardado
 - [x] Portales (móvil y `apps/web`): sección «Recomendados» con cargando / lista / sin conexión / vacío y «Actualizar recomendados»; se descarga solo al abrir Portales o al pulsarlo; «Añadir» abre «Añadir repositorio» con la URL rellena (confirmación manual); NSFW con insignia. Estados en la galería (vista de Portales)
-- [ ] 🧍 Fusionar el PR de `recommended.json` en `RyuuNest-Models` y verificar en el S25 (agent-device) la lista real
-- Verif: ✅ Vitest (núcleo `recommended.test.ts`; móvil `sourcesData`/`sourcesFlow`/`sampleSourcesService`) · ✅ Playwright 426/1440 px (`apps/mobile/tests/e2e/sources.cjs`, `apps/web/tests/e2e/sources.cjs` con fixture) · ⏳ nativo sin verificar
+- [x] PR de `recommended.json` fusionado en `RyuuNest-Models` (#8); repo oficial con `nsfw: false` en Models #9 (pendiente de fusionar)
+- [x] Un recomendado ya añadido muestra «Añadido» desactivado (`isRecommendedAdded`, P-179)
+- Verif: ✅ Vitest (núcleo `recommended.test.ts`; móvil `sourcesData`/`sourcesFlow`/`sampleSourcesService`) · ✅ Playwright 426/1440 px (`apps/mobile/tests/e2e/sources.cjs`, `apps/web/tests/e2e/sources.cjs` con fixture) · ✅ S25 (2026-11-20): Portales descarga la lista real de GitHub y el oficial sale «Añadido» · ⚠️ «Sin conexión» no se pudo ver en el S25 (sin red Android devolvió la respuesta en caché); cubierto por Vitest
 
 ### F83 Contrato de módulo: paginación y orden «más reciente» declarados `[BE · Intermedia · N3]`
 
