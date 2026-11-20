@@ -14,6 +14,7 @@ export * from "./backup/import.js";
 export * from "./backup/schema.js";
 export * from "./bytes.js";
 export * from "./contract/errors.js";
+export * from "./contract/paging.js";
 export * from "./contract/repoIndex.js";
 export * from "./contract/types.js";
 export * from "./diagnostics/LogStore.js";

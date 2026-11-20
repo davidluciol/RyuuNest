@@ -50,7 +50,7 @@ function manifest(
     lang: "es",
     nsfw: false,
     baseUrl: HTML_SITE_BASE_URL,
-    capabilities: ["popular", "latest", "search"],
+    capabilities: ["popular", "latest", "search", "paginated", "sortLatest"],
     permissions: { domains: ["sitio-html.test"] },
     entry: "index.json",
     ...overrides,
@@ -90,7 +90,7 @@ const ADULTO = manifest({
   id: "m-adulto",
   name: "Módulo para mayores",
   nsfw: true,
-  capabilities: ["latest", "search"],
+  capabilities: ["latest", "search", "paginated", "sortLatest"],
 });
 const APAGADO = manifest({ id: "m-apagado", name: "Módulo apagado" });
 
@@ -102,14 +102,60 @@ describe("createInstalledDiscoverSource · listModules", () => {
   it("solo lista declarativos activos, con las capacidades del manifest", async () => {
     await seed(packageFor(INSTALADO));
     await seed(packageFor(ADULTO, CONFIG_SIN_POPULAR));
-    await seed({ ...packageFor(manifest({ id: "m-script", name: "Módulo script" })), runtime: "script" });
+    await seed({
+      ...packageFor(manifest({ id: "m-script", name: "Módulo script" })),
+      runtime: "script",
+    });
     await seed({ ...packageFor(APAGADO), enabled: false });
 
     const source = createInstalledDiscoverSource({ driver, http: siteHttp() });
     expect(await source.listModules()).toEqual([
-      { id: "m-adulto", name: "Módulo para mayores", nsfw: true, hasPopular: false, hasLatest: true },
-      { id: "m-instalado", name: "Módulo instalado", nsfw: false, hasPopular: true, hasLatest: true },
+      {
+        id: "m-adulto",
+        name: "Módulo para mayores",
+        nsfw: true,
+        hasPopular: false,
+        hasLatest: true,
+        paginates: true,
+      },
+      {
+        id: "m-instalado",
+        name: "Módulo instalado",
+        nsfw: false,
+        hasPopular: true,
+        hasLatest: true,
+        paginates: true,
+      },
     ]);
+  });
+});
+
+describe("createInstalledDiscoverSource · F83 sin paginación declarada", () => {
+  it("oculta Reciente, Popular y el pie de páginas del módulo que no declara `paginated`", async () => {
+    await seed(
+      packageFor(
+        manifest({
+          id: "m-viejo",
+          name: "Módulo viejo",
+          capabilities: ["popular", "latest", "search"],
+        }),
+      ),
+    );
+    const source = createInstalledDiscoverSource({ driver, http: siteHttp() });
+
+    expect(await source.listModules()).toEqual([
+      {
+        id: "m-viejo",
+        name: "Módulo viejo",
+        nsfw: false,
+        hasPopular: false,
+        hasLatest: false,
+        paginates: false,
+      },
+    ]);
+    const data = await source.load({ moduleId: "m-viejo", query: "", page: 1 });
+    expect(data.latest).toEqual([]);
+    expect(data.popular).toEqual([]);
   });
 });
 
@@ -144,7 +190,9 @@ describe("createInstalledDiscoverSource · load", () => {
 
     const data = await source.load({ moduleId: "m-instalado", query: "dragon", page: 1 });
 
-    expect(data.catalog.entries[0]?.cover?.uri).toBe(`${HTML_SITE_BASE_URL}/img/dragon-de-ceniza.svg`);
+    expect(data.catalog.entries[0]?.cover?.uri).toBe(
+      `${HTML_SITE_BASE_URL}/img/dragon-de-ceniza.svg`,
+    );
     for (const entry of [...data.popular, ...data.latest]) {
       expect(entry.cover?.uri).toMatch(/\/img\/.+\.svg$/);
     }
@@ -169,9 +217,11 @@ describe("createInstalledDiscoverSource · load", () => {
     };
     const source = createInstalledDiscoverSource({ driver, http: contador });
 
-    await expect(source.load({ moduleId: "m-fantasma", query: "", page: 1 })).rejects.toMatchObject({
-      code: "NOT_FOUND",
-    });
+    await expect(source.load({ moduleId: "m-fantasma", query: "", page: 1 })).rejects.toMatchObject(
+      {
+        code: "NOT_FOUND",
+      },
+    );
     await seed({ ...packageFor(APAGADO), enabled: false });
     await expect(source.load({ moduleId: "m-apagado", query: "", page: 1 })).rejects.toMatchObject({
       code: "NOT_FOUND",
@@ -196,10 +246,9 @@ describe("createInstalledDiscoverSource · último módulo (RF-9 entre arranques
     const source = createInstalledDiscoverSource({ driver, http: siteHttp() });
     await source.rememberLastModule("m-instalado");
 
-    const fila = await driver.get<{ value: string }>(
-      "SELECT value FROM setting WHERE key = ?",
-      ["discover.lastModule"],
-    );
+    const fila = await driver.get<{ value: string }>("SELECT value FROM setting WHERE key = ?", [
+      "discover.lastModule",
+    ]);
     expect(fila?.value).toBe("m-instalado");
   });
 });

@@ -305,9 +305,9 @@ Dep: F59 · M · `packages/core/src/contract/types.ts`, `packages/module-sdk` (m
 
 > Origen (petición del humano, 2026-11-16). **Decisión:** si un módulo no soporta paginación u orden «más reciente», **se oculta esa sección** para él.
 
-- [ ] Rojo: el manifiesto/`ModuleApi` declara si `list`/`search` paginan y si pueden ordenar por más reciente; validación en `module-sdk`
-- [ ] La UI consulta la declaración y oculta Catálogo/Reciente/Popular que no la cumplan
-- Verif: Vitest (núcleo + SDK) con fixtures
+- [x] Rojo: el manifiesto declara `paginated` (list/search paginan) y `sortLatest` (orden más reciente, exige `paginated`); `modulePaging()` en el núcleo y validación en `module-sdk`
+- [x] La UI consulta la declaración: sin `paginated` se oculta Popular y el pie de páginas; sin `sortLatest`, Reciente (`discoverData.ts`)
+- Verif: ✅ Vitest (núcleo + SDK + móvil con fixtures)
 
 ### F84 Explorar catálogo con scroll infinito `[FE · Intermedia · N3]`
 

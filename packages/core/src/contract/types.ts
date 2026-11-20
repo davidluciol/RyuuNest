@@ -11,10 +11,21 @@ export type MediaKind = "manga" | "manhua" | "manhwa" | "comic";
 /**
  * Capacidades que un manifest puede declarar (SPEC §6.1). `details` y `pages`
  * se admiten como informativas desde P-82 (la forma del `zonatmo` real); los
- * métodos obligatorios del contrato no cambian (§6.3).
+ * métodos obligatorios del contrato no cambian (§6.3). F83: `paginated` (`list` y
+ * `search` pagan con `hasNext`) y `sortLatest` (el buscador puede ordenar por más
+ * reciente) se declaran; si faltan, la app oculta esa sección para el módulo.
  */
 export type ModuleCapability =
-  "popular" | "latest" | "search" | "details" | "pages" | "home" | "list" | "filters";
+  | "popular"
+  | "latest"
+  | "search"
+  | "details"
+  | "pages"
+  | "home"
+  | "list"
+  | "filters"
+  | "paginated"
+  | "sortLatest";
 
 /** Estado de publicación de una serie. */
 export type SeriesStatus = "ongoing" | "completed" | "hiatus" | "cancelled" | "unknown";

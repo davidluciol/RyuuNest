@@ -5,6 +5,7 @@ import {
   SqliteStorage,
   createFunctionScriptLoader,
   createModuleApi,
+  modulePaging,
   type DeclarativeConfig,
   type Http,
   type ModuleApiHandle,
@@ -159,8 +160,12 @@ export async function loadFromApi(
     }
   }
   const [latest, popular, home, catalogPage] = await Promise.all([
-    rows && !useHome && flags.hasLatest && api.latest ? api.latest(1).then((p) => p.items) : Promise.resolve([]),
-    rows && !useHome && flags.hasPopular && api.popular ? api.popular(1).then((p) => p.items) : Promise.resolve([]),
+    rows && !useHome && flags.hasLatest && api.latest
+      ? api.latest(1).then((p) => p.items)
+      : Promise.resolve([]),
+    rows && !useHome && flags.hasPopular && api.popular
+      ? api.popular(1).then((p) => p.items)
+      : Promise.resolve([]),
     useHome && api.home ? api.home().then((h) => h.sections) : Promise.resolve([]),
     inSection && api.list
       ? api.list(sectionId, page)
@@ -228,7 +233,7 @@ function sampleManifest(id: string): ModuleManifest {
   }
   const capabilities: ModuleManifest["capabilities"] = ["search"];
   if (source.hasPopular) capabilities.unshift("popular");
-  if (source.hasLatest) capabilities.push("latest");
+  if (source.hasLatest) capabilities.push("latest", "paginated", "sortLatest");
   return {
     id: source.id,
     name: source.name,
@@ -287,7 +292,15 @@ export async function loadDiscoverData(options: DiscoverLoadOptions): Promise<Di
     throw new ModuleError("NOT_FOUND", `El módulo de ejemplo ${moduleId} no existe`);
   }
   const handle = await mountSample(moduleId);
-  return loadFromApi(handle, { ...source, hasHome: false }, moduleId, query, page, sectionId, filters);
+  return loadFromApi(
+    handle,
+    { ...source, hasHome: false },
+    moduleId,
+    query,
+    page,
+    sectionId,
+    filters,
+  );
 }
 
 /** El último módulo elegido sobrevive a cambiar de pestaña en la sesión. */
@@ -344,8 +357,14 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
           id: pkg.id,
           name: pkg.manifest.name,
           nsfw: pkg.nsfw,
-          hasPopular: pkg.manifest.capabilities.includes("popular"),
-          hasLatest: pkg.manifest.capabilities.includes("latest"),
+          // F83: sin `paginated`/`sortLatest` declarados la sección se oculta.
+          hasPopular:
+            pkg.manifest.capabilities.includes("popular") &&
+            modulePaging(pkg.manifest.capabilities).paginates,
+          hasLatest:
+            pkg.manifest.capabilities.includes("latest") &&
+            modulePaging(pkg.manifest.capabilities).sortsLatest,
+          paginates: modulePaging(pkg.manifest.capabilities).paginates,
         }));
     },
     async load({ moduleId, query, page, sectionId, filters }) {
@@ -353,8 +372,12 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
       return loadFromApi(
         handle,
         {
-          hasLatest: manifest.capabilities.includes("latest"),
-          hasPopular: manifest.capabilities.includes("popular"),
+          hasLatest:
+            manifest.capabilities.includes("latest") &&
+            modulePaging(manifest.capabilities).sortsLatest,
+          hasPopular:
+            manifest.capabilities.includes("popular") &&
+            modulePaging(manifest.capabilities).paginates,
           hasHome: manifest.capabilities.includes("home"),
           hasFilters: manifest.capabilities.includes("filters"),
         },

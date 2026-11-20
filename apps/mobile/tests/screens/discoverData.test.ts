@@ -24,6 +24,7 @@ describe("getDiscoverModules", () => {
         nsfw: false,
         hasPopular: true,
         hasLatest: true,
+        paginates: true,
       },
       {
         id: "m-ejemplo-b",
@@ -31,6 +32,7 @@ describe("getDiscoverModules", () => {
         nsfw: true,
         hasPopular: false,
         hasLatest: true,
+        paginates: true,
       },
     ]);
   });
@@ -94,9 +96,9 @@ describe("loadDiscoverData — gating de capacidades y errores", () => {
   });
 
   it("un módulo desconocido falla con NOT_FOUND sin tocar la red", async () => {
-    await expect(loadDiscoverData({ moduleId: "m-fantasma", query: "", page: 1 })).rejects.toMatchObject(
-      { code: "NOT_FOUND" },
-    );
+    await expect(
+      loadDiscoverData({ moduleId: "m-fantasma", query: "", page: 1 }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 });
 
