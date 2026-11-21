@@ -36,5 +36,12 @@ export {
 export { defaultTheme, dragonNight, getTheme, themes, type Theme } from "./theme";
 export { contrastRatio, hexToRgb, relativeLuminance, WCAG_AA } from "./contrast";
 export { withAlpha } from "./color";
+export { activeColors, applyTheme, getThemeVersion } from "./activeColors";
+export {
+  THEME_COLOR_KEYS,
+  THEME_SCHEMA_VERSION,
+  validateTheme,
+  type ThemeValidation,
+} from "./themeSchema";
 
 export const UI_TOKENS_VERSION = "0.1.0";

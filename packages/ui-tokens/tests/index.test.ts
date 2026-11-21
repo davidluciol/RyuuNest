@@ -10,8 +10,12 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
   it("exporta todos los grupos de tokens", () => {
     expect(Object.keys(uiTokens).sort()).toEqual(
       [
+        "THEME_COLOR_KEYS",
+        "THEME_SCHEMA_VERSION",
         "UI_TOKENS_VERSION",
         "WCAG_AA",
+        "activeColors",
+        "applyTheme",
         "breakpoints",
         "breakpointForWidth",
         "contrastRatio",
@@ -26,6 +30,7 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
         "fontLicenses",
         "fonts",
         "getTheme",
+        "getThemeVersion",
         "hexToRgb",
         "layoutForWidth",
         "markers",
@@ -38,6 +43,7 @@ describe("superficie pública de @ryuunest/ui-tokens", () => {
         "readerMaxWidth",
         "spacing",
         "themes",
+        "validateTheme",
         "touchTarget",
         "typography",
         "withAlpha",
