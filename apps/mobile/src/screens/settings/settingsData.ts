@@ -12,6 +12,7 @@ import { validateRepoIndex } from "@ryuunest/module-sdk";
 
 import { OFFICIAL_REPO_DISMISSAL_SETTING, OFFICIAL_REPO_URL } from "../../data/officialRepo";
 import { INSTALL_PROTECTION_SETTING } from "../sources/sourcesData";
+import { createThemeSettings, type ThemeEntry } from "./themeSettings";
 
 /** Ajustes globales persistentes de F20 (SPEC §8.1, RF-34 y RF-39). */
 export const CONTENT_VISIBLE_SETTING = "settings.nsfwVisible";
@@ -46,6 +47,9 @@ export interface SettingsData {
   language: typeof DEFAULT_LANGUAGE;
   /** Modo global cuando la serie no tiene preferencia ni tipo que lo determine. */
   defaultReaderMode: ReaderMode;
+  /** F90: id del tema en uso y temas disponibles (integrados + importados, F91). */
+  activeThemeId: string;
+  themes: ThemeEntry[];
 }
 
 export interface SettingsService {
@@ -55,6 +59,10 @@ export interface SettingsService {
   setInstallProtection(on: boolean): Promise<void>;
   setNsfwVisible(on: boolean): Promise<void>;
   setDefaultReaderMode(mode: ReaderMode): Promise<void>;
+  setActiveTheme(id: string): Promise<void>;
+  /** F91: valida el JSON de un tema y lo guarda; el que llama ya confirmó con la persona. */
+  importTheme(json: string): Promise<void>;
+  deleteTheme(id: string): Promise<void>;
   clearCache(): Promise<void>;
   /** Vuelve a registrar el repo oficial y limpia el descarte (P-85). */
   restoreOfficialRepo(): Promise<void>;
@@ -73,6 +81,15 @@ export function createSettingsService(deps: SettingsServiceDeps): SettingsServic
   const storage = new SqliteStorage(driver);
   const repos = new RepoRegistry({ storage, http, clock, validateIndex: validateRepoIndex });
   const listeners = new Set<SettingsListener>();
+  const themeSettings = createThemeSettings({
+    async read(key) {
+      const row = await driver.get<{ value: string }>("SELECT value FROM setting WHERE key = ?", [
+        key,
+      ]);
+      return row?.value;
+    },
+    write: (key, value) => writeSetting(key, value),
+  });
 
   async function readFlag(key: string): Promise<boolean> {
     const row = await driver.get<{ value: string }>("SELECT value FROM setting WHERE key = ?", [
@@ -115,6 +132,7 @@ export function createSettingsService(deps: SettingsServiceDeps): SettingsServic
         nsfwVisible: await readFlag(CONTENT_VISIBLE_SETTING),
         language: DEFAULT_LANGUAGE,
         defaultReaderMode: await readReaderMode(),
+        ...(await themeSettings.load()),
       };
     },
 
@@ -146,6 +164,21 @@ export function createSettingsService(deps: SettingsServiceDeps): SettingsServic
         throw new ModuleError("INTERNAL", `Preferencia de lectura inválida: ${String(mode)}`);
       }
       await writeSetting(DEFAULT_READER_MODE_SETTING, mode);
+      notify();
+    },
+
+    async setActiveTheme(id) {
+      await themeSettings.setActive(id);
+      notify();
+    },
+
+    async importTheme(json) {
+      await themeSettings.import(json);
+      notify();
+    },
+
+    async deleteTheme(id) {
+      await themeSettings.remove(id);
       notify();
     },
 

@@ -58,7 +58,7 @@ describe("createSettingsService · protección de instalación (RF-7, F16b)", ()
   it("apagada por defecto y expone si el dispositivo tiene bloqueo", async () => {
     const service = build(fakeLock(true));
 
-    expect(await service.load()).toEqual({
+    expect(await service.load()).toMatchObject({
       installProtection: false,
       lockAvailable: true,
       officialRepoRegistered: false,

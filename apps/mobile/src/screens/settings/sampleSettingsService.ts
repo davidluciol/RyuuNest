@@ -7,6 +7,7 @@ import {
   type SettingsListener,
   type SettingsService,
 } from "./settingsData";
+import { createThemeSettings } from "./themeSettings";
 
 /**
  * F16b — `SettingsService` en memoria para la web (sin SQLite, P-79) y la
@@ -15,8 +16,15 @@ import {
  * con bloqueo para enseñar el interruptor activable.
  */
 
-export function createSampleSettingsService(initial: Partial<SettingsData> = {}): SettingsService {
-  let state: SettingsData = {
+export function createSampleSettingsService(
+  initial: Partial<Omit<SettingsData, "activeThemeId" | "themes">> = {},
+): SettingsService {
+  const memory = new Map<string, string>();
+  const themeSettings = createThemeSettings({
+    read: async (key) => memory.get(key),
+    write: async (key, value) => void memory.set(key, value),
+  });
+  let state: Omit<SettingsData, "activeThemeId" | "themes"> = {
     installProtection: false,
     lockAvailable: false,
     officialRepoRegistered: true,
@@ -33,7 +41,7 @@ export function createSampleSettingsService(initial: Partial<SettingsData> = {})
 
   return {
     async load() {
-      return { ...state };
+      return { ...state, ...(await themeSettings.load()) };
     },
 
     subscribe(listener) {
@@ -59,6 +67,21 @@ export function createSampleSettingsService(initial: Partial<SettingsData> = {})
 
     async setDefaultReaderMode(mode) {
       state = { ...state, defaultReaderMode: mode };
+      notify();
+    },
+
+    async setActiveTheme(id) {
+      await themeSettings.setActive(id);
+      notify();
+    },
+
+    async importTheme(json) {
+      await themeSettings.import(json);
+      notify();
+    },
+
+    async deleteTheme(id) {
+      await themeSettings.remove(id);
       notify();
     },
 
