@@ -114,6 +114,7 @@ describe("instalar", () => {
     expect((await app.service.load()).modules.find((m) => m.id === "portal-duna")?.status).toBe(
       "installed",
     );
+    expect(app.notices.at(-1)).toMatch(/instalado/);
   });
 
   it("un script no se instala con la confirmación normal y la hoja muestra el motivo", async () => {
@@ -207,6 +208,7 @@ describe("gestionar, actualizar y desinstalar", () => {
     expect((await app.service.load()).modules.find((m) => m.id === "portal-aurora")?.status).toBe(
       "available",
     );
+    expect(app.notices.at(-1)).toBe("Módulo desinstalado.");
   });
 });
 

@@ -64,12 +64,14 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
     submit: SourcesFlowAction,
     action: Parameters<typeof reportSourcesError>[1] = "install",
     context?: Record<string, unknown>,
+    success?: string,
   ): Promise<void> {
     dispatch(submit);
     try {
       await work();
       await reload();
       dispatch({ type: "done" });
+      if (success !== undefined) notify(success);
     } catch (error) {
       reportSourcesError(reporter, action, error, context);
       dispatch({ type: "fail", message: messageOf(error) });
@@ -110,6 +112,7 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
         { type: "submit-install" },
         "install",
         { moduleId: preview.id, repoId: preview.repoId },
+        t("sources.install.done", { name: preview.name }),
       );
     },
 
@@ -159,9 +162,13 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
       const flow = getFlow();
       if (flow.sheet !== "uninstall") return;
       const { moduleId } = flow;
-      await runSheet(() => service.uninstall(moduleId), { type: "submit-uninstall" }, "uninstall", {
-        moduleId,
-      });
+      await runSheet(
+        () => service.uninstall(moduleId),
+        { type: "submit-uninstall" },
+        "uninstall",
+        { moduleId },
+        t("sources.uninstall.done"),
+      );
     },
 
     async syncRepo(repoId) {
