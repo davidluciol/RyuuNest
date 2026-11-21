@@ -27,6 +27,19 @@
       "expo-image",
       "expo-sharing",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e0c0ec25-4131-466a-9ceb-752d20a87c43"
+      }
+    },
+    "owner": "poti7652",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e0c0ec25-4131-466a-9ceb-752d20a87c43"
+    }
   }
 }

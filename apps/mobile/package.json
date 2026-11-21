@@ -8,6 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "eas-build-post-install": "pnpm --filter @ryuunest/mobile^... build",
     "test": "vitest run",
     "typecheck": "node --stack-size=32000 ./node_modules/typescript/bin/tsc --noEmit"
   },
@@ -37,6 +38,7 @@
     "expo-sharing": "~57.0.25",
     "expo-sqlite": "~57.0.4",
     "expo-status-bar": "~57.0.1",
+    "expo-updates": "~57.0.28",
     "fflate": "^0.8.3",
     "htmlparser2": "^12.0.0",
     "lucide-react-native": "^1.57.0",
