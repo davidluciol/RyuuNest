@@ -547,12 +547,16 @@ export default function GalleryScreen() {
             url={SAMPLE_SOURCES_DATA.repos[0]?.url ?? ""}
             meta={t("sources.repo.modules", { count: 6 })}
             syncLabel={t("sources.repo.sync")}
+            removeLabel={t("sources.removeRepo.submit")}
+            removeAccessibilityLabel={t("sources.repo.remove")}
           />
           <RepoCard
             name={SAMPLE_SOURCES_DATA.repos[0]?.name ?? ""}
             url={SAMPLE_SOURCES_DATA.repos[0]?.url ?? ""}
             syncLabel={t("sources.repo.sync")}
             syncing
+            removeLabel={t("sources.removeRepo.submit")}
+            removeAccessibilityLabel={t("sources.repo.remove")}
           />
         </View>
 

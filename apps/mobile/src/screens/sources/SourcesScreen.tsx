@@ -189,9 +189,10 @@ export default function SourcesScreen({
                     url={repo.url}
                     meta={t("sources.repo.modules", { count: repo.moduleCount })}
                     syncLabel={t("sources.repo.sync")}
-                    accessibilityLabel={t("sources.repo.remove")}
+                    removeLabel={t("sources.removeRepo.submit")}
+                    removeAccessibilityLabel={t("sources.repo.remove")}
                     onSync={() => void controller?.syncRepo(repo.id)}
-                    onPress={() => controller?.askRemoveRepo(repo.id)}
+                    onRemove={() => controller?.askRemoveRepo(repo.id)}
                   />
                 ))}
               </View>
