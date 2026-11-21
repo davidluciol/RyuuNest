@@ -153,6 +153,7 @@ export class ModuleHost implements Host {
         headers: response.headers,
         url: response.url ?? url,
         text: () => response.text(),
+        bytes: () => response.bytes(),
       };
     } catch (error) {
       if (error instanceof ModuleError) {

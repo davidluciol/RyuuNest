@@ -96,6 +96,17 @@ describe("host · permisos de dominio", () => {
   });
 });
 
+describe("host · cuerpo binario", () => {
+  it("bytes() devuelve el cuerpo sin pasar por UTF-8", async () => {
+    const raw = new Uint8Array([0x00, 0x42, 0xb0, 0xe1]);
+    const http: Http = {
+      request: async () => ({ status: 200, headers: {}, text: async () => "", bytes: async () => raw }),
+    };
+    const response = await makeHost({ http }).fetch("https://ejemplo.com/ids.bin");
+    expect(Array.from(await response.bytes())).toEqual([0x00, 0x42, 0xb0, 0xe1]);
+  });
+});
+
 describe("host · tiempo límite", () => {
   it("una petición que excede el tiempo límite produce TIMEOUT", async () => {
     const host = makeHost({ http: new TrackingHttp({ never: true }), timeoutMs: 20 });
