@@ -1,4 +1,5 @@
 import FocusPressable from "./FocusPressable";
+import type { ReactElement } from "react";
 import { Modal, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
@@ -38,6 +39,8 @@ export interface ConfirmSheetProps {
   /** Nombre del elemento afectado (módulo, repositorio, archivo), si lo hay. */
   subject?: string;
   confirmLabel: string;
+  /** Icono de la acción; por defecto la papelera (borrar). `null` lo quita. */
+  confirmIcon?: ReactElement | null;
   cancelLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
@@ -58,6 +61,7 @@ export default function ConfirmSheet({
   message,
   subject,
   confirmLabel,
+  confirmIcon,
   cancelLabel = t("confirm.cancel"),
   onConfirm,
   onCancel,
@@ -80,7 +84,13 @@ export default function ConfirmSheet({
       key="confirm"
       variant="caution"
       label={confirmLabel}
-      icon={<Trash2 size={spacing.md} color={colors.warning} />}
+      icon={
+        confirmIcon === undefined ? (
+          <Trash2 size={spacing.md} color={colors.warning} />
+        ) : (
+          confirmIcon
+        )
+      }
       disabled={busy}
       onPress={onConfirm}
       testID={confirmTestID}

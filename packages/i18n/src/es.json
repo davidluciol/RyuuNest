@@ -20,6 +20,12 @@
   "actions.close": "Cerrar",
   "toast.close": "Cerrar aviso",
   "confirm.cancel": "Cancelar",
+  "challenge.confirm.title": "Verificar en el navegador",
+  "challenge.confirm.message": "{host} pide comprobar que eres una persona. Se abrirá una página del sitio en un navegador dentro de la app; resuelve la comprobación y la app guardará el permiso en este dispositivo para seguir cargando.",
+  "challenge.confirm.action": "Abrir navegador",
+  "challenge.browser.title": "Verificación de {host}",
+  "challenge.browser.hint": "Resuelve la comprobación del sitio. Cuando veas la página normal, toca «Listo».",
+  "challenge.browser.done": "Listo",
   "actions.back": "Volver",
 
   "series.title": "Ficha",
@@ -556,5 +562,6 @@
   "gallery.dialog.message": "El archivo no es un respaldo válido de RyuuNest.",
   "gallery.dialog.show": "Mostrar diálogo de error",
   "gallery.confirm.show": "Mostrar confirmación",
+  "gallery.confirm.showChallenge": "Mostrar verificación del sitio",
   "gallery.confirm.subject": "respaldo-2026-11-01.json"
 }
