@@ -360,7 +360,7 @@ export default function create(host: Host): ModuleApi;
 ```
 El host aplica por defecto un tiempo límite por petición, un máximo de peticiones simultáneas por módulo y una pausa mínima entre peticiones al mismo dominio.
 
-`HostResponse` trae `status`, `headers`, `text()` y `url`: la URL final tras seguir las redirecciones (la pedida si no hubo ninguna). El puerto `Http` la informa de forma opcional; el host rellena la pedida cuando falta.
+`HostResponse` trae `status`, `headers`, `text()`, `bytes()` (cuerpo sin decodificar; aditivo, lo pide hitomi.la) y `url`: la URL final tras seguir las redirecciones (la pedida si no hubo ninguna). El puerto `Http` la informa de forma opcional; el host rellena la pedida cuando falta.
 
 **Semántica del host (ADR-0003).** `host.fetch` sigue redirecciones. Solo el cuerpo de texto es parte del contrato (`text()`); el manejo de `Cookie` y `set-cookie` y los temporizadores **no se garantizan** (dependen de la plataforma; anti-bot fuera de la v1, P-8). `host.settings` mantiene su firma **sin garantía de persistencia**; `host.log` también. Los valores del host (tiempo límite, simultáneas, pausa) no son contrato: ningún módulo debe depender de ellos. Todos los tipos de esta sección son definitivos (se retiró la marca «provisional» de T08).
 

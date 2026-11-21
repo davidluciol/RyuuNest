@@ -183,6 +183,8 @@ export interface HostResponse {
   /** URL final tras seguir las redirecciones; la pedida si no hubo ninguna. */
   url: string;
   text(): Promise<string>;
+  /** Cuerpo sin decodificar (p. ej. listas binarias de IDs); `text()` pierde los bytes ≥ 0x80. */
+  bytes(): Promise<Uint8Array>;
 }
 
 /**
