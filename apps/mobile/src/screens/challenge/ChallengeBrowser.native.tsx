@@ -1,8 +1,8 @@
 import Constants from "expo-constants";
 import { useEffect, useRef, useState } from "react";
-import { Modal, NativeModules, StyleSheet, Text, View } from "react-native";
+import { Modal, NativeModules, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
 import LoadingState from "../../components/LoadingState";
@@ -11,6 +11,7 @@ import { textStyle } from "../../components/textStyle";
 import { t } from "../../i18n";
 import type { ChallengeBrowserProps } from "./ChallengeBrowser";
 import { allowsNavigation, pickClearance, type NativeCookie } from "./challengeBrowserRules";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F100 — navegador visible para el reto de Cloudflare. Seguridad: sin puente JS
@@ -158,12 +159,12 @@ export default function ChallengeBrowser({ url, host, domains, onFinish }: Chall
   );
 }
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   bar: { padding: spacing.md, gap: spacing.xs, backgroundColor: colors.bg },
   title: { ...textStyle(typography.titleLg), color: colors.textPrimary },
   hint: { ...textStyle(typography.bodyMd), color: colors.textSecondary },
   actions: { flexDirection: "row", justifyContent: "flex-end", gap: spacing.sm },
   web: { flex: 1 },
-});
+}));

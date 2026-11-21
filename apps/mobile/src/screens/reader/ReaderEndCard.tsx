@@ -1,18 +1,19 @@
 // single-use: tarjeta de fin de capítulo del lector (RF-21); solo existe dentro de él.
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
 import { textStyle } from "../../components/textStyle";
 import { ArrowRight, CircleCheck } from "../../icons";
 import { t } from "../../i18n";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F18 — fin del capítulo (RF-21): confirma el fin y ofrece abrir el siguiente. Si no hay más
  * capítulos lo dice sin inventar una acción.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ReaderEndCardProps {
   /** Número del capítulo que termina; `undefined` si no tiene número. */
@@ -24,7 +25,12 @@ export interface ReaderEndCardProps {
   onOpenNext: () => void;
 }
 
-export default function ReaderEndCard({ chapterNumber, next, width, onOpenNext }: ReaderEndCardProps) {
+export default function ReaderEndCard({
+  chapterNumber,
+  next,
+  width,
+  onOpenNext,
+}: ReaderEndCardProps) {
   return (
     <View testID="reader-end-card" style={[styles.card, { width }]}>
       <View style={styles.badge}>
@@ -53,7 +59,7 @@ export default function ReaderEndCard({ chapterNumber, next, width, onOpenNext }
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   card: {
     alignItems: "center",
     gap: spacing.sm,
@@ -71,4 +77,4 @@ const styles = StyleSheet.create({
   title: { ...textStyle(typography.headlineSm), color: colors.textPrimary, textAlign: "center" },
   message: { ...textStyle(typography.bodyMd), color: colors.textSecondary, textAlign: "center" },
   button: { alignSelf: "stretch" },
-});
+}));

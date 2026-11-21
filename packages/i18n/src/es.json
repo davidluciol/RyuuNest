@@ -563,5 +563,18 @@
   "gallery.dialog.show": "Mostrar diálogo de error",
   "gallery.confirm.show": "Mostrar confirmación",
   "gallery.confirm.showChallenge": "Mostrar verificación del sitio",
-  "gallery.confirm.subject": "respaldo-2026-11-01.json"
+  "gallery.confirm.subject": "respaldo-2026-11-01.json",
+  "settings.section.themes": "Temas",
+  "settings.themes.inUse": "En uso",
+  "settings.themes.imported": "Importado",
+  "settings.themes.selectA11y": "Usar el tema {name}",
+  "settings.themes.deleteAction": "Borrar",
+  "settings.themes.deleteA11y": "Borrar el tema {name}",
+  "settings.themes.importRow": "Importar tema",
+  "settings.themes.importHint": "Elige un archivo JSON de tema. Solo cambia colores y nada se importa sin tu confirmación.",
+  "settings.themes.importAction": "Elegir archivo",
+  "settings.themes.confirmTitle": "¿Importar este tema?",
+  "settings.themes.confirmMessage": "Solo cambia los colores de la app; no ejecuta código. Podrás borrarlo cuando quieras.",
+  "settings.themes.confirmAction": "Importar",
+  "gallery.component.themeRow": "Fila de tema"
 }

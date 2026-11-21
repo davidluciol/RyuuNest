@@ -1,17 +1,18 @@
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
 import SheetModal from "../../components/SheetModal";
 import { textStyle } from "../../components/textStyle";
 import { t } from "../../i18n";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F45 — aviso de primera vez al elegir un módulo NSFW: dice qué significa la
  * sigla y deja volver sin marcarlo como visto.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface NsfwNoticeSheetProps {
   moduleName: string;
@@ -31,7 +32,7 @@ export default function NsfwNoticeSheet({ moduleName, onContinue, onBack }: Nsfw
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   message: { ...textStyle(typography.bodyMd), color: colors.textPrimary },
   actions: {
     flexDirection: "row",
@@ -40,4 +41,4 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: spacing.xs,
   },
-});
+}));

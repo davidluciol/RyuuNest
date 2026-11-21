@@ -1,4 +1,4 @@
-import { radii, spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, spacing, touchTarget, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F16 — reglas de la tarjeta de repositorio (`RepoCard`), separadas del
@@ -6,7 +6,7 @@ import { radii, spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tok
  * sale del nivel de superficie, sin sombra (V11). Todo desde `ui-tokens`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface RepoCardStyleShape {
   backgroundColor: string;

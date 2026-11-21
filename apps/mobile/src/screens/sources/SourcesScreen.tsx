@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import { dragonNightColors, layoutForWidth, spacing, typography } from "@ryuunest/ui-tokens";
+import { ScrollView, Text, View, useWindowDimensions } from "react-native";
+import { activeColors, layoutForWidth, spacing, typography } from "@ryuunest/ui-tokens";
 import { isRecommendedAdded } from "@ryuunest/core";
 
 import Button from "../../components/Button";
@@ -39,6 +39,7 @@ import {
   moduleRowAction,
   moduleStatusBadges,
 } from "./sourcesView";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F16 — pantalla Fuentes (RF-1 a RF-8, SPEC §11.5): cabecera con resumen y un
@@ -50,7 +51,7 @@ import {
  * fuentes» (F21b) y la tarjeta «Seguridad del Nido» (T4/T6 de `DESIGN_RULES.md`).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 function kindChipLabel(filter: SourceKindFilter, count: number): string {
   return filter === "all"
@@ -155,7 +156,9 @@ export default function SourcesScreen({
 
         {notice !== null ? (
           <View style={styles.notice} accessibilityRole="alert">
-            <Text style={[styles.noticeText, noticeKind === "info" && styles.noticeInfo]}>{notice}</Text>
+            <Text style={[styles.noticeText, noticeKind === "info" && styles.noticeInfo]}>
+              {notice}
+            </Text>
             <Button
               variant="secondary"
               label={t("sources.sheet.close")}
@@ -328,7 +331,7 @@ export default function SourcesScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },
   stateWrap: {
     flex: 1,
@@ -350,4 +353,4 @@ const styles = StyleSheet.create({
   },
   noticeText: { ...textStyle(typography.bodyMd), color: colors.error },
   noticeInfo: { color: colors.textPrimary },
-});
+}));

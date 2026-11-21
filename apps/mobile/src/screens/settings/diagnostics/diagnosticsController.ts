@@ -1,11 +1,7 @@
 import type { ReportFormat } from "../../../data/diagnosticsReport";
 import { t } from "../../../i18n";
 import type { DiagnosticsService } from "./diagnosticsData";
-import type {
-  DiagnosticsFlow,
-  DiagnosticsFlowAction,
-  DiagnosticsNotice,
-} from "./diagnosticsFlow";
+import type { DiagnosticsFlow, DiagnosticsFlowAction, DiagnosticsNotice } from "./diagnosticsFlow";
 
 /**
  * F30 — controlador de Diagnóstico. Une el `DiagnosticsService` con la
@@ -35,7 +31,9 @@ export interface DiagnosticsController {
   dismissNotice(): void;
 }
 
-export function createDiagnosticsController(deps: DiagnosticsControllerDeps): DiagnosticsController {
+export function createDiagnosticsController(
+  deps: DiagnosticsControllerDeps,
+): DiagnosticsController {
   const { service, getFlow, dispatch, notify, reload } = deps;
 
   async function guarded(work: () => Promise<void>, ok: string, failed: string): Promise<void> {

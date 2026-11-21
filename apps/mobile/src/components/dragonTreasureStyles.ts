@@ -1,4 +1,4 @@
-import { dragonNightColors, markers } from "@ryuunest/ui-tokens";
+import { activeColors, markers } from "@ryuunest/ui-tokens";
 
 /**
  * F56 — ilustración «el dragón sin tesoros» (vacío de búsqueda de Tesoros): el dragón marcador
@@ -6,7 +6,7 @@ import { dragonNightColors, markers } from "@ryuunest/ui-tokens";
  * solo colores del tema.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Retícula del dibujo (192 × 120): el doble de ancho que el dragón mediano. */
 export const DRAGON_TREASURE_WIDTH = markers.md * 2;

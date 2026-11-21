@@ -1,6 +1,6 @@
 import FocusPressable from "./FocusPressable";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import { ChevronDown, ChevronUp, CircleAlert, Info, TriangleAlert } from "../icons";
 import {
@@ -11,6 +11,7 @@ import {
   type LogEventTone,
 } from "./logEventRowStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F30 — fila de evento del registro de diagnóstico (FB2: «Ajustes →
@@ -20,7 +21,7 @@ import { textStyle } from "./textStyle";
  * desplegado vive en quien la usa.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface LogEventDetailLine {
   label: string;
@@ -107,7 +108,7 @@ export default function LogEventRow({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   row: { flexDirection: "row", alignItems: "flex-start" },
   body: { flex: 1, minWidth: 0, gap: spacing.xxs },
   head: { flexDirection: "row", alignItems: "baseline", flexWrap: "wrap", gap: spacing.xs },
@@ -124,4 +125,4 @@ const styles = StyleSheet.create({
     minHeight: touchTarget.min,
   },
   toggleText: { ...textStyle(typography.labelLg), color: colors.textPrimary },
-});
+}));

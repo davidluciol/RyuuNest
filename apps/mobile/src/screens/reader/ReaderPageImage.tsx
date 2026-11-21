@@ -71,7 +71,10 @@ export default function ReaderPageImage({
   if (load.status === "error") {
     const kind = pageErrorKind(load.message);
     return (
-      <View testID={testID === undefined ? undefined : `${testID}-error`} style={{ width, height, justifyContent: "center", overflow: "hidden" }}>
+      <View
+        testID={testID === undefined ? undefined : `${testID}-error`}
+        style={{ width, height, justifyContent: "center", overflow: "hidden" }}
+      >
         <ErrorState
           title={t("reader.image.error", { number: pageNumber })}
           message={t(PAGE_ERROR_MESSAGE_KEYS[kind])}

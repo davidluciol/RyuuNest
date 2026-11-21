@@ -1,4 +1,4 @@
-import { dragonNightColors, spacing } from "@ryuunest/ui-tokens";
+import { activeColors, spacing } from "@ryuunest/ui-tokens";
 
 /**
  * F34.3 — anillo de foco de todo elemento pulsable: 2 px `accent` con
@@ -16,7 +16,7 @@ export interface FocusRingShape {
 
 export function focusRingStyle(focused: boolean): FocusRingShape {
   return {
-    outlineColor: focused ? dragonNightColors.accent : "transparent",
+    outlineColor: focused ? activeColors.accent : "transparent",
     outlineWidth: RING,
     outlineOffset: RING,
     outlineStyle: "solid",

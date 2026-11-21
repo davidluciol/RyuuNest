@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { FlatList, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { FlatList, Text, View, useWindowDimensions } from "react-native";
 import {
-  dragonNightColors,
+  activeColors,
   layoutForWidth,
   spacing,
   touchTarget,
@@ -46,6 +46,7 @@ import {
 } from "./libraryFixtures";
 import { textStyle } from "../../components/textStyle";
 import { useDebouncedValue } from "./debounce";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F14a/F14b — pantalla Biblioteca (RF-26 a RF-30, RF-35, SPEC §11.5):
@@ -55,7 +56,7 @@ import { useDebouncedValue } from "./debounce";
  * (RF-42, v2). Un solo acceso a carpetas (V6).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** F93 — acciones de «Gestionar carpetas»; sin ellas «Gestionar» no abre la hoja. */
 export interface LibraryFolderActions {
@@ -476,7 +477,9 @@ export default function LibraryScreen({
               key={editingFolder.id}
               visible
               folder={{ name: editingFolder.name, tags: editingFolder.tags ?? [] }}
-              existingNames={data.folders.filter((f) => f.id !== editingFolder.id).map((f) => f.name)}
+              existingNames={data.folders
+                .filter((f) => f.id !== editingFolder.id)
+                .map((f) => f.name)}
               availableTags={[...new Set([...data.tags, ...(editingFolder.tags ?? [])])]}
               onSubmit={(name, tags) => folderActions.update(editingFolder.id, name, tags)}
               onClose={() => setEditingFolder(null)}
@@ -508,9 +511,7 @@ export default function LibraryScreen({
           title={menuSeries.title}
           folders={data.folders.filter((f) => f.kind !== "gems")}
           currentFolderId={menuSeries.folderId}
-          inFavorites={
-            data.folders.find((f) => f.id === menuSeries.folderId)?.kind === "favorites"
-          }
+          inFavorites={data.folders.find((f) => f.id === menuSeries.folderId)?.kind === "favorites"}
           onMove={(folderId) => {
             const series = menuSeries;
             setMenuSeries(null);
@@ -553,7 +554,7 @@ export default function LibraryScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: {
     flex: 1,
     backgroundColor: colors.bg,
@@ -625,4 +626,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: spacing.lg,
   },
-});
+}));

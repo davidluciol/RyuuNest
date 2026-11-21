@@ -1,4 +1,4 @@
-import { spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
+import { spacing, touchTarget, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F13 — reglas del encabezado de sección (SPEC §11.10, `DESIGN_RULES.md` V1/V4):
@@ -8,7 +8,7 @@ import { spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
  * foco y destino activo).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Alto mínimo del encabezado cuando hay acción (área táctil, RNF-7). */
 export const SECTION_HEADER_MIN_HEIGHT = touchTarget.min;

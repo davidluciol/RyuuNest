@@ -1,4 +1,12 @@
-import { radii, spacing, touchTarget, typography, dragonNightColors, withAlpha, type TypeStyle } from "@ryuunest/ui-tokens";
+import {
+  radii,
+  spacing,
+  touchTarget,
+  typography,
+  activeColors,
+  withAlpha,
+  type TypeStyle,
+} from "@ryuunest/ui-tokens";
 
 /**
  * F29 — reglas de los avisos de error (P-72, sin diseño en Stitch: P-30).
@@ -20,8 +28,7 @@ export type ErrorSeverity = "info" | "warning" | "error";
 /** Duración del toast en milisegundos (4 s). */
 export const TOAST_DURATION_MS = 4_000;
 
-
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Color del borde y del icono por severidad. */
 export function severityColor(severity: ErrorSeverity): string {

@@ -1,9 +1,10 @@
 import FocusPressable from "./FocusPressable";
-import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import { spacing, typography, dragonNightColors } from "@ryuunest/ui-tokens";
+import { Text, View, useWindowDimensions } from "react-native";
+import { spacing, typography, activeColors } from "@ryuunest/ui-tokens";
 
 import { settingsRowLayout, settingsRowStyle } from "./sheetStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F07 — fila de ajustes: etiqueta a la izquierda y control/valor a la derecha
@@ -11,7 +12,7 @@ import { textStyle } from "./textStyle";
  * 400 dp el control se apila bajo el texto (F34.2).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface SettingsRowProps {
   label: string;
@@ -65,7 +66,7 @@ export default function SettingsRow({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   row: { flexDirection: "row", alignItems: "center", flex: 1, gap: spacing.sm },
   rowStacked: { flexDirection: "column", alignItems: "flex-start", paddingVertical: spacing.sm },
   textBlockStacked: { flex: 0, alignSelf: "stretch" },
@@ -74,4 +75,4 @@ const styles = StyleSheet.create({
   label: { ...textStyle(typography.bodyLg), color: colors.textPrimary },
   hint: { ...textStyle(typography.bodySm), color: colors.textSecondary },
   hintWarning: { ...textStyle(typography.bodySm), color: colors.progress },
-});
+}));

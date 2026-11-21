@@ -1,4 +1,4 @@
-import { radii, spacing, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, spacing, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F07 — reglas de fila de ajustes y de hojas/diálogos (SPEC §11.10, RNF-12).
@@ -6,7 +6,7 @@ import { radii, spacing, dragonNightColors } from "@ryuunest/ui-tokens";
  * superiores redondeadas, **sin sombra** (profundidad por superficie).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export const SETTINGS_ROW_MIN_HEIGHT = 56;
 

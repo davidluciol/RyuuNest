@@ -153,7 +153,9 @@ export function useSourcesData(): SourcesState {
     if (view.status !== "ready") return;
     setUpdateCount(countUpdates(view.data.modules));
     if (controller === null || !consumeOpenUpdatesRequest()) return;
-    const next = view.data.modules.find((m) => m.status === "installed" && m.updateTo !== undefined);
+    const next = view.data.modules.find(
+      (m) => m.status === "installed" && m.updateTo !== undefined,
+    );
     if (next !== undefined) void controller.openUpdate(next.id);
   }, [view, controller, openTick]);
 

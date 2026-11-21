@@ -1,4 +1,4 @@
-import { dragonNightColors, withAlpha } from "@ryuunest/ui-tokens";
+import { activeColors, withAlpha } from "@ryuunest/ui-tokens";
 
 /**
  * F16 — velo de la hoja modal (`SheetModal`): oscurece el contenido y deja la
@@ -6,7 +6,7 @@ import { dragonNightColors, withAlpha } from "@ryuunest/ui-tokens";
  * compartido por todas las hojas de Fuentes.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface SheetBackdropStyleShape {
   flex: number;

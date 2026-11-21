@@ -1,4 +1,4 @@
-import { dragonNightColors, withAlpha } from "@ryuunest/ui-tokens";
+import { activeColors, withAlpha } from "@ryuunest/ui-tokens";
 
 /**
  * F34.3 — lógica pura de la pista de desplazamiento de las filas de chips
@@ -37,5 +37,5 @@ export function scrollFadeState({
 
 /** Del fondo opaco al mismo fondo transparente (sin gris intermedio). */
 export function fadeColors(): readonly [string, string] {
-  return [withAlpha(dragonNightColors.bg, 1), withAlpha(dragonNightColors.bg, 0)];
+  return [withAlpha(activeColors.bg, 1), withAlpha(activeColors.bg, 0)];
 }

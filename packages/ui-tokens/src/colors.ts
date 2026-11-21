@@ -55,4 +55,3 @@ export const dragonNightColors: ThemeColors = {
   error: "#F06A6A",
   nsfw: "#FF6B1A",
 };
-

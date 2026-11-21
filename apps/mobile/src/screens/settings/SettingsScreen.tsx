@@ -1,9 +1,11 @@
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 import type { ReaderMode } from "@ryuunest/core";
-import { dragonNightColors, layoutForWidth, spacing, typography } from "@ryuunest/ui-tokens";
+import { activeColors, layoutForWidth, spacing, typography, type Theme } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
 import Chip from "../../components/Chip";
+import ConfirmSheet from "../../components/ConfirmSheet";
+import ThemeRow from "../../components/ThemeRow";
 import { contentColumnStyle } from "../../components/cardStyles";
 import NoticeToast from "../../components/NoticeToast";
 import SettingsCard from "../../components/SettingsCard";
@@ -21,6 +23,7 @@ import BackupSheets from "./backup/BackupSheets";
 import BackupSection from "./backup/BackupPreview";
 import type { BackupController } from "./backup/backupController";
 import type { BackupFlow } from "./backup/backupFlow";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F20 — pantalla de Ajustes (RF-34, RF-39, P-85). Presentacional: recibe la
@@ -35,7 +38,7 @@ import type { BackupFlow } from "./backup/backupFlow";
 export type SettingsView =
   { status: "loading" } | { status: "error" } | { status: "ready"; data: SettingsData };
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface SettingsScreenProps {
   view: SettingsView;
@@ -45,6 +48,15 @@ export interface SettingsScreenProps {
   onToggleNsfw?: (on: boolean) => void;
   /** Cambia el modo global cuando no hay preferencia de serie. */
   onDefaultReaderModeChange?: (mode: ReaderMode) => void;
+  /** F90: aplica el tema al instante. */
+  onSelectTheme?: (id: string) => void;
+  /** F91: abre el selector de archivos; nada se importa sin confirmar. */
+  onPickTheme?: () => void;
+  onDeleteTheme?: (id: string) => void;
+  /** F91: tema leído y válido que espera la confirmación de la persona. */
+  pendingTheme?: Theme | null;
+  onConfirmThemeImport?: () => void;
+  onCancelThemeImport?: () => void;
   /** Vacía la caché de imágenes de la plataforma. */
   onClearCache?: () => void;
   /** Vuelve a registrar el repo oficial (P-85). */
@@ -70,6 +82,12 @@ export default function SettingsScreen({
   onToggleProtection,
   onToggleNsfw,
   onDefaultReaderModeChange,
+  onSelectTheme,
+  onPickTheme,
+  onDeleteTheme,
+  pendingTheme = null,
+  onConfirmThemeImport,
+  onCancelThemeImport,
   onClearCache,
   onRestoreOfficialRepo,
   notice = null,
@@ -113,6 +131,8 @@ export default function SettingsScreen({
     nsfwVisible,
     language,
     defaultReaderMode,
+    activeThemeId,
+    themes,
   } = view.data;
 
   // El aviso del respaldo comparte bloque con el de ajustes: solo uno a la vez.
@@ -156,16 +176,48 @@ export default function SettingsScreen({
                 hint={t("settings.reading.defaultModeHint")}
               />
               <View style={styles.options}>
-              {READER_MODE_OPTIONS.map((option) => (
-                <Chip
-                  key={option.mode}
-                  label={t(option.labelKey)}
-                  selected={defaultReaderMode === option.mode}
-                  onPress={() => onDefaultReaderModeChange?.(option.mode)}
-                />
-              ))}
+                {READER_MODE_OPTIONS.map((option) => (
+                  <Chip
+                    key={option.mode}
+                    label={t(option.labelKey)}
+                    selected={defaultReaderMode === option.mode}
+                    onPress={() => onDefaultReaderModeChange?.(option.mode)}
+                  />
+                ))}
               </View>
             </View>
+          </SettingsCard>
+        </View>
+
+        <View style={styles.section}>
+          <SectionHeader title={t("settings.section.themes")} />
+          <SettingsCard>
+            <View style={styles.options} accessibilityRole="radiogroup">
+              {themes.map((theme) => (
+                <ThemeRow
+                  key={theme.id}
+                  theme={theme}
+                  selected={theme.id === activeThemeId}
+                  imported={!theme.builtIn}
+                  disabled={busy}
+                  onSelect={() => onSelectTheme?.(theme.id)}
+                  onDelete={() => onDeleteTheme?.(theme.id)}
+                  testID={`settings-theme-${theme.id}`}
+                />
+              ))}
+            </View>
+            <SettingsRow
+              label={t("settings.themes.importRow")}
+              hint={t("settings.themes.importHint")}
+              right={
+                <Button
+                  variant="secondary"
+                  label={t("settings.themes.importAction")}
+                  disabled={busy}
+                  onPress={onPickTheme}
+                />
+              }
+            />
           </SettingsCard>
         </View>
 
@@ -267,6 +319,18 @@ export default function SettingsScreen({
         testID="settings-toast"
       />
 
+      <ConfirmSheet
+        visible={pendingTheme !== null}
+        title={t("settings.themes.confirmTitle")}
+        message={t("settings.themes.confirmMessage")}
+        subject={pendingTheme?.name}
+        confirmLabel={t("settings.themes.confirmAction")}
+        confirmIcon={null}
+        onConfirm={() => onConfirmThemeImport?.()}
+        onCancel={() => onCancelThemeImport?.()}
+        testID="settings-theme-confirm"
+      />
+
       {backupController !== null && backupFlow !== undefined ? (
         <BackupSheets flow={backupFlow} controller={backupController} />
       ) : null}
@@ -274,7 +338,7 @@ export default function SettingsScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },
   stateWrap: {
     flex: 1,
@@ -294,4 +358,4 @@ const styles = StyleSheet.create({
     ...textStyle(typography.labelLg),
     color: colors.textSecondary,
   },
-});
+}));

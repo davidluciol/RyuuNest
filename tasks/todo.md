@@ -515,7 +515,8 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 
 - **Error de transacción SQLite (investigar primero):** al reabrir la app, el lector de m440 mostró «No se pudo abrir el capítulo» con `Call to function 'NativeDatabase.execAsync' has been rejected. → cannot start a transaction within a transaction` (INTERNAL). No se reprodujo después. Probable transacción anidada o concurrente al restaurar la ruta del lector.
 - **F100 sin disparar:** Cloudflare no bloqueó m440 ese día (búsqueda y filtros sin `BLOCKED`), así que no se vio la hoja de confirmación ni el WebView. Probar cuando vuelva a bloquear (`m440.in/manga-list`), en Expo Go (modo «tarro») y luego en build de desarrollo; medir caducidad de `cf_clearance` y si el `fetch` de RN reutiliza la cookie del WebView (el procedimiento está en el PR #157). Vigilar que `onShouldStartLoadWithRequest` en Android no bloquee `challenges.cloudflare.com`.
-- **Cookies sin librería deprecada:** `@react-native-cookies/cookies` está deprecada y sin soporte declarado de la New Architecture. Candidata: `@preeternal/react-native-cookie-manager` (TurboModules, API compatible, solo build de desarrollo). El `fetch` de RN en Android comparte el CookieManager del WebView, así que el «modo tarro» puede bastar sin librería: medir antes de decidir.
+- **Barra inferior a 360 dp con texto al 200 %:** las etiquetas se tocan (S25 y POCO). Caso muy especial; sin prisa.
+- **Cookies sin librería deprecada (ya es tarea, ver F69):** `@react-native-cookies/cookies` está deprecada y sin soporte declarado de la New Architecture. Candidata: `@preeternal/react-native-cookie-manager` (TurboModules, API compatible, solo build de desarrollo). El `fetch` de RN en Android comparte el CookieManager del WebView, así que el «modo tarro» puede bastar sin librería: medir antes de decidir.
 - **Portadas en blanco (YupManga y m440):** no se reprodujeron en el S25 (Aventuras, ficha y Guarida las muestran). Si reaparecen, leer el registro `cover.load` (PR #150): 403 ⇒ cargar con `host.fetch`; error de decodificación ⇒ formato.
 - **Aviso neutro de F42** (PR #156): solo cubierto por Vitest y Playwright; no se vio en el S25 (tras actualizar YupManga no se observó el aviso).
 - **F63:** instalar un módulo **declarativo** (los 3 del repo oficial son `script`) y el bloqueo de dispositivo con la protección activada.
@@ -530,31 +531,39 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 
 ### F65 Respaldo en el teléfono `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Compartir el archivo exportado con la hoja del sistema, importar un archivo real y comprobar que las carpetas por defecto no se duplican (ver F52) — F21a/F21b
+- [x] 🧍 Compartir el archivo exportado con la hoja del sistema, importar un archivo real y comprobar que las carpetas por defecto no se duplican (ver F52) — F21a/F21b · verificado en el S25 (2026-11-21), capturas en `docs/capturasF65/`
 - Verif: 🧍 POCO/S25
 
 ### F66 Zonas seguras en el dispositivo `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Muesca, barra de estado y gesto inferior con `react-native-safe-area-context` en el POCO y el S25 (Diagnóstico y ficha); interruptor apagado legible; tarjetas y botones «Exportar/Importar/Vaciar» a 360 dp; JetBrains Mono visible en códigos (F34.2)
-- [ ] 🧍 Repetir F34.3 en el POCO F5 Pro con texto al 200 %
+- [x] 🧍 Muesca, barra de estado y gesto inferior con `react-native-safe-area-context` en el POCO y el S25 (Diagnóstico y Ajustes); interruptor apagado legible (POCO: «Contenido NSFW» y «Protección de instalación»); tarjetas y botones «Exportar/Vaciar» a 360 dp; JetBrains Mono visible en códigos (F34.2, visto en el S25: el POCO no tiene eventos registrados) · evidencia en `docs/capturasF65/poco-*.png`. Observación: a 360 dp con 200 % las etiquetas de la barra inferior se tocan (S25 y POCO)
+- [x] 🧍 Repetir F34.3 en el POCO F5 Pro con texto al 200 % · Guarida y Ajustes a 360 dp (densidad 640) sin desbordes; ajustes de pantalla restaurados (560 dpi, fuente 1.0)
 - Verif: 🧍 POCO F5 Pro
 
 ### F67 Hojas de Respaldo, diálogos de error nativos y modo paginado `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Revisar en el teléfono las hojas de Respaldo y los diálogos de error nativos, y el modo paginado I → D (F33 R1); la hoja «Actualizar módulo» espera una actualización real
+- [x] 🧍 Revisar en el teléfono las hojas de Respaldo y los diálogos de error nativos, y el modo paginado I → D (F33 R1) · verificado en el S25 (hoja de modo, sugerencias, error INVALID, lector I → D avanza a la derecha); la hoja «Actualizar módulo» espera una actualización real y la de «Reemplazar» no se abrió
 - Verif: 🧍 S25
 
 ### F68 Informe de diagnóstico en el teléfono `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Exportar el informe (hoja del sistema) y copiarlo al portapapeles en el POCO/S25 (F30/F31)
+- [x] 🧍 Exportar el informe (hoja del sistema) y copiarlo al portapapeles en el POCO/S25 (F30/F31) · verificado en el S25: hoja con `ryuunest-diagnostico-2026-11-21.txt` y aviso «Informe copiado» (el contenido del portapapeles no se pudo leer por adb)
 - Verif: 🧍 dispositivo
 
-### F69 Actualizaciones OTA con `expo-updates` `[Ops · Intermedia · N3]` 🧍 (bloqueada)
+### F69 Actualizaciones OTA con `expo-updates` `[Ops · Intermedia · N3]` 🧍
 
-> **Bloqueada** por la cuenta de Expo/EAS del humano (login interactivo, proyecto y canal). Mientras no exista, Expo Go avisa «expo-updates system is disabled…»; no afecta al desarrollo.
+> Desbloqueada con la cuenta `poti7652` de EAS (proyecto `ryuunest`, canal `preview`). Expo Go sigue avisando «expo-updates system is disabled…»; no afecta al desarrollo.
 
-- [ ] Añadir `updates.url`, política de `runtimeVersion`, proyecto/canal de EAS, build de prueba y verificación de una actualización real
+- [x] Añadir `updates.url`, política de `runtimeVersion`, proyecto/canal de EAS, build de prueba y verificación de una actualización real · `eas.json` (perfil `preview`, APK), `runtimeVersion` `appVersion`, script `eas-build-post-install` (compila los paquetes del workspace) y parche de pnpm a `@react-native-cookies/cookies` (`jcenter()` → `mavenCentral()`); APK instalado en el POCO y actualización `01a20037…` descargada y ejecutada (logcat `DownloadComplete` y luego `CheckCompleteUnavailable`)
 - Verif: 🧍 con la cuenta de EAS
+
+#### Tarea general (sin ID): reemplazar `@react-native-cookies/cookies` `[Ops · Intermedia · N3]`
+
+> Origen (petición del humano, 2026-11-21). El paquete está deprecado y solo compila gracias al parche de pnpm de `patches/` (`jcenter()` → `mavenCentral()`). Hay que quitar esa implementación y sustituirla por algo mantenido.
+
+- [ ] Medir si el `fetch` de RN en Android ya comparte el CookieManager del WebView («modo tarro») y basta sin librería; si no, adoptar una alternativa con soporte de la New Architecture (candidata: `@preeternal/react-native-cookie-manager`; pedir permiso antes de añadir la dependencia)
+- [ ] Quitar el parche de pnpm y la dependencia vieja, y repetir build `preview` y F100 en el S25
+- Verif: 🧍 build de EAS + S25
 
 ### F89 Esquema de tema (JSON de tokens) y validación `[BE · Intermedia · N3]`
 
@@ -562,24 +571,24 @@ Dep: ninguna · M · `packages/ui-tokens`, `packages/module-sdk` (validación)
 
 > Origen (petición del humano, 2026-11-16). **Decisión:** un tema es un JSON de tokens, sin código ejecutable.
 
-- [ ] Rojo: esquema con los colores semánticos de `ui-tokens`, versión y nombre; rechaza claves desconocidas, colores inválidos y contraste insuficiente (WCAG AA)
-- [ ] Temas integrados actuales expresados con ese esquema
+- [x] Rojo: esquema con los colores semánticos de `ui-tokens`, versión y nombre; rechaza claves desconocidas, colores inválidos y contraste insuficiente (WCAG AA)
+- [x] Temas integrados actuales expresados con ese esquema
 - Verif: Vitest en `ui-tokens`/SDK
 
 ### F90 Ajustes: sección «Temas» con cambio dinámico `[FE · Intermedia · N3]`
 
 Dep: F89 · M · `apps/mobile/src/screens/settings/*`, `packages/ui-tokens`
 
-- [ ] Selector de tema con vista previa; el cambio se aplica al instante y persiste entre sesiones
-- [ ] Componentes nuevos en la galería; textos en i18n; respeta `prefers-reduced-motion`
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+- [x] Selector de tema con vista previa; el cambio se aplica al instante y persiste entre sesiones
+- [x] Componentes nuevos en la galería; textos en i18n; respeta `prefers-reduced-motion`
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 (hecho en el S25 2026-11-21: importar, aplicar y borrar; ver PR)
 
 ### F91 Ajustes: importar temas de la comunidad `[FE · Intermedia · N3]`
 
 Dep: F90 · M · `apps/mobile/src/screens/settings/*`
 
-- [ ] Importar un JSON de tema **con confirmación manual** (nunca automática); error claro si no valida; poder borrar un tema importado
-- Verif: Vitest + 🧍 S25
+- [x] Importar un JSON de tema **con confirmación manual** (nunca automática); error claro si no valida; poder borrar un tema importado
+- Verif: Vitest + 🧍 S25 (hecho en el S25 2026-11-21: importar, aplicar y borrar; ver PR)
 
 **Lote sugerido:** F65 → F66 → F67 → F68 (F69 espera cuenta); temas: F89 → F90 → F91. Diagnóstico y escritorio (F43) está en «Lector y ficha».
 

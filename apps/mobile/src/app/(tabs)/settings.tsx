@@ -18,6 +18,12 @@ export default function SettingsRoute() {
     toggleProtection,
     toggleNsfw,
     setDefaultReaderMode,
+    selectTheme,
+    pickTheme,
+    pendingTheme,
+    confirmThemeImport,
+    cancelThemeImport,
+    deleteTheme,
     clearCache,
     restoreOfficialRepo,
     dismissNotice,
@@ -33,6 +39,12 @@ export default function SettingsRoute() {
       onToggleProtection={toggleProtection}
       onToggleNsfw={toggleNsfw}
       onDefaultReaderModeChange={setDefaultReaderMode}
+      onSelectTheme={selectTheme}
+      onPickTheme={pickTheme}
+      pendingTheme={pendingTheme}
+      onConfirmThemeImport={confirmThemeImport}
+      onCancelThemeImport={cancelThemeImport}
+      onDeleteTheme={deleteTheme}
       onClearCache={clearCache}
       onRestoreOfficialRepo={restoreOfficialRepo}
       onDismissNotice={dismissNotice}

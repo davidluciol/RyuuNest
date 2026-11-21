@@ -1,7 +1,7 @@
 // single-use: barras superior e inferior del lector (RF-22); no tienen sentido fuera de él.
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
+import { activeColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { textStyle } from "../../components/textStyle";
 import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, List, Rows3 } from "../../icons";
@@ -9,6 +9,7 @@ import { t } from "../../i18n";
 import { percentOf } from "../../reader/readerLayout";
 import { readerBarStyle, readerIconButtonStyle } from "./readerStyles";
 import FocusPressable from "../../components/FocusPressable";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F18 — controles mínimos del lector (RF-22): cerrar, título, selector de capítulo y modo de
@@ -16,7 +17,7 @@ import FocusPressable from "../../components/FocusPressable";
  * mascota, y sin transiciones (el lector no anima).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ReaderTopBarProps {
   title: string;
@@ -48,9 +49,7 @@ export function ReaderTopBar({
         <ArrowLeft size={spacing.lg} color={colors.textPrimary} />
       </FocusPressable>
       <View style={styles.titles}>
-        <Text style={styles.title}>
-          {title}
-        </Text>
+        <Text style={styles.title}>{title}</Text>
         <View style={styles.subtitleRow}>
           <View style={styles.dot} />
           <Text style={styles.subtitle}>{subtitle}</Text>
@@ -169,7 +168,7 @@ export function ReaderBottomBar({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   bar: {
     position: "absolute",
     left: 0,
@@ -248,4 +247,4 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   nextLabel: { ...textStyle(typography.labelMd), color: colors.progress },
-});
+}));

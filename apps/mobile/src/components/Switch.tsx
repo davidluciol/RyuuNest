@@ -1,10 +1,11 @@
 import FocusPressable from "./FocusPressable";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { t } from "../i18n";
 import { switchLabelKey, switchStyle } from "./switchStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F34.2 — interruptor de las filas de ajustes (Regla 3): control propio con
@@ -61,8 +62,8 @@ export default function Switch({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   hit: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
   track: { justifyContent: "center" },
-  state: { ...textStyle(typography.labelMd), color: dragonNightColors.textSecondary },
-});
+  state: { ...textStyle(typography.labelMd), color: activeColors.textSecondary },
+}));

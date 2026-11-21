@@ -17,12 +17,7 @@ import {
   type SqlDriver,
   type UpdatePreview,
 } from "@ryuunest/core";
-import {
-  compareSemver,
-  isSemver,
-  validateManifest,
-  validateRepoIndex,
-} from "@ryuunest/module-sdk";
+import { compareSemver, isSemver, validateManifest, validateRepoIndex } from "@ryuunest/module-sdk";
 
 import {
   OFFICIAL_REPO_DISMISSAL_SETTING,

@@ -30,7 +30,8 @@ export function nextChapterPreload<T>(
   images: readonly T[],
   budget: { inMemory: number; cap: number | null },
 ): T[] {
-  const room = budget.cap === null ? NEXT_CHAPTER_PRELOAD : Math.max(0, budget.cap - budget.inMemory);
+  const room =
+    budget.cap === null ? NEXT_CHAPTER_PRELOAD : Math.max(0, budget.cap - budget.inMemory);
   return images.slice(0, Math.min(NEXT_CHAPTER_PRELOAD, room));
 }
 

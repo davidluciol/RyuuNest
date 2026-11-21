@@ -87,7 +87,9 @@ export default function LibraryCard({
     <FocusPressable
       accessibilityRole="button"
       accessibilityLabel={
-        nsfw ? `${accessibilityLabel ?? title}, ${t("library.nsfw.a11y")}` : (accessibilityLabel ?? title)
+        nsfw
+          ? `${accessibilityLabel ?? title}, ${t("library.nsfw.a11y")}`
+          : (accessibilityLabel ?? title)
       }
       onPress={onPress}
       onLongPress={onLongPress}

@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import { dragonNightColors, spacing } from "@ryuunest/ui-tokens";
+import { View } from "react-native";
+import { activeColors, spacing } from "@ryuunest/ui-tokens";
 
 import Button from "../../../../components/Button";
 import ErrorBanner from "../../../../components/ErrorBanner";
@@ -9,6 +9,7 @@ import { retryWithChallenge } from "../../../../data/appChallenge";
 import { t } from "../../../../i18n";
 import ReaderScreen from "../../../../screens/reader/ReaderScreen";
 import { useReader } from "../../../../screens/reader/useReader";
+import { themedStyles } from "../../../../components/themedStyles";
 
 /**
  * F18 — ruta del lector, a pantalla completa y fuera del shell de destinos. Solo conecta la
@@ -89,13 +90,13 @@ export default function ReaderRoute() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   stateWrap: {
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: spacing.lg,
-    backgroundColor: dragonNightColors.bg,
+    backgroundColor: activeColors.bg,
   },
   bannerWrap: { width: "100%" },
   back: { padding: spacing.md, alignItems: "center" },
-});
+}));

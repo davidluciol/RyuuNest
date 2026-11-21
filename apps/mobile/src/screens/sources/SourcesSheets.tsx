@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
 import ConfirmSheet from "../../components/ConfirmSheet";
@@ -14,6 +14,7 @@ import type { SourcesController } from "./sourcesController";
 import InstallSheet from "./InstallSheet";
 import { DetailRow, SheetError, runtimeLabel } from "./sheetPieces";
 import type { SourcesFlow } from "./sourcesFlow";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F16 — hojas de Fuentes (sin diseño en Stitch, P-30): añadir repositorio,
@@ -23,7 +24,7 @@ import type { SourcesFlow } from "./sourcesFlow";
  * núcleo.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface SourcesSheetsProps {
   flow: SourcesFlow;
@@ -221,7 +222,7 @@ export default function SourcesSheets({ flow, controller, modules }: SourcesShee
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   name: { ...textStyle(typography.headlineSm), color: colors.textPrimary },
   body: { ...textStyle(typography.bodyMd), color: colors.textSecondary },
   fieldLabel: { ...textStyle(typography.labelMd), color: colors.textSecondary },
@@ -236,4 +237,4 @@ const styles = StyleSheet.create({
   column: { gap: spacing.xs },
   // F38: la acción destructiva queda lejos de Activar/Desactivar para que un doble toque no la alcance.
   destructiveZone: { marginTop: spacing.xl },
-});
+}));

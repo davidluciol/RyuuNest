@@ -55,9 +55,7 @@ export type PageLoad =
   | { status: "error"; attempt: number; message: string };
 
 export type PageLoadEvent =
-  | { type: "loaded" }
-  | { type: "failed"; message: string }
-  | { type: "retry" };
+  { type: "loaded" } | { type: "failed"; message: string } | { type: "retry" };
 
 export const INITIAL_PAGE_LOAD: PageLoad = { status: "loading", attempt: 0 };
 

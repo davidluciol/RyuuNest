@@ -65,7 +65,12 @@ export function createSampleBackupService(
       format: "ryuunest-backup",
       version: 1,
       createdAt: 0,
-      repos: suggestions.repos.map((repo) => ({ url: repo.url, name: repo.name, addedAt: 0, updatedAt: 0 })),
+      repos: suggestions.repos.map((repo) => ({
+        url: repo.url,
+        name: repo.name,
+        addedAt: 0,
+        updatedAt: 0,
+      })),
       modules: suggestions.modules.map((module) => ({
         id: module.id,
         version: module.version,
@@ -102,10 +107,16 @@ export function createSampleBackupService(
       try {
         value = JSON.parse(text);
       } catch {
-        return { ok: false, reason: "NOT_JSON", message: "El archivo no es un JSON válido", issues: [] };
+        return {
+          ok: false,
+          reason: "NOT_JSON",
+          message: "El archivo no es un JSON válido",
+          issues: [],
+        };
       }
       if (
-        typeof value !== "object" || value === null ||
+        typeof value !== "object" ||
+        value === null ||
         (value as { format?: unknown }).format !== "ryuunest-backup"
       ) {
         return {

@@ -1,4 +1,11 @@
-import { markers, radii, spacing, typography, dragonNightColors, type TypeStyle } from "@ryuunest/ui-tokens";
+import {
+  markers,
+  radii,
+  spacing,
+  typography,
+  activeColors,
+  type TypeStyle,
+} from "@ryuunest/ui-tokens";
 
 import { t } from "../i18n";
 
@@ -10,7 +17,7 @@ import { t } from "../i18n";
  * sombras (RNF-12: profundidad por niveles de superficie).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Escala del dragón según el estado (§11.12): pequeño o mediano. */
 export type StateScale = "sm" | "md";

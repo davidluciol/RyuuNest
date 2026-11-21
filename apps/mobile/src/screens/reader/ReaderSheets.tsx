@@ -1,6 +1,6 @@
 // single-use: hojas de modo y de capítulo del lector (RF-22); solo existen dentro de él.
 import type { ReaderMode } from "@ryuunest/core";
-import { dragonNightColors, spacing } from "@ryuunest/ui-tokens";
+import { activeColors, spacing } from "@ryuunest/ui-tokens";
 
 import ChapterRow from "../../components/ChapterRow";
 import SettingsRow from "../../components/SettingsRow";
@@ -16,7 +16,7 @@ import type { ReaderChapterItem } from "./useReader";
  * (`SheetModal`, `SettingsRow`, `ChapterRow`) y aparecen sin animación.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ReaderModeSheetProps {
   visible: boolean;

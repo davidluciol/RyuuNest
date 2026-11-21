@@ -1,4 +1,4 @@
-import { radii, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F06 — reglas del chip de filtro (SPEC §11.10): pill de 36 px; inactivo
@@ -9,7 +9,7 @@ import { radii, dragonNightColors } from "@ryuunest/ui-tokens";
 
 export const CHIP_HEIGHT = 36;
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ChipStyleShape {
   height: number;

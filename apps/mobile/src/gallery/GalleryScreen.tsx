@@ -1,10 +1,11 @@
-import { useWindowDimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useWindowDimensions, ScrollView, Text, View } from "react-native";
 import { FIXTURE_SERIES } from "@ryuunest/test-site";
 import {
   breakpoints,
   coverAspectRatio,
   densityLayout,
-  dragonNightColors,
+  dragonNight,
+  activeColors,
   layoutForWidth,
   radii,
   spacing,
@@ -18,6 +19,7 @@ import Button from "../components/Button";
 import ChapterRow from "../components/ChapterRow";
 import Checkbox from "../components/Checkbox";
 import Chip from "../components/Chip";
+import ThemeRow from "../components/ThemeRow";
 import ChipScroller from "../components/ChipScroller";
 import ContinueCard from "../components/ContinueCard";
 import CoverCard from "../components/CoverCard";
@@ -112,7 +114,7 @@ import { t } from "../i18n";
  * Sin literales: todo color, tamaño, espaciado y radio sale de `ui-tokens`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 type ColorName = keyof ThemeColors;
 const colorNames = Object.keys(colors) as ColorName[];
@@ -270,6 +272,14 @@ export default function GalleryScreen() {
         <View style={styles.row}>
           <Chip label={t("gallery.chip.inactive")} />
           <Chip label={t("gallery.chip.selected")} selected />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.themeRow")}</Text>
+        <View style={styles.column}>
+          <ThemeRow theme={dragonNight} />
+          <ThemeRow theme={dragonNight} selected />
+          <ThemeRow theme={{ ...dragonNight, name: "Noche azul" }} imported />
+          <ThemeRow theme={dragonNight} disabled />
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.chipScroller")}</Text>
@@ -1043,7 +1053,7 @@ export default function GalleryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { paddingVertical: spacing.lg, gap: spacing.lg },
   title: {
@@ -1072,6 +1082,7 @@ const styles = StyleSheet.create({
     ...textStyle(typography.headlineSm),
   },
   row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  column: { gap: spacing.xs },
   chipScrollerRow: { gap: spacing.xs },
   swatch: {
     width: spacing.xl,
@@ -1107,6 +1118,7 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     ...textStyle(typography.bodySm),
   },
-});
+}));
 import { useState } from "react";
 import { textStyle } from "../components/textStyle";
+import { themedStyles } from "../components/themedStyles";

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { Zap } from "../icons";
 import { t } from "../i18n";
@@ -7,6 +7,7 @@ import type { LibraryFolder } from "../screens/library/libraryFixtures";
 import Button from "./Button";
 import SheetModal from "./SheetModal";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F93 — hoja «Gestionar carpetas»: lista cada carpeta (nombre, nº de series y rayo si es
@@ -15,7 +16,7 @@ import { textStyle } from "./textStyle";
  * edición y eliminar pasa por `ConfirmSheet` (lo orquesta la pantalla).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ManageFoldersSheetProps {
   visible: boolean;
@@ -97,11 +98,11 @@ export default function ManageFoldersSheet({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   row: { gap: spacing.xs, paddingVertical: spacing.xs },
   info: { gap: spacing.xs },
   nameLine: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
   name: { ...textStyle(typography.labelLg), color: colors.textPrimary, flexShrink: 1 },
   meta: { ...textStyle(typography.bodySm), color: colors.textSecondary },
   actions: { flexDirection: "row", gap: spacing.sm },
-});
+}));

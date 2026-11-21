@@ -1,5 +1,5 @@
 import { FIXTURE_SERIES } from "@ryuunest/test-site";
-import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
+import { activeColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { t } from "../i18n";
 import { COMPONENT_STATES, galleryEntries } from "./registry";
@@ -14,7 +14,7 @@ import { COMPONENT_STATES, galleryEntries } from "./registry";
  */
 
 function colorsBlock(): string {
-  return Object.entries(dragonNightColors)
+  return Object.entries(activeColors)
     .map(([name, value]) => `  ${name}: ${value}`)
     .join("\n");
 }
@@ -51,10 +51,8 @@ const blocks: Record<string, () => string> = {
   tipografia: typographyBlock,
   espaciado: spacingBlock,
   radios: radiiBlock,
-  layout: () =>
-    translatedKeys(galleryEntries.find((entry) => entry.id === "layout")?.items ?? []),
-  iconos: () =>
-    translatedKeys(galleryEntries.find((entry) => entry.id === "iconos")?.items ?? []),
+  layout: () => translatedKeys(galleryEntries.find((entry) => entry.id === "layout")?.items ?? []),
+  iconos: () => translatedKeys(galleryEntries.find((entry) => entry.id === "iconos")?.items ?? []),
   portadas: coversBlock,
   componentes: () => {
     const entry = galleryEntries.find((item) => item.id === "componentes");

@@ -1,7 +1,7 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { ChevronLeft } from "../../icons";
 import {
-  dragonNightColors,
+  activeColors,
   layoutForWidth,
   spacing,
   touchTarget,
@@ -15,13 +15,14 @@ import RecentCard from "../../components/RecentCard";
 import { textStyle } from "../../components/textStyle";
 import { t } from "../../i18n";
 import type { HomeProgress } from "../home/homeFixtures";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F82 — pantalla de lista reutilizable («Ver todas»): cabecera con atrás + título y
  * cuadrícula de tarjetas. El título y los ítems llegan por props; quien la usa decide
  * la fuente de datos (`listSources`) y qué hace al tocar (P-155).
  */
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ListScreenProps {
   title: string;
@@ -89,7 +90,7 @@ export default function ListScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },
   header: {
     flexDirection: "row",
@@ -100,4 +101,4 @@ const styles = StyleSheet.create({
   title: { ...textStyle(typography.headlineSm), color: colors.textPrimary, flexShrink: 1 },
   grid: { flexDirection: "row", flexWrap: "wrap", paddingVertical: spacing.md },
   emptyWrap: { flex: 1, justifyContent: "center" },
-});
+}));

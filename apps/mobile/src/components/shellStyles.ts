@@ -1,4 +1,4 @@
-import { radii, spacing, touchTarget, withAlpha, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, spacing, touchTarget, withAlpha, activeColors } from "@ryuunest/ui-tokens";
 
 import { focusRingStyle } from "./focusRing";
 
@@ -9,7 +9,7 @@ import { focusRingStyle } from "./focusRing";
  * sobre `bg`). Puras, testeables sin Metro.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export const HEADER_HEIGHT = 64;
 

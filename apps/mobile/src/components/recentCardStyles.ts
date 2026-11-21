@@ -1,4 +1,4 @@
-import { coverAspectRatio, radii, spacing, dragonNightColors } from "@ryuunest/ui-tokens";
+import { coverAspectRatio, radii, spacing, activeColors } from "@ryuunest/ui-tokens";
 import { LIBRARY_CARD_TITLE_LINES } from "./libraryCardStyles";
 
 /**
@@ -9,7 +9,7 @@ import { LIBRARY_CARD_TITLE_LINES } from "./libraryCardStyles";
  * (RF-42, v2). Sin sombra (RNF-12).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Ancho fijo de la tarjeta en el carrusel horizontal (128 px). */
 export const RECENT_CARD_WIDTH = 128;

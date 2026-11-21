@@ -1,11 +1,5 @@
 import { FIXTURE_SERIES } from "@ryuunest/test-site";
-import {
-  radii,
-  spacing,
-  typography,
-  dragonNightColors,
-  type ThemeColors,
-} from "@ryuunest/ui-tokens";
+import { radii, spacing, typography, activeColors, type ThemeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F05 — registro de la galería de componentes (pantalla solo de desarrollo,
@@ -43,7 +37,7 @@ export interface GalleryEntry {
   readonly states?: readonly string[];
 }
 
-const colorNames = Object.keys(dragonNightColors) as (keyof ThemeColors)[];
+const colorNames = Object.keys(activeColors) as (keyof ThemeColors)[];
 const spacingNames = Object.keys(spacing);
 const radiiNames = Object.keys(radii);
 const typeNames = Object.keys(typography);
@@ -101,6 +95,7 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
       "gallery.component.textField",
       "gallery.component.checkbox",
       "gallery.component.chip",
+      "gallery.component.themeRow",
       "gallery.component.badge",
       "gallery.component.coverCard",
       "gallery.component.chapterRow",

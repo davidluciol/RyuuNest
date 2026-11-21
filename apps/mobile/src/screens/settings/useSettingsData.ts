@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ReaderMode } from "@ryuunest/core";
+import type { Theme } from "@ryuunest/ui-tokens";
 
 import { openAppDatabase } from "../../data/appDatabase";
+import { createBackupFiles } from "../../data/backupFiles";
 import { createFetchHttp } from "../../data/fetchHttp";
 import { clearImageCache } from "../../data/imageCache";
 import { createAppSecureLock } from "../../data/secureLock";
@@ -9,6 +11,7 @@ import { createSettingsService, DEFAULT_READER_MODE } from "./settingsData";
 import { createSampleSettingsService } from "./sampleSettingsService";
 import type { SettingsService } from "./settingsData";
 import type { SettingsView } from "./SettingsScreen";
+import { parseThemeFile } from "./themeSettings";
 
 /**
  * F20 — estado de la pantalla Ajustes: en el dispositivo, el núcleo real sobre
@@ -94,6 +97,13 @@ export interface SettingsState {
   toggleProtection: (on: boolean) => void;
   toggleNsfw: (on: boolean) => void;
   setDefaultReaderMode: (mode: ReaderMode) => void;
+  selectTheme: (id: string) => void;
+  /** F91: elige un archivo y lo valida; si es válido queda pendiente de confirmar. */
+  pickTheme: () => void;
+  pendingTheme: Theme | null;
+  confirmThemeImport: () => void;
+  cancelThemeImport: () => void;
+  deleteTheme: (id: string) => void;
   clearCache: () => void;
   restoreOfficialRepo: () => void;
   dismissNotice: () => void;
@@ -109,6 +119,7 @@ export function useSettingsData(): SettingsState {
   const [view, setView] = useState<SettingsView>({ status: "loading" });
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [pending, setPending] = useState<{ theme: Theme; text: string } | null>(null);
   const [nonce, setNonce] = useState(0);
 
   useEffect(() => {
@@ -174,6 +185,39 @@ export function useSettingsData(): SettingsState {
     [service, run],
   );
 
+  const selectTheme = useCallback(
+    (id: string) => {
+      if (service === null) return;
+      void run(() => service.setActiveTheme(id));
+    },
+    [service, run],
+  );
+
+  const pickTheme = useCallback(() => {
+    void run(async () => {
+      const picked = await createBackupFiles().pickBackup();
+      if (picked === null) return;
+      setPending({ theme: parseThemeFile(picked.text), text: picked.text });
+    });
+  }, [run]);
+
+  const confirmThemeImport = useCallback(() => {
+    if (service === null || pending === null) return;
+    const { text } = pending;
+    setPending(null);
+    void run(() => service.importTheme(text));
+  }, [service, pending, run]);
+
+  const cancelThemeImport = useCallback(() => setPending(null), []);
+
+  const deleteTheme = useCallback(
+    (id: string) => {
+      if (service === null) return;
+      void run(() => service.deleteTheme(id));
+    },
+    [service, run],
+  );
+
   const clearCache = useCallback(() => {
     if (service === null) return;
     void run(() => service.clearCache());
@@ -194,6 +238,12 @@ export function useSettingsData(): SettingsState {
     toggleProtection,
     toggleNsfw,
     setDefaultReaderMode,
+    selectTheme,
+    pickTheme,
+    pendingTheme: pending?.theme ?? null,
+    confirmThemeImport,
+    cancelThemeImport,
+    deleteTheme,
     clearCache,
     restoreOfficialRepo,
     dismissNotice,

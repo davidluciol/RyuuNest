@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { dragonNightColors } from "@ryuunest/ui-tokens";
+import { activeColors } from "@ryuunest/ui-tokens";
 
 import { SAFE_SCREEN_EDGES } from "./safeScreenStyles";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F34.2 — contenedor de las rutas que viven fuera de las pestañas (ficha de
@@ -19,6 +19,6 @@ export default function SafeScreen({ children }: { children: ReactNode }) {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: dragonNightColors.bg },
-});
+const styles = themedStyles(() => ({
+  screen: { flex: 1, backgroundColor: activeColors.bg },
+}));

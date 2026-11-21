@@ -1,4 +1,4 @@
-import { radii, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, touchTarget, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F06 — reglas de campo de texto y casilla/radio (SPEC §11.10, `DESIGN.md`).
@@ -7,7 +7,7 @@ import { radii, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
  * `accent` y glifo `bg`. Puras, testeables sin Metro.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface TextFieldStyleShape {
   height: number;

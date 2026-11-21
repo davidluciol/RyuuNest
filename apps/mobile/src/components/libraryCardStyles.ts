@@ -5,7 +5,7 @@ import {
   spacing,
   touchTarget,
   typography,
-  dragonNightColors,
+  activeColors,
   type TypeStyle,
 } from "@ryuunest/ui-tokens";
 
@@ -19,7 +19,7 @@ import { BADGE_HEIGHT } from "./badgeStyles";
  * (RF-42, v2). Puras, testeables sin Metro.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /**
  * Título de tarjeta (T7): se muestra completo si cabe; solo pasadas 3 líneas se

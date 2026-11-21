@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 import {
-  dragonNightColors,
+  activeColors,
   layoutForWidth,
   markers,
   spacing,
@@ -36,6 +36,7 @@ import type { OnboardingController, OnboardingStep } from "./onboardingControlle
 import BackupSheets from "../settings/backup/BackupSheets";
 import type { BackupController } from "../settings/backup/backupController";
 import type { BackupFlow } from "../settings/backup/backupFlow";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F12 — pantalla del primer uso (SPEC §11.8, sin diseño en Stitch: wireframe;
@@ -53,7 +54,7 @@ import type { BackupFlow } from "../settings/backup/backupFlow";
  * (necesitaría `expo-clipboard`, dependencia nueva).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** F45/V5: «Saltar» es un enlace discreto bajo el botón principal. */
 function SkipLink({ onPress, disabled }: { onPress: (() => void) | undefined; disabled: boolean }) {
@@ -285,7 +286,7 @@ export default function OnboardingScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },
   stateWrap: {
     flex: 1,
@@ -320,4 +321,4 @@ const styles = StyleSheet.create({
     color: colors.accent,
     textDecorationLine: "underline",
   },
-});
+}));

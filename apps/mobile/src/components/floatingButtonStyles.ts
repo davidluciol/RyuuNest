@@ -1,11 +1,11 @@
-import { dragonNightColors, radii, spacing } from "@ryuunest/ui-tokens";
+import { activeColors, radii, spacing } from "@ryuunest/ui-tokens";
 
 /**
  * F53 — botón flotante «+» de Tesoros: círculo de 56 px (≥ 48, RNF-7) fijo abajo, fondo
  * `elevated`, borde y icono en verde `accent`. **Sin sombra** (RNF-12).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Diámetro: 48 de área táctil + un paso de respiro (múltiplo de 4). */
 export const FAB_SIZE = spacing["2xl"] + spacing.xs;

@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "./Badge";
 import Button from "./Button";
 import { TriangleAlert } from "../icons";
 import { moduleRowStyle, moduleRowTextColors } from "./moduleRowStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F16 — fila de módulo (RF-3 y RF-5): nombre, metadatos, hasta dos insignias
@@ -74,7 +75,7 @@ export default function ModuleRow({
           >
             {permissions.map((label) => (
               <View key={label} style={styles.permission}>
-                <TriangleAlert size={spacing.sm} color={dragonNightColors.progress} />
+                <TriangleAlert size={spacing.sm} color={activeColors.progress} />
                 <Text style={[styles.meta, { color: text.meta }]}>{label}</Text>
               </View>
             ))}
@@ -94,7 +95,7 @@ export default function ModuleRow({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   texts: { flex: 1, minWidth: 0, gap: spacing.xxs },
   name: { ...textStyle(typography.labelLg) },
@@ -102,4 +103,4 @@ const styles = StyleSheet.create({
   permissions: { flexDirection: "row", flexWrap: "wrap", columnGap: spacing.sm },
   permission: { flexDirection: "row", alignItems: "center", gap: spacing.xxs },
   badges: { flexDirection: "row", flexWrap: "wrap", gap: spacing.xs },
-});
+}));

@@ -1,4 +1,4 @@
-import { contentMaxWidth, dragonNightColors, radii } from "@ryuunest/ui-tokens";
+import { contentMaxWidth, activeColors, radii } from "@ryuunest/ui-tokens";
 
 /**
  * F34.2 — tarjeta de sección y columna de contenido. Tarjeta: nivel `surface`
@@ -7,7 +7,7 @@ import { contentMaxWidth, dragonNightColors, radii } from "@ryuunest/ui-tokens";
  * Columna: ocupa todo el ancho en móvil y se centra a 720 dp en escritorio.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface SettingsCardStyleShape {
   backgroundColor: string;

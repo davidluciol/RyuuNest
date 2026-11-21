@@ -1,6 +1,6 @@
-import { useWindowDimensions, ScrollView, StyleSheet, View } from "react-native";
+import { useWindowDimensions, ScrollView, View } from "react-native";
 import { Flame, History, Gem } from "../../icons";
-import { dragonNightColors, layoutForWidth, spacing } from "@ryuunest/ui-tokens";
+import { activeColors, layoutForWidth, spacing } from "@ryuunest/ui-tokens";
 
 import ContinueCard from "../../components/ContinueCard";
 import EmptyState from "../../components/EmptyState";
@@ -10,6 +10,7 @@ import SectionHeader from "../../components/SectionHeader";
 import { t } from "../../i18n";
 
 import { EMPTY_HOME_DATA, type HomeData, type HomeProgress } from "./homeFixtures";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F13 — pantalla Inicio (RF-14, RF-33, RF-41, SPEC §11.5): máximo 4
@@ -19,7 +20,7 @@ import { EMPTY_HOME_DATA, type HomeData, type HomeProgress } from "./homeFixture
  * hay favoritos ni progreso.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface HomeScreenProps {
   /** Datos de la pantalla; por defecto, el estado vacío. */
@@ -156,7 +157,7 @@ export default function HomeScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: {
     flex: 1,
     backgroundColor: colors.bg,
@@ -176,4 +177,4 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
   },
-});
+}));

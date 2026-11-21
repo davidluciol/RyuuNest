@@ -189,9 +189,14 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
       const flow = getFlow();
       if (flow.sheet !== "remove-repo") return;
       const { repoId } = flow;
-      await runSheet(() => service.removeRepo(repoId), { type: "submit-remove-repo" }, "remove-repo", {
-        repoId,
-      });
+      await runSheet(
+        () => service.removeRepo(repoId),
+        { type: "submit-remove-repo" },
+        "remove-repo",
+        {
+          repoId,
+        },
+      );
     },
 
     back: () => dispatch({ type: "back" }),

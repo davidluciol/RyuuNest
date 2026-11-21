@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 // expo-image: el Image de react-native no envía `source.headers` en Android (F35).
 import { Image } from "expo-image";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import { dragonNightColors, radii, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
+import { ScrollView, Text, TextInput, View } from "react-native";
+import { activeColors, radii, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "../../components/Badge";
 import Button from "../../components/Button";
@@ -23,8 +23,9 @@ import {
   type SeriesViewData,
 } from "./seriesFixtures";
 import FocusPressable from "../../components/FocusPressable";
+import { themedStyles } from "../../components/themedStyles";
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 function statusLabel(status: SeriesViewData["details"]["status"]): string {
   switch (status) {
@@ -251,7 +252,7 @@ export default function SeriesScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { padding: spacing.md, gap: spacing.sm, paddingBottom: spacing.xl },
   header: {
@@ -330,4 +331,4 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xs,
   },
   releaseText: { ...textStyle(typography.labelSm), color: colors.accent },
-});
+}));
