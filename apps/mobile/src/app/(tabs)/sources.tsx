@@ -6,7 +6,7 @@ import { useSourcesData } from "../../screens/sources/useSourcesData";
  * pantalla. El título de la sección lo pinta la cabecera del shell (F11).
  */
 export default function SourcesRoute() {
-  const { view, flow, notice, controller, retry, recommended, refreshRecommended } =
+  const { view, flow, notice, noticeKind, controller, retry, recommended, refreshRecommended } =
     useSourcesData();
 
   return (
@@ -15,6 +15,7 @@ export default function SourcesRoute() {
       flow={flow}
       controller={controller}
       notice={notice}
+      noticeKind={noticeKind}
       onRetry={retry}
       recommended={recommended}
       onRefreshRecommended={refreshRecommended}

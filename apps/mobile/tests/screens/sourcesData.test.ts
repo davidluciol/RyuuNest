@@ -11,6 +11,7 @@ import { OFFICIAL_REPO_URL, RECOMMENDED_URL } from "../../src/data/officialRepo"
 import {
   INSTALL_PROTECTION_SETTING,
   createSourcesService,
+  isUpdateAvailable,
   loadSourcesWithOfficialRepo,
   type SourcesService,
 } from "../../src/screens/sources/sourcesData";
@@ -611,5 +612,21 @@ describe("Recomendados (F44)", () => {
   it("sin red o con error lanza para que la pantalla muestre «sin conexión»", async () => {
     const service = build(new Repo([]));
     await expect(service.loadRecommended()).rejects.toBeInstanceOf(ModuleError);
+  });
+});
+
+describe("F99 — isUpdateAvailable (semver)", () => {
+  it.each([
+    ["1.2.3", "1.3.1", true],
+    ["1.2.3", "1.2.3", false],
+    ["1.3.1", "1.2.3", false],
+    ["1.2.3", "1.3.0-beta.1", false],
+    ["1.3.0-beta.1", "1.3.0-beta.2", true],
+    ["1.3.0-beta.1", "1.3.0", true],
+    ["1.3.0", "1.3.0-rc.1", false],
+    ["1.2.3", "1.2.3+build5", false],
+    ["1.2.3", "no-es-semver", false],
+  ])("instalada %s, índice %s -> %s", (installed, offered, expected) => {
+    expect(isUpdateAvailable(installed, offered)).toBe(expected);
   });
 });

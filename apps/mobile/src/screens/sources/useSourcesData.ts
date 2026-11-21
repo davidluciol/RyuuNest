@@ -9,8 +9,17 @@ import { resolveErrorReporter, type ErrorReporter } from "../../data/errorLog";
 import { createFflateArchive } from "../../data/fflateArchive";
 import { createAppSecureLock } from "../../data/secureLock";
 import { t } from "../../i18n";
+import {
+  consumeOpenUpdatesRequest,
+  setUpdateCount,
+  useOpenUpdatesTick,
+} from "../../navigation/updatesStore";
 import { createSampleSourcesService } from "./sampleSourcesService";
-import { createSourcesController, type SourcesController } from "./sourcesController";
+import {
+  createSourcesController,
+  type NoticeKind,
+  type SourcesController,
+} from "./sourcesController";
 import {
   createSourcesService,
   loadSourcesWithOfficialRepo,
@@ -18,6 +27,7 @@ import {
 } from "./sourcesData";
 import { reportSourcesError } from "./sourcesErrors";
 import { INITIAL_SOURCES_FLOW, sourcesFlowReducer, type SourcesFlow } from "./sourcesFlow";
+import { countUpdates } from "./sourcesView";
 import type { RecommendedView, SourcesView } from "./sourcesFixtures";
 
 /**
@@ -56,6 +66,7 @@ export interface SourcesState {
   view: SourcesView;
   flow: SourcesFlow;
   notice: string | null;
+  noticeKind: NoticeKind;
   /** `null` mientras carga el servicio. */
   controller: SourcesController | null;
   retry: () => void;
@@ -69,6 +80,7 @@ export function useSourcesData(): SourcesState {
   const [view, setView] = useState<SourcesView>({ status: "loading" });
   const [flow, dispatch] = useReducer(sourcesFlowReducer, INITIAL_SOURCES_FLOW);
   const [notice, setNotice] = useState<string | null>(null);
+  const [noticeKind, setNoticeKind] = useState<NoticeKind>("error");
   const [nonce, setNonce] = useState(0);
   const [reporter, setReporter] = useState<ErrorReporter | null>(null);
   const flowRef = useRef(flow);
@@ -126,11 +138,24 @@ export function useSourcesData(): SourcesState {
             getFlow: () => flowRef.current,
             dispatch,
             reload,
-            notify: setNotice,
+            notify: (message, kind = "error") => {
+              setNoticeKind(kind);
+              setNotice(message);
+            },
             reporter: reporterRef.current,
           }),
     [service, reload, reporter],
   );
+
+  // F99: el aviso del shell sigue a la lista; «Ver» del banner abre la hoja de actualizar.
+  const openTick = useOpenUpdatesTick();
+  useEffect(() => {
+    if (view.status !== "ready") return;
+    setUpdateCount(countUpdates(view.data.modules));
+    if (controller === null || !consumeOpenUpdatesRequest()) return;
+    const next = view.data.modules.find((m) => m.status === "installed" && m.updateTo !== undefined);
+    if (next !== undefined) void controller.openUpdate(next.id);
+  }, [view, controller, openTick]);
 
   const retry = useCallback(() => setNonce((value) => value + 1), []);
 
@@ -149,5 +174,5 @@ export function useSourcesData(): SourcesState {
   }, [service]);
   useEffect(refreshRecommended, [refreshRecommended]);
 
-  return { view, flow, notice, controller, retry, recommended, refreshRecommended };
+  return { view, flow, notice, noticeKind, controller, retry, recommended, refreshRecommended };
 }

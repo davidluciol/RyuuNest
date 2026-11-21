@@ -70,6 +70,7 @@ import {
 import OnboardingSample from "../screens/onboarding/OnboardingSample";
 import Toast from "../components/Toast";
 import ErrorBanner from "../components/ErrorBanner";
+import UpdatesBanner from "../components/UpdatesBanner";
 import CodeChip from "../components/CodeChip";
 import ConfirmSheet from "../components/ConfirmSheet";
 import DragonTreasure from "../components/DragonTreasure";
@@ -151,6 +152,7 @@ export default function GalleryScreen() {
   const [previewDestination, setPreviewDestination] = useState<BottomNavDestination>("home");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [challengeOpen, setChallengeOpen] = useState(false);
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   // F93: «Gestionar carpetas» con carpetas propias, sin ellas y la hoja de edición.
   const [manageOpen, setManageOpen] = useState<"list" | "empty" | "edit" | null>(null);
@@ -320,6 +322,7 @@ export default function GalleryScreen() {
         <BottomNav active="library" />
         <Text style={styles.muted}>{t("gallery.button.disabled")}</Text>
         <BottomNav active="library" disabled />
+        <BottomNav active="home" dots={["sources"]} />
 
         <Text style={styles.groupLabel}>{t("gallery.component.settingsRow")}</Text>
         <SettingsRow label={t("gallery.settings.label")} hint={t("gallery.settings.value")} />
@@ -547,12 +550,16 @@ export default function GalleryScreen() {
             url={SAMPLE_SOURCES_DATA.repos[0]?.url ?? ""}
             meta={t("sources.repo.modules", { count: 6 })}
             syncLabel={t("sources.repo.sync")}
+            removeLabel={t("sources.removeRepo.submit")}
+            removeAccessibilityLabel={t("sources.repo.remove")}
           />
           <RepoCard
             name={SAMPLE_SOURCES_DATA.repos[0]?.name ?? ""}
             url={SAMPLE_SOURCES_DATA.repos[0]?.url ?? ""}
             syncLabel={t("sources.repo.sync")}
             syncing
+            removeLabel={t("sources.removeRepo.submit")}
+            removeAccessibilityLabel={t("sources.repo.remove")}
           />
         </View>
 
@@ -562,6 +569,7 @@ export default function GalleryScreen() {
             <ModuleRow
               key={module.id}
               name={module.name}
+              nsfw={module.nsfw}
               meta={t("sources.module.meta", {
                 kind: module.kinds.map(kindLabel).join(", "),
                 lang: module.lang,
@@ -575,6 +583,13 @@ export default function GalleryScreen() {
               actionLabel={t(ROW_ACTION_KEYS[moduleRowAction(module)])}
             />
           ))}
+          <ModuleRow
+            testID="gallery-module-row-nsfw"
+            name={t("gallery.moduleRow.nsfwName")}
+            meta={t("gallery.moduleRow.nsfwMeta")}
+            badges={[t(BADGE_LABEL_KEYS.nsfw)]}
+            nsfw
+          />
           {SAMPLE_SOURCES_DATA.incompatible?.slice(0, 1).map((item) => (
             <ModuleRow
               key={item.id}
@@ -612,6 +627,16 @@ export default function GalleryScreen() {
             flow={INITIAL_SOURCES_FLOW}
             controller={null}
             recommended={{ status: "ready", repos: SAMPLE_RECOMMENDED }}
+          />
+        </View>
+        <View style={styles.shellPreview}>
+          <SourcesScreen
+            view={{ status: "ready", data: SAMPLE_SOURCES_DATA }}
+            flow={INITIAL_SOURCES_FLOW}
+            controller={null}
+            recommended={{ status: "ready", repos: SAMPLE_RECOMMENDED }}
+            notice={t("sources.uninstall.done")}
+            noticeKind="info"
           />
         </View>
         <View style={styles.shellPreview}>
@@ -712,6 +737,12 @@ export default function GalleryScreen() {
           onAction={() => {}}
         />
 
+        <Text style={styles.groupLabel}>{t("gallery.component.updatesBanner")}</Text>
+        <View style={styles.componentColumn}>
+          <UpdatesBanner count={1} onView={() => {}} />
+          <UpdatesBanner count={3} onView={() => {}} />
+        </View>
+
         <Text style={styles.groupLabel}>{t("gallery.component.errorDialog")}</Text>
         <View style={styles.componentColumn}>
           <Button
@@ -755,6 +786,25 @@ export default function GalleryScreen() {
             testID="gallery-confirm"
             confirmTestID="gallery-confirm-submit"
             cancelTestID="gallery-confirm-cancel"
+          />
+          <Button
+            variant="secondary"
+            label={t("gallery.confirm.showChallenge")}
+            testID="gallery-show-challenge"
+            onPress={() => setChallengeOpen(true)}
+          />
+          {/* F100: variante sin icono (abrir el navegador de verificación). */}
+          <ConfirmSheet
+            visible={challengeOpen}
+            animated={false}
+            title={t("challenge.confirm.title")}
+            message={t("challenge.confirm.message", { host: "m440.in" })}
+            subject="m440.in"
+            confirmLabel={t("challenge.confirm.action")}
+            confirmIcon={null}
+            onConfirm={() => setChallengeOpen(false)}
+            onCancel={() => setChallengeOpen(false)}
+            testID="gallery-challenge"
           />
         </View>
 

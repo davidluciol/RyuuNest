@@ -6,6 +6,7 @@ import { dragonNightColors } from "@ryuunest/ui-tokens";
 import NewFolderSheet from "../../../components/NewFolderSheet";
 import SaveFolderSheet from "../../../components/SaveFolderSheet";
 import ErrorState from "../../../components/ErrorState";
+import { retryWithChallenge } from "../../../data/appChallenge";
 import { resolveErrorReporter } from "../../../data/errorLog";
 import LoadingState from "../../../components/LoadingState";
 import SafeScreen from "../../../components/SafeScreen";
@@ -76,7 +77,7 @@ function SeriesRouteContent() {
             selector: view.error.selector,
           }}
           retryLabel={t("actions.retry")}
-          onRetry={retry}
+          onRetry={retryWithChallenge(moduleId, view.error, retry)}
           detailLabel={t("actions.showDetail")}
         />
       </View>

@@ -19,6 +19,8 @@ import {
 import Button from "../../components/Button";
 import EmptyState from "../../components/EmptyState";
 import ErrorState from "../../components/ErrorState";
+import { reportCoverError } from "../../components/coverError";
+import { resolveErrorReporter } from "../../data/errorLog";
 import LibraryCard from "../../components/LibraryCard";
 import LoadingState from "../../components/LoadingState";
 import FocusPressable from "../../components/FocusPressable";
@@ -544,6 +546,11 @@ function DiscoverCard({
       title={entry.title}
       meta={entryMeta(entry)}
       nsfw={hasNsfwBorder(entry)}
+      onCoverError={(message) => {
+        const cover = entry.cover;
+        if (cover === undefined) return;
+        void resolveErrorReporter().then((reporter) => reportCoverError(reporter, cover, message));
+      }}
       accessibilityLabel={entry.title}
       onPress={() => onPress?.(entry)}
     />

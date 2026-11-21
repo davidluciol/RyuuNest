@@ -1,6 +1,7 @@
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect } from "react";
 
+import { retryWithChallenge } from "../../data/appChallenge";
 import { resolveErrorReporter } from "../../data/errorLog";
 import { clearModuleSwitcher, publishModuleSwitcher } from "../../navigation/moduleSwitcherStore";
 import { destinationRoutes } from "../../navigation/routes";
@@ -83,7 +84,11 @@ export default function DiscoverRoute() {
         onApplyFilters={applyFilters}
         onOpenSection={openSection}
         onCloseSection={closeSection}
-        onRetry={retry}
+        onRetry={
+          view.status === "error"
+            ? retryWithChallenge(view.selectedModuleId, view.error, retry)
+            : retry
+        }
         onSeriesPress={(entry) =>
           router.push({
             pathname: "/series/[moduleId]/[seriesId]",

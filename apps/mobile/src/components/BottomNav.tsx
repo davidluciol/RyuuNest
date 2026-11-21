@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BookOpen, Compass, Home, Library, Settings, type LucideIcon } from "../icons";
-import { spacing, typography } from "@ryuunest/ui-tokens";
+import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { destinationLabel } from "../navigation/routes";
 import { t } from "../i18n";
@@ -37,9 +37,11 @@ export interface BottomNavProps {
   active: BottomNavDestination;
   onSelect?: (destination: BottomNavDestination) => void;
   disabled?: boolean;
+  /** F99: destinos con un punto de aviso (p. ej. actualizaciones en Portales). */
+  dots?: readonly BottomNavDestination[];
 }
 
-export default function BottomNav({ active, onSelect, disabled = false }: BottomNavProps) {
+export default function BottomNav({ active, onSelect, disabled = false, dots = [] }: BottomNavProps) {
   const [focused, setFocused] = useState<BottomNavDestination | null>(null);
   return (
     <View
@@ -55,7 +57,11 @@ export default function BottomNav({ active, onSelect, disabled = false }: Bottom
           <Pressable
             key={destination}
             accessibilityRole="tab"
-            accessibilityLabel={destinationLabel(destination)}
+            accessibilityLabel={
+              dots.includes(destination)
+                ? `${destinationLabel(destination)}, ${t("sources.updates.dotA11y")}`
+                : destinationLabel(destination)
+            }
             accessibilityState={{ selected: isActive, disabled }}
             aria-selected={isActive}
             aria-disabled={disabled}
@@ -68,7 +74,10 @@ export default function BottomNav({ active, onSelect, disabled = false }: Bottom
               navItemStyle({ focused: focused === destination, pressed, disabled }),
             ]}
           >
-            <Icon size={spacing.lg} color={colors.icon} />
+            <View>
+              <Icon size={spacing.lg} color={colors.icon} />
+              {dots.includes(destination) ? <View testID="nav-dot" style={styles.dot} /> : null}
+            </View>
             <Text
               testID="nav-label"
               maxFontSizeMultiplier={NAV_LABEL_MAX_FONT_SCALE}
@@ -100,6 +109,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: spacing.xxs,
     paddingVertical: spacing.xs,
+  },
+  dot: {
+    position: "absolute",
+    top: 0,
+    right: -spacing.xxs,
+    width: spacing.xs,
+    height: spacing.xs,
+    borderRadius: radii.pill,
+    backgroundColor: dragonNightColors.textPrimary,
   },
   label: {
     ...textStyle(typography.labelSm),

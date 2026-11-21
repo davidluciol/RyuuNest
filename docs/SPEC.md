@@ -341,7 +341,7 @@ export class ModuleError extends Error {
   details?: { url?: string; status?: number; selector?: string };
 }
 ```
-`BLOCKED` identifica protecciones anti-bot. En la v1 se informa al usuario y no se intenta resolver (ver sección 17).
+`BLOCKED` identifica protecciones anti-bot. Se informa al usuario. **Verificación con navegador visible (F100, decisión del humano 2026-11-21; reemplaza «no se intenta resolver», P-8):** si el error trae una URL de los dominios del módulo (`permissions.domains`, solo https), «Reintentar» ofrece abrir esa página en un navegador visible dentro de la app, **solo por acción del usuario y tras una confirmación explícita**. El módulo **no** puede abrirlo (no está en `Host`) ni declara nada nuevo en el manifest. El navegador no expone puente JS, no inyecta scripts, no abre ventanas y no navega fuera de esos dominios; al superarse el reto se guardan solo `cf_clearance` y el User-Agent del navegador, por host exacto y con caducidad, en el almacén seguro del dispositivo (`expo-secure-store`); **nunca** en respaldos ni en diagnóstico. Desde entonces `host.fetch` envía esa cookie y ese User-Agent a ese host (solo https) hasta que caduque. Sirve para el reto de página de Cloudflare, no para retos propios de un sitio. Sin el módulo nativo de cookies (Expo Go) se guarda solo el User-Agent y la cookie queda en el almacén de cookies del sistema.
 
 Un módulo script no puede importar `ModuleError` (solo recibe `host`), así que lanza un `Error` con `name === "ModuleError"`, un `code` del contrato y, opcional, `details`; el runtime lo convierte en un `ModuleError` real. Cualquier otro error del módulo llega como `INTERNAL`.
 
@@ -362,7 +362,7 @@ El host aplica por defecto un tiempo límite por petición, un máximo de petici
 
 `HostResponse` trae `status`, `headers`, `text()`, `bytes()` (cuerpo sin decodificar; aditivo, lo pide hitomi.la) y `url`: la URL final tras seguir las redirecciones (la pedida si no hubo ninguna). El puerto `Http` la informa de forma opcional; el host rellena la pedida cuando falta.
 
-**Semántica del host (ADR-0003).** `host.fetch` sigue redirecciones. Solo el cuerpo de texto es parte del contrato (`text()`); el manejo de `Cookie` y `set-cookie` y los temporizadores **no se garantizan** (dependen de la plataforma; anti-bot fuera de la v1, P-8). `host.settings` mantiene su firma **sin garantía de persistencia**; `host.log` también. Los valores del host (tiempo límite, simultáneas, pausa) no son contrato: ningún módulo debe depender de ellos. Todos los tipos de esta sección son definitivos (se retiró la marca «provisional» de T08).
+**Semántica del host (ADR-0003).** `host.fetch` sigue redirecciones. Solo el cuerpo de texto es parte del contrato (`text()`); el manejo de `Cookie` y `set-cookie` y los temporizadores **no se garantizan** (dependen de la plataforma; la única excepción es la verificación de §6.4, que añade el host). `host.settings` mantiene su firma **sin garantía de persistencia**; `host.log` también. Los valores del host (tiempo límite, simultáneas, pausa) no son contrato: ningún módulo debe depender de ellos. Todos los tipos de esta sección son definitivos (se retiró la marca «provisional» de T08).
 
 **Formato de un módulo `script` (ADR-0003, D1).** Un módulo ES cuyo `entry` exporta por defecto `create(host)`. Puede importar solo **rutas relativas dentro de su propio paquete**; no admite `import()` dinámico ni paquetes, y el entorno es ECMAScript estándar (sin `setTimeout`, `URL`, `TextDecoder`, `fetch` ni otros globales de plataforma). El cargador de la app recibe el paquete completo (ruta → texto) y la ruta de entrada, y resuelve esos imports (`createFunctionScriptLoader`, T40). Formas admitidas: `import { a, b as c } from`, `import d from`, `import d, { a } from`, `import * as n from`, `import "./x.js"`, `export const|let|var|function|async function|class`, `export default …` y `export { a as b }`. **No** se admiten `export … from`, `export *`, `import()` ni imports que no empiecen por `.`; un ciclo de imports o un archivo que falte dan `UNSUPPORTED`. `ryuunest-module test` carga el paquete con este mismo cargador. «script» deja de ser experimental (decisión del humano, T40): `zonatmo` se ejecutó en el dispositivo (2026-11-06) y los tres módulos publicados cargan con el cargador de la app **en Node** (2026-11-14); el 2026-11-14 `m440` (0.1.0) y `yupmanga` (0.1.1) se ejecutaron en el S25 Ultra (listas, ficha y lector con imágenes).
 
@@ -845,7 +845,7 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 - **React Native para TV:** se usa el proyecto React Native TV (`react-native-tvos`) como dependencia `react-native` dentro de Expo, con su plugin de configuración. Su versión debe coincidir con la del SDK de Expo, y se fija en la Fase 0.
 - **Navegación con foco** en TV con una librería de navegación espacial, a elegir en la Fase 0.
 - **Foco y escala en TV:** anillo de 2 px `accent` con separación de 2 px y tipografía a 1,25× (11.9).
-- Sin iOS y sin publicación en tiendas: distribución por APK directo y PWA.
+- Sin iOS y sin publicación en tiendas: distribución por APK directo (releases de GitHub) y PWA. La app **no irá a Google Play** (hace scraping; decisión del humano 2026-11-21), así que sus políticas, incluida la de usar un WebView para superar protecciones, no aplican.
 
 ---
 
@@ -891,7 +891,7 @@ La v2 y la v3 están en `IDEA.md`, sección 9.
 |---|---|---|
 | Sin experiencia previa en React Native | Ritmo lento al inicio | Fase 0 de calibración; herramientas de IA para andamiaje; mantener el núcleo en TS puro, que sí domina |
 | MiBox 4 con 2 GB | Cierres por memoria en el lector | Presupuesto medido desde la Fase 0, imágenes reducidas y concurrencia mínima |
-| Sitios con anti-bot | Algunos módulos no funcionan | Informar `BLOCKED`; solución con WebView y cookies queda para la v2 |
+| Sitios con anti-bot | Algunos módulos no funcionan | Informar `BLOCKED` y ofrecer la verificación con navegador visible (§6.4, F100); no garantizada y puede cambiar con el tiempo |
 | Sitios que cambian | Módulos rotos | Fixtures para detectar roturas; arreglar un sitio es actualizar un módulo |
 | Contrato validado con un solo sitio | API mal ajustada | Sitio falso de pruebas y segundo sitio real antes de congelar 1.0 |
 | Scripts sin aislamiento | Código hostil con acceso al runtime | Confirmación reforzada, repos de confianza y motor aislado como mejora (D-5) |

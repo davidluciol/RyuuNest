@@ -17,7 +17,12 @@ import {
   type SqlDriver,
   type UpdatePreview,
 } from "@ryuunest/core";
-import { validateManifest, validateRepoIndex } from "@ryuunest/module-sdk";
+import {
+  compareSemver,
+  isSemver,
+  validateManifest,
+  validateRepoIndex,
+} from "@ryuunest/module-sdk";
 
 import {
   OFFICIAL_REPO_DISMISSAL_SETTING,
@@ -201,7 +206,7 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
           repoId: pkg.repoUrl,
           enabled: pkg.enabled,
           orphan: !repoIds.has(pkg.repoUrl),
-          ...(entry !== undefined && entry.version !== pkg.version
+          ...(entry !== undefined && isUpdateAvailable(pkg.version, entry.version)
             ? { updateTo: entry.version }
             : {}),
           ...(pkg.lastError === undefined ? {} : { lastError: pkg.lastError }),
@@ -327,6 +332,16 @@ export function createSourcesService(deps: SourcesServiceDeps): SourcesService {
 
     loadRecommended: () => fetchRecommended(http, RECOMMENDED_URL),
   };
+}
+
+/**
+ * F99: ¿el índice ofrece algo más nuevo? Semver: ni iguales ni bajadas avisan, y un
+ * prerelease del índice no se ofrece a quien tiene una estable.
+ */
+export function isUpdateAvailable(installed: string, offered: string): boolean {
+  if (!isSemver(installed) || !isSemver(offered)) return false;
+  if (offered.includes("-") && !installed.includes("-")) return false;
+  return compareSemver(installed, offered) < 0;
 }
 
 /**
