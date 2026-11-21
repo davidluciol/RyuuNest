@@ -8,9 +8,11 @@ import BottomNav from "../components/BottomNav";
 import { BOTTOM_NAV_DESTINATIONS, type BottomNavDestination } from "../components/shellStyles";
 import AppShell from "../shell/AppShell";
 import HeaderModuleSwitcher from "./HeaderModuleSwitcher";
+import { useFirstUseActive } from "./firstUseStore";
 import { destinationLabel, shellDestination } from "./routes";
 
 export default function ShellNavigator() {
+  const firstUse = useFirstUseActive();
   const lastDestination = useRef<BottomNavDestination | null>(null);
   const destination = shellDestination(usePathname(), lastDestination.current);
   lastDestination.current = destination;
@@ -24,12 +26,14 @@ export default function ShellNavigator() {
         <Tabs
           backBehavior="history"
           screenOptions={{ headerShown: false, animation: "none", sceneStyle: styles.scene }}
-          tabBar={({ navigation }) => (
-            <BottomNav
-              active={destination}
-              onSelect={(id) => navigation.navigate(id === "home" ? "index" : id)}
-            />
-          )}
+          tabBar={({ navigation }) =>
+            firstUse ? null : (
+              <BottomNav
+                active={destination}
+                onSelect={(id) => navigation.navigate(id === "home" ? "index" : id)}
+              />
+            )
+          }
         >
           {BOTTOM_NAV_DESTINATIONS.map((id) => (
             <Tabs.Screen

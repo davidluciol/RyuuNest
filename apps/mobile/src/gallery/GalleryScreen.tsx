@@ -1010,7 +1010,7 @@ const styles = StyleSheet.create({
   libraryCardWrap: { flex: 1, minWidth: 0 },
   shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },
   settingsPreview: { flex: 0, minHeight: spacing["2xl"] * 4 },
-  onboardingPreview: { flex: 0, minHeight: spacing["2xl"] * 10 },
+  onboardingPreview: { height: spacing["2xl"] * 12 },
   shellErrorPreview: { flex: 0, minHeight: spacing["2xl"] * 16 },
   groupLabel: {
     color: colors.textSecondary,

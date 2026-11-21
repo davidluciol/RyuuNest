@@ -59,6 +59,10 @@ async function prepare(page) {
       // Paso 2: la URL del repo oficial ya puesta; Continuar añade el repo.
       await scope.getByRole("button", { name: "Empezar" }).click();
       await scope.getByTestId("onboarding-step-2").waitFor({ state: "visible" });
+      // F45/V4: con el repo oficial por defecto se ve su nombre, no la URL.
+      await scope.getByTestId("onboarding-official-repo").waitFor({ state: "visible" });
+      await scope.getByText("Repositorio oficial de RyuuNest").waitFor({ state: "visible" });
+      await scope.getByRole("button", { name: "Usar otro repositorio" }).click();
       const urlField = scope.getByLabel("Enlace del repositorio");
       assert.match(await urlField.inputValue(), /^https:\/\/.*index\.json$/, `URL sugerida @${width}`);
 
@@ -91,6 +95,8 @@ async function prepare(page) {
       await page.screenshot({ path: path.join(output, `paso2-${width}.png`), fullPage: true });
       await scope.getByRole("button", { name: "Continuar", exact: true }).click();
       await scope.getByTestId("onboarding-step-3").waitFor({ state: "visible" });
+      // F45/V4: sin módulo instalado, «Ir a leer» espera.
+      assert.equal(await scope.getByRole("button", { name: "Ir a leer" }).isDisabled(), true);
 
       // Paso 3: instalar con la confirmación de Fuentes (AC-8).
       await scope.getByTestId("onboarding-module-portal-duna").waitFor({ state: "visible" });
@@ -140,7 +146,7 @@ async function prepare(page) {
       const scope2 = page.getByTestId("onboarding-sample");
       await scope2.waitFor({ state: "visible", timeout: 120000 });
       await scope2.getByTestId("onboarding-step-1").waitFor({ state: "visible" });
-      await scope2.getByRole("button", { name: "Saltar", exact: true }).click();
+      await scope2.getByRole("link", { name: "Saltar", exact: true }).click();
       await page.getByText("Primer uso completado").waitFor({ state: "visible" });
 
       await context.close();

@@ -16,3 +16,8 @@ export const ONBOARDING_COMPLETED_SETTING = ["onboarding", "completed"].join("."
 export function isFirstUseData(data: SourcesData): boolean {
   return data.repos.length === 0 && data.modules.every((module) => module.status !== "installed");
 }
+
+/** F45/V4: «Ir a leer» solo sirve cuando ya hay un módulo instalado. */
+export function hasInstalledModule(data: SourcesData): boolean {
+  return data.modules.some((module) => module.status === "installed");
+}

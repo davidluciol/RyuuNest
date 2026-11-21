@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { dragonNightColors } from "@ryuunest/ui-tokens";
 
@@ -14,6 +14,7 @@ import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
 import OnboardingScreen from "../../screens/onboarding/OnboardingScreen";
 import { useOnboardingData } from "../../screens/onboarding/useOnboardingData";
 import { useBackupData } from "../../screens/settings/backup/useBackupData";
+import { setFirstUseActive } from "../../navigation/firstUseStore";
 import { OFFICIAL_REPO_URL } from "../../data/officialRepo";
 import { isNativePlatform } from "../../data/backupFilesPort";
 
@@ -72,6 +73,11 @@ function FirstUseRoute() {
   // En nativo móvil el respaldo vive en Ajustes; en TV y en web se ofrece aquí.
   const [showBackup] = useState(() => isNativePlatform() && !isTvLike());
   const offerBackup = !showBackup;
+  const inFirstUse = phase.status === "first-use";
+  useEffect(() => {
+    setFirstUseActive(inFirstUse);
+    return () => setFirstUseActive(false);
+  }, [inFirstUse]);
 
   if (phase.status === "loading") return <HomeContent />;
   if (phase.status === "error") return <HomeContent />;

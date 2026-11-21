@@ -60,6 +60,9 @@ import {
 /** Ajuste (tabla `setting`, SPEC §8.1) que guarda el último módulo elegido. */
 const LAST_MODULE_SETTING = ["discover", "lastModule"].join(".");
 
+/** F45: ajuste por módulo que marca el aviso NSFW de primera vez como visto. */
+const nsfwNoticeKey = (id: string): string => `discover.nsfwNoticeSeen.${id}`;
+
 /** Lo que la pantalla necesita saber de su fuente de datos. */
 export interface DiscoverDataSource {
   /** Módulos elegibles por Descubrir (activos y montables hoy). */
@@ -70,6 +73,9 @@ export interface DiscoverDataSource {
   recallLastModule(): Promise<string | null>;
   /** Guarda el módulo elegido como el último. */
   rememberLastModule(id: string): Promise<void>;
+  /** F45: el usuario ya vio el aviso de contenido para adultos de este módulo. */
+  hasSeenNsfwNotice(id: string): Promise<boolean>;
+  markNsfwNoticeSeen(id: string): Promise<void>;
 }
 
 /** Datos cargados de una pasada: filas de portada y página del catálogo. */
@@ -330,6 +336,7 @@ export async function loadDiscoverData(options: DiscoverLoadOptions): Promise<Di
 
 /** El último módulo elegido sobrevive a cambiar de pestaña en la sesión. */
 let rememberedSampleId: string | null = null;
+const seenSampleNsfw = new Set<string>();
 
 export function createSampleDiscoverSource(): DiscoverDataSource {
   return {
@@ -342,6 +349,12 @@ export function createSampleDiscoverSource(): DiscoverDataSource {
     },
     async rememberLastModule(id: string) {
       rememberedSampleId = id;
+    },
+    async hasSeenNsfwNotice(id: string) {
+      return seenSampleNsfw.has(id);
+    },
+    async markNsfwNoticeSeen(id: string) {
+      seenSampleNsfw.add(id);
     },
   };
 }
@@ -425,6 +438,18 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
       await driver.run(
         "INSERT INTO setting (key, value) VALUES (?, ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value",
         [LAST_MODULE_SETTING, id],
+      );
+    },
+    async hasSeenNsfwNotice(id: string) {
+      const row = await driver.get<{ value: string }>("SELECT value FROM setting WHERE key = ?", [
+        nsfwNoticeKey(id),
+      ]);
+      return row?.value === "1";
+    },
+    async markNsfwNoticeSeen(id: string) {
+      await driver.run(
+        "INSERT INTO setting (key, value) VALUES (?, ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value",
+        [nsfwNoticeKey(id), "1"],
       );
     },
   };
