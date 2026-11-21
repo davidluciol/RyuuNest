@@ -14,8 +14,6 @@ import { NON_TEXT_PAIRS, TEXT_PAIRS } from "../src/contrastPairs";
  * Los rellenos e iconos se exigen al mínimo no textual (3:1); el texto, a 4,5:1.
  */
 
-type Foreground = keyof typeof c;
-
 describe("contraste AA de los pares usados (Dragon Night)", () => {
   it.each(TEXT_PAIRS.map((p) => [...p]))("%s sobre %s (%s) cumple 4,5:1", (fg, bg, why) => {
     const ratio = contrastRatio(c[fg], c[bg]);
