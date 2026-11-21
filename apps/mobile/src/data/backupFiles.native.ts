@@ -56,7 +56,8 @@ export function createBackupFiles(): BackupFiles {
         return null;
       }
       const asset = result.assets[0];
-      const text = await FileSystem.readAsStringAsync(asset.uri);
+      // `fetch` y no `readAsStringAsync`: Expo Go rechaza leer `cache/DocumentPicker` ("isn't readable").
+      const text = await (await fetch(asset.uri)).text();
       return { text, name: asset.name };
     },
 

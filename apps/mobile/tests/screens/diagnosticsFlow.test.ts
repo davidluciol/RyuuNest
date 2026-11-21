@@ -46,7 +46,8 @@ describe("diagnosticsFlowReducer", () => {
 
   it("cambia de formato", () => {
     expect(
-      diagnosticsFlowReducer(INITIAL_DIAGNOSTICS_FLOW, { type: "set-format", format: "json" }).format,
+      diagnosticsFlowReducer(INITIAL_DIAGNOSTICS_FLOW, { type: "set-format", format: "json" })
+        .format,
     ).toBe("json");
   });
 

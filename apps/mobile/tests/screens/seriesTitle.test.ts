@@ -7,7 +7,10 @@ import { describe, expect, it } from "vitest";
  * `numberOfLines`, el texto crece en lugar de acabar en «…». La portada se
  * pide con las cabeceras del módulo (anti-hotlink).
  */
-const source = readFileSync(resolve(__dirname, "../../src/screens/series/SeriesScreen.tsx"), "utf8");
+const source = readFileSync(
+  resolve(__dirname, "../../src/screens/series/SeriesScreen.tsx"),
+  "utf8",
+);
 
 describe("ficha de serie · título sin recortes (T7)", () => {
   it("el título no se trunca", () => {

@@ -69,7 +69,11 @@ describe("seriesInFolder / folderCount (carpeta inteligente)", () => {
   });
 
   it("folderCount ignora las NSFW salvo que se pidan", () => {
-    const series = [base, { ...base, seriesId: "b", nsfw: true, folderId: "1" }, { ...base, seriesId: "c", folderId: "1" }];
+    const series = [
+      base,
+      { ...base, seriesId: "b", nsfw: true, folderId: "1" },
+      { ...base, seriesId: "c", folderId: "1" },
+    ];
     expect(folderCount(series, manual, false)).toBe(1);
     expect(folderCount(series, manual, true)).toBe(2);
   });
@@ -93,7 +97,10 @@ describe("addSampleFolder", () => {
   });
 
   it("rechaza un nombre repetido o vacío", () => {
-    expect(addSampleFolder(SAMPLE_LIBRARY_DATA, "gemas", [])).toEqual({ ok: false, reason: "DUPLICATE" });
+    expect(addSampleFolder(SAMPLE_LIBRARY_DATA, "gemas", [])).toEqual({
+      ok: false,
+      reason: "DUPLICATE",
+    });
     expect(addSampleFolder(SAMPLE_LIBRARY_DATA, " ", [])).toEqual({ ok: false, reason: "EMPTY" });
   });
 
@@ -113,7 +120,9 @@ describe("acciones de serie sobre los datos de ejemplo (F54, web sin base)", () 
 
   it("mover cambia la carpeta de la serie (solo una, D-12) y reajusta los dos recuentos", () => {
     const origen = primera.folderId as string;
-    const destino = SAMPLE_LIBRARY_DATA.folders.find((f) => f.id !== origen && f.kind === undefined) as LibraryFolder;
+    const destino = SAMPLE_LIBRARY_DATA.folders.find(
+      (f) => f.id !== origen && f.kind === undefined,
+    ) as LibraryFolder;
 
     const data = moveSampleSeries(SAMPLE_LIBRARY_DATA, clave, destino.id);
 
@@ -139,7 +148,9 @@ describe("acciones de serie sobre los datos de ejemplo (F54, web sin base)", () 
     expect(resultado.ok).toBe(true);
     if (!resultado.ok) return;
     const nueva = resultado.data.folders.at(-1) as LibraryFolder;
-    expect(resultado.data.series.find((s) => s.seriesId === clave.seriesId)?.folderId).toBe(nueva.id);
+    expect(resultado.data.series.find((s) => s.seriesId === clave.seriesId)?.folderId).toBe(
+      nueva.id,
+    );
     expect(nueva.count).toBe(1);
   });
 });
@@ -187,7 +198,10 @@ describe("F93 · editar y borrar carpetas en los datos de ejemplo", () => {
   const mine: LibraryFolder = { id: "x", name: "Mías", count: 1 };
   const other: LibraryFolder = { id: "y", name: "Otras", count: 0 };
   const data = {
-    series: [{ ...base, folderId: "x", tags: ["Acción"] }, { ...base, seriesId: "b", tags: ["Acción"] }],
+    series: [
+      { ...base, folderId: "x", tags: ["Acción"] },
+      { ...base, seriesId: "b", tags: ["Acción"] },
+    ],
     folders: [mine, other],
     sources: [],
     tags: ["Acción"],
@@ -197,7 +211,11 @@ describe("F93 · editar y borrar carpetas en los datos de ejemplo", () => {
     const done = updateSampleFolder(data, "x", "Nuevo nombre", ["Acción"]);
     expect(done.ok).toBe(true);
     if (!done.ok) return;
-    expect(done.data.folders[0]).toMatchObject({ name: "Nuevo nombre", tags: ["Acción"], count: 2 });
+    expect(done.data.folders[0]).toMatchObject({
+      name: "Nuevo nombre",
+      tags: ["Acción"],
+      count: 2,
+    });
   });
 
   it("sin etiquetas vuelve a ser manual (sin tags)", () => {

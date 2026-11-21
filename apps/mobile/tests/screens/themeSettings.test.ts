@@ -47,10 +47,15 @@ function contract(
     });
     afterEach(() => done());
 
-    it("por defecto: Dragon Night activo y es el único tema", async () => {
+    it("por defecto: Dragon Night activo y los temas integrados disponibles", async () => {
       const data = await service.load();
       expect(data.activeThemeId).toBe("dragon-night");
-      expect(data.themes.map((t) => [t.id, t.builtIn])).toEqual([["dragon-night", true]]);
+      expect(data.themes.map((t) => [t.id, t.builtIn])).toEqual([
+        ["dragon-night", true],
+        ["medianoche", true],
+        ["brasa", true],
+        ["amatista", true],
+      ]);
     });
 
     it("importa un tema, lo lista como importado y se puede activar", async () => {
@@ -77,8 +82,10 @@ function contract(
       await service.deleteTheme("noche-azul");
       const data = await service.load();
       expect(data.activeThemeId).toBe("dragon-night");
-      expect(data.themes).toHaveLength(1);
+      expect(data.themes).toHaveLength(4);
       await expect(service.deleteTheme("dragon-night")).rejects.toThrow();
+      await service.setActiveTheme("brasa");
+      expect((await service.load()).activeThemeId).toBe("brasa");
     });
   });
 }

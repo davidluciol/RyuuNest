@@ -10,7 +10,9 @@ const src = path.resolve(process.cwd(), "src");
 
 describe("ruta del lector", () => {
   it("vive fuera del navegador de destinos del shell", () => {
-    expect(existsSync(path.join(src, "app/reader/[moduleId]/[seriesId]/[chapterId].tsx"))).toBe(true);
+    expect(existsSync(path.join(src, "app/reader/[moduleId]/[seriesId]/[chapterId].tsx"))).toBe(
+      true,
+    );
     expect(existsSync(path.join(src, "app/(tabs)/reader"))).toBe(false);
   });
 

@@ -47,7 +47,9 @@ describe("loadFromApi · home()", () => {
       1,
     );
 
-    expect(data.sections.map((s) => [s.id, s.title, s.entries.map((e) => e.seriesId), s.hasMore])).toEqual([
+    expect(
+      data.sections.map((s) => [s.id, s.title, s.entries.map((e) => e.seriesId), s.hasMore]),
+    ).toEqual([
       ["hot", "En emisión", ["a", "b"], true],
       ["new", "Nuevos", ["c"], false],
     ]);

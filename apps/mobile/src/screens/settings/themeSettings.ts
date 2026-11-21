@@ -1,5 +1,11 @@
 import { ModuleError } from "@ryuunest/core";
-import { dragonNight, THEME_SCHEMA_VERSION, validateTheme, type Theme } from "@ryuunest/ui-tokens";
+import {
+  dragonNight,
+  themes as builtInThemes,
+  THEME_SCHEMA_VERSION,
+  validateTheme,
+  type Theme,
+} from "@ryuunest/ui-tokens";
 
 /**
  * F90/F91 — temas en Ajustes: el activo y los importados se guardan en `setting`
@@ -15,7 +21,7 @@ export interface ThemeEntry extends Theme {
   readonly builtIn: boolean;
 }
 
-const BUILT_IN: readonly Theme[] = [dragonNight];
+const BUILT_IN: readonly Theme[] = Object.values(builtInThemes);
 
 export interface ThemeStore {
   read(key: string): Promise<string | undefined>;

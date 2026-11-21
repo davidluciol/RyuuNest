@@ -25,10 +25,19 @@ describe("reportSourcesError", () => {
   it("registra la acción con el código del contrato en minúsculas", () => {
     const reporter = fakeReporter();
 
-    reportSourcesError(reporter, "sync", new ModuleError("NETWORK", "Tardó demasiado", { url: "https://repo.test/index.json" }));
+    reportSourcesError(
+      reporter,
+      "sync",
+      new ModuleError("NETWORK", "Tardó demasiado", { url: "https://repo.test/index.json" }),
+    );
 
     expect(reporter.calls).toHaveLength(1);
-    const [level, code, message, context] = reporter.calls[0] as [string, string, string, Record<string, unknown>];
+    const [level, code, message, context] = reporter.calls[0] as [
+      string,
+      string,
+      string,
+      Record<string, unknown>,
+    ];
     expect(level).toBe("error");
     expect(code).toBe("sources.sync.network");
     expect(message).toBe("Tardó demasiado");

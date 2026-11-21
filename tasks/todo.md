@@ -572,14 +572,14 @@ Dep: F89 · M · `apps/mobile/src/screens/settings/*`, `packages/ui-tokens`
 
 - [x] Selector de tema con vista previa; el cambio se aplica al instante y persiste entre sesiones
 - [x] Componentes nuevos en la galería; textos en i18n; respeta `prefers-reduced-motion`
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 (pendiente en el teléfono, ver PR)
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 (hecho en el S25 2026-11-21: importar, aplicar y borrar; ver PR)
 
 ### F91 Ajustes: importar temas de la comunidad `[FE · Intermedia · N3]`
 
 Dep: F90 · M · `apps/mobile/src/screens/settings/*`
 
 - [x] Importar un JSON de tema **con confirmación manual** (nunca automática); error claro si no valida; poder borrar un tema importado
-- Verif: Vitest + 🧍 S25 (pendiente en el teléfono, ver PR)
+- Verif: Vitest + 🧍 S25 (hecho en el S25 2026-11-21: importar, aplicar y borrar; ver PR)
 
 **Lote sugerido:** F65 → F66 → F67 → F68 (F69 espera cuenta); temas: F89 → F90 → F91. Diagnóstico y escritorio (F43) está en «Lector y ficha».
 

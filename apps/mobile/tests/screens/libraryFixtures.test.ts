@@ -145,12 +145,22 @@ describe("filterLibrarySeries (F14a/F14b)", () => {
     const seinen: LibraryFilters = { ...DEFAULT_LIBRARY_FILTERS, tags: ["seinen"] };
     const result = filterLibrarySeries(all, seinen);
     expect(result.length).toBeGreaterThan(0);
-    expect(result.every((s) => (s.tags ?? []).some((t) => t.toLowerCase() === "seinen"))).toBe(true);
+    expect(result.every((s) => (s.tags ?? []).some((t) => t.toLowerCase() === "seinen"))).toBe(
+      true,
+    );
 
-    const accionOTerror: LibraryFilters = { ...DEFAULT_LIBRARY_FILTERS, tags: ["accion", "TERROR"], nsfwVisible: true };
+    const accionOTerror: LibraryFilters = {
+      ...DEFAULT_LIBRARY_FILTERS,
+      tags: ["accion", "TERROR"],
+      nsfwVisible: true,
+    };
     const either = filterLibrarySeries(all, accionOTerror);
     expect(either.length).toBeGreaterThan(result.length > 0 ? 0 : -1);
-    expect(either.every((s) => (s.tags ?? []).some((t) => ["acción", "terror"].includes(t.toLowerCase())))).toBe(true);
+    expect(
+      either.every((s) =>
+        (s.tags ?? []).some((t) => ["acción", "terror"].includes(t.toLowerCase())),
+      ),
+    ).toBe(true);
 
     const conTexto: LibraryFilters = { ...seinen, search: "zzz-no-existe" };
     expect(filterLibrarySeries(all, conTexto)).toEqual([]);
@@ -175,7 +185,9 @@ describe("filterLibrarySeries (F14a/F14b)", () => {
 
   it("elegir Gemas no filtra: es la vista de todas las series (F52)", () => {
     const filters: LibraryFilters = { ...DEFAULT_LIBRARY_FILTERS, folderId: GEMS_FOLDER_ID };
-    expect(filterLibrarySeries(all, filters)).toEqual(filterLibrarySeries(all, DEFAULT_LIBRARY_FILTERS));
+    expect(filterLibrarySeries(all, filters)).toEqual(
+      filterLibrarySeries(all, DEFAULT_LIBRARY_FILTERS),
+    );
   });
 });
 

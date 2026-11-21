@@ -84,7 +84,12 @@ async function addSeries(
 }
 
 describe("resolveLibraryData (F14c)", () => {
-  const fallback: LibraryData = { series: [], folders: [], sources: [{ id: "x", name: "x" }], tags: [] };
+  const fallback: LibraryData = {
+    series: [],
+    folders: [],
+    sources: [{ id: "x", name: "x" }],
+    tags: [],
+  };
 
   it("sin base de datos en la plataforma (web) usa los datos de reserva", async () => {
     expect(await resolveLibraryData(async () => null, fallback)).toBe(fallback);
@@ -197,8 +202,12 @@ describe("loadLibraryData (F14c)", () => {
   });
 
   it("carpetas: Gemas (vista de todo) primero, Favoritos (del sistema) y las del usuario en su orden manual", async () => {
-    await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (11, 'Segunda', 2, 1)");
-    await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (12, 'Primera', 1, 1)");
+    await driver.run(
+      "INSERT INTO folder (id, name, sort, updated_at) VALUES (11, 'Segunda', 2, 1)",
+    );
+    await driver.run(
+      "INSERT INTO folder (id, name, sort, updated_at) VALUES (12, 'Primera', 1, 1)",
+    );
     await driver.run("INSERT INTO folder (id, name, sort, updated_at) VALUES (13, 'Vacía', 3, 1)");
     await addSeries(driver, { id: "a", title: "A", folderId: 12, addedAt: 1 });
     await addSeries(driver, { id: "b", title: "B", folderId: 12, addedAt: 2 });

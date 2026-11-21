@@ -23,9 +23,58 @@ export const dragonNight: Theme = {
   colors: dragonNightColors,
 };
 
-/** Registro de temas disponibles. Los futuros temas se añaden aquí. */
+/** Variante de Dragon Night: solo cambian los colores; los pares de contraste los valida `validateTheme`. */
+const variant = (id: string, name: string, colors: Partial<ThemeColors>): Theme => ({
+  id,
+  name,
+  colors: { ...dragonNightColors, ...colors },
+});
+
+/** Medianoche: azul frío. */
+const medianoche = variant("medianoche", "Medianoche", {
+  bg: "#0A0F1E",
+  surface: "#121A2E",
+  elevated: "#1A2540",
+  border: "#2A3A5C",
+  textPrimary: "#EEF2FA",
+  textSecondary: "#9FB0CC",
+  accent: "#5AA9FF",
+  badgeBg: "#14263F",
+});
+
+/** Brasa: cálido, rojizo. */
+const brasa = variant("brasa", "Brasa", {
+  bg: "#130C0C",
+  surface: "#1D1313",
+  elevated: "#281B1B",
+  border: "#4A3030",
+  textPrimary: "#F6EEEA",
+  textSecondary: "#BBA29A",
+  accent: "#FF7A59",
+  progress: "#F5C451",
+  accentAlt: "#C792EA",
+  badgeBg: "#33201B",
+});
+
+/** Amatista: violeta. */
+const amatista = variant("amatista", "Amatista", {
+  bg: "#0E0B16",
+  surface: "#171325",
+  elevated: "#211B34",
+  border: "#3A3156",
+  textPrimary: "#F1EEF8",
+  textSecondary: "#A99FC4",
+  accent: "#B79BFF",
+  accentAlt: "#35C98A",
+  badgeBg: "#25203D",
+});
+
+/** Registro de temas integrados (los de la comunidad se importan aparte, F91). */
 export const themes: Readonly<Record<string, Theme>> = {
   [dragonNight.id]: dragonNight,
+  [medianoche.id]: medianoche,
+  [brasa.id]: brasa,
+  [amatista.id]: amatista,
 };
 
 /** Tema aplicado cuando la app no elige ninguno (v1: siempre Dragon Night). */
