@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { activeColors, radii, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 import type { Theme } from "@ryuunest/ui-tokens";
 
@@ -91,31 +91,25 @@ export default function ThemeRow({
   );
 }
 
-const staticStyles = StyleSheet.create({
+const styles = themedStyles(() => ({
   row: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
   texts: { flex: 1, gap: spacing.xxs },
   swatches: { flexDirection: "row", gap: spacing.xxs },
   swatch: { width: SWATCH, height: SWATCH, borderRadius: radii.pill, borderWidth: 1 },
   pressed: { opacity: 0.8 },
-});
-
-const styles = {
-  ...staticStyles,
-  ...themedStyles(() => ({
-    pick: {
-      flex: 1,
-      flexDirection: "row" as const,
-      alignItems: "center" as const,
-      gap: spacing.sm,
-      minHeight: touchTarget.min,
-      paddingHorizontal: spacing.md,
-      borderRadius: radii.control,
-      borderWidth: 1,
-      borderColor: activeColors.border,
-      backgroundColor: activeColors.surface,
-    },
-    pickSelected: { borderColor: activeColors.accent, backgroundColor: activeColors.badgeBg },
-    name: { ...textStyle(typography.labelLg), color: activeColors.textPrimary },
-    tag: { ...textStyle(typography.labelMd), color: activeColors.textSecondary },
-  })),
-};
+  pick: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    minHeight: touchTarget.min,
+    paddingHorizontal: spacing.md,
+    borderRadius: radii.control,
+    borderWidth: 1,
+    borderColor: activeColors.border,
+    backgroundColor: activeColors.surface,
+  },
+  pickSelected: { borderColor: activeColors.accent, backgroundColor: activeColors.badgeBg },
+  name: { ...textStyle(typography.labelLg), color: activeColors.textPrimary },
+  tag: { ...textStyle(typography.labelMd), color: activeColors.textSecondary },
+}));

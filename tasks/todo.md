@@ -562,24 +562,24 @@ Dep: ninguna · M · `packages/ui-tokens`, `packages/module-sdk` (validación)
 
 > Origen (petición del humano, 2026-11-16). **Decisión:** un tema es un JSON de tokens, sin código ejecutable.
 
-- [ ] Rojo: esquema con los colores semánticos de `ui-tokens`, versión y nombre; rechaza claves desconocidas, colores inválidos y contraste insuficiente (WCAG AA)
-- [ ] Temas integrados actuales expresados con ese esquema
+- [x] Rojo: esquema con los colores semánticos de `ui-tokens`, versión y nombre; rechaza claves desconocidas, colores inválidos y contraste insuficiente (WCAG AA)
+- [x] Temas integrados actuales expresados con ese esquema
 - Verif: Vitest en `ui-tokens`/SDK
 
 ### F90 Ajustes: sección «Temas» con cambio dinámico `[FE · Intermedia · N3]`
 
 Dep: F89 · M · `apps/mobile/src/screens/settings/*`, `packages/ui-tokens`
 
-- [ ] Selector de tema con vista previa; el cambio se aplica al instante y persiste entre sesiones
-- [ ] Componentes nuevos en la galería; textos en i18n; respeta `prefers-reduced-motion`
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+- [x] Selector de tema con vista previa; el cambio se aplica al instante y persiste entre sesiones
+- [x] Componentes nuevos en la galería; textos en i18n; respeta `prefers-reduced-motion`
+- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 (pendiente en el teléfono, ver PR)
 
 ### F91 Ajustes: importar temas de la comunidad `[FE · Intermedia · N3]`
 
 Dep: F90 · M · `apps/mobile/src/screens/settings/*`
 
-- [ ] Importar un JSON de tema **con confirmación manual** (nunca automática); error claro si no valida; poder borrar un tema importado
-- Verif: Vitest + 🧍 S25
+- [x] Importar un JSON de tema **con confirmación manual** (nunca automática); error claro si no valida; poder borrar un tema importado
+- Verif: Vitest + 🧍 S25 (pendiente en el teléfono, ver PR)
 
 **Lote sugerido:** F65 → F66 → F67 → F68 (F69 espera cuenta); temas: F89 → F90 → F91. Diagnóstico y escritorio (F43) está en «Lector y ficha».
 
