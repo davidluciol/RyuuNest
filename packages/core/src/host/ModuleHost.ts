@@ -76,11 +76,12 @@ function withClearance(
   clearance: Clearance,
 ): Record<string, string> {
   const result: Record<string, string> = {};
+  const jar = clearance.cfClearance === null;
   let cookie = "";
   for (const [name, value] of Object.entries(headers ?? {})) {
     const lower = name.toLowerCase();
     if (lower === "user-agent") continue;
-    if (lower === "cookie") {
+    if (lower === "cookie" && !jar) {
       cookie = value
         .split(";")
         .map((part) => part.trim())
@@ -91,6 +92,7 @@ function withClearance(
     result[name] = value;
   }
   result["User-Agent"] = clearance.userAgent;
+  if (jar) return result;
   const own = `cf_clearance=${clearance.cfClearance}`;
   result["Cookie"] = cookie === "" ? own : `${cookie}; ${own}`;
   return result;

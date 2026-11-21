@@ -5,6 +5,7 @@ import { ModuleHost } from "../host/ModuleHost.js";
 import { fromHex, utf8Decode } from "../bytes.js";
 import { ModuleRegistry } from "./ModuleRegistry.js";
 import { SqliteStorage } from "../storage/SqliteStorage.js";
+import type { ClearanceStore } from "../host/challenge.js";
 import type { Http } from "../ports/http.js";
 import type { ScriptLoader } from "../ports/scriptLoader.js";
 import type { SqlDriver } from "../storage/SqlDriver.js";
@@ -34,10 +35,12 @@ export interface InstalledMounterDeps {
   http: Http;
   /** Carga de módulos script (SPEC §6.5); obligatoria para montarlos. */
   loader?: ScriptLoader;
+  /** Verificaciones de Cloudflare guardadas por la app (F100). */
+  clearances?: ClearanceStore;
 }
 
 export function createInstalledMounter(deps: InstalledMounterDeps): ModuleMounter {
-  const { driver, http, loader } = deps;
+  const { driver, http, loader, clearances } = deps;
   const registry = new ModuleRegistry({ storage: new SqliteStorage(driver) });
   const mounted = new Map<string, Promise<MountedModule>>();
 
@@ -47,10 +50,7 @@ export function createInstalledMounter(deps: InstalledMounterDeps): ModuleMounte
       throw new ModuleError("NOT_FOUND", `El módulo ${moduleId} no está instalado ni activo`);
     }
     if (pkg.runtime === "script" && loader === undefined) {
-      throw new ModuleError(
-        "UNSUPPORTED",
-        `Esta app aún no carga módulos script (${moduleId})`,
-      );
+      throw new ModuleError("UNSUPPORTED", `Esta app aún no carga módulos script (${moduleId})`);
     }
     return pkg;
   }
@@ -71,6 +71,7 @@ export function createInstalledMounter(deps: InstalledMounterDeps): ModuleMounte
             http,
             clock: { now: () => Date.now() },
             permissions: pkg.manifest.permissions,
+            ...(clearances === undefined ? {} : { clearances }),
           });
           const handle = await createModuleApi({
             manifest: pkg.manifest,

@@ -12,8 +12,12 @@ import { isAllowedHost } from "./ModuleHost.js";
 
 /** Lo que devuelve el navegador al superar el reto. */
 export interface ChallengeSolution {
-  /** Valor de la cookie `cf_clearance` (sin el nombre). */
-  cfClearance: string;
+  /**
+   * Valor de la cookie `cf_clearance` (sin el nombre). `null` = el navegador no
+   * puede leerla (Expo Go, sin módulo de cookies) y viaja en el tarro de cookies
+   * compartido de la plataforma; entonces solo se fija el `User-Agent`.
+   */
+  cfClearance: string | null;
   /** User-Agent con el que el navegador superó el reto: Cloudflare lo exige igual. */
   userAgent: string;
   /** Caducidad de la cookie (ms desde la época), si el navegador la conoce. */
@@ -22,7 +26,7 @@ export interface ChallengeSolution {
 
 /** Verificación guardada para un host. */
 export interface Clearance {
-  cfClearance: string;
+  cfClearance: string | null;
   userAgent: string;
   expiresAt: number;
 }
@@ -110,7 +114,7 @@ export async function solveChallenge(
   const solution = await options.browser.solve(parsed.href);
   if (
     solution === null ||
-    !COOKIE_VALUE.test(solution.cfClearance) ||
+    (solution.cfClearance !== null && !COOKIE_VALUE.test(solution.cfClearance)) ||
     !USER_AGENT.test(solution.userAgent)
   ) {
     return false;
