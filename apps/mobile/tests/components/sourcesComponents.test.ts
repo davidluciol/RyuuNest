@@ -47,6 +47,11 @@ describe("moduleRowStyle", () => {
     });
   });
 
+  it("F98: una fila NSFW lleva el borde naranja de F94 (2 dp); si no, sin borde", () => {
+    expect(moduleRowStyle(true)).toMatchObject({ borderWidth: 2, borderColor: "#FF6B1A" });
+    expect(moduleRowStyle().borderWidth).toBe(0);
+  });
+
   it("nombre en principal, metadatos en secundario y error con el color de error", () => {
     expect(moduleRowTextColors()).toEqual({
       name: "#F2F0EA",

@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { dragonNightColors } from "@ryuunest/ui-tokens";
 
 import { galleryFontSources } from "../gallery/fontSources";
+import ChallengeHost from "../screens/challenge/ChallengeHost";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts(galleryFontSources);
@@ -18,6 +19,7 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: dragonNightColors.bg },
         }}
       />
+      <ChallengeHost />
       <StatusBar style="light" />
     </>
   );

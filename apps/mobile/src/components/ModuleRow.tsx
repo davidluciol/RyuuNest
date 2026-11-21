@@ -32,6 +32,8 @@ export interface ModuleRowProps {
   onAction?: () => void;
   /** La acción no aplica (p. ej. recomendado ya añadido). */
   actionDisabled?: boolean;
+  /** F98: módulo/servidor NSFW; borde naranja (la etiqueta NSFW sigue yendo aparte). */
+  nsfw?: boolean;
   testID?: string;
 }
 
@@ -46,11 +48,12 @@ export default function ModuleRow({
   actionVariant = "secondary",
   onAction,
   actionDisabled = false,
+  nsfw = false,
   testID,
 }: ModuleRowProps) {
   const text = moduleRowTextColors();
   return (
-    <View testID={testID} style={[moduleRowStyle(), styles.row]}>
+    <View testID={testID} style={[moduleRowStyle(nsfw), styles.row]}>
       <View style={styles.texts}>
         <Text style={[styles.name, { color: text.name }]} numberOfLines={2}>
           {name}

@@ -73,6 +73,11 @@ export function moduleBadges(module: SourceModule): ModuleBadge[] {
   return badges.slice(0, MAX_ROW_BADGES);
 }
 
+/** F99: cuántos módulos instalados tienen una versión nueva en el índice ya guardado. */
+export function countUpdates(modules: readonly SourceModule[]): number {
+  return modules.filter((m) => m.status === "installed" && m.updateTo !== undefined).length;
+}
+
 /** Acción de la fila: instalar un disponible o gestionar uno instalado. */
 export function moduleRowAction(module: SourceModule): "install" | "manage" {
   return module.status === "installed" ? "manage" : "install";

@@ -5,6 +5,7 @@ import { dragonNightColors, spacing } from "@ryuunest/ui-tokens";
 import Button from "../../../../components/Button";
 import ErrorBanner from "../../../../components/ErrorBanner";
 import LoadingState from "../../../../components/LoadingState";
+import { retryWithChallenge } from "../../../../data/appChallenge";
 import { t } from "../../../../i18n";
 import ReaderScreen from "../../../../screens/reader/ReaderScreen";
 import { useReader } from "../../../../screens/reader/useReader";
@@ -29,7 +30,8 @@ export default function ReaderRoute() {
   // Cerrar vuelve a la ficha; si el lector se abrió directo, no hay atrás y se abre la ficha.
   const close = () => {
     if (router.canGoBack()) router.back();
-    else router.replace({ pathname: "/series/[moduleId]/[seriesId]", params: { moduleId, seriesId } });
+    else
+      router.replace({ pathname: "/series/[moduleId]/[seriesId]", params: { moduleId, seriesId } });
   };
 
   if (view.status === "loading") {
@@ -55,7 +57,7 @@ export default function ReaderRoute() {
             }}
             code={view.error.code}
             actionLabel={t("actions.retry")}
-            onAction={actions.retry}
+            onAction={retryWithChallenge(moduleId, view.error, actions.retry)}
             detailLabel={t("actions.showDetail")}
             testID="reader-error-banner"
           />

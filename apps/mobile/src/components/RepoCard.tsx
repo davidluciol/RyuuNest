@@ -1,3 +1,4 @@
+import Button from "./Button";
 import FocusPressable from "./FocusPressable";
 import { StyleSheet, Text, View } from "react-native";
 import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
@@ -9,7 +10,7 @@ import { textStyle } from "./textStyle";
 /**
  * F16 — tarjeta de repositorio (RF-3): icono, nombre, URL y botón de
  * sincronizar. Plana, sin brillos (V11). Los textos llegan por props (F10).
- * `onPress` abre la acción de quitar; sincronizar es el botón de la derecha.
+ * V7: «Quitar» es un botón visible en la tarjeta (`onRemove`); sincronizar, el icono.
  */
 
 const colors = dragonNightColors;
@@ -22,8 +23,11 @@ export interface RepoCardProps {
   syncLabel: string;
   syncing?: boolean;
   onSync?: () => void;
-  onPress?: () => void;
-  accessibilityLabel?: string;
+  /** Texto visible de quitar, p. ej. «Quitar». */
+  removeLabel?: string;
+  onRemove?: () => void;
+  /** Nombre accesible de quitar, p. ej. «Quitar repositorio». */
+  removeAccessibilityLabel?: string;
 }
 
 export default function RepoCard({
@@ -33,20 +37,14 @@ export default function RepoCard({
   syncLabel,
   syncing = false,
   onSync,
-  onPress,
-  accessibilityLabel,
+  removeLabel,
+  onRemove,
+  removeAccessibilityLabel,
 }: RepoCardProps) {
   const text = repoCardTextColors();
   return (
-    // La fila no puede ser un botón: en web anidaría el botón de sincronizar
-    // (HTML inválido). El cuerpo (icono y textos) es el botón de quitar.
     <View style={[repoCardStyle(), styles.card]}>
-      <FocusPressable
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel ?? name}
-        onPress={onPress}
-        style={styles.body}
-      >
+      <View style={styles.body}>
         <View style={styles.icon}>
           <Network size={spacing.md + spacing.xxs} color={colors.accent} />
         </View>
@@ -57,7 +55,7 @@ export default function RepoCard({
           <Text style={[styles.url, { color: text.url }]}>{url}</Text>
           {meta ? <Text style={[styles.url, { color: text.url }]}>{meta}</Text> : null}
         </View>
-      </FocusPressable>
+      </View>
       <FocusPressable
         accessibilityRole="button"
         accessibilityLabel={syncLabel}
@@ -68,6 +66,14 @@ export default function RepoCard({
       >
         <RefreshCw size={spacing.md + spacing.xxs} color={colors.textSecondary} />
       </FocusPressable>
+      {removeLabel !== undefined ? (
+        <Button
+          variant="secondary"
+          label={removeLabel}
+          accessibilityLabel={removeAccessibilityLabel}
+          onPress={onRemove}
+        />
+      ) : null}
     </View>
   );
 }

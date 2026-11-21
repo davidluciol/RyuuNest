@@ -9,6 +9,7 @@ import type { Host, HostRequestInit, HostResponse, HtmlDocument } from "../contr
 import { ModuleError } from "../contract/errors.js";
 import type { Clock } from "../ports/clock.js";
 import type { Http } from "../ports/http.js";
+import type { Clearance, ClearanceStore } from "./challenge.js";
 import { parseHtml } from "./html.js";
 
 export type HostLogLevel = "debug" | "info" | "warn" | "error";
@@ -37,6 +38,8 @@ export interface ModuleHostOptions {
   logger?: HostLogger;
   /** Por defecto, un almacén en memoria. */
   settings?: ModuleSettings;
+  /** Verificaciones de Cloudflare guardadas por la app (F100). Sin él, no se envían. */
+  clearances?: ClearanceStore;
 }
 
 /**
@@ -59,6 +62,42 @@ function createMemorySettings(): ModuleSettings {
   };
 }
 
+/** ¿`host` es uno de `domains` o un subdominio suyo? `domains` en minúsculas. */
+export function isAllowedHost(host: string, domains: readonly string[]): boolean {
+  return domains.some((domain) => host === domain || host.endsWith(`.${domain}`));
+}
+
+/**
+ * Cabeceras con la verificación aplicada (F100): sustituye el `User-Agent` y el
+ * `cf_clearance` del módulo; conserva el resto de cookies y cabeceras.
+ */
+function withClearance(
+  headers: Record<string, string> | undefined,
+  clearance: Clearance,
+): Record<string, string> {
+  const result: Record<string, string> = {};
+  const jar = clearance.cfClearance === null;
+  let cookie = "";
+  for (const [name, value] of Object.entries(headers ?? {})) {
+    const lower = name.toLowerCase();
+    if (lower === "user-agent") continue;
+    if (lower === "cookie" && !jar) {
+      cookie = value
+        .split(";")
+        .map((part) => part.trim())
+        .filter((part) => part !== "" && !part.startsWith("cf_clearance="))
+        .join("; ");
+      continue;
+    }
+    result[name] = value;
+  }
+  result["User-Agent"] = clearance.userAgent;
+  if (jar) return result;
+  const own = `cf_clearance=${clearance.cfClearance}`;
+  result["Cookie"] = cookie === "" ? own : `${cookie}; ${own}`;
+  return result;
+}
+
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -73,6 +112,7 @@ export class ModuleHost implements Host {
   private readonly maxConcurrent: number;
   private readonly minDelayMs: number;
   private readonly logger: HostLogger;
+  private readonly clearances: ClearanceStore | undefined;
   private readonly lastRequestAt = new Map<string, number>();
   /**
    * Cadena por dominio para que la comprobación y la espera de `respectDelay`
@@ -92,15 +132,17 @@ export class ModuleHost implements Host {
     this.minDelayMs = Math.max(0, options.minDelayMs ?? HOST_DEFAULTS.minDelayMs);
     this.logger = options.logger ?? (() => {});
     this.settings = options.settings ?? createMemorySettings();
+    this.clearances = options.clearances;
   }
 
   async fetch(url: string, init?: HostRequestInit): Promise<HostResponse> {
     const domain = this.assertDomain(url);
+    const request = await this.applyClearance(url, domain, init);
 
     await this.acquire();
     try {
       await this.respectDelay(domain);
-      return await this.withTimeout(url, init);
+      return await this.withTimeout(url, request);
     } finally {
       this.release();
     }
@@ -128,12 +170,34 @@ export class ModuleHost implements Host {
     }
 
     const host = parsed.hostname.toLowerCase();
-    const allowed = this.domains.some((domain) => host === domain || host.endsWith(`.${domain}`));
-    if (!allowed) {
+    if (!isAllowedHost(host, this.domains)) {
       throw new ModuleError("UNSUPPORTED", `Dominio no permitido: ${host}`, { url });
     }
 
     return host;
+  }
+
+  /**
+   * Añade la verificación guardada para este host exacto, solo por https y si no
+   * ha caducado; la caducada se borra (F100).
+   */
+  private async applyClearance(
+    url: string,
+    host: string,
+    init?: HostRequestInit,
+  ): Promise<HostRequestInit | undefined> {
+    if (this.clearances === undefined || !url.toLowerCase().startsWith("https:")) {
+      return init;
+    }
+    const clearance = await this.clearances.get(host);
+    if (clearance === undefined) {
+      return init;
+    }
+    if (clearance.expiresAt <= this.clock.now()) {
+      await this.clearances.delete(host);
+      return init;
+    }
+    return { ...init, headers: withClearance(init?.headers, clearance) };
   }
 
   private async withTimeout(url: string, init?: HostRequestInit): Promise<HostResponse> {

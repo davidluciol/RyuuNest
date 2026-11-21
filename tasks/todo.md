@@ -419,6 +419,7 @@ Dep: T40 · S · repo `RyuuNest-Models`
 - [ ] **Sigue fallando en el S25 (2026-11-20):** YupManga 0.1.1 abre la búsqueda y la ficha, pero el capítulo da `UNSUPPORTED` — «El reto del lector usa JS no soportado: carácter «`»» (el reto actual usa plantillas con acento grave, que `yupmanga/bin/utils/miniJs.js` no entiende). Falta capturar la fixture del reto vigente (1 petición real, con las herramientas de `tools/` de Models), añadir soporte y publicar 0.1.2 + índice
 - [x] **YupManga 0.2.0 (RyuuNest-Models PR #13 y #14, 2026-11-20):** el reto con acento grave, la cascada CSS del nodo oculto y la cabecera `Origin` están resueltos y verificados contra el servidor (16/16 respuestas aceptadas); además `home/list/filters` y búsqueda por género (las categorías ya no salen vacías). Canario: `uv run --project tools --locked python tools/canary_yupmanga.py` en Models.
 - [ ] 🧍 Actualizar YupManga a 0.2.0 en el S25 y comprobar: abrir un capítulo (espera ~9 s del anuncio, ver imágenes), Inicio/Aventuras con datos y filtro de género.
+- [ ] **Portadas en blanco — diagnóstico añadido (PR #150):** las cabeceras sí llegan al componente (descartado en código); Descubrir ahora registra `cover.load` (URL sin query, nombres de cabecera, error). 🧍 En el S25 abrir Descubrir con YupManga/m440 y leer el registro: 403 ⇒ cargar con `host.fetch`; error de decodificación ⇒ formato; sin registro ⇒ pintado.
 - [ ] **Portadas en blanco (YupManga y m440):** el servidor las sirve bien (200, WebP) con las cabeceras del módulo, así que el fallo está en el cargador de imágenes de la app: comprobar que `ImageRef.headers` (Referer, User-Agent, Accept) llegan al componente de imagen, que decodifica WebP servido como `.jpg` (m440) y que la huella TLS del cliente no recibe 403; si Cloudflare la rechaza, cargarlas con `host.fetch`.
 - [ ] Si vuelve a salir `UNSUPPORTED` en el reto: correr el canario, guardar la captura en `.scrape-tmp/yupmanga/canary/`, ampliar `miniJs.js`/`boxStyle.js` (ver «Depurar el reto» en `tools/README.md` de Models) y publicar parche + índice.
 - Verif: 🧍 S25 Ultra; el arnés del módulo en verde.
@@ -456,7 +457,8 @@ Dep: F16 · S · `apps/mobile/src/screens/{onboarding,sources}/*`
 Dep: F33 · S · `apps/mobile/src/screens/{sources,settings}/*`
 
 - [x] Aprobada por el humano (2026-11-20). Hecho: título duplicado quitado (N7), permisos «Ejecuta código»/«Para adultos» con icono de aviso solo en filas de módulo de Portales y primer uso (N9; las píldoras NSFW de Recomendados/Respaldo/web no se tocan, F98 sigue abierta), «Enlace del repositorio» sin `index.json` (R5), huella plegable y «Huella de verificación» (V3), Ajustes: idioma en una fila «Idioma» (N21), chips de lectura en columna sin separador (N22), chevrón de filas pulsables siempre a la derecha (R8), «archivo de respaldo» sin JSON (R9)
-- [ ] Pendiente de F42 (no hecho, decidir): V3 botón primario verde (choca con el relleno naranja de `progress`; se deja como está) y aviso «X instalado»; V7 «Quitar» visible en la tarjeta del repo; V8 aviso «desinstalado»; N21 sin chevrón porque no hay pantalla de idiomas; la web (`apps/web`) conserva su título y sus píldoras
+- [x] V7 «Quitar» visible en la tarjeta del repo, V8 avisos «{name} instalado» / «Módulo desinstalado» (PR #151). Los avisos de éxito salen en rojo (el bloque usa `colors.error`): tarea aparte para un tipo de aviso neutro
+- [ ] Pendiente de F42 (no hecho, decidir): V3 botón primario verde (choca con el relleno naranja de `progress`; se deja como está); N21 sin chevrón porque no hay pantalla de idiomas; la web (`apps/web`) conserva su título y sus píldoras
 - Verif: ✅ Vitest + ✅ Playwright 426/1440 px (`settings`, `sources`, `onboarding`, `shell`, galería)
 
 ### F100 Anti-bot con navegador nativo: spike del reto de Cloudflare `[BE/FE · Alta · N4]` 🧍
@@ -465,6 +467,8 @@ Dep: T42 · L · SPEC §894, IDEA 2.1 · repo `RyuuNest` (host) + `RyuuNest-Mode
 
 > Origen (2026-11-20): `m440` (`/manga-list`, `/filterList`) y ZonaTMO dan `BLOCKED` por el reto de página de Cloudflare, que ni curl_cffi con huella de Chrome supera. Un WebView lo supera y deja `cf_clearance`. **No sirve para el reto del lector de YupManga** (JS propio del sitio, no de Cloudflare): ese sigue con el intérprete cerrado y el canario.
 
+- [x] Parte 1 (PR #152, `packages/core/src/host/challenge.ts`): `solveChallenge` (https + dominio del módulo, confirmación, guarda solo `cf_clearance`+UA por host con caducidad) y `host.fetch` las aplica; probado con navegador y almacén falsos. Los módulos no pueden llamarlo. Procedimiento de medición en el S25 en el PR.
+- [ ] 🧍 Decisiones del humano para la parte 2 (WebView, hoja de confirmación, almacén): navegador (`react-native-webview` + `@react-native-cookies/cookies`), almacén de secretos (`expo-secure-store`), módulo sin campo nuevo, y aprobar el cambio de SPEC §6.4/§17/P-8 (`BLOCKED` no se resuelve en v1). Riesgo alto en Google Play: no entra en ninguna versión de tienda.
 - [ ] Spike (1–2 días): `host.solveChallenge(url)` abre un WebView visible, espera el reto y devuelve control tras guardar `cf_clearance` y el `User-Agent` usado. Nunca en silencio: solo tras `BLOCKED` y con confirmación del usuario.
 - [ ] Medir lo que decide la viabilidad: ¿acepta Cloudflare la cookie con la huella TLS del cliente HTTP de React Native o hay que pedir por el propio WebView? ¿cuánto dura? Respuesta con datos, no supuestos.
 - [ ] Si es viable: `host.fetch` envía esas cookies y el mismo `User-Agent` por dominio; el módulo declara «este dominio necesita verificación»; la cookie se guarda como secreto del dispositivo con caducidad.
@@ -488,8 +492,8 @@ Dep: F94 · S · `apps/mobile/src/screens/sources/*`
 
 > Origen (petición del humano, 2026-11-17, opcional). Reutiliza el token y la regla de F94.
 
-- [ ] Los módulos/servidores marcados `nsfw` en Portales llevan el borde naranja (más su etiqueta NSFW existente)
-- Verif: Playwright 426/1440 px + 🧍 S25
+- [x] Los módulos/servidores marcados `nsfw` en Portales llevan el borde naranja (más su etiqueta NSFW existente) — PR #153 (`ModuleRow.nsfw`, también en Recomendados; estado en la galería)
+- Verif: ✅ Vitest + ✅ Playwright 426/1440 px · 🧍 S25 pendiente (ver el borde)
 
 ### F99 Avisar de versiones nuevas de un módulo y recomendar actualizar `[FE · Intermedia · N3]`
 
@@ -497,11 +501,11 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 
 > Origen (petición del humano, 2026-11-20): si ZonaTMO instalado es 1.2.3 y el repo publica 1.3.1, avisar al usuario y recomendar actualizar. **Ya existe** la insignia `update` por módulo (`sourcesView.ts`) y la hoja «Actualizar módulo»; falta que el aviso se vea sin entrar a Portales.
 
-- [ ] Rojo: comparar la versión instalada con la del índice del repo con semver (`module-sdk`), sin falsos positivos con prerelease ni con versiones iguales
-- [ ] Aviso visible fuera de Portales (p. ej. punto en la pestaña Portales y banner «Hay N actualizaciones» con «Ver») que lleve a la hoja de actualizar existente; **nada se actualiza solo** (confirmación manual, SPEC §7)
-- [ ] Solo se consulta el índice cuando ya se consulta hoy (abrir Portales / acción del usuario); nada en segundo plano (RNF-5)
-- [ ] Textos en i18n, solo tokens, estados en la galería
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25 (subir una versión de prueba en un índice local, como pide F33 R1)
+- [x] Rojo: comparar la versión instalada con la del índice del repo con semver (`module-sdk`), sin falsos positivos con prerelease ni con versiones iguales (`isUpdateAvailable`, PR #154)
+- [x] Aviso visible fuera de Portales: punto neutro en la pestaña Portales y banner «Hay N actualizaciones» con «Ver» (solo en Guarida) que abre la hoja de actualizar del primer módulo con novedad; nada se actualiza solo
+- [x] Solo lee lo guardado en SQLite del último sync; sin red ni segundo plano (RNF-5)
+- [x] Textos en i18n, solo tokens, estados en la galería
+- Verif: ✅ Vitest + ✅ Playwright 426/1440 px · 🧍 S25: instalar un módulo desde un índice local 1.0.0, subirlo a 1.1.0, abrir/actualizar Portales, salir y ver punto + banner; «Ver» abre la hoja y solo actualiza al confirmar
 
 ---
 

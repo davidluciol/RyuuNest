@@ -6,6 +6,7 @@ import {
   createFunctionScriptLoader,
   createModuleApi,
   modulePaging,
+  type ClearanceStore,
   type DeclarativeConfig,
   type Http,
   type ModuleApiHandle,
@@ -26,6 +27,7 @@ import {
 import { openAppDatabase } from "../../data/appDatabase";
 import { isNativePlatform } from "../../data/backupFilesPort";
 import { createFetchHttp } from "../../data/fetchHttp";
+import { appClearances } from "../../data/appChallenge";
 import { createInstalledMounter, type ModuleMounter } from "../../data/moduleMounter";
 import {
   SAMPLE_DISCOVER_MODULES,
@@ -183,9 +185,7 @@ export async function loadFromApi(
     }
   }
   const [latest, popular, home, catalogPage] = await Promise.all([
-    rows && !useHome && flags.hasLatest && api.latest
-      ? api.latest(1)
-      : Promise.resolve(NO_ITEMS),
+    rows && !useHome && flags.hasLatest && api.latest ? api.latest(1) : Promise.resolve(NO_ITEMS),
     rows && !useHome && flags.hasPopular && api.popular
       ? api.popular(1)
       : Promise.resolve(NO_ITEMS),
@@ -370,6 +370,8 @@ export interface InstalledSourceDeps {
    * también los módulos script; sin él solo los declarativos (dispositivo, D-5).
    */
   loader?: ScriptLoader;
+  /** Verificaciones de Cloudflare (F100). */
+  clearances?: ClearanceStore;
 }
 
 /**
@@ -379,12 +381,13 @@ export interface InstalledSourceDeps {
  * app (D-5): listarlos sin poder montarlos sería prometer lo que no funciona.
  */
 export function createInstalledDiscoverSource(deps: InstalledSourceDeps): DiscoverDataSource {
-  const { driver, http, loader } = deps;
+  const { driver, http, loader, clearances } = deps;
   const registry = new ModuleRegistry({ storage: new SqliteStorage(driver) });
   const mounter = createInstalledMounter({
     driver,
     http,
     ...(loader === undefined ? {} : { loader }),
+    ...(clearances === undefined ? {} : { clearances }),
   });
 
   return {
@@ -469,5 +472,6 @@ export async function resolveDiscoverSource(): Promise<DiscoverDataSource> {
     driver,
     http: createFetchHttp(),
     loader: createFunctionScriptLoader(),
+    ...(appClearances === undefined ? {} : { clearances: appClearances }),
   });
 }
