@@ -78,7 +78,10 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF16");
       await page.getByTestId("module-portal-duna").getByRole("button", { name: "Instalar" }).click();
       await page.getByTestId("sheet-install").waitFor({ state: "visible" });
       await page.getByText("Dominios permitidos").waitFor({ state: "visible" });
-      await page.getByText("Huella SHA-256").waitFor({ state: "visible" });
+      // F42/V3: la huella está plegada y se abre a petición.
+      await page.getByTestId("install-hash-toggle").waitFor({ state: "visible" });
+      await page.getByTestId("install-hash-toggle").click();
+      await page.getByText("Huella de verificación").waitFor({ state: "visible" });
       await shot("instalar");
       await page.getByRole("button", { name: "Instalar", exact: true }).last().click();
       await page.getByTestId("sheet-install").waitFor({ state: "detached" });

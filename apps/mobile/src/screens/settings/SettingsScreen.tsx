@@ -136,7 +136,7 @@ export default function SettingsScreen({
         <View style={styles.section}>
           <SettingsCard>
             <SettingsRow
-              label={t("settings.language.label")}
+              label={t("settings.language.row")}
               hint={t("settings.language.hint")}
               right={
                 <Text style={styles.value} testID="settings-language-value">

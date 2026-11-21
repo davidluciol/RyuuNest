@@ -337,6 +337,7 @@
   "settings.section.cache": "Almacenamiento y caché",
   "settings.section.sources": "Portales",
   "settings.language.label": "Idioma de la aplicación",
+  "settings.language.row": "Idioma",
   "settings.language.hint": "Se usará en menús y controles",
   "settings.language.es": "Español",
   "settings.reading.defaultMode": "Modo de lectura por defecto",
