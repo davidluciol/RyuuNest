@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import type { ModuleApi, ModuleManifest } from "../../src/contract/types";
+import type { Host, ModuleApi, ModuleManifest } from "../../src/contract/types";
+import { MemoryClearanceStore } from "../../src/host/challenge";
 import { ModuleError } from "../../src/contract/errors";
 import { moduleKey, type InstalledPackage } from "../../src/install/PackageInstaller";
 import { createInstalledMounter } from "../../src/modules/installedMounter";
@@ -44,7 +45,10 @@ function installedPackage(overrides: Partial<InstalledPackage> = {}): InstalledP
     nsfw: false,
     permissions: { domains: ["sitio.test"] },
     manifest: MANIFEST,
-    files: Object.entries(PACKAGE).map(([path, text]) => ({ path, hex: Buffer.from(text, "utf8").toString("hex") })),
+    files: Object.entries(PACKAGE).map(([path, text]) => ({
+      path,
+      hex: Buffer.from(text, "utf8").toString("hex"),
+    })),
     installedAt: 1_000,
     enabled: true,
     ...overrides,
@@ -96,14 +100,39 @@ describe("createInstalledMounter", () => {
   it("un módulo desactivado o ausente da NOT_FOUND", async () => {
     const driver = await openMigratedDriver();
     const storage = new SqliteStorage(driver);
-    await storage.set(
-      moduleKey("ejemplo"),
-      JSON.stringify(installedPackage({ enabled: false })),
-    );
+    await storage.set(moduleKey("ejemplo"), JSON.stringify(installedPackage({ enabled: false })));
     const mounter = createInstalledMounter({ driver, http: new StubHttp() });
 
     const error = await mounter.mount("ejemplo").catch((e: unknown) => e);
     expect((error as ModuleError).code).toBe("NOT_FOUND");
     await expect(mounter.mount("ausente")).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
+  it("pasa las verificaciones guardadas al host del módulo (F100)", async () => {
+    const driver = await openMigratedDriver();
+    const storage = new SqliteStorage(driver);
+    await storage.set(moduleKey("ejemplo"), JSON.stringify(installedPackage()));
+    const clearances = new MemoryClearanceStore();
+    await clearances.set("sitio.test", {
+      cfClearance: "tok",
+      userAgent: "UA-wv",
+      expiresAt: Number.MAX_SAFE_INTEGER,
+    });
+    let host: Host | undefined;
+    const loader = new FakeScriptLoader({
+      "module.js": (h) => {
+        host = h;
+        return api;
+      },
+    });
+    const http = new StubHttp();
+    const mounter = createInstalledMounter({ driver, http, loader, clearances });
+
+    await mounter.mount("ejemplo");
+    await host?.fetch("https://sitio.test/lista");
+    expect(http.requests[0]?.init?.headers).toEqual({
+      "User-Agent": "UA-wv",
+      Cookie: "cf_clearance=tok",
+    });
   });
 });

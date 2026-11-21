@@ -25,7 +25,8 @@
       "expo-status-bar",
       "expo-sqlite",
       "expo-image",
-      "expo-sharing"
+      "expo-sharing",
+      "expo-secure-store"
     ]
   }
 }

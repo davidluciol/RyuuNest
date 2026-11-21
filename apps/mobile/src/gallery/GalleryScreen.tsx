@@ -152,6 +152,7 @@ export default function GalleryScreen() {
   const [previewDestination, setPreviewDestination] = useState<BottomNavDestination>("home");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [challengeOpen, setChallengeOpen] = useState(false);
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   // F93: «Gestionar carpetas» con carpetas propias, sin ellas y la hoja de edición.
   const [manageOpen, setManageOpen] = useState<"list" | "empty" | "edit" | null>(null);
@@ -785,6 +786,25 @@ export default function GalleryScreen() {
             testID="gallery-confirm"
             confirmTestID="gallery-confirm-submit"
             cancelTestID="gallery-confirm-cancel"
+          />
+          <Button
+            variant="secondary"
+            label={t("gallery.confirm.showChallenge")}
+            testID="gallery-show-challenge"
+            onPress={() => setChallengeOpen(true)}
+          />
+          {/* F100: variante sin icono (abrir el navegador de verificación). */}
+          <ConfirmSheet
+            visible={challengeOpen}
+            animated={false}
+            title={t("challenge.confirm.title")}
+            message={t("challenge.confirm.message", { host: "m440.in" })}
+            subject="m440.in"
+            confirmLabel={t("challenge.confirm.action")}
+            confirmIcon={null}
+            onConfirm={() => setChallengeOpen(false)}
+            onCancel={() => setChallengeOpen(false)}
+            testID="gallery-challenge"
           />
         </View>
 

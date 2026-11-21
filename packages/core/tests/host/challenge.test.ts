@@ -190,4 +190,31 @@ describe("ModuleHost con verificaciones guardadas (F100)", () => {
     expect(JSON.stringify(http.requests[0]?.init ?? {})).not.toContain("tok");
     expect(await store.get("m440.in")).toBeUndefined();
   });
+
+  it("modo tarro (cfClearance null): solo fija el User-Agent y deja las cookies del módulo", async () => {
+    const store = new MemoryClearanceStore();
+    const clock = new FixedClock(1_000);
+    await store.set("m440.in", { cfClearance: null, userAgent: UA, expiresAt: 2_000 });
+    const http = new StubHttp();
+    await makeHost(store, clock, http).fetch("https://m440.in/", {
+      headers: { "User-Agent": "Modulo/1.0", Cookie: "lang=es" },
+    });
+    expect(http.requests[0]?.init?.headers).toEqual({ "User-Agent": UA, Cookie: "lang=es" });
+  });
+});
+
+describe("solveChallenge en modo tarro (F100, Expo Go)", () => {
+  it("guarda cfClearance null cuando el navegador no puede leer la cookie", async () => {
+    const browser = new FakeBrowser({ cfClearance: null, userAgent: UA });
+    const store = new MemoryClearanceStore();
+    const ok = await solveChallenge("https://m440.in/", {
+      domains: ["m440.in"],
+      browser,
+      store,
+      clock: new FixedClock(0),
+      confirm: async () => true,
+    });
+    expect(ok).toBe(true);
+    expect((await store.get("m440.in"))?.cfClearance).toBeNull();
+  });
 });
