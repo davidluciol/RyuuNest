@@ -54,6 +54,8 @@ export interface LibraryCardProps {
   menuLabel?: string;
   /** F94 — serie NSFW: borde naranja e insignia «18+» (el color nunca va solo). */
   nsfw?: boolean;
+  /** T42 — la portada no cargó; `message` es lo que dijo el motor de imágenes. */
+  onCoverError?: (message: string) => void;
 }
 
 export default function LibraryCard({
@@ -68,6 +70,7 @@ export default function LibraryCard({
   onMenuPress,
   menuLabel,
   nsfw = false,
+  onCoverError,
 }: LibraryCardProps) {
   const [cardFocused, setCardFocused] = useState(false);
   const [menuFocused, setMenuFocused] = useState(false);
@@ -104,7 +107,13 @@ export default function LibraryCard({
           },
         ]}
       >
-        {cover ? <Image source={cover} style={styles.cover} /> : null}
+        {cover ? (
+          <Image
+            source={cover}
+            style={styles.cover}
+            onError={onCoverError ? (event) => onCoverError(event.error) : undefined}
+          />
+        ) : null}
         {kind ? (
           <View
             style={[
