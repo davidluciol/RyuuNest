@@ -630,6 +630,16 @@ export default function GalleryScreen() {
         </View>
         <View style={styles.shellPreview}>
           <SourcesScreen
+            view={{ status: "ready", data: SAMPLE_SOURCES_DATA }}
+            flow={INITIAL_SOURCES_FLOW}
+            controller={null}
+            recommended={{ status: "ready", repos: SAMPLE_RECOMMENDED }}
+            notice={t("sources.uninstall.done")}
+            noticeKind="info"
+          />
+        </View>
+        <View style={styles.shellPreview}>
+          <SourcesScreen
             view={{
               status: "ready",
               data: { ...EMPTY_SOURCES_DATA, officialRepoDismissed: true },

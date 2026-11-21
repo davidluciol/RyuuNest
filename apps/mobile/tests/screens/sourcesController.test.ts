@@ -26,6 +26,7 @@ function setup(service: SourcesService = createSampleSourcesService()) {
   let flow: SourcesFlow = INITIAL_SOURCES_FLOW;
   let reloads = 0;
   const notices: Array<string | null> = [];
+  const kinds: Array<string | undefined> = [];
   const controller: SourcesController = createSourcesController({
     service,
     getFlow: () => flow,
@@ -35,7 +36,10 @@ function setup(service: SourcesService = createSampleSourcesService()) {
     reload: async () => {
       reloads += 1;
     },
-    notify: (message) => notices.push(message),
+    notify: (message, kind) => {
+      notices.push(message);
+      kinds.push(kind);
+    },
   });
   return {
     controller,
@@ -43,6 +47,7 @@ function setup(service: SourcesService = createSampleSourcesService()) {
     flow: () => flow,
     reloads: () => reloads,
     notices,
+    kinds,
   };
 }
 
@@ -115,6 +120,7 @@ describe("instalar", () => {
       "installed",
     );
     expect(app.notices.at(-1)).toMatch(/instalado/);
+    expect(app.kinds.at(-1)).toBe("info");
   });
 
   it("un script no se instala con la confirmación normal y la hoja muestra el motivo", async () => {
@@ -149,6 +155,7 @@ describe("instalar", () => {
 
     expect(app.flow()).toEqual({ sheet: "none" });
     expect(app.notices.at(-1)).toContain("no existe");
+    expect(app.kinds.at(-1)).toBeUndefined();
   });
 
   it("confirmar sin una hoja de instalación abierta no hace nada", async () => {
@@ -209,6 +216,7 @@ describe("gestionar, actualizar y desinstalar", () => {
       "available",
     );
     expect(app.notices.at(-1)).toBe("Módulo desinstalado.");
+    expect(app.kinds.at(-1)).toBe("info");
   });
 });
 

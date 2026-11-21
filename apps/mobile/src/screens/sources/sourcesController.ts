@@ -13,14 +13,16 @@ import { validateRepoUrl } from "./sourcesView";
  * `useSourcesData` solo le da las piezas reales.
  */
 
+export type NoticeKind = "error" | "info";
+
 export interface SourcesControllerDeps {
   service: SourcesService;
   getFlow: () => SourcesFlow;
   dispatch: (action: SourcesFlowAction) => void;
   /** Vuelve a leer la lista tras un cambio. */
   reload: () => Promise<void>;
-  /** Aviso transitorio; `null` lo descarta. */
-  notify: (message: string | null) => void;
+  /** Aviso transitorio; `null` lo descarta. `info` es neutro (éxito); por defecto `error`. */
+  notify: (message: string | null, kind?: NoticeKind) => void;
   /** F31: registro de cada fallo visible en `log` (P-72); opcional para pruebas. */
   reporter?: ErrorReporter | null;
 }
@@ -71,7 +73,7 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
       await work();
       await reload();
       dispatch({ type: "done" });
-      if (success !== undefined) notify(success);
+      if (success !== undefined) notify(success, "info");
     } catch (error) {
       reportSourcesError(reporter, action, error, context);
       dispatch({ type: "fail", message: messageOf(error) });
@@ -132,7 +134,7 @@ export function createSourcesController(deps: SourcesControllerDeps): SourcesCon
       try {
         const preview = await service.previewUpdate(moduleId);
         if (!preview.available) {
-          notify(t("sources.update.upToDate"));
+          notify(t("sources.update.upToDate"), "info");
           return;
         }
         dispatch({ type: "open-update", moduleId, preview });
