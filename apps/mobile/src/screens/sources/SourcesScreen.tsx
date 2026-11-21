@@ -17,7 +17,7 @@ import { kindLabel } from "../../components/kindLabel";
 import { textStyle } from "../../components/textStyle";
 import { Plus } from "../../icons";
 import { t } from "../../i18n";
-import type { SourcesController } from "./sourcesController";
+import type { NoticeKind, SourcesController } from "./sourcesController";
 import type { SourceModule } from "./sourcesData";
 import type { SourcesFlow } from "./sourcesFlow";
 import {
@@ -72,6 +72,8 @@ export interface SourcesScreenProps {
   controller: SourcesController | null;
   /** Aviso transitorio (errores del servicio fuera de una hoja). */
   notice?: string | null;
+  /** `info` = aviso neutro (éxito); `error` en rojo. */
+  noticeKind?: NoticeKind;
   onRetry?: () => void;
   /** F44: sección «Recomendados»; sin ella (galería, primer uso) no se pinta. */
   recommended?: RecommendedView;
@@ -83,6 +85,7 @@ export default function SourcesScreen({
   flow,
   controller,
   notice = null,
+  noticeKind = "error",
   onRetry,
   recommended,
   onRefreshRecommended,
@@ -152,7 +155,7 @@ export default function SourcesScreen({
 
         {notice !== null ? (
           <View style={styles.notice} accessibilityRole="alert">
-            <Text style={styles.noticeText}>{notice}</Text>
+            <Text style={[styles.noticeText, noticeKind === "info" && styles.noticeInfo]}>{notice}</Text>
             <Button
               variant="secondary"
               label={t("sources.sheet.close")}
@@ -346,4 +349,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   noticeText: { ...textStyle(typography.bodyMd), color: colors.error },
+  noticeInfo: { color: colors.textPrimary },
 });
