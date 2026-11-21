@@ -1,4 +1,4 @@
-import { radii, spacing, touchTarget, withAlpha, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, spacing, touchTarget, withAlpha, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F06 — reglas de estilo del botón (SPEC §11.10), separadas del componente
@@ -11,7 +11,7 @@ export type ButtonVariant = "primary" | "secondary" | "destructive" | "caution";
 /** Alto mínimo de botón = área táctil (48 dp, RNF-7). */
 export const BUTTON_MIN_HEIGHT = touchTarget.min;
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Un subconjunto de ViewStyle con lo que usan los botones (sin RN). */
 export interface ButtonStyleShape {

@@ -1,4 +1,4 @@
-import { breakpointForWidth, dragonNightColors, radii, spacing } from "@ryuunest/ui-tokens";
+import { breakpointForWidth, activeColors, radii, spacing } from "@ryuunest/ui-tokens";
 
 /**
  * F34.2 — reglas de `ConfirmSheet` (`design/stitch/confirmar_accion_dragon_night`): hoja inferior
@@ -30,8 +30,8 @@ export function confirmActionsLayout(presentation: ConfirmPresentation): Confirm
 export function confirmSubjectStyle() {
   return {
     alignSelf: "flex-start" as const,
-    backgroundColor: dragonNightColors.surface,
-    borderColor: dragonNightColors.border,
+    backgroundColor: activeColors.surface,
+    borderColor: activeColors.border,
     borderWidth: 1,
     borderRadius: radii.control,
     paddingHorizontal: spacing.sm,

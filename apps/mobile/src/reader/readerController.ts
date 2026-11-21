@@ -89,7 +89,11 @@ export class ReaderController {
     this.#state = this.#buildState(
       this.#options.chapters.map((chapter) =>
         chapter.chapterId === target.chapterId
-          ? { ...chapter, releaseId: target.releaseId ?? chapter.releaseId ?? null, pageTotal: target.pageTotal }
+          ? {
+              ...chapter,
+              releaseId: target.releaseId ?? chapter.releaseId ?? null,
+              pageTotal: target.pageTotal,
+            }
           : chapter,
       ),
     );

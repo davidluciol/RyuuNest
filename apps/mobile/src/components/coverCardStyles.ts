@@ -1,4 +1,4 @@
-import { coverAspectRatio, radii, dragonNightColors } from "@ryuunest/ui-tokens";
+import { coverAspectRatio, radii, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F07 — reglas de la tarjeta de portada (SPEC §11.10, RF-41): 2:3, radio 12,
@@ -6,7 +6,7 @@ import { coverAspectRatio, radii, dragonNightColors } from "@ryuunest/ui-tokens"
  * de no leídos en la v1** (SPEC §11.10, V8). Puras, testeables sin Metro.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface CoverCardStyleShape {
   aspectRatio: number;

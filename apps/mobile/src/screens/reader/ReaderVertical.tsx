@@ -8,12 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  ScrollView,
-  View,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-} from "react-native";
+import { ScrollView, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import type { PageWindow } from "@ryuunest/core";
 
 import {

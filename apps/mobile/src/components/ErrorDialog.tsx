@@ -1,7 +1,7 @@
 import FocusPressable from "./FocusPressable";
 import { useState } from "react";
-import { Modal, StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
+import { Modal, Text, View } from "react-native";
+import { activeColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import Button from "./Button";
 import CodeChip from "./CodeChip";
@@ -20,6 +20,7 @@ import {
   severityColor,
 } from "./errorNoticeStyles";
 import { t } from "../i18n";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F29 — diálogo de error bloqueante (P-72): nivel 2, título, etiqueta de código,
@@ -32,7 +33,7 @@ import { t } from "../i18n";
  * del lector entra con `fade` (solo `opacity`).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ErrorDialogProps {
   visible: boolean;
@@ -152,7 +153,7 @@ export default function ErrorDialog({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   frame: dialogFrameStyle(),
   dialog: dialogStyle(),
   title: {
@@ -188,4 +189,4 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     marginTop: spacing.xs,
   },
-});
+}));

@@ -1,12 +1,13 @@
 import FocusPressable from "./FocusPressable";
-import { Modal, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Modal, ScrollView, Text, View, useWindowDimensions } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { X } from "../icons";
 import { t } from "../i18n";
 import Sheet from "./Sheet";
 import { sheetAnimation, sheetBackdropStyle } from "./sheetModalStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F16 — hoja modal reutilizable (nivel 2, SPEC §11.10): velo, hoja de `Sheet`,
@@ -15,7 +16,7 @@ import { textStyle } from "./textStyle";
  * Con `busy` no se puede cerrar a medias (el velo y el botón no responden).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 const BODY_MAX = spacing.xl * 16;
 
 export interface SheetModalProps {
@@ -92,7 +93,7 @@ export default function SheetModal({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -114,4 +115,4 @@ const styles = StyleSheet.create({
   },
   body: { maxHeight: BODY_MAX },
   bodyContent: { gap: spacing.sm, paddingBottom: spacing.xs },
-});
+}));

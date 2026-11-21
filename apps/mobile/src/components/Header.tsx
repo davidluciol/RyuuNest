@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Image, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
-import { spacing, touchTarget, typography, dragonNightColors } from "@ryuunest/ui-tokens";
+import { Image, Text, View, type ImageSourcePropType } from "react-native";
+import { spacing, touchTarget, typography, activeColors } from "@ryuunest/ui-tokens";
 
 import { Search, X } from "../icons";
 import { t } from "../i18n";
@@ -8,6 +8,7 @@ import FocusPressable from "./FocusPressable";
 import TextField from "./TextField";
 import { HEADER_HEIGHT, headerStyle } from "./shellStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F07 — cabecera única (V5): nivel `elevated`, **sin sombra** (RNF-12). El
@@ -16,7 +17,7 @@ import { textStyle } from "./textStyle";
  * campo que ocupa la cabecera; Entrar entrega la consulta y lo cierra.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface HeaderProps {
   /** Título de la pantalla. */
@@ -94,7 +95,7 @@ export default function Header({ title, logo, right, leading, subtitle, onSearch
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   container: {
     flexDirection: "row",
     alignItems: "center",
@@ -123,4 +124,4 @@ const styles = StyleSheet.create({
     ...textStyle(typography.labelMd),
     color: colors.textSecondary,
   },
-});
+}));

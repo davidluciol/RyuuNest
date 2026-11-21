@@ -58,7 +58,9 @@ export default function ZoomableView({ children, resetKey }: ZoomableViewProps) 
             gesture.current = { start: zoomRef.current, touches: current };
             return;
           }
-          setZoom(pinchZoom(gesture.current.start, gesture.current.touches, current, viewport.current));
+          setZoom(
+            pinchZoom(gesture.current.start, gesture.current.touches, current, viewport.current),
+          );
         },
         onPanResponderRelease: () => {
           gesture.current = null;

@@ -37,9 +37,7 @@ export default function SectionHeader({
     <View style={[styles.container, shape]}>
       <View style={styles.left}>
         {Icon ? <Icon size={spacing.lg} color={colors.icon} /> : null}
-        <Text style={[styles.title, { color: colors.title }]}>
-          {title}
-        </Text>
+        <Text style={[styles.title, { color: colors.title }]}>{title}</Text>
       </View>
       {actionLabel ? (
         <FocusPressable

@@ -380,7 +380,10 @@ export function addSampleFolder(
   const result = move === undefined ? created : moveSampleSeries(created, move, folder.id);
   const index = result.folders.length - 1;
   const counted = { ...folder, count: folderCount(result.series, folder, true) };
-  return { ok: true, data: { ...result, folders: result.folders.map((f, i) => (i === index ? counted : f)) } };
+  return {
+    ok: true,
+    data: { ...result, folders: result.folders.map((f, i) => (i === index ? counted : f)) },
+  };
 }
 
 /** Clave de una serie guardada. */
@@ -393,7 +396,11 @@ const sameSeries = (s: LibrarySeries, key: SeriesKey): boolean =>
   s.moduleId === key.moduleId && s.seriesId === key.seriesId;
 
 /** Suma `delta` al recuento de una carpeta (los de ejemplo son cifras fijas, no se recalculan). */
-function bump(folders: readonly LibraryFolder[], id: string | null, delta: number): LibraryFolder[] {
+function bump(
+  folders: readonly LibraryFolder[],
+  id: string | null,
+  delta: number,
+): LibraryFolder[] {
   return folders.map((f) => (f.id === id ? { ...f, count: Math.max(0, f.count + delta) } : f));
 }
 
@@ -441,7 +448,10 @@ export function updateSampleFolder(
       folders: data.folders.map((f) => {
         if (f.id !== id) return f;
         const { tags: _old, ...rest } = f;
-        const edited: LibraryFolder = tags.length > 0 ? { ...rest, name: name.trim(), tags: [...tags] } : { ...rest, name: name.trim() };
+        const edited: LibraryFolder =
+          tags.length > 0
+            ? { ...rest, name: name.trim(), tags: [...tags] }
+            : { ...rest, name: name.trim() };
         return { ...edited, count: folderCount(data.series, edited, true) };
       }),
     },
@@ -543,7 +553,9 @@ export function filterLibrarySeries(
   }
 
   // Búsqueda por título (F55): todas las palabras, en cualquier orden, sin tildes ni mayúsculas.
-  const words = normalizeTitle(filters.search).split(" ").filter((w) => w !== "");
+  const words = normalizeTitle(filters.search)
+    .split(" ")
+    .filter((w) => w !== "");
   if (words.length > 0) {
     result = result.filter((s) => {
       const title = normalizeTitle(s.title);

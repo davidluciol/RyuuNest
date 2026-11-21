@@ -1,11 +1,12 @@
 import Button from "./Button";
 import FocusPressable from "./FocusPressable";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { Network, RefreshCw } from "../icons";
 import { repoCardStyle, repoCardTextColors, repoSyncButtonStyle } from "./repoCardStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F16 — tarjeta de repositorio (RF-3): icono, nombre, URL y botón de
@@ -13,7 +14,7 @@ import { textStyle } from "./textStyle";
  * V7: «Quitar» es un botón visible en la tarjeta (`onRemove`); sincronizar, el icono.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface RepoCardProps {
   name: string;
@@ -78,7 +79,7 @@ export default function RepoCard({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   card: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   body: { flex: 1, minWidth: 0, flexDirection: "row", alignItems: "center", gap: spacing.sm },
   icon: {
@@ -94,4 +95,4 @@ const styles = StyleSheet.create({
   url: { ...textStyle(typography.bodySm) },
   sync: { alignItems: "center", justifyContent: "center" },
   syncing: { opacity: 0.5 },
-});
+}));

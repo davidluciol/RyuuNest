@@ -1,4 +1,4 @@
-import { coverAspectRatio, radii, spacing, dragonNightColors } from "@ryuunest/ui-tokens";
+import { coverAspectRatio, radii, spacing, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F13 — reglas de la tarjeta hero "Continuar la Aventura" (SPEC §11.10,
@@ -8,7 +8,7 @@ import { coverAspectRatio, radii, spacing, dragonNightColors } from "@ryuunest/u
  * **sin sombra** (RNF-12: profundidad por niveles de superficie).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Ancho fijo de la portada en la tarjeta hero (2:3 → 96×144 px). */
 export const CONTINUE_CARD_COVER_WIDTH = 96;
@@ -63,7 +63,5 @@ export function continueCardColors(): ContinueCardColors {
 
 /** Alto de la portada según la relación de aspecto 2:3. */
 export function continueCardCoverHeight(): number {
-  return Math.round(
-    (CONTINUE_CARD_COVER_WIDTH * coverAspectRatio.height) / coverAspectRatio.width,
-  );
+  return Math.round((CONTINUE_CARD_COVER_WIDTH * coverAspectRatio.height) / coverAspectRatio.width);
 }

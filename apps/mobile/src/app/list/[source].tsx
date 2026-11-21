@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import { dragonNightColors } from "@ryuunest/ui-tokens";
+import { View } from "react-native";
+import { activeColors } from "@ryuunest/ui-tokens";
 
 import ErrorState from "../../components/ErrorState";
 import SafeScreen from "../../components/SafeScreen";
@@ -11,6 +11,7 @@ import ListScreen from "../../screens/list/ListScreen";
 import { listSourceOf, type ListSource } from "../../screens/list/listSources";
 import { useListData } from "../../screens/list/useListData";
 import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
+import { themedStyles } from "../../components/themedStyles";
 
 /** F82 — ruta en pila `/list/<source>` (fuera de pestañas): «atrás» vuelve a Guarida. */
 export default function ListRoute() {
@@ -70,6 +71,6 @@ function ListContent({ source }: { source: ListSource }) {
   );
 }
 
-const styles = StyleSheet.create({
-  center: { flex: 1, justifyContent: "center", backgroundColor: dragonNightColors.bg },
-});
+const styles = themedStyles(() => ({
+  center: { flex: 1, justifyContent: "center", backgroundColor: activeColors.bg },
+}));

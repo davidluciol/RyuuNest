@@ -1,7 +1,7 @@
 import FocusPressable from "./FocusPressable";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import CodeChip from "./CodeChip";
 import { ChevronDown, ChevronUp, CircleAlert, RefreshCw } from "../icons";
@@ -19,6 +19,7 @@ import {
   dialogDetailTextStyle,
   severityColor,
 } from "./errorNoticeStyles";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F29 — banner inline de error (P-72, F15/F16): vive **dentro** de la pantalla
@@ -27,7 +28,7 @@ import {
  * `ErrorState`). Sin animaciones (Regla 4).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ErrorBannerProps {
   /** Causa legible (título del aviso). */
@@ -119,7 +120,7 @@ export default function ErrorBanner({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   banner: {},
   header: {
     flexDirection: "row",
@@ -153,4 +154,4 @@ const styles = StyleSheet.create({
   detailLine: {
     ...textStyle(dialogDetailTextStyle()),
   },
-});
+}));

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../../components/Button";
 import ConfirmSheet from "../../../components/ConfirmSheet";
@@ -13,6 +13,7 @@ import { BADGE_LABEL_KEYS, moduleBadges } from "../../sources/sourcesView";
 import type { BackupFlow } from "./backupFlow";
 import type { BackupController } from "./backupController";
 import type { ModuleSuggestion, RepoSuggestion } from "./backupData";
+import { themedStyles } from "../../../components/themedStyles";
 
 /**
  * F21 — hojas del respaldo en Ajustes (sin diseño en Stitch, P-30):
@@ -28,7 +29,7 @@ import type { ModuleSuggestion, RepoSuggestion } from "./backupData";
  * controlador; no toca el núcleo.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Insignias de un módulo sugerido (mismo cálculo que Fuentes, F16). */
 function moduleBadgesFor(module: ModuleSuggestion): string[] {
@@ -91,7 +92,11 @@ function ImportModeSheet({
           {flow.error}
         </Text>
       ) : null}
-      <Button variant="secondary" label={t("settings.backup.sheet.cancel")} onPress={controller.close} />
+      <Button
+        variant="secondary"
+        label={t("settings.backup.sheet.cancel")}
+        onPress={controller.close}
+      />
     </SheetModal>
   );
 }
@@ -189,7 +194,11 @@ function SuggestionsSheet({
           {flow.error === "" ? t("settings.backup.suggestions.repo.failed") : flow.error}
         </Text>
       ) : null}
-      <Button variant="secondary" label={t("settings.backup.suggestions.close")} onPress={controller.close} />
+      <Button
+        variant="secondary"
+        label={t("settings.backup.suggestions.close")}
+        onPress={controller.close}
+      />
     </SheetModal>
   );
 }
@@ -213,7 +222,11 @@ export default function BackupSheets({ flow, controller }: BackupSheetsProps) {
         code={flow.reason}
         severity="error"
         detailLabel={t("actions.showTechnicalDetail")}
-        detail={flow.issues.length > 0 ? { code: flow.issues.map((issue) => issue.path).join(", ") } : undefined}
+        detail={
+          flow.issues.length > 0
+            ? { code: flow.issues.map((issue) => issue.path).join(", ") }
+            : undefined
+        }
         retryLabel={t("actions.retry")}
         onRetry={controller.close}
         onClose={controller.close}
@@ -224,7 +237,7 @@ export default function BackupSheets({ flow, controller }: BackupSheetsProps) {
   return null;
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   body: { ...textStyle(typography.bodyMd), color: colors.textPrimary },
   optionHint: { ...textStyle(typography.bodySm), color: colors.textSecondary },
   error: { ...textStyle(typography.bodyMd), color: colors.error },
@@ -242,4 +255,4 @@ const styles = StyleSheet.create({
   suggestionText: { flex: 1, minWidth: 0, gap: spacing.xxs },
   suggestionTitle: { ...textStyle(typography.bodyLg), color: colors.textPrimary },
   suggestionHint: { ...textStyle(typography.bodySm), color: colors.textSecondary },
-});
+}));

@@ -1,4 +1,4 @@
-import { radii, spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, spacing, touchTarget, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F13 — reglas de la tarjeta de carpeta ("Tesoros Guardados", SPEC §11.10,
@@ -10,7 +10,7 @@ import { radii, spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tok
  * **Sin sombra** (RNF-12).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Tamaño del cuadrado del icono de carpeta (36 px, múltiplo de 4). */
 export const FOLDER_CARD_ICON_SIZE = 36;

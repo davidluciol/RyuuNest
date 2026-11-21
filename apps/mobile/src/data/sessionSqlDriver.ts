@@ -31,7 +31,12 @@ export function createSessionSqlDriver(): SqlDriver {
   const favorites = new Map<string, SqlRow>();
 
   function upsertPref(params: readonly SqlValue[], column: "reader_mode" | "preferred_group") {
-    const [moduleId, seriesId, value, updatedAt] = params as [string, string, string | null, number];
+    const [moduleId, seriesId, value, updatedAt] = params as [
+      string,
+      string,
+      string | null,
+      number,
+    ];
     const id = key(moduleId, seriesId);
     const current = prefs.get(id) ?? {
       module_id: moduleId,
@@ -55,7 +60,8 @@ export function createSessionSqlDriver(): SqlDriver {
         return NO_CHANGES;
       }
       if (sql.includes("INSERT INTO series (module_id, series_id, title")) {
-        const [moduleId, seriesId, title, titleNorm, coverUrl, kind, nsfw, status, updatedAt] = params;
+        const [moduleId, seriesId, title, titleNorm, coverUrl, kind, nsfw, status, updatedAt] =
+          params;
         series.set(key(moduleId as string, seriesId as string), {
           module_id: moduleId,
           series_id: seriesId,
@@ -85,19 +91,35 @@ export function createSessionSqlDriver(): SqlDriver {
       if (sql.includes("UPDATE favorite SET")) {
         // F95: `move` (carpeta en el primer parámetro) y `moveToFavorites` (carpeta fija, sin parámetro).
         const toFavorites = sql.includes("SELECT id FROM folder WHERE system = 'favorites'");
-        const [folderId, updatedAt, moduleId, seriesId] = toFavorites ? [FAVORITES_FOLDER_ID, ...params] : params;
+        const [folderId, updatedAt, moduleId, seriesId] = toFavorites
+          ? [FAVORITES_FOLDER_ID, ...params]
+          : params;
         const id = key(moduleId as string, seriesId as string);
         const current = favorites.get(id);
         if (current === undefined) return NO_CHANGES;
-        favorites.set(id, { ...current, folder_id: toFavorites ? FAVORITES_FOLDER_ID : folderId, updated_at: updatedAt });
+        favorites.set(id, {
+          ...current,
+          folder_id: toFavorites ? FAVORITES_FOLDER_ID : folderId,
+          updated_at: updatedAt,
+        });
         return ONE_CHANGE;
       }
       if (sql.includes("DELETE FROM favorite WHERE module_id = ? AND series_id = ?")) {
-        return favorites.delete(key(params[0] as string, params[1] as string)) ? ONE_CHANGE : NO_CHANGES;
+        return favorites.delete(key(params[0] as string, params[1] as string))
+          ? ONE_CHANGE
+          : NO_CHANGES;
       }
       if (sql.includes("INSERT INTO progress")) {
-        const [moduleId, seriesId, chapterId, releaseId, chapterTitle, pageIndex, pageTotal, updatedAt] =
-          params;
+        const [
+          moduleId,
+          seriesId,
+          chapterId,
+          releaseId,
+          chapterTitle,
+          pageIndex,
+          pageTotal,
+          updatedAt,
+        ] = params;
         progress.set(key(moduleId, seriesId), {
           module_id: moduleId,
           series_id: seriesId,
@@ -136,7 +158,10 @@ export function createSessionSqlDriver(): SqlDriver {
     },
 
     async all<T = SqlRow>(sql: string, params: readonly SqlValue[] = []): Promise<T[]> {
-      if (sql.includes("FROM chapter_read WHERE module_id = ? AND series_id = ?") && !sql.includes("chapter_id = ?")) {
+      if (
+        sql.includes("FROM chapter_read WHERE module_id = ? AND series_id = ?") &&
+        !sql.includes("chapter_id = ?")
+      ) {
         const scope = key(params[0] as string, params[1] as string);
         return [...chaptersRead.values()]
           .filter((row) => row.scope === scope)
@@ -162,8 +187,12 @@ export function createSessionSqlDriver(): SqlDriver {
       if (sql.includes("FROM series_pref WHERE module_id = ? AND series_id = ?")) {
         return prefs.get(key(params[0] as string, params[1] as string)) as T | undefined;
       }
-      if (sql.includes("FROM chapter_read WHERE module_id = ? AND series_id = ? AND chapter_id = ?")) {
-        const row = chaptersRead.get(key(params[0] as string, params[1] as string, params[2] as string));
+      if (
+        sql.includes("FROM chapter_read WHERE module_id = ? AND series_id = ? AND chapter_id = ?")
+      ) {
+        const row = chaptersRead.get(
+          key(params[0] as string, params[1] as string, params[2] as string),
+        );
         return row === undefined ? undefined : ({ chapter_id: row.chapter_id } as T);
       }
       throw unknownStatement(sql);

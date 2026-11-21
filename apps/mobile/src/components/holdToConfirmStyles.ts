@@ -1,4 +1,4 @@
-import { radii, spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, spacing, touchTarget, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F16 — reglas del botón de mantener pulsado (`HoldToConfirm`), separadas del
@@ -6,7 +6,7 @@ import { radii, spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tok
  * de los módulos `script` (SPEC §7.1, paso 3). Puras, todo desde `ui-tokens`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Cuánto hay que mantener pulsado: lo bastante largo para no ser accidental. */
 export const HOLD_DURATION_MS = 1200;

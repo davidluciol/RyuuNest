@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { dragonNightColors } from "@ryuunest/ui-tokens";
+import { View } from "react-native";
+import { activeColors } from "@ryuunest/ui-tokens";
 
 import ErrorState from "../../components/ErrorState";
 import { t } from "../../i18n";
@@ -17,6 +17,7 @@ import { useBackupData } from "../../screens/settings/backup/useBackupData";
 import { setFirstUseActive } from "../../navigation/firstUseStore";
 import { OFFICIAL_REPO_URL } from "../../data/officialRepo";
 import { isNativePlatform } from "../../data/backupFilesPort";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F13 — ruta Inicio: pantalla completa. F46: con datos reales del dispositivo
@@ -63,9 +64,9 @@ function HomeContent() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, justifyContent: "center", backgroundColor: dragonNightColors.bg },
-});
+const styles = themedStyles(() => ({
+  screen: { flex: 1, justifyContent: "center", backgroundColor: activeColors.bg },
+}));
 
 function FirstUseRoute() {
   const phase = useOnboardingData();

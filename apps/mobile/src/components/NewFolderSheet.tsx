@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { t } from "../i18n";
 import { validateFolderName, type FolderNameProblem } from "../screens/library/libraryFixtures";
@@ -9,6 +9,7 @@ import Chip from "./Chip";
 import SheetModal from "./SheetModal";
 import TextField from "./TextField";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F53 — hoja «Nueva carpeta»: nombre (obligatorio, sin repetir) y etiquetas opcionales (se
@@ -16,7 +17,7 @@ import { textStyle } from "./textStyle";
  * muestra siempre las series que las tengan. Reutiliza `SheetModal`, `TextField` y `Chip`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 const PROBLEM_KEYS: Record<FolderNameProblem | "FAILED", string> = {
   EMPTY: "library.folder.new.error.empty",
@@ -108,7 +109,11 @@ export default function NewFolderSheet({
       />
       {problem !== null ? (
         <Text accessibilityRole="alert" style={styles.error} testID="new-folder-error">
-          {t(problem === "FAILED" && editing ? "library.folder.edit.error.failed" : PROBLEM_KEYS[problem])}
+          {t(
+            problem === "FAILED" && editing
+              ? "library.folder.edit.error.failed"
+              : PROBLEM_KEYS[problem],
+          )}
         </Text>
       ) : null}
 
@@ -144,10 +149,10 @@ export default function NewFolderSheet({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   label: { ...textStyle(typography.labelLg), color: colors.textPrimary },
   hint: { ...textStyle(typography.bodySm), color: colors.textSecondary },
   error: { ...textStyle(typography.bodyMd), color: colors.error },
   tags: { flexDirection: "row", flexWrap: "wrap", gap: spacing.xs },
   actions: { flexDirection: "row", justifyContent: "flex-end", gap: spacing.sm },
-});
+}));

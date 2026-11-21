@@ -1,4 +1,4 @@
-import { radii, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F06 — reglas de la insignia de tipo/estado (SPEC §11.10): pill de 24 px,
@@ -9,7 +9,7 @@ import { radii, dragonNightColors } from "@ryuunest/ui-tokens";
 
 export const BADGE_HEIGHT = 24;
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface BadgeStyleShape {
   minHeight: number;

@@ -1,4 +1,4 @@
-import { spacing, dragonNightColors } from "@ryuunest/ui-tokens";
+import { spacing, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F07 — reglas de la fila de capítulo (SPEC §11.10, V8): alto mínimo 56 px,
@@ -8,7 +8,7 @@ import { spacing, dragonNightColors } from "@ryuunest/ui-tokens";
  * atenúa y lleva ✓, no se tacha.**
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export type ChapterState = "unread" | "in-progress" | "completed";
 

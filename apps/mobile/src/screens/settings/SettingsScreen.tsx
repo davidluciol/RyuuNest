@@ -1,6 +1,6 @@
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 import type { ReaderMode } from "@ryuunest/core";
-import { dragonNightColors, layoutForWidth, spacing, typography } from "@ryuunest/ui-tokens";
+import { activeColors, layoutForWidth, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
 import Chip from "../../components/Chip";
@@ -21,6 +21,7 @@ import BackupSheets from "./backup/BackupSheets";
 import BackupSection from "./backup/BackupPreview";
 import type { BackupController } from "./backup/backupController";
 import type { BackupFlow } from "./backup/backupFlow";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F20 — pantalla de Ajustes (RF-34, RF-39, P-85). Presentacional: recibe la
@@ -35,7 +36,7 @@ import type { BackupFlow } from "./backup/backupFlow";
 export type SettingsView =
   { status: "loading" } | { status: "error" } | { status: "ready"; data: SettingsData };
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface SettingsScreenProps {
   view: SettingsView;
@@ -156,14 +157,14 @@ export default function SettingsScreen({
                 hint={t("settings.reading.defaultModeHint")}
               />
               <View style={styles.options}>
-              {READER_MODE_OPTIONS.map((option) => (
-                <Chip
-                  key={option.mode}
-                  label={t(option.labelKey)}
-                  selected={defaultReaderMode === option.mode}
-                  onPress={() => onDefaultReaderModeChange?.(option.mode)}
-                />
-              ))}
+                {READER_MODE_OPTIONS.map((option) => (
+                  <Chip
+                    key={option.mode}
+                    label={t(option.labelKey)}
+                    selected={defaultReaderMode === option.mode}
+                    onPress={() => onDefaultReaderModeChange?.(option.mode)}
+                  />
+                ))}
               </View>
             </View>
           </SettingsCard>
@@ -274,7 +275,7 @@ export default function SettingsScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },
   stateWrap: {
     flex: 1,
@@ -294,4 +295,4 @@ const styles = StyleSheet.create({
     ...textStyle(typography.labelLg),
     color: colors.textSecondary,
   },
-});
+}));

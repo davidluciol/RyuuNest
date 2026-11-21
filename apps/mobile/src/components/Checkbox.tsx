@@ -1,9 +1,10 @@
 import FocusPressable from "./FocusPressable";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { Check } from "lucide-react-native";
-import { touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
+import { touchTarget, activeColors } from "@ryuunest/ui-tokens";
 
 import { checkboxStyle, radioStyle } from "./fieldStyles";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F06 — casilla y radio (SPEC §11.10): 20×20, borde 1,5 px `border`; marcado
@@ -11,7 +12,7 @@ import { checkboxStyle, radioStyle } from "./fieldStyles";
  * `hitSlop` (RNF-7). Props tipadas; todo desde `ui-tokens`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface CheckboxProps {
   checked?: boolean;
@@ -36,6 +37,6 @@ export default function Checkbox({ checked = false, onChange, radio = false }: C
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   center: { alignItems: "center", justifyContent: "center" },
-});
+}));

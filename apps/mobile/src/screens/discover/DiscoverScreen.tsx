@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
+import { ActivityIndicator, ScrollView, Text, View, useWindowDimensions } from "react-native";
 import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
-import {
-  dragonNightColors,
+  activeColors,
   layoutForWidth,
   radii,
   spacing,
@@ -45,6 +38,7 @@ import {
 } from "./discoverFixtures";
 import type { DiscoverMoreStatus, DiscoverRow } from "./useDiscoverData";
 import { textStyle } from "../../components/textStyle";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F15 — pantalla Descubrir (RF-9 a RF-11, RF-35, SPEC §11.5): selector de
@@ -55,7 +49,7 @@ import { textStyle } from "../../components/textStyle";
  * módulo llegan desde `useDiscoverData`; la pantalla no toca el núcleo.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Ancho del carrusel de portadas: el mismo que la fila de Inicio (F13). */
 const ROW_CARD_WIDTH = recentCardStyle().width;
@@ -557,7 +551,7 @@ function DiscoverCard({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: {
     flex: 1,
     backgroundColor: colors.bg,
@@ -618,4 +612,4 @@ const styles = StyleSheet.create({
     ...textStyle(typography.labelMd),
     color: colors.textSecondary,
   },
-});
+}));

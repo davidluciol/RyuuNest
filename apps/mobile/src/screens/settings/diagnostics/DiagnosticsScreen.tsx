@@ -1,7 +1,7 @@
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 import type { LogEntry } from "@ryuunest/core";
 import {
-  dragonNightColors,
+  activeColors,
   layoutForWidth,
   radii,
   spacing,
@@ -25,6 +25,7 @@ import type { DiagnosticsController } from "./diagnosticsController";
 import type { DiagnosticsFlow, DiagnosticsNotice } from "./diagnosticsFlow";
 import { confirmClearMessage, eventDetailLines, eventLevel, eventWhen } from "./diagnosticsView";
 import FocusPressable from "../../../components/FocusPressable";
+import { themedStyles } from "../../../components/themedStyles";
 
 /**
  * F30 — pantalla Ajustes → Diagnóstico (FB2, P-72; diseño en
@@ -36,7 +37,7 @@ import FocusPressable from "../../../components/FocusPressable";
  * se resuelve con `EmptyState` y una única acción (volver a Ajustes).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Estado de la pantalla, como lo ve la ruta. */
 export type DiagnosticsView =
@@ -237,7 +238,7 @@ export default function DiagnosticsScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },
   stateWrap: { flex: 1, justifyContent: "center", paddingHorizontal: spacing.lg },
   header: {
@@ -274,4 +275,4 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   divider: { borderTopWidth: 1, borderTopColor: colors.border },
-});
+}));

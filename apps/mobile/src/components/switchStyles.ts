@@ -1,4 +1,4 @@
-import { dragonNightColors, radii, spacing, touchTarget } from "@ryuunest/ui-tokens";
+import { activeColors, radii, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 /**
  * F34.2 — estilo del interruptor propio (sustituye al `Switch` nativo de F16b,
@@ -9,7 +9,7 @@ import { dragonNightColors, radii, spacing, touchTarget } from "@ryuunest/ui-tok
  * control va el texto «Sí»/«No» (`switchLabelKey`). Puro y testeable sin Metro.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 const TRACK_WIDTH = 52;
 const TRACK_HEIGHT = 32;

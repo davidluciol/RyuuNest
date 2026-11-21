@@ -1,12 +1,13 @@
 import { router } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import { dragonNightColors } from "@ryuunest/ui-tokens";
+import { View } from "react-native";
+import { activeColors } from "@ryuunest/ui-tokens";
 
 import ErrorState from "../../components/ErrorState";
 import { t } from "../../i18n";
 import LibraryScreen from "../../screens/library/LibraryScreen";
 import { useLibraryData } from "../../screens/library/useLibraryData";
 import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
+import { themedStyles } from "../../components/themedStyles";
 
 export default function LibraryRoute() {
   const library = useLibraryData();
@@ -42,6 +43,6 @@ export default function LibraryRoute() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, justifyContent: "center", backgroundColor: dragonNightColors.bg },
-});
+const styles = themedStyles(() => ({
+  screen: { flex: 1, justifyContent: "center", backgroundColor: activeColors.bg },
+}));

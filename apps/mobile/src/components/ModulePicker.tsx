@@ -1,7 +1,7 @@
 import FocusPressable from "./FocusPressable";
 import { useState } from "react";
-import { Modal, ScrollView, StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, withAlpha } from "@ryuunest/ui-tokens";
+import { Modal, ScrollView, Text, View } from "react-native";
+import { activeColors, spacing, withAlpha } from "@ryuunest/ui-tokens";
 
 import { Check, ChevronDown, Layers } from "../icons";
 import { t } from "../i18n";
@@ -13,6 +13,7 @@ import {
   modulePickerTitleStyle,
 } from "./modulePickerStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F15 — selector de módulo de Descubrir (RF-9): botón con el módulo activo y
@@ -21,7 +22,7 @@ import { textStyle } from "./textStyle";
  * Reutilizable (Regla 3): la hoja de fuentes (F16) puede montar lo mismo.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ModulePickerOption {
   id: string;
@@ -102,7 +103,7 @@ export default function ModulePicker({ modules, selectedId, onSelect }: ModulePi
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   backdrop: {
     flex: 1,
     backgroundColor: withAlpha(colors.bg, 0.64), // velo sobre el contenido
@@ -123,4 +124,4 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
-});
+}));

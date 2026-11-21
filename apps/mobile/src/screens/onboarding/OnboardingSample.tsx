@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { textStyle } from "../../components/textStyle";
 import { t } from "../../i18n";
@@ -10,6 +10,7 @@ import { EMPTY_SOURCES_DATA } from "../sources/sourcesFixtures";
 import OnboardingScreen from "./OnboardingScreen";
 import { useOnboardingSession } from "./useOnboardingData";
 import { useBackupData } from "../settings/backup/useBackupData";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F12 — el flujo de primer uso montado sobre el servicio de ejemplo, vacío al
@@ -52,12 +53,12 @@ export default function OnboardingSample() {
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: { height: spacing["2xl"] * 12, backgroundColor: dragonNightColors.bg },
+const styles = themedStyles(() => ({
+  wrap: { height: spacing["2xl"] * 12, backgroundColor: activeColors.bg },
   done: {
     ...textStyle(typography.bodyLg),
-    color: dragonNightColors.textPrimary,
+    color: activeColors.textPrimary,
     padding: spacing.md,
     textAlign: "center",
   },
-});
+}));

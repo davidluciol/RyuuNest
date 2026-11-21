@@ -1,11 +1,11 @@
-import { dragonNightColors, spacing, touchTarget, withAlpha } from "@ryuunest/ui-tokens";
+import { activeColors, spacing, touchTarget, withAlpha } from "@ryuunest/ui-tokens";
 
 /**
  * F18 — apariencia del lector (RF-22, `DESIGN.md` «Reader View Overlays»). Puro, para
  * comprobarlo sin renderizar: nada decorativo sobre el contenido.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Opacidad de las barras sobre el contenido (RF-22: `elevated` al 95 %). */
 const BAR_OPACITY = 0.95;

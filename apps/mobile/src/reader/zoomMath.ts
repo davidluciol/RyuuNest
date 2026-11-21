@@ -66,7 +66,10 @@ export function pinchZoom(
   const startDistance = distance(startTouches[0], startTouches[1]);
   if (startDistance === 0) return start;
 
-  const scale = Math.max(1, Math.min(MAX_ZOOM, (start.scale * distance(touches[0], touches[1])) / startDistance));
+  const scale = Math.max(
+    1,
+    Math.min(MAX_ZOOM, (start.scale * distance(touches[0], touches[1])) / startDistance),
+  );
   const center = { x: viewport.width / 2, y: viewport.height / 2 };
   const from = midpoint(startTouches[0], startTouches[1]);
   const to = midpoint(touches[0], touches[1]);

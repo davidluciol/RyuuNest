@@ -1,7 +1,7 @@
 import FocusPressable from "./FocusPressable";
 import type { ReactElement } from "react";
-import { Modal, StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
+import { Modal, Text, View, useWindowDimensions } from "react-native";
+import { activeColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Button from "./Button";
 import Sheet from "./Sheet";
@@ -21,6 +21,7 @@ import { sheetAnimation, sheetBackdropStyle } from "./sheetModalStyles";
 import { textStyle } from "./textStyle";
 import { Trash2 } from "../icons";
 import { t } from "../i18n";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F34.2 — confirmación de una acción con consecuencias (reemplazar el respaldo, desinstalar,
@@ -29,7 +30,7 @@ import { t } from "../i18n";
  * amarillo (`caution`): avisa sin asustar. Con `busy` no se puede cerrar a medias.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ConfirmSheetProps {
   visible: boolean;
@@ -165,7 +166,7 @@ export default function ConfirmSheet({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   sheetFrame: { width: "100%" },
   dialogFrame: dialogFrameStyle(),
   dialog: dialogStyle(),
@@ -185,4 +186,4 @@ const styles = StyleSheet.create({
   column: { flexDirection: "column", alignItems: "stretch" },
   row: { flexDirection: "row", justifyContent: "flex-end", gap: spacing.sm },
   full: { alignSelf: "stretch" },
-});
+}));

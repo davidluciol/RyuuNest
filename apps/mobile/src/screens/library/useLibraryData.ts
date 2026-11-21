@@ -75,10 +75,15 @@ export function useLibraryData(): LibraryLoad & LibraryActions {
     Math.max(0, ...(await folders.list()).map((folder) => folder.sort)) + 1;
   /** Vuelve a leer la base sin pasar por «cargando» (no se pierden filtros ni scroll). */
   const refresh = async () =>
-    setState({ status: "ready", data: await resolveLibraryData(openAppDatabase, SAMPLE_LIBRARY_DATA) });
+    setState({
+      status: "ready",
+      data: await resolveLibraryData(openAppDatabase, SAMPLE_LIBRARY_DATA),
+    });
   /** Sin base (web de ejemplo) los cambios viven solo en memoria. */
   const mutateSample = (change: (data: LibraryData) => LibraryData) =>
-    setState((prev) => (prev.status === "ready" ? { status: "ready", data: change(prev.data) } : prev));
+    setState((prev) =>
+      prev.status === "ready" ? { status: "ready", data: change(prev.data) } : prev,
+    );
 
   const createFolder = useCallback(
     async (name: string, tags: string[]): Promise<FolderNameProblem | null> => {
@@ -104,7 +109,10 @@ export function useLibraryData(): LibraryLoad & LibraryActions {
   );
 
   /** Ejecuta `real` con la base o, si no la hay, `sample` sobre los datos de ejemplo. */
-  const act = async (real: (driver: SqlDriver) => Promise<void>, sample: (d: LibraryData) => LibraryData) => {
+  const act = async (
+    real: (driver: SqlDriver) => Promise<void>,
+    sample: (d: LibraryData) => LibraryData,
+  ) => {
     const driver = await openAppDatabase();
     if (driver === null) {
       mutateSample(sample);
@@ -146,7 +154,13 @@ export function useLibraryData(): LibraryLoad & LibraryActions {
       }
       const folders = new Folders({ driver, clock });
       try {
-        await folders.createAndMove(name, await nextSort(folders), tags, key.moduleId, key.seriesId);
+        await folders.createAndMove(
+          name,
+          await nextSort(folders),
+          tags,
+          key.moduleId,
+          key.seriesId,
+        );
       } catch (error) {
         if (error instanceof FolderNameError) return error.reason;
         throw error;

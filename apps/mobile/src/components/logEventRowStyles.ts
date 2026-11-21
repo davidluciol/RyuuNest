@@ -1,11 +1,11 @@
-import { dragonNightColors, radii, spacing } from "@ryuunest/ui-tokens";
+import { activeColors, radii, spacing } from "@ryuunest/ui-tokens";
 
 /**
  * F30 — reglas de la fila de evento del registro de diagnóstico (FB2, P-72).
  * Lógica de color y forma sin React Native, para probarla sin Metro.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Tono semántico del evento (error / aviso / neutro). */
 export type LogEventTone = "error" | "warning" | "neutral";

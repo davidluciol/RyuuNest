@@ -5,12 +5,12 @@ import { createSampleSourcesService } from "../sources/sampleSourcesService";
 import { EMPTY_SOURCES_DATA, type SourcesView } from "../sources/sourcesFixtures";
 import { type SourcesService } from "../sources/sourcesData";
 import { createNativeSourcesService } from "../sources/useSourcesData";
+import { INITIAL_SOURCES_FLOW, sourcesFlowReducer, type SourcesFlow } from "../sources/sourcesFlow";
 import {
-  INITIAL_SOURCES_FLOW,
-  sourcesFlowReducer,
-  type SourcesFlow,
-} from "../sources/sourcesFlow";
-import { createOnboardingController, type OnboardingController, type OnboardingStep } from "./onboardingController";
+  createOnboardingController,
+  type OnboardingController,
+  type OnboardingStep,
+} from "./onboardingController";
 import { ONBOARDING_COMPLETED_SETTING, isFirstUseData } from "./onboardingData";
 
 /**

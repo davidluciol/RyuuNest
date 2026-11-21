@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import { dragonNightColors } from "@ryuunest/ui-tokens";
+import { View } from "react-native";
+import { activeColors } from "@ryuunest/ui-tokens";
 
 import NewFolderSheet from "../../../components/NewFolderSheet";
 import SaveFolderSheet from "../../../components/SaveFolderSheet";
@@ -22,6 +22,7 @@ import {
   type SaveFolderState,
 } from "../../../screens/series/saveFolder";
 import { useSeriesData } from "../../../screens/series/useSeriesData";
+import { themedStyles } from "../../../components/themedStyles";
 
 /**
  * F17/F18 — ruta de la ficha de serie: lee `details()` del módulo con su progreso (useSeriesData)
@@ -218,6 +219,6 @@ function SeriesRouteContent() {
   );
 }
 
-const styles = StyleSheet.create({
-  stateWrap: { flex: 1, justifyContent: "center", backgroundColor: dragonNightColors.bg },
-});
+const styles = themedStyles(() => ({
+  stateWrap: { flex: 1, justifyContent: "center", backgroundColor: activeColors.bg },
+}));

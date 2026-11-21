@@ -50,17 +50,19 @@ export type BackupFlowAction =
   | { type: "open-import-mode"; text: string }
   | { type: "open-replace-confirm" }
   | { type: "open-suggestions"; suggestions: BackupSuggestions }
-  | { type: "open-import-error"; error: string; reason: ImportRejection; issues: readonly ValidationIssue[] }
+  | {
+      type: "open-import-error";
+      error: string;
+      reason: ImportRejection;
+      issues: readonly ValidationIssue[];
+    }
   | { type: "confirm-repo"; url: string }
   | { type: "submit" }
   | { type: "fail"; message: string }
   | { type: "done" }
   | { type: "close" };
 
-export function backupFlowReducer(
-  flow: BackupFlow,
-  action: BackupFlowAction,
-): BackupFlow {
+export function backupFlowReducer(flow: BackupFlow, action: BackupFlowAction): BackupFlow {
   switch (action.type) {
     case "open-import-mode":
       return { sheet: "import-mode", text: action.text, busy: false, error: null };

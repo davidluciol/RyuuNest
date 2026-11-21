@@ -1,10 +1,10 @@
-import { useWindowDimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useWindowDimensions, ScrollView, Text, View } from "react-native";
 import { FIXTURE_SERIES } from "@ryuunest/test-site";
 import {
   breakpoints,
   coverAspectRatio,
   densityLayout,
-  dragonNightColors,
+  activeColors,
   layoutForWidth,
   radii,
   spacing,
@@ -112,7 +112,7 @@ import { t } from "../i18n";
  * Sin literales: todo color, tamaño, espaciado y radio sale de `ui-tokens`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 type ColorName = keyof ThemeColors;
 const colorNames = Object.keys(colors) as ColorName[];
@@ -1043,7 +1043,7 @@ export default function GalleryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { paddingVertical: spacing.lg, gap: spacing.lg },
   title: {
@@ -1107,6 +1107,7 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     ...textStyle(typography.bodySm),
   },
-});
+}));
 import { useState } from "react";
 import { textStyle } from "../components/textStyle";
+import { themedStyles } from "../components/themedStyles";

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, radii, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, radii, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import FocusPressable from "../components/FocusPressable";
 import ModulePicker from "../components/ModulePicker";
@@ -8,6 +8,7 @@ import TextField from "../components/TextField";
 import { textStyle } from "../components/textStyle";
 import { t } from "../i18n";
 import { Search, SlidersHorizontal } from "../icons";
+import { themedStyles } from "../components/themedStyles";
 
 /**
  * F86 — tres variantes de la búsqueda y los filtros de Aventuras para que el
@@ -18,7 +19,7 @@ import { Search, SlidersHorizontal } from "../icons";
  * del selector de módulo (F88).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 const MODULES = [
   { id: "a", name: "Módulo A" },
   { id: "b", name: "Módulo B" },
@@ -160,7 +161,7 @@ export default function SearchBarVariants() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   column: { gap: spacing.sm },
   variant: { gap: spacing.sm },
   row: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
@@ -190,4 +191,4 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   chipLabel: { ...textStyle(typography.labelMd), color: colors.textPrimary },
-});
+}));

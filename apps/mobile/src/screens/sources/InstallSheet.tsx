@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import type { InstallPreview } from "@ryuunest/core";
-import { dragonNightColors, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
+import { activeColors, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
 import FocusPressable from "../../components/FocusPressable";
@@ -12,6 +12,7 @@ import { t } from "../../i18n";
 import { canConfirmInstall } from "./sourcesFlow";
 import { DetailRow, SheetError, runtimeLabel } from "./sheetPieces";
 import { NSFW_INSTALL_WARNING_KEY } from "./sourcesView";
+import { themedStyles } from "../../components/themedStyles";
 
 /**
  * F16/F12 — hoja de confirmación de instalación (SPEC §7.1): nombre, versión,
@@ -20,7 +21,7 @@ import { NSFW_INSTALL_WARNING_KEY } from "./sourcesView";
  * misma y nada se instala sin ella (AC-8).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface InstallSheetProps {
   preview: InstallPreview;
@@ -98,7 +99,7 @@ export default function InstallSheet({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   name: { ...textStyle(typography.headlineSm), color: colors.textPrimary },
   hashToggle: { minHeight: touchTarget.min, justifyContent: "center" },
   hashToggleText: {
@@ -115,4 +116,4 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: spacing.xs,
   },
-});
+}));

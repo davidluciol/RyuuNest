@@ -1,9 +1,10 @@
-import { StyleSheet, View, type ViewStyle } from "react-native";
-import { dragonNightColors, spacing } from "@ryuunest/ui-tokens";
+import { View, type ViewStyle } from "react-native";
+import { activeColors, spacing } from "@ryuunest/ui-tokens";
 
 import DragonMarker from "../components/DragonMarker";
 import Header from "../components/Header";
 import { t } from "../i18n";
+import { themedStyles } from "../components/themedStyles";
 
 /** Estructura compartida; el contenedor de rutas se encarga de las áreas seguras. */
 export default function AppShell({
@@ -25,7 +26,7 @@ export default function AppShell({
           title={t("shell.brand")}
           subtitle={section}
           right={right}
-          leading={<DragonMarker size={spacing.xl} color={dragonNightColors.textSecondary} />}
+          leading={<DragonMarker size={spacing.xl} color={activeColors.textSecondary} />}
         />
       </View>
       <View style={styles.content}>{children}</View>
@@ -33,7 +34,7 @@ export default function AppShell({
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: dragonNightColors.bg },
+const styles = themedStyles(() => ({
+  screen: { flex: 1, backgroundColor: activeColors.bg },
   content: { flex: 1, minHeight: 0 },
-});
+}));

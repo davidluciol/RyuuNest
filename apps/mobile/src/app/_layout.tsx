@@ -1,7 +1,7 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { dragonNightColors } from "@ryuunest/ui-tokens";
+import { activeColors } from "@ryuunest/ui-tokens";
 
 import { galleryFontSources } from "../gallery/fontSources";
 import ChallengeHost from "../screens/challenge/ChallengeHost";
@@ -16,7 +16,7 @@ export default function RootLayout() {
         screenOptions={{
           headerShown: false,
           animation: "none",
-          contentStyle: { backgroundColor: dragonNightColors.bg },
+          contentStyle: { backgroundColor: activeColors.bg },
         }}
       />
       <ChallengeHost />

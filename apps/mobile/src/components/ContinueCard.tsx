@@ -1,8 +1,8 @@
 // expo-image: el Image de react-native no envía `source.headers` en Android (F35).
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
+import { Text, View, type ImageSourcePropType } from "react-native";
 import { Play } from "../icons";
-import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
+import { activeColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import Badge from "./Badge";
 import Button from "./Button";
@@ -14,6 +14,7 @@ import {
 } from "./continueCardStyles";
 import { progressBarStyle } from "./coverCardStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F13 — tarjeta hero "Continuar la Aventura" (SPEC §11.10, RF-14, RF-41):
@@ -102,9 +103,9 @@ export default function ContinueCard({
   );
 }
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   container: {
     flexDirection: "row",
     alignItems: "stretch",
@@ -170,4 +171,4 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: spacing.xxs / 2,
   },
-});
+}));

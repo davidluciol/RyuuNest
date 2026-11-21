@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { BookOpen, Compass, Home, Library, Settings, type LucideIcon } from "../icons";
-import { dragonNightColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
+import { activeColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { destinationLabel } from "../navigation/routes";
 import { t } from "../i18n";
@@ -14,6 +14,7 @@ import {
   navItemColors,
   navItemStyle,
 } from "./shellStyles";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F07 — barra inferior de 5 destinos (T1): Inicio, Biblioteca, Descubrir,
@@ -41,7 +42,12 @@ export interface BottomNavProps {
   dots?: readonly BottomNavDestination[];
 }
 
-export default function BottomNav({ active, onSelect, disabled = false, dots = [] }: BottomNavProps) {
+export default function BottomNav({
+  active,
+  onSelect,
+  disabled = false,
+  dots = [],
+}: BottomNavProps) {
   const [focused, setFocused] = useState<BottomNavDestination | null>(null);
   return (
     <View
@@ -92,7 +98,7 @@ export default function BottomNav({ active, onSelect, disabled = false, dots = [
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   container: {
     flexDirection: "row",
     alignItems: "stretch",
@@ -117,9 +123,9 @@ const styles = StyleSheet.create({
     width: spacing.xs,
     height: spacing.xs,
     borderRadius: radii.pill,
-    backgroundColor: dragonNightColors.textPrimary,
+    backgroundColor: activeColors.textPrimary,
   },
   label: {
     ...textStyle(typography.labelSm),
   },
-});
+}));

@@ -1,8 +1,8 @@
 import { Tabs, usePathname, useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { dragonNightColors, spacing } from "@ryuunest/ui-tokens";
+import { activeColors, spacing } from "@ryuunest/ui-tokens";
 
 import BottomNav from "../components/BottomNav";
 import { BOTTOM_NAV_DESTINATIONS, type BottomNavDestination } from "../components/shellStyles";
@@ -14,6 +14,7 @@ import HeaderModuleSwitcher from "./HeaderModuleSwitcher";
 import { useFirstUseActive } from "./firstUseStore";
 import { destinationLabel, destinationRoutes, shellDestination } from "./routes";
 import { requestOpenUpdates, setUpdateCount, useUpdateCount } from "./updatesStore";
+import { themedStyles } from "../components/themedStyles";
 
 export default function ShellNavigator() {
   const firstUse = useFirstUseActive();
@@ -74,8 +75,8 @@ export default function ShellNavigator() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: dragonNightColors.elevated },
+const styles = themedStyles(() => ({
+  screen: { flex: 1, backgroundColor: activeColors.elevated },
   banner: { paddingHorizontal: spacing.md, paddingTop: spacing.sm },
-  scene: { backgroundColor: dragonNightColors.bg },
-});
+  scene: { backgroundColor: activeColors.bg },
+}));

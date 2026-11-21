@@ -111,7 +111,8 @@ export function createBackupService(deps: BackupServiceDeps): BackupService {
     storage,
     http,
     clock,
-    validateIndex: (value) => validateRepoIndex(value, deps.appVersion ? { appVersion: deps.appVersion } : {}),
+    validateIndex: (value) =>
+      validateRepoIndex(value, deps.appVersion ? { appVersion: deps.appVersion } : {}),
   });
   const modules = new ModuleRegistry({ storage });
 

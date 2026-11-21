@@ -1,4 +1,4 @@
-import { radii, spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tokens";
+import { radii, spacing, touchTarget, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F16 — reglas de la fila de módulo (`ModuleRow`), separadas del componente
@@ -6,7 +6,7 @@ import { radii, spacing, touchTarget, dragonNightColors } from "@ryuunest/ui-tok
  * Todo desde `ui-tokens`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ModuleRowStyleShape {
   backgroundColor: string;

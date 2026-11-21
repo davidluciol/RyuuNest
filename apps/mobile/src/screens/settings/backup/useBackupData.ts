@@ -8,11 +8,7 @@ import { createFetchHttp } from "../../../data/fetchHttp";
 import { createBackupService, type BackupService } from "./backupData";
 import { createSampleBackupService } from "./sampleBackupService";
 import { createBackupController, type BackupController } from "./backupController";
-import {
-  INITIAL_BACKUP_FLOW,
-  backupFlowReducer,
-  type BackupFlow,
-} from "./backupFlow";
+import { INITIAL_BACKUP_FLOW, backupFlowReducer, type BackupFlow } from "./backupFlow";
 
 /**
  * F21 — estado del respaldo en Ajustes (RF-37/RF-38). En el dispositivo, el

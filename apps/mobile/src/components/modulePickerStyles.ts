@@ -2,7 +2,7 @@ import {
   spacing,
   touchTarget,
   typography,
-  dragonNightColors,
+  activeColors,
   type TypeStyle,
 } from "@ryuunest/ui-tokens";
 
@@ -12,7 +12,7 @@ import {
  * `ui-tokens`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ModulePickerRowStyleShape {
   minHeight: number;

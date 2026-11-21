@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, radii, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, radii, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import { ChevronRight } from "../icons";
 import { t } from "../i18n";
 import FocusPressable from "./FocusPressable";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F99 — aviso «Hay N actualizaciones» fuera de Portales. Neutro (V1: el ámbar y
@@ -12,7 +13,7 @@ import { textStyle } from "./textStyle";
  * secundario en `textPrimary` con chevron. No actualiza nada: solo lleva a Portales.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface UpdatesBannerProps {
   count: number;
@@ -41,7 +42,7 @@ export default function UpdatesBanner({ count, onView, testID }: UpdatesBannerPr
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   banner: {
     flexDirection: "row",
     alignItems: "center",
@@ -73,4 +74,4 @@ const styles = StyleSheet.create({
     ...textStyle(typography.labelLg),
     color: colors.textPrimary,
   },
-});
+}));

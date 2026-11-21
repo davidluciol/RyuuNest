@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 import type { MediaKind } from "@ryuunest/core";
 
 import { t } from "../i18n";
@@ -13,6 +13,7 @@ import Chip from "./Chip";
 import { kindLabel } from "./kindLabel";
 import SheetModal from "./SheetModal";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F57 — hoja de filtros de Tesoros (RF-27): tipo, fuente y NSFW. Controlada: cada chip aplica
@@ -20,7 +21,7 @@ import { textStyle } from "./textStyle";
  * respeta) y «Listo» cierra. Reutiliza `SheetModal`, `Chip` y `Button`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 /** Tipos de obra (D-13), en el orden en que se muestran. */
 const KINDS: readonly MediaKind[] = ["manga", "manhwa", "manhua", "comic"];
@@ -107,9 +108,9 @@ export default function FilterSheet({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   label: { ...textStyle(typography.labelLg), color: colors.textPrimary },
   hint: { ...textStyle(typography.bodySm), color: colors.textSecondary },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: spacing.xs },
   actions: { flexDirection: "row", justifyContent: "flex-end", gap: spacing.sm },
-});
+}));

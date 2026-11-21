@@ -1,7 +1,7 @@
 import FocusPressable from "./FocusPressable";
 import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import { textStyle } from "./textStyle";
 import {
@@ -15,6 +15,7 @@ import {
 } from "./errorNoticeStyles";
 import { X } from "../icons";
 import { t } from "../i18n";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F29 — toast (P-72): aviso transitorio de 4 s con el mensaje completo y acción opcional.
@@ -25,7 +26,7 @@ import { t } from "../i18n";
  * (nada anima allí).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ToastProps {
   /** Mensaje del aviso, completo y sin «…» (T7). */
@@ -85,7 +86,7 @@ export default function Toast({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   toast: {
     flexDirection: "row",
     alignItems: "center",
@@ -109,4 +110,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-});
+}));

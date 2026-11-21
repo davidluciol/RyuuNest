@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { dragonNightColors, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
+import { Text, View } from "react-native";
+import { activeColors, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import { t } from "../i18n";
 import { Check, ChevronDown, ChevronUp } from "../icons";
@@ -14,6 +14,7 @@ import { checkboxStyle, radioStyle } from "./fieldStyles";
 import FocusPressable from "./FocusPressable";
 import SheetModal from "./SheetModal";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F50 + F87 — hoja de filtros de Descubrir: un desplegable por cada filtro que declara el
@@ -23,7 +24,7 @@ import { textStyle } from "./textStyle";
  * y «Listo» cierra. Reutiliza `SheetModal`, `Button` y los estilos de `Checkbox`.
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface TagFilterSheetProps {
   visible: boolean;
@@ -126,7 +127,7 @@ export default function TagFilterSheet({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   row: {
     minHeight: touchTarget.min,
     flexDirection: "row",
@@ -143,4 +144,4 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingTop: spacing.sm,
   },
-});
+}));

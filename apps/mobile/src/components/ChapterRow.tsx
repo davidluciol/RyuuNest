@@ -1,10 +1,11 @@
 import FocusPressable from "./FocusPressable";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Check } from "lucide-react-native";
-import { spacing, typography, dragonNightColors } from "@ryuunest/ui-tokens";
+import { spacing, typography, activeColors } from "@ryuunest/ui-tokens";
 
 import { type ChapterState, chapterRowColors, chapterRowStyle } from "./chapterRowStyles";
 import { textStyle } from "./textStyle";
+import { themedStyles } from "./themedStyles";
 
 /**
  * F07 — fila de capítulo (SPEC §11.10, V8): alto mínimo 56 px, relleno
@@ -13,7 +14,7 @@ import { textStyle } from "./textStyle";
  * (atenuado y ✓ en `positive`, **sin tachar**).
  */
 
-const colors = dragonNightColors;
+const colors = activeColors;
 
 export interface ChapterRowProps {
   title: string;
@@ -37,15 +38,11 @@ export default function ChapterRow({
     <FocusPressable accessibilityRole="button" onPress={onPress} style={chapterRowStyle(state)}>
       <View style={styles.row}>
         <View style={styles.textBlock}>
-          <Text style={[styles.title, { color: rowColors.text }]}>
-            {title}
-          </Text>
+          <Text style={[styles.title, { color: rowColors.text }]}>{title}</Text>
           {state === "in-progress" && typeof percent === "number" ? (
             <Text style={[styles.progress, { color: rowColors.accent }]}>● {percent}%</Text>
           ) : hint ? (
-            <Text style={[styles.hint, { color: colors.textSecondary }]}>
-              {hint}
-            </Text>
+            <Text style={[styles.hint, { color: colors.textSecondary }]}>{hint}</Text>
           ) : null}
         </View>
         {state === "completed" ? <Check size={20} color={colors.positive} /> : null}
@@ -54,7 +51,7 @@ export default function ChapterRow({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => ({
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -65,4 +62,4 @@ const styles = StyleSheet.create({
   title: { ...textStyle(typography.bodyLg) },
   progress: { ...textStyle(typography.labelMd) },
   hint: { ...textStyle(typography.bodySm) },
-});
+}));
