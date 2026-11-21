@@ -11,6 +11,7 @@ import { textStyle } from "../../components/textStyle";
 import { t } from "../../i18n";
 import { canConfirmInstall } from "./sourcesFlow";
 import { DetailRow, SheetError, runtimeLabel } from "./sheetPieces";
+import { NSFW_INSTALL_WARNING_KEY } from "./sourcesView";
 
 /**
  * F16/F12 — hoja de confirmación de instalación (SPEC §7.1): nombre, versión,
@@ -66,6 +67,7 @@ export default function InstallSheet({
         <Text style={styles.hashToggleText}>{t("sources.detail.hash")}</Text>
       </FocusPressable>
       {hashOpen ? <Text style={styles.hash}>{preview.sha256}</Text> : null}
+      {preview.nsfw ? <Text style={styles.warning}>{t(NSFW_INSTALL_WARNING_KEY)}</Text> : null}
       {preview.reinforced ? (
         <Text style={styles.warning}>{t("sources.install.scriptWarning")}</Text>
       ) : null}

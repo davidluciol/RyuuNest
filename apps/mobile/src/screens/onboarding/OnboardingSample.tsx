@@ -53,7 +53,7 @@ export default function OnboardingSample() {
 }
 
 const styles = StyleSheet.create({
-  wrap: { flex: 0, minHeight: spacing["2xl"] * 12, backgroundColor: dragonNightColors.bg },
+  wrap: { height: spacing["2xl"] * 12, backgroundColor: dragonNightColors.bg },
   done: {
     ...textStyle(typography.bodyLg),
     color: dragonNightColors.textPrimary,

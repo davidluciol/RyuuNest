@@ -45,6 +45,9 @@ export function moduleStatusBadges(module: SourceModule): ModuleBadge[] {
   return moduleBadges(module).filter((badge) => badge !== "script" && badge !== "nsfw");
 }
 
+/** F45: aviso al instalar un módulo NSFW; explica qué significa la sigla. */
+export const NSFW_INSTALL_WARNING_KEY = "sources.install.nsfwWarning";
+
 /** F61: etiqueta de un módulo que esta versión de la app no puede instalar. */
 export const INCOMPATIBLE_LABEL_KEY = "sources.incompatible.label";
 

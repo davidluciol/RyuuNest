@@ -435,8 +435,8 @@ Dep: T38 (hecha) · XS · `apps/mobile/src/screens/sources/*`
 
 Dep: F16 · S · `apps/mobile/src/screens/{onboarding,sources}/*`
 
-- [ ] 🧍 Aprobar F45. Después: dos avisos NSFW (al instalar y al abrir por primera vez, explicando qué es NSFW) y primer uso sin jerga
-- Verif: Vitest + Playwright 426/1440 px + 🧍 S25
+- [x] Aprobada por el humano (2026-11-20). Hecho: aviso al instalar un módulo NSFW (hoja de instalar) y aviso de primera vez al elegir/abrir un módulo NSFW en Aventuras (`NsfwNoticeSheet`; «Entiendo, continuar» lo marca visto en `setting` `discover.nsfwNoticeSeen.<id>`, «Volver» no); ambos explican «contenido para adultos, sexual o explícito». Primer uso: textos sin jerga (R13), botón primario a ancho completo anclado abajo con «Saltar» como enlace (V5), etiqueta «Repositorio oficial de RyuuNest» con «Usar otro repositorio», barra inferior oculta y «Ir a leer» deshabilitado hasta instalar un módulo (V4), y «Ir a leer» no se repite mientras termina (V6; el fallo original no se reprodujo, no hay medición)
+- Verif: ✅ Vitest + ✅ Playwright 426/1440 px (`onboarding`, `discover`, `discoverNsfw`, `nsfwNotice`) · 🧍 S25 pendiente
 
 ### F42 Portales y Ajustes: permisos y «disponibles» (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
 

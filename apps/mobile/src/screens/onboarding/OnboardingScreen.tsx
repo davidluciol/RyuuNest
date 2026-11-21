@@ -5,10 +5,13 @@ import {
   layoutForWidth,
   markers,
   spacing,
+  touchTarget,
   typography,
 } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
+import FocusPressable from "../../components/FocusPressable";
+import { hasInstalledModule } from "./onboardingData";
 import DragonMarker from "../../components/DragonMarker";
 import ErrorState from "../../components/ErrorState";
 import LoadingState from "../../components/LoadingState";
@@ -52,6 +55,21 @@ import type { BackupFlow } from "../settings/backup/backupFlow";
 
 const colors = dragonNightColors;
 
+/** F45/V5: «Saltar» es un enlace discreto bajo el botón principal. */
+function SkipLink({ onPress, disabled }: { onPress: (() => void) | undefined; disabled: boolean }) {
+  return (
+    <FocusPressable
+      accessibilityRole="link"
+      disabled={disabled}
+      onPress={onPress}
+      style={styles.link}
+      testID="onboarding-skip"
+    >
+      <Text style={styles.linkText}>{t("onboarding.skip")}</Text>
+    </FocusPressable>
+  );
+}
+
 function moduleMeta(module: SourceModule): string {
   return t("sources.module.meta", {
     kind: module.kinds.map(kindLabel).join(", "),
@@ -89,6 +107,9 @@ export default function OnboardingScreen({
   const { width } = useWindowDimensions();
   const layout = layoutForWidth(width);
   const [repoUrl, setRepoUrl] = useState(suggestedUrl);
+  const [otherRepo, setOtherRepo] = useState(false);
+  // F45/V6: «Ir a leer» responde a la primera pulsación y no se repite mientras termina.
+  const [finishing, setFinishing] = useState(false);
 
   if (view.status === "loading") {
     return (
@@ -112,6 +133,9 @@ export default function OnboardingScreen({
   }
 
   const stepError = flow.sheet === "add-repo" ? flow.error : null;
+  // F45/V4: con el repo oficial por defecto se muestra su nombre, no la URL.
+  const showOfficial = !otherRepo && suggestedUrl !== "" && repoUrl === suggestedUrl;
+  const canFinish = hasInstalledModule(view.data);
 
   return (
     <View style={styles.screen} testID="screen-onboarding">
@@ -138,15 +162,6 @@ export default function OnboardingScreen({
             </View>
             <Text style={styles.title}>{t("onboarding.welcome.title")}</Text>
             <Text style={styles.message}>{t("onboarding.welcome.message")}</Text>
-            <View style={styles.actions}>
-              <Button
-                variant="secondary"
-                label={t("onboarding.skip")}
-                onPress={controller?.skip}
-                disabled={controller === null}
-              />
-              <Button label={t("onboarding.start")} onPress={controller?.start} />
-            </View>
           </View>
         ) : null}
 
@@ -154,16 +169,27 @@ export default function OnboardingScreen({
           <View style={styles.step} testID="onboarding-step-2">
             <Text style={styles.title}>{t("sources.add.title")}</Text>
             <Text style={styles.message}>{t("sources.add.description")}</Text>
-            <TextField
-              value={repoUrl}
-              onChangeText={setRepoUrl}
-              placeholder={t("sources.add.placeholder")}
-              accessibilityLabel={t("sources.add.label")}
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="url"
-              onSubmitEditing={() => void controller?.submitRepo(repoUrl)}
-            />
+            {showOfficial ? (
+              <View style={styles.official} testID="onboarding-official-repo">
+                <Text style={styles.officialName}>{t("onboarding.repo.official")}</Text>
+                <Button
+                  variant="secondary"
+                  label={t("onboarding.repo.other")}
+                  onPress={() => setOtherRepo(true)}
+                />
+              </View>
+            ) : (
+              <TextField
+                value={repoUrl}
+                onChangeText={setRepoUrl}
+                placeholder={t("sources.add.placeholder")}
+                accessibilityLabel={t("sources.add.label")}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="url"
+                onSubmitEditing={() => void controller?.submitRepo(repoUrl)}
+              />
+            )}
             {stepError !== null ? (
               <Text accessibilityRole="alert" style={styles.error}>
                 {stepError}
@@ -177,19 +203,6 @@ export default function OnboardingScreen({
                 testID="onboarding-import-backup"
               />
             ) : null}
-            <View style={styles.actions}>
-              <Button
-                variant="secondary"
-                label={t("onboarding.skip")}
-                onPress={controller?.skip}
-                disabled={controller === null}
-              />
-              <Button
-                label={t("onboarding.repo.continue")}
-                onPress={() => void controller?.submitRepo(repoUrl)}
-                disabled={controller === null}
-              />
-            </View>
           </View>
         ) : null}
 
@@ -218,22 +231,42 @@ export default function OnboardingScreen({
                 />
               );
             })}
-            <View style={styles.actions}>
-              <Button
-                variant="secondary"
-                label={t("onboarding.skip")}
-                onPress={controller?.skip}
-                disabled={controller === null}
-              />
-              <Button
-                label={t("onboarding.finish")}
-                onPress={controller?.finish}
-                disabled={controller === null}
-              />
-            </View>
+            {canFinish ? null : <Text style={styles.message}>{t("onboarding.finishHint")}</Text>}
           </View>
         ) : null}
       </ScrollView>
+
+      {/* F45/V5: botones anclados abajo, el principal a ancho completo y «Saltar» como enlace. */}
+      <View
+        style={[styles.footer, { paddingHorizontal: layout.margin }]}
+        testID="onboarding-footer"
+      >
+        {step === 1 ? (
+          <Button
+            label={t("onboarding.start")}
+            onPress={controller?.start}
+            disabled={controller === null}
+          />
+        ) : null}
+        {step === 2 ? (
+          <Button
+            label={t("onboarding.repo.continue")}
+            onPress={() => void controller?.submitRepo(repoUrl)}
+            disabled={controller === null}
+          />
+        ) : null}
+        {step === 3 ? (
+          <Button
+            label={t("onboarding.finish")}
+            onPress={() => {
+              setFinishing(true);
+              void controller?.finish().finally(() => setFinishing(false));
+            }}
+            disabled={controller === null || !canFinish || finishing}
+          />
+        ) : null}
+        <SkipLink onPress={controller?.skip} disabled={controller === null} />
+      </View>
 
       {controller !== null && flow.sheet === "install" ? (
         <InstallSheet
@@ -272,11 +305,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   noticeText: { ...textStyle(typography.bodyMd), color: colors.error },
-  actions: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    flexWrap: "wrap",
+  official: { gap: spacing.sm, alignItems: "stretch" },
+  officialName: { ...textStyle(typography.labelLg), color: colors.textPrimary },
+  footer: {
     gap: spacing.xs,
+    alignItems: "stretch",
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.md,
+    backgroundColor: colors.bg,
+  },
+  link: { minHeight: touchTarget.min, alignItems: "center", justifyContent: "center" },
+  linkText: {
+    ...textStyle(typography.labelLg),
+    color: colors.accent,
+    textDecorationLine: "underline",
   },
 });

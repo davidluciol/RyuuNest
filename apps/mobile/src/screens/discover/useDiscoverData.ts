@@ -74,6 +74,9 @@ export interface DiscoverActions {
   /** F59: vuelve de la sección a la portada del módulo. */
   closeSection: () => void;
   retry: () => void;
+  /** F45: el módulo NSFW elegido pide su aviso de primera vez. */
+  acknowledgeNsfwNotice: () => void;
+  declineNsfwNotice: () => void;
   /** Relee los módulos activos (al volver a la pestaña); recarga solo si cambiaron. */
   refreshModules: () => void;
 }
@@ -95,6 +98,8 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): {
   view: DiscoverView;
   more: DiscoverMoreStatus;
   rowMore: Record<DiscoverRow, DiscoverMoreStatus>;
+  /** F45: módulo NSFW cuyo aviso de primera vez está pendiente. */
+  nsfwNotice: { id: string; name: string } | null;
 } & DiscoverActions {
   const { source, reporter, resolveReporter, nsfwVisible = false } = deps;
   const [boot, setBoot] = useState<Boot | null>(null);
@@ -410,6 +415,49 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): {
       });
   }, []);
 
+  // F45: aviso de primera vez al elegir (o abrir por defecto) un módulo NSFW.
+  const [nsfwNotice, setNsfwNotice] = useState<{ id: string; name: string } | null>(null);
+  const selectedModule =
+    view.status === "ready"
+      ? view.ready.modules.find((module) => module.id === view.ready.selectedModuleId)
+      : undefined;
+  const noticeId = selectedModule?.nsfw === true ? selectedModule.id : null;
+  const noticeName = selectedModule?.name ?? "";
+  useEffect(() => {
+    const current = bootRef.current?.source;
+    if (noticeId === null || current === undefined) return;
+    let cancelled = false;
+    void current
+      .hasSeenNsfwNotice(noticeId)
+      .then((seen) => {
+        if (!cancelled && !seen) setNsfwNotice({ id: noticeId, name: noticeName });
+      })
+      .catch((error: unknown) => {
+        console.warn("No se pudo leer el aviso NSFW:", error);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [noticeId, noticeName]);
+
+  const acknowledgeNsfwNotice = useCallback(() => {
+    if (nsfwNotice === null) return;
+    const { id } = nsfwNotice;
+    setNsfwNotice(null);
+    void bootRef.current?.source.markNsfwNoticeSeen(id).catch((error: unknown) => {
+      console.warn("No se pudo guardar el aviso NSFW:", error);
+    });
+  }, [nsfwNotice]);
+
+  // «Volver»: sin marcar como visto; pasa a un módulo que no sea NSFW si lo hay.
+  const declineNsfwNotice = useCallback(() => {
+    if (nsfwNotice === null) return;
+    setNsfwNotice(null);
+    const other =
+      view.status === "ready" ? view.ready.modules.find((module) => !module.nsfw) : undefined;
+    if (other !== undefined) selectModule(other.id);
+  }, [nsfwNotice, view, selectModule]);
+
   const retry = useCallback(() => {
     setNonce((value) => value + 1); // reintenta también el arranque (fuente y registro)
     setRequest((current) => ({ ...current, attempt: current.attempt + 1 }));
@@ -429,6 +477,9 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): {
     openSection,
     closeSection,
     retry,
+    nsfwNotice,
+    acknowledgeNsfwNotice,
+    declineNsfwNotice,
     refreshModules,
   };
 }

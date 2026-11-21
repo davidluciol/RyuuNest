@@ -252,3 +252,19 @@ describe("createInstalledDiscoverSource · último módulo (RF-9 entre arranques
     expect(fila?.value).toBe("m-instalado");
   });
 });
+
+describe("createInstalledDiscoverSource · aviso NSFW de primera vez (F45)", () => {
+  it("recuerda por módulo que ya vio el aviso, en la tabla `setting`", async () => {
+    const source = createInstalledDiscoverSource({ driver, http: siteHttp() });
+    expect(await source.hasSeenNsfwNotice("m-adulto")).toBe(false);
+
+    await source.markNsfwNoticeSeen("m-adulto");
+    expect(await source.hasSeenNsfwNotice("m-adulto")).toBe(true);
+    expect(await source.hasSeenNsfwNotice("otro")).toBe(false);
+
+    const fila = await driver.get<{ value: string }>("SELECT value FROM setting WHERE key = ?", [
+      "discover.nsfwNoticeSeen.m-adulto",
+    ]);
+    expect(fila?.value).toBe("1");
+  });
+});

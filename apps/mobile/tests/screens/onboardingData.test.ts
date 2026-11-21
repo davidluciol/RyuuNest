@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   ONBOARDING_COMPLETED_SETTING,
+  hasInstalledModule,
   isFirstUseData,
 } from "../../src/screens/onboarding/onboardingData";
 import {
@@ -29,5 +30,17 @@ describe("isFirstUseData (puerta del primer uso, F12)", () => {
 
   it("la marca de completado vive en setting con la clave prevista", () => {
     expect(ONBOARDING_COMPLETED_SETTING).toBe("onboarding.completed");
+  });
+});
+
+describe("hasInstalledModule (F45/V4: «Ir a leer» espera a un módulo)", () => {
+  it("solo cuenta los módulos instalados, no los disponibles", () => {
+    expect(hasInstalledModule(EMPTY_SOURCES_DATA)).toBe(false);
+    const available = {
+      ...EMPTY_SOURCES_DATA,
+      modules: [{ ...SAMPLE_SOURCES_DATA.modules[3], status: "available" as const }],
+    };
+    expect(hasInstalledModule(available)).toBe(false);
+    expect(hasInstalledModule(SAMPLE_SOURCES_DATA)).toBe(true);
   });
 });

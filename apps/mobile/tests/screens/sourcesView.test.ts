@@ -5,6 +5,7 @@ import { t } from "../../src/i18n";
 import {
   BADGE_LABEL_KEYS,
   INCOMPATIBLE_LABEL_KEY,
+  NSFW_INSTALL_WARNING_KEY,
   MAX_ROW_BADGES,
   moduleBadges,
   modulePermissions,
@@ -166,5 +167,13 @@ describe("permisos aparte de las insignias de estado (F42/N9)", () => {
     expect(moduleStatusBadges(module)).toEqual(["disabled"]);
     expect(t(PERMISSION_LABEL_KEYS.script)).toBe("Ejecuta código");
     expect(t(PERMISSION_LABEL_KEYS.nsfw)).toBe("Para adultos");
+  });
+});
+
+describe("aviso NSFW al instalar (F45)", () => {
+  it("explica qué es NSFW sin jerga", () => {
+    const text = t(NSFW_INSTALL_WARNING_KEY);
+    expect(text).toContain("módulo NSFW");
+    expect(text).toContain("contenido para adultos, sexual o explícito");
   });
 });

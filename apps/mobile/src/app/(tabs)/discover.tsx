@@ -5,6 +5,7 @@ import { resolveErrorReporter } from "../../data/errorLog";
 import { clearModuleSwitcher, publishModuleSwitcher } from "../../navigation/moduleSwitcherStore";
 import { destinationRoutes } from "../../navigation/routes";
 import DiscoverScreen from "../../screens/discover/DiscoverScreen";
+import NsfwNoticeSheet from "../../screens/discover/NsfwNoticeSheet";
 import { visibleDiscoverModules } from "../../screens/discover/discoverFixtures";
 import { useDiscoverData } from "../../screens/discover/useDiscoverData";
 import { useSettingsPreferences } from "../../screens/settings/useSettingsData";
@@ -29,6 +30,9 @@ export default function DiscoverRoute() {
     closeSection,
     retry,
     refreshModules,
+    nsfwNotice,
+    acknowledgeNsfwNotice,
+    declineNsfwNotice,
   } = useDiscoverData({
     resolveReporter: resolveErrorReporter,
     nsfwVisible: settings.nsfwVisible,
@@ -66,27 +70,36 @@ export default function DiscoverRoute() {
   );
 
   return (
-    <DiscoverScreen
-      view={view}
-      nsfwVisible={settings.nsfwVisible}
-      onModuleSelect={selectModule}
-      onSearch={search}
-      more={more}
-      rowMore={rowMore}
-      onLoadMoreRow={loadMoreRow}
-      onLoadMore={loadMore}
-      onApplyFilters={applyFilters}
-      onOpenSection={openSection}
-      onCloseSection={closeSection}
-      onRetry={retry}
-      onSeriesPress={(entry) =>
-        router.push({
-          pathname: "/series/[moduleId]/[seriesId]",
-          params: { moduleId: entry.moduleId, seriesId: entry.seriesId },
-        })
-      }
-      onEmptyAction={() => router.push(destinationRoutes.sources)}
-      onOpenSettings={() => router.push(destinationRoutes.settings)}
-    />
+    <>
+      <DiscoverScreen
+        view={view}
+        nsfwVisible={settings.nsfwVisible}
+        onModuleSelect={selectModule}
+        onSearch={search}
+        more={more}
+        rowMore={rowMore}
+        onLoadMoreRow={loadMoreRow}
+        onLoadMore={loadMore}
+        onApplyFilters={applyFilters}
+        onOpenSection={openSection}
+        onCloseSection={closeSection}
+        onRetry={retry}
+        onSeriesPress={(entry) =>
+          router.push({
+            pathname: "/series/[moduleId]/[seriesId]",
+            params: { moduleId: entry.moduleId, seriesId: entry.seriesId },
+          })
+        }
+        onEmptyAction={() => router.push(destinationRoutes.sources)}
+        onOpenSettings={() => router.push(destinationRoutes.settings)}
+      />
+      {nsfwNotice === null ? null : (
+        <NsfwNoticeSheet
+          moduleName={nsfwNotice.name}
+          onContinue={acknowledgeNsfwNotice}
+          onBack={declineNsfwNotice}
+        />
+      )}
+    </>
   );
 }
