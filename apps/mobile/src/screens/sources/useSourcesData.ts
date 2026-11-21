@@ -9,6 +9,7 @@ import { resolveErrorReporter, type ErrorReporter } from "../../data/errorLog";
 import { createFflateArchive } from "../../data/fflateArchive";
 import { createAppSecureLock } from "../../data/secureLock";
 import { t } from "../../i18n";
+import { consumeOpenUpdatesRequest, setUpdateCount } from "../../navigation/updatesStore";
 import { createSampleSourcesService } from "./sampleSourcesService";
 import { createSourcesController, type SourcesController } from "./sourcesController";
 import {
@@ -18,6 +19,7 @@ import {
 } from "./sourcesData";
 import { reportSourcesError } from "./sourcesErrors";
 import { INITIAL_SOURCES_FLOW, sourcesFlowReducer, type SourcesFlow } from "./sourcesFlow";
+import { countUpdates } from "./sourcesView";
 import type { RecommendedView, SourcesView } from "./sourcesFixtures";
 
 /**
@@ -131,6 +133,15 @@ export function useSourcesData(): SourcesState {
           }),
     [service, reload, reporter],
   );
+
+  // F99: el aviso del shell sigue a la lista; «Ver» del banner abre la hoja de actualizar.
+  useEffect(() => {
+    if (view.status !== "ready") return;
+    setUpdateCount(countUpdates(view.data.modules));
+    if (controller === null || !consumeOpenUpdatesRequest()) return;
+    const next = view.data.modules.find((m) => m.status === "installed" && m.updateTo !== undefined);
+    if (next !== undefined) void controller.openUpdate(next.id);
+  }, [view, controller]);
 
   const retry = useCallback(() => setNonce((value) => value + 1), []);
 

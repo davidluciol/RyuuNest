@@ -70,6 +70,7 @@ import {
 import OnboardingSample from "../screens/onboarding/OnboardingSample";
 import Toast from "../components/Toast";
 import ErrorBanner from "../components/ErrorBanner";
+import UpdatesBanner from "../components/UpdatesBanner";
 import CodeChip from "../components/CodeChip";
 import ConfirmSheet from "../components/ConfirmSheet";
 import DragonTreasure from "../components/DragonTreasure";
@@ -320,6 +321,7 @@ export default function GalleryScreen() {
         <BottomNav active="library" />
         <Text style={styles.muted}>{t("gallery.button.disabled")}</Text>
         <BottomNav active="library" disabled />
+        <BottomNav active="home" dots={["sources"]} />
 
         <Text style={styles.groupLabel}>{t("gallery.component.settingsRow")}</Text>
         <SettingsRow label={t("gallery.settings.label")} hint={t("gallery.settings.value")} />
@@ -711,6 +713,12 @@ export default function GalleryScreen() {
           detailLabel={t("actions.showDetail")}
           onAction={() => {}}
         />
+
+        <Text style={styles.groupLabel}>{t("gallery.component.updatesBanner")}</Text>
+        <View style={styles.componentColumn}>
+          <UpdatesBanner count={1} onView={() => {}} />
+          <UpdatesBanner count={3} onView={() => {}} />
+        </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.errorDialog")}</Text>
         <View style={styles.componentColumn}>
