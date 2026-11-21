@@ -16,9 +16,11 @@ export interface ModuleRowStyleShape {
   gap: number;
   elevation: number;
   shadowOpacity: number;
+  borderWidth: number;
+  borderColor: string;
 }
 
-export function moduleRowStyle(): ModuleRowStyleShape {
+export function moduleRowStyle(nsfw = false): ModuleRowStyleShape {
   return {
     backgroundColor: colors.surface,
     borderRadius: radii.card,
@@ -27,6 +29,9 @@ export function moduleRowStyle(): ModuleRowStyleShape {
     gap: spacing.xs,
     elevation: 0,
     shadowOpacity: 0,
+    // F98: mismo borde naranja que las tarjetas NSFW de F94 (la etiqueta sigue visible).
+    borderWidth: nsfw ? 2 : 0,
+    borderColor: colors.nsfw,
   };
 }
 

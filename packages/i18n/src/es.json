@@ -477,6 +477,8 @@
   "gallery.newFolder.show": "Abrir «Nueva carpeta»",
   "gallery.component.errorBanner": "aviso inline (banner)",
   "gallery.component.errorDialog": "diálogo de error",
+  "gallery.moduleRow.nsfwName": "Portal para adultos",
+  "gallery.moduleRow.nsfwMeta": "Manga · es · v1.0.0",
   "gallery.holdToConfirm.label": "Mantén pulsado",
   "gallery.toast.message": "Se vació la caché de imágenes",
   "gallery.toast.action": "Deshacer",
