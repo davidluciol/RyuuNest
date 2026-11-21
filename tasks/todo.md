@@ -405,7 +405,7 @@ Dep: F94 · S · `apps/mobile/src/screens/discover/*`
 
 Dep: T40 · repo `RyuuNest-Models` (módulo `hitomi` 0.1.0) · el host ya expone `HostResponse.bytes()` (SPEC §6.5)
 
-- [ ] 🧍 Probar en el S25 que el adaptador HTTP real pasa `Range` y devuelve 206/416 (sin eso `readIds` cae al recorte local o da `UNSUPPORTED`).
+- Probar `Range` (206/416) en el S25: ver «Sugerencias (no bloqueantes)».
 - [ ] **Problemas del buscador:** (1) no hay búsqueda por título: el sitio la resuelve con un índice B-tree propio (`galleries.<versión>.index/.data`), no con `.nozomi`; (2) solo acepta **un** término `namespace:valor` (`female:yuri`, `artist:x`, `type:…`) o una etiqueta suelta; (3) combinar términos exigiría bajar listas enteras (hasta ~16 MB). Decidir si se implementa el índice B-tree o se acepta el límite.
 - [ ] Coste de listas: una petición a `galleries/<id>.js` por tarjeta (24 por página); valorar `galleryblock` o tarjetas perezosas.
 
@@ -437,7 +437,7 @@ Dep: T38 (hecha) · XS · `apps/mobile/src/screens/sources/*`
 ### F63 F16 en el dispositivo: repo real, módulo declarativo y `script` `[Ops · Baja · N2]` 🧍
 
 - [x] 🧍 Prueba en el S25 Ultra (2026-11-20, Expo Go + Metro, agent-device) con el repo real `RyuuNest-Models` ya añadido: el repo oficial y sus 3 módulos aparecen; sincronizar muestra «Actualización» en m440 y actualizar 0.2.0 → 0.2.1 funciona (índice y SHA-256 verificados por la app); desinstalar e instalar YupManga con la hoja nueva: aviso NSFW, huella plegable y «Mantén pulsado para instalar» (confirmación reforzada) OK
-- [ ] Sin probar en el teléfono: instalar un módulo **declarativo** (los 3 módulos del repo oficial son `script`) y el bloqueo de dispositivo con la protección activada (en esta prueba la protección estaba apagada: no pidió bloqueo)
+- Módulo declarativo y bloqueo de dispositivo sin probar: ver «Sugerencias (no bloqueantes)».
 - Verif: ✅ S25 Ultra (parcial, ver arriba)
 
 ### F64 Revisión de `RyuuNest-Models` `[Ops · Baja · N1]` 🧍
@@ -468,9 +468,7 @@ Dep: T42 · L · SPEC §894, IDEA 2.1 · repo `RyuuNest` (host) + `RyuuNest-Mode
 > Origen (2026-11-20): `m440` (`/manga-list`, `/filterList`) y ZonaTMO dan `BLOCKED` por el reto de página de Cloudflare, que ni curl_cffi con huella de Chrome supera. Un WebView lo supera y deja `cf_clearance`. **No sirve para el reto del lector de YupManga** (JS propio del sitio, no de Cloudflare): ese sigue con el intérprete cerrado y el canario.
 
 - [x] Parte 1 (PR #152, `packages/core/src/host/challenge.ts`): `solveChallenge` (https + dominio del módulo, confirmación, guarda solo `cf_clearance`+UA por host con caducidad) y `host.fetch` las aplica; probado con navegador y almacén falsos. Los módulos no pueden llamarlo. Procedimiento de medición en el S25 en el PR.
-- [ ] 🧍 **Error visto en el S25 (2026-11-21), investigar:** al reabrir la app, el lector de m440 mostró «No se pudo abrir el capítulo» con `Call to function 'NativeDatabase.execAsync' has been rejected. → cannot start a transaction within a transaction` (INTERNAL, módulo m440); no se reprodujo después. Probable transacción SQLite anidada/concurrente al restaurar la ruta del lector.
-- [ ] F100: sin `BLOCKED` hoy en m440 (búsqueda y filtros sin bloqueo), el flujo de la hoja y el WebView no se pudo disparar; probar cuando Cloudflare vuelva a bloquear. Cookies: `@react-native-cookies/cookies` deprecada → candidata `@preeternal/react-native-cookie-manager` (TurboModules, API compatible, solo build de desarrollo); el `fetch` de RN en Android comparte el CookieManager del WebView, así que el «modo tarro» puede bastar sin librería (medir).
-- [ ] 🧍 Decisiones del humano para la parte 2 (WebView, hoja de confirmación, almacén): navegador (`react-native-webview` + `@react-native-cookies/cookies`), almacén de secretos (`expo-secure-store`), módulo sin campo nuevo, y aprobar el cambio de SPEC §6.4/§17/P-8 (`BLOCKED` no se resuelve en v1). Riesgo alto en Google Play: no entra en ninguna versión de tienda.
+- [x] Parte 2 (PR #157): WebView, hoja de confirmación, almacén `expo-secure-store`, módulo sin campo nuevo y SPEC §6.4/§6.5/§16/§17 actualizados (aprobado por el humano 2026-11-21; la app va por GitHub Releases, nunca Google Play). Medición y prueba en el S25: ver «Sugerencias (no bloqueantes)».
 - [ ] Spike (1–2 días): `host.solveChallenge(url)` abre un WebView visible, espera el reto y devuelve control tras guardar `cf_clearance` y el `User-Agent` usado. Nunca en silencio: solo tras `BLOCKED` y con confirmación del usuario.
 - [ ] Medir lo que decide la viabilidad: ¿acepta Cloudflare la cookie con la huella TLS del cliente HTTP de React Native o hay que pedir por el propio WebView? ¿cuánto dura? Respuesta con datos, no supuestos.
 - [ ] Si es viable: `host.fetch` envía esas cookies y el mismo `User-Agent` por dominio; el módulo declara «este dominio necesita verificación»; la cookie se guarda como secreto del dispositivo con caducidad.
@@ -508,6 +506,23 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 - [x] Solo lee lo guardado en SQLite del último sync; sin red ni segundo plano (RNF-5)
 - [x] Textos en i18n, solo tokens, estados en la galería
 - Verif: ✅ Vitest + ✅ Playwright 426/1440 px · 🧍 S25: instalar un módulo desde un índice local 1.0.0, subirlo a 1.1.0, abrir/actualizar Portales, salir y ver punto + banner; «Ver» abre la hoja y solo actualiza al confirmar
+
+---
+
+## 💡 Sugerencias (no bloqueantes)
+
+> Lo que quedó sin probar o pendiente tras el lote Portales (2026-11-21). No son tareas: no bloquean ni se planifican hasta que el humano las suba a tarea.
+
+- **Error de transacción SQLite (investigar primero):** al reabrir la app, el lector de m440 mostró «No se pudo abrir el capítulo» con `Call to function 'NativeDatabase.execAsync' has been rejected. → cannot start a transaction within a transaction` (INTERNAL). No se reprodujo después. Probable transacción anidada o concurrente al restaurar la ruta del lector.
+- **F100 sin disparar:** Cloudflare no bloqueó m440 ese día (búsqueda y filtros sin `BLOCKED`), así que no se vio la hoja de confirmación ni el WebView. Probar cuando vuelva a bloquear (`m440.in/manga-list`), en Expo Go (modo «tarro») y luego en build de desarrollo; medir caducidad de `cf_clearance` y si el `fetch` de RN reutiliza la cookie del WebView (el procedimiento está en el PR #157). Vigilar que `onShouldStartLoadWithRequest` en Android no bloquee `challenges.cloudflare.com`.
+- **Cookies sin librería deprecada:** `@react-native-cookies/cookies` está deprecada y sin soporte declarado de la New Architecture. Candidata: `@preeternal/react-native-cookie-manager` (TurboModules, API compatible, solo build de desarrollo). El `fetch` de RN en Android comparte el CookieManager del WebView, así que el «modo tarro» puede bastar sin librería: medir antes de decidir.
+- **Portadas en blanco (YupManga y m440):** no se reprodujeron en el S25 (Aventuras, ficha y Guarida las muestran). Si reaparecen, leer el registro `cover.load` (PR #150): 403 ⇒ cargar con `host.fetch`; error de decodificación ⇒ formato.
+- **Aviso neutro de F42** (PR #156): solo cubierto por Vitest y Playwright; no se vio en el S25 (tras actualizar YupManga no se observó el aviso).
+- **F63:** instalar un módulo **declarativo** (los 3 del repo oficial son `script`) y el bloqueo de dispositivo con la protección activada.
+- **T45:** probar en el S25 que el adaptador HTTP real pasa `Range` y devuelve 206/416.
+- **Primer uso (F45):** la barra oculta y «Ir a leer» deshabilitado no se vieron en el teléfono porque ya había datos.
+- **Borde NSFW (F98) en la lista de Recomendados:** verificado en módulos; falta ver una fila recomendada NSFW en el S25.
+- **Limpieza:** borrar a mano `.claude/worktrees/agent-*` (rutas demasiado largas para Windows; git ya los desregistró).
 
 ---
 
