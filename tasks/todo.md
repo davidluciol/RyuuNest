@@ -535,8 +535,8 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 
 ### F66 Zonas seguras en el dispositivo `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 (S25 hecho salvo interruptor apagado; falta POCO) Muesca, barra de estado y gesto inferior con `react-native-safe-area-context` en el POCO y el S25 (Diagnóstico y ficha); interruptor apagado legible; tarjetas y botones «Exportar/Importar/Vaciar» a 360 dp; JetBrains Mono visible en códigos (F34.2)
-- [ ] 🧍 Repetir F34.3 en el POCO F5 Pro con texto al 200 %
+- [x] 🧍 Muesca, barra de estado y gesto inferior con `react-native-safe-area-context` en el POCO y el S25 (Diagnóstico y Ajustes); interruptor apagado legible (POCO: «Contenido NSFW» y «Protección de instalación»); tarjetas y botones «Exportar/Vaciar» a 360 dp; JetBrains Mono visible en códigos (F34.2, visto en el S25: el POCO no tiene eventos registrados) · evidencia en `docs/capturasF65/poco-*.png`. Observación: a 360 dp con 200 % las etiquetas de la barra inferior se tocan (S25 y POCO)
+- [x] 🧍 Repetir F34.3 en el POCO F5 Pro con texto al 200 % · Guarida y Ajustes a 360 dp (densidad 640) sin desbordes; ajustes de pantalla restaurados (560 dpi, fuente 1.0)
 - Verif: 🧍 POCO F5 Pro
 
 ### F67 Hojas de Respaldo, diálogos de error nativos y modo paginado `[FE · Baja · N2]` 🧍
@@ -549,11 +549,11 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 - [x] 🧍 Exportar el informe (hoja del sistema) y copiarlo al portapapeles en el POCO/S25 (F30/F31) · verificado en el S25: hoja con `ryuunest-diagnostico-2026-11-21.txt` y aviso «Informe copiado» (el contenido del portapapeles no se pudo leer por adb)
 - Verif: 🧍 dispositivo
 
-### F69 Actualizaciones OTA con `expo-updates` `[Ops · Intermedia · N3]` 🧍 (bloqueada)
+### F69 Actualizaciones OTA con `expo-updates` `[Ops · Intermedia · N3]` 🧍
 
-> **Bloqueada** por la cuenta de Expo/EAS del humano (login interactivo, proyecto y canal). Mientras no exista, Expo Go avisa «expo-updates system is disabled…»; no afecta al desarrollo.
+> Desbloqueada con la cuenta `poti7652` de EAS (proyecto `ryuunest`, canal `preview`). Expo Go sigue avisando «expo-updates system is disabled…»; no afecta al desarrollo.
 
-- [ ] Añadir `updates.url`, política de `runtimeVersion`, proyecto/canal de EAS, build de prueba y verificación de una actualización real
+- [x] Añadir `updates.url`, política de `runtimeVersion`, proyecto/canal de EAS, build de prueba y verificación de una actualización real · `eas.json` (perfil `preview`, APK), `runtimeVersion` `appVersion`, script `eas-build-post-install` (compila los paquetes del workspace) y parche de pnpm a `@react-native-cookies/cookies` (`jcenter()` → `mavenCentral()`); APK instalado en el POCO y actualización `01a20037…` descargada y ejecutada (logcat `DownloadComplete` y luego `CheckCompleteUnavailable`)
 - Verif: 🧍 con la cuenta de EAS
 
 ### F89 Esquema de tema (JSON de tokens) y validación `[BE · Intermedia · N3]`
