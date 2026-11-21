@@ -13,6 +13,7 @@ import {
   moduleStatusBadges,
   PERMISSION_LABEL_KEYS,
   ROW_ACTION_KEYS,
+  countUpdates,
   validateRepoUrl,
 } from "../../src/screens/sources/sourcesView";
 
@@ -175,5 +176,17 @@ describe("aviso NSFW al instalar (F45)", () => {
     const text = t(NSFW_INSTALL_WARNING_KEY);
     expect(text).toContain("módulo NSFW");
     expect(text).toContain("contenido para adultos, sexual o explícito");
+  });
+});
+
+describe("F99 — aviso de actualizaciones", () => {
+  it("cuenta solo los instalados con versión nueva", () => {
+    const rows = [
+      row({ id: "a", status: "installed", updateTo: "1.3.1" }),
+      row({ id: "b", status: "installed" }),
+      row({ id: "c", status: "available", updateTo: "2.0.0" }),
+    ];
+    expect(countUpdates(rows)).toBe(1);
+    expect(countUpdates([])).toBe(0);
   });
 });
