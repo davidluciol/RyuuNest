@@ -408,7 +408,7 @@ Dep: T40 · S · repo `RyuuNest-Models`
 - [ ] El capítulo falla con `UNSUPPORTED` («el reto del lector cambió de formato»; selector `\[([0-9,]+)\];var [\w$]+=String\.fromCharCode\(([0-9,]+)\);`). Guardar una fixture HTML del reto actual (nunca el sitio real en pruebas), ajustar el módulo y subir versión + índice con SHA-256.
 - [ ] Abrir un capítulo de YupManga en el teléfono y ver al menos una imagen.
 - [x] `m440.in` `TIMEOUT`: mensaje claro de «sitio intermitente» sin reintentos (m440 0.2.1, RyuuNest-Models PR #11; el `index.json` va en PR aparte)
-- [ ] YupManga 0.1.1 ya resuelve el nuevo reto (PRs #5/#6 de Models): falta abrir un capítulo en el teléfono; solo si sigue fallando con `UNSUPPORTED` se captura la fixture
+- [ ] **Sigue fallando en el S25 (2026-11-20):** YupManga 0.1.1 abre la búsqueda y la ficha, pero el capítulo da `UNSUPPORTED` — «El reto del lector usa JS no soportado: carácter «`»» (el reto actual usa plantillas con acento grave, que `yupmanga/bin/utils/miniJs.js` no entiende). Falta capturar la fixture del reto vigente (1 petición real, con las herramientas de `tools/` de Models), añadir soporte y publicar 0.1.2 + índice
 - Verif: 🧍 S25 Ultra; el arnés del módulo en verde.
 
 
@@ -423,8 +423,9 @@ Dep: T38 (hecha) · XS · `apps/mobile/src/screens/sources/*`
 
 ### F63 F16 en el dispositivo: repo real, módulo declarativo y `script` `[Ops · Baja · N2]` 🧍
 
-- [ ] 🧍 Añadir un repo real, instalar uno declarativo y uno `script` (confirmación reforzada y bloqueo de dispositivo con la protección activada); incluye F16b/F16c/F12 (el repo oficial aparece al entrar)
-- Verif: 🧍 POCO F5 Pro
+- [x] 🧍 Prueba en el S25 Ultra (2026-11-20, Expo Go + Metro, agent-device) con el repo real `RyuuNest-Models` ya añadido: el repo oficial y sus 3 módulos aparecen; sincronizar muestra «Actualización» en m440 y actualizar 0.2.0 → 0.2.1 funciona (índice y SHA-256 verificados por la app); desinstalar e instalar YupManga con la hoja nueva: aviso NSFW, huella plegable y «Mantén pulsado para instalar» (confirmación reforzada) OK
+- [ ] Sin probar en el teléfono: instalar un módulo **declarativo** (los 3 módulos del repo oficial son `script`) y el bloqueo de dispositivo con la protección activada (en esta prueba la protección estaba apagada: no pidió bloqueo)
+- Verif: ✅ S25 Ultra (parcial, ver arriba)
 
 ### F64 Revisión de `RyuuNest-Models` `[Ops · Baja · N1]` 🧍
 
@@ -436,7 +437,7 @@ Dep: T38 (hecha) · XS · `apps/mobile/src/screens/sources/*`
 Dep: F16 · S · `apps/mobile/src/screens/{onboarding,sources}/*`
 
 - [x] Aprobada por el humano (2026-11-20). Hecho: aviso al instalar un módulo NSFW (hoja de instalar) y aviso de primera vez al elegir/abrir un módulo NSFW en Aventuras (`NsfwNoticeSheet`; «Entiendo, continuar» lo marca visto en `setting` `discover.nsfwNoticeSeen.<id>`, «Volver» no); ambos explican «contenido para adultos, sexual o explícito». Primer uso: textos sin jerga (R13), botón primario a ancho completo anclado abajo con «Saltar» como enlace (V5), etiqueta «Repositorio oficial de RyuuNest» con «Usar otro repositorio», barra inferior oculta y «Ir a leer» deshabilitado hasta instalar un módulo (V4), y «Ir a leer» no se repite mientras termina (V6; el fallo original no se reprodujo, no hay medición)
-- Verif: ✅ Vitest + ✅ Playwright 426/1440 px (`onboarding`, `discover`, `discoverNsfw`, `nsfwNotice`) · 🧍 S25 pendiente
+- Verif: ✅ Vitest + ✅ Playwright 426/1440 px (`onboarding`, `discover`, `discoverNsfw`, `nsfwNotice`) · ✅ S25 (2026-11-20): aviso NSFW al instalar y aviso de primera vez al elegir YupManga en Aventuras; el primer uso (barra oculta, «Ir a leer» deshabilitado) no se vio en el teléfono porque ya había datos
 
 ### F42 Portales y Ajustes: permisos y «disponibles» (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
 
