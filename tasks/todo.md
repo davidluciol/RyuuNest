@@ -515,7 +515,8 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 
 - **Error de transacción SQLite (investigar primero):** al reabrir la app, el lector de m440 mostró «No se pudo abrir el capítulo» con `Call to function 'NativeDatabase.execAsync' has been rejected. → cannot start a transaction within a transaction` (INTERNAL). No se reprodujo después. Probable transacción anidada o concurrente al restaurar la ruta del lector.
 - **F100 sin disparar:** Cloudflare no bloqueó m440 ese día (búsqueda y filtros sin `BLOCKED`), así que no se vio la hoja de confirmación ni el WebView. Probar cuando vuelva a bloquear (`m440.in/manga-list`), en Expo Go (modo «tarro») y luego en build de desarrollo; medir caducidad de `cf_clearance` y si el `fetch` de RN reutiliza la cookie del WebView (el procedimiento está en el PR #157). Vigilar que `onShouldStartLoadWithRequest` en Android no bloquee `challenges.cloudflare.com`.
-- **Cookies sin librería deprecada:** `@react-native-cookies/cookies` está deprecada y sin soporte declarado de la New Architecture. Candidata: `@preeternal/react-native-cookie-manager` (TurboModules, API compatible, solo build de desarrollo). El `fetch` de RN en Android comparte el CookieManager del WebView, así que el «modo tarro» puede bastar sin librería: medir antes de decidir.
+- **Barra inferior a 360 dp con texto al 200 %:** las etiquetas se tocan (S25 y POCO). Caso muy especial; sin prisa.
+- **Cookies sin librería deprecada (ya es tarea, ver F69):** `@react-native-cookies/cookies` está deprecada y sin soporte declarado de la New Architecture. Candidata: `@preeternal/react-native-cookie-manager` (TurboModules, API compatible, solo build de desarrollo). El `fetch` de RN en Android comparte el CookieManager del WebView, así que el «modo tarro» puede bastar sin librería: medir antes de decidir.
 - **Portadas en blanco (YupManga y m440):** no se reprodujeron en el S25 (Aventuras, ficha y Guarida las muestran). Si reaparecen, leer el registro `cover.load` (PR #150): 403 ⇒ cargar con `host.fetch`; error de decodificación ⇒ formato.
 - **Aviso neutro de F42** (PR #156): solo cubierto por Vitest y Playwright; no se vio en el S25 (tras actualizar YupManga no se observó el aviso).
 - **F63:** instalar un módulo **declarativo** (los 3 del repo oficial son `script`) y el bloqueo de dispositivo con la protección activada.
@@ -555,6 +556,14 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 
 - [x] Añadir `updates.url`, política de `runtimeVersion`, proyecto/canal de EAS, build de prueba y verificación de una actualización real · `eas.json` (perfil `preview`, APK), `runtimeVersion` `appVersion`, script `eas-build-post-install` (compila los paquetes del workspace) y parche de pnpm a `@react-native-cookies/cookies` (`jcenter()` → `mavenCentral()`); APK instalado en el POCO y actualización `01a20037…` descargada y ejecutada (logcat `DownloadComplete` y luego `CheckCompleteUnavailable`)
 - Verif: 🧍 con la cuenta de EAS
+
+#### Tarea general (sin ID): reemplazar `@react-native-cookies/cookies` `[Ops · Intermedia · N3]`
+
+> Origen (petición del humano, 2026-11-21). El paquete está deprecado y solo compila gracias al parche de pnpm de `patches/` (`jcenter()` → `mavenCentral()`). Hay que quitar esa implementación y sustituirla por algo mantenido.
+
+- [ ] Medir si el `fetch` de RN en Android ya comparte el CookieManager del WebView («modo tarro») y basta sin librería; si no, adoptar una alternativa con soporte de la New Architecture (candidata: `@preeternal/react-native-cookie-manager`; pedir permiso antes de añadir la dependencia)
+- [ ] Quitar el parche de pnpm y la dependencia vieja, y repetir build `preview` y F100 en el S25
+- Verif: 🧍 build de EAS + S25
 
 ### F89 Esquema de tema (JSON de tokens) y validación `[BE · Intermedia · N3]`
 
