@@ -15,6 +15,7 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.textField",
       "gallery.component.checkbox",
       "gallery.component.chip",
+      "gallery.component.themeRow",
       "gallery.component.badge",
       "gallery.component.coverCard",
       "gallery.component.chapterRow",

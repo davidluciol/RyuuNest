@@ -4,6 +4,7 @@ import {
   breakpoints,
   coverAspectRatio,
   densityLayout,
+  dragonNight,
   activeColors,
   layoutForWidth,
   radii,
@@ -18,6 +19,7 @@ import Button from "../components/Button";
 import ChapterRow from "../components/ChapterRow";
 import Checkbox from "../components/Checkbox";
 import Chip from "../components/Chip";
+import ThemeRow from "../components/ThemeRow";
 import ChipScroller from "../components/ChipScroller";
 import ContinueCard from "../components/ContinueCard";
 import CoverCard from "../components/CoverCard";
@@ -270,6 +272,14 @@ export default function GalleryScreen() {
         <View style={styles.row}>
           <Chip label={t("gallery.chip.inactive")} />
           <Chip label={t("gallery.chip.selected")} selected />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.themeRow")}</Text>
+        <View style={styles.column}>
+          <ThemeRow theme={dragonNight} />
+          <ThemeRow theme={dragonNight} selected />
+          <ThemeRow theme={{ ...dragonNight, name: "Noche azul" }} imported />
+          <ThemeRow theme={dragonNight} disabled />
         </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.chipScroller")}</Text>
@@ -1072,6 +1082,7 @@ const styles = themedStyles(() => ({
     ...textStyle(typography.headlineSm),
   },
   row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  column: { gap: spacing.xs },
   chipScrollerRow: { gap: spacing.xs },
   swatch: {
     width: spacing.xl,

@@ -95,6 +95,7 @@ export const galleryEntries: readonly GalleryEntry[] = Object.freeze([
       "gallery.component.textField",
       "gallery.component.checkbox",
       "gallery.component.chip",
+      "gallery.component.themeRow",
       "gallery.component.badge",
       "gallery.component.coverCard",
       "gallery.component.chapterRow",

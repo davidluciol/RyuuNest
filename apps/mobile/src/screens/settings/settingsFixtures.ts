@@ -1,3 +1,5 @@
+import { dragonNight } from "@ryuunest/ui-tokens";
+
 import { DEFAULT_LANGUAGE, DEFAULT_READER_MODE, type SettingsData } from "./settingsData";
 
 /**
@@ -14,6 +16,8 @@ export const SAMPLE_SETTINGS_DATA: SettingsData = {
   nsfwVisible: false,
   language: DEFAULT_LANGUAGE,
   defaultReaderMode: DEFAULT_READER_MODE,
+  activeThemeId: dragonNight.id,
+  themes: [{ ...dragonNight, builtIn: true }],
 };
 
 /** Sin bloqueo en el dispositivo: el interruptor no se puede activar (RF-7). */
@@ -24,6 +28,8 @@ export const NO_LOCK_SETTINGS_DATA: SettingsData = {
   nsfwVisible: false,
   language: DEFAULT_LANGUAGE,
   defaultReaderMode: DEFAULT_READER_MODE,
+  activeThemeId: dragonNight.id,
+  themes: [{ ...dragonNight, builtIn: true }],
 };
 
 /** El usuario quitó el repo oficial: Ajustes ofrece restaurarlo (P-85). */
@@ -34,4 +40,6 @@ export const OFFICIAL_DISMISSED_SETTINGS_DATA: SettingsData = {
   nsfwVisible: false,
   language: DEFAULT_LANGUAGE,
   defaultReaderMode: DEFAULT_READER_MODE,
+  activeThemeId: dragonNight.id,
+  themes: [{ ...dragonNight, builtIn: true }],
 };
