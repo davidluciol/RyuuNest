@@ -227,6 +227,7 @@ export default function SourcesScreen({
                       key={module.id}
                       testID={`module-${module.id}`}
                       name={module.name}
+                      nsfw={module.nsfw}
                       meta={moduleMeta(module)}
                       badges={moduleStatusBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
                       permissions={modulePermissions(module).map((permission) =>
@@ -293,6 +294,7 @@ export default function SourcesScreen({
                       key={repo.indexUrl}
                       testID={`recommended-${repo.indexUrl}`}
                       name={repo.name}
+                      nsfw={repo.nsfw}
                       meta={repo.description}
                       hint={repo.indexUrl}
                       badges={repo.nsfw ? [t(BADGE_LABEL_KEYS.nsfw)] : []}

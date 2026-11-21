@@ -566,6 +566,7 @@ export default function GalleryScreen() {
             <ModuleRow
               key={module.id}
               name={module.name}
+              nsfw={module.nsfw}
               meta={t("sources.module.meta", {
                 kind: module.kinds.map(kindLabel).join(", "),
                 lang: module.lang,
@@ -579,6 +580,13 @@ export default function GalleryScreen() {
               actionLabel={t(ROW_ACTION_KEYS[moduleRowAction(module)])}
             />
           ))}
+          <ModuleRow
+            testID="gallery-module-row-nsfw"
+            name={t("gallery.moduleRow.nsfwName")}
+            meta={t("gallery.moduleRow.nsfwMeta")}
+            badges={[t(BADGE_LABEL_KEYS.nsfw)]}
+            nsfw
+          />
           {SAMPLE_SOURCES_DATA.incompatible?.slice(0, 1).map((item) => (
             <ModuleRow
               key={item.id}
