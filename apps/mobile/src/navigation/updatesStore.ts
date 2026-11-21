@@ -15,8 +15,18 @@ export function setUpdateCount(next: number): void {
   for (const listener of listeners) listener();
 }
 
+let requestTick = 0;
+
 export function requestOpenUpdates(): void {
   openRequested = true;
+  // Portales ya puede estar montada y lista: avisa para que su efecto vuelva a correr.
+  requestTick += 1;
+  for (const listener of listeners) listener();
+}
+
+/** Cambia con cada petición «Ver»; entra en las dependencias del efecto que la consume. */
+export function useOpenUpdatesTick(): number {
+  return useSyncExternalStore(subscribe, () => requestTick);
 }
 
 /** Devuelve la petición pendiente una sola vez. */
