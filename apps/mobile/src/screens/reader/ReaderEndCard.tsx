@@ -23,6 +23,8 @@ export interface ReaderEndCardProps {
   /** Ancho de la columna de lectura. */
   width: number;
   onOpenNext: () => void;
+  /** F51 — segundos que faltan para abrir solo el siguiente capítulo; `null` si no hay cuenta. */
+  autoNextSeconds: number | null;
 }
 
 export default function ReaderEndCard({
@@ -30,6 +32,7 @@ export default function ReaderEndCard({
   next,
   width,
   onOpenNext,
+  autoNextSeconds,
 }: ReaderEndCardProps) {
   return (
     <View testID="reader-end-card" style={[styles.card, { width }]}>
@@ -55,6 +58,11 @@ export default function ReaderEndCard({
           style={styles.button}
         />
       )}
+      {next !== null && autoNextSeconds !== null ? (
+        <Text testID="reader-end-auto-next" style={styles.message}>
+          {t("reader.end.autoNext", { seconds: autoNextSeconds })}
+        </Text>
+      ) : null}
     </View>
   );
 }
