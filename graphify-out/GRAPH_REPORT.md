@@ -1,48 +1,48 @@
 # Graph Report - RyuuNest  (2026-11-20)
 
 ## Corpus Check
-- 761 files · ~431,566 words
+- 764 files · ~434,175 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 45 file(s) not represented in the graph (top: .css 27, .ttf 14, (none) 4)
 
 ## Summary
-- 5120 nodes · 13558 edges · 260 communities (192 shown, 68 thin omitted)
+- 5159 nodes · 13831 edges · 258 communities (197 shown, 61 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 767 edges (avg confidence: 0.9)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d1a1dc82`
+- Built from commit: `2d157788`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- libraryCardStyles.ts
+- textStyle.ts
 - logicFoxManga.py
-- SourcesService
-- expo-constants
-- RepoRegistry
+- web/src/screens/series/SeriesScreen.tsx
+- extensionHttp.ts
+- PackageInstaller.ts
 - BottomNav.tsx
-- mobile/src/screens/settings/SettingsScreen.tsx
-- types.ts
+- ui-tokens/src/index.ts
+- export.ts
 - Lint and Package Config
-- SqlDriver
+- packages_core_src_index_sqldriver
 - Module SDK Package Config
-- mobile/src/components/Button.tsx
-- MediaKind
+- react-native
+- DeclarativeRuntime
 - import.ts
 - Core Parser Dependencies
 - Design Rules and Screens
-- Anexo A: inventario de la superficie
+- ModuleError
 - Base TypeScript Config
-- mobile/src/components/HoldToConfirm.tsx
+- .details
 - Lista de tareas — RyuuNest Parte 1 (Back-end / Núcleo)
 - Docs, ADRs and Principles
 - Core Package Manifest
 - Expo App Configuration
 - FoxMangas Book Logic
 - platformImports.ts
-- ui-tokens/src/index.ts
-- Folders
+- layout.ts
+- index.js
 - seedDb.cjs
 - Settings Screen Sections
 - Mobile Package Manifest
@@ -52,17 +52,17 @@
 - TMO Module Port
 - Test Site Manifest
 - Sample Module Manifest
-- web/src/screens/sources/SourcesScreen.tsx
+- web/src/screens/discover/DiscoverScreen.tsx
 - Detail Screen Components
 - MangaIn Scraping Logic
 - Sources Screen Elements
 - transforms.ts
-- ModuleError
-- dependencies
-- declarativeConfig.ts
-- log.test.ts
+- FixedClock
+- mobile/package.json
+- HtmlElement
+- core/src/index.ts
 - ReaderMode
-- web/src/screens/discover/DiscoverScreen.tsx
+- web/src/screens/reader/ReaderScreen.tsx
 - Core Test TypeScript Config
 - Discover Screen Components
 - Home Screen Sections
@@ -81,7 +81,7 @@
 - Mobile Test TypeScript Config
 - ref_node_fs
 - CI Verification Pipeline
-- mobile/src/screens/series/SeriesScreen.tsx
+- discoverInstalled.test.ts
 - Local Fonts and Icons
 - TDD Contribution Workflow
 - Monochrome Android Icon
@@ -116,30 +116,30 @@
 - InstallFlow Confirmation Rule
 - createModuleApi Seam
 - React Native Expo Stack
-- settingsData.ts
+- mobile/src/screens/sources/useSourcesData.ts
 - i18n/src/index.ts
 - test-site/src/index.ts
-- mobile/src/screens/reader/useReader.ts
+- web/src/screens/reader/useReader.ts
 - exampleScript.ts
 - mobile/src/screens/discover/DiscoverScreen.tsx
 - domainsModel.ts
-- sourcesController.ts
-- extensionHttp.ts
+- SourcesService
+- extensionHttp.test.ts
 - renderGallery.ts
 - eslint-plugin-ryuunest/package.json
 - web/src/screens/discover/DiscoverScreen.tsx
 - [source].tsx
 - webDatabase.ts
-- ref_vitest
+- SqlDriver
 - webScriptLoader.ts
-- packages_ui_tokens_src_index_spacing
-- mobile/src/screens/sources/useSourcesData.ts
-- ModuleApi
+- FolderCard.tsx
+- SourcesController
+- script
 - NineManga
 - useSeriesData.ts
 - Luscious
 - fontSources.ts
-- SourcesController
+- bridge.ts
 - logicYupmanga
 - metro.config.js
 - 6. Índice de tareas y checkpoints
@@ -156,20 +156,20 @@
 - screens/diagnostics/DiagnosticsScreen.tsx
 - web/src/screens/library/LibraryScreen.tsx
 - Plano de pantalla (FB1)
-- DiscoverDataSource
+- ReaderVertical.tsx
 - F28 — Verificación por pantalla (AC-12, parte web/Playwright)
 - mobile/src/components/ErrorState.tsx
-- LogEventRow.tsx
+- packages_ui_tokens_src_index_spacing
 - backupData.ts
-- core/src/index.ts
-- FixedClock
+- Fase 7 — Respaldo
+- tokensSnapshot.ts
 - fixtures.ts
 - [seriesId].tsx
 - PARTE 2 — DISEÑO Y FRONT-END (Fases 6a, 6b, 7 y 8 del SPEC)
-- module-sdk/src/index.ts
+- headers.ts
 - focusPressableUsage.test.ts
 - extension/package.json
-- web/src/screens/settings/useSettingsData.ts
+- typography.ts
 - background/index.ts
 - web-db/package.json
 - extension-protocol/src/index.ts
@@ -177,117 +177,115 @@
 - web/src/screens/settings/SettingsScreen.tsx
 - deviceSecureLock.ts
 - fflate
-- devDependencies
+- FloatingActionButton.tsx
 - web/src/screens/series/SeriesScreen.tsx
 - sites.ts
 - harness.test.ts
 - ReaderPageImage.tsx
-- react-native
-- i18n/index.ts
+- ImageCapPanel.tsx
+- mobile/src/screens/reader/ReaderScreen.tsx
 - harness.ts
 - module-sdk/tests/manifest.test.ts
 - discoverData.ts
-- ModulePicker.tsx
+- mobile/src/screens/discover/DiscoverScreen.tsx
 - web/package.json
-- SectionHeader.tsx
-- i18nUsage.test.ts
+- useReaderPrefetch.ts
+- .fetch
 - zoomMath.ts
 - paths
 - i18n/package.json
 - f28Screens.cjs
 - clipboard.native.ts
-- ModuleRuntime.ts
+- guardApi
 - RowReader
 - tokensCssPlugin.ts
 - BackupController
-- focusAndScale.cjs
+- f28Screens.cjs
 - i18n/tsconfig.json
 - i18n/tsconfig.test.json
 - scripts
 - virtual.d.ts
 - handler.ts
 - ports/fetchHttp.ts
-- SeriesPrefs.ts
+- ChipScroller.tsx
 - extension/manifest.json
-- vite.options.config.ts
+- BackupService
 - bridge.cjs
-- useBackupData.ts
-- fontWeightGuard.test.ts
+- backupFlow.ts
+- build.mjs
 - debounce.ts
 - settings/diagnostics/useDiagnosticsData.ts
 - compilerOptions
 - sourcesFixtures.ts
-- manifest.ts
-- safeAreas.test.ts
+- backupData.test.ts
+- dependencies
 - extension-protocol/package.json
-- Archivo 2 — Bloques completados podados del todo.md (2026-10-28 → 2026-11-08)
+- Tareas completadas retiradas de `todo.md` el 2026-11-16 (reorganización por secciones)
 - CLAUDE.md — RyuuNest
-- expo-file-system
+- FailingStorage
 - backup.cjs
 - expo-linking@~57.0.13
 - discover.tsx
 - @expo/metro-runtime@~57.0.18
-- ref_node_url
+- ref_vitest
 - fakes.ts
 - Extensión de RyuuNest (F26)
-- sampleSettingsService.ts
+- sourcesData.ts
 - sourcesData.test.ts
 - extension-protocol/tsconfig.json
-- web/src/icons.ts
+- ExtensionNotice.tsx
 - extension-protocol/tsconfig.test.json
 - extension/src/virtual.d.ts
 - functionScriptLoader.ts
 - design-md.test.ts
 - .mcp.json
-- mobile/tests/fonts.test.ts
+- useBackupData.ts
 - GalleryScreen.tsx
-- appServices.ts
+- ReaderImage
 - pnpm-workspace.yaml
+- exampleDeclarative.ts
 - OnboardingScreen.tsx
-- DragonTreasure.tsx
+- expo-linear-gradient
+- @noble/hashes
 - web-db/tsconfig.test.json
-- declarativeConfig.test.ts
-- Task F09: Lint de diseño (sin literales en `apps/*`)
-- Task T05: Calibración de dispositivos y presupuesto de memoria
-- Task T11: CLI del SDK + plantilla de módulo
-- Task T15: E2E de instalación desde fixture (AC-2, AC-8)
+- react-dom@19.2.3
+- react-native-reanimated@4.5.1
+- react-native-safe-area-context
+- react-native-web@~0.21.4
+- contrast.ts
+- react-native-worklets@0.10.1
+- @ryuunest/test-site@workspace:*
+- @ryuunest/ui-tokens@workspace:*
 - web-db/tsconfig.json
-- Task T27: Máquina de estados del lector (headless)
-- Task T30: E2E de respaldo (AC-7)
-- Task T32: Segundo sitio falso de otra arquitectura + ADR de congelación de API 1.0
-- Task T35: Puertas de CI / contrato / cobertura
-- Task F21: Respaldo (UI)
-- Task F23: Lector para TV (D-pad)
-- Task F27: Puente web ↔ extensión (Host sobre mensajes)
-- Task F28: Playwright por pantalla + `DIFFS.md` + lista de 20 s (AC-12)
+- sql.js@1.15.2
 - onboarding.cjs
 - gallery-shell.cjs
-- .release
-- mobile/package.json
+- LogStore
+- dependencies
 
 ## God Nodes (most connected - your core abstractions)
-1. `ModuleError` - 139 edges
-2. `t()` - 111 edges
-3. `react-native` - 89 edges
-4. `SqlDriver` - 88 edges
-5. `Lista de tareas — RyuuNest Parte 1 (Back-end / Núcleo)` - 81 edges
-6. `FixedClock` - 57 edges
-7. `textStyle()` - 56 edges
-8. `MediaKind` - 55 edges
-9. `FocusPressable()` - 52 edges
-10. `dragonNightColors` - 50 edges
+1. `t()` - 208 edges
+2. `ModuleError` - 121 edges
+3. `react-native` - 90 edges
+4. `Lista de tareas — RyuuNest Parte 1 (Back-end / Núcleo)` - 81 edges
+5. `SqlDriver` - 77 edges
+6. `FocusPressable()` - 67 edges
+7. `GalleryScreen()` - 66 edges
+8. `Button()` - 59 edges
+9. `textStyle()` - 57 edges
+10. `FixedClock` - 57 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `✅ Checkpoint E (tras T18–T20)` --references--> `ModuleErrorCode`  [INFERRED]
-  tasks/plan.archive.md → packages/core/src/contract/errors.ts
-- `🚩 Checkpoint E (tras T18–T20)` --references--> `ModuleErrorCode`  [INFERRED]
-  tasks/todo.archive.md → packages/core/src/contract/errors.ts
-- `Task T23: Filtros/orden/búsqueda + carga 3000 series (AC-4)` --references--> `ModuleError`  [INFERRED]
-  tasks/todo.archive.md → packages/core/src/contract/errors.ts
-- `Hallazgos UX/UI consolidados antes del merge` --references--> `ModuleRegistry`  [INFERRED]
-  tasks/todo.archive.md → packages/core/src/modules/ModuleRegistry.ts
-- `Task T28: Exportar respaldo JSON` --references--> `Storage`  [INFERRED]
-  tasks/todo.archive.md → packages/core/src/ports/storage.ts
+- `Defectos de 273 px (corregidos en esta tarea)` --references--> `libraryColumnsFor()`  [INFERRED]
+  design/stitch/F34-3-verificacion.md → apps/mobile/src/components/libraryCardStyles.ts
+- `F20 Ajustes `[FE · Baja · N2]`` --references--> `SettingsService`  [INFERRED]
+  tasks/todo.archive.md → apps/mobile/src/screens/settings/settingsData.ts
+- `F12 Primer uso (3 pasos) + estado vacío `[FE · Intermedia · N3]` ✅` --references--> `InstallSheet()`  [INFERRED]
+  tasks/todo.archive.md → apps/mobile/src/screens/sources/InstallSheet.tsx
+- `F21b Importar respaldo `[FE · Intermedia · N3]` ✅` --references--> `replace()`  [INFERRED]
+  tasks/todo.archive.md → apps/mobile/src/screens/sources/sampleSourcesService.ts
+- `FB1 Plano de pantalla (`screen-blueprint.md`) `[Doc · Baja · N4]`` --references--> `t()`  [INFERRED]
+  tasks/todo.archive.md → packages/i18n/src/index.ts
 
 ## Import Cycles
 - None detected.
@@ -314,79 +312,83 @@
 - **Library organization and discovery: saved collections, portal update feed, and total work counter** — design_stitch_inicio_guarida_screen_treasures, design_stitch_inicio_guarida_screen_portal_updates, design_stitch_inicio_guarida_screen_work_count [INFERRED 0.85]
 - **T05 verification evidence: module load calibration on Samsung S25 Ultra** — docs_capturast05_samsung_s25ultra_screenshot, docs_capturast05_samsung_s25ultra_calibration_screen, docs_capturast05_samsung_s25ultra_module_checks [INFERRED]
 
-## Communities (260 total, 68 thin omitted)
+## Communities (258 total, 61 thin omitted)
 
-### Community 0 - "libraryCardStyles.ts"
+### Community 0 - "textStyle.ts"
+Cohesion: 0.04
+Nodes (75): Badge(), BadgeProps, styles, BADGE_HEIGHT, badgeColors(), badgeStyle(), BadgeStyleShape, ChapterRow() (+67 more)
+
+### Community 2 - "web/src/screens/series/SeriesScreen.tsx"
+Cohesion: 0.15
+Nodes (20): App(), Chip(), ChipProps, ErrorState(), LoadingState(), TextField(), TextFieldProps, openWebServices() (+12 more)
+
+### Community 3 - "extensionHttp.ts"
+Cohesion: 0.10
+Nodes (14): CONTRACT_CODE, createBrowserChannel(), createWindowChannel(), DETECT_TIMEOUT_MS, ExtensionChannel, ExtensionFailure, ExtensionHttp, REQUEST_TIMEOUT_MS (+6 more)
+
+### Community 4 - "PackageInstaller.ts"
 Cohesion: 0.08
-Nodes (35): Badge(), BadgeProps, styles, BADGE_HEIGHT, badgeColors(), badgeStyle(), BadgeStyleShape, Chip() (+27 more)
-
-### Community 2 - "SourcesService"
-Cohesion: 0.12
-Nodes (4): loadSourcesWithOfficialRepo(), SourcesService, InstallConfirmation, RecommendedRepo
-
-### Community 4 - "RepoRegistry"
-Cohesion: 0.05
-Nodes (31): packageFor(), Decisión 2: cambios requeridos antes de declarar la 1.0, R3. Compatibilidad hacia delante ejecutable, readModules(), readRepos(), fromHex(), toHex(), utf8Decode() (+23 more)
+Nodes (33): fromHex(), toHex(), utf8Decode(), ManifestValidateOptions, normalizeEntryPath(), PackageFile, PackageInstallerOptions, resolveHttpsUrl() (+25 more)
 
 ### Community 5 - "BottomNav.tsx"
-Cohesion: 0.08
-Nodes (34): BottomNav(), BottomNavProps, DESTINATION_ICONS, styles, FocusRingShape, focusRingStyle(), Header(), HeaderProps (+26 more)
+Cohesion: 0.07
+Nodes (35): BottomNav(), BottomNavProps, DESTINATION_ICONS, styles, FocusRingShape, focusRingStyle(), BOTTOM_NAV_DESTINATIONS, BottomNavDestination (+27 more)
 
-### Community 6 - "mobile/src/screens/settings/SettingsScreen.tsx"
-Cohesion: 0.06
-Nodes (51): Button(), contentColumnStyle(), ContentColumnStyleShape, settingsCardDividerStyle(), settingsCardStyle(), SettingsCardStyleShape, ConfirmSheet(), ConfirmSheetProps (+43 more)
-
-### Community 7 - "types.ts"
+### Community 6 - "ui-tokens/src/index.ts"
 Cohesion: 0.05
-Nodes (64): exportBackup(), FavoriteRow, FolderRow, PrefRow, ProgressRow, readFavorites(), readFolders(), readPrefs() (+56 more)
+Nodes (46): styles, contentColumnStyle(), ContentColumnStyleShape, settingsCardDividerStyle(), settingsCardStyle(), SettingsCardStyleShape, DRAGON_TREASURE_HEIGHT, DRAGON_TREASURE_WIDTH (+38 more)
+
+### Community 7 - "export.ts"
+Cohesion: 0.05
+Nodes (61): exportBackup(), ExportBackupOptions, FavoriteRow, FolderRow, PrefRow, ProgressRow, readFavorites(), readFolders() (+53 more)
 
 ### Community 8 - "Lint and Package Config"
 Cohesion: 0.07
 Nodes (29): description, devDependencies, eslint, prettier, @ryuunest/eslint-plugin, typescript, typescript-eslint, vitest (+21 more)
 
-### Community 9 - "SqlDriver"
-Cohesion: 0.07
-Nodes (36): createSessionSqlDriver(), Listener, PROGRESS_SAVE_DELAY_MS, ReaderControllerOptions, ReaderOpenTarget, BackupServiceDeps, SettingsServiceDeps, clock (+28 more)
+### Community 9 - "packages_core_src_index_sqldriver"
+Cohesion: 0.08
+Nodes (11): open(), createExpoSqlDriver(), ExpoDatabaseLike, createSessionSqlDriver(), upsertPref(), key(), NO_CHANGES, ONE_CHANGE (+3 more)
 
 ### Community 10 - "Module SDK Package Config"
 Cohesion: 0.07
 Nodes (28): bin, ryuunest-module, dependencies, fflate, @noble/hashes, @ryuunest/core, @ryuunest/test-site, description (+20 more)
 
-### Community 11 - "mobile/src/components/Button.tsx"
-Cohesion: 0.09
-Nodes (27): styles, ButtonProps, styles, BUTTON_MIN_HEIGHT, buttonColors(), ButtonState, buttonStyle(), ButtonStyleShape (+19 more)
+### Community 11 - "react-native"
+Cohesion: 0.06
+Nodes (60): Button(), ButtonProps, styles, BUTTON_MIN_HEIGHT, buttonColors(), ButtonState, buttonStyle(), ButtonStyleShape (+52 more)
 
-### Community 12 - "MediaKind"
-Cohesion: 0.08
-Nodes (34): HomeWebData, LibraryWebData, loadHomeWeb(), loadLibraryWeb(), Datos reales, BackupSeries, MediaKind, SeriesStatus (+26 more)
+### Community 12 - "DeclarativeRuntime"
+Cohesion: 0.22
+Nodes (7): HtmlDocument, DeclarativeRuntime, isHtmlElement(), isMediaKind(), isSeriesStatus(), parseBoolean(), parseError()
 
 ### Community 13 - "import.ts"
-Cohesion: 0.11
-Nodes (34): actualizarFavorito(), actualizarLeido(), actualizarPref(), actualizarProgreso(), actualizarSerie(), claveCarpeta(), claveSerie(), Counts (+26 more)
+Cohesion: 0.07
+Nodes (42): actualizarFavorito(), actualizarLeido(), actualizarPref(), actualizarProgreso(), actualizarSerie(), claveCarpeta(), claveSerie(), Counts (+34 more)
 
 ### Community 14 - "Core Parser Dependencies"
-Cohesion: 0.07
-Nodes (26): dependencies, css-select, domhandler, fflate, htmlparser2, @noble/hashes, description, devDependencies (+18 more)
+Cohesion: 0.10
+Nodes (20): description, devDependencies, @types/node, exports, files, fflate, htmlparser2, @noble/hashes (+12 more)
 
 ### Community 15 - "Design Rules and Screens"
 Cohesion: 0.10
 Nodes (13): Dragon Night design system (root DESIGN.md), Ajustes screen mockup, Biblioteca (Tesoros) screen mockup, Descubrir (Aventuras) screen mockup, Serie detail screen mockup, label-sm implemented at 12px (design table says 11px), Registry of accepted differences between Stitch design and implementation, Fuentes (Portales) screen mockup (+5 more)
 
-### Community 16 - "Anexo A: inventario de la superficie"
-Cohesion: 0.06
-Nodes (54): Anexo A: inventario de la superficie, Decisión 1: qué se puede congelar ya, Chapter, ChapterPages, HomeSection, Host, ImageRef, ModuleHome (+46 more)
+### Community 16 - "ModuleError"
+Cohesion: 0.03
+Nodes (109): Anexo A: inventario de la superficie, Decisión 1: qué se puede congelar ya, Decisión 3: política de compatibilidad, R1. Ejecución y empaquetado de módulos `script` (decide el autor: D1), Reservas aditivas (no forman parte de la 1.0), isModuleError(), isModuleErrorCode(), MODULE_ERROR_CODES (+101 more)
 
 ### Community 17 - "Base TypeScript Config"
 Cohesion: 0.10
 Nodes (20): compilerOptions, declaration, declarationMap, exactOptionalPropertyTypes, forceConsistentCasingInFileNames, isolatedModules, lib, module (+12 more)
 
-### Community 18 - "mobile/src/components/HoldToConfirm.tsx"
+### Community 18 - ".details"
 Cohesion: 0.25
-Nodes (10): HoldToConfirm(), HoldToConfirmProps, styles, HOLD_DURATION_MS, holdFillScale(), holdToConfirmStyle(), HoldToConfirmStyleShape, holdToConfirmTextColor() (+2 more)
+Nodes (18): replace(), Anexo B: formato declarativo tal como está construido, Decisión 5: 2.º sitio real, candidatos (sin instalarlos), 1. Estructura, 3. Plantillas y variables, 5. Listados: `popular`, `latest`, `search`, 9. Transformaciones, trim() (+10 more)
 
 ### Community 19 - "Lista de tareas — RyuuNest Parte 1 (Back-end / Núcleo)"
-Cohesion: 0.04
-Nodes (46): Fase 0 — Fundación, Fase 1 — Contrato y arnés, Fase 2 — Corte vertical 1: instalar un módulo desde un repo, Fase 3 — Corte vertical 2: módulo declarativo, Fase 4 — Corte vertical 3: módulo script, Fase 5 — Corte vertical 4: biblioteca local, Fase 6 — Corte vertical 5: progreso y lecturas, Fase 6a — Sistema de diseño (+38 more)
+Cohesion: 0.03
+Nodes (70): paths(), 🚩 Checkpoint A (tras T01–T05), 🚩 Checkpoint B (tras T06–T11), 🚩 Checkpoint C (tras T12–T15), 🚩 Checkpoint G (tras T25–T27), 🚩 Checkpoint H (tras T28–T30), 🚩 Checkpoint I (tras T31–T32), 🚩 Checkpoint J — Fin de la Parte 1 (tras T33–T35) (+62 more)
 
 ### Community 20 - "Docs, ADRs and Principles"
 Cohesion: 0.12
@@ -401,20 +403,20 @@ Cohesion: 0.11
 Nodes (18): backgroundColor, backgroundImage, foregroundImage, monochromeImage, adaptiveIcon, package, predictiveBackGestureEnabled, expo (+10 more)
 
 ### Community 24 - "platformImports.ts"
-Cohesion: 0.06
-Nodes (33): bindingNames(), createAnalysis(), declaredNames(), describePlatformIssue(), dynamicSpecifier(), ExportSet, EXTENSIONS, findPlatformImportIssues() (+25 more)
+Cohesion: 0.11
+Nodes (23): bindingNames(), createAnalysis(), declaredNames(), describePlatformIssue(), dynamicSpecifier(), ExportSet, EXTENSIONS, findPlatformImportIssues() (+15 more)
 
-### Community 25 - "ui-tokens/src/index.ts"
-Cohesion: 0.10
-Nodes (42): FONTS_DIR, uiTokensSnapshot(), TokensSnapshot, ThemeColors, breakpoints, coverAspectRatio, densities, Density (+34 more)
+### Community 25 - "layout.ts"
+Cohesion: 0.16
+Nodes (19): uiTokensSnapshot(), breakpoints, contentMaxWidth, coverAspectRatio, densities, Density, DensityName, progressBarHeight (+11 more)
 
-### Community 26 - "Folders"
-Cohesion: 0.19
-Nodes (6): Folders, toRecord(), removeSeriesFromLibrary(), RemoveSeriesFromLibraryOptions, withTransaction(), Task T22: Series + favoritos + carpetas (D-12)
+### Community 26 - "index.js"
+Cohesion: 0.11
+Nodes (10): ALLOWED_COLOR_KEYWORDS, ALLOWED_NUMBERS, COLOR_KEYS, MEASURE_KEYS, noDesignLiterals, noRawFontFamily, eslint, REPO_ROOT (+2 more)
 
 ### Community 27 - "seedDb.cjs"
-Cohesion: 0.05
-Nodes (40): assert, { chromium }, assert, { chromium }, FAKE_COVER_HOSTS, fs, output, path (+32 more)
+Cohesion: 0.04
+Nodes (53): assert, { chromium }, assert, { chromium }, FAKE_COVER_HOSTS, fs, output, path (+45 more)
 
 ### Community 28 - "Settings Screen Sections"
 Cohesion: 0.15
@@ -425,12 +427,12 @@ Cohesion: 0.13
 Nodes (14): description, exports, files, license, main, name, private, scripts (+6 more)
 
 ### Community 30 - "mobile/src/screens/reader/useReader.ts"
-Cohesion: 0.10
-Nodes (23): readerChapters(), readingOrder(), sampleSeriesView(), chapterProgress(), ChapterState, preferredRelease(), SeriesProgress, bootReader() (+15 more)
+Cohesion: 0.08
+Nodes (24): readerChapters(), readingOrder(), savedChapterLabel(), ReaderChaptersSheetProps, ReadingSource, ReaderChapterItem, ReaderTarget, ReaderView (+16 more)
 
 ### Community 31 - "libraryFixtures.ts"
-Cohesion: 0.06
-Nodes (69): LibraryRoute(), styles, FilterPatch, FilterSheet(), FilterSheetProps, KINDS, styles, ManageFoldersSheet() (+61 more)
+Cohesion: 0.07
+Nodes (53): LibraryRoute(), styles, ManageFoldersSheetProps, styles, NewFolderSheetProps, PROBLEM_KEYS, styles, SeriesMenuSheetProps (+45 more)
 
 ### Community 32 - "Library Screen Components"
 Cohesion: 0.18
@@ -444,9 +446,9 @@ Nodes (14): apiVersion, baseUrl, capabilities, entry, id, kinds, lang, minAppVer
 Cohesion: 0.14
 Nodes (13): apiVersion, baseUrl, capabilities, entry, id, kinds, lang, name (+5 more)
 
-### Community 36 - "web/src/screens/sources/SourcesScreen.tsx"
-Cohesion: 0.18
-Nodes (6): InstallSheetProps, canConfirmInstall(), INITIAL_SOURCES_FLOW, BadgeProps, InstallPreview, UpdatePreview
+### Community 36 - "web/src/screens/discover/DiscoverScreen.tsx"
+Cohesion: 0.29
+Nodes (6): createInstalledDiscoverSource(), BadgeProps, seriesPath(), DiscoverReady(), DiscoverScreen(), EntryGrid()
 
 ### Community 37 - "Detail Screen Components"
 Cohesion: 0.22
@@ -457,32 +459,32 @@ Cohesion: 0.18
 Nodes (11): Add Repository Button (Añadir repositorio), Content Type Filter Chips (Todos, Manga, Manhwa, Cómic), Top Navigation Header (search, notifications, profile), Import Sources Backup Button (Importar respaldo de fuentes .json), Fuentes (Sources/Portals) Screen Mockup, Community Repository Card (Repositorio Comunitario, ACTIVO), JSON Repository Index (repo.ejemplo.org/indice.json), Nido Security Card (Seguridad del Nido) (+3 more)
 
 ### Community 40 - "transforms.ts"
-Cohesion: 0.05
-Nodes (53): HtmlDocument, HtmlElement, DocumentView, ElementView, parseHtml(), readText(), DECLARATIVE_VARIABLES, DeclarativeChaptersSpec (+45 more)
+Cohesion: 0.14
+Nodes (24): DeclarativeFieldSpec, findJoin(), applyOne(), applyTransforms(), compile(), escapeRegex(), firstNumber(), isTransformName() (+16 more)
 
-### Community 41 - "ModuleError"
-Cohesion: 0.05
-Nodes (67): createSourcesService(), protectionOn(), requireUnlock(), seed(), isModuleError(), MODULE_ERROR_CODES, ModuleError, ModuleErrorCode (+59 more)
+### Community 41 - "FixedClock"
+Cohesion: 0.03
+Nodes (98): Decisión 2: cambios requeridos antes de declarar la 1.0, R3. Compatibilidad hacia delante ejecutable, readModules(), readRepos(), utf8Encode(), IncompatibleModuleEntry, REPO_INDEX_FORMAT, REPO_INDEX_VERSION (+90 more)
 
-### Community 42 - "dependencies"
-Cohesion: 0.07
-Nodes (28): dependencies, expo-asset@~57.0.21, expo-document-picker@~57.0.3, expo-image@~57.0.5, expo-keep-awake@~57.0.2, expo-router@57.0.30, expo-sharing@~57.0.25, expo-status-bar@~57.0.1 (+20 more)
+### Community 42 - "mobile/package.json"
+Cohesion: 0.11
+Nodes (18): expo-asset@~57.0.21, expo-file-system@~57.0.7, expo-keep-awake@~57.0.2, expo-local-authentication@~57.0.3, expo-sharing@~57.0.25, fflate@^0.8.3, @ryuunest/i18n@workspace:*, fflate (+10 more)
 
-### Community 43 - "declarativeConfig.ts"
-Cohesion: 0.18
-Nodes (20): R2. Formato declarativo cerrado y comprobable, DETAILS_FIELDS, FieldsRule, isTransformName(), isValidRegex(), LIST_FIELDS, LIST_METHODS, MethodName (+12 more)
+### Community 43 - "HtmlElement"
+Cohesion: 0.15
+Nodes (7): HtmlElement, DocumentView, ElementView, parseHtml(), readText(), css-select, domhandler
 
-### Community 44 - "log.test.ts"
+### Community 44 - "core/src/index.ts"
 Cohesion: 0.06
-Nodes (31): open(), createExpoSqlDriver(), ExpoDatabaseLike, Call, BuiltQuery, Cursor, migrate(), Migration (+23 more)
+Nodes (47): logStore(), api, details, pkg(), setup(), target, createErrorReporter(), createLogStore() (+39 more)
 
 ### Community 45 - "ReaderMode"
-Cohesion: 0.09
-Nodes (18): ReaderController, ReaderModeSheetProps, BackupPref, ReaderMode, toRecord(), ajustarPagina(), MODOS, pageTotalOf() (+10 more)
+Cohesion: 0.11
+Nodes (12): ReaderController, controller(), toRecord(), ajustarPagina(), pageTotalOf(), ReaderState, ventana(), 🚩 Checkpoint G `[Ops · Baja · N1]` ✅ (pendiente de revisión humana) (+4 more)
 
-### Community 46 - "web/src/screens/discover/DiscoverScreen.tsx"
-Cohesion: 0.15
-Nodes (17): App(), locateSqlWasm(), container, seriesPath(), DiscoverReady(), DiscoverScreen(), EntryGrid(), PagedCanvas() (+9 more)
+### Community 46 - "web/src/screens/reader/ReaderScreen.tsx"
+Cohesion: 0.27
+Nodes (8): fetchImageBlob(), PagedCanvas(), ReaderImageView(), ReaderReady(), ReaderScreen(), VerticalCanvas(), useReader(), useServices()
 
 ### Community 47 - "Core Test TypeScript Config"
 Cohesion: 0.20
@@ -501,8 +503,8 @@ Cohesion: 0.22
 Nodes (8): Declarative module format (CSS selectors), Host interface for script modules, ModuleManifest contract type, Web to extension HTTP bridge protocol (SPEC §10), Declarative module template (module-sdk), Script module template (module-sdk), T16 DeclarativeRuntime task, T18 ScriptRuntime task
 
 ### Community 51 - "cli.ts"
-Cohesion: 0.11
-Nodes (24): applyPlaceholders(), BOOLEAN_FLAGS, CLI_NAME, CliIo, collectFiles(), createCommand(), describe(), domainOf() (+16 more)
+Cohesion: 0.05
+Nodes (72): R2. Formato declarativo cerrado y comprobable, ValidationIssue, applyPlaceholders(), BOOLEAN_FLAGS, CLI_NAME, CliIo, collectFiles(), createCommand() (+64 more)
 
 ### Community 52 - "UI Package Test Config"
 Cohesion: 0.20
@@ -550,15 +552,15 @@ Nodes (5): compilerOptions, noEmit, extends, include, ../../tsconfig.base.json
 
 ### Community 63 - "ref_node_fs"
 Cohesion: 0.04
-Nodes (34): SAMPLE_TAG_FILTERS, SCREENS, SRC, LOCAL_ONLY, PENDING, rnImageFiles(), blueprint, root (+26 more)
+Nodes (34): SCREENS, EXEMPT, SRC, SRC, src(), blueprint, root, output (+26 more)
 
 ### Community 64 - "CI Verification Pipeline"
 Cohesion: 0.50
 Nodes (4): CI pipeline (lint, typecheck, test, build), Verification gate: pnpm lint / typecheck / test / build, P-17: pnpm workspaces monorepo with Vitest, Open question 16: CI runs test before build, likely red on clean checkout
 
-### Community 65 - "mobile/src/screens/series/SeriesScreen.tsx"
-Cohesion: 0.15
-Nodes (19): ChapterRow(), ChapterRowProps, styles, CHAPTER_ROW_MIN_HEIGHT, chapterRowColors, chapterRowStyle(), ChapterRowStyleShape, ChapterSignal (+11 more)
+### Community 65 - "discoverInstalled.test.ts"
+Cohesion: 0.12
+Nodes (3): ADULTO, APAGADO, INSTALADO
 
 ### Community 66 - "Local Fonts and Icons"
 Cohesion: 0.50
@@ -596,89 +598,93 @@ Nodes (3): Package installation flow (SPEC §7.1), Repository index.json format,
 Cohesion: 0.40
 Nodes (4): *.png, *.svg, *.ttf, *.wasm
 
-### Community 110 - "settingsData.ts"
-Cohesion: 0.13
-Nodes (12): clearImageCache(), createAppSecureLock(), createSampleSettingsService(), SettingsService, SettingsView, messageOf(), resolveSettingsService(), SettingsPreferencesState (+4 more)
+### Community 110 - "mobile/src/screens/sources/useSourcesData.ts"
+Cohesion: 0.09
+Nodes (29): FirstUseRoute(), HomeContent(), HomeRoute(), isTvLike(), styles, SettingsRoute(), SourcesRoute(), openAppDatabase() (+21 more)
 
 ### Community 111 - "i18n/src/index.ts"
-Cohesion: 0.18
-Nodes (16): sourceFiles(), SRC, Catalog, catalogKeys(), catalogs, defaultLocale, formatDate(), formatNumber() (+8 more)
+Cohesion: 0.11
+Nodes (24): sourceFiles(), SRC, consumerSourceFiles(), I18N_DIR, OTHER_CONSUMERS, referencedKeys(), sourceFiles(), SRC (+16 more)
 
 ### Community 112 - "test-site/src/index.ts"
-Cohesion: 0.16
-Nodes (27): CAPABILITIES, CONTRACT_METHODS, hostFor(), manifest(), mountDeclarative(), mountScriptHtml(), mountScriptJson(), RUNTIMES (+19 more)
+Cohesion: 0.15
+Nodes (23): CAPABILITIES, CONTRACT_METHODS, hostFor(), manifest(), mountDeclarative(), mountScriptHtml(), mountScriptJson(), RUNTIMES (+15 more)
 
-### Community 113 - "mobile/src/screens/reader/useReader.ts"
-Cohesion: 0.09
-Nodes (20): resolveErrorLog(), resolveErrorReporter(), savedChapterLabel(), messageOf(), ReaderErrorAction, reportReaderError(), ReaderScreenProps, ReaderChaptersSheetProps (+12 more)
+### Community 113 - "web/src/screens/reader/useReader.ts"
+Cohesion: 0.18
+Nodes (10): messageOf(), ReaderErrorAction, reportReaderError(), ReaderBoot, ReaderTarget, ReaderActions, ReaderReadyView, ReaderView (+2 more)
 
 ### Community 114 - "exampleScript.ts"
 Cohesion: 0.22
 Nodes (15): attrIn(), attrOf(), createExampleScript(), createHtmlApi(), createJsonApi(), describe(), ExampleScriptSite, lastSegment() (+7 more)
 
 ### Community 115 - "mobile/src/screens/discover/DiscoverScreen.tsx"
-Cohesion: 0.08
-Nodes (52): TagFilterSheetProps, createCatalogPager(), mergeCatalogPage(), DiscoverLoadOptions, DiscoverLoadResult, countActiveFilters(), countHiddenNsfwModules(), DiscoverEntry (+44 more)
+Cohesion: 0.07
+Nodes (50): TagFilterSheetProps, createCatalogPager(), mergeCatalogPage(), DiscoverDataSource, DiscoverLoadOptions, DiscoverLoadResult, resolveDiscoverSource(), countActiveFilters() (+42 more)
 
 ### Community 116 - "domainsModel.ts"
 Cohesion: 0.13
 Nodes (19): authorizedHostsFrom(), createPendingHosts(), read(), update(), isValidHost(), KeyValueStore, MAX_PENDING_HOSTS, PENDING_KEY (+11 more)
 
-### Community 117 - "sourcesController.ts"
-Cohesion: 0.22
-Nodes (14): createOnboardingController(), OnboardingControllerDeps, createSourcesController(), runSheet(), messageOf(), SourcesControllerDeps, URL_ERROR_KEYS, messageOf() (+6 more)
+### Community 117 - "SourcesService"
+Cohesion: 0.08
+Nodes (18): createOnboardingController(), OnboardingControllerDeps, BackupErrorAction, messageOf(), reportBackupError(), createSourcesController(), runSheet(), messageOf() (+10 more)
 
-### Community 118 - "extensionHttp.ts"
-Cohesion: 0.07
-Nodes (33): internalError(), reply(), openWebServices(), CONTRACT_CODE, createBrowserChannel(), createExtensionHttp(), detect(), ensureExtension() (+25 more)
+### Community 118 - "extensionHttp.test.ts"
+Cohesion: 0.14
+Nodes (19): startBridge(), internalError(), reply(), createExtensionHttp(), detect(), ensureExtension(), exchange(), ExtensionHttpError (+11 more)
 
 ### Community 119 - "renderGallery.ts"
-Cohesion: 0.20
-Nodes (6): galleryEntries, blocks, galleryScreenSource(), renderGalleryScreen(), translatedKeys(), FIXTURE_SERIES
+Cohesion: 0.13
+Nodes (12): colorNames, COMPONENT_STATES, galleryEntries, GalleryEntry, GalleryKind, radiiNames, spacingNames, typeNames (+4 more)
 
 ### Community 120 - "eslint-plugin-ryuunest/package.json"
 Cohesion: 0.11
 Nodes (17): description, devDependencies, eslint, typescript-eslint, vitest, exports, eslint, typescript-eslint (+9 more)
 
 ### Community 121 - "web/src/screens/discover/DiscoverScreen.tsx"
-Cohesion: 0.12
-Nodes (12): HeaderSearch(), DIAGNOSTICS_PATH, discoverSearchPath(), readerPath(), TAB_ROUTES, TabIcon, TabRoute, AppShell() (+4 more)
+Cohesion: 0.13
+Nodes (11): HeaderSearch(), DIAGNOSTICS_PATH, discoverSearchPath(), TAB_ROUTES, TabIcon, TabRoute, AppShell(), TAB_ICONS (+3 more)
 
 ### Community 122 - "[source].tsx"
-Cohesion: 0.11
-Nodes (24): coverSource(), openAppDatabase(), chapterNumberOf(), loadFolders(), loadHomeData(), LoadHomeOptions, loadRecentList(), RECENT_LIST_LIMIT (+16 more)
+Cohesion: 0.06
+Nodes (41): expo-router@57.0.30, DiagnosticsRoute(), ListContent(), ListRoute(), styles, UnknownList(), coverSource(), SafeScreen() (+33 more)
 
 ### Community 123 - "webDatabase.ts"
 Cohesion: 0.07
-Nodes (15): open(), upsertPref(), key(), NO_CHANGES, ONE_CHANGE, ByteStore, createIdbByteStore(), createMemoryByteStore() (+7 more)
+Nodes (12): OpenWebServicesOptions, WebServices, ExtensionHttpOptions, ExtensionStatusStore, ByteStore, createIdbByteStore(), createMemoryByteStore(), IdbByteStoreOptions (+4 more)
 
-### Community 124 - "ref_vitest"
-Cohesion: 0.08
-Nodes (21): FavoriteRecord, FavoriteRow, FolderNameError, FolderOrder, FolderRecord, FolderRow, SeriesRow, SeriesStore (+13 more)
+### Community 124 - "SqlDriver"
+Cohesion: 0.03
+Nodes (91): Listener, PROGRESS_SAVE_DELAY_MS, ReaderControllerOptions, ReaderOpenTarget, clock, stores(), CHAPTERS, clock (+83 more)
 
 ### Community 125 - "webScriptLoader.ts"
 Cohesion: 0.07
 Nodes (32): allImports(), buildLoadOrder(), visit(), packageImports(), resolveImport(), rewriteImports(), ADR-0003, endpoint (+24 more)
 
-### Community 126 - "packages_ui_tokens_src_index_spacing"
+### Community 126 - "FolderCard.tsx"
+Cohesion: 0.32
+Nodes (8): FolderCardProps, styles, FOLDER_CARD_ICON_SIZE, FolderCardColors, folderCardColors(), folderCardContainer(), folderCardStyle(), FolderCardStyleShape
+
+### Community 127 - "SourcesController"
 Cohesion: 0.07
-Nodes (39): ListContent(), ListRoute(), styles, UnknownList(), FirstUseRoute(), HomeContent(), HomeRoute(), isTvLike() (+31 more)
+Nodes (12): OnboardingController, OnboardingStep, OnboardingScreenProps, OnboardingSession, SourcesController, RecommendedView, SourcesView, SourcesFlow (+4 more)
 
-### Community 127 - "mobile/src/screens/sources/useSourcesData.ts"
-Cohesion: 0.12
-Nodes (18): SourcesRoute(), OnboardingController, OnboardingStep, isFirstUseData(), ONBOARDING_COMPLETED_SETTING, OnboardingScreenProps, OnboardingPhase, OnboardingSession (+10 more)
-
-### Community 128 - "ModuleApi"
-Cohesion: 0.04
-Nodes (87): script(), replace(), images(), ADR-0003: Congelación de la API 1.0 de módulos, Anexo B: formato declarativo tal como está construido, Consecuencias, D1. Cómo se ejecutan los módulos `script` (R1), D2. Cabeceras de imagen en el formato declarativo (RF-24, pregunta abierta de `MEMORY.md`) (+79 more)
+### Community 128 - "script"
+Cohesion: 0.08
+Nodes (24): script(), ADR-0003: Congelación de la API 1.0 de módulos, Consecuencias, Contexto, Cómo se obtuvo la evidencia, D1. Cómo se ejecutan los módulos `script` (R1), D2. Cabeceras de imagen en el formato declarativo (RF-24, pregunta abierta de `MEMORY.md`), D3. 2.º sitio real (+16 more)
 
 ### Community 130 - "useSeriesData.ts"
-Cohesion: 0.15
-Nodes (8): toDiscoverError(), reportDiscoverError(), DiscoverError, ReadingSource, SeriesViewData, SeriesScreenProps, SeriesView, useSeriesData()
+Cohesion: 0.33
+Nodes (5): toDiscoverError(), reportDiscoverError(), DiscoverError, SeriesView, useSeriesData()
 
 ### Community 132 - "fontSources.ts"
-Cohesion: 0.18
-Nodes (3): expo-font@~57.0.4, galleryFontSources, expo-font
+Cohesion: 0.15
+Nodes (5): expo-font@~57.0.4, expo-status-bar@~57.0.1, galleryFontSources, expo-font, expo-status-bar
+
+### Community 133 - "bridge.ts"
+Cohesion: 0.15
+Nodes (7): BridgeEvent, BridgeOptions, BridgeRuntime, BridgeWindow, envelope, httpResponse, validRequest
 
 ### Community 135 - "metro.config.js"
 Cohesion: 0.25
@@ -702,7 +708,7 @@ Nodes (9): devDependencies, @react-native/metro-config@0.86.3, @types/react@~19.
 
 ### Community 141 - "ErrorDialog.tsx"
 Cohesion: 0.09
-Nodes (46): CodeChip(), CodeChipProps, styles, ErrorBanner(), ErrorBannerProps, styles, ErrorDialog(), ErrorDialogProps (+38 more)
+Nodes (45): CodeChip(), CodeChipProps, styles, ErrorBanner(), ErrorBannerProps, styles, ErrorDialog(), ErrorDialogProps (+37 more)
 
 ### Community 142 - "Análisis F33: revisión general UX/UI observable"
 Cohesion: 0.15
@@ -721,68 +727,68 @@ Cohesion: 0.22
 Nodes (8): 1. Reglas de sesión (obligatorias), 2. Qué significa cada complejidad, 3. Niveles de modelo (OpenCode Zen), 4. Complejidad por tarea pendiente, 5. Flujos que ahorran tokens, complexity.md — Complejidad, modelo y límites de sesión (RyuuNest), Parte 1 — Núcleo, Parte 2 — Interfaz
 
 ### Community 146 - "seriesData.test.ts"
-Cohesion: 0.06
-Nodes (23): createSampleMounter(), createReadingSource(), createSampleReadingSource(), ReaderPages, ReadingSourceDeps, resolveReadingSource(), SAMPLE_PAGE_ASSETS, seedSample() (+15 more)
+Cohesion: 0.07
+Nodes (21): createSampleMounter(), createReadingSource(), createSampleReadingSource(), ReaderPages, ReadingSourceDeps, resolveReadingSource(), SAMPLE_PAGE_ASSETS, seedSample() (+13 more)
 
 ### Community 147 - "mobile/tests/e2e/shell.cjs"
-Cohesion: 0.14
-Nodes (13): assert, { chromium }, fs, output, path, destinationMarker(), assert, { chromium } (+5 more)
+Cohesion: 0.22
+Nodes (7): assert, { chromium }, fs, output, path, destinationMarker(), F11b Arreglar el e2e obsoleto del shell (`shell.cjs` y `home.cjs`) `[FE · Baja · N1]` ✅
 
 ### Community 148 - "screens/diagnostics/DiagnosticsScreen.tsx"
 Cohesion: 0.17
-Nodes (12): clock(), confirmClearMessage(), DetailLine, eventDetailLines(), eventLevel, EventTone, eventWhen(), startOfDay() (+4 more)
+Nodes (5): confirmPresentation(), ConfirmDialog(), ConfirmDialogProps, useViewportWidth(), DialogProps
 
 ### Community 149 - "web/src/screens/library/LibraryScreen.tsx"
-Cohesion: 0.16
-Nodes (15): Chip(), ChipProps, CoverCard(), DRAGON_VIEWBOX, DragonMarker(), DragonMarkerProps, EmptyState(), EmptyStateProps (+7 more)
+Cohesion: 0.21
+Nodes (10): CoverCard(), DRAGON_VIEWBOX, DragonMarker(), DragonMarkerProps, EmptyState(), EmptyStateProps, ErrorStateProps, EmptyScreen() (+2 more)
 
 ### Community 150 - "Plano de pantalla (FB1)"
 Cohesion: 0.33
 Nodes (5): Estructura de una pantalla, Patrón, Plano de pantalla (FB1), Textos y tokens, Verificación con Playwright
 
-### Community 151 - "DiscoverDataSource"
-Cohesion: 0.29
-Nodes (4): DiscoverDataSource, DiscoverModule, Boot, DiscoverDataDeps
+### Community 151 - "ReaderVertical.tsx"
+Cohesion: 0.36
+Nodes (11): pageAspect(), anchorDelta(), createScrollAnchor(), pageAtOffset(), pageHeightFor(), pageHeights(), pageOffset(), shouldMountImage() (+3 more)
 
 ### Community 152 - "F28 — Verificación por pantalla (AC-12, parte web/Playwright)"
 Cohesion: 0.22
 Nodes (8): Comprobaciones automáticas de AGENTS.md §5 — todas en verde en las 34 capturas, Cómo se ejecutó, Estado de AC-12, F28 — Verificación por pantalla (AC-12, parte web/Playwright), Hallazgos para tareas siguientes (no bloquean F28), Lista de 20 segundos (DESIGN_RULES.md §6) — pasada por pantalla, Pantallas comparadas contra su `screen.png`, Rojo → verde durante F28 (los chequeos en rojo cazaron 4 cosas)
 
 ### Community 153 - "mobile/src/components/ErrorState.tsx"
-Cohesion: 0.16
-Nodes (20): DRAGON_VIEWBOX, colors, EmptyState(), EmptyStateProps, styles, colors, ErrorStateProps, styles (+12 more)
+Cohesion: 0.14
+Nodes (25): DRAGON_VIEWBOX, DragonMarker(), colors, EmptyStateProps, styles, colors, ErrorState(), ErrorStateProps (+17 more)
 
-### Community 154 - "LogEventRow.tsx"
-Cohesion: 0.20
-Nodes (12): LogEventDetailLine, LogEventRow(), LogEventRowProps, styles, ToneIcon(), LOG_EVENT_ICON_SIZE, LogEventDetailBoxShape, logEventDetailBoxStyle() (+4 more)
+### Community 154 - "packages_ui_tokens_src_index_spacing"
+Cohesion: 0.09
+Nodes (26): LogEventDetailLine, LogEventRow(), LogEventRowProps, styles, ToneIcon(), LOG_EVENT_ICON_SIZE, LogEventDetailBoxShape, logEventDetailBoxStyle() (+18 more)
 
 ### Community 155 - "backupData.ts"
-Cohesion: 0.15
-Nodes (8): BackupImportSummary, BackupService, BackupSuggestions, ModuleSuggestion, RepoSuggestion, SAMPLE_SUGGESTIONS, SampleBackupState, ImportMode
+Cohesion: 0.26
+Nodes (9): BackupImportSummary, BackupSuggestions, ModuleSuggestion, RepoSuggestion, SAMPLE_SUGGESTIONS, SampleBackupState, ImportMode, ImportResult (+1 more)
 
-### Community 156 - "core/src/index.ts"
-Cohesion: 0.12
-Nodes (19): logStore(), build(), createLogStore(), isoDate(), ListOptions, LOG_MAX_ENTRIES, LogExportFormat, LogLevel (+11 more)
+### Community 156 - "Fase 7 — Respaldo"
+Cohesion: 0.10
+Nodes (21): F12 Primer uso (3 pasos) + estado vacío `[FE · Intermedia · N3]` ✅, F13 Inicio `[FE · Intermedia · N3]` ✅ (pendiente Playwright + POCO), F14a Biblioteca: cuadrícula, búsqueda y filtros `[FE · Intermedia · N3]` ✅ (pendiente Playwright + POCO), F14b Biblioteca: carpetas y orden `[FE · Intermedia · N3]` ✅ (pendiente Playwright + POCO), F16c Repo oficial por defecto `[FE · Baja · N2]` ✅ (nace de F16/F12), F18 Lector 1 `[FE · Alta · N4]` ✅, F19 Lector 2 `[FE · Alta · N4]` ✅, F20 Ajustes `[FE · Baja · N2]` (+13 more)
 
-### Community 157 - "FixedClock"
-Cohesion: 0.06
-Nodes (36): utf8Encode(), InstallFlowOptions, InstallRequest, PackageInstaller, Archive, ArchiveEntry, FakeArchive, FixedClock (+28 more)
+### Community 157 - "tokensSnapshot.ts"
+Cohesion: 0.23
+Nodes (10): TokensSnapshot, ThemeColors, FontFile, BreakpointName, RadiusToken, SpacingToken, dragonNight, getTheme() (+2 more)
 
 ### Community 158 - "fixtures.ts"
-Cohesion: 0.17
-Nodes (13): cronicasDeMoonlit, dracoDeJade, dragonDeCeniza, findChapter(), findSeries(), FIXTURE_DEFAULTS, FixtureChapter, FixtureDefaults (+5 more)
+Cohesion: 0.20
+Nodes (16): cronicasDeMoonlit, dracoDeJade, dragonDeCeniza, findChapter(), findSeries(), FIXTURE_DEFAULTS, FIXTURE_SERIES, FixtureChapter (+8 more)
 
 ### Community 159 - "[seriesId].tsx"
-Cohesion: 0.13
-Nodes (12): SeriesRoute(), SeriesRouteContent(), clock, createAndSave(), GEMS_OPTION_ID, loadSaveOptions(), SaveFolderOption, SaveFolderState (+4 more)
+Cohesion: 0.10
+Nodes (19): SeriesRoute(), SeriesRouteContent(), styles, cover, LIBRARY_PAGE_SIZE, loadAllEntries(), loadLibraryData(), LoadLibraryOptions (+11 more)
 
 ### Community 160 - "PARTE 2 — DISEÑO Y FRONT-END (Fases 6a, 6b, 7 y 8 del SPEC)"
 Cohesion: 0.25
 Nodes (7): P2.1 Resumen y alcance, P2.2 Decisiones, P2.3 Grafo de dependencias, P2.4 Estrategia de cortes verticales, P2.6 Riesgos (Parte 2), P2.7 Preguntas abiertas (Parte 2), PARTE 2 — DISEÑO Y FRONT-END (Fases 6a, 6b, 7 y 8 del SPEC)
 
-### Community 161 - "module-sdk/src/index.ts"
-Cohesion: 0.11
-Nodes (14): ValidationIssue, MODULE_SDK_VERSION, MEDIA_KINDS, MODULE_CAPABILITIES, MODULE_RUNTIMES, ValidateOptions, incompatibility(), validateRepoIndex() (+6 more)
+### Community 161 - "headers.ts"
+Cohesion: 0.21
+Nodes (9): buildHeaderRule(), ClassifiedHeaders, classifyHeaders(), createHeaderRules(), escapeRegex(), FORBIDDEN_HEADER_NAMES, HeaderRule, RULE_HEADER_NAMES (+1 more)
 
 ### Community 162 - "focusPressableUsage.test.ts"
 Cohesion: 0.29
@@ -792,93 +798,93 @@ Nodes (6): dir, OWN_RING, PENDING, raw, rawPressableFiles(), WRAPPER
 Cohesion: 0.07
 Nodes (38): dependencies, lucide-react@1.66.0, react@19.3.1, react-dom@19.3.1, @ryuunest/extension-protocol@workspace:*, @ryuunest/i18n@workspace:*, @ryuunest/ui-tokens@workspace:*, description (+30 more)
 
-### Community 164 - "web/src/screens/settings/useSettingsData.ts"
-Cohesion: 0.21
-Nodes (9): createSettingsService(), readReaderMode(), SettingsData, build(), createWebBackupFiles(), downloadText(), messageOf(), SettingsState (+1 more)
+### Community 164 - "typography.ts"
+Cohesion: 0.30
+Nodes (8): fontFiles, fontLicenses, scaleSize(), scaleStyle(), scaleTypography(), FontFamily, fonts, TypeStyle
 
 ### Community 165 - "background/index.ts"
-Cohesion: 0.15
-Nodes (11): deps, headerRules, pending, ready, sessionRules, ext, APP_ORIGINS, REQUEST_TIMEOUT_MS (+3 more)
+Cohesion: 0.20
+Nodes (10): deps, headerRules, pending, ready, sessionRules, ext, APP_ORIGINS, REQUEST_TIMEOUT_MS (+2 more)
 
 ### Community 166 - "web-db/package.json"
 Cohesion: 0.10
 Nodes (22): dependencies, @ryuunest/core@workspace:*, sql.js@1.15.2, description, devDependencies, @types/sql.js@1.4.11, exports, files (+14 more)
 
 ### Community 167 - "extension-protocol/src/index.ts"
-Cohesion: 0.12
-Nodes (31): BridgeEvent, BridgeOptions, BridgeRuntime, startBridge(), envelope, httpResponse, validRequest, AckResponse (+23 more)
+Cohesion: 0.19
+Nodes (23): AckResponse, BodyEncoding, Envelope, ErrorResponse, EXTENSION_ERROR_CODES, ExtensionErrorCode, HTTP_METHODS, HttpMethod (+15 more)
 
 ### Community 168 - "backupData.test.ts"
-Cohesion: 0.17
-Nodes (9): createBackupFiles(), backupFileName(), BackupFiles, PickResult, ShareResult, createBackupService(), summarizeImport(), build() (+1 more)
+Cohesion: 0.23
+Nodes (8): createBackupFiles(), backupFileName(), BackupFiles, PickResult, ShareResult, FakeFiles, createWebBackupFiles(), downloadText()
 
 ### Community 169 - "web/src/screens/settings/SettingsScreen.tsx"
-Cohesion: 0.27
-Nodes (6): INSTALL_PROTECTION_HINT_KEYS, installProtectionHintKey(), READER_MODE_OPTIONS, Switch(), SwitchProps, SettingsScreen()
+Cohesion: 0.20
+Nodes (11): createBackupController(), backupFlowReducer(), INSTALL_PROTECTION_HINT_KEYS, installProtectionHintKey(), READER_MODE_OPTIONS, setup(), Switch(), SwitchProps (+3 more)
 
 ### Community 170 - "deviceSecureLock.ts"
-Cohesion: 0.33
-Nodes (5): expo-local-authentication@~57.0.3, createDeviceSecureLock(), LocalAuthLike, createAppSecureLock(), expo-local-authentication
+Cohesion: 0.48
+Nodes (3): createDeviceSecureLock(), LocalAuthLike, createAppSecureLock()
 
 ### Community 171 - "fflate"
-Cohesion: 0.26
+Cohesion: 0.24
 Nodes (8): output, png, buildCalibrationPng(), chunk(), crc32(), header(), rawPixels(), SIGNATURE
 
-### Community 172 - "devDependencies"
-Cohesion: 0.17
-Nodes (12): devDependencies, @types/react@~19.2.2, @types/react-dom@~19.2.0, @types/sql.js@1.4.11, typescript@~6.0.3, vite@8.3.5, vitest@5.0.4, @types/react (+4 more)
+### Community 172 - "FloatingActionButton.tsx"
+Cohesion: 0.30
+Nodes (8): FloatingActionButton(), FloatingActionButtonProps, styles, FAB_ICON_SIZE, FAB_SIZE, floatingButtonIconColor(), floatingButtonStyle(), FloatingButtonStyleShape
 
 ### Community 173 - "web/src/screens/series/SeriesScreen.tsx"
-Cohesion: 0.12
-Nodes (16): DomainRow(), DomainRowProps, container, OptionsApp(), Button(), ButtonProps, ButtonVariant, ErrorState() (+8 more)
+Cohesion: 0.21
+Nodes (10): DomainRow(), DomainRowProps, container, OptionsApp(), Button(), ButtonProps, ButtonVariant, HoldToConfirm() (+2 more)
 
 ### Community 174 - "sites.ts"
-Cohesion: 0.11
-Nodes (22): listFields, apiSummary(), escapeHtml(), HTML_SELECTORS, htmlListBody(), jsonDetailBody(), jsonListBody(), jsonPagesBody() (+14 more)
+Cohesion: 0.14
+Nodes (21): apiSummary(), createJsonApiSite(), escapeHtml(), htmlListBody(), imageUrlsFor(), jsonDetailBody(), jsonListBody(), jsonPagesBody() (+13 more)
 
 ### Community 175 - "harness.test.ts"
-Cohesion: 0.13
-Nodes (11): FLAGS, handle(), page(), series(), createEstimatingApi(), createFixtureApi(), fixtureSeries(), slicePage() (+3 more)
+Cohesion: 0.23
+Nodes (6): createEstimatingApi(), createFixtureApi(), fixtureSeries(), slicePage(), toDetails(), toSummary()
 
 ### Community 176 - "ReaderPageImage.tsx"
-Cohesion: 0.07
-Nodes (53): capFor(), clampCount(), decodedBytes(), toMB(), ImageCapPanel(), step(), INITIAL_PAGE_LOAD, PAGE_ERROR_MESSAGE_KEYS (+45 more)
+Cohesion: 0.28
+Nodes (12): INITIAL_PAGE_LOAD, PAGE_ERROR_MESSAGE_KEYS, PageErrorKind, pageErrorKind(), PageImageRef, PageImageSource, pageImageSource(), PageLoad (+4 more)
 
-### Community 177 - "react-native"
-Cohesion: 0.10
-Nodes (28): Calibration Page Gradient Image, Full-Screen Color Gradient Calibration Pattern, Checkbox(), CheckboxProps, styles, CHECKBOX_SIZE, checkboxStyle(), CheckStyleShape (+20 more)
+### Community 177 - "ImageCapPanel.tsx"
+Cohesion: 0.35
+Nodes (9): Calibration Page Gradient Image, Full-Screen Color Gradient Calibration Pattern, capFor(), clampCount(), decodedBytes(), toMB(), ImageCapPanel(), step() (+1 more)
 
-### Community 178 - "i18n/index.ts"
-Cohesion: 0.07
-Nodes (34): ReaderRoute(), styles, styles, ReaderBottomBar(), ReaderBottomBarProps, ReaderTopBar(), ReaderTopBarProps, styles (+26 more)
+### Community 178 - "mobile/src/screens/reader/ReaderScreen.tsx"
+Cohesion: 0.14
+Nodes (22): columnWidth(), DEFAULT_PAGE_ASPECT, percentOf(), READER_MAX_WIDTH, ReaderTapAction, tapActionFor(), TapZone, tapZoneAt() (+14 more)
 
 ### Community 179 - "harness.ts"
 Cohesion: 0.26
 Nodes (10): assertDetails(), assertImageHeaders(), assertImages(), assertPage(), checkListing(), ContractError, ContractHarnessOptions, ContractReport (+2 more)
 
 ### Community 180 - "module-sdk/tests/manifest.test.ts"
-Cohesion: 0.15
+Cohesion: 0.17
 Nodes (3): validManifest, validEntry, validIndex
 
 ### Community 181 - "discoverData.ts"
-Cohesion: 0.07
-Nodes (21): createInstalledDiscoverSource(), createSampleDiscoverSource(), getDiscoverModules(), InstalledSourceDeps, LAST_MODULE_SETTING, loadDiscoverData(), loadFromApi(), mountedSamples (+13 more)
-
-### Community 182 - "ModulePicker.tsx"
 Cohesion: 0.10
-Nodes (25): ChipScroller(), ChipScrollerProps, styles, ModulePicker(), ModulePickerOption, ModulePickerProps, styles, modulePickerRowStyle() (+17 more)
+Nodes (18): createSampleDiscoverSource(), getDiscoverModules(), InstalledSourceDeps, LAST_MODULE_SETTING, loadDiscoverData(), loadFromApi(), mountedSamples, mountSample() (+10 more)
+
+### Community 182 - "mobile/src/screens/discover/DiscoverScreen.tsx"
+Cohesion: 0.06
+Nodes (49): Checkbox(), CheckboxProps, styles, CHECKBOX_SIZE, checkboxStyle(), CheckStyleShape, radioStyle(), textFieldColors() (+41 more)
 
 ### Community 183 - "web/package.json"
-Cohesion: 0.08
-Nodes (32): dependencies, fflate@^0.8.3, lucide-react@1.66.0, react@19.3.1, react-dom@19.3.1, react-router@8.5.1, @ryuunest/core@workspace:*, @ryuunest/extension-protocol@workspace:* (+24 more)
+Cohesion: 0.06
+Nodes (45): dependencies, fflate@^0.8.3, lucide-react@1.66.0, react@19.3.1, react-dom@19.3.1, react-router@8.5.1, @ryuunest/core@workspace:*, @ryuunest/extension-protocol@workspace:* (+37 more)
 
-### Community 184 - "SectionHeader.tsx"
-Cohesion: 0.27
-Nodes (7): SectionHeader(), SectionHeaderProps, styles, SECTION_HEADER_MIN_HEIGHT, sectionHeaderColors, sectionHeaderStyle(), SectionHeaderStyleShape
+### Community 184 - "useReaderPrefetch.ts"
+Cohesion: 0.41
+Nodes (9): memoryCap(), NEXT_CHAPTER_PRELOAD, nextChapterPreload(), pagedAhead(), READER_IMAGE_BUDGET_MB, shouldPreloadNext(), prefetch(), useReaderPrefetch() (+1 more)
 
-### Community 185 - "i18nUsage.test.ts"
-Cohesion: 0.19
-Nodes (7): consumerSourceFiles(), I18N_DIR, OTHER_CONSUMERS, referencedKeys(), sourceFiles(), SRC, usedKeys()
+### Community 185 - ".fetch"
+Cohesion: 0.26
+Nodes (8): images(), Límites conocidos que no bloquean (van a otras tareas), R4. Contrato escrito y comprobado en ejecución, 7. Páginas: `pages`, HostRequestInit, HostResponse, T37 Contrato escrito y validado en ejecución (R4) `[BE · Intermedia · N3]` ✅, Task T19: E2E script contra el sitio falso
 
 ### Community 186 - "zoomMath.ts"
 Cohesion: 0.26
@@ -894,23 +900,27 @@ Nodes (14): description, exports, files, license, main, name, private, scripts (
 
 ### Community 189 - "f28Screens.cjs"
 Cohesion: 0.05
-Nodes (34): assert, { chromium }, assert, { chromium }, routes, assert, brokenManifest, { chromium } (+26 more)
+Nodes (34): assert, brokenManifest, { chromium }, crypto, MANIFEST, { zipSync, strToU8 }, open(), shots (+26 more)
 
-### Community 191 - "ModuleRuntime.ts"
-Cohesion: 0.20
-Nodes (19): isModuleErrorCode(), ModuleErrorDetails, detailsShapeViolation(), filtersShapeViolation(), homeShapeViolation(), isNonEmptyString(), isPlainObject(), pageShapeViolation() (+11 more)
+### Community 191 - "guardApi"
+Cohesion: 0.45
+Nodes (9): detailsShapeViolation(), filtersShapeViolation(), homeShapeViolation(), isNonEmptyString(), isPlainObject(), pageShapeViolation(), pagesShapeViolation(), ADR-0003 (+1 more)
+
+### Community 192 - "RowReader"
+Cohesion: 0.16
+Nodes (9): claveSerie(), esHttps(), isRecord(), readSettings(), RowReader, validateBackup(), section(), withCoverHeaders() (+1 more)
 
 ### Community 193 - "tokensCssPlugin.ts"
-Cohesion: 0.24
-Nodes (7): emitTokensCss(), kebab(), TOKENS_CSS_ID, tokensCssPlugin(), Hook, vite, F24 Cliente web (React + Vite) `[FE · Intermedia · N3]`
+Cohesion: 0.16
+Nodes (11): at(), logger, srcAlias(), vite@8.3.5, emitTokensCss(), kebab(), TOKENS_CSS_ID, tokensCssPlugin() (+3 more)
 
 ### Community 194 - "BackupController"
-Cohesion: 0.18
+Cohesion: 0.16
 Nodes (6): BackupController, BackupFlow, BackupSectionProps, BackupSheetsProps, BackupState, SettingsScreenProps
 
-### Community 195 - "focusAndScale.cjs"
-Cohesion: 0.20
-Nodes (6): assert, checkFocusRing(), { chromium }, newPage(), readFocusRing(), ROUTES
+### Community 195 - "f28Screens.cjs"
+Cohesion: 0.22
+Nodes (9): COLOR_VARS, cors(), MANIFEST, OUT, PAGE_SVG, runChecks(), snap(), W (+1 more)
 
 ### Community 196 - "i18n/tsconfig.json"
 Cohesion: 0.25
@@ -925,164 +935,172 @@ Cohesion: 0.33
 Nodes (6): scripts, build, dev, preview, test, typecheck
 
 ### Community 200 - "handler.ts"
-Cohesion: 0.08
-Nodes (22): failure(), FetchFn, FetchInit, FetchResponseLike, handleHttp(), handleMessage(), HandlerDeps, Sender (+14 more)
+Cohesion: 0.13
+Nodes (13): failure(), FetchFn, FetchInit, FetchResponseLike, handleHttp(), handleMessage(), HandlerDeps, Sender (+5 more)
 
 ### Community 201 - "ports/fetchHttp.ts"
 Cohesion: 0.36
 Nodes (5): createFetchHttp(), FetchInitLike, FetchLike, FetchResponseLike, stubFetch()
 
-### Community 202 - "SeriesPrefs.ts"
-Cohesion: 0.28
-Nodes (6): defaultReaderModeFor(), modoConocido(), MODOS, SeriesPreference, SeriesPrefRow, toRecord()
+### Community 202 - "ChipScroller.tsx"
+Cohesion: 0.33
+Nodes (7): ChipScroller(), ChipScrollerProps, styles, fadeColors(), ScrollFade, scrollFadeState(), ScrollMeasure
 
 ### Community 203 - "extension/manifest.json"
 Cohesion: 0.10
 Nodes (20): action, default_title, background, scripts, service_worker, browser_specific_settings, gecko, content_scripts (+12 more)
 
-### Community 204 - "vite.options.config.ts"
-Cohesion: 0.33
-Nodes (5): at(), logger, srcAlias(), @vitejs/plugin-react@6.1.2, @vitejs/plugin-react
+### Community 204 - "BackupService"
+Cohesion: 0.22
+Nodes (4): BackupService, ImportSuggestions, BackupModule, BackupRepo
 
 ### Community 205 - "bridge.cjs"
-Cohesion: 0.11
-Nodes (14): dist, findChromium(), PNG, setup(), startServer(), shots, fs, http (+6 more)
+Cohesion: 0.09
+Nodes (15): root, dist, findChromium(), PNG, setup(), startServer(), shots, fs (+7 more)
 
-### Community 206 - "useBackupData.ts"
-Cohesion: 0.21
-Nodes (15): SettingsRoute(), createBackupFiles(), BackupControllerDeps, createBackupController(), BackupFlowAction, backupFlowReducer(), INITIAL_BACKUP_FLOW, createSampleBackupService() (+7 more)
+### Community 206 - "backupFlow.ts"
+Cohesion: 0.32
+Nodes (6): BackupControllerDeps, BackupFlowAction, INITIAL_BACKUP_FLOW, openImportMode(), SAMPLE_TEXT, ImportRejection
 
-### Community 207 - "fontWeightGuard.test.ts"
-Cohesion: 0.22
-Nodes (7): EXEMPT, sources(), SRC, Defectos de 273 px (corregidos en esta tarea), F34.3 — Menores y verificación (web y nativo), Lista de 20 segundos (`DESIGN_RULES.md` §6) — pantallas tocadas: Biblioteca, Fuentes, barra de pestañas web, Ajustes (interruptor), galería, Qué se midió y cómo
+### Community 207 - "build.mjs"
+Cohesion: 0.29
+Nodes (7): alias, at(), manifest, missing, referenced, root, shared
 
 ### Community 208 - "debounce.ts"
 Cohesion: 0.47
 Nodes (4): createDebouncer(), Debouncer, SEARCH_DEBOUNCE_MS, useDebouncedValue()
 
 ### Community 209 - "settings/diagnostics/useDiagnosticsData.ts"
-Cohesion: 0.06
-Nodes (45): DiagnosticsRoute(), SafeScreen(), isNativePlatform(), copyText(), createDiagnosticsFiles(), createDiagnosticsFiles(), diagnosticsFileName(), DiagnosticsFiles (+37 more)
+Cohesion: 0.07
+Nodes (39): copyText(), createDiagnosticsFiles(), createDiagnosticsFiles(), diagnosticsFileName(), DiagnosticsFiles, diagnosticsMimeType(), EXTENSIONS, MIME_TYPES (+31 more)
 
 ### Community 210 - "compilerOptions"
 Cohesion: 0.12
 Nodes (15): compilerOptions, jsx, lib, noEmit, paths, resolveJsonModule, types, extends (+7 more)
 
 ### Community 211 - "sourcesFixtures.ts"
-Cohesion: 0.14
-Nodes (20): OnboardingSample(), styles, useOnboardingSession(), clone(), createSampleSourcesService(), find(), SAMPLE_SHA256, SourcesData (+12 more)
+Cohesion: 0.10
+Nodes (24): hasInstalledModule(), isFirstUseData(), ONBOARDING_COMPLETED_SETTING, OnboardingPhase, useOnboardingSession(), clone(), createSampleSourcesService(), SAMPLE_SHA256 (+16 more)
 
-### Community 212 - "manifest.ts"
-Cohesion: 0.37
-Nodes (14): requireString(), validateEnum(), validateEnumArray(), validateId(), validateManifest(), validateMinAppVersion(), validateModuleFields(), validateOptionalString() (+6 more)
+### Community 212 - "backupData.test.ts"
+Cohesion: 0.33
+Nodes (3): createBackupService(), summarizeImport(), build()
+
+### Community 213 - "dependencies"
+Cohesion: 0.33
+Nodes (6): dependencies, css-select, domhandler, fflate, htmlparser2, @noble/hashes
 
 ### Community 214 - "extension-protocol/package.json"
 Cohesion: 0.13
 Nodes (14): description, exports, files, license, main, name, private, scripts (+6 more)
 
-### Community 215 - "Archivo 2 — Bloques completados podados del todo.md (2026-10-28 → 2026-11-08)"
-Cohesion: 0.33
-Nodes (5): Archivo 2 — Bloques completados podados del todo.md (2026-10-28 → 2026-11-08), 🚩 Checkpoint G `[Ops · Baja · N1]` ✅ (pendiente de revisión humana), Fase 6 — Progreso y lecturas, T05b Identidad de la app (P-71) `[Ops · Baja · N1]` ✅, T25b Borrar progreso y capítulos leídos al quitar una serie (P-62) `[BE · Baja · N2]` ✅
+### Community 215 - "Tareas completadas retiradas de `todo.md` el 2026-11-16 (reorganización por secciones)"
+Cohesion: 0.14
+Nodes (13): Archivo 2 — Bloques completados podados del todo.md (2026-10-28 → 2026-11-08), F25 Pantallas web — restante `[FE · Baja · N2]`, F31 Integrar errores en las pantallas — verificación restante `[FE · Baja · N2]`, F35 Portadas en blanco de M440 y YupManga `[FE/Ops · Intermedia · N3]`, F38 Descubrir: refresco al recuperar el foco `[FE · Baja · N2]`, F50 Botón de filtros por etiquetas en el buscador de Descubrir `[FE · Intermedia · N3]`, F60 Búsqueda global de la cabecera `[FE · Intermedia · N3]`, F77 Descubrir: texto de error del lector de imagen en la web `[FE · Baja · N2]` (+5 more)
 
 ### Community 216 - "CLAUDE.md — RyuuNest"
 Cohesion: 0.15
 Nodes (12): 0. Autoridad, alcance y dudas, 1. Inicio de sesión, 2. TDD y verificación, 3. Código y UI, 4. Graphify, 5. MEMORY.md, 6. Git, 7. Cierre (+4 more)
 
 ### Community 218 - "backup.cjs"
-Cohesion: 0.08
-Nodes (21): assert, { chromium }, fs, os, output, path, assert, { chromium } (+13 more)
+Cohesion: 0.12
+Nodes (13): assert, { chromium }, fs, os, output, path, assert, { chromium } (+5 more)
 
 ### Community 220 - "discover.tsx"
-Cohesion: 0.30
-Nodes (11): DiscoverRoute(), HeaderModuleSwitcher(), clearModuleSwitcher(), emit(), getModuleSwitcher(), listeners, ModuleSwitcherState, publishModuleSwitcher() (+3 more)
+Cohesion: 0.31
+Nodes (10): DiscoverRoute(), HeaderModuleSwitcher(), clearModuleSwitcher(), emit(), getModuleSwitcher(), listeners, ModuleSwitcherState, publishModuleSwitcher() (+2 more)
 
-### Community 222 - "ref_node_url"
+### Community 222 - "ref_vitest"
 Cohesion: 0.08
-Nodes (10): alias, at(), manifest, missing, referenced, root, shared, root (+2 more)
+Nodes (10): galleryStyleLiterals(), StyleLiterals, LOCAL_ONLY, PENDING, rnImageFiles(), ModulePaging, modulePaging(), Config (+2 more)
 
 ### Community 223 - "fakes.ts"
-Cohesion: 0.03
-Nodes (58): setup(), Contexto, Cómo se obtuvo la evidencia, Límites conocidos que no bloquean (van a otras tareas), R4. Contrato escrito y comprobado en ejecución, Uso real de la API (tres módulos publicados), HostRequestInit, HostResponse (+50 more)
+Cohesion: 0.06
+Nodes (38): BackupServiceDeps, createMemorySettings(), HOST_DEFAULTS, HostLogger, HostLogLevel, ModuleHost, ModuleHostOptions, ModuleSettings (+30 more)
 
 ### Community 224 - "Extensión de RyuuNest (F26)"
 Cohesion: 0.25
 Nodes (7): Compilar y cargar, Comprobaciones, Extensión de RyuuNest (F26), Pendiente, Usarla, dist(), Task F05: Galería de componentes (pantalla de desarrollo)
 
-### Community 225 - "sampleSettingsService.ts"
-Cohesion: 0.22
-Nodes (10): CONTENT_VISIBLE_SETTING, DEFAULT_LANGUAGE, DEFAULT_READER_MODE, DEFAULT_READER_MODE_SETTING, LANGUAGE_SETTING, READER_MODES, SettingsListener, NO_LOCK_SETTINGS_DATA (+2 more)
+### Community 225 - "sourcesData.ts"
+Cohesion: 0.07
+Nodes (26): OFFICIAL_REPO_DISMISSAL_SETTING, OFFICIAL_REPO_URL, RECOMMENDED_URL, REPO_NAME, CONTENT_VISIBLE_SETTING, createSettingsService(), DEFAULT_LANGUAGE, DEFAULT_READER_MODE (+18 more)
 
 ### Community 226 - "sourcesData.test.ts"
-Cohesion: 0.08
-Nodes (20): OFFICIAL_REPO_DISMISSAL_SETTING, OFFICIAL_REPO_URL, RECOMMENDED_URL, REPO_NAME, IncompatibleSource, INSTALL_PROTECTION_SETTING, RepoRow, SourcesServiceDeps (+12 more)
+Cohesion: 0.11
+Nodes (10): createSourcesService(), protectionOn(), requireUnlock(), build(), manifestOf(), Repo, text(), Version (+2 more)
 
 ### Community 227 - "extension-protocol/tsconfig.json"
 Cohesion: 0.25
 Nodes (7): compilerOptions, lib, outDir, rootDir, extends, include, ../../tsconfig.base.json
 
-### Community 228 - "web/src/icons.ts"
-Cohesion: 0.17
-Nodes (16): Banner(), BannerProps, Dialog(), DialogProps, AddRepoDialog(), InstallDialog(), ManageDialog(), PreviewRows() (+8 more)
+### Community 228 - "ExtensionNotice.tsx"
+Cohesion: 0.33
+Nodes (6): Banner(), BannerProps, ExtensionNotice(), extensionNotice, keys, F27 Puente web ↔ extensión `[FE/BE · Alta · N4]`
 
 ### Community 229 - "extension-protocol/tsconfig.test.json"
 Cohesion: 0.29
 Nodes (6): compilerOptions, lib, noEmit, extends, include, ../../tsconfig.base.json
 
 ### Community 231 - "functionScriptLoader.ts"
-Cohesion: 0.50
-Nodes (8): compileScriptPackage(), importDeclarations(), importsOf(), loadOrder(), visit(), resolveImport(), transformFile(), unsupported()
+Cohesion: 0.26
+Nodes (11): compileScriptPackage(), createFunctionScriptLoader(), importDeclarations(), importsOf(), loadOrder(), visit(), resolveImport(), transformFile() (+3 more)
 
 ### Community 232 - "design-md.test.ts"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (8): COLOR_ALIASES, designColors, designMd, designRadii, designSpacing, designTypography, FM, TYPE_ALIASES
 
 ### Community 233 - ".mcp.json"
 Cohesion: 0.40
 Nodes (4): agent-device, graphify-mcp, agent-device, graphify
 
-### Community 234 - "mobile/tests/fonts.test.ts"
-Cohesion: 0.50
-Nodes (4): readTtfNames(), TtfNames, weightFrom(), WEIGHTS
+### Community 234 - "useBackupData.ts"
+Cohesion: 0.80
+Nodes (4): createBackupFiles(), createSampleBackupService(), createAppBackupService(), resolveBackupService()
 
 ### Community 235 - "GalleryScreen.tsx"
 Cohesion: 0.07
-Nodes (27): App(), styles, GalleryRoute(), FloatingActionButton(), FloatingActionButtonProps, styles, FAB_ICON_SIZE, FAB_SIZE (+19 more)
+Nodes (47): App(), styles, GalleryRoute(), Chip(), DragonTreasure(), EmptyState(), FilterPatch, FilterSheet() (+39 more)
 
-### Community 236 - "appServices.ts"
-Cohesion: 0.09
-Nodes (4): OpenWebServicesOptions, WebServices, ExtensionHttpOptions, ExtensionStatusStore
+### Community 236 - "ReaderImage"
+Cohesion: 0.50
+Nodes (4): ReaderPaged(), ReaderPagedProps, ReaderPageImageProps, ReaderImage
+
+### Community 238 - "exampleDeclarative.ts"
+Cohesion: 0.40
+Nodes (3): EXAMPLE_DECLARATIVE, listFields, HTML_SELECTORS
 
 ### Community 239 - "OnboardingScreen.tsx"
 Cohesion: 0.10
-Nodes (45): DragonMarker(), KIND_KEYS, kindLabel(), LoadingState(), ModuleRow(), ModuleRowProps, styles, moduleRowStyle() (+37 more)
-
-### Community 241 - "DragonTreasure.tsx"
-Cohesion: 0.36
-Nodes (7): react-native-svg@15.15.4, DragonTreasure(), DRAGON_TREASURE_HEIGHT, DRAGON_TREASURE_WIDTH, DragonTreasureColors, dragonTreasureColors(), react-native-svg
+Nodes (45): ReaderRoute(), KIND_KEYS, kindLabel(), LoadingState(), OnboardingSample(), styles, moduleMeta(), OnboardingScreen() (+37 more)
 
 ### Community 242 - "web-db/tsconfig.test.json"
 Cohesion: 0.22
 Nodes (8): compilerOptions, lib, noEmit, paths, extends, include, ../../tsconfig.base.json, @ryuunest/core
 
-### Community 246 - "declarativeConfig.test.ts"
-Cohesion: 0.29
-Nodes (4): Config, paths(), TEMPLATE, ADR-0003
+### Community 247 - "contrast.ts"
+Cohesion: 0.22
+Nodes (11): withAlpha(), contrastRatio(), hexToRgb(), relativeLuminance(), Rgb, toLinear(), WCAG_AA, Foreground (+3 more)
 
 ### Community 251 - "web-db/tsconfig.json"
 Cohesion: 0.25
 Nodes (7): compilerOptions, lib, outDir, rootDir, extends, include, ../../tsconfig.base.json
 
 ### Community 260 - "onboarding.cjs"
-Cohesion: 0.29
-Nodes (5): assert, { chromium }, fs, output, path
+Cohesion: 0.14
+Nodes (10): assert, { chromium }, fs, output, path, assert, { chromium }, fs (+2 more)
 
 ### Community 261 - "gallery-shell.cjs"
 Cohesion: 0.50
 Nodes (3): assert, { chromium }, path
 
-### Community 264 - "mobile/package.json"
-Cohesion: 0.08
-Nodes (24): expo-linear-gradient@~57.0.2, expo-sqlite@~57.0.4, fflate@^0.8.3, htmlparser2@^12.0.0, react-native-reanimated@4.5.1, react-native-screens@~4.26.2, @ryuunest/module-sdk@workspace:*, @ryuunest/ui-tokens@workspace:* (+16 more)
+### Community 263 - "LogStore"
+Cohesion: 0.17
+Nodes (5): LogStore, sleep(), T34 Pruebas de resiliencia `[BE · Intermedia · N3]` ✅, Task F17: Serie (detalle), Task T25: Progreso atómico y reanudación
+
+### Community 264 - "dependencies"
+Cohesion: 0.09
+Nodes (22): dependencies, expo-constants@~57.0.23, expo-document-picker@~57.0.3, expo-image@~57.0.5, expo-sqlite@~57.0.4, htmlparser2@^12.0.0, lucide-react-native@^1.57.0, react@19.2.3 (+14 more)
 
 ## Ambiguous Edges - Review These
 - `Tipo and Portal Advanced Filter Dropdowns` → `SFW Content Safety Toggle Badge`  [AMBIGUOUS]
@@ -1092,22 +1110,22 @@ Nodes (24): expo-linear-gradient@~57.0.2, expo-sqlite@~57.0.4, fflate@^0.8.3, ht
 
 ## Knowledge Gaps
 - **141 isolated node(s):** `fflate`, `@noble/hashes`, `@ryuunest/core`, `@ryuunest/test-site`, `@types/node` (+136 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1914 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **68 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1953 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **61 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `ModuleError` connect `ModuleError` to `ModuleApi`, `useSeriesData.ts`, `RepoRegistry`, `SqlDriver`, `MediaKind`, `Anexo A: inventario de la superficie`, `Lista de tareas — RyuuNest Parte 1 (Back-end / Núcleo)`, `core/src/index.ts`, `FixedClock`, `mobile/src/screens/reader/useReader.ts`, `web/src/screens/settings/useSettingsData.ts`, `transforms.ts`, `log.test.ts`, `ReaderMode`, `discoverData.ts`, `ModuleRuntime.ts`, `SeriesPrefs.ts`, `useBackupData.ts`, `sourcesFixtures.ts`, `fakes.ts`, `sampleSettingsService.ts`, `sourcesData.test.ts`, `functionScriptLoader.ts`, `mobile/src/screens/reader/useReader.ts`, `sourcesController.ts`, `extensionHttp.ts`, `ref_vitest`, `webScriptLoader.ts`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
-- **Are the 11 inferred relationships involving `ModuleError` (e.g. with `Anexo A: inventario de la superficie` and `Decisión 1: qué se puede congelar ya`) actually correct?**
-  _`ModuleError` has 11 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `t()` connect `OnboardingScreen.tsx` to `textStyle.ts`, `web/src/screens/series/SeriesScreen.tsx`, `BottomNav.tsx`, `ui-tokens/src/index.ts`, `react-native`, `ErrorDialog.tsx`, `screens/diagnostics/DiagnosticsScreen.tsx`, `web/src/screens/library/LibraryScreen.tsx`, `mobile/src/components/ErrorState.tsx`, `Fase 7 — Respaldo`, `mobile/src/screens/reader/useReader.ts`, `libraryFixtures.ts`, `[seriesId].tsx`, `web/src/screens/discover/DiscoverScreen.tsx`, `web/src/screens/settings/SettingsScreen.tsx`, `web/src/screens/series/SeriesScreen.tsx`, `web/src/screens/reader/ReaderScreen.tsx`, `ImageCapPanel.tsx`, `mobile/src/screens/reader/ReaderScreen.tsx`, `mobile/src/screens/discover/DiscoverScreen.tsx`, `settings/diagnostics/useDiagnosticsData.ts`, `ExtensionNotice.tsx`, `GalleryScreen.tsx`, `mobile/src/screens/sources/useSourcesData.ts`, `i18n/src/index.ts`, `domainsModel.ts`, `SourcesService`, `renderGallery.ts`, `web/src/screens/discover/DiscoverScreen.tsx`, `[source].tsx`, `FolderCard.tsx`, `SourcesController`?**
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+- **Are the 2 inferred relationships involving `t()` (e.g. with `FB1 Plano de pantalla (`screen-blueprint.md`) `[Doc · Baja · N4]`` and `Task F10: Internacionalización (archivo de traducciones)`) actually correct?**
+  _`t()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `fflate`, `@noble/hashes`, `@ryuunest/core` to the rest of the system?**
   _141 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `libraryCardStyles.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.0783673469387755 - nodes in this community are weakly interconnected._
-- **Why does `react-native` connect `react-native` to `libraryCardStyles.ts`, `BottomNav.tsx`, `mobile/src/screens/settings/SettingsScreen.tsx`, `mobile/package.json`, `mobile/src/components/Button.tsx`, `ErrorDialog.tsx`, `mobile/src/components/HoldToConfirm.tsx`, `seriesData.test.ts`, `mobile/src/components/ErrorState.tsx`, `LogEventRow.tsx`, `mobile/src/screens/reader/useReader.ts`, `libraryFixtures.ts`, `dependencies`, `ReaderPageImage.tsx`, `i18n/index.ts`, `ModulePicker.tsx`, `SectionHeader.tsx`, `zoomMath.ts`, `mobile/src/screens/series/SeriesScreen.tsx`, `settings/diagnostics/useDiagnosticsData.ts`, `sourcesFixtures.ts`, `GalleryScreen.tsx`, `OnboardingScreen.tsx`, `mobile/src/screens/reader/useReader.ts`, `mobile/src/screens/discover/DiscoverScreen.tsx`, `[source].tsx`, `packages_ui_tokens_src_index_spacing`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Should `textStyle.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.04170993423329872 - nodes in this community are weakly interconnected._
+- **Why does `ModuleError` connect `ModuleError` to `useSeriesData.ts`, `extensionHttp.ts`, `PackageInstaller.ts`, `export.ts`, `DeclarativeRuntime`, `.details`, `Lista de tareas — RyuuNest Parte 1 (Back-end / Núcleo)`, `mobile/src/screens/reader/useReader.ts`, `transforms.ts`, `FixedClock`, `core/src/index.ts`, `ReaderMode`, `.fetch`, `guardApi`, `sourcesFixtures.ts`, `fakes.ts`, `functionScriptLoader.ts`, `web/src/screens/reader/useReader.ts`, `SourcesService`, `extensionHttp.test.ts`, `SqlDriver`, `webScriptLoader.ts`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 
 ### Low-confidence Hints
 _AMBIGUOUS edges — the extractor was unsure. Verify before acting on these._
