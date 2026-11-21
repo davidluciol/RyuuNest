@@ -530,23 +530,23 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 
 ### F65 Respaldo en el teléfono `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Compartir el archivo exportado con la hoja del sistema, importar un archivo real y comprobar que las carpetas por defecto no se duplican (ver F52) — F21a/F21b
+- [x] 🧍 Compartir el archivo exportado con la hoja del sistema, importar un archivo real y comprobar que las carpetas por defecto no se duplican (ver F52) — F21a/F21b · verificado en el S25 (2026-11-21), capturas en `docs/capturasF65/`
 - Verif: 🧍 POCO/S25
 
 ### F66 Zonas seguras en el dispositivo `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Muesca, barra de estado y gesto inferior con `react-native-safe-area-context` en el POCO y el S25 (Diagnóstico y ficha); interruptor apagado legible; tarjetas y botones «Exportar/Importar/Vaciar» a 360 dp; JetBrains Mono visible en códigos (F34.2)
+- [ ] 🧍 (S25 hecho salvo interruptor apagado; falta POCO) Muesca, barra de estado y gesto inferior con `react-native-safe-area-context` en el POCO y el S25 (Diagnóstico y ficha); interruptor apagado legible; tarjetas y botones «Exportar/Importar/Vaciar» a 360 dp; JetBrains Mono visible en códigos (F34.2)
 - [ ] 🧍 Repetir F34.3 en el POCO F5 Pro con texto al 200 %
 - Verif: 🧍 POCO F5 Pro
 
 ### F67 Hojas de Respaldo, diálogos de error nativos y modo paginado `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Revisar en el teléfono las hojas de Respaldo y los diálogos de error nativos, y el modo paginado I → D (F33 R1); la hoja «Actualizar módulo» espera una actualización real
+- [x] 🧍 Revisar en el teléfono las hojas de Respaldo y los diálogos de error nativos, y el modo paginado I → D (F33 R1) · verificado en el S25 (hoja de modo, sugerencias, error INVALID, lector I → D avanza a la derecha); la hoja «Actualizar módulo» espera una actualización real y la de «Reemplazar» no se abrió
 - Verif: 🧍 S25
 
 ### F68 Informe de diagnóstico en el teléfono `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Exportar el informe (hoja del sistema) y copiarlo al portapapeles en el POCO/S25 (F30/F31)
+- [x] 🧍 Exportar el informe (hoja del sistema) y copiarlo al portapapeles en el POCO/S25 (F30/F31) · verificado en el S25: hoja con `ryuunest-diagnostico-2026-11-21.txt` y aviso «Informe copiado» (el contenido del portapapeles no se pudo leer por adb)
 - Verif: 🧍 dispositivo
 
 ### F69 Actualizaciones OTA con `expo-updates` `[Ops · Intermedia · N3]` 🧍 (bloqueada)
