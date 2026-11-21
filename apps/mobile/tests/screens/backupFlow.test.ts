@@ -27,14 +27,7 @@ function setup(service: BackupService = createSampleBackupService()) {
   const notify = vi.fn<(message: string | null) => void>();
   const goToSources = vi.fn<() => void>();
   const onApplied = vi.fn<() => void>();
-  const controller = createBackupController({
-    service,
-    getFlow,
-    dispatch,
-    notify,
-    goToSources,
-    onApplied,
-  });
+  const controller = createBackupController({ service, getFlow, dispatch, notify, goToSources, onApplied });
   return { controller, getFlow, notify, goToSources, onApplied, service };
 }
 
@@ -206,8 +199,8 @@ describe("controlador · importar (RF-38, F21b)", () => {
     vi.spyOn(service, "applyText").mockResolvedValue({
       ok: false,
       reason: "INVALID",
-      message: 'El respaldo no es válido: format: debe ser "ryuunest-backup"',
-      issues: [{ path: "format", message: 'debe ser "ryuunest-backup"' }],
+      message: "El respaldo no es válido: format: debe ser \"ryuunest-backup\"",
+      issues: [{ path: "format", message: "debe ser \"ryuunest-backup\"" }],
     });
     let flow = openImportMode(INITIAL_BACKUP_FLOW, "{}");
     const dispatch = (action: BackupFlowAction) => {

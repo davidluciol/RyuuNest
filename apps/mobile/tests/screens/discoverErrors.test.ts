@@ -28,18 +28,9 @@ describe("reportDiscoverError", () => {
 
     const result = reportDiscoverError(reporter, error, "Módulo A");
 
-    expect(result).toMatchObject({
-      moduleName: "Módulo A",
-      code: "NETWORK",
-      cause: "Tardó demasiado",
-    });
+    expect(result).toMatchObject({ moduleName: "Módulo A", code: "NETWORK", cause: "Tardó demasiado" });
     expect(reporter.calls).toHaveLength(1);
-    const [level, code, message, context] = reporter.calls[0] as [
-      string,
-      string,
-      string,
-      Record<string, unknown>,
-    ];
+    const [level, code, message, context] = reporter.calls[0] as [string, string, string, Record<string, unknown>];
     expect(level).toBe("error");
     expect(code).toBe("discover.network");
     expect(message).toBe("Tardó demasiado");

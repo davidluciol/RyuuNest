@@ -5,7 +5,10 @@ import {
   hasInstalledModule,
   isFirstUseData,
 } from "../../src/screens/onboarding/onboardingData";
-import { EMPTY_SOURCES_DATA, SAMPLE_SOURCES_DATA } from "../../src/screens/sources/sourcesFixtures";
+import {
+  EMPTY_SOURCES_DATA,
+  SAMPLE_SOURCES_DATA,
+} from "../../src/screens/sources/sourcesFixtures";
 
 /**
  * F12 — la puerta del primer uso (AC-1): sin repos y sin módulos instalados,

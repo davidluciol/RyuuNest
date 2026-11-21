@@ -53,7 +53,7 @@ describe("marcadores de destino estables (F11b)", () => {
     const shell = readFileSync(path.join(SRC, "../tests/e2e/shell.cjs"), "utf8");
     const home = readFileSync(path.join(SRC, "../tests/e2e/home.cjs"), "utf8");
     for (const script of [shell, home]) {
-      expect(script).toContain('require("./markers.cjs")');
+      expect(script).toContain("require(\"./markers.cjs\")");
       expect(script).toContain("destinationMarker(");
     }
   });

@@ -6,7 +6,10 @@ import {
   type OnboardingStep,
 } from "../../src/screens/onboarding/onboardingController";
 import { createSampleSourcesService } from "../../src/screens/sources/sampleSourcesService";
-import { EMPTY_SOURCES_DATA, SAMPLE_SOURCES_DATA } from "../../src/screens/sources/sourcesFixtures";
+import {
+  EMPTY_SOURCES_DATA,
+  SAMPLE_SOURCES_DATA,
+} from "../../src/screens/sources/sourcesFixtures";
 import {
   INITIAL_SOURCES_FLOW,
   sourcesFlowReducer,

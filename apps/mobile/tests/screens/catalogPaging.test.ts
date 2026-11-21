@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { createCatalogPager, mergeCatalogPage } from "../../src/screens/discover/catalogPaging";
+import {
+  createCatalogPager,
+  mergeCatalogPage,
+} from "../../src/screens/discover/catalogPaging";
 import type { DiscoverEntry, DiscoverPage } from "../../src/screens/discover/discoverFixtures";
 
 /** F84 — scroll infinito del catálogo: acumula páginas sin duplicar ni repetir peticiones. */

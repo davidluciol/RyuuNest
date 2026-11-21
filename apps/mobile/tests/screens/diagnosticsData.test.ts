@@ -47,12 +47,7 @@ function build(files: DiagnosticsFiles = fakeFiles()): {
   service: DiagnosticsService;
   record: ReturnType<typeof createLogStore>["record"];
 } {
-  const logStore = createLogStore({
-    driver,
-    clock: { now: () => now },
-    appVersion: "0.1.0",
-    platform: "android",
-  });
+  const logStore = createLogStore({ driver, clock: { now: () => now }, appVersion: "0.1.0", platform: "android" });
   return {
     service: createDiagnosticsService({
       logStore,

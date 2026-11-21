@@ -41,21 +41,14 @@ describe("reportBackupError", () => {
     reportBackupError(reporter, "apply", new ModuleError("INTERNAL", "El archivo es muy grande"), {
       rejection: "TOO_LARGE",
     });
-    const [, code, , context] = reporter.calls[0] as [
-      string,
-      string,
-      string,
-      Record<string, unknown>,
-    ];
+    const [, code, , context] = reporter.calls[0] as [string, string, string, Record<string, unknown>];
     expect(code).toBe("backup.apply.too_large");
     expect(context.rejection).toBe("TOO_LARGE");
   });
 
   it("confirmar repo sugerido fallido: backup.repo.<codigo>", () => {
     const reporter = fakeReporter();
-    reportBackupError(reporter, "repo", new ModuleError("NETWORK", "repositorio caído"), {
-      repoUrl: "https://x.test",
-    });
+    reportBackupError(reporter, "repo", new ModuleError("NETWORK", "repositorio caído"), { repoUrl: "https://x.test" });
     expect(reporter.calls[0]?.[1]).toBe("backup.repo.network");
   });
 

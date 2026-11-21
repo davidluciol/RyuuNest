@@ -30,21 +30,11 @@ describe("reportReaderError", () => {
       chapterId: "c1",
     });
 
-    const [level, code, message, context] = reporter.calls[0] as [
-      string,
-      string,
-      string,
-      Record<string, unknown>,
-    ];
+    const [level, code, message, context] = reporter.calls[0] as [string, string, string, Record<string, unknown>];
     expect(level).toBe("error");
     expect(code).toBe("reader.open.network");
     expect(message).toBe("Tardó demasiado");
-    expect(context).toMatchObject({
-      moduleId: "m1",
-      seriesId: "s1",
-      chapterId: "c1",
-      errorCode: "NETWORK",
-    });
+    expect(context).toMatchObject({ moduleId: "m1", seriesId: "s1", chapterId: "c1", errorCode: "NETWORK" });
   });
 
   it("imagen fallida: reader.image.<codigo> con la página (base 1)", () => {

@@ -140,7 +140,7 @@ describe("exportText (RF-37, F21a)", () => {
 
   it("pickText devuelve lo que eligió el usuario, o null si canceló", async () => {
     const files = fakeFiles();
-    files.picked = { text: '{ "format": "ryuunest-backup" }', name: "respaldo.json" };
+    files.picked = { text: "{ \"format\": \"ryuunest-backup\" }", name: "respaldo.json" };
     const service = build(files);
 
     expect(await service.pickText()).toEqual({
@@ -285,8 +285,6 @@ describe("sugerencias (F21c)", () => {
 
 describe("backupFileName", () => {
   it("usa la fecha ISO: ryuunest-respaldo-2026-10-28.json", () => {
-    expect(backupFileName(new Date("2026-10-28T15:04:05Z"))).toBe(
-      "ryuunest-respaldo-2026-10-28.json",
-    );
+    expect(backupFileName(new Date("2026-10-28T15:04:05Z"))).toBe("ryuunest-respaldo-2026-10-28.json");
   });
 });

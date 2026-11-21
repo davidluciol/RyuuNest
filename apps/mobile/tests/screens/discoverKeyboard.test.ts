@@ -8,7 +8,5 @@ it("la lista de Descubrir deja pasar el toque a «Buscar» con el teclado abiert
     path.resolve(process.cwd(), "src/screens/discover/DiscoverScreen.tsx"),
     "utf8",
   );
-  expect(src).toMatch(
-    /<ScrollView\s+keyboardShouldPersistTaps="handled"\s+contentContainerStyle=\{\{\s*paddingHorizontal: sidePadding/,
-  );
+  expect(src).toMatch(/<ScrollView\s+keyboardShouldPersistTaps="handled"\s+contentContainerStyle=\{\{\s*paddingHorizontal: sidePadding/);
 });
