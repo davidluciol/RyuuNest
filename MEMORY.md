@@ -214,6 +214,8 @@ Memoria del proyecto para cualquier agente. Solo hitos, decisiones vigentes y pe
 
 ### Del humano
 
+- ⚠️ **IMPORTANTE, revisar y resolver en la próxima sesión (T44, 2026-11-20):** `vitest run` desde la raíz da **58 archivos / 44 tests en rojo** (apps/mobile 44, apps/web 7, core 4, eslint-plugin 2, ui-tokens 1), igual con y sin los últimos cambios; varios con `ENOENT scandir '<raíz>\src'`. Detalle en `tasks/todo.md` T44.
+- **Hitomi.la (T45, 2026-11-20):** el módulo `hitomi` 0.1.0 (repo `RyuuNest-Models`) necesitó `HostResponse.bytes()` (aditivo; ADR-0003 decía «sin bytes()»). Problemas del buscador: sin búsqueda por título (índice B-tree propio), solo un término `namespace:valor` o etiqueta, sin combinar términos. Falta probar en el S25 que el adaptador pasa `Range`. Detalle en `tasks/todo.md` T45.
 - **Tesoros F92/F93/F94 (P-172):** (a) 🧍 verificar en el S25 Ultra los PR #120, #121 y #122 (no había dispositivo conectado); (b) ~~token semántico~~ resuelto en P-173; (c) tras fusionar F92, ejecutar `graphify update .`.
 - **P-175 F83 (2026-11-19):** el contrato añade las capacidades `paginated` y `sortLatest` (`modulePaging` en el núcleo). Los módulos ya publicados que no las declaren **pierden** Reciente/Popular y el pie de páginas hasta actualizar su manifiesto (decisión del humano: ocultar).
 - **P-176 (humano 2026-11-20):** se quita de momento la lupa de búsqueda de la cabecera móvil (F60): `ShellNavigator` ya no pasa `onSearch` y se borra `headerSearch.cjs` (fallaba). El componente `Header` conserva la prop `onSearch` y `discoverSearchParams`, por si vuelve; la web (`HeaderSearch`) no se tocó.

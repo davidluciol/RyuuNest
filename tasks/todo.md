@@ -401,6 +401,14 @@ Dep: F94 · S · `apps/mobile/src/screens/discover/*`
 
 ## 🚪 Portales (Fuentes y módulos)
 
+### T45 Hitomi.la: buscador limitado y pruebas en la app `[BE/Ops · Intermedia · N3]` 🧍
+
+Dep: T40 · repo `RyuuNest-Models` (módulo `hitomi` 0.1.0) · el host ya expone `HostResponse.bytes()` (SPEC §6.5)
+
+- [ ] 🧍 Probar en el S25 que el adaptador HTTP real pasa `Range` y devuelve 206/416 (sin eso `readIds` cae al recorte local o da `UNSUPPORTED`).
+- [ ] **Problemas del buscador:** (1) no hay búsqueda por título: el sitio la resuelve con un índice B-tree propio (`galleries.<versión>.index/.data`), no con `.nozomi`; (2) solo acepta **un** término `namespace:valor` (`female:yuri`, `artist:x`, `type:…`) o una etiqueta suelta; (3) combinar términos exigiría bajar listas enteras (hasta ~16 MB). Decidir si se implementa el índice B-tree o se acepta el límite.
+- [ ] Coste de listas: una petición a `galleries/<id>.js` por tarjeta (24 por página); valorar `galleryblock` o tarjetas perezosas.
+
 ### T42 YupManga: el «reto del lector» cambió de formato `[Ops · Intermedia · N3]` 🧍
 
 Dep: T40 · S · repo `RyuuNest-Models`
@@ -685,6 +693,11 @@ Dep: F52, F53 · XS
 ---
 
 ## 🗂️ General (abarca varias secciones o ninguna)
+
+### T44 ⚠️ IMPORTANTE (próxima sesión): 58 archivos de test fallan en `vitest run` `[Ops · Intermedia · N3]`
+
+- [ ] Revisar y resolver. Medido el 2026-11-20 con `npx vitest run` desde la raíz: **58 archivos / 44 tests fallan**, y fallan igual sin los cambios de `HostResponse.bytes()` (comprobado con `git stash`). Reparto por paquete: `apps/mobile` 44, `apps/web` 7, `packages/core` 4, `tools/eslint-plugin-ryuunest` 2, `packages/ui-tokens` 1.
+- Pista: varios dan `ENOENT: scandir '<raíz>\src'` (asumen cwd = paquete). Probar `pnpm -r test` y comparar con la raíz; decidir si es la configuración de vitest o tests rotos de verdad. Hasta resolverlo, la suite global no sirve como puerta de calidad.
 
 ### T05 cierre `[Ops · Baja · N1]` 🧍
 
