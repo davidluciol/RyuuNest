@@ -407,7 +407,8 @@ Dep: T40 · S · repo `RyuuNest-Models`
 
 - [ ] El capítulo falla con `UNSUPPORTED` («el reto del lector cambió de formato»; selector `\[([0-9,]+)\];var [\w$]+=String\.fromCharCode\(([0-9,]+)\);`). Guardar una fixture HTML del reto actual (nunca el sitio real en pruebas), ajustar el módulo y subir versión + índice con SHA-256.
 - [ ] Abrir un capítulo de YupManga en el teléfono y ver al menos una imagen.
-- [ ] Revisar `m440.in`: dio `TIMEOUT` durante la sesión (sitio intermitente); decidir si el módulo necesita reintentos o un mensaje mejor.
+- [x] `m440.in` `TIMEOUT`: mensaje claro de «sitio intermitente» sin reintentos (m440 0.2.1, RyuuNest-Models PR #11; el `index.json` va en PR aparte)
+- [ ] YupManga 0.1.1 ya resuelve el nuevo reto (PRs #5/#6 de Models): falta abrir un capítulo en el teléfono; solo si sigue fallando con `UNSUPPORTED` se captura la fixture
 - Verif: 🧍 S25 Ultra; el arnés del módulo en verde.
 
 
@@ -417,8 +418,8 @@ Dep: T38 (hecha) · XS · `apps/mobile/src/screens/sources/*`
 
 > Origen: T38 dejó `SourcesData.incompatible` sin etiqueta visual.
 
-- [ ] Mostrar «No compatible con esta versión» (con la versión mínima) en la fila del módulo; no se puede instalar
-- Verif: Vitest + Playwright
+- [x] Mostrar «No compatible con esta versión» (con la versión mínima) en la fila del módulo; no se puede instalar (sección «No compatibles» con el motivo del índice; sin botón)
+- Verif: ✅ Vitest + ✅ Playwright 426/1440 px (la galería tiene el estado; el e2e de Fuentes usa el servicio sin incompatibles)
 
 ### F63 F16 en el dispositivo: repo real, módulo declarativo y `script` `[Ops · Baja · N2]` 🧍
 
@@ -427,7 +428,7 @@ Dep: T38 (hecha) · XS · `apps/mobile/src/screens/sources/*`
 
 ### F64 Revisión de `RyuuNest-Models` `[Ops · Baja · N1]` 🧍
 
-- [ ] 🧍 Corregir la frase «un campo de más o de menos lo rechaza» de su `AGENTS.md` (T38) y copiar `modules/{AGENTS,README,NOTES}.md` al repo
+- [x] Frase corregida en `AGENTS.md` de RyuuNest-Models (PR #11); `AGENTS/README/NOTES.md` ya estaban en la raíz del repo, no hubo nada que copiar
 - Verif: revisión humana
 
 ### F45 Avisos NSFW y primer uso sin jerga (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
@@ -441,8 +442,9 @@ Dep: F16 · S · `apps/mobile/src/screens/{onboarding,sources}/*`
 
 Dep: F33 · S · `apps/mobile/src/screens/{sources,settings}/*`
 
-- [ ] 🧍 Aprobar F42. Después: permisos con icono de aviso y la lista de «disponibles» visible
-- Verif: Vitest + Playwright 426/1440 px
+- [x] Aprobada por el humano (2026-11-20). Hecho: título duplicado quitado (N7), permisos «Ejecuta código»/«Para adultos» con icono de aviso solo en filas de módulo de Portales y primer uso (N9; las píldoras NSFW de Recomendados/Respaldo/web no se tocan, F98 sigue abierta), «Enlace del repositorio» sin `index.json` (R5), huella plegable y «Huella de verificación» (V3), Ajustes: idioma en una fila «Idioma» (N21), chips de lectura en columna sin separador (N22), chevrón de filas pulsables siempre a la derecha (R8), «archivo de respaldo» sin JSON (R9)
+- [ ] Pendiente de F42 (no hecho, decidir): V3 botón primario verde (choca con el relleno naranja de `progress`; se deja como está) y aviso «X instalado»; V7 «Quitar» visible en la tarjeta del repo; V8 aviso «desinstalado»; N21 sin chevrón porque no hay pantalla de idiomas; la web (`apps/web`) conserva su título y sus píldoras
+- Verif: ✅ Vitest + ✅ Playwright 426/1440 px (`settings`, `sources`, `onboarding`, `shell`, galería)
 
 ### F62 Puertos futuros de `legacyModulos/` (deuda) `[BE/Ops · Alta · N4]`
 

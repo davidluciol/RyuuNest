@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import type { InstallPreview } from "@ryuunest/core";
-import { dragonNightColors, spacing, typography } from "@ryuunest/ui-tokens";
+import { dragonNightColors, spacing, touchTarget, typography } from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
+import FocusPressable from "../../components/FocusPressable";
 import HoldToConfirm from "../../components/HoldToConfirm";
 import SheetModal from "../../components/SheetModal";
 import { textStyle } from "../../components/textStyle";
@@ -36,6 +38,8 @@ export default function InstallSheet({
   onCancel,
   onConfirm,
 }: InstallSheetProps) {
+  // F42/V3: la huella es un dato técnico; plegada por defecto.
+  const [hashOpen, setHashOpen] = useState(false);
   return (
     <SheetModal
       visible
@@ -52,13 +56,27 @@ export default function InstallSheet({
         label={t("sources.detail.permissions")}
         value={preview.permissions.domains.join(", ")}
       />
-      <DetailRow label={t("sources.detail.hash")} value={preview.sha256} />
+      <FocusPressable
+        accessibilityRole="button"
+        accessibilityState={{ expanded: hashOpen }}
+        onPress={() => setHashOpen((open) => !open)}
+        style={styles.hashToggle}
+        testID="install-hash-toggle"
+      >
+        <Text style={styles.hashToggleText}>{t("sources.detail.hash")}</Text>
+      </FocusPressable>
+      {hashOpen ? <Text style={styles.hash}>{preview.sha256}</Text> : null}
       {preview.reinforced ? (
         <Text style={styles.warning}>{t("sources.install.scriptWarning")}</Text>
       ) : null}
       <SheetError message={error} />
       <View style={styles.actions}>
-        <Button variant="secondary" label={t("sources.sheet.cancel")} disabled={busy} onPress={onCancel} />
+        <Button
+          variant="secondary"
+          label={t("sources.sheet.cancel")}
+          disabled={busy}
+          onPress={onCancel}
+        />
         {preview.reinforced ? (
           <HoldToConfirm
             label={t("sources.install.hold")}
@@ -80,6 +98,13 @@ export default function InstallSheet({
 
 const styles = StyleSheet.create({
   name: { ...textStyle(typography.headlineSm), color: colors.textPrimary },
+  hashToggle: { minHeight: touchTarget.min, justifyContent: "center" },
+  hashToggleText: {
+    ...textStyle(typography.labelMd),
+    color: colors.accent,
+    textDecorationLine: "underline",
+  },
+  hash: { ...textStyle(typography.bodySm), color: colors.textSecondary },
   warning: { ...textStyle(typography.bodyMd), color: colors.progress },
   actions: {
     flexDirection: "row",

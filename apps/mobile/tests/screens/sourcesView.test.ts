@@ -4,9 +4,13 @@ import type { SourceModule } from "../../src/screens/sources/sourcesData";
 import { t } from "../../src/i18n";
 import {
   BADGE_LABEL_KEYS,
+  INCOMPATIBLE_LABEL_KEY,
   MAX_ROW_BADGES,
   moduleBadges,
+  modulePermissions,
   moduleRowAction,
+  moduleStatusBadges,
+  PERMISSION_LABEL_KEYS,
   ROW_ACTION_KEYS,
   validateRepoUrl,
 } from "../../src/screens/sources/sourcesView";
@@ -137,5 +141,30 @@ describe("claves de traducción de la fila", () => {
 
   it("el texto de script no usa jerga (T5): dice que ejecuta código", () => {
     expect(t(BADGE_LABEL_KEYS.script)).toBe("Ejecuta código");
+  });
+});
+
+describe("módulos no compatibles (F61)", () => {
+  it("la etiqueta dice que no es compatible con esta versión", () => {
+    expect(t(INCOMPATIBLE_LABEL_KEY)).toBe("No compatible con esta versión");
+  });
+});
+
+describe("permisos aparte de las insignias de estado (F42/N9)", () => {
+  it("script y NSFW son permisos, no insignias de estado", () => {
+    const module = row({ runtime: "script", nsfw: true });
+    expect(modulePermissions(module)).toEqual(["script", "nsfw"]);
+    expect(moduleStatusBadges(module)).toEqual([]);
+  });
+
+  it("un módulo sin permisos especiales no lleva línea de permisos", () => {
+    expect(modulePermissions(row())).toEqual([]);
+  });
+
+  it("el estado urgente se conserva y los textos no usan jerga", () => {
+    const module = row({ status: "installed", enabled: false, runtime: "script" });
+    expect(moduleStatusBadges(module)).toEqual(["disabled"]);
+    expect(t(PERMISSION_LABEL_KEYS.script)).toBe("Ejecuta código");
+    expect(t(PERMISSION_LABEL_KEYS.nsfw)).toBe("Para adultos");
   });
 });

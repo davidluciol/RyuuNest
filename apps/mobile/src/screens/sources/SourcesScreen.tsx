@@ -30,7 +30,15 @@ import {
   type SourcesView,
 } from "./sourcesFixtures";
 import SourcesSheets from "./SourcesSheets";
-import { BADGE_LABEL_KEYS, ROW_ACTION_KEYS, moduleBadges, moduleRowAction } from "./sourcesView";
+import {
+  BADGE_LABEL_KEYS,
+  INCOMPATIBLE_LABEL_KEY,
+  ROW_ACTION_KEYS,
+  PERMISSION_LABEL_KEYS,
+  modulePermissions,
+  moduleRowAction,
+  moduleStatusBadges,
+} from "./sourcesView";
 
 /**
  * F16 — pantalla Fuentes (RF-1 a RF-8, SPEC §11.5): cabecera con resumen y un
@@ -108,7 +116,7 @@ export default function SourcesScreen({
     );
   }
 
-  const { repos, modules } = view.data;
+  const { repos, modules, incompatible = [] } = view.data;
   const summary = sourcesSummary(modules);
 
   return (
@@ -124,9 +132,6 @@ export default function SourcesScreen({
       >
         <View style={styles.header}>
           <View style={styles.headerTexts}>
-            <Text accessibilityRole="header" style={styles.title}>
-              {t("nav.sources")}
-            </Text>
             {modules.length > 0 ? (
               <Text style={styles.summary}>
                 {t("sources.summary", {
@@ -222,7 +227,10 @@ export default function SourcesScreen({
                       testID={`module-${module.id}`}
                       name={module.name}
                       meta={moduleMeta(module)}
-                      badges={moduleBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
+                      badges={moduleStatusBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
+                      permissions={modulePermissions(module).map((permission) =>
+                        t(PERMISSION_LABEL_KEYS[permission]),
+                      )}
                       {...(module.lastError === undefined || module.status !== "installed"
                         ? {}
                         : { error: module.lastError })}
@@ -238,6 +246,21 @@ export default function SourcesScreen({
               )}
             </View>
           </>
+        )}
+
+        {incompatible.length === 0 ? null : (
+          <View style={styles.section} testID="sources-incompatible">
+            <SectionHeader title={t("sources.section.incompatible")} />
+            {incompatible.map((item) => (
+              <ModuleRow
+                key={`${item.repoId}/${item.id}`}
+                testID={`incompatible-${item.id}`}
+                name={item.name}
+                meta={t(INCOMPATIBLE_LABEL_KEY)}
+                hint={item.reason}
+              />
+            ))}
+          </View>
         )}
 
         {recommended !== undefined ? (
@@ -309,7 +332,6 @@ const styles = StyleSheet.create({
   },
   header: { gap: spacing.sm },
   headerTexts: { gap: spacing.xxs },
-  title: { ...textStyle(typography.headlineMd), color: colors.textPrimary },
   summary: { ...textStyle(typography.labelMd), color: colors.accent },
   subtitle: { ...textStyle(typography.bodySm), color: colors.textSecondary },
   section: { gap: spacing.xs },

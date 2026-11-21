@@ -91,9 +91,12 @@ import { eventLevel } from "../screens/settings/diagnostics/diagnosticsView";
 import DiagnosticsSample from "../screens/settings/diagnostics/DiagnosticsSample";
 import {
   BADGE_LABEL_KEYS,
+  INCOMPATIBLE_LABEL_KEY,
+  PERMISSION_LABEL_KEYS,
   ROW_ACTION_KEYS,
-  moduleBadges,
+  modulePermissions,
   moduleRowAction,
+  moduleStatusBadges,
 } from "../screens/sources/sourcesView";
 import { Flame, History } from "../icons";
 
@@ -564,9 +567,20 @@ export default function GalleryScreen() {
                 lang: module.lang,
                 version: module.version,
               })}
-              badges={moduleBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
+              badges={moduleStatusBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
+              permissions={modulePermissions(module).map((permission) =>
+                t(PERMISSION_LABEL_KEYS[permission]),
+              )}
               {...(module.lastError === undefined ? {} : { error: module.lastError })}
               actionLabel={t(ROW_ACTION_KEYS[moduleRowAction(module)])}
+            />
+          ))}
+          {SAMPLE_SOURCES_DATA.incompatible?.slice(0, 1).map((item) => (
+            <ModuleRow
+              key={item.id}
+              name={item.name}
+              meta={t(INCOMPATIBLE_LABEL_KEY)}
+              hint={item.reason}
             />
           ))}
         </View>

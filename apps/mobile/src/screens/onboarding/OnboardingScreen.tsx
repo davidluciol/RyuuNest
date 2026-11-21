@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import { dragonNightColors, layoutForWidth, markers, spacing, typography } from "@ryuunest/ui-tokens";
+import {
+  dragonNightColors,
+  layoutForWidth,
+  markers,
+  spacing,
+  typography,
+} from "@ryuunest/ui-tokens";
 
 import Button from "../../components/Button";
 import DragonMarker from "../../components/DragonMarker";
@@ -14,7 +20,14 @@ import type { SourceModule } from "../sources/sourcesData";
 import type { SourcesFlow } from "../sources/sourcesFlow";
 import type { SourcesView } from "../sources/sourcesFixtures";
 import InstallSheet from "../sources/InstallSheet";
-import { moduleBadges, moduleRowAction, BADGE_LABEL_KEYS, ROW_ACTION_KEYS } from "../sources/sourcesView";
+import {
+  BADGE_LABEL_KEYS,
+  PERMISSION_LABEL_KEYS,
+  ROW_ACTION_KEYS,
+  modulePermissions,
+  moduleRowAction,
+  moduleStatusBadges,
+} from "../sources/sourcesView";
 import { kindLabel } from "../../components/kindLabel";
 import type { OnboardingController, OnboardingStep } from "./onboardingController";
 import BackupSheets from "../settings/backup/BackupSheets";
@@ -192,7 +205,10 @@ export default function OnboardingScreen({
                   testID={`onboarding-module-${module.id}`}
                   name={module.name}
                   meta={moduleMeta(module)}
-                  badges={moduleBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
+                  badges={moduleStatusBadges(module).map((badge) => t(BADGE_LABEL_KEYS[badge]))}
+                  permissions={modulePermissions(module).map((permission) =>
+                    t(PERMISSION_LABEL_KEYS[permission]),
+                  )}
                   actionLabel={t(ROW_ACTION_KEYS[action])}
                   onAction={() =>
                     action === "install"

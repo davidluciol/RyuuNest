@@ -134,6 +134,14 @@ export const SAMPLE_SOURCES_DATA: SourcesData = {
     sampleModule({ id: "portal-ember", name: "Portal Ember", kinds: ["manga"], lang: "en" }),
     sampleModule({ id: "portal-fresno", name: "Portal Fresno", kinds: ["comic"] }),
   ],
+  incompatible: [
+    {
+      id: "portal-garza",
+      name: "Portal Garza",
+      repoId: SAMPLE_REPO_ID,
+      reason: "Requiere la app 2.0.0 y la app instalada es 1.0.0",
+    },
+  ],
 };
 
 /** F44: estado de la sección «Recomendados»; un fallo no bloquea la pantalla. */

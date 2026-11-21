@@ -134,13 +134,12 @@ export default function SettingsScreen({
         }}
       >
         <View style={styles.section}>
-          <SectionHeader title={t("settings.section.language")} />
           <SettingsCard>
             <SettingsRow
-              label={t("settings.language.label")}
+              label={t("settings.language.row")}
               hint={t("settings.language.hint")}
               right={
-                <Text style={styles.value}>
+                <Text style={styles.value} testID="settings-language-value">
                   {language === "es" ? t("settings.language.es") : language}
                 </Text>
               }
@@ -151,11 +150,12 @@ export default function SettingsScreen({
         <View style={styles.section}>
           <SectionHeader title={t("settings.section.reading")} />
           <SettingsCard>
-            <SettingsRow
-              label={t("settings.reading.defaultMode")}
-              hint={t("settings.reading.defaultModeHint")}
-            />
-            <View style={styles.options}>
+            <View>
+              <SettingsRow
+                label={t("settings.reading.defaultMode")}
+                hint={t("settings.reading.defaultModeHint")}
+              />
+              <View style={styles.options}>
               {READER_MODE_OPTIONS.map((option) => (
                 <Chip
                   key={option.mode}
@@ -164,6 +164,7 @@ export default function SettingsScreen({
                   onPress={() => onDefaultReaderModeChange?.(option.mode)}
                 />
               ))}
+              </View>
             </View>
           </SettingsCard>
         </View>
@@ -283,14 +284,14 @@ const styles = StyleSheet.create({
   },
   section: { gap: spacing.xs },
   options: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: "column",
+    alignItems: "stretch",
     gap: spacing.xs,
     paddingHorizontal: spacing.md,
     paddingBottom: spacing.sm,
   },
   value: {
     ...textStyle(typography.labelLg),
-    color: colors.accent,
+    color: colors.textSecondary,
   },
 });
