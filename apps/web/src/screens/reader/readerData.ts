@@ -103,3 +103,23 @@ export async function bootReader(services: ReaderServices, target: ReaderTarget)
     snapshot: controller.snapshot,
   };
 }
+
+/**
+ * Modo vertical: índice de la página más cercana al centro del viewport entre todas las
+ * visibles (no solo las del último aviso del IntersectionObserver, que trae solo las que cambian).
+ */
+export function nearestPage(
+  pages: readonly { index: number; top: number; bottom: number }[],
+  viewportCenter: number,
+): number | null {
+  let best: number | null = null;
+  let bestDistance = Number.POSITIVE_INFINITY;
+  for (const page of pages) {
+    const distance = Math.abs((page.top + page.bottom) / 2 - viewportCenter);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      best = page.index;
+    }
+  }
+  return best;
+}

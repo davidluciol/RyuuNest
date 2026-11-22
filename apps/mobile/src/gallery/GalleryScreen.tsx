@@ -79,6 +79,8 @@ import DragonTreasure from "../components/DragonTreasure";
 import FloatingActionButton from "../components/FloatingActionButton";
 import type { MediaKind } from "@ryuunest/core";
 import SortSheet from "../components/SortSheet";
+import ReleaseSheet from "../components/ReleaseSheet";
+import { sampleSeriesView } from "../screens/series/seriesFixtures";
 import FilterSheet from "../components/FilterSheet";
 import TagFilterSheet from "../components/TagFilterSheet";
 import SearchBarVariants from "./SearchBarVariants";
@@ -150,6 +152,9 @@ function TypeSample({ name }: { name: keyof typeof typography }) {
   );
 }
 
+/** F17: capítulo de ejemplo con dos releases (fixture «dragon-de-ceniza», cap. 1). */
+const GALLERY_RELEASES = sampleSeriesView().details.chapters[0]?.releases ?? [];
+
 export default function GalleryScreen() {
   const [previewDestination, setPreviewDestination] = useState<BottomNavDestination>("home");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -164,6 +169,8 @@ export default function GalleryScreen() {
   const [tagFilterOpen, setTagFilterOpen] = useState(false);
   const [tagFilters, setTagFilters] = useState<DiscoverFilterValues>({ genre: ["horror"] });
   const [sortOpen, setSortOpen] = useState(false);
+  const [releaseOpen, setReleaseOpen] = useState(false);
+  const [releaseId, setReleaseId] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<LibraryFilters["order"]>("lastRead");
   const [filterKinds, setFilterKinds] = useState<MediaKind[]>(["manhwa"]);
   const [filterModules, setFilterModules] = useState<string[]>([]);
@@ -995,6 +1002,26 @@ export default function GalleryScreen() {
               setSortOpen(false);
             }}
             onClose={() => setSortOpen(false)}
+          />
+        </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.releaseSheet")}</Text>
+        <View style={styles.componentColumn}>
+          <Button
+            variant="secondary"
+            label={t("gallery.releaseSheet.show")}
+            testID="gallery-show-release-sheet"
+            onPress={() => setReleaseOpen(true)}
+          />
+          <ReleaseSheet
+            visible={releaseOpen}
+            releases={GALLERY_RELEASES}
+            currentId={releaseId ?? GALLERY_RELEASES[0]?.id ?? null}
+            onSelect={(release) => {
+              setReleaseId(release.id);
+              setReleaseOpen(false);
+            }}
+            onClose={() => setReleaseOpen(false)}
           />
         </View>
 

@@ -100,7 +100,7 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF30");
       assert.match(text.text, /\[error\] module\.timeout/);
       await page.getByTestId("diagnostics-toast").getByText("Informe exportado").waitFor({ state: "visible" });
 
-      await screen.getByRole("button", { name: "JSON" }).click();
+      await screen.getByRole("button", { name: "Datos" }).click();
       const json = await exportFile();
       assert.match(json.name, /^ryuunest-diagnostico-\d{4}-\d{2}-\d{2}\.json$/);
       const parsed = JSON.parse(json.text);

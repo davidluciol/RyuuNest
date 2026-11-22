@@ -13,6 +13,8 @@ const { fulfillFakeCover, newSeededContext } = require("./seedDb.cjs");
 const { destinationMarker } = require("./markers.cjs");
 
 const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
+// F99: con módulos por actualizar, la pestaña se anuncia «Portales, hay actualizaciones de módulos».
+const tab = (page, label) => page.getByRole("tab", { name: new RegExp(`^${label}(, |$)`) });
 const output = path.resolve(__dirname, "../../../../docs/capturasF11");
 const destinations = [
   ["Guarida", "/", "home"],
@@ -50,14 +52,14 @@ const destinations = [
     for (const width of [320, 375, 426, 768, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       for (const [label, route, id] of destinations) {
-        await page.getByRole("tab", { name: label, exact: true }).click();
+        await tab(page, label).click();
         await page.waitForURL((url) => url.pathname === route);
         await page.getByTestId(destinationMarker(id)).waitFor({ state: "visible" });
         assert.equal(await page.getByTestId("shell-header").count(), 1);
         assert.equal(await page.getByRole("tablist").count(), 1);
         assert.equal(await page.getByRole("tab", { selected: true }).count(), 1);
         assert.equal(
-          await page.getByRole("tab", { name: label, exact: true }).getAttribute("aria-selected"),
+          await tab(page, label).getAttribute("aria-selected"),
           "true",
         );
         const audit = await page.evaluate(() => {
@@ -91,14 +93,15 @@ const destinations = [
     // Historial real del navegador y entrada directa, no solo cambio de color.
     await page.goto(`${baseURL}/library`);
     await page.getByTestId(destinationMarker("library")).waitFor();
-    await page.getByRole("tab", { name: "Portales", exact: true }).click();
+    assert.equal(await page.getByRole("tab", { name: "Portales, hay actualizaciones de módulos" }).count(), 1);
+    await tab(page, "Portales").click();
     await page.waitForURL("**/sources");
     await page.goBack();
     await page.getByTestId(destinationMarker("library")).waitFor({ state: "visible" });
     await page.reload();
     await page.getByRole("tab", { name: "Tesoros", selected: true }).waitFor();
-    await page.getByRole("tab", { name: "Guarida", exact: true }).focus();
-    const focus = await page.getByRole("tab", { name: "Guarida", exact: true }).evaluate((el) => ({
+    await tab(page, "Guarida").focus();
+    const focus = await tab(page, "Guarida").evaluate((el) => ({
       color: getComputedStyle(el).outlineColor,
       width: getComputedStyle(el).outlineWidth,
     }));
@@ -115,7 +118,7 @@ const destinations = [
       );
     }
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.getByRole("tab", { name: "Ajustes", exact: true }).click();
+    await tab(page, "Ajustes").click();
     await page.getByTestId(destinationMarker("settings")).waitFor({ state: "visible" });
     assert.deepEqual(external, []);
     assert.deepEqual(errors, []);

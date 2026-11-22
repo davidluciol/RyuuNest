@@ -23,7 +23,14 @@ import { ChevronLeft, Copy, Trash2, Upload } from "../../../icons";
 import { t } from "../../../i18n";
 import type { DiagnosticsController } from "./diagnosticsController";
 import type { DiagnosticsFlow, DiagnosticsNotice } from "./diagnosticsFlow";
-import { confirmClearMessage, eventDetailLines, eventLevel, eventWhen } from "./diagnosticsView";
+import {
+  confirmClearMessage,
+  eventDetailLines,
+  eventLevel,
+  eventWhen,
+  groupEvents,
+  groupWhen,
+} from "./diagnosticsView";
 import FocusPressable from "../../../components/FocusPressable";
 import { themedStyles } from "../../../components/themedStyles";
 
@@ -196,7 +203,7 @@ export default function DiagnosticsScreen({
         <View style={styles.group}>
           <Text style={styles.label}>{t("diagnostics.events", { count: events.length })}</Text>
           <View style={styles.list} testID="diagnostics-list">
-            {events.map((event, index) => {
+            {groupEvents(events).map(({ entry: event, count }, index) => {
               const level = eventLevel(event.level);
               return (
                 <View key={event.id} style={index === 0 ? undefined : styles.divider}>
@@ -205,7 +212,7 @@ export default function DiagnosticsScreen({
                     tone={level.tone}
                     code={event.code}
                     message={event.message}
-                    when={eventWhen(event.at, now)}
+                    when={groupWhen(count, eventWhen(event.at, now))}
                     detailLines={eventDetailLines(event)}
                     expanded={flow.expanded.includes(event.id)}
                     onToggleDetail={() => controller?.toggleDetail(event.id)}

@@ -76,6 +76,7 @@ async function installDemo(page, index, zip) {
   await page.mouse.up();
   await page.waitForFunction(
     () => document.querySelector('[data-testid="module-action-demo"]')?.textContent?.includes("Gestionar"),
+    undefined,
     { timeout: 30000 },
   );
 }
@@ -147,8 +148,17 @@ async function installDemo(page, index, zip) {
       await page.getByTestId("reader-image-0").waitFor({ state: "visible" });
       await page.waitForFunction(
         () => document.querySelector('[data-testid="reader-indicator"]')?.textContent?.includes("1 / 3"),
+        undefined,
         { timeout: 15000 },
       );
+
+      // F43 W15: selector de capítulo en la barra; el actual va marcado como «Leyendo ahora».
+      await page.getByTestId("reader-chapters").click();
+      await page.getByTestId("reader-chapters-dialog").waitFor({ state: "visible" });
+      await page.getByTestId("reader-chapter-ch-1").getByText("Leyendo ahora").waitFor({ state: "visible" });
+      await page.screenshot({ path: `${process.env.SHOTS_DIR || "."}/f43-w15-${width}.png` });
+      await page.keyboard.press("Escape");
+      await page.getByTestId("reader-chapters-dialog").waitFor({ state: "detached" });
 
       // Modo paginado (determinista para avanzar página a página).
       await page.getByTestId("reader-mode").click();
@@ -167,6 +177,7 @@ async function installDemo(page, index, zip) {
       await page.getByTestId("reader-image-1").waitFor({ state: "visible" });
       await page.waitForFunction(
         () => document.querySelector('[data-testid="reader-indicator"]')?.textContent?.includes("2 / 3"),
+        undefined,
         { timeout: 15000 },
       );
 
@@ -176,6 +187,7 @@ async function installDemo(page, index, zip) {
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
       await page.waitForFunction(
         () => document.querySelector('[data-testid="reader-indicator"]')?.textContent?.includes("2 / 3"),
+        undefined,
         { timeout: 15000 },
       );
 
@@ -183,12 +195,24 @@ async function installDemo(page, index, zip) {
       await page.locator(".reader-zone-right").click();
       await page.waitForFunction(
         () => document.querySelector('[data-testid="reader-indicator"]')?.textContent?.includes("3 / 3"),
+        undefined,
         { timeout: 15000 },
       );
       await page.getByTestId("reader-endcard").waitFor({ state: "visible" });
       await page.getByTestId("reader-next-chapter").click();
-      await page.waitForFunction(() => location.pathname.endsWith("/reader/demo/s-1/ch-2"), { timeout: 15000 });
+      await page.waitForFunction(() => location.pathname.endsWith("/reader/demo/s-1/ch-2"), undefined, { timeout: 15000 });
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
+
+      // F43 W14: capítulo que no existe → banner con margen, código y «Ver detalle».
+      await page.goto(`${baseURL}/reader/demo/s-1/no-existe`);
+      const banner = page.getByTestId("reader-error-banner");
+      await banner.waitFor({ state: "visible" });
+      await page.getByTestId("reader-error-code").getByText("NOT_FOUND").waitFor({ state: "visible" });
+      const box = await banner.boundingBox();
+      assert.ok(box && box.x >= 16 && box.x + box.width <= width - 16, `margen lateral del banner a ${width} px`);
+      await page.getByTestId("reader-error-detail-toggle").click();
+      await page.getByTestId("reader-error-detail").waitFor({ state: "visible" });
+      await page.screenshot({ path: `${process.env.SHOTS_DIR || "."}/f43-w14-${width}.png` });
 
       assert.deepEqual(errors, [], `errores de consola/página a ${width} px: ${errors}`);
       assert.deepEqual(external, [], `peticiones externas no interceptadas a ${width} px: ${external}`);

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 
 import { t } from "@ryuunest/i18n";
-import { eventDetailLines, eventLevel, eventWhen, confirmClearMessage } from "@ryuunest/mobile-src/screens/settings/diagnostics/diagnosticsView";
+import { eventDetailLines, eventLevel, eventWhen, confirmClearMessage, groupEvents, groupWhen } from "@ryuunest/mobile-src/screens/settings/diagnostics/diagnosticsView";
 
 import Button from "../../components/Button";
 import Chip from "../../components/Chip";
@@ -133,7 +133,7 @@ export default function DiagnosticsScreen() {
         <section className="diag-group">
           <h2 className="t-label-md diag-label">{t("diagnostics.events", { count: events.length })}</h2>
           <ul className="diag-list" data-testid="diagnostics-list">
-            {events.map((event, index) => {
+            {groupEvents(events).map(({ entry: event, count }, index) => {
               const level = eventLevel(event.level);
               const expanded = flow.expanded.includes(event.id);
               return (
@@ -148,7 +148,7 @@ export default function DiagnosticsScreen() {
                     <span className={`t-label-sm diag-level diag-level-${level.tone}`}>{level.label}</span>
                     <span className="t-label-sm diag-code">{event.code}</span>
                     <span className="t-body-sm diag-message">{event.message}</span>
-                    <span className="t-body-sm diag-when">{eventWhen(event.at, now)}</span>
+                    <span className="t-body-sm diag-when">{groupWhen(count, eventWhen(event.at, now))}</span>
                   </button>
                   {expanded && (
                     <dl className="diag-detail" data-testid={`diagnostics-detail-${event.id}`}>

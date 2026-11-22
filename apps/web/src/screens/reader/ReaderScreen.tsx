@@ -5,12 +5,13 @@ import { t } from "@ryuunest/i18n";
 import type { ReaderMode } from "@ryuunest/core";
 
 import Button from "../../components/Button";
+import Dialog from "../../components/Dialog";
 import LoadingState from "../../components/LoadingState";
-import { ArrowLeft, BookOpen, GalleryVertical } from "../../icons";
+import { ArrowLeft, BookOpen, ChevronDown, GalleryVertical } from "../../icons";
 import { readerPath } from "../../routes";
 import { useServices } from "../../services/ServicesContext";
 import "./reader.css";
-import { type ReaderPageImage } from "./readerData";
+import { nearestPage, type ReaderPageImage } from "./readerData";
 import { fetchImageBlob, imageErrorKey } from "./readerImage";
 import { useReader, type ReaderReadyView } from "./useReader";
 
@@ -33,16 +34,17 @@ export default function ReaderScreen() {
 
   return (
     <div className="reader-screen" data-testid="screen-reader">
-      {view.status === "loading" && <LoadingState label={t("reader.loading.title")} testID="reader-loading" />}
+      {view.status === "loading" && (
+        <LoadingState label={t("reader.loading.title")} testID="reader-loading" />
+      )}
 
       {view.status === "error" && (
-        <div className="reader-error-banner" data-testid="reader-error-banner" role="alert">
-          <p className="t-headline-sm">{t("reader.error.title")}</p>
-          <div className="reader-error-actions">
-            <Button label={t("actions.retry")} onClick={actions.retry} testID="reader-retry" />
-            <Button variant="secondary" label={t("actions.back")} onClick={() => navigate(-1)} testID="reader-back" />
-          </div>
-        </div>
+        <ReaderErrorBanner
+          code={view.code}
+          message={view.message}
+          onRetry={actions.retry}
+          onBack={() => navigate(-1)}
+        />
       )}
 
       {view.status === "ready" && (
@@ -50,11 +52,56 @@ export default function ReaderScreen() {
           ready={view.ready}
           actions={actions}
           onOpenChapter={(nextChapterId, releaseId) =>
-            navigate(readerPath(moduleId, seriesId, nextChapterId, releaseId ?? undefined), { replace: true })
+            navigate(readerPath(moduleId, seriesId, nextChapterId, releaseId ?? undefined), {
+              replace: true,
+            })
           }
           onClose={() => navigate(-1)}
         />
       )}
+    </div>
+  );
+}
+
+/** F31 + F43 W14: fallo al abrir el capítulo, con su código y el mensaje original en «Ver detalle». */
+function ReaderErrorBanner({
+  code,
+  message,
+  onRetry,
+  onBack,
+}: {
+  code: string;
+  message: string;
+  onRetry: () => void;
+  onBack: () => void;
+}) {
+  const [detail, setDetail] = useState(false);
+  return (
+    <div className="reader-error-banner" data-testid="reader-error-banner" role="alert">
+      <p className="t-headline-sm">{t("reader.error.title")}</p>
+      <p className="t-label-sm reader-error-code" data-testid="reader-error-code">
+        {code}
+      </p>
+      {detail && (
+        <p className="t-body-sm reader-error-detail" data-testid="reader-error-detail">
+          {message}
+        </p>
+      )}
+      <div className="reader-error-actions">
+        <Button label={t("actions.retry")} onClick={onRetry} testID="reader-retry" />
+        <Button
+          variant="secondary"
+          label={t("actions.back")}
+          onClick={onBack}
+          testID="reader-back"
+        />
+        <Button
+          variant="secondary"
+          label={detail ? t("diagnostics.detail.hide") : t("diagnostics.detail.show")}
+          onClick={() => setDetail((value) => !value)}
+          testID="reader-error-detail-toggle"
+        />
+      </div>
     </div>
   );
 }
@@ -72,6 +119,9 @@ function ReaderReady({
 }) {
   const { snapshot, images, seriesTitle, chapters } = ready;
   const [showBars, setShowBars] = useState(true);
+  const [chaptersOpen, setChaptersOpen] = useState(false);
+  const currentChapterId = snapshot.chapter?.chapterId;
+  const currentNumber = chapters.find((c) => c.id === currentChapterId)?.number ?? 0;
   const mode: ReaderMode = snapshot.mode ?? "vertical";
   const pageTotal = snapshot.pageTotal ?? images.length;
   const current = Math.min(snapshot.pageIndex + 1, Math.max(pageTotal, 1));
@@ -79,7 +129,11 @@ function ReaderReady({
   return (
     <div className="reader-canvas" onClick={() => setShowBars((value) => !value)}>
       {showBars && (
-        <header className="reader-topbar" data-testid="reader-topbar" onClick={(event) => event.stopPropagation()}>
+        <header
+          className="reader-topbar"
+          data-testid="reader-topbar"
+          onClick={(event) => event.stopPropagation()}
+        >
           <Button
             variant="secondary"
             label={t("reader.close")}
@@ -90,20 +144,76 @@ function ReaderReady({
           <div className="reader-titles">
             <span className="t-body-md">{seriesTitle}</span>
             <span className="t-body-sm reader-chapter-title">
-              {t("reader.chapter.short", { number: ready.chapters.find((c) => c.id === snapshot.chapter?.chapterId)?.number ?? 0 })}
+              {t("reader.chapter.short", {
+                number:
+                  ready.chapters.find((c) => c.id === snapshot.chapter?.chapterId)?.number ?? 0,
+              })}
             </span>
           </div>
+          {/* F43 W15: selector de capítulo en la barra (RF-22), como en móvil. */}
+          <Button
+            variant="secondary"
+            label={t("reader.chapter.short", { number: currentNumber })}
+            icon={<ChevronDown size={18} aria-hidden />}
+            ariaLabel={t("reader.chapters.select")}
+            onClick={() => setChaptersOpen(true)}
+            testID="reader-chapters"
+          />
           <span className="t-body-sm reader-indicator" data-testid="reader-indicator">
             {t("reader.page.indicator", { current, total: pageTotal })}
           </span>
           <Button
             variant="secondary"
             label={t("reader.mode.open")}
-            icon={mode === "vertical" ? <GalleryVertical size={18} aria-hidden /> : <BookOpen size={18} aria-hidden />}
+            icon={
+              mode === "vertical" ? (
+                <GalleryVertical size={18} aria-hidden />
+              ) : (
+                <BookOpen size={18} aria-hidden />
+              )
+            }
             onClick={() => actions.setMode(mode === "vertical" ? "paged-rtl" : "vertical")}
             testID="reader-mode"
           />
         </header>
+      )}
+
+      {chaptersOpen && (
+        // El diálogo no es portal: que su fondo no alterne las barras del lienzo.
+        <div onClick={(event) => event.stopPropagation()}>
+          <Dialog
+            title={t("reader.chapters.title")}
+            testID="reader-chapters-dialog"
+            onClose={() => setChaptersOpen(false)}
+          >
+            <ul className="reader-chapter-list">
+              {chapters.map((chapter) => (
+                <li key={chapter.id}>
+                  <button
+                    type="button"
+                    className="reader-chapter-row"
+                    aria-current={chapter.id === currentChapterId ? "true" : undefined}
+                    onClick={() => {
+                      setChaptersOpen(false);
+                      if (chapter.id !== currentChapterId)
+                        onOpenChapter(chapter.id, chapter.releaseId);
+                    }}
+                    data-testid={`reader-chapter-${chapter.id}`}
+                  >
+                    <span className="t-body-md">
+                      {`${t("series.chapter", { number: chapter.number ?? "" })}: ${chapter.title}`}
+                    </span>
+                    {chapter.id === currentChapterId && (
+                      <span className="t-label-sm reader-chapter-current">
+                        {t("reader.chapters.current")}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </Dialog>
+        </div>
       )}
 
       {mode === "vertical" ? (
@@ -121,12 +231,21 @@ function ReaderReady({
       {snapshot.finished && (
         <div className="reader-endcard" data-testid="reader-endcard">
           <p className="t-headline-sm">
-            {t("reader.end.title", { number: ready.chapters.find((c) => c.id === snapshot.chapter?.chapterId)?.number ?? 0 })}
+            {t("reader.end.title", {
+              number: ready.chapters.find((c) => c.id === snapshot.chapter?.chapterId)?.number ?? 0,
+            })}
           </p>
           {snapshot.nextChapter !== null ? (
             <Button
-              label={t("reader.end.next", { number: chapters.find((c) => c.id === snapshot.nextChapter?.chapterId)?.number ?? 0 })}
-              onClick={() => onOpenChapter(snapshot.nextChapter?.chapterId ?? "", snapshot.nextChapter?.releaseId ?? null)}
+              label={t("reader.end.next", {
+                number: chapters.find((c) => c.id === snapshot.nextChapter?.chapterId)?.number ?? 0,
+              })}
+              onClick={() =>
+                onOpenChapter(
+                  snapshot.nextChapter?.chapterId ?? "",
+                  snapshot.nextChapter?.releaseId ?? null,
+                )
+              }
               testID="reader-next-chapter"
             />
           ) : (
@@ -155,24 +274,22 @@ function VerticalCanvas({
 
   useEffect(() => {
     observerRef.current?.disconnect();
+    // Páginas dentro de la banda; el aviso solo trae las que cambian, así que se acumulan aquí.
+    const visible = new Set<HTMLElement>();
     const observer = new IntersectionObserver(
       (entries) => {
-        // La página "visible" es la que más cerca queda del centro del viewport:
-        // así no importa que varias páginas intersecten la banda a la vez.
-        let best: number | null = null;
-        let bestDistance = Number.POSITIVE_INFINITY;
-        const viewportCenter = window.innerHeight / 2;
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const index = Number((entry.target as HTMLElement).dataset.pageIndex);
-          if (Number.isNaN(index)) continue;
-          const center = entry.boundingClientRect.top + entry.boundingClientRect.height / 2;
-          const distance = Math.abs(center - viewportCenter);
-          if (distance < bestDistance) {
-            bestDistance = distance;
-            best = index;
-          }
+          const el = entry.target as HTMLElement;
+          if (entry.isIntersecting) visible.add(el);
+          else visible.delete(el);
         }
+        const pages = [...visible].flatMap((el) => {
+          const index = Number(el.dataset.pageIndex);
+          if (Number.isNaN(index) || !el.isConnected) return [];
+          const rect = el.getBoundingClientRect();
+          return [{ index, top: rect.top, bottom: rect.bottom }];
+        });
+        const best = nearestPage(pages, window.innerHeight / 2);
         if (best !== null) onVisiblePage(best);
       },
       { rootMargin: "45% 0px 45% 0px" },
@@ -209,7 +326,15 @@ function PagedCanvas({
   const image = images[snapshot.pageIndex];
   return (
     <div className="reader-paged" data-testid="reader-paged">
-      <button type="button" className="reader-zone reader-zone-left" aria-label={t("reader.page.previous")} onClick={(e) => { e.stopPropagation(); onPrevious(); }} />
+      <button
+        type="button"
+        className="reader-zone reader-zone-left"
+        aria-label={t("reader.page.previous")}
+        onClick={(e) => {
+          e.stopPropagation();
+          onPrevious();
+        }}
+      />
       <div
         className="reader-page-wrap"
         onClick={(e) => {
@@ -221,7 +346,15 @@ function PagedCanvas({
       >
         {image !== undefined && <ReaderImageView image={image} index={snapshot.pageIndex} />}
       </div>
-      <button type="button" className="reader-zone reader-zone-right" aria-label={t("reader.page.next")} onClick={(e) => { e.stopPropagation(); onNext(); }} />
+      <button
+        type="button"
+        className="reader-zone reader-zone-right"
+        aria-label={t("reader.page.next")}
+        onClick={(e) => {
+          e.stopPropagation();
+          onNext();
+        }}
+      />
     </div>
   );
 }
@@ -259,7 +392,6 @@ function ReaderImageView({ image, index }: { image: ReaderPageImage; index: numb
     };
   }, [image.url, image.headers, nonce, services.http]);
 
-
   if (failed !== null) {
     if (!reported.current) {
       reported.current = true;
@@ -270,10 +402,23 @@ function ReaderImageView({ image, index }: { image: ReaderPageImage; index: numb
       });
     }
     return (
-      <div className="reader-page reader-page-error" data-page-index={index} data-testid={`reader-image-error-${index}`}>
+      <div
+        className="reader-page reader-page-error"
+        data-page-index={index}
+        data-testid={`reader-image-error-${index}`}
+      >
         <p className="t-body-md">{t("reader.image.error", { number: index + 1 })}</p>
-        <p className="t-body-sm" data-testid={`reader-image-error-message-${index}`}>{t(failed)}</p>
-        <Button label={t("actions.retry")} onClick={() => { setFailed(null); setNonce((v) => v + 1); }} testID={`reader-image-retry-${index}`} />
+        <p className="t-body-sm" data-testid={`reader-image-error-message-${index}`}>
+          {t(failed)}
+        </p>
+        <Button
+          label={t("actions.retry")}
+          onClick={() => {
+            setFailed(null);
+            setNonce((v) => v + 1);
+          }}
+          testID={`reader-image-retry-${index}`}
+        />
       </div>
     );
   }

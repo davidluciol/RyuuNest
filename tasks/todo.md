@@ -600,8 +600,10 @@ Dep: F90 · M · `apps/mobile/src/screens/settings/*`
 
 Dep: F32 (hallazgo) · S · `apps/mobile/src/screens/series/*`
 
-- [ ] **Carpeta:** no hay selector de carpeta en la ficha (`onFolderLongPress` vacío); queda como tarea aparte (hoja con `Folders.list` + «Sin carpeta» → `Favorites.move`)
-- [ ] Comprobar en el dispositivo que el reinicio conserva favorito y release (la ficha no tiene aún selector de release: el chip solo repite la actual)
+- [x] **Carpeta:** cubierta por F96 (botón «Guardar» con hoja de carpetas); comprobado con `tests/e2e/series.cjs` a 426/1440 (2026-11-21)
+- [x] Selector de grupo: el chip de un capítulo con ≥ 2 releases abre «Elegir grupo» (`ReleaseSheet`); la elección vale para toda la serie (P-187). Vitest + e2e `series.cjs` 426/1440
+- [x] 🧍 POCO F5 Pro (2026-11-21, Expo Go, m440 Blue Lock): tras forzar el cierre, la serie sigue «En favoritos» y en su modo. Los chips de un solo grupo salen como etiqueta
+- [ ] 🧍 Hoja «Elegir grupo» en el teléfono: **no se puede con m440** (una release por capítulo, P-147); falta un módulo real con ≥ 2 grupos por capítulo (en web probada con el ejemplo)
 - Verif: Vitest con SQLite real · 🧍 S25 Ultra
 - Nota: la parte web de la ficha entra en F41 (propuesta de F33).
 
@@ -636,22 +638,31 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 ### F39 Equivalencias web de los arreglos de F32 `[FE · Baja · N2]`
 
-- [ ] Sin decidir: el error de imagen del lector web solo muestra el título; valorar el mismo mensaje por tipo que en móvil (**mismo asunto que F77**: decidir en una sola)
-- Verif: Playwright a 1440/426 px
+- [x] Cubierta por F77 (P-171): el lector web muestra el mensaje por tipo. Comprobado 2026-11-21 con `apps/web/tests/e2e/reader.cjs` a 1440/426 px; de paso se arregló el salto de página del modo vertical que hacía fallar ese e2e a 426 px (P-187)
+- Verif: ✅ Playwright a 1440/426 px
 
 ### F36 Detalle de error en el S25 `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Ver el «Ver detalle» de `ErrorState` con la URL completa (sin «…») en el S25 con un error de imagen real (red cortada)
+- [x] 🧍 Hecho en el **POCO F5 Pro** (2026-11-21, decisión del humano: POCO en vez de S25): Wi‑Fi cortado → pág. 13 de Blue Lock (m440) falla con «No hay conexión…»; «Ver detalle» muestra la URL completa en dos líneas sin «…» y `código: NETWORK`
 - Verif: S25 Ultra
 
 ### F43 Lector, Diagnóstico y escritorio (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
 
-- [ ] 🧍 Aprobar F43. Después: ajustes del lector, Diagnóstico y diseño de escritorio según `tasks/Analisis.md` §7
-- Verif: según el análisis
+- [x] Aprobada (humano, 2026-11-21). Auditoría: R12 y W19 ya resueltos; N17/R10/R11/R6 parciales; R7, W14, W15 abiertos; W17 en la web de Expo
+- [x] N17 un solo indicador (sin «%») · R11 sin botones ‹ › · R10 «Derecha a izquierda (manga)» / «Izquierda a derecha (cómic)»
+- [x] R6 eventos repetidos agrupados («×N») · R7 chips «Texto» / «Datos»
+- [x] W14 banner del lector web con margen, código y «Ver detalle» · W15 selector de capítulo en la barra del lector web
+- [x] W17 Guarida y Tesoros con tope `gridMaxWidth` 1100 px y rejilla por tramo (P-188)
+- [x] 🧍 POCO F5 Pro (2026-11-21): barra inferior «Pág. 2 / 77» sin ‹ › ni «%», y hoja de modo con «Derecha a izquierda (manga)» / «Izquierda a derecha (cómic)»
+- Verif: ✅ Vitest + Playwright (`reader`, `settings`, `diagnostics`, `library`, `home`, `shell` en móvil; `reader`, `settings`, `f28Screens` en `apps/web`)
 
 ### 🧍 Lector en el POCO (F18/F19) `[FE · Baja · N2]`
 
-- [ ] 🧍 Abrir un capítulo real, cambiar de modo, pellizcar, comprobar que la pantalla no se apaga, romper una imagen (modo avión) y reintentarla, y medir la memoria con `adb shell dumpsys meminfo` durante la precarga
+- [x] 🧍 Hecho 2026-11-21 (Expo Go, m440 Blue Lock cap. 2): cambio a D→I y deslizar avanza; pellizco ~2,5×; pantalla encendida (`SCREEN_BRIGHT_WAKE_LOCK` de Expo Go); Wi‑Fi cortado → pág. 13 falla y «Reintentar» la carga al volver la red; `dumpsys meminfo` PSS ≈ 709 MB al abrir y ≈ 758 MB en precarga (Native Heap ≈ 396–414 MB, Graphics ≈ 81–145 MB)
+
+### Hallazgo (2026-11-21) · plural en carpetas de Tesoros `[FE · Baja · N1]`
+
+- [ ] La tarjeta de carpeta dice «1 obras» (visto en la web de Expo a 1440 px con la base sembrada); falta singular
 
 **Lote sugerido:** F17 → F51 → F39 → F36 → F43 → F23.
 

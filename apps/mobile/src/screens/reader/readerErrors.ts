@@ -12,8 +12,13 @@ import type { ErrorReporter } from "../../data/errorLogPort";
 /** Puntos del lector que pueden fallar. */
 export type ReaderErrorAction = "open" | "image";
 
-function messageOf(error: unknown): string {
+export function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+/** Código del fallo: el del módulo o `INTERNAL` (también lo enseña el banner web, F43 W14). */
+export function readerErrorCode(error: unknown): string {
+  return error instanceof ModuleError ? error.code : "INTERNAL";
 }
 
 export function reportReaderError(
@@ -22,7 +27,7 @@ export function reportReaderError(
   error: unknown,
   context: Record<string, unknown>,
 ): void {
-  const code = error instanceof ModuleError ? error.code : "INTERNAL";
+  const code = readerErrorCode(error);
   reporter?.report("error", `reader.${action}.${code.toLowerCase()}`, messageOf(error), {
     errorCode: code,
     ...(error instanceof ModuleError && error.details?.url !== undefined

@@ -223,8 +223,6 @@ export default function ReaderScreen({
           pageTotal={snapshot.pageTotal}
           modeLabel={modeLabel(mode)}
           next={next === null ? null : { number: next.number }}
-          onPrevious={goPrevious}
-          onNext={goNext}
           onOpenMode={() => setSheet("mode")}
           onOpenNextChapter={openNext}
         />
