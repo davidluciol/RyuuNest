@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
+import type { Release } from "@ryuunest/core";
 import { View } from "react-native";
 import { activeColors } from "@ryuunest/ui-tokens";
 
 import NewFolderSheet from "../../../components/NewFolderSheet";
+import ReleaseSheet from "../../../components/ReleaseSheet";
 import SaveFolderSheet from "../../../components/SaveFolderSheet";
 import ErrorState from "../../../components/ErrorState";
 import { retryWithChallenge } from "../../../data/appChallenge";
@@ -46,6 +48,7 @@ function SeriesRouteContent() {
   const [saveOpen, setSaveOpen] = useState(false);
   const [creating, setCreating] = useState(false);
   const [preferredReleaseId, setPreferredReleaseId] = useState<string | null>(null);
+  const [releaseChapterId, setReleaseChapterId] = useState<string | null>(null);
   const savedFavorite = view.status === "ready" ? view.data.favorite : undefined;
   const savedRelease = view.status === "ready" ? view.data.preferredReleaseId : undefined;
 
@@ -129,6 +132,17 @@ function SeriesRouteContent() {
       },
     });
 
+  const releaseChapter = data.details.chapters.find((item) => item.id === releaseChapterId);
+
+  // F17: la release elegida vale para toda la serie (se guarda por grupo).
+  const selectRelease = (release: Release) => {
+    setReleaseChapterId(null);
+    setPreferredReleaseId(release.group ?? release.id);
+    resolveReadingSource()
+      .then((source) => source.setPreferredRelease(moduleId, seriesId, release))
+      .catch((error: unknown) => reportError("series.release.internal", error));
+  };
+
   const openChapter = (chapterId: string) => {
     const chapter = data.details.chapters.find((item) => item.id === chapterId);
     if (chapter !== undefined) {
@@ -162,25 +176,18 @@ function SeriesRouteContent() {
             });
         }}
         onSave={openSave}
-        onReleaseSelect={(chapterId, releaseId) => {
-          const chapter = data.details.chapters.find((item) => item.id === chapterId);
-          const release = chapter?.releases.find((item) => item.id === releaseId);
-          if (release === undefined) return;
-          setPreferredReleaseId(release.group ?? release.id);
-          resolveReadingSource()
-            .then((source) => source.setPreferredRelease(moduleId, seriesId, release))
-            .catch(async (error: unknown) => {
-              const reporter = await resolveErrorReporter();
-              reporter.report(
-                "error",
-                "series.release.internal",
-                error instanceof Error ? error.message : String(error),
-                { moduleId, seriesId },
-              );
-            });
-        }}
+        onReleasePress={setReleaseChapterId}
         onChapterPress={openReader}
       />
+      {releaseChapter === undefined ? null : (
+        <ReleaseSheet
+          visible
+          releases={releaseChapter.releases}
+          currentId={preferredRelease(releaseChapter.releases, preferredReleaseId)?.id ?? null}
+          onClose={() => setReleaseChapterId(null)}
+          onSelect={selectRelease}
+        />
+      )}
       {saveState === null ? null : (
         <>
           <SaveFolderSheet

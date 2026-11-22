@@ -22,6 +22,7 @@ import {
   preferredRelease,
   type SeriesViewData,
 } from "./seriesFixtures";
+import { canChooseRelease, releaseLabel } from "./seriesLogic";
 import FocusPressable from "../../components/FocusPressable";
 import { themedStyles } from "../../components/themedStyles";
 
@@ -60,7 +61,8 @@ export interface SeriesScreenProps {
   onContinue?: () => void;
   onFavoriteToggle?: () => void;
   onSave?: () => void;
-  onReleaseSelect?: (chapterId: string, releaseId: string) => void;
+  /** F17: solo se llama si el capítulo tiene dos o más releases (abre la hoja). */
+  onReleasePress?: (chapterId: string) => void;
   onChapterPress?: (chapterId: string, releaseId: string) => void;
 }
 
@@ -71,7 +73,7 @@ export default function SeriesScreen({
   onContinue,
   onFavoriteToggle,
   onSave,
-  onReleaseSelect,
+  onReleasePress,
   onChapterPress,
 }: SeriesScreenProps) {
   const [expanded, setExpanded] = useState(false);
@@ -233,16 +235,21 @@ export default function SeriesScreen({
                 hint={stateLabel(state)}
                 onPress={() => release && onChapterPress?.(chapter.id, release.id)}
               />
-              {release ? (
+              {release && canChooseRelease(chapter) ? (
                 <FocusPressable
-                  onPress={() => onReleaseSelect?.(chapter.id, release.id)}
+                  onPress={() => onReleasePress?.(chapter.id)}
                   style={styles.release}
                   hitSlop={touchTarget.min / 4}
                   accessibilityRole="button"
+                  accessibilityLabel={t("series.release.sheet.title")}
                 >
-                  <Text style={styles.releaseText}>{release.group}</Text>
+                  <Text style={styles.releaseText}>{releaseLabel(release)}</Text>
                   <ChevronDown size={14} color={colors.accent} />
                 </FocusPressable>
+              ) : release ? (
+                <View style={styles.release}>
+                  <Text style={styles.releaseText}>{releaseLabel(release)}</Text>
+                </View>
               ) : null}
             </View>
           );

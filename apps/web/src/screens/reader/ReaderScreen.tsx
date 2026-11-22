@@ -10,7 +10,7 @@ import { ArrowLeft, BookOpen, GalleryVertical } from "../../icons";
 import { readerPath } from "../../routes";
 import { useServices } from "../../services/ServicesContext";
 import "./reader.css";
-import { type ReaderPageImage } from "./readerData";
+import { nearestPage, type ReaderPageImage } from "./readerData";
 import { fetchImageBlob, imageErrorKey } from "./readerImage";
 import { useReader, type ReaderReadyView } from "./useReader";
 
@@ -155,24 +155,22 @@ function VerticalCanvas({
 
   useEffect(() => {
     observerRef.current?.disconnect();
+    // Páginas dentro de la banda; el aviso solo trae las que cambian, así que se acumulan aquí.
+    const visible = new Set<HTMLElement>();
     const observer = new IntersectionObserver(
       (entries) => {
-        // La página "visible" es la que más cerca queda del centro del viewport:
-        // así no importa que varias páginas intersecten la banda a la vez.
-        let best: number | null = null;
-        let bestDistance = Number.POSITIVE_INFINITY;
-        const viewportCenter = window.innerHeight / 2;
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const index = Number((entry.target as HTMLElement).dataset.pageIndex);
-          if (Number.isNaN(index)) continue;
-          const center = entry.boundingClientRect.top + entry.boundingClientRect.height / 2;
-          const distance = Math.abs(center - viewportCenter);
-          if (distance < bestDistance) {
-            bestDistance = distance;
-            best = index;
-          }
+          const el = entry.target as HTMLElement;
+          if (entry.isIntersecting) visible.add(el);
+          else visible.delete(el);
         }
+        const pages = [...visible].flatMap((el) => {
+          const index = Number(el.dataset.pageIndex);
+          if (Number.isNaN(index) || !el.isConnected) return [];
+          const rect = el.getBoundingClientRect();
+          return [{ index, top: rect.top, bottom: rect.bottom }];
+        });
+        const best = nearestPage(pages, window.innerHeight / 2);
         if (best !== null) onVisiblePage(best);
       },
       { rootMargin: "45% 0px 45% 0px" },

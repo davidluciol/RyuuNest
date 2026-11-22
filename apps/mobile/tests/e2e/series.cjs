@@ -58,6 +58,16 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
       await page.getByRole("button", { name: "Favoritos", exact: true }).click(); // vuelve a Favoritos para el resto
       await page.getByRole("button", { name: "En favoritos", exact: true }).waitFor({ state: "visible" });
 
+      // F17: el cap. 1 tiene dos grupos; su chip abre «Elegir grupo» y la elección vale para la
+      // serie. El cap. 2 solo tiene uno: su chip es etiqueta (no es botón).
+      assert.equal(await page.getByRole("button", { name: "Elegir grupo" }).count(), 1);
+      await page.getByRole("button", { name: "Elegir grupo" }).click();
+      await page.getByTestId("release-sheet").waitFor({ state: "visible" });
+      await page.getByRole("button", { name: "Escuadrón Noche", exact: true }).click();
+      await page.getByTestId("release-sheet").waitFor({ state: "hidden" });
+      await page.getByText("Escuadrón Noche", { exact: true }).waitFor({ state: "visible" });
+      await page.screenshot({ path: `${process.env.SHOTS_DIR || "."}/f17-release-${width}.png` });
+
       // P-126: el favorito se guarda (con su serie) y no se pierde al salir de la ficha y volver.
       await page.getByText("Capítulo 1: Capítulo 1").click();
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
