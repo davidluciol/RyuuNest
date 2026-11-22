@@ -53,6 +53,9 @@ export const HOST_DEFAULTS = {
   minDelayMs: 250,
 } as const;
 
+/** Límites de `network.minDelayMs` del manifest (G6): nunca más rápido que el host. */
+export const MODULE_MIN_DELAY_RANGE = { min: HOST_DEFAULTS.minDelayMs, max: 5_000 } as const;
+
 function createMemorySettings(): ModuleSettings {
   const values = new Map<string, string>();
   return {

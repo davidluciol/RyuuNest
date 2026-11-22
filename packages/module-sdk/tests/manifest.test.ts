@@ -165,6 +165,23 @@ describe("manifest · inválido", () => {
     expect(issues.length).toBeGreaterThanOrEqual(3);
   });
 
+  it("acepta network.minDelayMs entre 250 y 5000 ms y rechaza lo demás (G6)", () => {
+    expect(validateManifest({ ...validManifest, network: { minDelayMs: 600 } }).ok).toBe(true);
+    expect(validateManifest({ ...validManifest, network: {} }).ok).toBe(true);
+
+    for (const network of [
+      { minDelayMs: 100 },
+      { minDelayMs: 6000 },
+      { minDelayMs: "600" },
+      { minDelayMs: 600.5 },
+      "rápido",
+    ]) {
+      expect(pathsOf(validateManifest({ ...validManifest, network })).join()).toMatch(
+        /^network/,
+      );
+    }
+  });
+
   it("valida minAppVersion contra la versión de la app", () => {
     const tooNew = validateManifest(
       { ...validManifest, minAppVersion: "2.0.0" },

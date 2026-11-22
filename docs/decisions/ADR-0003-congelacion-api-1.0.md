@@ -164,6 +164,8 @@ Solo se listan las que ya tienen evidencia (o mención en el SPEC):
 | `Page.next?` y parámetro de cursor | Ninguna evidencia real. El «cursor» del sitio falso JSON es `c${page}` (predecible), así que T32a no ejercita cursores opacos. Con un cursor opaco, un módulo puede guardar un mapa página → cursor mientras la app pida las páginas en orden. |
 | Parámetro opcional de filtros en `search` | SPEC §17.2, pregunta 5 (fuera de la v1). |
 
+> **Actualización (G6, 2026-11-22):** entra `network.minDelayMs?` en el manifest (aditivo, sin subir `apiVersion` ni pedir `minAppVersion`: una app anterior lo ignora y aplica la pausa del host). Entero de 250 a 5000 ms; nunca más rápido que el host. Evidencia: `m440` responde 403 a dos peticiones separadas ~250 ms (POCO, 2026-11-21 y 2026-11-22); declara 600 ms.
+
 > **Actualización (T43, 2026-11-14):** el parámetro de filtros de `search` y los métodos opcionales `home()`, `list()` y `filters()` entraron en el contrato (SPEC §6.3, `MEMORY.md` P-146).
 
 ## Decisión 4: revisión de P-74, P-75 y P-76

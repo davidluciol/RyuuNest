@@ -768,7 +768,15 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 - [ ] 🧍 PR de prueba que rompe el contrato y hace fallar el CI
 
 - [x] TIMEOUT de m440 al «Retomar» investigado en el POCO (2026-11-22): tras ~4–5 min sin tráfico al host, la primera petición tarda 124–154 s y acaba en 200; dos peticiones colgadas acabaron en el mismo milisegundo → conexión reutilizada que el servidor ya cerró. React Native crea OkHttp sin límites (`connectTimeout/readTimeout/writeTimeout` = 0, `OkHttpClientProvider.kt`) y el `TIMEOUT` del host (15 s) no cancela la petición, así que «Reintentar» va por la misma conexión muerta. No es la cola del host: el temporizador empieza tras `acquire`/`respectDelay`
-- [ ] Decidir el arreglo del TIMEOUT tras inactividad (ver MEMORY §4)
+- [x] Arreglo decidido (humano, 2026-11-22): OkHttp nativo con ping + `network.minDelayMs` en el manifest → **G6**
+
+### G6 OkHttp con ping y pausa por módulo `[BE · Alta · N4]` (PR #166 → `feature/general-lote`; Models PR #17)
+
+- [x] Plugin `apps/mobile/plugins/withOkHttpPing.js` (ping 10 s, conexión 15 s, lectura 30 s; conserva caché y cookies) + test + prebuild comprobado
+- [x] `network.minDelayMs?` (250–5000 ms) en manifest, SDK y `installedMounter`; SPEC §6.1 y ADR-0003
+- [x] m440 0.2.2 declara 600 ms (Models PR #17); tests 5/5
+- [ ] PR de `index.json` en Models con m440 0.2.2 (tras fusionar #17 y #166)
+- [x] 🧍 APK EAS `preview` (build `b345fb0e`) en el POCO (2026-11-22): tras 5,5 min sin tráfico, «Retomar» de m440 abre la página en 1,2 s y 0,4 s (2/2); en Expo Go, sin el arreglo, 124–154 s (2/2). Los 600 ms de m440 se comprobarán al publicar 0.2.2 en `index.json`
 
 ### G2 Plataforma: deudas del núcleo `[BE · Intermedia · N3]`
 
@@ -805,7 +813,8 @@ Dep: F32 · S · dispositivos
 
 ### G3 Medidas con APK compilado `[Ops · Baja · N2]` 🧍
 
-- [ ] 🧍 Medir el tope de imágenes (P-45) y revalidar RNF-1 (<3 s) con APK compilado (antes: POCO 4580 ms, S25 1940 ms, MiBox 5600 ms); cierra T05
+- [x] 🧍 RNF-1 con APK en el POCO (2026-11-22): ~1,8 s hasta Guarida útil (antes, en desarrollo, 4580 ms); primer frame 274–333 ms (`am start -W`). Ojo: Guarida vacía (el APK tiene datos aparte). PSS del lector ≈ 491 MB (Expo Go: 758–828 MB)
+- [ ] 🧍 Medir el tope de imágenes (P-45): `ImageCapPanel` no está montado en ninguna pantalla; decidir dónde exponerlo. Cierra T05
 
 ### G4 Proceso y limpieza `[Ops · Baja · N1]` 🧍
 
@@ -820,6 +829,17 @@ Dep: F32 · S · dispositivos
 ### G5 Manejador del enlace `ryuunest://add-repo` `[FE · Intermedia · N3]` (de T33)
 
 - [ ] Hoy Expo Router manda el enlace a una ruta inexistente. Abrir Portales con la hoja «Añadir repositorio» y la URL puesta (SPEC §7.2), sin instalar; ampliar `deepLink.test.ts`
+
+### V2 · Dependencias obsoletas de `eas-cli` `[Ops · Baja · N1]` (v2)
+
+> Al ejecutar `npx eas-cli@latest login` (2026-11-22), npm avisó de paquetes obsoletos. Son dependencias **del propio `eas-cli`** (lo descarga `npx`), no de RyuuNest: no se arreglan en este repo; se revisan cuando Expo publique un `eas-cli` que las actualice.
+
+- [ ] `inflight@1.0.6` (pierde memoria) → sustituto `lru-cache`
+- [ ] `rimraf@2.4.5` → v4 o superior
+- [ ] `glob@6.0.4` y `glob@10.5.0` (vulnerabilidades conocidas) → versión actual
+- [ ] `http-call@5.3.0` → `@heroku/http-call`
+- [ ] `uuid@7.0.3` y `uuid@8.3.2` → `uuid@11` (CommonJS) o la última (ESM)
+- [x] Ninguno está en `pnpm-lock.yaml` de RyuuNest (2026-11-22: solo `glob@13.0.6` y `glob@14.0.3`, vigentes)
 
 ### 🚩 Checkpoints `[Ops · Baja · N1]`
 

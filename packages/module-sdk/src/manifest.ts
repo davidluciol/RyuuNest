@@ -3,6 +3,7 @@
  *
  * Devuelve o el manifest tipado o una lista de problemas con **ruta y motivo**.
  */
+import { MODULE_MIN_DELAY_RANGE } from "@ryuunest/core";
 import type { MediaKind, ModuleCapability, ModuleManifest } from "@ryuunest/core";
 
 import { compareSemver, isSemver } from "./semver.js";
@@ -68,6 +69,7 @@ export function validateManifest(
   }
   validateEnumArray(value["capabilities"], "capabilities", MODULE_CAPABILITIES, issues, false);
   requireString(value["entry"], "entry", issues);
+  validateNetwork(value["network"], issues);
 
   return issues.result<ModuleManifest>(value);
 }
@@ -183,6 +185,24 @@ function validatePermissions(value: unknown, path: string, issues: IssueCollecto
       issues.add(indexedPath(childPath(path, "domains"), index), "Debe ser una cadena no vacía");
     }
   });
+}
+
+function validateNetwork(value: unknown, issues: IssueCollector): void {
+  if (value === undefined) {
+    return;
+  }
+  if (!isRecord(value)) {
+    issues.add("network", "Si se indica, debe ser un objeto con { minDelayMs }");
+    return;
+  }
+  const delay = value["minDelayMs"];
+  const { min, max } = MODULE_MIN_DELAY_RANGE;
+  if (
+    delay !== undefined &&
+    (typeof delay !== "number" || !Number.isInteger(delay) || delay < min || delay > max)
+  ) {
+    issues.add("network.minDelayMs", `Debe ser un entero entre ${min} y ${max} ms`);
+  }
 }
 
 function validateOptionalString(
