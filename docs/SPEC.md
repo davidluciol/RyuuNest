@@ -259,6 +259,7 @@ export interface ModuleManifest {
   capabilities: Array<"popular" | "latest" | "search" | "details" | "pages" | "home" | "list" | "filters">;
   permissions: { domains: string[] };   // dominios a los que puede llamar
   entry: string;                 // archivo de entrada dentro del paquete
+  network?: { minDelayMs?: number };   // G6: pausa entre peticiones al mismo dominio, entero 250–5000 ms (sin ella, la del host)
   minAppVersion?: string;
   author?: string;
   homepage?: string;

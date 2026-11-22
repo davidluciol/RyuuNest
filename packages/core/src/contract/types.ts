@@ -118,6 +118,11 @@ export interface ModuleManifest {
   capabilities: ModuleCapability[];
   /** Dominios a los que el módulo puede llamar. */
   permissions: { domains: string[] };
+  /**
+   * Política de red propia (G6). `minDelayMs`: pausa mínima entre peticiones al
+   * mismo dominio, entera y dentro de `MODULE_MIN_DELAY_RANGE`; sin ella, la del host.
+   */
+  network?: { minDelayMs?: number };
   /** Archivo de entrada dentro del paquete. */
   entry: string;
   minAppVersion?: string;
