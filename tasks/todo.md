@@ -796,7 +796,8 @@ Dep: F32 · S · dispositivos
 
 ### F28 Playwright por pantalla + `DIFFS.md` + lista de 20 s (AC-12) — restante `[FE/QA · Baja · N2]` 🧍
 
-- [ ] 🧍 Capturas en POCO F5 Pro y MiBox 4 (AC-12 no se cierra sin dispositivo). POCO a medias (2026-11-21): Guarida, Tesoros, Ajustes y lector capturados; faltan Aventuras, Portales, ficha y Diagnóstico + `DIFFS.md`
+- [x] 🧍 POCO F5 Pro (2026-11-22): las 8 pantallas capturadas y comparadas con `screen.png`; diferencias en `DIFFS.md` (fila AC-12)
+- [ ] 🧍 Capturas en la MiBox 4 (AC-12 no se cierra sin ella)
 
 
 ### G3 Medidas con APK compilado `[Ops · Baja · N2]` 🧍
