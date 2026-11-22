@@ -20,6 +20,8 @@ const TABLAS: Readonly<Record<string, readonly ColumnSpec[]>> = {
     ["url", "TEXT", 1, 0, null],
     ["name", "TEXT", 0, 0, null],
     ["added_at", "INTEGER", 1, 0, null],
+    ["data", "TEXT", 0, 0, null], // G2 (migración 6): el JSON del registro
+    ["index_json", "TEXT", 0, 0, null], // G2: el index.json tal cual llegó
   ],
   module: [
     ["id", "TEXT", 0, 1, null],
@@ -32,6 +34,7 @@ const TABLAS: Readonly<Record<string, readonly ColumnSpec[]>> = {
     ["enabled", "INTEGER", 1, 0, "1"],
     ["installed_at", "INTEGER", 1, 0, null],
     ["last_error", "TEXT", 0, 0, null],
+    ["data", "TEXT", 0, 0, null], // G2 (migración 6): el JSON del paquete instalado
   ],
   series: [
     ["module_id", "TEXT", 1, 1, null],

@@ -1009,7 +1009,6 @@ describe("importBackup · sugerencias de repos y módulos (RF-38)", () => {
 
       expect((await driver.get<{ n: number }>("SELECT COUNT(*) AS n FROM repo"))?.n).toBe(0);
       expect((await driver.get<{ n: number }>("SELECT COUNT(*) AS n FROM module"))?.n).toBe(0);
-      expect((await driver.get<{ n: number }>("SELECT COUNT(*) AS n FROM kv"))?.n).toBe(0);
     },
   );
 

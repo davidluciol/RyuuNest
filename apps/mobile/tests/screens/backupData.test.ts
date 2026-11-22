@@ -218,7 +218,7 @@ describe("sugerencias (F21c)", () => {
     expect(trasConfirmar).toEqual([{ url: "https://otro.test/index.json", name: "Otro repo" }]);
 
     // El repo confirmado quedó registrado (RF-2: descargó su índice).
-    const repos = await driver.all("SELECT key FROM kv WHERE key LIKE 'repo:%'");
+    const repos = await driver.all("SELECT id FROM repo");
     expect(repos).toHaveLength(1);
   });
 
@@ -232,16 +232,14 @@ describe("sugerencias (F21c)", () => {
 
     await service.confirmRepo(REPO_URL);
 
-    const registro = await driver.get<{ value: string }>("SELECT value FROM kv WHERE key = ?", [
-      `repo:${REPO_URL}`,
-    ]);
-    expect(registro?.value).toBeDefined();
-    const indice = await driver.get<{ value: string }>("SELECT value FROM kv WHERE key = ?", [
-      `repoIndex:${REPO_URL}`,
-    ]);
-    expect(indice?.value).toContain("Repo de ejemplo");
+    const registro = await driver.get<{ data: string; index_json: string }>(
+      "SELECT data, index_json FROM repo WHERE id = ?",
+      [REPO_URL],
+    );
+    expect(registro?.data).toBeDefined();
+    expect(registro?.index_json).toContain("Repo de ejemplo");
     // Sin módulos: nada instalado.
-    const modules = await driver.all("SELECT key FROM kv WHERE key LIKE 'module:%'");
+    const modules = await driver.all("SELECT id FROM module");
     expect(modules).toEqual([]);
   });
 
