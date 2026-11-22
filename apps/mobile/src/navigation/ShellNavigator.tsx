@@ -1,6 +1,6 @@
 import { Tabs, usePathname, useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { activeColors, spacing } from "@ryuunest/ui-tokens";
 
@@ -15,6 +15,13 @@ import { useFirstUseActive } from "./firstUseStore";
 import { destinationLabel, destinationRoutes, shellDestination } from "./routes";
 import { requestOpenUpdates, setUpdateCount, useUpdateCount } from "./updatesStore";
 import { themedStyles } from "../components/themedStyles";
+import { isTvDevice, TV_SAFE_MARGINS } from "../tv/tvShell";
+
+/** F22: en TV, riel lateral con márgenes seguros en lugar de la barra inferior. */
+const IS_TV = isTvDevice(
+  Platform.isTV,
+  typeof navigator === "undefined" ? undefined : navigator.userAgent,
+);
 
 export default function ShellNavigator() {
   const firstUse = useFirstUseActive();
@@ -32,7 +39,10 @@ export default function ShellNavigator() {
   lastDestination.current = destination;
   if (destination === null) return null;
   return (
-    <SafeAreaView edges={["top", "left", "right", "bottom"]} style={styles.screen}>
+    <SafeAreaView
+      edges={["top", "left", "right", "bottom"]}
+      style={IS_TV ? [styles.screen, styles.tvScreen] : styles.screen}
+    >
       <AppShell
         section={destinationLabel(destination)}
         right={destination === "discover" ? <HeaderModuleSwitcher /> : undefined}
@@ -51,11 +61,17 @@ export default function ShellNavigator() {
         ) : null}
         <Tabs
           backBehavior="history"
-          screenOptions={{ headerShown: false, animation: "none", sceneStyle: styles.scene }}
+          screenOptions={{
+            headerShown: false,
+            animation: "none",
+            sceneStyle: styles.scene,
+            tabBarPosition: IS_TV ? "left" : "bottom",
+          }}
           tabBar={({ navigation }) =>
             firstUse ? null : (
               <BottomNav
                 active={destination}
+                variant={IS_TV ? "rail" : "bar"}
                 dots={updates > 0 ? ["sources"] : []}
                 onSelect={(id) => navigation.navigate(id === "home" ? "index" : id)}
               />
@@ -79,4 +95,5 @@ const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: activeColors.elevated },
   banner: { paddingHorizontal: spacing.md, paddingTop: spacing.sm },
   scene: { backgroundColor: activeColors.bg },
+  tvScreen: { backgroundColor: activeColors.bg, ...TV_SAFE_MARGINS },
 }));
