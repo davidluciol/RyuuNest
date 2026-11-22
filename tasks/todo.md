@@ -829,6 +829,17 @@ Dep: F32 · S · dispositivos
 
 - [ ] Hoy Expo Router manda el enlace a una ruta inexistente. Abrir Portales con la hoja «Añadir repositorio» y la URL puesta (SPEC §7.2), sin instalar; ampliar `deepLink.test.ts`
 
+### V2 · Dependencias obsoletas de `eas-cli` `[Ops · Baja · N1]` (v2)
+
+> Al ejecutar `npx eas-cli@latest login` (2026-11-22), npm avisó de paquetes obsoletos. Son dependencias **del propio `eas-cli`** (lo descarga `npx`), no de RyuuNest: no se arreglan en este repo; se revisan cuando Expo publique un `eas-cli` que las actualice.
+
+- [ ] `inflight@1.0.6` (pierde memoria) → sustituto `lru-cache`
+- [ ] `rimraf@2.4.5` → v4 o superior
+- [ ] `glob@6.0.4` y `glob@10.5.0` (vulnerabilidades conocidas) → versión actual
+- [ ] `http-call@5.3.0` → `@heroku/http-call`
+- [ ] `uuid@7.0.3` y `uuid@8.3.2` → `uuid@11` (CommonJS) o la última (ESM)
+- [x] Ninguno está en `pnpm-lock.yaml` de RyuuNest (2026-11-22: solo `glob@13.0.6` y `glob@14.0.3`, vigentes)
+
 ### 🚩 Checkpoints `[Ops · Baja · N1]`
 
 - [ ] **I:** API 1.0 congelable (T37–T41 hechas; lo decide el humano) · 🧍 Revisión
