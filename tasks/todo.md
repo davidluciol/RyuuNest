@@ -602,7 +602,8 @@ Dep: F32 (hallazgo) · S · `apps/mobile/src/screens/series/*`
 
 - [x] **Carpeta:** cubierta por F96 (botón «Guardar» con hoja de carpetas); comprobado con `tests/e2e/series.cjs` a 426/1440 (2026-11-21)
 - [x] Selector de grupo: el chip de un capítulo con ≥ 2 releases abre «Elegir grupo» (`ReleaseSheet`); la elección vale para toda la serie (P-187). Vitest + e2e `series.cjs` 426/1440
-- [ ] 🧍 Comprobar en el dispositivo que el reinicio conserva favorito y grupo elegido
+- [x] 🧍 POCO F5 Pro (2026-11-21, Expo Go, m440 Blue Lock): tras forzar el cierre, la serie sigue «En favoritos» y en su modo. Los chips de un solo grupo salen como etiqueta
+- [ ] 🧍 Hoja «Elegir grupo» en el teléfono: **no se puede con m440** (una release por capítulo, P-147); falta un módulo real con ≥ 2 grupos por capítulo (en web probada con el ejemplo)
 - Verif: Vitest con SQLite real · 🧍 S25 Ultra
 - Nota: la parte web de la ficha entra en F41 (propuesta de F33).
 
@@ -642,7 +643,7 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 ### F36 Detalle de error en el S25 `[FE · Baja · N2]` 🧍
 
-- [ ] 🧍 Ver el «Ver detalle» de `ErrorState` con la URL completa (sin «…») en el S25 con un error de imagen real (red cortada)
+- [x] 🧍 Hecho en el **POCO F5 Pro** (2026-11-21, decisión del humano: POCO en vez de S25): Wi‑Fi cortado → pág. 13 de Blue Lock (m440) falla con «No hay conexión…»; «Ver detalle» muestra la URL completa en dos líneas sin «…» y `código: NETWORK`
 - Verif: S25 Ultra
 
 ### F43 Lector, Diagnóstico y escritorio (propuesta de F33, sin aprobar) `[FE · Intermedia · N3]`
@@ -652,12 +653,12 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 - [x] R6 eventos repetidos agrupados («×N») · R7 chips «Texto» / «Datos»
 - [x] W14 banner del lector web con margen, código y «Ver detalle» · W15 selector de capítulo en la barra del lector web
 - [x] W17 Guarida y Tesoros con tope `gridMaxWidth` 1100 px y rejilla por tramo (P-188)
-- [ ] 🧍 Ver en el teléfono la barra inferior sin ‹ › ni «%» y los nombres de modo nuevos
+- [x] 🧍 POCO F5 Pro (2026-11-21): barra inferior «Pág. 2 / 77» sin ‹ › ni «%», y hoja de modo con «Derecha a izquierda (manga)» / «Izquierda a derecha (cómic)»
 - Verif: ✅ Vitest + Playwright (`reader`, `settings`, `diagnostics`, `library`, `home`, `shell` en móvil; `reader`, `settings`, `f28Screens` en `apps/web`)
 
 ### 🧍 Lector en el POCO (F18/F19) `[FE · Baja · N2]`
 
-- [ ] 🧍 Abrir un capítulo real, cambiar de modo, pellizcar, comprobar que la pantalla no se apaga, romper una imagen (modo avión) y reintentarla, y medir la memoria con `adb shell dumpsys meminfo` durante la precarga
+- [x] 🧍 Hecho 2026-11-21 (Expo Go, m440 Blue Lock cap. 2): cambio a D→I y deslizar avanza; pellizco ~2,5×; pantalla encendida (`SCREEN_BRIGHT_WAKE_LOCK` de Expo Go); Wi‑Fi cortado → pág. 13 falla y «Reintentar» la carga al volver la red; `dumpsys meminfo` PSS ≈ 709 MB al abrir y ≈ 758 MB en precarga (Native Heap ≈ 396–414 MB, Graphics ≈ 81–145 MB)
 
 ### Hallazgo (2026-11-21) · plural en carpetas de Tesoros `[FE · Baja · N1]`
 
