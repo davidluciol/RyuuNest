@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { BookOpen, Compass, Home, Library, Settings, type LucideIcon } from "../icons";
 import { activeColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
@@ -13,7 +13,12 @@ import {
   NAV_LABEL_MAX_FONT_SCALE,
   navItemColors,
   navItemStyle,
+  RAIL_ICON_SIZE,
+  RAIL_ITEM_MIN_HEIGHT,
+  RAIL_LABEL,
+  railNavStyle,
 } from "./shellStyles";
+import { nextRailIndex } from "../tv/tvShell";
 import { themedStyles } from "./themedStyles";
 
 /**
@@ -24,6 +29,10 @@ import { themedStyles } from "./themedStyles";
  * F10: los destinos son identificadores de API y sus etiquetas salen del
  * catálogo (`nav.*`), escritas con claves literales para que la puerta de i18n
  * las vea.
+ *
+ * F22: `variant="rail"` es el riel lateral de TV (SPEC §11.10): mismos destinos,
+ * tamaños ×1,25 y flechas arriba/abajo entre destinos (en Android el D-pad ya
+ * mueve el foco de forma nativa; en web lo hacen las flechas).
  */
 
 const DESTINATION_ICONS: Record<BottomNavDestination, LucideIcon> = {
@@ -40,6 +49,8 @@ export interface BottomNavProps {
   disabled?: boolean;
   /** F99: destinos con un punto de aviso (p. ej. actualizaciones en Portales). */
   dots?: readonly BottomNavDestination[];
+  /** F22: barra inferior (móvil/web) o riel lateral (TV). */
+  variant?: "bar" | "rail";
 }
 
 export default function BottomNav({
@@ -47,21 +58,41 @@ export default function BottomNav({
   onSelect,
   disabled = false,
   dots = [],
+  variant = "bar",
 }: BottomNavProps) {
   const [focused, setFocused] = useState<BottomNavDestination | null>(null);
+  const rail = variant === "rail";
+  const items = useRef<(View | null)[]>([]);
+  useEffect(() => {
+    if (!rail || typeof document === "undefined") return;
+    const onKey = (event: KeyboardEvent) => {
+      const current = items.current.findIndex(
+        (item) => item === (document.activeElement as unknown),
+      );
+      const next = nextRailIndex(current, event.key, items.current.length);
+      if (next === null) return;
+      event.preventDefault();
+      items.current[next]?.focus();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [rail]);
   return (
     <View
       accessibilityRole="tablist"
       accessibilityLabel={t("a11y.mainNav")}
-      style={[bottomNavStyle(), styles.container]}
+      style={rail ? [railNavStyle(), styles.rail] : [bottomNavStyle(), styles.container]}
     >
-      {BOTTOM_NAV_DESTINATIONS.map((destination) => {
+      {BOTTOM_NAV_DESTINATIONS.map((destination, index) => {
         const isActive = destination === active;
         const colors = navItemColors(isActive);
         const Icon = DESTINATION_ICONS[destination];
         return (
           <Pressable
             key={destination}
+            ref={(item) => {
+              items.current[index] = item;
+            }}
             accessibilityRole="tab"
             accessibilityLabel={
               dots.includes(destination)
@@ -76,18 +107,18 @@ export default function BottomNav({
             onBlur={() => setFocused(null)}
             onPress={() => onSelect?.(destination)}
             style={({ pressed }) => [
-              styles.item,
               navItemStyle({ focused: focused === destination, pressed, disabled }),
+              rail ? styles.railItem : styles.item,
             ]}
           >
             <View>
-              <Icon size={spacing.lg} color={colors.icon} />
+              <Icon size={rail ? RAIL_ICON_SIZE : spacing.lg} color={colors.icon} />
               {dots.includes(destination) ? <View testID="nav-dot" style={styles.dot} /> : null}
             </View>
             <Text
               testID="nav-label"
               maxFontSizeMultiplier={NAV_LABEL_MAX_FONT_SCALE}
-              style={[styles.label, { color: colors.text }]}
+              style={[rail ? styles.railLabel : styles.label, { color: colors.text }]}
             >
               {destinationLabel(destination)}
             </Text>
@@ -115,6 +146,20 @@ const styles = themedStyles(() => ({
     justifyContent: "center",
     gap: spacing.xxs,
     paddingVertical: spacing.xs,
+  },
+  rail: {
+    gap: spacing.xs,
+    padding: spacing.sm,
+  },
+  railItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    minHeight: RAIL_ITEM_MIN_HEIGHT,
+    paddingHorizontal: spacing.md,
+  },
+  railLabel: {
+    ...textStyle(RAIL_LABEL),
   },
   dot: {
     position: "absolute",

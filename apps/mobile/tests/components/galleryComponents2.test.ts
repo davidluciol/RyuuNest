@@ -21,6 +21,7 @@ describe("galería con componentes base 2 (F07)", () => {
       "gallery.component.chapterRow",
       "gallery.component.header",
       "gallery.component.bottomNav",
+      "gallery.component.sideRail",
       "gallery.component.settingsRow",
       "gallery.component.switch",
       "gallery.component.sheet",

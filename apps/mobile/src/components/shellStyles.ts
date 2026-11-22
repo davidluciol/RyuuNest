@@ -1,4 +1,15 @@
-import { radii, spacing, touchTarget, withAlpha, activeColors } from "@ryuunest/ui-tokens";
+import {
+  activeColors,
+  breakpoints,
+  densities,
+  radii,
+  scaleSize,
+  scaleStyle,
+  spacing,
+  touchTarget,
+  typography,
+  withAlpha,
+} from "@ryuunest/ui-tokens";
 
 import { focusRingStyle } from "./focusRing";
 
@@ -19,6 +30,9 @@ export interface ShellStyleShape {
   minHeight?: number;
   borderTopColor?: string;
   borderTopWidth?: number;
+  borderRightColor?: string;
+  borderRightWidth?: number;
+  width?: number;
   elevation: number;
   shadowOpacity: number;
 }
@@ -68,6 +82,28 @@ export function bottomNavStyle(): ShellStyleShape {
     shadowOpacity: 0,
   };
 }
+
+/**
+ * F22 — riel lateral de TV en lugar de la barra inferior (SPEC §11.10). Mismo
+ * nivel `elevated` sin sombra; ancho del riel de escritorio (el SPEC no fija
+ * uno para TV: pregunta abierta en el PR).
+ */
+export function railNavStyle(): ShellStyleShape {
+  return {
+    backgroundColor: colors.elevated,
+    width: breakpoints.desktopRail,
+    borderRightColor: colors.border,
+    borderRightWidth: 1,
+    elevation: 0,
+    shadowOpacity: 0,
+  };
+}
+
+/** TV multiplica todos los tamaños por 1,25 (SPEC §11.9). */
+const TV_SCALE = densities.tv.fontScale;
+export const RAIL_ITEM_MIN_HEIGHT = scaleSize(touchTarget.min, TV_SCALE);
+export const RAIL_ICON_SIZE = scaleSize(spacing.lg, TV_SCALE);
+export const RAIL_LABEL = scaleStyle(typography.labelMd, TV_SCALE);
 
 /** Colores de un destino según activo/inactivo. */
 export function navItemColors(active: boolean): { icon: string; text: string } {
