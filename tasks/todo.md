@@ -600,8 +600,9 @@ Dep: F90 · M · `apps/mobile/src/screens/settings/*`
 
 Dep: F32 (hallazgo) · S · `apps/mobile/src/screens/series/*`
 
-- [ ] **Carpeta:** no hay selector de carpeta en la ficha (`onFolderLongPress` vacío); queda como tarea aparte (hoja con `Folders.list` + «Sin carpeta» → `Favorites.move`)
-- [ ] Comprobar en el dispositivo que el reinicio conserva favorito y release (la ficha no tiene aún selector de release: el chip solo repite la actual)
+- [x] **Carpeta:** cubierta por F96 (botón «Guardar» con hoja de carpetas); comprobado con `tests/e2e/series.cjs` a 426/1440 (2026-11-21)
+- [x] Selector de grupo: el chip de un capítulo con ≥ 2 releases abre «Elegir grupo» (`ReleaseSheet`); la elección vale para toda la serie (P-187). Vitest + e2e `series.cjs` 426/1440
+- [ ] 🧍 Comprobar en el dispositivo que el reinicio conserva favorito y grupo elegido
 - Verif: Vitest con SQLite real · 🧍 S25 Ultra
 - Nota: la parte web de la ficha entra en F41 (propuesta de F33).
 
@@ -636,8 +637,8 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 ### F39 Equivalencias web de los arreglos de F32 `[FE · Baja · N2]`
 
-- [ ] Sin decidir: el error de imagen del lector web solo muestra el título; valorar el mismo mensaje por tipo que en móvil (**mismo asunto que F77**: decidir en una sola)
-- Verif: Playwright a 1440/426 px
+- [x] Cubierta por F77 (P-171): el lector web muestra el mensaje por tipo. Comprobado 2026-11-21 con `apps/web/tests/e2e/reader.cjs` a 1440/426 px; de paso se arregló el salto de página del modo vertical que hacía fallar ese e2e a 426 px (P-187)
+- Verif: ✅ Playwright a 1440/426 px
 
 ### F36 Detalle de error en el S25 `[FE · Baja · N2]` 🧍
 
