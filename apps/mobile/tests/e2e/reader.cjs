@@ -136,7 +136,7 @@ async function swipe(page, fromFx, toFx) {
       // 3. Cambia a paginado D→I desde la hoja de modo (RF-22) y se recuerda por serie (RF-18).
       await showBars(page);
       await page.getByRole("button", { name: "Modo de lectura" }).click();
-      await page.getByText("Paginado D → I · Manga").click();
+      await page.getByText("Derecha a izquierda (manga)").click();
       await page.getByTestId("reader-paged").waitFor({ state: "visible" });
       await page.getByText("Pág. 1 / 3").waitFor({ state: "visible" });
 
@@ -156,12 +156,13 @@ async function swipe(page, fromFx, toFx) {
       await page.getByText("Pág. 1 / 3").waitFor({ state: "visible" });
 
       // 4. Al pasar de la última página aparece la tarjeta de siguiente capítulo (RF-21).
-      const next = page.getByRole("button", { name: "Página siguiente" });
+      // F43 (R11): sin botones ‹ ›; en D→I la orilla izquierda avanza.
+      const next = () => tapAt(page, "reader-canvas", 0.1, 0.5);
+      await next();
+      await next();
       await showBars(page);
-      await next.click();
-      await next.click();
       await page.getByText("Pág. 3 / 3").waitFor({ state: "visible" });
-      await next.click();
+      await next();
       await page.getByText("Fin del capítulo 1").waitFor({ state: "visible" });
       await showBars(page);
       // La tarjeta queda entre las barras, no tapada por ellas.

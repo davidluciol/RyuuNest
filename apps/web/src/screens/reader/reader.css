@@ -95,8 +95,11 @@
 }
 
 .reader-error-banner {
+  /* F43 W14: con margen lateral también a anchos de móvil. */
+  width: calc(100% - 2 * var(--space-md));
   margin: var(--space-2xl) auto;
   max-width: calc(var(--space-2xl) * 15);
+  box-sizing: border-box;
   padding: var(--space-lg);
   background: var(--color-surface);
   border: 1px solid var(--color-error);
@@ -109,7 +112,17 @@
 
 .reader-error-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-sm);
+}
+
+.reader-error-code {
+  color: var(--color-text-secondary);
+}
+
+.reader-error-detail {
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
 }
 
 .reader-endcard {
@@ -126,4 +139,32 @@
 
 .reader-end-last {
   color: var(--color-text-secondary);
+}
+
+/* F43 W15: lista del selector de capítulo (misma fila que la ficha web). */
+.reader-chapter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.reader-chapter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-xs) var(--space-sm);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.reader-chapter-current {
+  color: var(--color-accent);
+  white-space: nowrap;
 }

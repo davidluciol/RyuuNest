@@ -49,8 +49,8 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF20");
       await page.getByText("Español").waitFor({ state: "visible" });
       await page.getByText("Preferencias de lectura").waitFor({ state: "visible" });
       await page.getByText("Vertical continuo").waitFor({ state: "visible" });
-      await page.getByText("Paginado D → I · Manga").waitFor({ state: "visible" });
-      await page.getByText("Paginado I → D · Cómic").waitFor({ state: "visible" });
+      await page.getByText("Derecha a izquierda (manga)").waitFor({ state: "visible" });
+      await page.getByText("Izquierda a derecha (cómic)").waitFor({ state: "visible" });
       await page.getByText("Almacenamiento y caché").waitFor({ state: "visible" });
       await page
         .getByText("Caché de imágenes", { exact: true })
