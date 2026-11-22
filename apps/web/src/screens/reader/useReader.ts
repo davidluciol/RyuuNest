@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { ErrorReporter, ReaderMode, ReaderSnapshot } from "@ryuunest/core";
-import { reportReaderError } from "@ryuunest/mobile-src/screens/reader/readerErrors";
+import {
+  messageOf,
+  readerErrorCode,
+  reportReaderError,
+} from "@ryuunest/mobile-src/screens/reader/readerErrors";
 
 import { bootReader, type ReaderBoot, type ReaderServices, type ReaderTarget } from "./readerData";
 
@@ -16,7 +20,7 @@ export interface ReaderReadyView extends ReaderBoot {
 
 export type ReaderView =
   | { status: "loading" }
-  | { status: "error" }
+  | { status: "error"; code: string; message: string }
   | { status: "ready"; ready: ReaderReadyView };
 
 export interface ReaderActions {
@@ -58,7 +62,9 @@ export function useReader(
       })
       .catch((error: unknown) => {
         reportReaderError(services.reporter, "open", error, { moduleId, seriesId, chapterId });
-        if (!cancelled) setView({ status: "error" });
+        if (!cancelled) {
+          setView({ status: "error", code: readerErrorCode(error), message: messageOf(error) });
+        }
       });
 
     return () => {
