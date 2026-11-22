@@ -618,7 +618,9 @@ Dep: F18/F19 (hechas) · M · `apps/mobile/src/screens/reader/{ReaderScreen,Read
 - [x] Paginado: deslizar pasa de página (invertido en D→I), además de las orillas
 - [x] Al ver la tarjeta de fin, a los 3 s se abre el siguiente capítulo (aviso en la tarjeta; alejarse lo cancela)
 - [x] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20; e2e `reader.cjs` pasos 6–7)
-- [ ] 🧍 Probar en el teléfono con un módulo instalado: deslizar un capítulo largo, pellizcar, mantener presionado, deslizar en paginado y paso automático al siguiente capítulo
+- [x] Precarga a disco por lotes de 5 (lote actual + siguiente) con aviso «Cargando imágenes X / N» (petición del humano, 2026-11-21)
+- [x] Probado en el POCO con m440 (Blue Lock): deslizar rápido, mantener presionado, ocultado a 3 s, paso automático al cap. 2 y deslizar en paginado
+- [ ] 🧍 Pellizcar para zoom en el teléfono (no se probó en esta sesión; el código del zoom no cambió)
 - Verif: Vitest de la lógica (temporizador, toque ≠ avanzar) + 🧍 S25: leer un capítulo largo deslizando, pellizcar y ver que las barras se ocultan
 
 ---

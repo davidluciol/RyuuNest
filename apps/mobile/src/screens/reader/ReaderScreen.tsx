@@ -21,6 +21,8 @@ import ReaderVertical, { type ReaderVerticalHandle } from "./ReaderVertical";
 import { FALLBACK_READER_MODE, modeLabel } from "./readerModes";
 import { readerCanvasStyle } from "./readerStyles";
 import type { ReaderActions, ReaderReady } from "./useReader";
+import type { ReaderPreloadProgress } from "./useReaderPrefetch";
+import Badge from "../../components/Badge";
 import ZoomableView from "./ZoomableView";
 import FocusPressable from "../../components/FocusPressable";
 
@@ -37,6 +39,8 @@ const FOOTER_CLEARANCE = spacing["2xl"] * 4;
 
 export interface ReaderScreenProps {
   ready: ReaderReady;
+  /** F51 — avance de la descarga del lote de la página actual; `null` si ya está en disco. */
+  preload: ReaderPreloadProgress;
   actions: ReaderActions;
   onClose: () => void;
   onOpenChapter: (chapterId: string, releaseId: string | null) => void;
@@ -46,6 +50,7 @@ type Sheet = "mode" | "chapters" | null;
 
 export default function ReaderScreen({
   ready,
+  preload,
   actions,
   onClose,
   onOpenChapter,
@@ -184,6 +189,16 @@ export default function ReaderScreen({
           </View>
         </FocusPressable>
       </ZoomableView>
+
+      {preload === null ? null : (
+        <View
+          testID="reader-loading-batch"
+          pointerEvents="none"
+          style={{ position: "absolute", left: 0, right: 0, bottom: FOOTER_CLEARANCE, alignItems: "center" }}
+        >
+          <Badge label={t("reader.loading.batch", preload)} />
+        </View>
+      )}
 
       {controls ? (
         <ReaderTopBar

@@ -6,7 +6,11 @@ import {
   NEXT_CHAPTER_PRELOAD,
   memoryCap,
   nextChapterPreload,
-  pagedAhead,
+  PRELOAD_BATCH,
+  batchOf,
+  batchPages,
+  batchProgress,
+  batchesToPreload,
   shouldPreloadNext,
 } from "../../src/reader/preloadPlan";
 
@@ -68,16 +72,31 @@ describe("shouldPreloadNext", () => {
   });
 });
 
-describe("pagedAhead", () => {
-  it("devuelve las páginas por delante de la actual dentro de la ventana del núcleo", () => {
-    expect(pagedAhead(images(10), { from: 3, to: 5 }, 3)).toEqual(["img-4", "img-5"]);
+describe("precarga por lotes (F51)", () => {
+  it("los lotes son de 5 páginas", () => {
+    expect(PRELOAD_BATCH).toBe(5);
+    expect(batchOf(0)).toBe(0);
+    expect(batchOf(4)).toBe(0);
+    expect(batchOf(5)).toBe(1);
   });
 
-  it("no pasa del final del capítulo", () => {
-    expect(pagedAhead(images(5), { from: 3, to: 5 }, 3)).toEqual(["img-4"]);
+  it("pide el lote de la página actual y el siguiente, sin pasar del final", () => {
+    expect(batchesToPreload(0, 23)).toEqual([0, 1]);
+    expect(batchesToPreload(7, 23)).toEqual([1, 2]);
+    expect(batchesToPreload(21, 23)).toEqual([4]);
+    expect(batchesToPreload(0, 3)).toEqual([0]);
+    expect(batchesToPreload(0, 0)).toEqual([]);
   });
 
-  it("sin ventana no hay nada que precargar", () => {
-    expect(pagedAhead(images(10), null, 3)).toEqual([]);
+  it("páginas de un lote, recortadas al total", () => {
+    expect(batchPages(0, 23)).toEqual([0, 1, 2, 3, 4]);
+    expect(batchPages(4, 23)).toEqual([20, 21, 22]);
+  });
+
+  it("progreso del lote de la página actual; null cuando ya está completo", () => {
+    expect(batchProgress(new Set([0, 2]), 1, 23)).toEqual({ loaded: 2, size: 5 });
+    expect(batchProgress(new Set([0, 1, 2, 3, 4]), 1, 23)).toBeNull();
+    expect(batchProgress(new Set([20]), 22, 23)).toEqual({ loaded: 1, size: 3 });
+    expect(batchProgress(new Set(), 0, 0)).toBeNull();
   });
 });

@@ -26,7 +26,7 @@ export default function ReaderRoute() {
     chapterId: string;
     release?: string;
   }>();
-  const { view, actions } = useReader({ moduleId, seriesId, chapterId, releaseId: release });
+  const { view, actions, preload } = useReader({ moduleId, seriesId, chapterId, releaseId: release });
 
   // Cerrar vuelve a la ficha; si el lector se abrió directo, no hay atrás y se abre la ficha.
   const close = () => {
@@ -73,6 +73,7 @@ export default function ReaderRoute() {
   return (
     <ReaderScreen
       ready={view.ready}
+      preload={preload}
       actions={actions}
       onClose={close}
       onOpenChapter={(nextChapterId, releaseId) =>

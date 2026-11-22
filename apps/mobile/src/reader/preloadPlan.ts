@@ -1,4 +1,4 @@
-import { PAGED_PRELOAD_AHEAD, type PageWindow } from "@ryuunest/core";
+import { PAGED_PRELOAD_AHEAD } from "@ryuunest/core";
 
 import { capFor } from "../imageBudget";
 
@@ -40,12 +40,37 @@ export function shouldPreloadNext(pageIndex: number, pageTotal: number | null): 
   return pageTotal !== null && pageIndex >= pageTotal - 1 - NEXT_CHAPTER_PRELOAD;
 }
 
-/** Páginas por delante de la actual dentro de la ventana que declara el núcleo (paginado). */
-export function pagedAhead<T>(
-  images: readonly T[],
-  window: PageWindow | null,
+/**
+ * F51 — páginas por lote de descarga a disco. Se baja el lote de la página actual y el siguiente,
+ * uno tras otro: así las primeras 5 llegan pronto y al deslizar la siguiente ya está en disco.
+ * Provisional (criterio de P-90).
+ */
+export const PRELOAD_BATCH = 5;
+
+export function batchOf(pageIndex: number): number {
+  return Math.floor(pageIndex / PRELOAD_BATCH);
+}
+
+/** Índices de las páginas del lote `batch`, sin pasar de `total`. */
+export function batchPages(batch: number, total: number): number[] {
+  const from = batch * PRELOAD_BATCH;
+  const to = Math.min(total, from + PRELOAD_BATCH);
+  return Array.from({ length: Math.max(0, to - from) }, (_value, offset) => from + offset);
+}
+
+/** Lotes que deben estar en disco leyendo `pageIndex`: el actual y el siguiente. */
+export function batchesToPreload(pageIndex: number, total: number): number[] {
+  const current = batchOf(pageIndex);
+  return [current, current + 1].filter((batch) => batch * PRELOAD_BATCH < total);
+}
+
+/** Avance del lote de la página actual; `null` si ya está completo (no hay nada que avisar). */
+export function batchProgress(
+  done: ReadonlySet<number>,
   pageIndex: number,
-): T[] {
-  if (window === null) return [];
-  return images.slice(pageIndex + 1, window.to + 1);
+  total: number,
+): { loaded: number; size: number } | null {
+  const pages = batchPages(batchOf(pageIndex), total);
+  const loaded = pages.filter((page) => done.has(page)).length;
+  return loaded === pages.length ? null : { loaded, size: pages.length };
 }
