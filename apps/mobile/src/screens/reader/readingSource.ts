@@ -20,6 +20,7 @@ import page3 from "../../../assets/placeholder/page-3.svg";
 import { openAppDatabase } from "../../data/appDatabase";
 import { isNativePlatform } from "../../data/backupFilesPort";
 import { createFetchHttp } from "../../data/fetchHttp";
+import { moduleHttp } from "../../data/timedHttp";
 import { appClearances } from "../../data/appChallenge";
 import { createInstalledMounter, type ModuleMounter } from "../../data/moduleMounter";
 import { createSessionSqlDriver } from "../../data/sessionSqlDriver";
@@ -204,7 +205,7 @@ export function resolveReadingSource(): Promise<ReadingSource> {
             driver,
             mounter: createInstalledMounter({
               driver,
-              http: createFetchHttp(),
+              http: moduleHttp(createFetchHttp()),
               loader: createFunctionScriptLoader(),
               ...(appClearances === undefined ? {} : { clearances: appClearances }),
             }),
