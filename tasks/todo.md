@@ -751,13 +751,13 @@ Dep: F52, F53 · XS
 - [ ] 🧍 Confirmar que `ADR-0002` fija versiones Expo/RN/RNTV y el tope de imágenes medido; marcar T05 ✅
 - Aparte (no bloquea): MiBox 4 pospuesta (P-43); revalidar RNF-1 en release.
 
-### T33 Pruebas de seguridad `[Sec · Alta · N4]`
+### T33 ✅ Pruebas de seguridad `[Sec · Alta · N4]` (PR #164, 2026-11-21)
 
 Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre de la API (en paralelo)
 
-- [ ] Cada amenaza de SPEC §7.2 (zip-slip, bomba, hash, manifest, respaldo malicioso) tiene una prueba que falla si se quita la mitigación
-- [ ] Un deep link `ryuunest://add-repo?url=…` solo abre la confirmación, no instala (AC-8)
-- [ ] Límites de tamaño/archivos cubiertos
+- [x] Cada amenaza de SPEC §7.2 tiene prueba (`core/tests/security/`); 19 mitigaciones quitadas una a una, todas dejan rojo. Arreglada la bomba zip con tamaños declarados (P-189)
+- [x] Un deep link `ryuunest://add-repo?url=…` no instala (AC-8; `apps/mobile/tests/security/deepLink.test.ts`). Ojo: no hay manejador, así que tampoco abre la confirmación → tarea G5
+- [x] Límites de tamaño/archivos cubiertos
 - Verif: `pnpm --filter @ryuunest/core test -- security` + revisar correspondencia amenaza↔prueba
 
 
@@ -769,7 +769,8 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 ### G2 Plataforma: deudas del núcleo `[BE · Intermedia · N3]`
 
 - [ ] La app nativa aún no rellena `HttpResponse.url` (P-74): en código ya llega (`XMLHttpRequest.responseURL` de RN → whatwg-fetch `url` → `createFetchHttp`, con test); falta verlo en el POCO con una redirección
-- [ ] Migrar las filas `kv` de repos/módulos a tablas `repo`/`module` y retirar `kv`
+- [x] Filas `kv` migradas a `repo`/`module` y `kv` retirada (migración 6, PR #163, P-189)
+- [ ] 🧍 Abrir la app en el POCO con la base existente y comprobar que repos y módulos siguen tras la migración 6
 - [ ] Si los `paths` entre paquetes se complican, migrar a *project references* de TypeScript (condicional: hoy no hace falta)
 - [ ] `react-native-tvos` sin confirmar contra SDK 57 (pospuesto con P-43)
 
@@ -777,7 +778,8 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 
 Dep: P-B · M · `apps/mobile/src/tv/*`
 
-- [ ] Foco siempre visible (anillo 2 px `accent`, separación 2 px); escala 1,25×; márgenes seguros; navegación completa con D-pad (incluye el ítem pendiente de F33: revisar navegación con teclado/D-pad y legibilidad en densidad TV)
+- [x] Riel lateral, foco 2 px `accent`, ×1,25 en el riel, márgenes seguros, teclado en web (PR #165; Playwright `tests/e2e/tvRail.cjs` a 960/1440/426)
+- [ ] Preguntas abiertas (PR #165): ancho del riel TV (hoy 240 de escritorio), márgenes seguros (48×32), zoom del elemento enfocado vs escalar tamaños, escalar ×1,25 el resto de pantallas, `isTvLike()` del primer uso → `isTvDevice`
 - Verif: Playwright (foco con teclado) · 🧍 recorrer los 5 destinos en la MiBox 4
 
 
@@ -804,6 +806,10 @@ Dep: F32 · S · dispositivos
 - [ ] 🧍 Definir el proceso Scrum en una sesión aparte (AGENTS.md §16) · [ ] 🧍 Reservar el org npm `@ryuunest` · [ ] 🧍 Decidir qué hacer con las ramas remotas ya fusionadas
 - [x] `stash@{0}` descartado y worktree residual de F07 borrado (2026-11-21, con permiso del humano)
 - [ ] `AGENTS.md` pide una entrada de bitácora por sesión (P-15) que este archivo ya no lleva: decidir dónde va
+
+### G5 Manejador del enlace `ryuunest://add-repo` `[FE · Intermedia · N3]` (de T33)
+
+- [ ] Hoy Expo Router manda el enlace a una ruta inexistente. Abrir Portales con la hoja «Añadir repositorio» y la URL puesta (SPEC §7.2), sin instalar; ampliar `deepLink.test.ts`
 
 ### 🚩 Checkpoints `[Ops · Baja · N1]`
 
