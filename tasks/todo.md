@@ -767,6 +767,9 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 - [x] Calibrado en el POCO (2026-11-21, Wi‑Fi, zonatmo + m440, ~20 peticiones): 59–1266 ms, p90 ≈ 1,3 s, concurrencia real ≤ 2, separación mínima 257 ms → **se mantienen 15 s / 4 / 250 ms** (humano). m440 dio dos 403 con ~250 ms entre peticiones: ajustar por módulo si se repite
 - [ ] 🧍 PR de prueba que rompe el contrato y hace fallar el CI
 
+- [x] TIMEOUT de m440 al «Retomar» investigado en el POCO (2026-11-22): tras ~4–5 min sin tráfico al host, la primera petición tarda 124–154 s y acaba en 200; dos peticiones colgadas acabaron en el mismo milisegundo → conexión reutilizada que el servidor ya cerró. React Native crea OkHttp sin límites (`connectTimeout/readTimeout/writeTimeout` = 0, `OkHttpClientProvider.kt`) y el `TIMEOUT` del host (15 s) no cancela la petición, así que «Reintentar» va por la misma conexión muerta. No es la cola del host: el temporizador empieza tras `acquire`/`respectDelay`
+- [ ] Decidir el arreglo del TIMEOUT tras inactividad (ver MEMORY §4)
+
 ### G2 Plataforma: deudas del núcleo `[BE · Intermedia · N3]`
 
 - [x] La app nativa rellena `HttpResponse.url` (P-74): visto en el POCO (`finalUrl: "same"` en `[host-timing]`, no `none`); sin redirección real a mano, pero el valor llega de `XMLHttpRequest.responseURL`
