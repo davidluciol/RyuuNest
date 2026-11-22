@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest";
  * color: el texto «Sí/No» va junto al control (el mismo `switchLabelKey` del
  * móvil, vía el alias compartido P-115).
  */
-const dir = path.resolve(process.cwd(), "src/components");
+const dir = path.resolve(import.meta.dirname, "../..", "src/components");
 const css = readFileSync(path.join(dir, "switch.css"), "utf8");
 const tsx = readFileSync(path.join(dir, "Switch.tsx"), "utf8");
 

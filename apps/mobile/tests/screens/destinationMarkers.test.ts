@@ -12,7 +12,7 @@ import { describe, expect, it } from "vitest";
  * pantalla quitó el marco (F13, F14c, F15) sin tocar los scripts.
  */
 
-const SRC = path.resolve(process.cwd(), "src");
+const SRC = path.resolve(import.meta.dirname, "../..", "src");
 
 /** Destinos de la barra (routes.ts) → archivo de ruta y marcador esperado. */
 const DESTINATIONS: Array<{ id: string; route: string }> = [

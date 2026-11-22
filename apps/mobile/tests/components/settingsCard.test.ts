@@ -50,7 +50,7 @@ describe("contentColumnStyle", () => {
 describe("un solo patrón de aviso", () => {
   it("Ajustes ya no pinta el bloque rojo ad hoc y usa NoticeToast", () => {
     const src = readFileSync(
-      path.resolve(process.cwd(), "src/screens/settings/SettingsScreen.tsx"),
+      path.resolve(import.meta.dirname, "../..", "src/screens/settings/SettingsScreen.tsx"),
       "utf8",
     );
     expect(src).not.toContain("noticeText");

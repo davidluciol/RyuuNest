@@ -15,7 +15,7 @@ import { readTtfNames } from "./ttfNames";
  * pesos sintéticos). Las licencias OFL acompañan a las familias.
  */
 
-const FONTS_DIR = path.resolve(process.cwd(), "assets/fonts");
+const FONTS_DIR = path.resolve(import.meta.dirname, "..", "assets/fonts");
 
 describe("fuentes empaquetadas (apps/mobile/assets/fonts)", () => {
   it.each(fontFiles.map((f) => [f.file, f] as const))("%s existe y es un TTF", (file) => {
@@ -48,7 +48,7 @@ describe("fuentes empaquetadas (apps/mobile/assets/fonts)", () => {
   );
 
   it("no hay URLs remotas en el cableado de iconos (RNF-5: cero CDN)", () => {
-    const src = path.resolve(process.cwd(), "src/icons.ts");
+    const src = path.resolve(import.meta.dirname, "..", "src/icons.ts");
     if (!existsSync(src)) return; // lo crea el propio corte de iconos
     const text = readFileSync(src, "utf8");
     expect(text, "icons.ts no debe enlazar recursos remotos").not.toMatch(

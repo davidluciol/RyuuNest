@@ -81,7 +81,7 @@ describe("F36 — la URL del detalle no se corta con «…» (T7)", () => {
   it("ErrorState no limita las líneas del detalle y parte las URL largas", async () => {
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");
-    const src = readFileSync(resolve(process.cwd(), "src/components/ErrorState.tsx"), "utf8");
+    const src = readFileSync(resolve(import.meta.dirname, "../..", "src/components/ErrorState.tsx"), "utf8");
     const detail = src.slice(src.indexOf("lines.map"));
     expect(detail).not.toMatch(/numberOfLines/);
     expect(src).toMatch(/detailLine:[\s\S]*wordBreak:\s*"break-all"/);

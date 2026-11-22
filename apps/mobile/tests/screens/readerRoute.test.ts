@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
  * F18 — el lector es una ruta a pantalla completa: vive fuera del navegador de destinos del
  * shell (sin barra inferior) y declara el marcador estable que esperan los e2e (F11b).
  */
-const src = path.resolve(process.cwd(), "src");
+const src = path.resolve(import.meta.dirname, "../..", "src");
 
 describe("ruta del lector", () => {
   it("vive fuera del navegador de destinos del shell", () => {

@@ -11,7 +11,7 @@ import { describe, expect, it } from "vitest";
  * bundle web se rompería.
  */
 
-const MOBILE_SRC = path.resolve(process.cwd(), "../mobile/src");
+const MOBILE_SRC = path.resolve(import.meta.dirname, "..", "../mobile/src");
 
 /** Archivos de apps/mobile/src que apps/web importa (vía `@ryuunest/mobile-src`). */
 const SHARED_FILES = [

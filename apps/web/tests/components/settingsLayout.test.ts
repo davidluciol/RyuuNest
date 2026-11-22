@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
  * fila), filas de una tarjeta separadas por una línea `border` y Fuentes en la
  * misma columna de 720 px que Ajustes y Diagnóstico.
  */
-const src = path.resolve(process.cwd(), "src/screens");
+const src = path.resolve(import.meta.dirname, "../..", "src/screens");
 const tsx = readFileSync(path.join(src, "settings/SettingsScreen.tsx"), "utf8");
 const settingsCss = readFileSync(path.join(src, "settings/settings.css"), "utf8");
 const sourcesCss = readFileSync(path.join(src, "sources/sources.css"), "utf8");
