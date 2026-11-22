@@ -240,7 +240,7 @@ export class PackageInstaller {
   /** Descomprime el paquete, sin dejar que un zip roto rompa la app. */
   private async unzip(bytes: Uint8Array, url: string): Promise<ArchiveEntry[]> {
     try {
-      return await this.archive.unzip(bytes);
+      return await this.archive.unzip(bytes, this.limits);
     } catch (error) {
       if (error instanceof ModuleError) {
         throw error;
