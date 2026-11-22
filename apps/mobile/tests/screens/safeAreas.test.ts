@@ -12,7 +12,7 @@ import { SAFE_SCREEN_EDGES } from "../../src/components/safeScreenStyles";
  * shell y el lector aplica los insets a sus barras. La verificación en el
  * dispositivo (POCO, S25) la hace el humano.
  */
-const SRC = path.resolve(process.cwd(), "src");
+const SRC = path.resolve(import.meta.dirname, "../..", "src");
 const read = (relative: string) => readFileSync(path.join(SRC, relative), "utf8");
 
 describe("zonas seguras", () => {

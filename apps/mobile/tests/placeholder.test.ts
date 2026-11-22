@@ -9,8 +9,8 @@ import { describe, expect, it } from "vitest";
  * texto (D3), sin obras reales (D2) y sin referencias remotas (RNF-5).
  */
 
-const PLACEHOLDER_DIR = path.resolve(process.cwd(), "assets", "placeholder");
-const REPO_ROOT = path.resolve(process.cwd(), "..", "..");
+const PLACEHOLDER_DIR = path.resolve(import.meta.dirname, "..", "assets", "placeholder");
+const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..", "..");
 
 describe("marcador de dragón (assets/placeholder)", () => {
   const svgPath = path.join(PLACEHOLDER_DIR, "dragon.svg");

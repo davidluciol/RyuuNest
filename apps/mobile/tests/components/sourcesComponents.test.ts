@@ -71,7 +71,7 @@ describe("sheetBackdropStyle", () => {
 describe("hoja de gestión de módulo (F38)", () => {
   it("«Desinstalar» va aparte de «Activar/Desactivar», con separación de ancho de zona táctil", () => {
     const src = readFileSync(
-      path.resolve(process.cwd(), "src/screens/sources/SourcesSheets.tsx"),
+      path.resolve(import.meta.dirname, "../..", "src/screens/sources/SourcesSheets.tsx"),
       "utf8",
     );
     expect(src).toMatch(/destructiveZone:\s*\{[^}]*marginTop:\s*spacing\.xl/);

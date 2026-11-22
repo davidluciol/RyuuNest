@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest";
  * de entrada único: las pantallas nunca importan `lucide-react-native` a mano.
  */
 
-const SRC_DIR = path.resolve(process.cwd(), "src");
+const SRC_DIR = path.resolve(import.meta.dirname, "..", "src");
 
 /** Emojis y glifos (pictográficos, dingbats, símbolos varios + variación U+FE0F). */
 const EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/u;
@@ -22,7 +22,7 @@ function sourceFiles(): string[] {
 
 describe("iconos: Lucide como fuente única (P2-3)", () => {
   it("apps/mobile depende de lucide-react-native (móvil/TV)", () => {
-    const pkg = JSON.parse(readFileSync(path.resolve(process.cwd(), "package.json"), "utf8")) as {
+    const pkg = JSON.parse(readFileSync(path.resolve(import.meta.dirname, "..", "package.json"), "utf8")) as {
       dependencies?: Record<string, string>;
     };
     expect(pkg.dependencies?.["lucide-react-native"], "falta la dependencia").toBeDefined();

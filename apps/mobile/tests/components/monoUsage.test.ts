@@ -12,7 +12,7 @@ import { detailTextStyle } from "../../src/components/stateStyles";
  * `LogEventRow`. Banner, diálogo y chip de código ya pasan por los helpers de
  * `errorNoticeStyles` (cubiertos en errorNotice.test.ts).
  */
-const SRC = path.resolve(process.cwd(), "src/components");
+const SRC = path.resolve(import.meta.dirname, "../..", "src/components");
 
 describe("typography.mono (F34.2)", () => {
   it("el detalle técnico de ErrorState va en mono", () => {

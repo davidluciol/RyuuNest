@@ -10,7 +10,7 @@ import { SAMPLE_TAG_FILTERS } from "../../src/screens/discover/discoverFixtures"
  * contador de activos visible en el botón de filtros. Sin Metro: se fija la estructura del
  * código (como `discoverKeyboard.test.ts`); el render real lo verifica Playwright.
  */
-const read = (file: string) => readFileSync(path.resolve(process.cwd(), file), "utf8");
+const read = (file: string) => readFileSync(path.resolve(import.meta.dirname, "../..", file), "utf8");
 
 describe("TagFilterSheet como desplegables con casillas (F87)", () => {
   const src = read("src/components/TagFilterSheet.tsx");

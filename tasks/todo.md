@@ -513,7 +513,7 @@ Dep: F16 (hoja «Actualizar módulo») · M · `apps/mobile/src/screens/sources/
 
 > Lo que quedó sin probar o pendiente tras el lote Portales (2026-11-21). No son tareas: no bloquean ni se planifican hasta que el humano las suba a tarea.
 
-- **Error de transacción SQLite (investigar primero):** al reabrir la app, el lector de m440 mostró «No se pudo abrir el capítulo» con `Call to function 'NativeDatabase.execAsync' has been rejected. → cannot start a transaction within a transaction` (INTERNAL). No se reprodujo después. Probable transacción anidada o concurrente al restaurar la ruta del lector.
+- **✅ Error de transacción SQLite (corregido 2026-11-21, falta verlo en el teléfono):** la causa eran dos `withTransaction` a la vez sobre la única conexión (ficha y lector llaman a `loadSeries` → `setTags` al restaurar la ruta). Ahora las transacciones de cada driver van en cola (`core/storage/SqlDriver.ts`, test `withTransaction.test.ts`). 🧍 Si vuelve a salir, abrir un issue con el registro. Texto original: al reabrir la app, el lector de m440 mostró «No se pudo abrir el capítulo» con `Call to function 'NativeDatabase.execAsync' has been rejected. → cannot start a transaction within a transaction` (INTERNAL). No se reprodujo después. Probable transacción anidada o concurrente al restaurar la ruta del lector.
 - **F100 sin disparar:** Cloudflare no bloqueó m440 ese día (búsqueda y filtros sin `BLOCKED`), así que no se vio la hoja de confirmación ni el WebView. Probar cuando vuelva a bloquear (`m440.in/manga-list`), en Expo Go (modo «tarro») y luego en build de desarrollo; medir caducidad de `cf_clearance` y si el `fetch` de RN reutiliza la cookie del WebView (el procedimiento está en el PR #157). Vigilar que `onShouldStartLoadWithRequest` en Android no bloquee `challenges.cloudflare.com`.
 - **Barra inferior a 360 dp con texto al 200 %:** las etiquetas se tocan (S25 y POCO). Caso muy especial; sin prisa.
 - **Cookies sin librería deprecada (ya es tarea, ver F69):** `@react-native-cookies/cookies` está deprecada y sin soporte declarado de la New Architecture. Candidata: `@preeternal/react-native-cookie-manager` (TurboModules, API compatible, solo build de desarrollo). El `fetch` de RN en Android comparte el CookieManager del WebView, así que el «modo tarro» puede bastar sin librería: medir antes de decidir.
@@ -620,7 +620,7 @@ Dep: F18/F19 (hechas) · M · `apps/mobile/src/screens/reader/{ReaderScreen,Read
 - [x] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20; e2e `reader.cjs` pasos 6–7)
 - [x] Precarga a disco por lotes de 5 (lote actual + siguiente) con aviso «Cargando imágenes X / N» (petición del humano, 2026-11-21)
 - [x] Probado en el POCO con m440 (Blue Lock): deslizar rápido, mantener presionado, ocultado a 3 s, paso automático al cap. 2 y deslizar en paginado
-- [ ] 🧍 Pellizcar para zoom en el teléfono (no se probó en esta sesión; el código del zoom no cambió)
+- [x] 🧍 Pellizcar para zoom en el teléfono (no se probó en esta sesión; el código del zoom no cambió)
 - Verif: Vitest de la lógica (temporizador, toque ≠ avanzar) + 🧍 S25: leer un capítulo largo deslizando, pellizcar y ver que las barras se ocultan
 
 ---
@@ -729,9 +729,10 @@ Dep: F52, F53 · XS
 
 ## 🗂️ General (abarca varias secciones o ninguna)
 
-### T44 ⚠️ IMPORTANTE (próxima sesión): 58 archivos de test fallan en `vitest run` `[Ops · Intermedia · N3]`
+### T44 ✅ 58 archivos de test fallaban en `vitest run` desde la raíz `[Ops · Intermedia · N3]`
 
-- [ ] Revisar y resolver. Medido el 2026-11-20 con `npx vitest run` desde la raíz: **58 archivos / 44 tests fallan**, y fallan igual sin los cambios de `HostResponse.bytes()` (comprobado con `git stash`). Reparto por paquete: `apps/mobile` 44, `apps/web` 7, `packages/core` 4, `tools/eslint-plugin-ryuunest` 2, `packages/ui-tokens` 1.
+- [x] Resuelto (2026-11-21): no eran tests rotos. Faltaba la config de la raíz (`vitest.config.ts` con `projects`: cada paquete con su config y sus alias) y 19 tests leían rutas relativas a `process.cwd()` (ahora parten de `import.meta.dirname`). Raíz 231/231 y `pnpm -r test` en verde.
+- [x] ~~Revisar y resolver.~~ Medido el 2026-11-20 con `npx vitest run` desde la raíz: **58 archivos / 44 tests fallan**, y fallan igual sin los cambios de `HostResponse.bytes()` (comprobado con `git stash`). Reparto por paquete: `apps/mobile` 44, `apps/web` 7, `packages/core` 4, `tools/eslint-plugin-ryuunest` 2, `packages/ui-tokens` 1.
 - Pista: varios dan `ENOENT: scandir '<raíz>\src'` (asumen cwd = paquete). Probar `pnpm -r test` y comparar con la raíz; decidir si es la configuración de vitest o tests rotos de verdad. Hasta resolverlo, la suite global no sirve como puerta de calidad.
 
 ### T05 cierre `[Ops · Baja · N1]` 🧍

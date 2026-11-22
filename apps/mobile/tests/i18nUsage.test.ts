@@ -18,7 +18,7 @@ import { catalogs, catalogKeys, defaultLocale } from "../src/i18n";
  * vive en el catálogo.
  */
 
-const SRC = path.resolve(process.cwd(), "src");
+const SRC = path.resolve(import.meta.dirname, "..", "src");
 const I18N_DIR = path.join(SRC, "i18n");
 
 function sourceFiles(dir: string = SRC, out: string[] = []): string[] {

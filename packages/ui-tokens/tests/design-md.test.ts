@@ -14,7 +14,7 @@ import { typography } from "../src/typography";
  * comprueba que los genéricos contradictorios NO entraron en la paleta.
  */
 
-const designMd = readFileSync("../../DESIGN.md", "utf8");
+const designMd = readFileSync(`${import.meta.dirname}/../../../DESIGN.md`, "utf8");
 
 /** Líneas del front-matter (entre los dos primeras `---`). */
 function frontmatterLines(md: string): string[] {

@@ -13,7 +13,7 @@ import { catalogKeys } from "@ryuunest/i18n";
  * 3. Toda clave usada con `t("…")` existe en el catálogo (RF-40, P-11).
  */
 
-const SRC = path.resolve(process.cwd(), "src");
+const SRC = path.resolve(import.meta.dirname, "..", "src");
 
 function sourceFiles(dir: string = SRC, out: string[] = []): string[] {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
