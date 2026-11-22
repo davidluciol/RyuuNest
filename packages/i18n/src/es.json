@@ -80,6 +80,8 @@
   "reader.end.next": "Siguiente: capítulo {number}",
   "reader.end.nextUnnumbered": "Siguiente capítulo",
   "reader.end.last": "Es el último capítulo disponible",
+  "reader.end.autoNext": "Siguiente capítulo en {seconds} s",
+  "reader.loading.batch": "Cargando imágenes {loaded} / {size}",
   "reader.loading.title": "Abriendo el capítulo",
   "reader.error.title": "No se pudo abrir el capítulo",
 

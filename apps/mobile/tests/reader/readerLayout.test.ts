@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import {
   READER_MAX_WIDTH,
+  SWIPE_MIN_DISTANCE,
   columnWidth,
+  isAtScrollEnd,
   percentOf,
+  swipeActionFor,
   tapActionFor,
   tapZoneAt,
 } from "../../src/reader/readerLayout";
@@ -30,25 +33,63 @@ describe("tapZoneAt", () => {
 });
 
 describe("tapActionFor", () => {
-  it("el centro siempre muestra u oculta los controles (RF-19)", () => {
-    for (const mode of ["vertical", "paged-ltr", "paged-rtl"] as const) {
-      expect(tapActionFor("center", mode)).toBe("toggleControls");
+  it("en paginado el centro siempre muestra u oculta los controles (RF-19)", () => {
+    for (const mode of ["paged-ltr", "paged-rtl"] as const) {
+      expect(tapActionFor("center", mode, true)).toBe("toggleControls");
+      expect(tapActionFor("center", mode, false)).toBe("toggleControls");
     }
   });
 
   it("paginado I→D: izquierda retrocede y derecha avanza", () => {
-    expect(tapActionFor("left", "paged-ltr")).toBe("previous");
-    expect(tapActionFor("right", "paged-ltr")).toBe("next");
+    expect(tapActionFor("left", "paged-ltr", false)).toBe("previous");
+    expect(tapActionFor("right", "paged-ltr", false)).toBe("next");
   });
 
   it("paginado D→I: las laterales se invierten (RF-19)", () => {
-    expect(tapActionFor("left", "paged-rtl")).toBe("next");
-    expect(tapActionFor("right", "paged-rtl")).toBe("previous");
+    expect(tapActionFor("left", "paged-rtl", false)).toBe("next");
+    expect(tapActionFor("right", "paged-rtl", false)).toBe("previous");
   });
 
-  it("vertical continuo: no se invierten, el contenido avanza hacia abajo", () => {
-    expect(tapActionFor("left", "vertical")).toBe("previous");
-    expect(tapActionFor("right", "vertical")).toBe("next");
+  it("F51 webtoon: un toque nunca pasa de página; solo oculta las barras visibles", () => {
+    for (const zone of ["left", "center", "right"] as const) {
+      expect(tapActionFor(zone, "vertical", true)).toBe("toggleControls");
+      expect(tapActionFor(zone, "vertical", false)).toBe("none");
+    }
+  });
+});
+
+describe("swipeActionFor (F51)", () => {
+  const far = SWIPE_MIN_DISTANCE + 1;
+
+  it("I→D: el dedo hacia la izquierda avanza y hacia la derecha retrocede", () => {
+    expect(swipeActionFor(-far, 0, "paged-ltr")).toBe("next");
+    expect(swipeActionFor(far, 0, "paged-ltr")).toBe("previous");
+  });
+
+  it("D→I: se invierte", () => {
+    expect(swipeActionFor(-far, 0, "paged-rtl")).toBe("previous");
+    expect(swipeActionFor(far, 0, "paged-rtl")).toBe("next");
+  });
+
+  it("ignora movimientos cortos o poco horizontales", () => {
+    expect(swipeActionFor(SWIPE_MIN_DISTANCE - 1, 0, "paged-ltr")).toBeNull();
+    expect(swipeActionFor(far, far, "paged-ltr")).toBeNull();
+  });
+
+  it("en webtoon no hay deslizar horizontal", () => {
+    expect(swipeActionFor(-far * 3, 0, "vertical")).toBeNull();
+  });
+});
+
+describe("isAtScrollEnd (F51)", () => {
+  it("es verdadero solo cuando el final del contenido está a la vista", () => {
+    expect(isAtScrollEnd(1000, 800, 1800)).toBe(true);
+    expect(isAtScrollEnd(990, 800, 1800)).toBe(true);
+    expect(isAtScrollEnd(500, 800, 1800)).toBe(false);
+  });
+
+  it("sin medidas no hay final", () => {
+    expect(isAtScrollEnd(0, 0, 0)).toBe(false);
   });
 });
 

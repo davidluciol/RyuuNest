@@ -612,10 +612,15 @@ Dep: F18/F19 (hechas) · M · `apps/mobile/src/screens/reader/{ReaderScreen,Read
 
 > Origen (petición del humano, 2026-11-16). Hoy el modo vertical ya es una lista, pero un toque en la pantalla avanza a la página siguiente (`scrollToPage`).
 
-- [ ] En modo cascada/webtoon las imágenes se apilan de arriba abajo y se navega **solo deslizando**; un toque en la pantalla deja de avanzar de página (el toque solo muestra u oculta las barras)
-- [ ] Zoom con pellizco (acercar/alejar) en cascada, sin romper el desplazamiento vertical; revisar el presupuesto de memoria (P-90)
-- [ ] Las barras (cabecera y pie) se ocultan solas **3 s** después de mostrarse; sin animaciones en el lector (AGENTS.md): aparecen y desaparecen sin transición. **Pregunta abierta:** ¿el temporizador se reinicia con cada toque y también afecta al modo paginado?
-- [ ] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20)
+- [x] En modo cascada/webtoon las imágenes se apilan de arriba abajo y se navega **solo deslizando**; un toque en la pantalla deja de avanzar de página (el toque solo muestra u oculta las barras)
+- [x] Zoom con pellizco (acercar/alejar) en cascada, sin romper el desplazamiento vertical; revisar el presupuesto de memoria (P-90)
+- [x] Las barras (cabecera y pie) se ocultan solas **3 s** después de mostrarse, sin transición. Resuelto (P-185): mantener presionado las muestra; afecta también al paginado; pasar de página reinicia la cuenta y una hoja abierta la pausa
+- [x] Paginado: deslizar pasa de página (invertido en D→I), además de las orillas
+- [x] Al ver la tarjeta de fin, a los 3 s se abre el siguiente capítulo (aviso en la tarjeta; alejarse lo cancela)
+- [x] El progreso guardado y «Continuar» siguen funcionando con el nuevo desplazamiento (RF-20; e2e `reader.cjs` pasos 6–7)
+- [x] Precarga a disco por lotes de 5 (lote actual + siguiente) con aviso «Cargando imágenes X / N» (petición del humano, 2026-11-21)
+- [x] Probado en el POCO con m440 (Blue Lock): deslizar rápido, mantener presionado, ocultado a 3 s, paso automático al cap. 2 y deslizar en paginado
+- [ ] 🧍 Pellizcar para zoom en el teléfono (no se probó en esta sesión; el código del zoom no cambió)
 - Verif: Vitest de la lógica (temporizador, toque ≠ avanzar) + 🧍 S25: leer un capítulo largo deslizando, pellizcar y ver que las barras se ocultan
 
 ---

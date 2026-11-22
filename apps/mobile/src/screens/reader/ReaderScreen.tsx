@@ -5,7 +5,14 @@ import type { ReaderMode } from "@ryuunest/core";
 import { spacing } from "@ryuunest/ui-tokens";
 
 import { t } from "../../i18n";
-import { columnWidth, tapActionFor, tapZoneAt } from "../../reader/readerLayout";
+import {
+  AUTO_NEXT_DELAY_MS,
+  CONTROLS_HIDE_MS,
+  columnWidth,
+  swipeActionFor,
+  tapActionFor,
+  tapZoneAt,
+} from "../../reader/readerLayout";
 import { ReaderBottomBar, ReaderTopBar } from "./ReaderBars";
 import ReaderEndCard from "./ReaderEndCard";
 import ReaderPaged from "./ReaderPaged";
@@ -14,13 +21,17 @@ import ReaderVertical, { type ReaderVerticalHandle } from "./ReaderVertical";
 import { FALLBACK_READER_MODE, modeLabel } from "./readerModes";
 import { readerCanvasStyle } from "./readerStyles";
 import type { ReaderActions, ReaderReady } from "./useReader";
+import type { ReaderPreloadProgress } from "./useReaderPrefetch";
+import Badge from "../../components/Badge";
 import ZoomableView from "./ZoomableView";
 import FocusPressable from "../../components/FocusPressable";
 
 /**
- * F18 — pantalla del lector (RF-18 a RF-22): lienzo con el contenido y nada más; el centro
- * muestra u oculta los controles y las laterales cambian de página (invertidas en D→I). Sin
- * animaciones. Recibe la vista ya cargada (`useReader`) y los callbacks por props.
+ * F18 — pantalla del lector (RF-18 a RF-22): lienzo con el contenido y nada más. En paginado el
+ * centro muestra u oculta los controles y las laterales o el deslizamiento cambian de página
+ * (invertidos en D→I). F51: en webtoon solo se desliza y se pellizca; mantener presionado
+ * muestra las barras, que se ocultan solas a los 3 s, y al ver la tarjeta de fin se abre el
+ * siguiente capítulo a los 3 s. Sin animaciones. Recibe la vista ya cargada (`useReader`).
  */
 
 /** Espacio al final de la lista vertical para que la tarjeta de fin no quede bajo la barra. */
@@ -28,6 +39,8 @@ const FOOTER_CLEARANCE = spacing["2xl"] * 4;
 
 export interface ReaderScreenProps {
   ready: ReaderReady;
+  /** F51 — avance de la descarga del lote de la página actual; `null` si ya está en disco. */
+  preload: ReaderPreloadProgress;
   actions: ReaderActions;
   onClose: () => void;
   onOpenChapter: (chapterId: string, releaseId: string | null) => void;
@@ -37,6 +50,7 @@ type Sheet = "mode" | "chapters" | null;
 
 export default function ReaderScreen({
   ready,
+  preload,
   actions,
   onClose,
   onOpenChapter,
@@ -48,14 +62,40 @@ export default function ReaderScreen({
   const [controls, setControls] = useState(true);
   const [sheet, setSheet] = useState<Sheet>(null);
   const [endCard, setEndCard] = useState(false);
+  const [verticalAtEnd, setVerticalAtEnd] = useState(false);
   const vertical = useRef<ReaderVerticalHandle>(null);
   const column = columnWidth(size.width);
+  const atEnd = mode === "vertical" ? verticalAtEnd : endCard;
+  const autoNext = atEnd && next !== null && sheet === null;
 
   // RF-23: la pantalla no se apaga mientras se lee.
   useKeepAwake("reader");
 
   // Moverse de página, de modo o de capítulo cierra la tarjeta de fin del modo paginado.
   useEffect(() => setEndCard(false), [snapshot.pageIndex, chapter.id, mode]);
+  useEffect(() => setVerticalAtEnd(false), [chapter.id, mode]);
+
+  // F51: las barras se ocultan solas; pasar de página reinicia la cuenta y una hoja abierta la pausa.
+  useEffect(() => {
+    if (!controls || sheet !== null) return;
+    const timer = setTimeout(() => setControls(false), CONTROLS_HIDE_MS);
+    return () => clearTimeout(timer);
+  }, [controls, sheet, snapshot.pageIndex]);
+
+  // F51: con la tarjeta de fin a la vista, se abre el siguiente capítulo; alejarse lo cancela.
+  // Ref: un callback nuevo en cada render no debe reiniciar la cuenta.
+  const openChapterRef = useRef(onOpenChapter);
+  openChapterRef.current = onOpenChapter;
+  const nextId = next?.id ?? null;
+  const nextReleaseId = next?.releaseId ?? null;
+  useEffect(() => {
+    if (!autoNext || nextId === null) return;
+    const timer = setTimeout(
+      () => openChapterRef.current(nextId, nextReleaseId),
+      AUTO_NEXT_DELAY_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [autoNext, nextId, nextReleaseId]);
 
   const onLayout = (event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
@@ -82,10 +122,16 @@ export default function ReaderScreen({
   };
 
   const onCanvasPress = (pageX: number) => {
-    const action = tapActionFor(tapZoneAt(pageX, size.width), mode);
+    const action = tapActionFor(tapZoneAt(pageX, size.width), mode, controls);
     if (action === "toggleControls") setControls((visible) => !visible);
     else if (action === "next") goNext();
-    else goPrevious();
+    else if (action === "previous") goPrevious();
+  };
+
+  const onSwipe = (dx: number, dy: number) => {
+    const action = swipeActionFor(dx, dy, mode);
+    if (action === "next") goNext();
+    else if (action === "previous") goPrevious();
   };
 
   const openNext = () => {
@@ -98,12 +144,16 @@ export default function ReaderScreen({
       next={next === null ? null : { number: next.number }}
       width={column}
       onOpenNext={openNext}
+      autoNextSeconds={autoNext ? AUTO_NEXT_DELAY_MS / 1000 : null}
     />
   );
 
   return (
     <View testID="screen-reader" style={readerCanvasStyle()}>
-      <ZoomableView resetKey={mode === "vertical" ? chapter.id : snapshot.pageIndex}>
+      <ZoomableView
+        resetKey={mode === "vertical" ? chapter.id : snapshot.pageIndex}
+        onSwipe={mode === "vertical" ? undefined : onSwipe}
+      >
         <FocusPressable
           testID="reader-canvas"
           focusable={false}
@@ -111,6 +161,7 @@ export default function ReaderScreen({
           style={readerCanvasStyle()}
           onLayout={onLayout}
           onPress={(event) => onCanvasPress(event.nativeEvent.pageX)}
+          onLongPress={() => setControls(true)}
         >
           <View style={{ flex: 1, alignItems: "center" }}>
             {size.width === 0 ? null : mode === "vertical" ? (
@@ -123,6 +174,7 @@ export default function ReaderScreen({
                 onPageChange={actions.goToPage}
                 footer={endCardView}
                 footerClearance={controls ? FOOTER_CLEARANCE : 0}
+                onEndChange={setVerticalAtEnd}
               />
             ) : endCard ? (
               <View style={{ flex: 1, justifyContent: "center" }}>{endCardView}</View>
@@ -137,6 +189,16 @@ export default function ReaderScreen({
           </View>
         </FocusPressable>
       </ZoomableView>
+
+      {preload === null ? null : (
+        <View
+          testID="reader-loading-batch"
+          pointerEvents="none"
+          style={{ position: "absolute", left: 0, right: 0, bottom: FOOTER_CLEARANCE, alignItems: "center" }}
+        >
+          <Badge label={t("reader.loading.batch", preload)} />
+        </View>
+      )}
 
       {controls ? (
         <ReaderTopBar

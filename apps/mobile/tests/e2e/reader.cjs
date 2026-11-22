@@ -15,8 +15,41 @@ async function tapAt(page, canvasTestId, fx, fy) {
   await page.mouse.click(box.x + box.width * fx, box.y + box.height * fy);
 }
 
+// F51: mantener presionado el centro muestra las barras (se ocultan solas a los 3 s).
+async function showBars(page) {
+  if ((await page.getByTestId("reader-top-bar").count()) > 0) return;
+  const box = await page.getByTestId("reader-canvas").boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.waitForTimeout(800);
+  await page.mouse.up();
+  await page.getByTestId("reader-top-bar").waitFor({ state: "visible" });
+}
+
+// F51: deslizar con un dedo (toque real por CDP) horizontalmente sobre el lienzo.
+async function swipe(page, fromFx, toFx) {
+  const client = await page.context().newCDPSession(page);
+  const box = await page.getByTestId("reader-canvas").boundingBox();
+  const y = box.y + box.height / 2;
+  const at = (fx) => [{ x: box.x + box.width * fx, y, id: 0 }];
+  await client.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: at(fromFx) });
+  for (let step = 1; step <= 8; step += 1) {
+    await client.send("Input.dispatchTouchEvent", {
+      type: "touchMove",
+      touchPoints: at(fromFx + ((toFx - fromFx) * step) / 8),
+    });
+  }
+  await client.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  await client.detach();
+}
+
 (async () => {
-  const browser = await chromium.launch({ headless: true, channel: "chrome" });
+  const browser = await chromium.launch({
+    headless: true,
+    channel: "chrome",
+    // F51: un deslizamiento horizontal no debe ser el «atrás» del historial del navegador.
+    args: ["--disable-features=OverscrollHistoryNavigation"],
+  });
   try {
     for (const width of [426, 1440]) {
       const context = await newSeededContext(browser, { viewport: { width, height: 900 }, hasTouch: true });
@@ -88,13 +121,20 @@ async function tapAt(page, canvasTestId, fx, fy) {
       const close = await page.getByRole("button", { name: "Cerrar lector" }).boundingBox();
       assert.ok(close && close.width >= 48 && close.height >= 48, `área táctil de cerrar @${width}`);
 
-      // 2. El centro oculta y vuelve a mostrar los controles (RF-19).
-      await tapAt(page, "reader-canvas", 0.5, 0.5);
+      // 2. F51 webtoon: un toque oculta las barras y no pasa de página; con ellas ocultas un toque
+      // no hace nada; mantener presionado las muestra y se ocultan solas a los 3 s.
+      await showBars(page);
+      await tapAt(page, "reader-canvas", 0.9, 0.5);
       await page.getByTestId("reader-top-bar").waitFor({ state: "detached" });
-      await tapAt(page, "reader-canvas", 0.5, 0.5);
-      await page.getByTestId("reader-top-bar").waitFor({ state: "visible" });
+      await tapAt(page, "reader-canvas", 0.9, 0.5);
+      await page.waitForTimeout(300);
+      assert.equal(await page.getByTestId("reader-top-bar").count(), 0, `el toque no muestra barras @${width}`);
+      await showBars(page);
+      await page.getByText("Pág. 1 / 3").waitFor({ state: "visible" });
+      await page.getByTestId("reader-top-bar").waitFor({ state: "detached", timeout: 5000 });
 
       // 3. Cambia a paginado D→I desde la hoja de modo (RF-22) y se recuerda por serie (RF-18).
+      await showBars(page);
       await page.getByRole("button", { name: "Modo de lectura" }).click();
       await page.getByText("Paginado D → I · Manga").click();
       await page.getByTestId("reader-paged").waitFor({ state: "visible" });
@@ -104,15 +144,26 @@ async function tapAt(page, canvasTestId, fx, fy) {
       await tapAt(page, "reader-canvas", 0.1, 0.5);
       await page.getByText("Pág. 2 / 3").waitFor({ state: "visible" });
       await tapAt(page, "reader-canvas", 0.9, 0.5);
+      await showBars(page);
+      await page.getByText("Pág. 1 / 3").waitFor({ state: "visible" });
+
+      // F51: deslizar también pasa de página; en D→I el dedo hacia la derecha avanza.
+      await swipe(page, 0.3, 0.8);
+      await showBars(page);
+      await page.getByText("Pág. 2 / 3").waitFor({ state: "visible" });
+      await swipe(page, 0.8, 0.3);
+      await showBars(page);
       await page.getByText("Pág. 1 / 3").waitFor({ state: "visible" });
 
       // 4. Al pasar de la última página aparece la tarjeta de siguiente capítulo (RF-21).
       const next = page.getByRole("button", { name: "Página siguiente" });
+      await showBars(page);
       await next.click();
       await next.click();
       await page.getByText("Pág. 3 / 3").waitFor({ state: "visible" });
       await next.click();
       await page.getByText("Fin del capítulo 1").waitFor({ state: "visible" });
+      await showBars(page);
       // La tarjeta queda entre las barras, no tapada por ellas.
       const card = await page.getByTestId("reader-end-card").boundingBox();
       const topBar = await page.getByTestId("reader-top-bar").boundingBox();
@@ -120,17 +171,21 @@ async function tapAt(page, canvasTestId, fx, fy) {
       assert.ok(card && topBar && bottomBar, `cajas de la tarjeta y las barras @${width}`);
       assert.ok(card.y >= topBar.y + topBar.height, `la tarjeta no puede quedar bajo la barra superior @${width}`);
       assert.ok(card.y + card.height <= bottomBar.y, `la tarjeta no puede quedar bajo la barra inferior @${width}`);
-      await page.getByRole("button", { name: "Siguiente: capítulo 2" }).click();
+      // F51: la tarjeta avisa y a los 3 s abre sola el capítulo 2.
+      await page.getByText("Siguiente capítulo en 3 s").waitFor({ state: "visible" });
+      await page.getByTestId("reader-paged").waitFor({ state: "visible", timeout: 6000 });
+      await showBars(page);
       await page.getByText("Pág. 1 / 4").waitFor({ state: "visible" });
-      await page.getByTestId("reader-paged").waitFor({ state: "visible" });
 
       // 5. El selector de capítulo salta a otro capítulo, conservando el modo de la serie.
+      await showBars(page);
       await page.getByRole("button", { name: "Seleccionar capítulo" }).click();
       await page.getByText("Capítulo 3: Capítulo 3").click();
       await page.getByText("Pág. 1 / 2").waitFor({ state: "visible" });
       await page.getByTestId("reader-paged").waitFor({ state: "visible" });
 
       // 6. Cerrar guarda el progreso: la ficha ofrece continuar en el capítulo 3.
+      await showBars(page);
       await page.getByRole("button", { name: "Cerrar lector" }).click();
       await page.getByTestId("screen-series").waitFor({ state: "visible" });
       await page.getByText(/Continuar cap\. 3/).waitFor({ state: "visible" });
@@ -142,6 +197,7 @@ async function tapAt(page, canvasTestId, fx, fy) {
       // 7. Reabrir el capítulo 2 en frío lleva a la página exacta guardada (RF-20, ejemplo: 3 de 4).
       await resetSeed(page, `${READER}/ch-2?release=r-oficial`); // vuelve al progreso sembrado (la base es real y persiste)
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
+      await showBars(page);
       await page.getByText("Pág. 3 / 4").waitFor({ state: "visible" });
 
       // 8. Zoom con pellizco (RF-23): dos dedos que se separan amplían el lienzo; juntarlos lo deshace.
@@ -181,6 +237,7 @@ async function tapAt(page, canvasTestId, fx, fy) {
       await resetSeed(page, `${READER}/ch-2?release=r-oficial`); // vuelve al progreso sembrado (la base es real y persiste)
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
       await page.getByText("No se pudo cargar la página 2").waitFor({ state: "visible" });
+      await showBars(page);
       await page.getByText("Pág. 3 / 4").waitFor({ state: "visible" });
       await page.getByTestId("reader-page-0").waitFor({ state: "visible" });
       await page.getByTestId("reader-page-2").waitFor({ state: "visible" });

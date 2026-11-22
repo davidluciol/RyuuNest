@@ -20,6 +20,7 @@ import {
   pageOffset,
   shouldMountImage,
 } from "../../reader/verticalLayout";
+import { isAtScrollEnd } from "../../reader/readerLayout";
 import ReaderPageImage from "./ReaderPageImage";
 import type { ReaderImage } from "./readingSource";
 
@@ -45,13 +46,16 @@ export interface ReaderVerticalProps {
   footer: React.ReactNode;
   /** Espacio bajo el pie para que no lo tape la barra inferior cuando está visible. */
   footerClearance: number;
+  /** F51 — avisa cuando el final de la lista (la tarjeta de fin) entra o sale de la vista. */
+  onEndChange: (atEnd: boolean) => void;
 }
 
 const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
   function ReaderVertical(
-    { images, width, window, initialPage, onPageChange, footer, footerClearance },
+    { images, width, window, initialPage, onPageChange, footer, footerClearance, onEndChange },
     ref,
   ) {
+    const atEnd = useRef(false);
     const scrollRef = useRef<ScrollView>(null);
     const offsetY = useRef(0);
     const currentPage = useRef(initialPage);
@@ -92,8 +96,14 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
     }, [placeInitialPage]);
 
     const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const y = event.nativeEvent.contentOffset.y;
+      const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+      const y = contentOffset.y;
       offsetY.current = y;
+      const end = isAtScrollEnd(y, layoutMeasurement.height, contentSize.height);
+      if (end !== atEnd.current) {
+        atEnd.current = end;
+        onEndChange(end);
+      }
       const page = pageAtOffset(heightsRef.current, y);
       if (page !== null && page !== currentPage.current) {
         currentPage.current = page;

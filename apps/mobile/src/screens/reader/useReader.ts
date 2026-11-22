@@ -12,7 +12,7 @@ import { chapterState, type ChapterState } from "../series/seriesFixtures";
 import { resolveReadingSource, type ReaderImage } from "./readingSource";
 import { resolveSettingsService } from "../settings/useSettingsData";
 import { savedChapterLabel } from "./readerChapterLabel";
-import { useReaderPrefetch } from "./useReaderPrefetch";
+import { useReaderPrefetch, type ReaderPreloadProgress } from "./useReaderPrefetch";
 
 /**
  * F18 — estado de la pantalla del lector: carga la ficha (capítulos y tipo de obra) y las páginas
@@ -63,7 +63,11 @@ function report(error: unknown): void {
   console.warn("El lector no pudo completar la acción:", error);
 }
 
-export function useReader(target: ReaderTarget): { view: ReaderView; actions: ReaderActions } {
+export function useReader(target: ReaderTarget): {
+  view: ReaderView;
+  actions: ReaderActions;
+  preload: ReaderPreloadProgress;
+} {
   const { moduleId, seriesId, chapterId, releaseId } = target;
   const [view, setView] = useState<ReaderView>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
@@ -200,7 +204,7 @@ export function useReader(target: ReaderTarget): { view: ReaderView; actions: Re
   );
   const retry = useCallback(() => setAttempt((value) => value + 1), []);
 
-  useReaderPrefetch(view.status === "ready" ? view.ready : null, moduleId);
+  const preload = useReaderPrefetch(view.status === "ready" ? view.ready : null, moduleId);
 
-  return { view, actions: { goToPage, next, previous, setMode, retry } };
+  return { view, actions: { goToPage, next, previous, setMode, retry }, preload };
 }

@@ -25,9 +25,20 @@ export interface ZoomableViewProps {
   children: React.ReactNode;
   /** Cuando cambia, el zoom vuelve a 1 (por ejemplo, al pasar de página en paginado). */
   resetKey: string | number;
+  /**
+   * F51 — deslizar con un dedo (paginado). Solo sin zoom y con gesto horizontal; recibe el
+   * recorrido al soltar. Sin esta prop, un dedo sigue siendo de quien está debajo.
+   */
+  onSwipe?: (dx: number, dy: number) => void;
 }
 
-export default function ZoomableView({ children, resetKey }: ZoomableViewProps) {
+/** Recorrido horizontal a partir del cual un dedo se considera deslizamiento y no toque. */
+const SWIPE_CAPTURE_DISTANCE = 12;
+
+export default function ZoomableView({ children, resetKey, onSwipe }: ZoomableViewProps) {
+  const onSwipeRef = useRef(onSwipe);
+  onSwipeRef.current = onSwipe;
+  const swiping = useRef(false);
   const [zoom, setZoom] = useState<Zoom>(NO_ZOOM);
   const zoomRef = useRef(zoom);
   zoomRef.current = zoom;
@@ -40,9 +51,18 @@ export default function ZoomableView({ children, resetKey }: ZoomableViewProps) 
     () =>
       PanResponder.create({
         onStartShouldSetPanResponderCapture: (event) => event.nativeEvent.touches.length >= 2,
-        onMoveShouldSetPanResponderCapture: (event) => event.nativeEvent.touches.length >= 2,
+        onMoveShouldSetPanResponderCapture: (event, state) => {
+          if (event.nativeEvent.touches.length >= 2) return true;
+          swiping.current =
+            onSwipeRef.current !== undefined &&
+            zoomRef.current.scale === 1 &&
+            Math.abs(state.dx) > SWIPE_CAPTURE_DISTANCE &&
+            Math.abs(state.dx) > Math.abs(state.dy);
+          return swiping.current;
+        },
         onPanResponderTerminationRequest: () => false,
         onPanResponderMove: (event) => {
+          if (swiping.current) return;
           const touches = event.nativeEvent.touches;
           const first = touches[0];
           const second = touches[1];
@@ -62,11 +82,17 @@ export default function ZoomableView({ children, resetKey }: ZoomableViewProps) 
             pinchZoom(gesture.current.start, gesture.current.touches, current, viewport.current),
           );
         },
-        onPanResponderRelease: () => {
+        onPanResponderRelease: (_event, state) => {
+          if (swiping.current) {
+            swiping.current = false;
+            onSwipeRef.current?.(state.dx, state.dy);
+            return;
+          }
           gesture.current = null;
           setZoom((current) => settleZoom(current));
         },
         onPanResponderTerminate: () => {
+          swiping.current = false;
           gesture.current = null;
           setZoom((current) => settleZoom(current));
         },
