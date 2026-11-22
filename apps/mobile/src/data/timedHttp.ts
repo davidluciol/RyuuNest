@@ -36,7 +36,8 @@ export function withTiming(
 
 /** La `Http` de los módulos: en desarrollo deja cada medida en la consola (Metro/logcat). */
 export function moduleHttp(http: Http): Http {
-  if (!__DEV__) {
+  // `__DEV__` lo define Metro; la web compila este archivo sin esa global.
+  if ((globalThis as { __DEV__?: boolean }).__DEV__ !== true) {
     return http;
   }
   return withTiming(http, (timing) => {

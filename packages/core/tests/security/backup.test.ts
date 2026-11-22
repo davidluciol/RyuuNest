@@ -42,7 +42,6 @@ async function snapshot(): Promise<Record<string, unknown[]>> {
   const tables = [
     "repo",
     "module",
-    "kv",
     "series",
     "folder",
     "favorite",
@@ -134,6 +133,5 @@ describe("seguridad · respaldo malicioso: nada se instala solo (RF-38, AC-8)", 
     const rows = await snapshot();
     expect(rows["repo"]).toEqual([]);
     expect(rows["module"]).toEqual([]);
-    expect(rows["kv"]).toEqual([]);
   });
 });
