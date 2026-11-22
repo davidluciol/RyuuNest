@@ -39,6 +39,15 @@ export function preferredRelease(
   );
 }
 
+/** F17: el chip de release solo abre la hoja si hay algo que elegir. */
+export function canChooseRelease(chapter: Chapter): boolean {
+  return chapter.releases.length > 1;
+}
+
+export function releaseLabel(release: Release): string {
+  return release.group ?? release.id;
+}
+
 export function chapterProgress(
   chapter: Chapter,
   progress: SeriesProgress | null,
