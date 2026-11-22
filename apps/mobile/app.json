@@ -26,7 +26,8 @@
       "expo-sqlite",
       "expo-image",
       "expo-sharing",
-      "expo-secure-store"
+      "expo-secure-store",
+      "./plugins/withOkHttpPing.js"
     ],
     "extra": {
       "router": {},

@@ -44,13 +44,17 @@ export interface ModuleHostOptions {
 
 /**
  * Valores por defecto de las políticas del host. El SPEC §6.5 no los fija; son
- * ajustables por módulo y se revisan con las mediciones de T35.
+ * ajustables por módulo. Calibrados (G1, 2026-11-21, POCO F5 Pro en Wi‑Fi, zonatmo y
+ * m440): peticiones de 59–1266 ms (p90 ≈ 1,3 s), concurrencia real ≤ 2; se mantienen.
  */
 export const HOST_DEFAULTS = {
   timeoutMs: 15_000,
   maxConcurrent: 4,
   minDelayMs: 250,
 } as const;
+
+/** Límites de `network.minDelayMs` del manifest (G6): nunca más rápido que el host. */
+export const MODULE_MIN_DELAY_RANGE = { min: HOST_DEFAULTS.minDelayMs, max: 5_000 } as const;
 
 function createMemorySettings(): ModuleSettings {
   const values = new Map<string, string>();

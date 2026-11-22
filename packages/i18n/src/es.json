@@ -143,6 +143,7 @@
   "gallery.component.chapterRow": "fila de capítulo",
   "gallery.component.header": "cabecera",
   "gallery.component.bottomNav": "barra inferior",
+  "gallery.component.sideRail": "riel lateral (TV)",
   "gallery.component.settingsRow": "fila de ajustes",
   "gallery.component.switch": "interruptor",
   "gallery.component.sheet": "hoja y diálogo",

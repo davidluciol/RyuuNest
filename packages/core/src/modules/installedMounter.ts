@@ -71,6 +71,9 @@ export function createInstalledMounter(deps: InstalledMounterDeps): ModuleMounte
             http,
             clock: { now: () => Date.now() },
             permissions: pkg.manifest.permissions,
+            ...(pkg.manifest.network?.minDelayMs === undefined
+              ? {}
+              : { minDelayMs: pkg.manifest.network.minDelayMs }),
             ...(clearances === undefined ? {} : { clearances }),
           });
           const handle = await createModuleApi({

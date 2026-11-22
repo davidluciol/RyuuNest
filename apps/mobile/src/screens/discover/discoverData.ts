@@ -27,6 +27,7 @@ import {
 import { openAppDatabase } from "../../data/appDatabase";
 import { isNativePlatform } from "../../data/backupFilesPort";
 import { createFetchHttp } from "../../data/fetchHttp";
+import { moduleHttp } from "../../data/timedHttp";
 import { appClearances } from "../../data/appChallenge";
 import { createInstalledMounter, type ModuleMounter } from "../../data/moduleMounter";
 import {
@@ -470,7 +471,7 @@ export async function resolveDiscoverSource(): Promise<DiscoverDataSource> {
   if (driver === null || !isNativePlatform()) return createSampleDiscoverSource();
   return createInstalledDiscoverSource({
     driver,
-    http: createFetchHttp(),
+    http: moduleHttp(createFetchHttp()),
     loader: createFunctionScriptLoader(),
     ...(appClearances === undefined ? {} : { clearances: appClearances }),
   });

@@ -341,6 +341,14 @@ export default function GalleryScreen() {
         <BottomNav active="library" disabled />
         <BottomNav active="home" dots={["sources"]} />
 
+        <Text style={styles.groupLabel}>{t("gallery.component.sideRail")}</Text>
+        <View testID="gallery-side-rail">
+          <BottomNav variant="rail" active="library" />
+        </View>
+        <Text style={styles.muted}>{t("gallery.button.disabled")}</Text>
+        <BottomNav variant="rail" active="library" disabled />
+        <BottomNav variant="rail" active="home" dots={["sources"]} />
+
         <Text style={styles.groupLabel}>{t("gallery.component.settingsRow")}</Text>
         <SettingsRow label={t("gallery.settings.label")} hint={t("gallery.settings.value")} />
 

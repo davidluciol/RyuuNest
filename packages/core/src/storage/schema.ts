@@ -5,12 +5,12 @@
  * el documento. Se añade una tabla `kv` para el puerto `Storage` clave-valor que ya usa
  * la instalación de módulos (T12–T15): el SPEC describe las tablas relacionales de la
  * biblioteca, pero no dónde viven las filas JSON de repos y módulos mientras el registro
- * no tenga su propio API. Anotado en `MEMORY.md` (P-55); si esas tablas dejan de
- * necesitarlas, se retira `kv`.
+ * no tenga su propio API. Anotado en `MEMORY.md` (P-55). La migración 6 (G2) las pasa a
+ * `repo`/`module` y retira `kv`.
  */
 
 /** Versión del esquema: sube con cada migración nueva (SPEC §8.1). */
-export const SCHEMA_VERSION = 5;
+export const SCHEMA_VERSION = 6;
 
 /** Tablas, claves y valores por defecto del SPEC §8.1. */
 const TABLAS: readonly string[] = [
@@ -67,7 +67,7 @@ const INDICES: readonly string[] = [
   "CREATE INDEX IF NOT EXISTS idx_progress_recent ON progress(updated_at DESC)",
 ];
 
-/** Casa del puerto `Storage` clave-valor (ver la nota de la cabecera). */
+/** Casa del puerto `Storage` clave-valor (ver la nota de la cabecera); la retira la migración 6. */
 const KV: readonly string[] = [
   "CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL)",
 ];
@@ -134,4 +134,55 @@ export const MIGRATION_4: readonly string[] = [
   tag TEXT NOT NULL, tag_norm TEXT NOT NULL,
   PRIMARY KEY (folder_id, tag_norm)
 )`,
+];
+
+/**
+ * Copia (upsert) las filas JSON de repos y módulos de `source` —una tabla o subconsulta con
+ * columnas `key` y `value` con la forma de las filas de `kv`— a `repo`/`module` (G2). La
+ * comparten la migración 6 (`FROM kv`) y `SqliteStorage` (`FROM (SELECT ? AS key, ? AS value)`),
+ * así que una fila migrada y una escrita hoy quedan igual. `data` guarda el JSON tal cual
+ * (es lo que leen los registros); las columnas del SPEC son su proyección. `repo_id` solo se
+ * enlaza si el repo existe: un módulo sobrevive a que se borre su repo (RF-8).
+ */
+export function upsertRepo(source: string): string {
+  return `INSERT INTO repo (id, url, name, added_at, data)
+  SELECT substr(key, 6), COALESCE(json_extract(value, '$.url'), substr(key, 6)),
+    json_extract(value, '$.name'), COALESCE(json_extract(value, '$.addedAt'), 0), value
+  FROM ${source} WHERE substr(key, 1, 5) = 'repo:' AND json_valid(value)
+  ON CONFLICT (id) DO UPDATE SET url = excluded.url, name = excluded.name,
+    added_at = excluded.added_at, data = excluded.data`;
+}
+
+/** Ver `upsertRepo`. */
+export function upsertModule(source: string): string {
+  return `INSERT INTO module (id, version, repo_id, runtime, kinds, lang, nsfw, enabled, installed_at, last_error, data)
+  SELECT substr(key, 8), COALESCE(json_extract(value, '$.version'), ''),
+    (SELECT r.id FROM repo r WHERE r.id = json_extract(value, '$.repoUrl')),
+    COALESCE(json_extract(value, '$.runtime'), ''), COALESCE(json_extract(value, '$.kinds'), '[]'),
+    json_extract(value, '$.lang'), COALESCE(json_extract(value, '$.nsfw'), 0),
+    COALESCE(json_extract(value, '$.enabled'), 1), COALESCE(json_extract(value, '$.installedAt'), 0),
+    json_extract(value, '$.lastError'), value
+  FROM ${source} WHERE substr(key, 1, 7) = 'module:' AND json_valid(value)
+  ON CONFLICT (id) DO UPDATE SET version = excluded.version, repo_id = excluded.repo_id,
+    runtime = excluded.runtime, kinds = excluded.kinds, lang = excluded.lang, nsfw = excluded.nsfw,
+    enabled = excluded.enabled, installed_at = excluded.installed_at,
+    last_error = excluded.last_error, data = excluded.data`;
+}
+
+/**
+ * Migración 6 (G2): las filas JSON de repos y módulos pasan de `kv` a las tablas `repo` y
+ * `module` del SPEC §8.1, que ya existían vacías. Se añaden `data` (el JSON completo) y
+ * `repo.index_json` (el `index.json` tal cual llegó, T38) y se retira `kv`. Va en una sola
+ * transacción (`migrate`): si una fila no cabe, no se borra nada. Se descartan solo filas que
+ * los registros ya no podían leer (JSON inválido) y un índice sin su repo.
+ */
+export const MIGRATION_6: readonly string[] = [
+  "ALTER TABLE repo ADD COLUMN data TEXT",
+  "ALTER TABLE repo ADD COLUMN index_json TEXT",
+  "ALTER TABLE module ADD COLUMN data TEXT",
+  upsertRepo("kv"),
+  `UPDATE repo SET index_json = (SELECT value FROM kv WHERE key = 'repoIndex:' || repo.id)
+   WHERE EXISTS (SELECT 1 FROM kv WHERE key = 'repoIndex:' || repo.id)`,
+  upsertModule("kv"),
+  "DROP TABLE kv",
 ];

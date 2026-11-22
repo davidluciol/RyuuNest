@@ -108,6 +108,28 @@ describe("createInstalledMounter", () => {
     await expect(mounter.mount("ausente")).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 
+  it("aplica la pausa entre peticiones que declara el manifest (G6)", async () => {
+    const driver = await openMigratedDriver();
+    const storage = new SqliteStorage(driver);
+    const manifest = { ...MANIFEST, network: { minDelayMs: 600 } };
+    await storage.set(moduleKey("ejemplo"), JSON.stringify(installedPackage({ manifest })));
+    let host: Host | undefined;
+    const loader = new FakeScriptLoader({
+      "module.js": (h) => {
+        host = h;
+        return api;
+      },
+    });
+    const mounter = createInstalledMounter({ driver, http: new StubHttp(), loader });
+
+    await mounter.mount("ejemplo");
+    const startedAt = Date.now();
+    await host?.fetch("https://sitio.test/a");
+    await host?.fetch("https://sitio.test/b");
+    // Con el defecto del host (250 ms) serían ~250 ms.
+    expect(Date.now() - startedAt).toBeGreaterThanOrEqual(550);
+  });
+
   it("pasa las verificaciones guardadas al host del módulo (F100)", async () => {
     const driver = await openMigratedDriver();
     const storage = new SqliteStorage(driver);

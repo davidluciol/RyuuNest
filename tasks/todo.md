@@ -751,32 +751,47 @@ Dep: F52, F53 · XS
 - [ ] 🧍 Confirmar que `ADR-0002` fija versiones Expo/RN/RNTV y el tope de imágenes medido; marcar T05 ✅
 - Aparte (no bloquea): MiBox 4 pospuesta (P-43); revalidar RNF-1 en release.
 
-### T33 Pruebas de seguridad `[Sec · Alta · N4]`
+### T33 ✅ Pruebas de seguridad `[Sec · Alta · N4]` (PR #164, 2026-11-21)
 
 Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre de la API (en paralelo)
 
-- [ ] Cada amenaza de SPEC §7.2 (zip-slip, bomba, hash, manifest, respaldo malicioso) tiene una prueba que falla si se quita la mitigación
-- [ ] Un deep link `ryuunest://add-repo?url=…` solo abre la confirmación, no instala (AC-8)
-- [ ] Límites de tamaño/archivos cubiertos
+- [x] Cada amenaza de SPEC §7.2 tiene prueba (`core/tests/security/`); 19 mitigaciones quitadas una a una, todas dejan rojo. Arreglada la bomba zip con tamaños declarados (P-189)
+- [x] Un deep link `ryuunest://add-repo?url=…` no instala (AC-8; `apps/mobile/tests/security/deepLink.test.ts`). Ojo: no hay manejador, así que tampoco abre la confirmación → tarea G5
+- [x] Límites de tamaño/archivos cubiertos
 - Verif: `pnpm --filter @ryuunest/core test -- security` + revisar correspondencia amenaza↔prueba
 
 
 ### G1 Calibrar políticas del host (T35) `[BE · Intermedia · N3]`
 
-- [ ] Calibrar `HOST_DEFAULTS` (15 s, 4, 250 ms) con mediciones; 🧍 PR de prueba que rompe el contrato y hace fallar el CI
+- [x] Instrumento (2026-11-21): `apps/mobile/src/data/timedHttp.ts` deja en la consola de desarrollo `[host-timing] {host,status,startedAt,ms}` por petición de módulo (Descubrir y lector; solo host, sin ruta)
+- [x] Calibrado en el POCO (2026-11-21, Wi‑Fi, zonatmo + m440, ~20 peticiones): 59–1266 ms, p90 ≈ 1,3 s, concurrencia real ≤ 2, separación mínima 257 ms → **se mantienen 15 s / 4 / 250 ms** (humano). m440 dio dos 403 con ~250 ms entre peticiones: ajustar por módulo si se repite
+- [ ] 🧍 PR de prueba que rompe el contrato y hace fallar el CI
+
+- [x] TIMEOUT de m440 al «Retomar» investigado en el POCO (2026-11-22): tras ~4–5 min sin tráfico al host, la primera petición tarda 124–154 s y acaba en 200; dos peticiones colgadas acabaron en el mismo milisegundo → conexión reutilizada que el servidor ya cerró. React Native crea OkHttp sin límites (`connectTimeout/readTimeout/writeTimeout` = 0, `OkHttpClientProvider.kt`) y el `TIMEOUT` del host (15 s) no cancela la petición, así que «Reintentar» va por la misma conexión muerta. No es la cola del host: el temporizador empieza tras `acquire`/`respectDelay`
+- [x] Arreglo decidido (humano, 2026-11-22): OkHttp nativo con ping + `network.minDelayMs` en el manifest → **G6**
+
+### G6 OkHttp con ping y pausa por módulo `[BE · Alta · N4]` (PR #166 → `feature/general-lote`; Models PR #17)
+
+- [x] Plugin `apps/mobile/plugins/withOkHttpPing.js` (ping 10 s, conexión 15 s, lectura 30 s; conserva caché y cookies) + test + prebuild comprobado
+- [x] `network.minDelayMs?` (250–5000 ms) en manifest, SDK y `installedMounter`; SPEC §6.1 y ADR-0003
+- [x] m440 0.2.2 declara 600 ms (Models PR #17); tests 5/5
+- [ ] PR de `index.json` en Models con m440 0.2.2 (tras fusionar #17 y #166)
+- [x] 🧍 APK EAS `preview` (build `b345fb0e`) en el POCO (2026-11-22): tras 5,5 min sin tráfico, «Retomar» de m440 abre la página en 1,2 s y 0,4 s (2/2); en Expo Go, sin el arreglo, 124–154 s (2/2). Los 600 ms de m440 se comprobarán al publicar 0.2.2 en `index.json`
 
 ### G2 Plataforma: deudas del núcleo `[BE · Intermedia · N3]`
 
-- [ ] La app nativa aún no rellena `HttpResponse.url` (P-74)
-- [ ] Migrar las filas `kv` de repos/módulos a tablas `repo`/`module` y retirar `kv`
-- [ ] Si los `paths` entre paquetes se complican, migrar a *project references* de TypeScript
+- [x] La app nativa rellena `HttpResponse.url` (P-74): visto en el POCO (`finalUrl: "same"` en `[host-timing]`, no `none`); sin redirección real a mano, pero el valor llega de `XMLHttpRequest.responseURL`
+- [x] Filas `kv` migradas a `repo`/`module` y `kv` retirada (migración 6, PR #163, P-189)
+- [x] POCO (2026-11-21): tras la migración 6 siguen el repo RyuuNest-Models y sus 4 módulos; «Sincronizar» funciona
+- [ ] Si los `paths` entre paquetes se complican, migrar a *project references* de TypeScript (condicional: hoy no hace falta)
 - [ ] `react-native-tvos` sin confirmar contra SDK 57 (pospuesto con P-43)
 
 ### F22 Riel lateral + navegación espacial + foco `[FE · Alta · N4]`
 
 Dep: P-B · M · `apps/mobile/src/tv/*`
 
-- [ ] Foco siempre visible (anillo 2 px `accent`, separación 2 px); escala 1,25×; márgenes seguros; navegación completa con D-pad (incluye el ítem pendiente de F33: revisar navegación con teclado/D-pad y legibilidad en densidad TV)
+- [x] Riel lateral, foco 2 px `accent`, ×1,25 en el riel, márgenes seguros, teclado en web (PR #165; Playwright `tests/e2e/tvRail.cjs` a 960/1440/426)
+- [ ] Preguntas abiertas (PR #165): ancho del riel TV (hoy 240 de escritorio), márgenes seguros (48×32), zoom del elemento enfocado vs escalar tamaños, escalar ×1,25 el resto de pantallas, `isTvLike()` del primer uso → `isTvDevice`
 - Verif: Playwright (foco con teclado) · 🧍 recorrer los 5 destinos en la MiBox 4
 
 
@@ -784,6 +799,7 @@ Dep: P-B · M · `apps/mobile/src/tv/*`
 
 Dep: F32 · S · dispositivos
 
+- [x] POCO (2026-11-21): recorrido F32 con M440 (búsqueda, ficha con portada, lector) en verde; PSS ≈ 828 MB en precarga. m440 da 403 a ~250 ms entre peticiones y un TIMEOUT al retomar (ver MEMORY §4)
 - [ ] Repetir el recorrido de F32 en la MiBox 4 (piso de rendimiento, Android 9, 2 GB) y en el POCO F5 Pro cuando haya módulo y red; anotar diferencias frente al S25 Ultra.
 - [ ] Medir la memoria del lector con `adb shell dumpsys meminfo` durante la precarga (fija `READER_IMAGE_BUDGET_MB`, P-90) y AC-6 (60 páginas verticales sin cierres) en la MiBox 4.
 - Verif: 🧍 dispositivos.
@@ -791,18 +807,39 @@ Dep: F32 · S · dispositivos
 
 ### F28 Playwright por pantalla + `DIFFS.md` + lista de 20 s (AC-12) — restante `[FE/QA · Baja · N2]` 🧍
 
-- [ ] 🧍 Capturas en POCO F5 Pro y MiBox 4 (AC-12 no se cierra sin dispositivo)
+- [x] 🧍 POCO F5 Pro (2026-11-22): las 8 pantallas capturadas y comparadas con `screen.png`; diferencias en `DIFFS.md` (fila AC-12)
+- [ ] 🧍 Capturas en la MiBox 4 (AC-12 no se cierra sin ella)
 
 
 ### G3 Medidas con APK compilado `[Ops · Baja · N2]` 🧍
 
-- [ ] 🧍 Medir el tope de imágenes (P-45) y revalidar RNF-1 (<3 s) con APK compilado (antes: POCO 4580 ms, S25 1940 ms, MiBox 5600 ms); cierra T05
+- [x] 🧍 RNF-1 con APK en el POCO (2026-11-22): ~1,8 s hasta Guarida útil (antes, en desarrollo, 4580 ms); primer frame 274–333 ms (`am start -W`). Ojo: Guarida vacía (el APK tiene datos aparte). PSS del lector ≈ 491 MB (Expo Go: 758–828 MB)
+- [ ] 🧍 Medir el tope de imágenes (P-45): `ImageCapPanel` no está montado en ninguna pantalla; decidir dónde exponerlo. Cierra T05
 
 ### G4 Proceso y limpieza `[Ops · Baja · N1]` 🧍
 
 - [ ] 🧍 Definir el proceso Scrum en una sesión aparte (AGENTS.md §16) · [ ] 🧍 Reservar el org npm `@ryuunest` · [ ] 🧍 Decidir qué hacer con las ramas remotas ya fusionadas
-- [ ] Revisar o descartar `stash@{0}` y borrar el worktree residual de F07 en `~/.local/share/opencode/worktree/`
+- [x] `stash@{0}` descartado y worktree residual de F07 borrado (2026-11-21, con permiso del humano)
 - [ ] `AGENTS.md` pide una entrada de bitácora por sesión (P-15) que este archivo ya no lleva: decidir dónde va
+
+### Hallazgo (2026-11-21) · ZonaTMO falla en algunas fichas `[BE · Baja · N2]` (repo `RyuuNest-Models`)
+
+- [ ] «El Mejor Ingeniero del Mundo» (`/library/manhwa/30664/…`) da `PARSE`: falta `h1.element-title`. Revisar el selector del módulo con un fixture guardado
+
+### G5 Manejador del enlace `ryuunest://add-repo` `[FE · Intermedia · N3]` (de T33)
+
+- [ ] Hoy Expo Router manda el enlace a una ruta inexistente. Abrir Portales con la hoja «Añadir repositorio» y la URL puesta (SPEC §7.2), sin instalar; ampliar `deepLink.test.ts`
+
+### V2 · Dependencias obsoletas de `eas-cli` `[Ops · Baja · N1]` (v2)
+
+> Al ejecutar `npx eas-cli@latest login` (2026-11-22), npm avisó de paquetes obsoletos. Son dependencias **del propio `eas-cli`** (lo descarga `npx`), no de RyuuNest: no se arreglan en este repo; se revisan cuando Expo publique un `eas-cli` que las actualice.
+
+- [ ] `inflight@1.0.6` (pierde memoria) → sustituto `lru-cache`
+- [ ] `rimraf@2.4.5` → v4 o superior
+- [ ] `glob@6.0.4` y `glob@10.5.0` (vulnerabilidades conocidas) → versión actual
+- [ ] `http-call@5.3.0` → `@heroku/http-call`
+- [ ] `uuid@7.0.3` y `uuid@8.3.2` → `uuid@11` (CommonJS) o la última (ESM)
+- [x] Ninguno está en `pnpm-lock.yaml` de RyuuNest (2026-11-22: solo `glob@13.0.6` y `glob@14.0.3`, vigentes)
 
 ### 🚩 Checkpoints `[Ops · Baja · N1]`
 
