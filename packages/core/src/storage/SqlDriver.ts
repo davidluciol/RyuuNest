@@ -60,8 +60,23 @@ export function escapeLike(valor: string): string {
  * Ejecuta una acción dentro de una transacción SQLite: `BEGIN`, y `COMMIT` solo si todo va
  * bien (si no, `ROLLBACK` y se propaga el fallo). Los cambios de `PRAGMA user_version` también
  * son transaccionales, así que una migración a medias no deja versión nueva.
+ *
+ * Las transacciones del mismo driver van en cola: la conexión es una sola y dos `BEGIN`
+ * concurrentes (p. ej. ficha y lector guardando la serie a la vez) fallan con «cannot start a
+ * transaction within a transaction». No es reentrante: `accion` no debe abrir otra transacción.
  */
-export async function withTransaction<T>(driver: SqlDriver, accion: () => Promise<T>): Promise<T> {
+const colas = new WeakMap<SqlDriver, Promise<unknown>>();
+
+export function withTransaction<T>(driver: SqlDriver, accion: () => Promise<T>): Promise<T> {
+  const turno = (colas.get(driver) ?? Promise.resolve()).then(() => ejecutar(driver, accion));
+  colas.set(
+    driver,
+    turno.catch(() => undefined),
+  );
+  return turno;
+}
+
+async function ejecutar<T>(driver: SqlDriver, accion: () => Promise<T>): Promise<T> {
   await driver.exec("BEGIN");
   try {
     const resultado = await accion();
