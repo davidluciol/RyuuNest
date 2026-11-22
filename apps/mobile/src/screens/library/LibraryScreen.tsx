@@ -2,12 +2,14 @@ import { useMemo, useState } from "react";
 import { FlatList, Text, View, useWindowDimensions } from "react-native";
 import {
   activeColors,
+  gridMaxWidth,
   layoutForWidth,
   spacing,
   touchTarget,
   typography,
 } from "@ryuunest/ui-tokens";
 
+import { contentColumnStyle } from "../../components/cardStyles";
 import LibraryCard from "../../components/LibraryCard";
 import { libraryColumnsFor } from "../../components/libraryCardStyles";
 import Chip from "../../components/Chip";
@@ -219,7 +221,8 @@ export default function LibraryScreen({
   }
 
   return (
-    <View style={styles.screen} testID="screen-library">
+    // F43 W17: tope centrado en escritorio; la rejilla crece por columnas dentro de él.
+    <View style={[styles.screen, contentColumnStyle(gridMaxWidth)]} testID="screen-library">
       {/* Búsqueda siempre visible (RF-26). */}
       <View style={[styles.searchWrap, { paddingHorizontal: layout.margin }]}>
         <TextField

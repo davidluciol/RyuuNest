@@ -1,5 +1,6 @@
 import {
   coverAspectRatio,
+  gridMaxWidth,
   layoutForWidth,
   radii,
   spacing,
@@ -162,9 +163,15 @@ export function libraryCardMenuStyle(): LibraryCardMenuStyleShape {
   };
 }
 
-/** Columnas de la cuadrícula de Biblioteca: 3 si la tarjeta conserva su ancho mínimo; si no, 2. */
-export function libraryColumnsFor(width: number): 2 | 3 {
-  const { margin, gap } = layoutForWidth(width);
-  const cardWidth = (width - 2 * margin - 2 * gap) / 3;
-  return cardWidth >= LIBRARY_CARD_MIN_WIDTH ? 3 : 2;
+/**
+ * Columnas de la cuadrícula de Biblioteca: las más del tramo (móvil 3, tablet 6, escritorio 8;
+ * F43 W17) en las que la tarjeta conserva su ancho mínimo dentro de `gridMaxWidth`; como poco, 2.
+ */
+export function libraryColumnsFor(width: number): number {
+  const { margin, gap, columns } = layoutForWidth(width);
+  const inner = Math.min(width, gridMaxWidth) - 2 * margin;
+  for (let count = columns.max; count > 2; count--) {
+    if ((inner - (count - 1) * gap) / count >= LIBRARY_CARD_MIN_WIDTH) return count;
+  }
+  return 2;
 }

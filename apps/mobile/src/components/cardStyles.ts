@@ -37,6 +37,7 @@ export interface ContentColumnStyleShape {
   alignSelf: "center";
 }
 
-export function contentColumnStyle(): ContentColumnStyleShape {
-  return { width: "100%", maxWidth: contentMaxWidth, alignSelf: "center" };
+/** Columna centrada con tope de ancho; Guarida y Tesoros usan `gridMaxWidth` (F43 W17). */
+export function contentColumnStyle(maxWidth: number = contentMaxWidth): ContentColumnStyleShape {
+  return { width: "100%", maxWidth, alignSelf: "center" };
 }

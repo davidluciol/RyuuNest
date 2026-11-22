@@ -1,7 +1,8 @@
 import { useWindowDimensions, ScrollView, View } from "react-native";
 import { Flame, History, Gem } from "../../icons";
-import { activeColors, layoutForWidth, spacing } from "@ryuunest/ui-tokens";
+import { activeColors, gridMaxWidth, layoutForWidth, spacing } from "@ryuunest/ui-tokens";
 
+import { contentColumnStyle } from "../../components/cardStyles";
 import ContinueCard from "../../components/ContinueCard";
 import EmptyState from "../../components/EmptyState";
 import FolderCard from "../../components/FolderCard";
@@ -73,6 +74,7 @@ export default function HomeScreen({
       style={styles.screen}
       contentContainerStyle={[
         styles.content,
+        contentColumnStyle(gridMaxWidth), // F43 W17: tope centrado en escritorio
         { paddingHorizontal: layout.margin, gap: layout.gap * 2 },
       ]}
     >

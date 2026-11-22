@@ -15,6 +15,7 @@ export { radii, type RadiusToken } from "./radii";
 export {
   breakpoints,
   contentMaxWidth,
+  gridMaxWidth,
   coverAspectRatio,
   densities,
   progressBarHeight,

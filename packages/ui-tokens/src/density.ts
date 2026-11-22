@@ -51,6 +51,12 @@ export const readerMaxWidth = 720 as const;
  */
 export const contentMaxWidth = 720 as const;
 
+/**
+ * F43 W17 — tope de ancho de las pantallas con rejilla (Guarida, Tesoros) en escritorio: la
+ * rejilla crece por columnas hasta aquí y después se centra (decisión del humano, 2026-11-21).
+ */
+export const gridMaxWidth = 1100 as const;
+
 /** Alto de la barra de progreso de portada (RF-41: 3 px). */
 export const progressBarHeight = 3 as const;
 
