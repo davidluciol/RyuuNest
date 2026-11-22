@@ -48,6 +48,29 @@ export function eventWhen(at: number, now: number): string {
   return t("diagnostics.when.daysAgo", { days, time });
 }
 
+export interface EventGroup {
+  /** El más reciente del grupo (la lista llega del más nuevo al más viejo). */
+  entry: LogEntry;
+  count: number;
+}
+
+/** F43 R6: junta eventos con el mismo nivel, código y mensaje en una fila «×N». */
+export function groupEvents(events: readonly LogEntry[]): EventGroup[] {
+  const groups = new Map<string, EventGroup>();
+  for (const entry of events) {
+    const key = JSON.stringify([entry.level, entry.code, entry.message]);
+    const group = groups.get(key);
+    if (group === undefined) groups.set(key, { entry, count: 1 });
+    else group.count += 1;
+  }
+  return [...groups.values()];
+}
+
+/** «×12 · Hoy · 14:32» si se repite; si no, solo el cuándo. */
+export function groupWhen(count: number, when: string): string {
+  return count > 1 ? t("diagnostics.when.repeated", { count, when }) : when;
+}
+
 export interface DetailLine {
   label: string;
   value: string;

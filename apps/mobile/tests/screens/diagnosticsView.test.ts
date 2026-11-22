@@ -7,6 +7,8 @@ import {
   eventDetailLines,
   eventLevel,
   eventWhen,
+  groupEvents,
+  groupWhen,
 } from "../../src/screens/settings/diagnostics/diagnosticsView";
 
 /**
@@ -86,5 +88,36 @@ describe("confirmClearMessage", () => {
   it("usa singular y plural", () => {
     expect(confirmClearMessage(1)).toContain("el evento guardado");
     expect(confirmClearMessage(4)).toContain("los 4 eventos guardados");
+  });
+});
+
+describe("F43 R6 — eventos repetidos agrupados", () => {
+  it("junta mismo nivel, código y mensaje; conserva el más reciente y el orden", () => {
+    const events = [
+      entry({ id: 5, code: "a", message: "x" }),
+      entry({ id: 4, code: "b", message: "y" }),
+      entry({ id: 3, code: "a", message: "x" }),
+      entry({ id: 2, code: "a", message: "otro" }),
+      entry({ id: 1, code: "a", message: "x", level: "warn" }),
+    ];
+    expect(groupEvents(events).map((g) => [g.entry.id, g.count])).toEqual([
+      [5, 2],
+      [4, 1],
+      [2, 1],
+      [1, 1],
+    ]);
+  });
+
+  it("«×N · cuándo» solo si se repite", () => {
+    expect(groupWhen(1, "Hoy · 14:32")).toBe("Hoy · 14:32");
+    expect(groupWhen(12, "Hoy · 14:32")).toBe(t("diagnostics.when.repeated", { count: 12, when: "Hoy · 14:32" }));
+    expect(t("diagnostics.when.repeated", { count: 12, when: "Hoy · 14:32" })).toBe("×12 · Hoy · 14:32");
+  });
+});
+
+describe("F43 R7 — formatos sin jerga", () => {
+  it("«Texto» y «Datos»", () => {
+    expect(t("diagnostics.format.text")).toBe("Texto");
+    expect(t("diagnostics.format.json")).toBe("Datos");
   });
 });

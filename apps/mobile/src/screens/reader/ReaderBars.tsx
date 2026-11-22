@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { activeColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { textStyle } from "../../components/textStyle";
-import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, List, Rows3 } from "../../icons";
+import { ArrowLeft, ChevronDown, ChevronRight, List, Rows3 } from "../../icons";
 import { t } from "../../i18n";
 import { percentOf } from "../../reader/readerLayout";
 import { readerBarStyle, readerIconButtonStyle } from "./readerStyles";
@@ -75,8 +75,6 @@ export interface ReaderBottomBarProps {
   modeLabel: string;
   /** Número del capítulo siguiente; `undefined` si no tiene número. */
   next: { number: number | undefined } | null;
-  onPrevious: () => void;
-  onNext: () => void;
   onOpenMode: () => void;
   onOpenNextChapter: () => void;
 }
@@ -86,8 +84,6 @@ export function ReaderBottomBar({
   pageTotal,
   modeLabel,
   next,
-  onPrevious,
-  onNext,
   onOpenMode,
   onOpenNextChapter,
 }: ReaderBottomBarProps) {
@@ -103,40 +99,16 @@ export function ReaderBottomBar({
         { paddingBottom: insets.bottom + spacing.sm },
       ]}
     >
-      <View style={styles.pageRow}>
-        <FocusPressable
-          accessibilityRole="button"
-          accessibilityLabel={t("reader.page.previous")}
-          accessibilityState={{ disabled: pageIndex === 0 }}
-          disabled={pageIndex === 0}
-          onPress={onPrevious}
-          style={[readerIconButtonStyle(), styles.pageButton, pageIndex === 0 && styles.disabled]}
-        >
-          <ChevronLeft size={spacing.lg} color={colors.textPrimary} />
-        </FocusPressable>
-        <View style={styles.progress}>
-          <View style={styles.progressLabels}>
-            <Text style={styles.pageLabel}>
-              {pageTotal === null
-                ? t("reader.page.indicatorOpen", { current: pageIndex + 1 })
-                : t("reader.page.indicator", { current: pageIndex + 1, total: pageTotal })}
-            </Text>
-            {percent === null ? null : (
-              <Text style={styles.percent}>{t("reader.progress.percent", { percent })}</Text>
-            )}
-          </View>
-          <View style={styles.track}>
-            <View style={[styles.fill, { width: `${percent ?? 0}%` }]} />
-          </View>
+      {/* F43: un solo indicador (N17) y sin ‹ ›, que repetían el toque lateral y deslizar (R11). */}
+      <View style={styles.progress}>
+        <Text style={styles.pageLabel}>
+          {pageTotal === null
+            ? t("reader.page.indicatorOpen", { current: pageIndex + 1 })
+            : t("reader.page.indicator", { current: pageIndex + 1, total: pageTotal })}
+        </Text>
+        <View style={styles.track}>
+          <View style={[styles.fill, { width: `${percent ?? 0}%` }]} />
         </View>
-        <FocusPressable
-          accessibilityRole="button"
-          accessibilityLabel={t("reader.page.next")}
-          onPress={onNext}
-          style={[readerIconButtonStyle(), styles.pageButton]}
-        >
-          <ChevronRight size={spacing.lg} color={colors.textPrimary} />
-        </FocusPressable>
       </View>
       <View style={styles.actionRow}>
         <FocusPressable
@@ -207,13 +179,8 @@ const styles = themedStyles(() => ({
     backgroundColor: colors.surface,
   },
   pillLabel: { ...textStyle(typography.labelMd), color: colors.textPrimary },
-  pageRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
-  pageButton: { backgroundColor: colors.surface },
-  disabled: { opacity: 0.4 },
   progress: { flex: 1, gap: spacing.xxs },
-  progressLabels: { flexDirection: "row", justifyContent: "space-between" },
   pageLabel: { ...textStyle(typography.labelMd), color: colors.textPrimary },
-  percent: { ...textStyle(typography.labelMd), color: colors.progress },
   track: {
     height: spacing.xxs,
     borderRadius: radii.pill,
