@@ -763,13 +763,14 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 
 ### G1 Calibrar políticas del host (T35) `[BE · Intermedia · N3]`
 
-- [ ] Calibrar `HOST_DEFAULTS` (15 s, 4, 250 ms) con mediciones; 🧍 PR de prueba que rompe el contrato y hace fallar el CI
+- [x] Instrumento (2026-11-21): `apps/mobile/src/data/timedHttp.ts` deja en la consola de desarrollo `[host-timing] {host,status,startedAt,ms}` por petición de módulo (Descubrir y lector; solo host, sin ruta)
+- [ ] Calibrar `HOST_DEFAULTS` (15 s, 4, 250 ms) con las mediciones del POCO; 🧍 PR de prueba que rompe el contrato y hace fallar el CI
 
 ### G2 Plataforma: deudas del núcleo `[BE · Intermedia · N3]`
 
-- [ ] La app nativa aún no rellena `HttpResponse.url` (P-74)
+- [ ] La app nativa aún no rellena `HttpResponse.url` (P-74): en código ya llega (`XMLHttpRequest.responseURL` de RN → whatwg-fetch `url` → `createFetchHttp`, con test); falta verlo en el POCO con una redirección
 - [ ] Migrar las filas `kv` de repos/módulos a tablas `repo`/`module` y retirar `kv`
-- [ ] Si los `paths` entre paquetes se complican, migrar a *project references* de TypeScript
+- [ ] Si los `paths` entre paquetes se complican, migrar a *project references* de TypeScript (condicional: hoy no hace falta)
 - [ ] `react-native-tvos` sin confirmar contra SDK 57 (pospuesto con P-43)
 
 ### F22 Riel lateral + navegación espacial + foco `[FE · Alta · N4]`
@@ -801,7 +802,7 @@ Dep: F32 · S · dispositivos
 ### G4 Proceso y limpieza `[Ops · Baja · N1]` 🧍
 
 - [ ] 🧍 Definir el proceso Scrum en una sesión aparte (AGENTS.md §16) · [ ] 🧍 Reservar el org npm `@ryuunest` · [ ] 🧍 Decidir qué hacer con las ramas remotas ya fusionadas
-- [ ] Revisar o descartar `stash@{0}` y borrar el worktree residual de F07 en `~/.local/share/opencode/worktree/`
+- [x] `stash@{0}` descartado y worktree residual de F07 borrado (2026-11-21, con permiso del humano)
 - [ ] `AGENTS.md` pide una entrada de bitácora por sesión (P-15) que este archivo ya no lleva: decidir dónde va
 
 ### 🚩 Checkpoints `[Ops · Baja · N1]`
