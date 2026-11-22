@@ -35,16 +35,17 @@ function suiteDeConformidad(nombre: string, abrir: () => Promise<BajoPrueba>): v
     });
 
     it("guarda y recupera un valor, y sobreescribir reemplaza", async () => {
-      await actual.storage.set("repo:x", "primero");
-      await actual.storage.set("repo:x", "segundo");
+      await actual.storage.set("repo:x", '{"name":"primero"}');
+      await actual.storage.set("repo:x", '{"name":"segundo"}');
 
-      await expect(actual.storage.get("repo:x")).resolves.toBe("segundo");
+      await expect(actual.storage.get("repo:x")).resolves.toBe('{"name":"segundo"}');
     });
 
     it("distingue la cadena vacía de la ausencia de clave", async () => {
-      await actual.storage.set("setting:vacia", "");
+      await actual.storage.set("repo:x", "{}");
+      await actual.storage.set("repoIndex:x", "");
 
-      await expect(actual.storage.get("setting:vacia")).resolves.toBe("");
+      await expect(actual.storage.get("repoIndex:x")).resolves.toBe("");
     });
 
     it("borra una clave y deja las demás intactas", async () => {
@@ -85,10 +86,10 @@ function suiteDeConformidad(nombre: string, abrir: () => Promise<BajoPrueba>): v
     });
 
     it("un prefijo vacío cuenta como todas las claves", async () => {
-      await actual.storage.set("a", "1");
-      await actual.storage.set("b", "2");
+      await actual.storage.set("module:a", "1");
+      await actual.storage.set("module:b", "2");
 
-      await expect(claves(actual.storage, "")).resolves.toEqual(["a", "b"]);
+      await expect(claves(actual.storage, "")).resolves.toEqual(["module:a", "module:b"]);
     });
 
     it("los caracteres de comodín del prefijo no amplían el filtro", async () => {
