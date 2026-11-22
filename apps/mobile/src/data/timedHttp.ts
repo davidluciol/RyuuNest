@@ -7,6 +7,8 @@ export interface HttpTiming {
   status: number;
   startedAt: number;
   ms: number;
+  /** URL final que informó la plataforma (P-74): igual, otra o ninguna. Nunca se guarda la URL. */
+  finalUrl: "same" | "other" | "none";
 }
 
 /**
@@ -23,12 +25,14 @@ export function withTiming(
       const host = new URL(url).hostname.toLowerCase();
       const startedAt = now();
       let status = 0;
+      let finalUrl: HttpTiming["finalUrl"] = "none";
       try {
         const response = await http.request(url, init);
         status = response.status;
+        finalUrl = response.url === undefined ? "none" : response.url === url ? "same" : "other";
         return response;
       } finally {
-        report({ host, status, startedAt, ms: now() - startedAt });
+        report({ host, status, startedAt, ms: now() - startedAt, finalUrl });
       }
     },
   };
