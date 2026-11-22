@@ -768,7 +768,15 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 - [ ] 🧍 PR de prueba que rompe el contrato y hace fallar el CI
 
 - [x] TIMEOUT de m440 al «Retomar» investigado en el POCO (2026-11-22): tras ~4–5 min sin tráfico al host, la primera petición tarda 124–154 s y acaba en 200; dos peticiones colgadas acabaron en el mismo milisegundo → conexión reutilizada que el servidor ya cerró. React Native crea OkHttp sin límites (`connectTimeout/readTimeout/writeTimeout` = 0, `OkHttpClientProvider.kt`) y el `TIMEOUT` del host (15 s) no cancela la petición, así que «Reintentar» va por la misma conexión muerta. No es la cola del host: el temporizador empieza tras `acquire`/`respectDelay`
-- [ ] Decidir el arreglo del TIMEOUT tras inactividad (ver MEMORY §4)
+- [x] Arreglo decidido (humano, 2026-11-22): OkHttp nativo con ping + `network.minDelayMs` en el manifest → **G6**
+
+### G6 OkHttp con ping y pausa por módulo `[BE · Alta · N4]` (PR #166 → `feature/general-lote`; Models PR #17)
+
+- [x] Plugin `apps/mobile/plugins/withOkHttpPing.js` (ping 10 s, conexión 15 s, lectura 30 s; conserva caché y cookies) + test + prebuild comprobado
+- [x] `network.minDelayMs?` (250–5000 ms) en manifest, SDK y `installedMounter`; SPEC §6.1 y ADR-0003
+- [x] m440 0.2.2 declara 600 ms (Models PR #17); tests 5/5
+- [ ] PR de `index.json` en Models con m440 0.2.2 (tras fusionar #17 y #166)
+- [ ] 🧍 APK EAS `preview` en el POCO: retomar m440 tras 5 min sin tráfico responde en segundos y sin 403 (sirve también para G3)
 
 ### G2 Plataforma: deudas del núcleo `[BE · Intermedia · N3]`
 
