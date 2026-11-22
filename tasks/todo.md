@@ -764,13 +764,14 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 ### G1 Calibrar políticas del host (T35) `[BE · Intermedia · N3]`
 
 - [x] Instrumento (2026-11-21): `apps/mobile/src/data/timedHttp.ts` deja en la consola de desarrollo `[host-timing] {host,status,startedAt,ms}` por petición de módulo (Descubrir y lector; solo host, sin ruta)
-- [ ] Calibrar `HOST_DEFAULTS` (15 s, 4, 250 ms) con las mediciones del POCO; 🧍 PR de prueba que rompe el contrato y hace fallar el CI
+- [x] Calibrado en el POCO (2026-11-21, Wi‑Fi, zonatmo + m440, ~20 peticiones): 59–1266 ms, p90 ≈ 1,3 s, concurrencia real ≤ 2, separación mínima 257 ms → **se mantienen 15 s / 4 / 250 ms** (humano). m440 dio dos 403 con ~250 ms entre peticiones: ajustar por módulo si se repite
+- [ ] 🧍 PR de prueba que rompe el contrato y hace fallar el CI
 
 ### G2 Plataforma: deudas del núcleo `[BE · Intermedia · N3]`
 
-- [ ] La app nativa aún no rellena `HttpResponse.url` (P-74): en código ya llega (`XMLHttpRequest.responseURL` de RN → whatwg-fetch `url` → `createFetchHttp`, con test); falta verlo en el POCO con una redirección
+- [x] La app nativa rellena `HttpResponse.url` (P-74): visto en el POCO (`finalUrl: "same"` en `[host-timing]`, no `none`); sin redirección real a mano, pero el valor llega de `XMLHttpRequest.responseURL`
 - [x] Filas `kv` migradas a `repo`/`module` y `kv` retirada (migración 6, PR #163, P-189)
-- [ ] 🧍 Abrir la app en el POCO con la base existente y comprobar que repos y módulos siguen tras la migración 6
+- [x] POCO (2026-11-21): tras la migración 6 siguen el repo RyuuNest-Models y sus 4 módulos; «Sincronizar» funciona
 - [ ] Si los `paths` entre paquetes se complican, migrar a *project references* de TypeScript (condicional: hoy no hace falta)
 - [ ] `react-native-tvos` sin confirmar contra SDK 57 (pospuesto con P-43)
 
@@ -806,6 +807,10 @@ Dep: F32 · S · dispositivos
 - [ ] 🧍 Definir el proceso Scrum en una sesión aparte (AGENTS.md §16) · [ ] 🧍 Reservar el org npm `@ryuunest` · [ ] 🧍 Decidir qué hacer con las ramas remotas ya fusionadas
 - [x] `stash@{0}` descartado y worktree residual de F07 borrado (2026-11-21, con permiso del humano)
 - [ ] `AGENTS.md` pide una entrada de bitácora por sesión (P-15) que este archivo ya no lleva: decidir dónde va
+
+### Hallazgo (2026-11-21) · ZonaTMO falla en algunas fichas `[BE · Baja · N2]` (repo `RyuuNest-Models`)
+
+- [ ] «El Mejor Ingeniero del Mundo» (`/library/manhwa/30664/…`) da `PARSE`: falta `h1.element-title`. Revisar el selector del módulo con un fixture guardado
 
 ### G5 Manejador del enlace `ryuunest://add-repo` `[FE · Intermedia · N3]` (de T33)
 
