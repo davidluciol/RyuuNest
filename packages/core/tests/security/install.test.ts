@@ -54,6 +54,21 @@ function packageZip(extra: Record<string, Uint8Array> = {}): Uint8Array {
   });
 }
 
+/**
+ * Falsea el tamaño descomprimido que declara el directorio central para cada entrada
+ * (offset 24 de la cabecera `PK\x01\x02`). El contenido real no cambia.
+ */
+function forgeDeclaredSize(zip: Uint8Array, size: number): Uint8Array {
+  const forged = zip.slice();
+  const view = new DataView(forged.buffer);
+  for (let offset = 0; offset + 4 <= forged.length; offset += 1) {
+    if (view.getUint32(offset, true) === 0x02014b50) {
+      view.setUint32(offset + 24, size, true);
+    }
+  }
+  return forged;
+}
+
 /** El adaptador real, pero sin los topes previos a descomprimir (aísla al instalador). */
 function withoutAdapterLimits(): Archive {
   const archive = createFflateArchive();
@@ -152,6 +167,21 @@ describe("seguridad · bomba de descompresión (SPEC §7.1 y §7.2)", () => {
     expect(await storage.keys()).toEqual([]);
   });
 
+  it("el adaptador rechaza un tamaño declarado enorme antes de reservar memoria", async () => {
+    // 20 bytes reales que dicen ocupar 1 GiB: sin el tope previo se reservaría 1 GiB.
+    const zip = forgeDeclaredSize(packageZip(), 1024 ** 3);
+
+    await rejects(createFflateArchive().unzip(zip, INSTALL_LIMITS), "UNSUPPORTED");
+  });
+
+  it("el instalador pasa sus topes al adaptador: el tamaño declarado falso no se instala", async () => {
+    const zip = forgeDeclaredSize(packageZip(), 1024 ** 3);
+    const { installer, storage, request } = setup(zip);
+
+    await rejects(installer.install(request), "UNSUPPORTED");
+
+    expect(await storage.keys()).toEqual([]);
+  });
 });
 
 describe("seguridad · número de archivos (SPEC §7.1)", () => {
@@ -175,6 +205,13 @@ describe("seguridad · número de archivos (SPEC §7.1)", () => {
     await rejects(installer.install(request), "UNSUPPORTED");
 
     expect(await storage.keys()).toEqual([]);
+  });
+
+  it("el adaptador corta antes de descomprimir más archivos que el tope", async () => {
+    await rejects(
+      createFflateArchive().unzip(zipWithFiles(INSTALL_LIMITS.files + 1), INSTALL_LIMITS),
+      "UNSUPPORTED",
+    );
   });
 
   it("el instalador cuenta los archivos aunque el adaptador no aplique topes", async () => {
