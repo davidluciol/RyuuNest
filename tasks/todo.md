@@ -788,6 +788,7 @@ Dep: P-B · M · `apps/mobile/src/tv/*`
 
 Dep: F32 · S · dispositivos
 
+- [x] POCO (2026-11-21): recorrido F32 con M440 (búsqueda, ficha con portada, lector) en verde; PSS ≈ 828 MB en precarga. m440 da 403 a ~250 ms entre peticiones y un TIMEOUT al retomar (ver MEMORY §4)
 - [ ] Repetir el recorrido de F32 en la MiBox 4 (piso de rendimiento, Android 9, 2 GB) y en el POCO F5 Pro cuando haya módulo y red; anotar diferencias frente al S25 Ultra.
 - [ ] Medir la memoria del lector con `adb shell dumpsys meminfo` durante la precarga (fija `READER_IMAGE_BUDGET_MB`, P-90) y AC-6 (60 páginas verticales sin cierres) en la MiBox 4.
 - Verif: 🧍 dispositivos.
@@ -795,7 +796,7 @@ Dep: F32 · S · dispositivos
 
 ### F28 Playwright por pantalla + `DIFFS.md` + lista de 20 s (AC-12) — restante `[FE/QA · Baja · N2]` 🧍
 
-- [ ] 🧍 Capturas en POCO F5 Pro y MiBox 4 (AC-12 no se cierra sin dispositivo)
+- [ ] 🧍 Capturas en POCO F5 Pro y MiBox 4 (AC-12 no se cierra sin dispositivo). POCO a medias (2026-11-21): Guarida, Tesoros, Ajustes y lector capturados; faltan Aventuras, Portales, ficha y Diagnóstico + `DIFFS.md`
 
 
 ### G3 Medidas con APK compilado `[Ops · Baja · N2]` 🧍
