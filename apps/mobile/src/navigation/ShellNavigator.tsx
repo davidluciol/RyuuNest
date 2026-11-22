@@ -1,8 +1,8 @@
 import { Tabs, usePathname, useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
-import { Platform, View } from "react-native";
+import { Platform, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { activeColors, spacing } from "@ryuunest/ui-tokens";
+import { activeColors, breakpoints, spacing } from "@ryuunest/ui-tokens";
 
 import BottomNav from "../components/BottomNav";
 import { BOTTOM_NAV_DESTINATIONS, type BottomNavDestination } from "../components/shellStyles";
@@ -27,6 +27,9 @@ export default function ShellNavigator() {
   const firstUse = useFirstUseActive();
   const updates = useUpdateCount();
   const router = useRouter();
+  // Una ventana de TV estrecha (solo en web) no tiene sitio para el riel: vuelve la barra.
+  const { width } = useWindowDimensions();
+  const tv = IS_TV && width >= breakpoints.mobileMax;
   // F99 (RNF-5): solo lee lo ya guardado en SQLite del último sync; no pide nada a la red.
   useEffect(() => {
     void resolveSourcesService()
@@ -41,7 +44,7 @@ export default function ShellNavigator() {
   return (
     <SafeAreaView
       edges={["top", "left", "right", "bottom"]}
-      style={IS_TV ? [styles.screen, styles.tvScreen] : styles.screen}
+      style={tv ? [styles.screen, styles.tvScreen] : styles.screen}
     >
       <AppShell
         section={destinationLabel(destination)}
@@ -65,13 +68,13 @@ export default function ShellNavigator() {
             headerShown: false,
             animation: "none",
             sceneStyle: styles.scene,
-            tabBarPosition: IS_TV ? "left" : "bottom",
+            tabBarPosition: tv ? "left" : "bottom",
           }}
           tabBar={({ navigation }) =>
             firstUse ? null : (
               <BottomNav
                 active={destination}
-                variant={IS_TV ? "rail" : "bar"}
+                variant={tv ? "rail" : "bar"}
                 dots={updates > 0 ? ["sources"] : []}
                 onSelect={(id) => navigation.navigate(id === "home" ? "index" : id)}
               />
