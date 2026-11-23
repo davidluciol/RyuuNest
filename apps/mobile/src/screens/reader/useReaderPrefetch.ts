@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useWindowDimensions } from "react-native";
 import { Image } from "expo-image";
 
+import { createPageQueue, type PageQueue } from "../../reader/pageQueue";
 import {
+  PAGE_QUEUE,
   READER_IMAGE_BUDGET_MB,
+  batchOf,
   batchPages,
-  batchProgress,
-  batchesToPreload,
   memoryCap,
   nextChapterPreload,
   shouldPreloadNext,
@@ -15,29 +16,42 @@ import { resolveReadingSource, type ReaderImage } from "./readingSource";
 import type { ReaderReady } from "./useReader";
 
 /**
- * F19 — precarga del lector (SPEC §9, RF-21). Dos cosas, ambas a **disco** y acotadas por
- * `preloadPlan` para no gastar la memoria de imágenes decodificadas:
+ * F19/R1 — precarga del lector (SPEC §9, RF-21), siempre a **disco** para no gastar la memoria de
+ * imágenes decodificadas:
  *
- * - F51: en los dos modos, el capítulo por lotes de 5 (el de la página actual y el siguiente,
- *   uno tras otro) y el avance del lote actual para avisar «Cargando imágenes»;
+ * - R1: una cola por capítulo (`pageQueue`) baja primero la página que se lee, luego las cercanas,
+ *   con tope de concurrencia, timeout y reintentos acotados; al cambiar de capítulo o salir se
+ *   descarta y sus respuestas tardías no cuentan. F51: el avance del lote actual sigue avisando
+ *   «Cargando imágenes»;
  * - al acercarse al final, las primeras imágenes del capítulo siguiente, con las cabeceras de su
  *   módulo (RF-24).
  *
  * Es de mejor esfuerzo: un fallo de precarga no molesta al lector, la imagen se pedirá al abrirla.
  */
 
-function prefetchOne(image: ReaderImage): Promise<unknown> {
-  // Los recursos empaquetados (web de ejemplo) no se descargan: no hay nada que precargar.
-  if (image.asset !== undefined) return Promise.resolve();
+function prefetchOne(image: ReaderImage): Promise<boolean> {
+  // Los recursos empaquetados (web de ejemplo) no se descargan: ya están disponibles.
+  if (image.asset !== undefined) return Promise.resolve(true);
   return Image.prefetch(image.url, {
     cachePolicy: "disk",
     ...(image.headers === undefined ? {} : { headers: image.headers }),
-  }).catch(() => undefined);
+  }).catch(() => false);
 }
 
 function prefetch(images: readonly ReaderImage[]): void {
   for (const image of images) void prefetchOne(image);
 }
+
+/** Páginas del lote que ya terminaron (cargadas o en error: el error no se queda «cargando»). */
+function settledIn(queue: PageQueue | null, pages: readonly number[]): number {
+  if (queue === null) return 0;
+  return pages.filter((page) => {
+    const status = queue.getState(page).status;
+    return status === "loaded" || status === "error";
+  }).length;
+}
+
+const noop = () => undefined;
 
 /** Avance del lote de la página actual; `null` cuando ya está en disco. */
 export type ReaderPreloadProgress = { loaded: number; size: number } | null;
@@ -56,37 +70,30 @@ export function useReaderPrefetch(
   const window = snapshot?.window ?? null;
   const inMemory = window === null ? 0 : window.to - window.from + 1;
 
-  // F51: lotes del capítulo en cola (uno tras otro); un fallo cuenta como hecho, la imagen se
-  // reintentará al montarse.
-  const done = useRef(new Set<number>());
-  const started = useRef(new Set<number>());
-  const queue = useRef<Promise<unknown>>(Promise.resolve());
-  const [, setDoneCount] = useState(0);
+  // R1: una cola por capítulo; se descarta al cambiar de capítulo o desmontar el lector. Se crea
+  // en el efecto (no en useMemo) para que el doble montaje de StrictMode no deje una cola muerta.
+  const [queue, setQueue] = useState<PageQueue | null>(null);
   useEffect(() => {
-    done.current = new Set();
-    started.current = new Set();
-    queue.current = Promise.resolve();
-    setDoneCount(0);
-  }, [images]);
-  useEffect(() => {
-    if (images === null) return;
-    const chapterImages = images;
-    const doneSet = done.current;
-    for (const batch of batchesToPreload(pageIndex, chapterImages.length)) {
-      if (started.current.has(batch)) continue;
-      started.current.add(batch);
-      queue.current = queue.current.then(() =>
-        Promise.all(
-          batchPages(batch, chapterImages.length).map((page) =>
-            prefetchOne(chapterImages[page] as ReaderImage).then(() => {
-              doneSet.add(page);
-              if (done.current === doneSet) setDoneCount(doneSet.size);
-            }),
-          ),
-        ),
-      );
+    if (images === null) {
+      setQueue(null);
+      return;
     }
-  }, [images, pageIndex]);
+    const created = createPageQueue({
+      count: images.length,
+      load: (index) => prefetchOne(images[index] as ReaderImage),
+      ...PAGE_QUEUE,
+    });
+    setQueue(created);
+    return () => created.dispose();
+  }, [images]);
+  useEffect(() => queue?.focus(pageIndex), [queue, pageIndex]);
+
+  const batch = images === null ? [] : batchPages(batchOf(pageIndex), images.length);
+  const subscribe = useCallback(
+    (listener: () => void) => queue?.subscribeAll(listener) ?? noop,
+    [queue],
+  );
+  const loaded = useSyncExternalStore(subscribe, () => settledIn(queue, batch));
 
   // Al acercarse al final, las primeras del siguiente capítulo (una sola vez por capítulo).
   useEffect(() => {
@@ -107,5 +114,5 @@ export function useReaderPrefetch(
       .catch(() => undefined);
   }, [next, pageIndex, pageTotal, inMemory, moduleId, width, height]);
 
-  return images === null ? null : batchProgress(done.current, pageIndex, images.length);
+  return images === null || loaded === batch.length ? null : { loaded, size: batch.length };
 }

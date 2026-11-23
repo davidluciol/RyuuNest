@@ -841,6 +841,17 @@ Dep: F32 · S · dispositivos
 - [ ] `uuid@7.0.3` y `uuid@8.3.2` → `uuid@11` (CommonJS) o la última (ESM)
 - [x] Ninguno está en `pnpm-lock.yaml` de RyuuNest (2026-11-22: solo `glob@13.0.6` y `glob@14.0.3`, vigentes)
 
+### R1 Cola de carga de páginas del lector `[FE · Alta · N4]` (P-190)
+
+- [x] `reader/pageQueue.ts`: prioridad por cercanía, tope de concurrencia, timeout, reintentos con backoff y jitter, cancelación de lo encolado, `dispose` por capítulo; 14 tests
+- [x] `useReaderPrefetch` usa la cola; el aviso «Cargando imágenes» se conserva
+- [ ] 🧍 Línea base y medición en el POCO (capítulo de ~100 páginas): primera página, memoria, cuadros perdidos, logcat (ANR, `too large bitmap`)
+
+### R2 Estados visibles por página en el lector `[FE · Intermedia · N3]` (P-190)
+
+- [ ] Placeholder por página (número, estado, spinner nativo o icono con movimiento reducido), error con «Puedes continuar leyendo» y reintento ≥48
+- [ ] `<Image>` solo con la página en disco (sin descarga doble); filas memoizadas en vertical; estados en la galería
+
 ### 🚩 Checkpoints `[Ops · Baja · N1]`
 
 - [ ] **I:** API 1.0 congelable (T37–T41 hechas; lo decide el humano) · 🧍 Revisión
