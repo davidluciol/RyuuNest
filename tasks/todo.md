@@ -845,13 +845,17 @@ Dep: F32 · S · dispositivos
 
 - [x] `reader/pageQueue.ts`: prioridad por cercanía, tope de concurrencia, timeout, reintentos con backoff y jitter, cancelación de lo encolado, `dispose` por capítulo; 14 tests
 - [x] `useReaderPrefetch` usa la cola; el aviso «Cargando imágenes» se conserva
-- [ ] 🧍 Línea base y medición en el POCO (capítulo de ~100 páginas): primera página, memoria, cuadros perdidos, logcat (ANR, `too large bitmap`)
+- [x] Línea base en el POCO (2026-11-23, Expo Go, `master`, m440 Kusuriya cap. 87, registro VERBOSE de Glide): al abrir, **15 descargas de red para 10 páginas** (las 1–5 dos veces: prefetch + vista); scroll rápido 17 para 15; 0,6 % de cuadros con retraso; 0 OOM/ANR/`too large bitmap`
 
 ### R2 Estados visibles por página en el lector `[FE · Intermedia · N3]` (P-190)
 
 - [x] Placeholder por página (`ReaderPagePlaceholder`: número, estado, spinner nativo o icono con movimiento reducido), error con «Puedes continuar leyendo» y reintento ≥48
 - [x] `<Image>` solo con la página en disco (`pageView`, sin descarga doble); filas memoizadas en vertical; estados en la galería; Playwright 426/1440 (`reader.cjs` + galería)
-- [ ] 🧍 En el POCO: scroll rápido en ~100 páginas, modo avión a mitad de capítulo y reintento, cambiar de capítulo durante descargas, salir y volver; confirmar que no hay descarga doble (prefetch con cabeceras y `<Image>` comparten caché)
+- [x] En el POCO (2026-11-23, Expo Go en modo desarrollo, cap. 86 y 1): **7 descargas para 7 páginas al abrir y 15 para 15 en scroll rápido, sin duplicadas**; tráfico al abrir 2,9 MB frente a 4,9 MB; sin Wi‑Fi cada página muestra «No se pudo cargar la página N · No hay conexión… Puedes continuar leyendo» y «Reintentar» la carga al volver la red; 0 OOM/ANR. Glide comparte caché: la clave de disco es la URL sin cabeceras (visto en el registro)
+- [ ] 🧍 Medir cuadros y memoria de R2 con APK (Expo Go en producción reutiliza el bundle en caché; la medición de R2 fue en modo desarrollo) y en un capítulo de ~100 páginas (los de m440 probados tienen 15–49)
+- [ ] Decidir: al volver la red, ¿reintentar solas las páginas en error del rango? Hoy hay que pulsar «Reintentar» en cada una
+- [ ] Hallazgo: «Vaciar caché de imágenes» no vació la caché de disco en Expo Go (las páginas siguieron saliendo de disco); comprobar con APK
+- [ ] Hallazgo (V2/upstream): `Image.prefetch` de expo-image decodifica cada página a tamaño original solo para dejarla en disco (mediana 44 ms y un bitmap completo por página); no hay opción «solo descargar» en JS
 
 ### 🚩 Checkpoints `[Ops · Baja · N1]`
 
