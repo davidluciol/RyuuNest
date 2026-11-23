@@ -765,7 +765,7 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 
 - [x] Instrumento (2026-11-21): `apps/mobile/src/data/timedHttp.ts` deja en la consola de desarrollo `[host-timing] {host,status,startedAt,ms}` por petición de módulo (Descubrir y lector; solo host, sin ruta)
 - [x] Calibrado en el POCO (2026-11-21, Wi‑Fi, zonatmo + m440, ~20 peticiones): 59–1266 ms, p90 ≈ 1,3 s, concurrencia real ≤ 2, separación mínima 257 ms → **se mantienen 15 s / 4 / 250 ms** (humano). m440 dio dos 403 con ~250 ms entre peticiones: ajustar por módulo si se repite
-- [ ] 🧍 PR de prueba que rompe el contrato y hace fallar el CI
+- [x] 🧍 PR de prueba que rompe el contrato y hace fallar el CI
 
 - [x] TIMEOUT de m440 al «Retomar» investigado en el POCO (2026-11-22): tras ~4–5 min sin tráfico al host, la primera petición tarda 124–154 s y acaba en 200; dos peticiones colgadas acabaron en el mismo milisegundo → conexión reutilizada que el servidor ya cerró. React Native crea OkHttp sin límites (`connectTimeout/readTimeout/writeTimeout` = 0, `OkHttpClientProvider.kt`) y el `TIMEOUT` del host (15 s) no cancela la petición, así que «Reintentar» va por la misma conexión muerta. No es la cola del host: el temporizador empieza tras `acquire`/`respectDelay`
 - [x] Arreglo decidido (humano, 2026-11-22): OkHttp nativo con ping + `network.minDelayMs` en el manifest → **G6**
@@ -775,7 +775,7 @@ Dep: T13 · M · `core/tests/security/*.test.ts` · sin dependencia del cierre d
 - [x] Plugin `apps/mobile/plugins/withOkHttpPing.js` (ping 10 s, conexión 15 s, lectura 30 s; conserva caché y cookies) + test + prebuild comprobado
 - [x] `network.minDelayMs?` (250–5000 ms) en manifest, SDK y `installedMounter`; SPEC §6.1 y ADR-0003
 - [x] m440 0.2.2 declara 600 ms (Models PR #17); tests 5/5
-- [ ] PR de `index.json` en Models con m440 0.2.2 (tras fusionar #17 y #166)
+- [x] PR de `index.json` en Models con m440 0.2.2 (tras fusionar #17 y #166)
 - [x] 🧍 APK EAS `preview` (build `b345fb0e`) en el POCO (2026-11-22): tras 5,5 min sin tráfico, «Retomar» de m440 abre la página en 1,2 s y 0,4 s (2/2); en Expo Go, sin el arreglo, 124–154 s (2/2). Los 600 ms de m440 se comprobarán al publicar 0.2.2 en `index.json`
 
 ### G2 Plataforma: deudas del núcleo `[BE · Intermedia · N3]`
