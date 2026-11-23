@@ -41,9 +41,8 @@ export function shouldPreloadNext(pageIndex: number, pageTotal: number | null): 
 }
 
 /**
- * F51 — páginas por lote de descarga a disco. Se baja el lote de la página actual y el siguiente,
- * uno tras otro: así las primeras 5 llegan pronto y al deslizar la siguiente ya está en disco.
- * Provisional (criterio de P-90).
+ * F51 — páginas por lote del aviso «Cargando imágenes x / y»: el lote de la página actual.
+ * La descarga en sí la ordena la cola (`PAGE_QUEUE`). Provisional (criterio de P-90).
  */
 export const PRELOAD_BATCH = 5;
 
@@ -58,19 +57,19 @@ export function batchPages(batch: number, total: number): number[] {
   return Array.from({ length: Math.max(0, to - from) }, (_value, offset) => from + offset);
 }
 
-/** Lotes que deben estar en disco leyendo `pageIndex`: el actual y el siguiente. */
-export function batchesToPreload(pageIndex: number, total: number): number[] {
-  const current = batchOf(pageIndex);
-  return [current, current + 1].filter((batch) => batch * PRELOAD_BATCH < total);
-}
-
-/** Avance del lote de la página actual; `null` si ya está completo (no hay nada que avisar). */
-export function batchProgress(
-  done: ReadonlySet<number>,
-  pageIndex: number,
-  total: number,
-): { loaded: number; size: number } | null {
-  const pages = batchPages(batchOf(pageIndex), total);
-  const loaded = pages.filter((page) => done.has(page)).length;
-  return loaded === pages.length ? null : { loaded, size: pages.length };
-}
+/**
+ * R1 — parámetros de la cola de carga (`pageQueue`). Provisionales (P-90) hasta medirlos en el
+ * teléfono (P-45):
+ * - 3 descargas a la vez: el ancho de banda va a la página que se lee, por debajo de los hilos de
+ *   red de Glide, sin amontonar peticiones a un sitio que limita el ritmo (m440, G6);
+ * - a disco, 6 por delante y 2 por detrás de la actual (la ventana decodificada la fija el núcleo);
+ * - 30 s de tope por imagen y hasta 2 reintentos automáticos con backoff desde 1 s.
+ */
+export const PAGE_QUEUE = {
+  maxConcurrent: 3,
+  ahead: 6,
+  behind: 2,
+  timeoutMs: 30_000,
+  retryBaseMs: 1_000,
+  maxAutoRetries: 2,
+} as const;
