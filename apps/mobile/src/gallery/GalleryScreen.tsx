@@ -28,6 +28,7 @@ import ErrorState from "../components/ErrorState";
 import FolderCard from "../components/FolderCard";
 import Header from "../components/Header";
 import LoadingState from "../components/LoadingState";
+import ReaderPagePlaceholder from "../screens/reader/ReaderPagePlaceholder";
 import RecentCard from "../components/RecentCard";
 import ListScreen from "../screens/list/ListScreen";
 import SectionHeader from "../components/SectionHeader";
@@ -406,6 +407,19 @@ export default function GalleryScreen() {
           title={t("state.loading.title")}
           message={t("state.loading.message", { page: 2, total: 5 })}
         />
+
+        <Text style={styles.groupLabel}>{t("gallery.component.readerPagePlaceholder")}</Text>
+        <View style={styles.placeholderRow}>
+          {(["idle", "queued", "loading"] as const).map((status, index) => (
+            <ReaderPagePlaceholder
+              key={status}
+              pageNumber={index + 1}
+              status={status}
+              width={spacing["2xl"] * 2}
+              height={spacing["2xl"] * 3}
+            />
+          ))}
+        </View>
 
         <Text style={styles.groupLabel}>{t("gallery.component.appShell")}</Text>
         <AppShell section={destinationLabel(previewDestination)} style={styles.shellPreview}>
@@ -1101,6 +1115,7 @@ const styles = themedStyles(() => ({
   },
   section: { gap: spacing.sm },
   componentColumn: { gap: spacing.sm, alignItems: "stretch" },
+  placeholderRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
   coverWrap: { width: spacing["2xl"] * 2 },
   libraryCardWrap: { flex: 1, minWidth: 0 },
   shellPreview: { flex: 0, minHeight: spacing["2xl"] * 8 },

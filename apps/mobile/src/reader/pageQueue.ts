@@ -109,6 +109,8 @@ export function createPageQueue(options: PageQueueOptions): PageQueue {
       } else {
         // Sigue «en cola» mientras espera: no es un error para quien lee todavía.
         set(index, { status: "queued", attempt, permanent: false });
+        // Un reintento manual fuera del rango no está en `priority`: sin esto no volvería a salir.
+        if (!priority.includes(index) && !manual.includes(index)) manual.push(index);
         const delay = retryBaseMs * 2 ** (attempt - 1) + random() * retryBaseMs;
         cooling.set(
           index,
@@ -138,7 +140,9 @@ export function createPageQueue(options: PageQueueOptions): PageQueue {
   function pump(): void {
     if (disposed) return;
     for (const index of [...manual, ...priority]) {
-      if (jobs.size >= maxConcurrent) return;
+      // La página que se lee tiene un hueco extra: no espera a peticiones viejas de otra zona.
+      const limit = index === priority[0] ? maxConcurrent + 1 : maxConcurrent;
+      if (jobs.size >= limit) continue;
       if (states[index]?.status !== "queued" || cooling.has(index)) continue;
       const at = manual.indexOf(index);
       if (at >= 0) manual.splice(at, 1);

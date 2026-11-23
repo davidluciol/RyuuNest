@@ -12,7 +12,7 @@ import { chapterState, type ChapterState } from "../series/seriesFixtures";
 import { resolveReadingSource, type ReaderImage } from "./readingSource";
 import { resolveSettingsService } from "../settings/useSettingsData";
 import { savedChapterLabel } from "./readerChapterLabel";
-import { useReaderPrefetch, type ReaderPreloadProgress } from "./useReaderPrefetch";
+import { useReaderPrefetch, type ReaderPreload } from "./useReaderPrefetch";
 
 /**
  * F18 — estado de la pantalla del lector: carga la ficha (capítulos y tipo de obra) y las páginas
@@ -66,7 +66,7 @@ function report(error: unknown): void {
 export function useReader(target: ReaderTarget): {
   view: ReaderView;
   actions: ReaderActions;
-  preload: ReaderPreloadProgress;
+  preload: ReaderPreload;
 } {
   const { moduleId, seriesId, chapterId, releaseId } = target;
   const [view, setView] = useState<ReaderView>({ status: "loading" });

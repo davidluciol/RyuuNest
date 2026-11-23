@@ -1,30 +1,37 @@
 // single-use: vista del modo paginado; solo existe dentro del lector (F18).
 import { View } from "react-native";
 
+import type { PageQueue } from "../../reader/pageQueue";
 import ReaderPageImage from "./ReaderPageImage";
 import type { ReaderImage } from "./readingSource";
 
 /**
  * F18 — modo paginado (RF-18): una página a la vez, ajustada a la columna de lectura. El núcleo
- * declara la ventana (la actual y las siguientes, SPEC §9); aquí solo hay una imagen montada.
+ * declara la ventana (la actual y las siguientes, SPEC §9); aquí solo hay una imagen montada y
+ * la cola (R1) baja las siguientes a disco.
  */
 
 export interface ReaderPagedProps {
   image: ReaderImage;
+  queue: PageQueue | null;
   pageIndex: number;
   width: number;
   height: number;
 }
 
-export default function ReaderPaged({ image, pageIndex, width, height }: ReaderPagedProps) {
+export default function ReaderPaged({ image, queue, pageIndex, width, height }: ReaderPagedProps) {
   return (
     <View testID="reader-paged" style={{ width, height }}>
+      {/* La clave por página e imagen evita que el error de una pase a otra (o a otro capítulo). */}
       <ReaderPageImage
+        key={`${pageIndex}:${image.url}`}
         image={image}
+        index={pageIndex}
+        queue={queue}
+        decode
         width={width}
         height={height}
         fit="contain"
-        pageNumber={pageIndex + 1}
         testID={`reader-page-${pageIndex}`}
       />
     </View>

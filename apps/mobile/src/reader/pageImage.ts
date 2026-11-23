@@ -1,12 +1,14 @@
 import type { ImageRef } from "@ryuunest/core";
 
+import type { PageLoadState } from "./pageQueue";
+
 /**
  * F19 — carga de una página del lector. Lógica pura; la pantalla solo la pinta.
  *
  * - **Cabeceras (RF-24):** la imagen se pide con las que dio el módulo (`Referer`,
  *   `User-Agent`), porque muchos sitios bloquean los enlaces directos.
  * - **Reintento individual (RF-23, SPEC §9):** una imagen que falla se reintenta sola, sin tocar
- *   las demás ni descartar el capítulo.
+ *   las demás ni descartar el capítulo (la cola de `pageQueue` lleva los intentos).
  */
 
 /** Imagen de una página: la del módulo y, en la web de ejemplo, un recurso empaquetado. */
@@ -49,24 +51,21 @@ export function pageErrorKind(raw: string): PageErrorKind {
   return "unknown";
 }
 
-export type PageLoad =
-  | { status: "loading"; attempt: number }
-  | { status: "loaded"; attempt: number }
-  | { status: "error"; attempt: number; message: string };
+/** R2 — lo que pinta una página: su hueco con el estado, la imagen o el error. */
+export type PageView =
+  | { kind: "placeholder"; status: "idle" | "queued" | "loading" }
+  | { kind: "image" }
+  | { kind: "error" };
 
-export type PageLoadEvent =
-  { type: "loaded" } | { type: "failed"; message: string } | { type: "retry" };
-
-export const INITIAL_PAGE_LOAD: PageLoad = { status: "loading", attempt: 0 };
-
-/** `attempt` cuenta los reintentos y la pantalla lo usa de clave para volver a montar la imagen. */
-export function pageLoadReducer(state: PageLoad, event: PageLoadEvent): PageLoad {
-  switch (event.type) {
-    case "loaded":
-      return { status: "loaded", attempt: state.attempt };
-    case "failed":
-      return { status: "error", attempt: state.attempt, message: event.message };
-    case "retry":
-      return state.status === "error" ? { status: "loading", attempt: state.attempt + 1 } : state;
-  }
+/**
+ * `decode`: la página está en la ventana que el núcleo mantiene decodificada. `failure`: el motivo
+ * que dio la imagen al fallar. Tras agotar la cola, la imagen se monta una vez más para saber por
+ * qué falla (el prefetch no lo dice).
+ */
+export function pageView(state: PageLoadState, decode: boolean, failure: string | null): PageView {
+  if (state.status === "error")
+    return decode && failure === null ? { kind: "image" } : { kind: "error" };
+  if (state.status === "loaded")
+    return decode ? { kind: "image" } : { kind: "placeholder", status: "idle" };
+  return { kind: "placeholder", status: state.status };
 }

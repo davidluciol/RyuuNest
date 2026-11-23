@@ -849,8 +849,9 @@ Dep: F32 · S · dispositivos
 
 ### R2 Estados visibles por página en el lector `[FE · Intermedia · N3]` (P-190)
 
-- [ ] Placeholder por página (número, estado, spinner nativo o icono con movimiento reducido), error con «Puedes continuar leyendo» y reintento ≥48
-- [ ] `<Image>` solo con la página en disco (sin descarga doble); filas memoizadas en vertical; estados en la galería
+- [x] Placeholder por página (`ReaderPagePlaceholder`: número, estado, spinner nativo o icono con movimiento reducido), error con «Puedes continuar leyendo» y reintento ≥48
+- [x] `<Image>` solo con la página en disco (`pageView`, sin descarga doble); filas memoizadas en vertical; estados en la galería; Playwright 426/1440 (`reader.cjs` + galería)
+- [ ] 🧍 En el POCO: scroll rápido en ~100 páginas, modo avión a mitad de capítulo y reintento, cambiar de capítulo durante descargas, salir y volver; confirmar que no hay descarga doble (prefetch con cabeceras y `<Image>` comparten caché)
 
 ### 🚩 Checkpoints `[Ops · Baja · N1]`
 

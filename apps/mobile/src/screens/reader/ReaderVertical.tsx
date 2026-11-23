@@ -11,6 +11,7 @@ import {
 import { ScrollView, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import type { PageWindow } from "@ryuunest/core";
 
+import type { PageQueue } from "../../reader/pageQueue";
 import {
   anchorDelta,
   createScrollAnchor,
@@ -26,8 +27,10 @@ import type { ReaderImage } from "./readingSource";
 
 /**
  * F18 — modo vertical continuo (RF-18, SPEC §9). Cada página ocupa su altura (conocida al cargar,
- * estimada antes) y solo se montan las imágenes dentro de `window`, la ventana que declara el
- * núcleo; las demás son huecos del mismo alto, así que la memoria no crece con el capítulo.
+ * estimada antes) y solo se decodifican las imágenes dentro de `window`, la ventana que declara el
+ * núcleo; las demás muestran su número y estado (R2) con el mismo alto, así que la memoria no
+ * crece con el capítulo. Las filas están memoizadas: cargar una página o pasar de página no vuelve
+ * a pintar las demás.
  */
 
 export interface ReaderVerticalHandle {
@@ -37,6 +40,8 @@ export interface ReaderVerticalHandle {
 
 export interface ReaderVerticalProps {
   images: readonly ReaderImage[];
+  /** R1 — cola de carga; cada página lee de ella su estado. */
+  queue: PageQueue | null;
   width: number;
   window: PageWindow | null;
   /** Página con la que se abre (la guardada, RF-20). */
@@ -52,7 +57,7 @@ export interface ReaderVerticalProps {
 
 const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
   function ReaderVertical(
-    { images, width, window, initialPage, onPageChange, footer, footerClearance, onEndChange },
+    { images, queue, width, window, initialPage, onPageChange, footer, footerClearance, onEndChange },
     ref,
   ) {
     const atEnd = useRef(false);
@@ -111,7 +116,8 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
       }
     };
 
-    const onAspect = (index: number, aspect: number) => {
+    // Estable entre renders para que las filas memoizadas no se vuelvan a pintar.
+    const onAspect = useCallback((index: number, aspect: number) => {
       if (aspectsRef.current[index] === aspect) return;
       const delta = anchorDelta({
         changedIndex: index,
@@ -129,7 +135,7 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
         offsetY.current += pending;
         scrollRef.current?.scrollTo({ y: offsetY.current, animated: false });
       });
-    };
+    }, [width]);
 
     return (
       <ScrollView
@@ -142,18 +148,18 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
         contentContainerStyle={{ alignItems: "center", paddingBottom: footerClearance }}
       >
         {images.map((image, index) => (
-          <View key={index} style={{ width, height: heights[index] }}>
-            {shouldMountImage(index, window) ? (
-              <ReaderPageImage
-                image={image}
-                width={width}
-                height={heights[index] ?? 0}
-                fit="fill"
-                pageNumber={index + 1}
-                testID={`reader-page-${index}`}
-                onAspect={(aspect) => onAspect(index, aspect)}
-              />
-            ) : null}
+          <View key={`${index}:${image.url}`} style={{ width, height: heights[index] }}>
+            <ReaderPageImage
+              image={image}
+              index={index}
+              queue={queue}
+              decode={shouldMountImage(index, window)}
+              width={width}
+              height={heights[index] ?? 0}
+              fit="fill"
+              testID={`reader-page-${index}`}
+              onAspect={onAspect}
+            />
           </View>
         ))}
         {footer}

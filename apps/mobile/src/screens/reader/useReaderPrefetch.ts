@@ -42,12 +42,16 @@ function prefetch(images: readonly ReaderImage[]): void {
   for (const image of images) void prefetchOne(image);
 }
 
-/** Páginas del lote que ya terminaron (cargadas o en error: el error no se queda «cargando»). */
+/**
+ * Páginas del lote que no esperan descarga. Solo cuenta como pendiente lo que la cola tiene en
+ * curso o en cola: una página del lote fuera del rango de la cola (p. ej. al retomar en la 9, las
+ * 5 y 6) se queda `idle` y no debe dejar el aviso colgado.
+ */
 function settledIn(queue: PageQueue | null, pages: readonly number[]): number {
   if (queue === null) return 0;
   return pages.filter((page) => {
     const status = queue.getState(page).status;
-    return status === "loaded" || status === "error";
+    return status !== "queued" && status !== "loading";
   }).length;
 }
 
@@ -56,10 +60,13 @@ const noop = () => undefined;
 /** Avance del lote de la página actual; `null` cuando ya está en disco. */
 export type ReaderPreloadProgress = { loaded: number; size: number } | null;
 
-export function useReaderPrefetch(
-  ready: ReaderReady | null,
-  moduleId: string,
-): ReaderPreloadProgress {
+/** R2: el avance para el aviso F51 y la cola, de la que cada página lee su estado. */
+export interface ReaderPreload {
+  progress: ReaderPreloadProgress;
+  queue: PageQueue | null;
+}
+
+export function useReaderPrefetch(ready: ReaderReady | null, moduleId: string): ReaderPreload {
   const { width, height } = useWindowDimensions();
   const preloadedChapter = useRef<string | null>(null);
   const snapshot = ready?.snapshot ?? null;
@@ -72,10 +79,14 @@ export function useReaderPrefetch(
 
   // R1: una cola por capítulo; se descarta al cambiar de capítulo o desmontar el lector. Se crea
   // en el efecto (no en useMemo) para que el doble montaje de StrictMode no deje una cola muerta.
-  const [queue, setQueue] = useState<PageQueue | null>(null);
+  // La cola va con sus imágenes: en el render que estrena capítulo, la vieja no se usa.
+  const [entry, setEntry] = useState<{ images: readonly ReaderImage[]; queue: PageQueue } | null>(
+    null,
+  );
+  const queue = entry !== null && entry.images === images ? entry.queue : null;
   useEffect(() => {
     if (images === null) {
-      setQueue(null);
+      setEntry(null);
       return;
     }
     const created = createPageQueue({
@@ -83,7 +94,7 @@ export function useReaderPrefetch(
       load: (index) => prefetchOne(images[index] as ReaderImage),
       ...PAGE_QUEUE,
     });
-    setQueue(created);
+    setEntry({ images, queue: created });
     return () => created.dispose();
   }, [images]);
   useEffect(() => queue?.focus(pageIndex), [queue, pageIndex]);
@@ -114,5 +125,7 @@ export function useReaderPrefetch(
       .catch(() => undefined);
   }, [next, pageIndex, pageTotal, inMemory, moduleId, width, height]);
 
-  return images === null || loaded === batch.length ? null : { loaded, size: batch.length };
+  const progress =
+    images === null || loaded === batch.length ? null : { loaded, size: batch.length };
+  return { progress, queue };
 }
