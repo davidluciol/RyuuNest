@@ -122,6 +122,23 @@ describe("createPageQueue", () => {
     expect(calls.filter((page) => page === 50)).toHaveLength(2);
   });
 
+  it("al volver la red reintenta las páginas en error del rango, no las permanentes ni las lejanas", async () => {
+    const { queue, calls, settle } = harness(30, { maxAutoRetries: 0 });
+    queue.focus(0);
+    for (const page of [0, 1, 2, 3, 4, 5, 6]) await settle(page, false);
+    queue.markFailed(2, true);
+    queue.focus(20);
+    queue.focus(3);
+    // Rango 1…9: 0 queda fuera; 2 es permanente; 7–9 nunca fallaron y ya se piden.
+    const before = calls.length;
+    queue.retryFailed();
+    expect(queue.getState(0).status).toBe("idle");
+    expect(queue.getState(2)).toMatchObject({ status: "error", permanent: true });
+    expect(queue.getState(3)).toEqual({ status: "loading", attempt: 0, permanent: false });
+    expect(calls.slice(before)).toContain(3);
+    expect(calls.slice(before)).not.toContain(2);
+  });
+
   it("al volver atrás no repite las páginas ya cargadas", async () => {
     const { queue, calls, settle } = harness(30);
     queue.focus(0);

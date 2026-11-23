@@ -853,7 +853,7 @@ Dep: F32 · S · dispositivos
 - [x] `<Image>` solo con la página en disco (`pageView`, sin descarga doble); filas memoizadas en vertical; estados en la galería; Playwright 426/1440 (`reader.cjs` + galería)
 - [x] En el POCO (2026-11-23, Expo Go en modo desarrollo, cap. 86 y 1): **7 descargas para 7 páginas al abrir y 15 para 15 en scroll rápido, sin duplicadas**; tráfico al abrir 2,9 MB frente a 4,9 MB; sin Wi‑Fi cada página muestra «No se pudo cargar la página N · No hay conexión… Puedes continuar leyendo» y «Reintentar» la carga al volver la red; 0 OOM/ANR. Glide comparte caché: la clave de disco es la URL sin cabeceras (visto en el registro)
 - [ ] 🧍 Medir cuadros y memoria de R2 con APK (Expo Go en producción reutiliza el bundle en caché; la medición de R2 fue en modo desarrollo) y en un capítulo de ~100 páginas (los de m440 probados tienen 15–49)
-- [ ] Decidir: al volver la red, ¿reintentar solas las páginas en error del rango? Hoy hay que pulsar «Reintentar» en cada una
+- [x] Al volver la red, las páginas en error del rango se reintentan solas (`retryFailed` + `expo-network` 57.0.3, aprobado por el humano 2026-11-23); comprobado en el POCO: sin Wi‑Fi la página 30 en error, al encenderla carga sola en ~5 s sin pulsar nada
 - [ ] Hallazgo: «Vaciar caché de imágenes» no vació la caché de disco en Expo Go (las páginas siguieron saliendo de disco); comprobar con APK
 - [ ] Hallazgo (V2/upstream): `Image.prefetch` de expo-image decodifica cada página a tamaño original solo para dejarla en disco (mediana 44 ms y un bitmap completo por página); no hay opción «solo descargar» en JS
 

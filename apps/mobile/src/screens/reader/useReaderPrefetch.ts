@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useWindowDimensions } from "react-native";
 import { Image } from "expo-image";
+import { addNetworkStateListener } from "expo-network";
 
 import { createPageQueue, type PageQueue } from "../../reader/pageQueue";
 import {
@@ -21,7 +22,7 @@ import type { ReaderReady } from "./useReader";
  *
  * - R1: una cola por capítulo (`pageQueue`) baja primero la página que se lee, luego las cercanas,
  *   con tope de concurrencia, timeout y reintentos acotados; al cambiar de capítulo o salir se
- *   descarta y sus respuestas tardías no cuentan. F51: el avance del lote actual sigue avisando
+ *   descarta y sus respuestas tardías no cuentan; al volver la red reintenta las que fallaron. F51: el avance del lote actual sigue avisando
  *   «Cargando imágenes»;
  * - al acercarse al final, las primeras imágenes del capítulo siguiente, con las cabeceras de su
  *   módulo (RF-24).
@@ -98,6 +99,16 @@ export function useReaderPrefetch(ready: ReaderReady | null, moduleId: string): 
     return () => created.dispose();
   }, [images]);
   useEffect(() => queue?.focus(pageIndex), [queue, pageIndex]);
+
+  // Al volver la red, las páginas que fallaron se piden solas (antes había que pulsar «Reintentar»
+  // en cada una). Solo avisa de cambios: estando en línea no se reintenta nada.
+  useEffect(() => {
+    if (queue === null) return;
+    const subscription = addNetworkStateListener(({ isConnected, isInternetReachable }) => {
+      if (isConnected === true && isInternetReachable !== false) queue.retryFailed();
+    });
+    return () => subscription.remove();
+  }, [queue]);
 
   const batch = images === null ? [] : batchPages(batchOf(pageIndex), images.length);
   const subscribe = useCallback(

@@ -9,6 +9,8 @@
  *   bloquea al resto (antes, una cadena de promesas sí lo hacía).
  * - **Reintentos automáticos** acotados con backoff exponencial y jitter; los errores permanentes
  *   (404, formato inválido) los marca la UI con `markFailed(i, true)` y no se reintentan solos.
+ * - **Al volver la red** (`retryFailed`), las páginas en error del rango se piden de nuevo; las
+ *   permanentes no.
  * - **Resultados viejos ignorados:** cada petición lleva su ficha; tras un timeout, un
  *   `markLoaded`/`markFailed` o `dispose` (cambio de capítulo, salida) su respuesta ya no cuenta.
  */
@@ -43,6 +45,8 @@ export interface PageQueue {
   subscribeAll: (listener: () => void) => () => void;
   focus: (page: number) => void;
   retry: (index: number) => void;
+  /** Al volver la red: reintenta las páginas en error que no son permanentes. */
+  retryFailed: () => void;
   markLoaded: (index: number) => void;
   markFailed: (index: number, permanent: boolean) => void;
   dispose: () => void;
@@ -158,6 +162,26 @@ export function createPageQueue(options: PageQueueOptions): PageQueue {
     set(index, next);
   }
 
+  function focus(page: number): void {
+    if (disposed) return;
+    const order = [page];
+    for (let step = 1; step <= ahead; step += 1) order.push(page + step);
+    for (let step = 1; step <= behind; step += 1) order.push(page - step);
+    priority = order.filter(inRange);
+    const wanted = new Set(priority);
+    states.forEach((state, index) => {
+      if (state.status === "queued" && !wanted.has(index) && !manual.includes(index)) {
+        drop(index, IDLE);
+      }
+    });
+    for (const index of priority) {
+      if ((states[index] as PageLoadState).status === "idle") {
+        set(index, { ...(states[index] as PageLoadState), status: "queued" });
+      }
+    }
+    pump();
+  }
+
   return {
     getState: (index) => states[index] ?? IDLE,
     subscribe(index, listener) {
@@ -170,30 +194,21 @@ export function createPageQueue(options: PageQueueOptions): PageQueue {
       allListeners.add(listener);
       return () => allListeners.delete(listener);
     },
-    focus(page) {
-      if (disposed) return;
-      const order = [page];
-      for (let step = 1; step <= ahead; step += 1) order.push(page + step);
-      for (let step = 1; step <= behind; step += 1) order.push(page - step);
-      priority = order.filter(inRange);
-      const wanted = new Set(priority);
-      states.forEach((state, index) => {
-        if (state.status === "queued" && !wanted.has(index) && !manual.includes(index)) {
-          drop(index, IDLE);
-        }
-      });
-      for (const index of priority) {
-        if ((states[index] as PageLoadState).status === "idle") {
-          set(index, { ...(states[index] as PageLoadState), status: "queued" });
-        }
-      }
-      pump();
-    },
+    focus,
     retry(index) {
       if (disposed || !inRange(index)) return;
       drop(index, { status: "queued", attempt: 0, permanent: false });
       manual.push(index);
       pump();
+    },
+    retryFailed() {
+      if (disposed) return;
+      states.forEach((state, index) => {
+        if (state.status === "error" && !state.permanent) drop(index, IDLE);
+      });
+      // Volver a enfocar la página actual encola solo las del rango; las lejanas quedan en idle.
+      const current = priority[0];
+      if (current !== undefined) focus(current);
     },
     markLoaded(index) {
       if (disposed || !inRange(index)) return;
