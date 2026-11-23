@@ -21,7 +21,7 @@ import ReaderVertical, { type ReaderVerticalHandle } from "./ReaderVertical";
 import { FALLBACK_READER_MODE, modeLabel } from "./readerModes";
 import { readerCanvasStyle } from "./readerStyles";
 import type { ReaderActions, ReaderReady } from "./useReader";
-import type { ReaderPreloadProgress } from "./useReaderPrefetch";
+import type { ReaderPreload } from "./useReaderPrefetch";
 import Badge from "../../components/Badge";
 import ZoomableView from "./ZoomableView";
 import FocusPressable from "../../components/FocusPressable";
@@ -39,8 +39,8 @@ const FOOTER_CLEARANCE = spacing["2xl"] * 4;
 
 export interface ReaderScreenProps {
   ready: ReaderReady;
-  /** F51 — avance de la descarga del lote de la página actual; `null` si ya está en disco. */
-  preload: ReaderPreloadProgress;
+  /** F51/R2 — avance del lote de la página actual y la cola de carga de las páginas. */
+  preload: ReaderPreload;
   actions: ReaderActions;
   onClose: () => void;
   onOpenChapter: (chapterId: string, releaseId: string | null) => void;
@@ -168,6 +168,7 @@ export default function ReaderScreen({
               <ReaderVertical
                 ref={vertical}
                 images={images}
+                queue={preload.queue}
                 width={column}
                 window={snapshot.window}
                 initialPage={snapshot.pageIndex}
@@ -180,6 +181,7 @@ export default function ReaderScreen({
               <View style={{ flex: 1, justifyContent: "center" }}>{endCardView}</View>
             ) : (
               <ReaderPaged
+                queue={preload.queue}
                 image={images[snapshot.pageIndex] as (typeof images)[number]}
                 pageIndex={snapshot.pageIndex}
                 width={column}
@@ -190,13 +192,13 @@ export default function ReaderScreen({
         </FocusPressable>
       </ZoomableView>
 
-      {preload === null ? null : (
+      {preload.progress === null ? null : (
         <View
           testID="reader-loading-batch"
           pointerEvents="none"
           style={{ position: "absolute", left: 0, right: 0, bottom: FOOTER_CLEARANCE, alignItems: "center" }}
         >
-          <Badge label={t("reader.loading.batch", preload)} />
+          <Badge label={t("reader.loading.batch", preload.progress)} />
         </View>
       )}
 

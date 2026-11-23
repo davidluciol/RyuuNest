@@ -94,9 +94,49 @@ describe("createPageQueue", () => {
     queue.focus(60);
     // Lo encolado de la zona vieja (3…6) se descarta; lo que ya estaba en curso termina.
     expect(statuses().slice(3, 7)).toEqual(["idle", "idle", "idle", "idle"]);
-    expect(queue.getState(60).status).toBe("queued");
+    // La nueva página no espera a las viejas (hueco extra); la siguiente entra al quedar uno libre.
+    expect(queue.getState(60).status).toBe("loading");
     await settle(1, true);
-    expect(calls.at(-1)).toBe(60);
+    await settle(2, true);
+    expect(calls.at(-1)).toBe(61);
+  });
+
+  it("la página enfocada no espera a peticiones viejas que ocupan los huecos (servidor lento)", () => {
+    const { queue, calls } = harness(100);
+    queue.focus(0);
+    queue.focus(60);
+    expect(calls).toEqual([0, 1, 2, 60]);
+    expect(queue.getState(61).status).toBe("queued");
+  });
+
+  it("un reintento manual fuera del rango que vuelve a fallar no se queda en cola para siempre", async () => {
+    const { queue, calls, settle } = harness(100);
+    queue.focus(0);
+    for (const page of [0, 1, 2, 3, 4, 5, 6]) await settle(page, true);
+    queue.markFailed(50, false);
+    queue.retry(50);
+    expect(calls.at(-1)).toBe(50);
+    await settle(50, false);
+    await vi.advanceTimersByTimeAsync(1_500);
+    expect(calls.at(-1)).toBe(50);
+    expect(calls.filter((page) => page === 50)).toHaveLength(2);
+  });
+
+  it("al volver la red reintenta las páginas en error del rango, no las permanentes ni las lejanas", async () => {
+    const { queue, calls, settle } = harness(30, { maxAutoRetries: 0 });
+    queue.focus(0);
+    for (const page of [0, 1, 2, 3, 4, 5, 6]) await settle(page, false);
+    queue.markFailed(2, true);
+    queue.focus(20);
+    queue.focus(3);
+    // Rango 1…9: 0 queda fuera; 2 es permanente; 7–9 nunca fallaron y ya se piden.
+    const before = calls.length;
+    queue.retryFailed();
+    expect(queue.getState(0).status).toBe("idle");
+    expect(queue.getState(2)).toMatchObject({ status: "error", permanent: true });
+    expect(queue.getState(3)).toEqual({ status: "loading", attempt: 0, permanent: false });
+    expect(calls.slice(before)).toContain(3);
+    expect(calls.slice(before)).not.toContain(2);
   });
 
   it("al volver atrás no repite las páginas ya cargadas", async () => {

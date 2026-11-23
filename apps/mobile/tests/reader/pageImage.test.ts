@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+import type { PageStatus } from "../../src/reader/pageQueue";
 import {
-  INITIAL_PAGE_LOAD,
   pageImageSource,
-  pageLoadReducer,
+  pageView,
   PAGE_ERROR_MESSAGE_KEYS,
   pageErrorKind,
 } from "../../src/reader/pageImage";
@@ -35,39 +35,27 @@ describe("pageImageSource", () => {
   });
 });
 
-describe("pageLoadReducer", () => {
-  it("arranca cargando, en el primer intento", () => {
-    expect(INITIAL_PAGE_LOAD).toEqual({ status: "loading", attempt: 0 });
+describe("pageView · qué pinta una página según su estado en la cola (R2)", () => {
+  const at = (status: PageStatus) => ({ status, attempt: 0, permanent: false });
+
+  it("mientras no está en disco, el hueco con su estado", () => {
+    expect(pageView(at("idle"), true, null)).toEqual({ kind: "placeholder", status: "idle" });
+    expect(pageView(at("queued"), true, null)).toEqual({ kind: "placeholder", status: "queued" });
+    expect(pageView(at("loading"), true, null)).toEqual({ kind: "placeholder", status: "loading" });
   });
 
-  it("al cargar pasa a cargada", () => {
-    expect(pageLoadReducer(INITIAL_PAGE_LOAD, { type: "loaded" })).toEqual({
-      status: "loaded",
-      attempt: 0,
-    });
+  it("en disco, la imagen solo dentro de la ventana que decodifica el núcleo", () => {
+    expect(pageView(at("loaded"), true, null)).toEqual({ kind: "image" });
+    expect(pageView(at("loaded"), false, null)).toEqual({ kind: "placeholder", status: "idle" });
   });
 
-  it("un fallo guarda el motivo para mostrarlo como detalle técnico", () => {
-    expect(pageLoadReducer(INITIAL_PAGE_LOAD, { type: "failed", message: "HTTP 403" })).toEqual({
-      status: "error",
-      attempt: 0,
-      message: "HTTP 403",
-    });
+  it("si la cola agotó los intentos, monta la imagen una vez para conocer el motivo", () => {
+    expect(pageView(at("error"), true, null)).toEqual({ kind: "image" });
   });
 
-  it("reintentar vuelve a cargar y cuenta el intento, que cambia la clave de la imagen", () => {
-    const failed = pageLoadReducer(INITIAL_PAGE_LOAD, { type: "failed", message: "HTTP 403" });
-
-    const retried = pageLoadReducer(failed, { type: "retry" });
-
-    expect(retried).toEqual({ status: "loading", attempt: 1 });
-    expect(pageLoadReducer(pageLoadReducer(retried, { type: "failed", message: "x" }), { type: "retry" }).attempt).toBe(2);
-  });
-
-  it("reintentar solo tiene efecto si la imagen falló", () => {
-    expect(pageLoadReducer(INITIAL_PAGE_LOAD, { type: "retry" })).toBe(INITIAL_PAGE_LOAD);
-    const loaded = pageLoadReducer(INITIAL_PAGE_LOAD, { type: "loaded" });
-    expect(pageLoadReducer(loaded, { type: "retry" })).toBe(loaded);
+  it("con el motivo, o fuera de la ventana, muestra el error", () => {
+    expect(pageView(at("error"), true, "HTTP 404")).toEqual({ kind: "error" });
+    expect(pageView(at("error"), false, null)).toEqual({ kind: "error" });
   });
 });
 
