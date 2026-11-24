@@ -174,7 +174,7 @@ Carga **solo** las skills de la categoría de la tarea. Empieza por el `*-catego
 | DevOps / CI | `devops-category-pointer` |
 | Git / PR | `git-category-pointer` |
 | Revisión de código | `code-review-category-pointer` |
-| Explorar código | `codebase-memory` + Graphify (§10) |
+| Explorar código | Graphify (§10) |
 | Documentación / textos | `writing-category-pointer` |
 | OpenCode / agentes / tooling | `opencode`, `agents-category-pointer`, `tooling-category-pointer`, `report` |
 | Marketing | `marketing-category-pointer`; solo si el humano lo pide |
@@ -255,9 +255,3 @@ Una tarea está terminada solo si:
 - **Cada problema abierto es una tarea propia** con etiqueta `[tipo · complejidad · nivel]` (Baja/Intermedia/Alta; N1–N5 de `tasks/complexity.md`). Las preguntas al humano se escriben en la tarea («Pregunta abierta»).
 - `todo.md` solo contiene **pendientes**: una tarea con todos sus `- [x]` pasa a `tasks/todo.archive.md`; si queda un `- [ ]`, se queda en su sección (se puede podar lo ya hecho, nunca el pendiente). Los identificadores no se renumeran; las tareas nuevas siguen la numeración (hoy, hasta F91/G4).
 - Al crear una tarea, ponla en su sección, añade su ID al lote y actualiza `MEMORY.md` si implica una decisión.
-
-## 16. Scrum (pendiente de definir)
-
-- A partir de ahora el proyecto se gestiona con **Scrum**. Las ceremonias, artefactos, duraciones, roles y métricas se definirán en una sesión aparte; **no los inventes**.
-- Mientras se define, `tasks/plan.md` (PLAN) y `tasks/todo.md` (TODO) siguen siendo la fuente de trabajo, y `MEMORY.md` la de decisiones.
-- Cuando el humano cierre el proceso, actualiza esta sección y `MEMORY.md` con la decisión.
