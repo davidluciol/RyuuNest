@@ -91,6 +91,8 @@ import SaveFolderSheet from "../components/SaveFolderSheet";
 import SeriesMenuSheet from "../components/SeriesMenuSheet";
 import ErrorDialog from "../components/ErrorDialog";
 import LogEventRow from "../components/LogEventRow";
+import ArtistCard from "../components/ArtistCard";
+import type { Artist } from "../about/artists";
 import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen";
 import { INITIAL_DIAGNOSTICS_FLOW } from "../screens/settings/diagnostics/diagnosticsFlow";
 import { eventLevel } from "../screens/settings/diagnostics/diagnosticsView";
@@ -1097,10 +1099,40 @@ export default function GalleryScreen() {
             controller={null}
           />
         </View>
+
+        <Text style={styles.groupLabel}>{t("gallery.component.artistCard")}</Text>
+        <View style={styles.componentColumn}>
+          {SAMPLE_ARTISTS.map((artist) => (
+            <ArtistCard key={artist.id} artist={artist} testID={`gallery-artist-${artist.id}`} />
+          ))}
+        </View>
       </Section>
     </ScrollView>
   );
 }
+
+/** Artistas de ejemplo (TEMPORAL): una red, varias redes con logo y genéricas, y un enlace no https que se descarta. */
+const SAMPLE_ARTISTS: readonly Artist[] = [
+  {
+    id: "una-red",
+    name: "Artista de ejemplo",
+    bioKey: "about.artists.sample.bio",
+    links: [{ network: "instagram", url: "https://instagram.com/ejemplo" }],
+  },
+  {
+    id: "varias-redes",
+    name: "Otra artista de ejemplo",
+    bioKey: "about.artists.sample.bio",
+    links: [
+      { network: "telegram", url: "https://t.me/ejemplo" },
+      { network: "x", url: "https://x.com/ejemplo" },
+      { network: "youtube", url: "https://youtube.com/@ejemplo" },
+      { network: "kofi", url: "https://ko-fi.com/ejemplo" },
+      { network: "web", url: "https://ejemplo.org" },
+      { network: "artstation", url: "http://artstation.com/ejemplo" },
+    ],
+  },
+];
 
 const styles = themedStyles(() => ({
   screen: { flex: 1, backgroundColor: colors.bg },

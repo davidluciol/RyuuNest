@@ -35,7 +35,9 @@ archivo, listado en `packages/ui-tokens/src/fonts.ts` (`fontFiles`). La puerta a
 |---|---|---|---|
 | **Lucide** (`lucide-react-native@^1.57.0` en móvil/TV, `lucide-react@1.66.0` en web) | ISC | `github.com/lucide-icons/lucide` (paquete npm, instalado con `npx expo install` para la versión compatible con SDK 57) | **Incluido** (F03): punto de entrada único `apps/mobile/src/icons.ts`; requiere `react-native-svg@15.15.4` (par nativo, mismo origen ISC/MIT de su paquete). **Web (F24):** `lucide-react@1.66.0` con punto de entrada único `apps/web/src/icons.ts`; la puerta `apps/web/tests/sourceGuards.test.ts` prohíbe importar `lucide-react` a mano desde otra fuente |
 
-Notas: un único conjunto de iconos SVG, un icono por significado; sin emojis ni glifos de
+| **Tabler Icons** (solo los logos de redes sociales, v3.53.0) | MIT © 2020-2026 Paweł Kuna | `github.com/tabler/tabler-icons` → `icons/outline/brand-{instagram,telegram,x,tiktok,youtube,discord,twitch,patreon,deviantart,bluesky,threads,facebook,behance,linktree,github}.svg` (copia de los trazos `d`, 2026-11-27; sin dependencia npm) | **Incluido** (Acerca de): `apps/mobile/src/about/socialIcons.ts`, dibujado por `components/SocialIcon.tsx`. Misma rejilla que Lucide (24×24, trazo 2). Las marcas son de sus dueños: solo se usan para enlazar al perfil del artista. Las redes sin logo en Tabler (Ko-fi, pixiv, ArtStation, web) usan el genérico de Lucide |
+
+Notas: un único conjunto de iconos SVG para la interfaz (Lucide; Tabler solo aporta logos de redes), un icono por significado; sin emojis ni glifos de
 texto (`DESIGN_RULES.md` V4). La puerta `apps/mobile/tests/icons.test.ts` prohíbe emojis en
 `src/` y que otra pantalla importe `lucide-react-native` a mano.
 
