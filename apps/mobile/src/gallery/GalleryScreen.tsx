@@ -97,6 +97,7 @@ import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen
 import { INITIAL_DIAGNOSTICS_FLOW } from "../screens/settings/diagnostics/diagnosticsFlow";
 import { eventLevel } from "../screens/settings/diagnostics/diagnosticsView";
 import DiagnosticsSample from "../screens/settings/diagnostics/DiagnosticsSample";
+import AboutScreen from "../screens/settings/about/AboutScreen";
 import {
   BADGE_LABEL_KEYS,
   INCOMPATIBLE_LABEL_KEY,
@@ -1105,6 +1106,10 @@ export default function GalleryScreen() {
           {SAMPLE_ARTISTS.map((artist) => (
             <ArtistCard key={artist.id} artist={artist} testID={`gallery-artist-${artist.id}`} />
           ))}
+        </View>
+        <Text style={styles.groupLabel}>{t("gallery.component.aboutScreen")}</Text>
+        <View style={styles.onboardingPreview}>
+          <AboutScreen artists={SAMPLE_ARTISTS} onBack={() => {}} />
         </View>
       </Section>
     </ScrollView>

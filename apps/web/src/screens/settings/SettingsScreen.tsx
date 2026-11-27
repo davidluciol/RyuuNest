@@ -16,7 +16,7 @@ import LoadingState from "../../components/LoadingState";
 import Switch from "../../components/Switch";
 import Toast from "../../components/Toast";
 import { ChevronRight } from "../../icons";
-import { DIAGNOSTICS_PATH } from "../../routes";
+import { ABOUT_PATH, DIAGNOSTICS_PATH } from "../../routes";
 import "./settings.css";
 import { useSettingsData } from "./useSettingsData";
 
@@ -181,6 +181,17 @@ export default function SettingsScreen() {
               <span>
                 <span className="t-body-md settings-row-label settings-nav-label">{t("settings.diagnostics.row")}</span>
                 <span className="t-body-sm settings-hint settings-nav-hint">{t("settings.diagnostics.rowHint")}</span>
+              </span>
+              <ChevronRight size={20} aria-hidden />
+            </button>
+          </section>
+
+          <section className="settings-card" aria-label={t("settings.section.about")}>
+            <h2 className="t-title-lg">{t("settings.section.about")}</h2>
+            <button type="button" className="settings-nav-row" onClick={() => navigate(ABOUT_PATH)} data-testid="settings-about">
+              <span>
+                <span className="t-body-md settings-row-label settings-nav-label">{t("settings.about.row")}</span>
+                <span className="t-body-sm settings-hint settings-nav-hint">{t("settings.about.rowHint")}</span>
               </span>
               <ChevronRight size={20} aria-hidden />
             </button>

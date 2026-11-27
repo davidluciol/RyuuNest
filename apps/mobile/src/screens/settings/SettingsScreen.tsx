@@ -69,6 +69,8 @@ export interface SettingsScreenProps {
   onRetry?: () => void;
   /** F30 — abre Ajustes → Diagnóstico. */
   onOpenDiagnostics?: () => void;
+  /** Acerca de (AB2): abre Ajustes → Acerca de. */
+  onOpenAbout?: () => void;
   /** F21 — flujo de hojas del respaldo (sección «Respaldo»). */
   backupFlow?: BackupFlow;
   backupController?: BackupController | null;
@@ -95,6 +97,7 @@ export default function SettingsScreen({
   busy = false,
   onRetry,
   onOpenDiagnostics,
+  onOpenAbout,
   backupFlow,
   backupController = null,
   backupNotice = null,
@@ -307,6 +310,18 @@ export default function SettingsScreen({
               label={t("settings.diagnostics.row")}
               hint={t("settings.diagnostics.rowHint")}
               onPress={onOpenDiagnostics}
+              right={<ChevronRight size={spacing.lg} color={colors.textSecondary} />}
+            />
+          </SettingsCard>
+        </View>
+
+        <View style={styles.section}>
+          <SectionHeader title={t("settings.section.about")} />
+          <SettingsCard>
+            <SettingsRow
+              label={t("settings.about.row")}
+              hint={t("settings.about.rowHint")}
+              onPress={onOpenAbout}
               right={<ChevronRight size={spacing.lg} color={colors.textSecondary} />}
             />
           </SettingsCard>

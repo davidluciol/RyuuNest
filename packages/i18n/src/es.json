@@ -613,5 +613,19 @@
   "about.social.kofi": "Ko-fi",
   "about.social.pixiv": "pixiv",
   "about.social.artstation": "ArtStation",
-  "about.social.web": "Web"
+  "about.social.web": "Web",
+  "settings.section.about": "Acerca de",
+  "settings.about.row": "Acerca de RyuuNest",
+  "settings.about.rowHint": "Versión, licencia, artistas y recursos de terceros.",
+  "about.title": "Acerca de",
+  "about.version": "Versión {version}",
+  "about.license": "Licencia GPL-3.0 · Código abierto",
+  "about.privacy": "Sin rastreo, sin telemetría y sin publicidad. Tus datos se quedan en tu dispositivo.",
+  "about.links.source": "Código fuente",
+  "about.links.license": "Licencia",
+  "about.artists.title": "Artistas",
+  "about.artists.intro": "Las manos y el corazón detrás de cada dragón de esta guarida. ¡Gracias por darle vida!",
+  "about.credits.title": "Recursos de terceros",
+  "about.credits.item": "{name} · {license}",
+  "gallery.component.aboutScreen": "pantalla Acerca de"
 }

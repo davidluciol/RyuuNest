@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import { catalogKeys, t } from "@ryuunest/i18n";
 
-import { DIAGNOSTICS_PATH, discoverSearchPath, readerPath, seriesPath, TAB_ROUTES } from "../src/routes";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+import { ABOUT_PATH, DIAGNOSTICS_PATH, discoverSearchPath, readerPath, seriesPath, TAB_ROUTES } from "../src/routes";
 
 describe("tabla de rutas del cliente web (F24)", () => {
   it("cinco pestañas con id único, ruta absoluta y etiqueta traducida", () => {
@@ -29,6 +32,20 @@ describe("tabla de rutas del cliente web (F24)", () => {
 
   it("diagnóstico cuelga de una ruta propia fuera de las pestañas", () => {
     expect(DIAGNOSTICS_PATH).toBe("/diagnostics");
+  });
+
+  it("Acerca de (AB3) cuelga de una ruta propia y Ajustes la abre", () => {
+    expect(ABOUT_PATH).toBe("/about");
+    const src = path.resolve(import.meta.dirname, "..", "src");
+    expect(readFileSync(path.join(src, "App.tsx"), "utf8")).toContain('path="about"');
+    expect(readFileSync(path.join(src, "screens/settings/SettingsScreen.tsx"), "utf8")).toContain("navigate(ABOUT_PATH)");
+  });
+
+  it("iconos temáticos de las pestañas (F74): castillo, gema, mapa, puerta y engranaje", () => {
+    const shell = readFileSync(path.resolve(import.meta.dirname, "..", "src/shell/AppShell.tsx"), "utf8");
+    for (const pair of ["home: Castle", "library: Gem", "compass: MapIcon", "layers: DoorOpen", "settings: SettingsIcon"]) {
+      expect(shell).toContain(pair);
+    }
   });
 });
 

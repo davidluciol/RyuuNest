@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router";
 import ServicesProvider from "./services/ServicesContext";
 import AppShell from "./shell/AppShell";
 import ExtensionNotice from "./shell/ExtensionNotice";
+import AboutScreen from "./screens/about/AboutScreen";
 import DiagnosticsScreen from "./screens/diagnostics/DiagnosticsScreen";
 import DiscoverScreen from "./screens/discover/DiscoverScreen";
 import HomeScreen from "./screens/home/HomeScreen";
@@ -35,6 +36,7 @@ export default function App() {
         <Route path="reader/:moduleId/:seriesId/:chapterId" element={<ReaderScreen />} />
         {/* Diagnóstico con cabecera propia (volver a Ajustes), fuera del marco. */}
         <Route path="diagnostics" element={<DiagnosticsScreen />} />
+        <Route path="about" element={<AboutScreen />} />
       </Routes>
     </ServicesProvider>
   );
