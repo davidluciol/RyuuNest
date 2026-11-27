@@ -22,6 +22,7 @@ import {
   shouldMountImage,
 } from "../../reader/verticalLayout";
 import { isAtScrollEnd } from "../../reader/readerLayout";
+import FocusPressable from "../../components/FocusPressable";
 import ReaderPageImage from "./ReaderPageImage";
 import type { ReaderImage } from "./readingSource";
 
@@ -53,11 +54,29 @@ export interface ReaderVerticalProps {
   footerClearance: number;
   /** F51 — avisa cuando el final de la lista (la tarjeta de fin) entra o sale de la vista. */
   onEndChange: (atEnd: boolean) => void;
+  /**
+   * F51 — tocar y mantener. Se atienden aquí, dentro del ScrollView: un Pressable que lo envuelve
+   * le roba el arrastre en Android en cuanto JS le concede el respondedor (P-193).
+   */
+  onPress: (pageX: number) => void;
+  onLongPress: () => void;
 }
 
 const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
   function ReaderVertical(
-    { images, queue, width, window, initialPage, onPageChange, footer, footerClearance, onEndChange },
+    {
+      images,
+      queue,
+      width,
+      window,
+      initialPage,
+      onPageChange,
+      footer,
+      footerClearance,
+      onEndChange,
+      onPress,
+      onLongPress,
+    },
     ref,
   ) {
     const atEnd = useRef(false);
@@ -117,25 +136,28 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
     };
 
     // Estable entre renders para que las filas memoizadas no se vuelvan a pintar.
-    const onAspect = useCallback((index: number, aspect: number) => {
-      if (aspectsRef.current[index] === aspect) return;
-      const delta = anchorDelta({
-        changedIndex: index,
-        currentPage: currentPage.current,
-        previousHeight: heightsRef.current[index] ?? 0,
-        nextHeight: pageHeightFor(width, aspect),
-      });
-      aspectsRef.current = { ...aspectsRef.current, [index]: aspect };
-      setAspects(aspectsRef.current);
-      if (delta === 0) return;
-      anchor.current.add(delta);
-      requestAnimationFrame(() => {
-        const pending = anchor.current.take();
-        if (pending === 0) return;
-        offsetY.current += pending;
-        scrollRef.current?.scrollTo({ y: offsetY.current, animated: false });
-      });
-    }, [width]);
+    const onAspect = useCallback(
+      (index: number, aspect: number) => {
+        if (aspectsRef.current[index] === aspect) return;
+        const delta = anchorDelta({
+          changedIndex: index,
+          currentPage: currentPage.current,
+          previousHeight: heightsRef.current[index] ?? 0,
+          nextHeight: pageHeightFor(width, aspect),
+        });
+        aspectsRef.current = { ...aspectsRef.current, [index]: aspect };
+        setAspects(aspectsRef.current);
+        if (delta === 0) return;
+        anchor.current.add(delta);
+        requestAnimationFrame(() => {
+          const pending = anchor.current.take();
+          if (pending === 0) return;
+          offsetY.current += pending;
+          scrollRef.current?.scrollTo({ y: offsetY.current, animated: false });
+        });
+      },
+      [width],
+    );
 
     return (
       <ScrollView
@@ -145,24 +167,32 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
         onContentSizeChange={placeInitialPage}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ alignItems: "center", paddingBottom: footerClearance }}
+        contentContainerStyle={{ paddingBottom: footerClearance }}
       >
-        {images.map((image, index) => (
-          <View key={`${index}:${image.url}`} style={{ width, height: heights[index] }}>
-            <ReaderPageImage
-              image={image}
-              index={index}
-              queue={queue}
-              decode={shouldMountImage(index, window)}
-              width={width}
-              height={heights[index] ?? 0}
-              fit="fill"
-              testID={`reader-page-${index}`}
-              onAspect={onAspect}
-            />
-          </View>
-        ))}
-        {footer}
+        <FocusPressable
+          focusable={false}
+          accessible={false}
+          style={{ alignItems: "center" }}
+          onPress={(event) => onPress(event.nativeEvent.pageX)}
+          onLongPress={onLongPress}
+        >
+          {images.map((image, index) => (
+            <View key={`${index}:${image.url}`} style={{ width, height: heights[index] }}>
+              <ReaderPageImage
+                image={image}
+                index={index}
+                queue={queue}
+                decode={shouldMountImage(index, window)}
+                width={width}
+                height={heights[index] ?? 0}
+                fit="fill"
+                testID={`reader-page-${index}`}
+                onAspect={onAspect}
+              />
+            </View>
+          ))}
+          {footer}
+        </FocusPressable>
       </ScrollView>
     );
   },

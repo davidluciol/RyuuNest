@@ -128,6 +128,8 @@ export default function ReaderScreen({
     else if (action === "previous") goPrevious();
   };
 
+  const showControls = () => setControls(true);
+
   const onSwipe = (dx: number, dy: number) => {
     const action = swipeActionFor(dx, dy, mode);
     if (action === "next") goNext();
@@ -156,12 +158,13 @@ export default function ReaderScreen({
       >
         <FocusPressable
           testID="reader-canvas"
+          disabled={mode === "vertical"}
           focusable={false}
           accessible={false}
           style={readerCanvasStyle()}
           onLayout={onLayout}
           onPress={(event) => onCanvasPress(event.nativeEvent.pageX)}
-          onLongPress={() => setControls(true)}
+          onLongPress={showControls}
         >
           <View style={{ flex: 1, alignItems: "center" }}>
             {size.width === 0 ? null : mode === "vertical" ? (
@@ -176,6 +179,8 @@ export default function ReaderScreen({
                 footer={endCardView}
                 footerClearance={controls ? FOOTER_CLEARANCE : 0}
                 onEndChange={setVerticalAtEnd}
+                onPress={onCanvasPress}
+                onLongPress={showControls}
               />
             ) : endCard ? (
               <View style={{ flex: 1, justifyContent: "center" }}>{endCardView}</View>
@@ -196,7 +201,13 @@ export default function ReaderScreen({
         <View
           testID="reader-loading-batch"
           pointerEvents="none"
-          style={{ position: "absolute", left: 0, right: 0, bottom: FOOTER_CLEARANCE, alignItems: "center" }}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: FOOTER_CLEARANCE,
+            alignItems: "center",
+          }}
         >
           <Badge label={t("reader.loading.batch", preload.progress)} />
         </View>
