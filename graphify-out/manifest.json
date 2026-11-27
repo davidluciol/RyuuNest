@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1795551910.9034858,
-    "seen": 1795754364.3366091,
-    "ast_hash": "87aeeb7df9ba3fc9d035118d46b38652",
+    "mtime": 1795756304.162914,
+    "seen": 1795800024.550372,
+    "ast_hash": "06d2542fc8a31ecf5399f811552df648",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -966,9 +966,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1795551911.1549406,
-    "seen": 1795754364.3367584,
-    "ast_hash": "c01c8d1ba1bfd3e635cf62cc2ac6c59b",
+    "mtime": 1795756303.78913,
+    "seen": 1795800024.5504491,
+    "ast_hash": "1b6b75998082729bf341119f819d9551",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -2730,9 +2730,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/series/SeriesScreen.tsx": {
-    "mtime": 1795318185.4256692,
-    "seen": 1795319928.5594747,
-    "ast_hash": "d8d95df221d270a6a5f095aed3238470",
+    "mtime": 1795799440.5079668,
+    "seen": 1795800024.5495217,
+    "ast_hash": "8c059f9b1a6da0c2f4a4a27baf72c5b0",
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/series/seriesFixtures.ts": {
@@ -2856,9 +2856,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/reader/ReaderSheets.tsx": {
-    "mtime": 1795301817.0434718,
-    "seen": 1795319928.5594485,
-    "ast_hash": "a823b69dd00e856ef4c7dc06f84e5975",
+    "mtime": 1795799440.5069666,
+    "seen": 1795800024.5495057,
+    "ast_hash": "b37a81caee4778c1bb6591f0dea0e49c",
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/reader/ReaderVertical.tsx": {
@@ -4044,8 +4044,8 @@
     "semantic_hash": ""
   },
   "packages/core/src/modules/installedMounter.ts": {
-    "mtime": 1795754521.3336506,
-    "seen": 1795754625.3979876,
+    "mtime": 1795755046.40038,
+    "seen": 1795800024.5500474,
     "ast_hash": "1c3d258cae8ed980aecc99644767ea54",
     "semantic_hash": ""
   },
@@ -4068,8 +4068,8 @@
     "semantic_hash": ""
   },
   "packages/core/tests/modules/installedMounter.test.ts": {
-    "mtime": 1795754516.8858058,
-    "seen": 1795754625.398097,
+    "mtime": 1795755046.402404,
+    "seen": 1795800024.5501454,
     "ast_hash": "3d2e59e6c195d87e3033958456d00c0d",
     "semantic_hash": ""
   },
@@ -5538,9 +5538,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/reader/readerChapterLabel.ts": {
-    "mtime": 1795218822.4683454,
-    "seen": 1795319928.5594563,
-    "ast_hash": "4ae29158ca3897f80f6edfdbfab9d8f7",
+    "mtime": 1795799959.9351466,
+    "seen": 1795800024.5495107,
+    "ast_hash": "33aaec67fcc81be7da36f1b8559f0f5a",
     "semantic_hash": ""
   },
   "apps/mobile/tests/e2e/screenErrors.cjs": {
@@ -5568,9 +5568,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/tests/screens/readerChapterLabel.test.ts": {
-    "mtime": 1795218824.2528813,
-    "seen": 1795319928.559968,
-    "ast_hash": "b98e47d3e24c34a8d28e698e723ac0be",
+    "mtime": 1795799440.509285,
+    "seen": 1795800024.5498006,
+    "ast_hash": "4bbbe7f6e9eda79cf854591a0a23d22d",
     "semantic_hash": ""
   },
   "apps/mobile/tests/screens/resumeRoutes.test.ts": {
@@ -6378,9 +6378,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/tests/screens/releaseSheet.test.ts": {
-    "mtime": 1795318185.438508,
-    "seen": 1795319928.5599794,
-    "ast_hash": "70124bfba3c0a723a0371aec15380ea8",
+    "mtime": 1795799440.5102859,
+    "seen": 1795800024.5498073,
+    "ast_hash": "6fccf7fcee4ce6df4d15d356713ce940",
     "semantic_hash": ""
   },
   "apps/web/tests/screens/readerVisiblePage.test.ts": {
