@@ -720,11 +720,25 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 > Hallazgos de explorar la app (2026-11-16): **todos** los estados vacío, de error y de carga usan el mismo `DragonMarker` (silueta marcador en `assets/placeholder/`, TEMPORAL); la barra inferior usa iconos de `lucide`; no hay ilustración propia por pantalla ni arte para las carpetas por defecto; los iconos de la app (`icon.png`, `android-icon-*`, `splash-icon.png`) y los de la extensión no tienen arte final. Solo tokens de color de `ui-tokens`, arte original GPL-3.0, sin recursos externos (RNF-5); cada recurso se registra en `ASSETS.md`.
 
+> **Regla para todo el arte de artistas (FA1–FA3, F70–F75):** el artista se acredita en Ajustes → Acerca de añadiéndolo a `ARTISTS` (`apps/mobile/src/about/artists.ts`) con su foto y sus redes (FA3), y cada recurso se registra en `ASSETS.md` con licencia compatible GPL-3.0.
+
 ### FA1 Arte final del dragón `[Ops · Baja · N1]` 🧍 (sin dependencias; antes de v1.0 pública)
 
 - [ ] 🧍 Arte original con licencia compatible GPL-3.0; sustituir `apps/mobile/assets/placeholder/*`
 - [ ] `ASSETS.md` y `README` de placeholder actualizados; retirar marca TEMPORAL
 - Verif: `apps/mobile/tests/placeholder.test.ts` en verde + galería con Playwright (RNF-5)
+
+### FA2 Logo de cabecera y bienvenida de primer uso `[Arte · Baja · N2]` 🧍
+
+- [ ] Logo pequeño del dragón para la cabecera y la ilustración grande de bienvenida (SPEC §11, tabla del dragón: «Encabezado» y «Primer uso»), con arte del artista
+- [ ] Sustituir el `DragonMarker` en `Header`/`AppShell` y en `OnboardingScreen`; ambos en la galería
+- Verif: Playwright + galería + 🧍 S25
+
+### FA3 Alta de artista en «Acerca de» `[Datos · Baja · N1]` 🧍
+
+- [ ] 🧍 Pasar nombre artístico, foto, redes y agradecimiento de cada artista
+- [ ] Foto en `apps/mobile/assets/artists/<id>.webp` (local, RNF-5), entrada en `ARTISTS`, texto en `es.json` (`about.artists.<id>.bio`), registro en `ASSETS.md`
+- Verif: `tests/about/artists.test.ts` + galería + 🧍 S25 (tocar cada red abre el navegador)
 
 ---
 
@@ -756,6 +770,7 @@ Dep: F56 · M · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`
 
 Dep: — · S · `apps/mobile/src/icons`, `BottomNav.tsx`
 
+- [ ] Iconos temáticos libres de Lucide ya (decisión 2026-11-27): Guarida `Castle`, Tesoros `Gem`, Aventuras `Map`, Portales `DoorOpen`, Ajustes `Settings`, en móvil/TV y web; sustituir por el arte del artista cuando llegue
 - [ ] Auditar iconos de la barra inferior y la cabecera: un solo juego (`lucide`), tamaños y colores por estado (activo/inactivo/foco) tomados de `ui-tokens`; iconos con nombres temáticos coherentes (Guarida, Tesoros, Aventuras, Portales, Ajustes)
 - Verif: Playwright + galería
 
@@ -767,6 +782,15 @@ Dep: F52, F53 · XS
 - Verif: galería + Playwright
 
 **Lote sugerido:** F70 → F71 → F74 → F75 → F73 (F72 y FA1 esperan el arte final del dragón).
+
+### AB1–AB3 Ajustes → «Acerca de» con sección de Artistas `[FE · Intermedia · N3]`
+
+Plan aprobado el 2026-11-27. Logos de redes de Tabler (MIT, solo trazos copiados); las redes sin logo usan el genérico de Lucide.
+
+- [x] AB1 Datos y tarjeta: `about/socialIcons.ts`, `about/artists.ts` (`safeLinks` solo `https:`), `SocialIcon`, `ArtistCard` + galería, `ASSETS.md`
+- [ ] AB2 Pantalla móvil/TV: `AboutScreen` (versión, GPL-3.0, sin telemetría, enlaces; «Artistas» oculta si no hay; recursos de terceros), ruta `/about` y fila en Ajustes
+- [ ] AB3 Web: `AboutScreen` web, `SocialIcon` web, ruta y fila en Ajustes web
+- Verif: Playwright 426/1440 (sin desbordes, ≥48×48, cero peticiones al cargar) + agent-device en el teléfono
 
 ---
 
