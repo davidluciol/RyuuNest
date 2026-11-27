@@ -10,8 +10,8 @@ export function savedChapterLabel(chapter: { number: number | undefined; title: 
     : t("series.chapter", { number: chapter.number });
 }
 
-/** El módulo ya numeró el título («Capítulo 103.00», «Cap. 5: …», «Chapter 2»). */
-const NUMBERED_TITLE = /^(cap[ií]tulo|cap\.?|chapter|ch\.?)\s*\d/iu;
+/** El módulo ya numeró el título («Capítulo 103.00», «Capitulo 7», «Cap. 5: …», «Chapter 2»). */
+const NUMBERED_TITLE = /^(cap|ch)\S*\s*\d/i;
 
 /** Título de la fila de capítulo: «Capítulo N: subtítulo», sin repetir la numeración del módulo. */
 export function chapterRowTitle(chapter: { number?: number | undefined; title: string }): string {
