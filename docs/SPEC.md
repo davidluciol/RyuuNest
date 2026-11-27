@@ -812,7 +812,7 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 - Las imágenes de ejemplo de `design/` (portadas, avatar, dragón) son marcadores: se copian a `assets/placeholder/` con su registro y no se enlazan por URL.
 - Fuentes e iconos del diseño: Manrope e Inter (OFL) y Lucide (ISC), empaquetados y registrados en `docs/ASSETS.md`.
 - Los marcadores viven solo en `assets/placeholder/`, con un `README` que registra herramienta, fecha e indicaciones usadas, y una marca clara de **temporal**. No se emplean personajes ni estilos de obras protegidas.
-- `docs/ASSETS.md` registra la licencia de todo recurso de terceros (iconos, fuentes, imágenes). En un repo GPL-3.0 no entran recursos con licencias no libres o no comerciales.
+- `docs/ASSETS.md` registra la licencia de todo recurso de terceros (iconos, fuentes, imágenes). En un repo GPL-3.0 no entran recursos con licencias no libres o no comerciales, **salvo el arte de los artistas**, que va bajo CC BY-NC-ND 4.0 con su aceptación por escrito (`LICENSE-ART.md`, P-196).
 - Antes de la v1.0 pública se reemplazan los marcadores o se confirma su situación de licencia. Ninguna pantalla depende del arte final: el dragón de marcador es una silueta sencilla.
 
 ---
@@ -852,7 +852,7 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 
 ## 15. Código abierto y comunidad
 
-- **Licencia GPL-3.0.** Los módulos son obras independientes de cada autor, que decide su licencia. Esto no es asesoría legal.
+- **Licencia GPL-3.0-only** para el código (`LICENSE`). El arte de los artistas va bajo **CC BY-NC-ND 4.0** (`LICENSE-ART.md`): un fork lo quita o lo usa sin modificarlo, sin fines comerciales y con créditos; el nombre «RyuuNest» y el logo no se usan en forks. Donaciones voluntarias en Ko-fi (`.github/FUNDING.yml`); no desbloquean nada (P-196). Los módulos son obras independientes de cada autor, que decide su licencia. Esto no es asesoría legal.
 - **El repo principal no incluye módulos de sitios concretos.** Los módulos del autor viven en un repo público aparte, no afiliado a la app. Repo de módulos decidido el 2026-10-25 (**P-78**): **`https://github.com/davidluciol/RyuuNest-Models.git`**. La estructura de contribución (carpeta `<site>` con `manifest.json` + `module.js` y apoyo en `bin/`) está en el `AGENTS.md` de ese repo.
 - **README:** declara que no está afiliado a ningún sitio, que no aloja ni distribuye contenido, y que cada usuario es responsable de los repos que añade y de respetar los derechos de autor y los términos de cada sitio.
 - **Documentos:** `CONTRIBUTING.md`, guía del SDK de módulos, código de conducta, plantillas de issues y política de seguridad.

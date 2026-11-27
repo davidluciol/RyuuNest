@@ -100,7 +100,14 @@ con Playwright de `AGENTS.md` (secciones 3, 4 y 5).
 ## Recursos de terceros
 
 Todo recurso de terceros (fuentes, iconos, imágenes) registra su licencia en `docs/ASSETS.md`.
-En un repositorio GPL-3.0 **no entran** recursos con licencias no libres o no comerciales.
+En un repositorio GPL-3.0 **no entran** recursos con licencias no libres o no comerciales,
+salvo el arte de artistas (ver abajo).
+
+## Licencia de las contribuciones
+
+- **Código:** al contribuir aceptas que tu aporte se publique bajo **GPL-3.0-only** (`LICENSE`).
+- **Arte:** solo entra arte cuyo autor acepte por escrito **CC BY-NC-ND 4.0** y el permiso de
+  adaptación para la app oficial (`LICENSE-ART.md`). Se registra en `docs/ASSETS.md` como «Artista».
 
 ## Módulos de sitios reales
 

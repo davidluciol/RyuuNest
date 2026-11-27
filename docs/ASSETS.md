@@ -13,6 +13,9 @@ código se registran con su licencia en los `package.json` y en `pnpm-lock.yaml`
 1. Sin CDN ni recursos remotos: fuentes e iconos se empaquetan localmente (RNF-5).
 2. Un recurso sin licencia registrada aquí no se usa.
 3. Licencias admitidas: libres y comerciales (por ejemplo OFL, ISC, MIT, BSD, Apache-2.0).
+   **Excepción:** el arte hecho por artistas para RyuuNest va bajo **CC BY-NC-ND 4.0**
+   (`LICENSE-ART.md`, P-196), con la aceptación por escrito del artista. Se registra en la
+   tabla de imágenes con el estado **«Artista»**, su autor y su enlace.
 4. Cada marcador temporal se marca como **temporal** y se revisa antes de la v1.0.
 
 ## Fuentes
@@ -64,4 +67,5 @@ Reglas de los marcadores (`docs/SPEC.md` §12):
 ## Cómo registrar un recurso nuevo
 
 Añade una fila en la tabla que corresponda con: recurso, versión/pesos, licencia, origen,
-ubicación y estado. Si la licencia no es libre o no comercial, el recurso **no se añade**.
+ubicación y estado. Si la licencia no es libre o no comercial, el recurso **no se añade**
+(salvo el arte de artistas de la regla 3).

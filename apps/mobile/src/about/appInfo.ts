@@ -18,7 +18,7 @@ export interface AppLink {
 export const APP_LINKS: readonly AppLink[] = [
   { id: "source", labelKey: "about.links.source", url: "https://github.com/davidluciol/RyuuNest" },
   // shortcut: el repo aún no tiene LICENSE; cuando lo tenga, enlazar a `…/blob/master/LICENSE`.
-  { id: "license", labelKey: "about.links.license", url: "https://www.gnu.org/licenses/gpl-3.0.html" },
+  { id: "license", labelKey: "about.links.license", url: "https://github.com/davidluciol/RyuuNest/blob/master/LICENSE" },
 ];
 
 export interface ThirdPartyCredit {

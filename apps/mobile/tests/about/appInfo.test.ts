@@ -21,11 +21,12 @@ describe("datos de «Acerca de»", () => {
     expect(APP_VERSION).toBe(appJson.expo.version);
   });
 
-  it("código fuente (el repositorio) y licencia (texto oficial de la GPL-3.0), con texto en el catálogo", () => {
+  it("código fuente (el repositorio) y licencia (el LICENSE GPL-3.0 del repositorio), con texto en el catálogo", () => {
     const keys = catalogKeys();
     expect(APP_LINKS.map((link) => link.id)).toEqual(["source", "license"]);
     expect(APP_LINKS[0]?.url).toBe("https://github.com/davidluciol/RyuuNest");
-    expect(APP_LINKS[1]?.url).toBe("https://www.gnu.org/licenses/gpl-3.0.html");
+    expect(APP_LINKS[1]?.url).toBe("https://github.com/davidluciol/RyuuNest/blob/master/LICENSE");
+    expect(readFileSync(path.resolve(ROOT, "../../LICENSE"), "utf8")).toContain("GNU GENERAL PUBLIC LICENSE");
     for (const link of APP_LINKS) expect(keys).toContain(link.labelKey);
   });
 
