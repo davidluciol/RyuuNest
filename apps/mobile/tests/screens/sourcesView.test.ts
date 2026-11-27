@@ -10,6 +10,7 @@ import {
   moduleBadges,
   modulePermissions,
   moduleRowAction,
+  moduleRowKey,
   moduleStatusBadges,
   PERMISSION_LABEL_KEYS,
   ROW_ACTION_KEYS,
@@ -188,5 +189,17 @@ describe("F99 — aviso de actualizaciones", () => {
     ];
     expect(countUpdates(rows)).toBe(1);
     expect(countUpdates([])).toBe(0);
+  });
+});
+
+describe("clave de fila única", () => {
+  it("distingue el mismo id de dos repos y el instalado del disponible", () => {
+    const fromMain = row({ id: "fanfox", version: "0.1.0", repoId: "https://main.test/index.json" });
+    const fromOther = row({ id: "fanfox", version: "0.1.1", repoId: "https://other.test/index.json" });
+    const installed = row({ id: "fanfox", status: "installed", repoId: "https://main.test/index.json" });
+
+    expect(moduleRowKey(fromMain)).not.toBe(moduleRowKey(fromOther));
+    expect(moduleRowKey(fromMain)).not.toBe(moduleRowKey(installed));
+    expect(moduleRowKey(fromMain)).toBe(moduleRowKey(row({ id: "fanfox", repoId: "https://main.test/index.json" })));
   });
 });

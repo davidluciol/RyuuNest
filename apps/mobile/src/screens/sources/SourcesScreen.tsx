@@ -37,6 +37,7 @@ import {
   PERMISSION_LABEL_KEYS,
   modulePermissions,
   moduleRowAction,
+  moduleRowKey,
   moduleStatusBadges,
 } from "./sourcesView";
 import { themedStyles } from "../../components/themedStyles";
@@ -230,7 +231,7 @@ export default function SourcesScreen({
                   const action = moduleRowAction(module);
                   return (
                     <ModuleRow
-                      key={module.id}
+                      key={moduleRowKey(module)}
                       testID={`module-${module.id}`}
                       name={module.name}
                       nsfw={module.nsfw}
