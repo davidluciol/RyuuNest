@@ -3,6 +3,7 @@ import type { ModuleManifest } from "../contract/types.js";
 import { createModuleApi, type ModuleApiHandle } from "../runtimes/ModuleRuntime.js";
 import { ModuleHost } from "../host/ModuleHost.js";
 import { fromHex, utf8Decode } from "../bytes.js";
+import type { InstalledPackage } from "../install/PackageInstaller.js";
 import { ModuleRegistry } from "./ModuleRegistry.js";
 import { SqliteStorage } from "../storage/SqliteStorage.js";
 import type { ClearanceStore } from "../host/challenge.js";
@@ -42,11 +43,13 @@ export interface InstalledMounterDeps {
 export function createInstalledMounter(deps: InstalledMounterDeps): ModuleMounter {
   const { driver, http, loader, clearances } = deps;
   const registry = new ModuleRegistry({ storage: new SqliteStorage(driver) });
-  const mounted = new Map<string, Promise<MountedModule>>();
+  // La firma detecta instalar/actualizar/reinstalar/activar sin decodificar el paquete.
+  const mounted = new Map<string, { signature: string; module: Promise<MountedModule> }>();
 
   async function requireUsablePackage(moduleId: string) {
     const pkg = await registry.get(moduleId);
     if (pkg === undefined || !pkg.enabled) {
+      mounted.delete(moduleId);
       throw new ModuleError("NOT_FOUND", `El módulo ${moduleId} no está instalado ni activo`);
     }
     if (pkg.runtime === "script" && loader === undefined) {
@@ -55,42 +58,48 @@ export function createInstalledMounter(deps: InstalledMounterDeps): ModuleMounte
     return pkg;
   }
 
+  async function mountPackage(moduleId: string, pkg: InstalledPackage): Promise<MountedModule> {
+    const entry = pkg.files.find((file) => file.path === pkg.manifest.entry);
+    if (entry === undefined) {
+      throw new ModuleError(
+        "NOT_FOUND",
+        `El paquete de ${moduleId} no trae su archivo de entrada (${pkg.manifest.entry})`,
+      );
+    }
+    const host = new ModuleHost({
+      http,
+      clock: { now: () => Date.now() },
+      permissions: pkg.manifest.permissions,
+      ...(pkg.manifest.network?.minDelayMs === undefined
+        ? {}
+        : { minDelayMs: pkg.manifest.network.minDelayMs }),
+      ...(clearances === undefined ? {} : { clearances }),
+    });
+    const handle = await createModuleApi({
+      manifest: pkg.manifest,
+      entry: utf8Decode(fromHex(entry.hex)),
+      files: Object.fromEntries(pkg.files.map((file) => [file.path, utf8Decode(fromHex(file.hex))])),
+      host,
+      ...(loader === undefined ? {} : { loader }),
+    });
+    return { handle, manifest: pkg.manifest };
+  }
+
   return {
-    mount(moduleId) {
-      let module = mounted.get(moduleId);
-      if (module === undefined) {
-        module = requireUsablePackage(moduleId).then(async (pkg) => {
-          const entry = pkg.files.find((file) => file.path === pkg.manifest.entry);
-          if (entry === undefined) {
-            throw new ModuleError(
-              "NOT_FOUND",
-              `El paquete de ${moduleId} no trae su archivo de entrada (${pkg.manifest.entry})`,
-            );
-          }
-          const host = new ModuleHost({
-            http,
-            clock: { now: () => Date.now() },
-            permissions: pkg.manifest.permissions,
-            ...(pkg.manifest.network?.minDelayMs === undefined
-              ? {}
-              : { minDelayMs: pkg.manifest.network.minDelayMs }),
-            ...(clearances === undefined ? {} : { clearances }),
-          });
-          const handle = await createModuleApi({
-            manifest: pkg.manifest,
-            entry: utf8Decode(fromHex(entry.hex)),
-            files: Object.fromEntries(
-              pkg.files.map((file) => [file.path, utf8Decode(fromHex(file.hex))]),
-            ),
-            host,
-            ...(loader === undefined ? {} : { loader }),
-          });
-          return { handle, manifest: pkg.manifest };
-        });
-        // Un fallo al montar no se cachea: la próxima petición lo reintenta.
-        module.catch(() => mounted.delete(moduleId));
-        mounted.set(moduleId, module);
+    async mount(moduleId) {
+      const pkg = await requireUsablePackage(moduleId);
+      const signature = `${pkg.version}|${pkg.installedAt}|${pkg.files.length}`;
+      const cached = mounted.get(moduleId);
+      if (cached?.signature === signature) {
+        return cached.module;
       }
+      const module = mountPackage(moduleId, pkg);
+      const entry = { signature, module };
+      mounted.set(moduleId, entry);
+      // Un fallo al montar no se cachea: la próxima petición lo reintenta.
+      module.catch(() => {
+        if (mounted.get(moduleId) === entry) mounted.delete(moduleId);
+      });
       return module;
     },
   };
