@@ -2,8 +2,8 @@ import { radii, activeColors } from "@ryuunest/ui-tokens";
 
 /**
  * F06 — reglas de la insignia de tipo/estado (SPEC §11.10): pill de 24 px,
- * **neutra** (fondo `elevated`, texto `text-secondary`) según `DESIGN_RULES.md`
- * V1 — `DESIGN.md` la pinta esmeralda y gana la regla. No es interactiva, así
+ * **neutra** (fondo `elevated`, texto `text-secondary`) según `docs/DESIGN_RULES.md`
+ * V1 — `docs/DESIGN.md` la pinta esmeralda y gana la regla. No es interactiva, así
  * que no necesita área táctil de 48 dp.
  */
 

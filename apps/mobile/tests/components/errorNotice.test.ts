@@ -27,7 +27,7 @@ import { t } from "../../src/i18n";
 
 /**
  * F29 — aviso transitorio (toast), aviso inline (banner) y diálogo de error
- * (P-72). Sin diseño en Stitch (P-30): se componen con `DESIGN.md` y tokens.
+ * (P-72). Sin diseño en Stitch (P-30): se componen con `docs/DESIGN.md` y tokens.
  *
  * Reglas fijadas aquí (sin Metro, como `button.test.ts` y `states.test.ts`):
  * - toast de 4 s, una línea, acción opcional, área táctil mínima;

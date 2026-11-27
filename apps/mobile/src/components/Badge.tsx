@@ -6,7 +6,7 @@ import { textStyle } from "./textStyle";
 
 /**
  * F06 — insignia de tipo/estado (SPEC §11.10): pill de 24 px, **neutra**
- * (fondo `elevated`, texto `text-secondary`) según `DESIGN_RULES.md` V1. No es
+ * (fondo `elevated`, texto `text-secondary`) según `docs/DESIGN_RULES.md` V1. No es
  * interactiva. Props tipadas; todo desde `ui-tokens`.
  */
 

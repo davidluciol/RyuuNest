@@ -9,7 +9,7 @@ import {
 } from "../../src/screens/reader/readerStyles";
 
 /**
- * F18 — apariencia del lector (RF-22, `DESIGN.md` «Reader View Overlays»): barras `elevated` al
+ * F18 — apariencia del lector (RF-22, `docs/DESIGN.md` «Reader View Overlays»): barras `elevated` al
  * 95 % con borde `border`, sin sombras, marca ni mascota; lienzo en `bg`; áreas táctiles de 48.
  */
 

@@ -7,7 +7,7 @@ import { sectionHeaderColors, sectionHeaderStyle } from "./sectionHeaderStyles";
 import { textStyle } from "./textStyle";
 
 /**
- * F13 — encabezado de sección (SPEC §11.10, `DESIGN_RULES.md` V1/V4): icono
+ * F13 — encabezado de sección (SPEC §11.10, `docs/DESIGN_RULES.md` V1/V4): icono
  * opcional a la izquierda en `text-secondary`, título en `title-lg` y acción
  * secundaria a la derecha ("Ver todas" en `text-primary` con chevron). Sin
  * `accent` en el título ni en la acción (V1). Área táctil mínima de 48 dp

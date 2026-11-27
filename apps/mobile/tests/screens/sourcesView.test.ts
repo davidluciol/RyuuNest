@@ -20,7 +20,7 @@ import {
 
 /**
  * F16 — presentación pura de Fuentes: qué insignias lleva una fila (tope de
- * dos señales, como V8/V9 en `DESIGN_RULES.md`), qué acción ofrece y la
+ * dos señales, como V8/V9 en `docs/DESIGN_RULES.md`), qué acción ofrece y la
  * comprobación de la URL antes de tocar la red (RF-2).
  */
 

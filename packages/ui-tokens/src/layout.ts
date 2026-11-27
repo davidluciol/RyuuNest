@@ -7,7 +7,7 @@ import { type TypeStyle, type TypeToken } from "./typography";
  * F04 — layout por punto de corte (SPEC §11.9): márgenes, separaciones, riel
  * y columnas según el ancho; base compartida por móvil, web y TV. La
  * separación de tablet (16 px) la eligió el humano: el SPEC fija 12 en móvil
- * y 24 en escritorio, pero nada entre medias (se anota en `MEMORY.md`).
+ * y 24 en escritorio, pero nada entre medias (se anota en `docs/MEMORY.md`).
  */
 
 /** Tramo de ancho de pantalla. */

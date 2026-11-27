@@ -3,7 +3,7 @@
 > **TEMPORAL.** Todo lo que hay en esta carpeta es un **marcador provisional**
 > (SPEC §12): se sustituirá por arte final o se confirmará su licencia antes de
 > la v1.0 pública. Ninguna pantalla depende del arte final. Los marcadores no se
-> enlazan por URL: van empaquetados aquí y se registran en `ASSETS.md`.
+> enlazan por URL: van empaquetados aquí y se registran en `docs/ASSETS.md`.
 
 ## `dragon.svg` — dragón marcador (estados vacíos, error y carga)
 
@@ -35,5 +35,5 @@ La versión renderizable en la app es `src/components/DragonMarker.tsx`
 
 1. Solo viven aquí los marcadores; nada enlaza recursos remotos (RNF-5).
 2. Cada fichero lleva registro en este README: herramienta, fecha, indicaciones y marca **TEMPORAL**.
-3. Sin portadas con obras reales ni texto (D2 y D3 de `DESIGN_RULES.md`).
+3. Sin portadas con obras reales ni texto (D2 y D3 de `docs/DESIGN_RULES.md`).
 4. Antes de la v1.0 pública: reemplazar o confirmar licencia.

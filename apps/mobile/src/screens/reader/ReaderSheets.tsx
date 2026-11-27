@@ -13,7 +13,7 @@ import { chapterRowTitle } from "./readerChapterLabel";
 
 /**
  * F18 — hojas del lector (sin diseño en Stitch, `SPEC` §11.5: «Selector de capítulo y de modo en
- * el lector → barras del lector de DESIGN.md»). Se componen con las piezas compartidas
+ * el lector → barras del lector de docs/DESIGN.md»). Se componen con las piezas compartidas
  * (`SheetModal`, `SettingsRow`, `ChapterRow`) y aparecen sin animación.
  */
 

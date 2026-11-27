@@ -1,5 +1,5 @@
 /**
- * Capas translúcidas derivadas de un token (F09, SPEC §11.11 / `DESIGN_RULES.md`
+ * Capas translúcidas derivadas de un token (F09, SPEC §11.11 / `docs/DESIGN_RULES.md`
  * V2): la interfaz no escribe `rgba(...)` literales; compone el color del tema
  * con la transparencia que pida el diseño.
  */

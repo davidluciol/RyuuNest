@@ -12,7 +12,7 @@
 
 Cobertura ampliada el mismo día (§4.1): hojas de añadir y gestionar, Diagnóstico, modo paginado D → I y la muestra de primer uso. **Sigue sin verse en el teléfono** (bloqueante R1): hojas de instalar, actualizar, desinstalar y quitar repositorio, primer uso real, Respaldo, diálogos de error y el modo paginado I → D.
 
-Referencias: `DESIGN_RULES.md` (T1–T8, D1–D5, V1–V13, lista de 20 s), `design/stitch/*/screen.png` y `design/stitch/DIFFS.md`.
+Referencias: `docs/DESIGN_RULES.md` (T1–T8, D1–D5, V1–V13, lista de 20 s), `design/stitch/*/screen.png` y `design/stitch/DIFFS.md`.
 
 Leyenda: 🔴 bloqueante · 🟠 importante · 🟡 menor. «Tarea» indica dónde se resuelve; **nueva** significa que no existe todavía.
 
@@ -259,7 +259,7 @@ Las preguntas anteriores quedaron respondidas (§2.1 y §2.2). Quedan:
 2. **R1, lo que queda:** para ver la hoja de «Actualizar módulo» hace falta que un módulo tenga una versión nueva en el índice. ¿Subo una versión de prueba en un índice local (sin tocar `RyuuNest-Models`) o prefieres esperar a una actualización real?
 3. **Orden de trabajo:** ¿qué va primero? Recomendación: **F40 (Inicio real y vacío) → F45 (NSFW y primer uso) → F41/F42 → F43 → F44**, porque F40 y F45 afectan al primer contacto y no necesitan cambiar el SPEC.
 
-## 9. Verificación de la lista de 20 segundos (`DESIGN_RULES.md` §6) sobre lo observado
+## 9. Verificación de la lista de 20 segundos (`docs/DESIGN_RULES.md` §6) sobre lo observado
 
 | Punto | Resultado |
 |---|---|

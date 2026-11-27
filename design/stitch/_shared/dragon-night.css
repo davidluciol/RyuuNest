@@ -1,5 +1,5 @@
 /* Referencia de FB2 (Dragon Night). Solo para renderizar los diseños de
-   design/stitch/: tokens de DESIGN.md / SPEC §11.9, fuentes locales y cero CDN (RNF-5).
+   design/stitch/: tokens de docs/DESIGN.md / SPEC §11.9, fuentes locales y cero CDN (RNF-5).
    No es código de la app: la app usa `ui-tokens`. */
 @font-face { font-family: "Manrope"; font-weight: 600; src: url("../../../apps/mobile/assets/fonts/Manrope-SemiBold.ttf"); }
 @font-face { font-family: "Manrope"; font-weight: 700; src: url("../../../apps/mobile/assets/fonts/Manrope-Bold.ttf"); }

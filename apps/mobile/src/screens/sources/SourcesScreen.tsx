@@ -49,7 +49,7 @@ import { themedStyles } from "../../components/themedStyles";
  * vista, el flujo de hojas y el controlador; no toca el núcleo ni la red.
  *
  * Fuera de la v1 y anotado en `design/stitch/DIFFS.md`: «Importar respaldo de
- * fuentes» (F21b) y la tarjeta «Seguridad del Nido» (T4/T6 de `DESIGN_RULES.md`).
+ * fuentes» (F21b) y la tarjeta «Seguridad del Nido» (T4/T6 de `docs/DESIGN_RULES.md`).
  */
 
 const colors = activeColors;

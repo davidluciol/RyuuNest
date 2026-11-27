@@ -1,7 +1,7 @@
 /**
  * Espaciado: rejilla de 4 px (SPEC §11.9). Toda distancia y relleno de la
  * interfaz es múltiplo de 4 y sale de aquí; ningún componente escribe literales
- * (AC-13, P2-4, `DESIGN_RULES.md` V2).
+ * (AC-13, P2-4, `docs/DESIGN_RULES.md` V2).
  */
 export const spacing = {
   xxs: 4,

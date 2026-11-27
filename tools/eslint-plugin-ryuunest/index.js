@@ -3,7 +3,7 @@
  *
  * `no-design-literals`: la interfaz no escribe colores ni medidas literales.
  * Todo color, tamaño, radio y espacio sale de `@ryuunest/ui-tokens`
- * (`DESIGN_RULES.md` V2 y V12). El lint se aplica solo al código de `src` en
+ * (`docs/DESIGN_RULES.md` V2 y V12). El lint se aplica solo al código de `src` en
  * `apps/` (la configuración decide las rutas); los paquetes de tokens y los
  * tests quedan fuera, porque ahí los valores literales son la fuente de verdad.
  */

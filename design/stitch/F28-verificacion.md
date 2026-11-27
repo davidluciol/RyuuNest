@@ -74,7 +74,7 @@ Fecha: 2026-11-02 · Rama: `feature/F28-visual-verification` · Cliente verifica
 Artefacto conocido: en las capturas `fullPage` la barra inferior fija aparece a mitad de
 la imagen; no es un bug de layout (el chequeo de overflow da 0).
 
-## Lista de 20 segundos (DESIGN_RULES.md §6) — pasada por pantalla
+## Lista de 20 segundos (docs/DESIGN_RULES.md §6) — pasada por pantalla
 
 - ¿Texto dependiente del tema? ✅ no; Dragon Night único (P-29), todo legible en oscuro.
 - ¿Cifras cuadran entre pantallas? ✅ contadores de Fuentes provienen del índice real;

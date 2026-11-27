@@ -13,7 +13,7 @@ import {
 
 /**
  * F30 — presentación pura del registro: nivel (texto + tono, nunca solo
- * color: DESIGN.md «Non-Color Dependent Indicators»), cuándo ocurrió y las
+ * color: docs/DESIGN.md «Non-Color Dependent Indicators»), cuándo ocurrió y las
  * líneas del detalle desplegable.
  */
 

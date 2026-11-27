@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Tokens semánticos de diseño de RyuuNest (Dragon Night), derivados de SPEC §11.9 / DESIGN.md.",
+  "description": "Tokens semánticos de diseño de RyuuNest (Dragon Night), derivados de SPEC §11.9 / docs/DESIGN.md.",
   "license": "GPL-3.0-only",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

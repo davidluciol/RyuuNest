@@ -15,7 +15,7 @@
 6. **Verificar con el comando focalizado de la tarea.** `pnpm -r …` completo solo en checkpoints.
 7. **TDD:** test rojo → verde. No editar un test para que pase, salvo que el criterio de aceptación lo exija.
 8. **Duda o dato faltante → preguntar, no inventar.** Las mediciones en dispositivo (POCO, Galaxy, MiBox) son 🧍 del humano.
-9. **Al cerrar:** marcar `[x]` y añadir 1 línea a `MEMORY.md`.
+9. **Al cerrar:** marcar `[x]` y añadir 1 línea a `docs/MEMORY.md`.
 10. **Fuera del alcance** de la tarea → anotarlo, no hacerlo.
 
 Cambiar de modelo: `/models` en la TUI de OpenCode (`opencode/<id>`). En sesión nueva, pegar el resumen de la regla 3.

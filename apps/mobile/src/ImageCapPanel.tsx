@@ -14,7 +14,7 @@ import FocusPressable from "./components/FocusPressable";
 /**
  * Red de seguridad del panel: 30 imágenes a 1440×3200 son ~528 MB decodificados, más que
  * suficiente para encontrar el tope en un teléfono. El humano sube de una en una hasta
- * que la app deje de responder y de ahí sale el tope (SPEC §9, `MEMORY.md` P-45).
+ * que la app deje de responder y de ahí sale el tope (SPEC §9, `docs/MEMORY.md` P-45).
  */
 const MAX_COUNT = 30;
 

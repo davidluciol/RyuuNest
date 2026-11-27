@@ -9,7 +9,7 @@ import { APP_LINKS, APP_VERSION, THIRD_PARTY_CREDITS } from "../../src/about/app
 /**
  * Acerca de (AB2) — datos de la app que comparten móvil y web: versión (la de
  * `app.json`), enlaces al repositorio y créditos de recursos de terceros, que
- * deben coincidir con `ASSETS.md`.
+ * deben coincidir con `docs/ASSETS.md`.
  */
 const ROOT = path.resolve(import.meta.dirname, "../..");
 
@@ -29,8 +29,8 @@ describe("datos de «Acerca de»", () => {
     for (const link of APP_LINKS) expect(keys).toContain(link.labelKey);
   });
 
-  it("cada crédito aparece registrado en ASSETS.md", () => {
-    const assets = readFileSync(path.resolve(ROOT, "../../ASSETS.md"), "utf8");
+  it("cada crédito aparece registrado en docs/ASSETS.md", () => {
+    const assets = readFileSync(path.resolve(ROOT, "../../docs/ASSETS.md"), "utf8");
     expect(THIRD_PARTY_CREDITS.length).toBeGreaterThan(0);
     for (const credit of THIRD_PARTY_CREDITS) {
       expect(assets, credit.name).toContain(`**${credit.name}**`);

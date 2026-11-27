@@ -7,7 +7,7 @@ import type { MediaKind } from "@ryuunest/core";
  * eventos. Aquí vive lo comprobable sin montar la app: qué se ve con el filtro
  * NSFW apagado (RF-35), qué módulo queda seleccionado al entrar (RF-9, se
  * recuerda el último) y los datos de ejemplo coherentes con el conjunto único
- * de fixtures (`DESIGN_RULES.md` D1–D5): las mismas series inventadas que usan
+ * de fixtures (`docs/DESIGN_RULES.md` D1–D5): las mismas series inventadas que usan
  * Inicio, Biblioteca y `test-site`.
  */
 

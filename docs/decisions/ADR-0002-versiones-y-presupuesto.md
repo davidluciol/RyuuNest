@@ -1,6 +1,6 @@
 # ADR-0002: Versiones y presupuesto de memoria (calibración de dispositivos)
 
-- **Estado:** versiones **fijadas** (2026-10-15); smokes **OK en los 2 teléfonos** (2026-10-14); **MiBox 4 pospuesta** (Android TV de lado, `MEMORY.md` P-43, alcance solo evidencia); **queda el tope de imágenes** (provisional hasta repetirlo en la MiBox, P-45)
+- **Estado:** versiones **fijadas** (2026-10-15); smokes **OK en los 2 teléfonos** (2026-10-14); **MiBox 4 pospuesta** (Android TV de lado, `docs/MEMORY.md` P-43, alcance solo evidencia); **queda el tope de imágenes** (provisional hasta repetirlo en la MiBox, P-45)
 - **Fecha:** 2026-10-13
 - **Tarea:** T05 (Fase 0)
 - **Fuentes:** `docs/SPEC.md` §14 y §17.2; `tasks/todo.md` T05; registro npm (2026-10-13)
@@ -27,7 +27,7 @@ comprueba que las tres librerías JS puras del núcleo (`@noble/hashes`, `fflate
 | React Native | `0.86.3` | **Fijada** (la que fija el SDK 57) |
 | React | `19.2.3` | **Fijada** (la que fija el SDK 57) |
 | expo-status-bar | `~57.0.1` | **Fijada** |
-| TypeScript | `~6.0.3` | **Fijada** (ver ADR-0001 y `MEMORY.md` P-34) |
+| TypeScript | `~6.0.3` | **Fijada** (ver ADR-0001 y `docs/MEMORY.md` P-34) |
 | @noble/hashes | `^2.4.0` | **Fijada** (también dependencia de `@ryuunest/core` desde T13, P-47) |
 | fflate | `^0.8.3` | **Fijada** |
 | htmlparser2 | `^12.0.0` | **Fijada** |
@@ -94,8 +94,8 @@ La app de calibración ejecuta estas comprobaciones y muestra OK/FALLO por dispo
 **Evidencia:** `docs/capturasT05/Samsung_s25Ultra.jpeg` (Galaxy S25 Ultra: «Módulo cargado +314490 ms · 3/3 comprobaciones» con las tres filas `OK`) y la misma prueba **3/3 OK** en el POCO, hecha en mano sin captura.
 
 > ⚠ **Modelo confirmado: POCO F5 Pro** (2026-10-14, el humano). El proyecto venía diciendo
-> «F6 Pro» por error; se corrigió en SPEC, `AGENTS.md` y decisiones (`MEMORY.md` P-44).
-> ⚠ **Android TV (MiBox 4) queda de lado de momento** (`MEMORY.md` P-43), con alcance **solo
+> «F6 Pro» por error; se corrigió en SPEC, `AGENTS.md` y decisiones (`docs/MEMORY.md` P-44).
+> ⚠ **Android TV (MiBox 4) queda de lado de momento** (`docs/MEMORY.md` P-43), con alcance **solo
 > de evidencia**: la MiBox **sigue siendo el equipo mínimo** (D-9, `minSdk` 28). Sus casillas
 > de smokes y el tope de imágenes quedan pendientes de tenerla en mano.
 

@@ -4,7 +4,7 @@
  *
  * Valores en píxeles; `letterSpacing` en em (0 = sin tracking en el diseño).
  *
- * Diferencia aceptada (`DESIGN_RULES.md` V12): `labelSm` se implementa a 12 px
+ * Diferencia aceptada (`docs/DESIGN_RULES.md` V12): `labelSm` se implementa a 12 px
  * en vez de los 11 px de la tabla del SPEC — el mínimo para metadatos es 12 px.
  * Se registra en `design/stitch/DIFFS.md`.
  */

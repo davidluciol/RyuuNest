@@ -1,5 +1,5 @@
 /**
- * Conjunto único y coherente de datos de ejemplo (`DESIGN_RULES.md` D1–D5).
+ * Conjunto único y coherente de datos de ejemplo (`docs/DESIGN_RULES.md` D1–D5).
  *
  * Series inventadas (sin obras reales), con capítulos, releases y páginas. De este
  * conjunto se derivan las **dos arquitecturas** de `sites.ts` (HTML y JSON con

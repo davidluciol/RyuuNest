@@ -5,7 +5,7 @@
  * el documento. Se añade una tabla `kv` para el puerto `Storage` clave-valor que ya usa
  * la instalación de módulos (T12–T15): el SPEC describe las tablas relacionales de la
  * biblioteca, pero no dónde viven las filas JSON de repos y módulos mientras el registro
- * no tenga su propio API. Anotado en `MEMORY.md` (P-55). La migración 6 (G2) las pasa a
+ * no tenga su propio API. Anotado en `docs/MEMORY.md` (P-55). La migración 6 (G2) las pasa a
  * `repo`/`module` y retira `kv`.
  */
 

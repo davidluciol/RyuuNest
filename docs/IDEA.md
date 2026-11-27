@@ -211,7 +211,7 @@ Ninguna entra sin pasar por el filtro de alcance.
 - La sección 14 es una propuesta de diseño: no se implementa antes de la fase 4. Hasta entonces, la UI usa componentes neutros y **tokens de tema** (variables CSS) para poder aplicar la identidad visual después sin reescribir pantallas.
 - Las especificaciones funcionales de UX de la sección 16 (navegación, primer uso, pantalla de serie y lector) sí se aplican desde la v1. Lo que espera es el arte y los extras temáticos.
 - Toda cadena visible para el usuario va en un archivo de traducciones, no dentro de los componentes.
-- Todo recurso gráfico, fuente o icono de terceros se registra en `ASSETS.md` con su licencia (ver sección 15).
+- Todo recurso gráfico, fuente o icono de terceros se registra en `docs/ASSETS.md` con su licencia (ver sección 15).
 
 ## 13. Preguntas abiertas
 
@@ -503,7 +503,7 @@ La sección 14 es una propuesta creativa aportada por ChatGPT en el rol de dise�
 | Punto de la propuesta | Consecuencia | Condición o ajuste |
 | --- | --- | --- |
 | El dragón como personaje recurrente (14.7) | Requiere ilustración original en varias poses, y hoy no hay quien la haga. Puede frenar la v1. | La v1 usa una silueta SVG sencilla de marcador. Ninguna pantalla depende del arte final. |
-| Recursos de la lista 14.6 | Las licencias son mixtas. Un repositorio GPL-3.0 no debe incluir recursos con licencias no libres o de uso no comercial. | Lucide, Tabler, Phosphor, Inter, Manrope y Kenney son en principio compatibles; OpenGameArt, SVG Repo, Figma Community, unDraw y Storyset dependen de cada recurso o tienen condiciones propias (verificar la licencia vigente). Registrar todo en `ASSETS.md`. El arte original del proyecto puede ir con una licencia aparte (por ejemplo CC BY-SA 4.0). |
+| Recursos de la lista 14.6 | Las licencias son mixtas. Un repositorio GPL-3.0 no debe incluir recursos con licencias no libres o de uso no comercial. | Lucide, Tabler, Phosphor, Inter, Manrope y Kenney son en principio compatibles; OpenGameArt, SVG Repo, Figma Community, unDraw y Storyset dependen de cada recurso o tienen condiciones propias (verificar la licencia vigente). Registrar todo en `docs/ASSETS.md`. El arte original del proyecto puede ir con una licencia aparte (por ejemplo CC BY-SA 4.0). |
 | Emojis como iconos (14.5) | Se ven distinto en cada dispositivo y en algunas TV pueden faltar o verse mal. | Solo iconos SVG. Los emojis del documento son referencias. |
 | Errores temáticos como "El portal no responde" (14.12) | Ocultan la causa real y complican depurar módulos. | Mensaje temático corto más un detalle técnico desplegable (módulo, URL, código HTTP). |
 | Textos con humor (14.12) | Son difíciles de traducir y de mantener. | Cadenas en archivo de traducciones desde el inicio (es/en). |

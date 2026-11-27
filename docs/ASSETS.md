@@ -1,4 +1,4 @@
-# ASSETS.md: registro de recursos de terceros
+# docs/ASSETS.md: registro de recursos de terceros
 
 RyuuNest se distribuye bajo **GPL-3.0**. Todo recurso de terceros que se incluya en el
 repositorio o se empaquete en la app **debe registrar aquí su licencia y su origen**. En un
@@ -38,7 +38,7 @@ archivo, listado en `packages/ui-tokens/src/fonts.ts` (`fontFiles`). La puerta a
 | **Tabler Icons** (solo los logos de redes sociales, v3.53.0) | MIT © 2020-2026 Paweł Kuna | `github.com/tabler/tabler-icons` → `icons/outline/brand-{instagram,telegram,x,tiktok,youtube,discord,twitch,patreon,deviantart,bluesky,threads,facebook,behance,linktree,github}.svg` (copia de los trazos `d`, 2026-11-27; sin dependencia npm) | **Incluido** (Acerca de): `apps/mobile/src/about/socialIcons.ts`, dibujado por `components/SocialIcon.tsx`. Misma rejilla que Lucide (24×24, trazo 2). Las marcas son de sus dueños: solo se usan para enlazar al perfil del artista. Las redes sin logo en Tabler (Ko-fi, pixiv, ArtStation, web) usan el genérico de Lucide |
 
 Notas: un único conjunto de iconos SVG para la interfaz (Lucide; Tabler solo aporta logos de redes), un icono por significado; sin emojis ni glifos de
-texto (`DESIGN_RULES.md` V4). La puerta `apps/mobile/tests/icons.test.ts` prohíbe emojis en
+texto (`docs/DESIGN_RULES.md` V4). La puerta `apps/mobile/tests/icons.test.ts` prohíbe emojis en
 `src/` y que otra pantalla importe `lucide-react-native` a mano.
 
 ## Imágenes y marcadores temporales

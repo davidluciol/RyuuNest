@@ -5,8 +5,8 @@ import { BADGE_HEIGHT, badgeColors, badgeStyle } from "../../src/components/badg
 
 /**
  * F06 — chip de filtro (36 px, pill) e insignia de tipo/estado (24 px, neutra).
- * SPEC §11.10 y `DESIGN.md`. La insignia es **neutra** (elevated/text-secondary)
- * según `DESIGN_RULES.md` V1: gana la regla sobre el esmeralda del diseño.
+ * SPEC §11.10 y `docs/DESIGN.md`. La insignia es **neutra** (elevated/text-secondary)
+ * según `docs/DESIGN_RULES.md` V1: gana la regla sobre el esmeralda del diseño.
  */
 describe("chipStyle (chip de filtro, 36 px pill)", () => {
   it("inactivo: surface, borde border, texto text-secondary", () => {

@@ -3,7 +3,7 @@ import appJson from "../../app.json";
 /**
  * Acerca de — datos de la app que comparten móvil y web (sin react-native: la
  * web los importa por `@ryuunest/mobile-src`). La versión sale de `app.json`,
- * la misma que lee Expo; los créditos repiten lo registrado en `ASSETS.md`
+ * la misma que lee Expo; los créditos repiten lo registrado en `docs/ASSETS.md`
  * (la prueba `tests/about/appInfo.test.ts` vigila que coincidan).
  */
 

@@ -4,7 +4,7 @@ import { withAlpha } from "../src/color";
 
 /**
  * F09 — `withAlpha` deriva una capa translúcida **de un token**, para no
- * escribir `rgba(...)` literales en la interfaz (`DESIGN_RULES.md` V2, AC-13).
+ * escribir `rgba(...)` literales en la interfaz (`docs/DESIGN_RULES.md` V2, AC-13).
  * No inventa valores de diseño: solo añade transparencia a un color existente.
  */
 describe("withAlpha", () => {

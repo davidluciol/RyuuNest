@@ -1,9 +1,9 @@
 # Plan de Implementación: RyuuNest — Parte 1 (Back-end / Núcleo) + Parte 2 (Diseño y Front-end)
 
 > Documento de planificación. Estado: **en ejecución** (revisado por el humano; no aprobado formalmente).
-> Fuentes (orden de autoridad): `docs/SPEC.md` → `DESIGN_RULES.md` → `DESIGN.md`
+> Fuentes (orden de autoridad): `docs/SPEC.md` → `docs/DESIGN_RULES.md` → `docs/DESIGN.md`
 > → PNG de `design/stitch/` → HTML de `design/stitch/` → `docs/IDEA.md`. Contexto: `docs/SPEC_Legacy.md`,
-> `legacyModulos/*.py`, `AGENTS.md`, `MEMORY.md`.
+> `legacyModulos/*.py`, `AGENTS.md`, `docs/MEMORY.md`.
 > Fecha: 13 de octubre de 2026 · Licencia: GPL-3.0.
 > **Actualizado: 12 de noviembre de 2026** — estados sincronizados con lo hecho y `tasks/todo.md` podado a solo pendientes (historial en `tasks/todo.archive.md`).
 > Complejidad, modelo y esfuerzo por tarea pendiente: `tasks/complexity.md`. Registro de cambios: §12.
@@ -38,7 +38,7 @@ aparecen en las capturas se omiten y anotan en `design/stitch/DIFFS.md` (RF-44).
 
 Las decisiones D-1…D-13 de `SPEC.md` §5.4 se respetan sin cambios. Decisiones técnicas
 del plan (registradas en `docs/decisions/ADR-0001-stack-y-convenciones.md`; ⚠️ estos `P-n`
-son del plan y **colisionan** con los de `MEMORY.md` §2 — no citarlos):
+son del plan y **colisionan** con los de `docs/MEMORY.md` §2 — no citarlos):
 
 | # | Decisión |
 |---|---|
@@ -54,7 +54,7 @@ son del plan y **colisionan** con los de `MEMORY.md` §2 — no citarlos):
 | P-10 | 2.º sitio real → prueba de generalidad con 2.º sitio falso JSON/cursor (T32a) |
 | P-11 | Límites de módulo: los del SPEC §7.1 (2 MB / 5 MB / 50 archivos) |
 | P-12 | Tracker: `bd` local → GitHub Issues |
-| P-13 | `MEMORY.md` en la raíz |
+| P-13 | `docs/MEMORY.md` en la raíz |
 | P-14 | La Parte 2 se planificó en la misma sesión del plan |
 | P-15 | División de tareas (T25+T26 juntos; T29a/b; T32a/b) por complejidad/modelo |
 | P-16 | Gestión por complejidad en `tasks/complexity.md` (N1–N5, regla de 2 intentos) |
@@ -164,7 +164,7 @@ primero T38–T41. Los módulos reales viven en `RyuuNest-Models` (P-8, P-78).
 
 ## 9. Preguntas abiertas (requieren decisión humana)
 
-Resueltas: límites del módulo (SPEC §7.1), tracker, ubicación de `MEMORY.md`, segundo sitio
+Resueltas: límites del módulo (SPEC §7.1), tracker, ubicación de `docs/MEMORY.md`, segundo sitio
 (§8), nombre y disponibilidad (P-71: repo `davidluciol`, scope `@ryuunest`,
 `applicationId` `io.github.davidluciol.ryuunest`), verificación nativa (P2-9), tipos en
 filtros (los 4) y temas (solo Dragon Night).
@@ -172,7 +172,7 @@ filtros (los 4) y temas (solo Dragon Night).
 Pendientes:
 
 1. **Pantallas sin diseño** (SPEC §11.5): se decide al llegar a ellas (P2-11); mientras,
-   se componen solo con `DESIGN.md` y se marcan «sin diseño» (P-30).
+   se componen solo con `docs/DESIGN.md` y se marcan «sin diseño» (P-30).
 2. **`accent-alt` violeta** (SPEC §17.2.9): regla provisional es no usarlo en la v1; confirmar.
 3. **`expo-updates`/EAS**: necesita la cuenta de Expo del humano (tarea bloqueada en `todo.md`).
 
@@ -227,7 +227,7 @@ y web (React + Vite + extensión). Tema v1: **solo Dragon Night** con tokens sem
 | P2-7 | Datos de ejemplo: un solo conjunto coherente de fixtures inventadas (D1–D5) |
 | P2-8 | Filtros de Biblioteca con los **cuatro tipos** de obra |
 | P2-9 | Verificación visual: galería compilada para web con Playwright + capturas de dispositivo |
-| P2-11 | Pantallas sin diseño: se decide al llegar a ellas; mientras, solo `DESIGN.md` (P-30) |
+| P2-11 | Pantallas sin diseño: se decide al llegar a ellas; mientras, solo `docs/DESIGN.md` (P-30) |
 | P2-12 | **Plano de pantalla** (`docs/screen-blueprint.md`, FB1, hecho) documentado con F13 (fixtures) y F14c (datos reales); F12, F15, F17, F20, F21 y F25 lo leen |
 | P2-13 | F14 dividida en F14a/F14b; F12 después de F16 |
 
@@ -255,7 +255,7 @@ Cada **pantalla es un corte vertical**: componentes reutilizables → pantalla c
 ## P2.5 Índice de tareas y checkpoints (Parte 2)
 
 ### Fase 6a — Sistema de diseño
-- [x] F01 `ui-tokens` · F02 tokens vs `DESIGN.md` y contraste WCAG (**AC-13**) · F03 fuentes/iconos locales · F04 escala/layout · F05 galería · F06/F07 componentes base · F08 estados vacíos/error · F09 lint de diseño (**AC-13**) · F10 i18n (RF-40)
+- [x] F01 `ui-tokens` · F02 tokens vs `docs/DESIGN.md` y contraste WCAG (**AC-13**) · F03 fuentes/iconos locales · F04 escala/layout · F05 galería · F06/F07 componentes base · F08 estados vacíos/error · F09 lint de diseño (**AC-13**) · F10 i18n (RF-40)
 - [ ] FA1 Arte final del dragón 🧍
 
 ### ✅ Checkpoint P-A 🟡 — criterios en verde; falta revisión humana
@@ -293,7 +293,7 @@ Cada **pantalla es un corte vertical**: componentes reutilizables → pantalla c
 |---|---|---|
 | Copiar HTML/Tailwind o inventar estilos | Alto | Reglas SPEC §11.1–11.4 y 11.11; lint (F09); AC-12/AC-13 |
 | El diseño muestra funciones fuera de la v1 | Medio | RF-44; omitir y anotar en `DIFFS.md` |
-| Pantallas sin diseño (SPEC §11.5) | Medio | Componer solo con `DESIGN.md`; marcar «sin diseño» (P-30) |
+| Pantallas sin diseño (SPEC §11.5) | Medio | Componer solo con `docs/DESIGN.md`; marcar «sin diseño» (P-30) |
 | Rendimiento en TV/MiBox | Alto | Animaciones solo `transform`/`opacity`; medir en F22/F23/F37 |
 | Una etiqueta por concepto (AI-slop) | Medio | Glosario SPEC §11.7; lista de 20 s |
 

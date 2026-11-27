@@ -58,7 +58,7 @@ Guarda: `fontScale.test.ts`. Capturas tras el arreglo: `nativo-fuentes-200.png`,
 2. **Contenedores tragatoques:** los `Pressable` vacíos de `ConfirmSheet`, `ErrorDialog`, `ModulePicker`, `SheetModal` y el lienzo del lector llevan `focusable={false}` para no pintar un anillo alrededor del diálogo o de la pantalla.
 3. **Corregido en esta tarea:** a 273 px los títulos de las tarjetas de Biblioteca acababan en «…» y las etiquetas de la barra inferior se tocaban (ver «Defectos de 273 px»).
 
-## Lista de 20 segundos (`DESIGN_RULES.md` §6) — pantallas tocadas: Biblioteca, Fuentes, barra de pestañas web, Ajustes (interruptor), galería
+## Lista de 20 segundos (`docs/DESIGN_RULES.md` §6) — pantallas tocadas: Biblioteca, Fuentes, barra de pestañas web, Ajustes (interruptor), galería
 
 - [x] ¿Algún texto depende del tema para entenderse? No: el degradado y el anillo no añaden texto.
 - [x] ¿Las cifras cuadran con las demás pantallas? No se tocaron cifras.

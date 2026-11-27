@@ -1,7 +1,7 @@
 import { radii, touchTarget, activeColors } from "@ryuunest/ui-tokens";
 
 /**
- * F06 — reglas de campo de texto y casilla/radio (SPEC §11.10, `DESIGN.md`).
+ * F06 — reglas de campo de texto y casilla/radio (SPEC §11.10, `docs/DESIGN.md`).
  * Campo: `surface`, borde `border`, 48 px, radio 8; en foco borde `accent` sin
  * brillo. Casilla/radio: 20×20, borde de 1,5 px `border`; marcado con relleno
  * `accent` y glifo `bg`. Puras, testeables sin Metro.

@@ -3,7 +3,7 @@
  *
  * Lógica pura que usa el panel de calibración de `apps/mobile`: cuántos bytes ocupa una
  * imagen decodificada al tamaño de pantalla y cuántas caben en un presupuesto. El tope
- * final lo fija una medición manual en el dispositivo (`MEMORY.md` P-45); aquí está lo
+ * final lo fija una medición manual en el dispositivo (`docs/MEMORY.md` P-45); aquí está lo
  * que se puede comprobar con pruebas.
  */
 

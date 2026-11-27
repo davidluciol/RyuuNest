@@ -26,10 +26,10 @@
 ## 0. Autoridad, alcance y dudas
 
 1. `docs/SPEC.md` decide **qué** hace la app.
-2. `DESIGN_RULES.md` decide **qué se toma del diseño y cómo se usa el color**.
-3. `DESIGN.md` decide **cómo se ve** cada componente.
+2. `docs/DESIGN_RULES.md` decide **qué se toma del diseño y cómo se usa el color**.
+3. `docs/DESIGN.md` decide **cómo se ve** cada componente.
 4. Los `screen.png` de `design/stitch/` deciden la composición; los `code.html` son solo referencia.
-5. `MEMORY.md` guarda decisiones, hitos y preguntas abiertas.
+5. `docs/MEMORY.md` guarda decisiones, hitos y preguntas abiertas.
 6. **SPEC:** `docs/SPEC.md`. **PLAN:** `tasks/plan.md`. **TODO:** `tasks/todo.md`. `tasks/complexity.md` §1 fija el tamaño de sesión y el escalado.
 
 - Ante duda, dato faltante o contradicción: **pregunta al humano** con 2–3 opciones y una recomendación. No inventes requisitos, datos, versiones, URLs, textos ni licencias. Avanza en lo independiente y anota el bloqueo.
@@ -38,7 +38,7 @@
 
 ## 1. Inicio de sesión
 
-- Lee `MEMORY.md`, `tasks/todo.md` y las secciones del SPEC que toques. Si tocas UI, lee además `DESIGN_RULES.md`, `DESIGN.md` y el `screen.png`/`code.html` de esa pantalla.
+- Lee `docs/MEMORY.md`, `tasks/todo.md` y las secciones del SPEC que toques. Si tocas UI, lee además `docs/DESIGN_RULES.md`, `docs/DESIGN.md` y el `screen.png`/`code.html` de esa pantalla.
 - Antes de buscar código, consulta Graphify (§4); después lee solo los archivos y rangos localizados.
 - Para APIs de librerías, frameworks o CLI usa **Context7**: `npx ctx7@latest library <nombre> "<tema>"` y luego `npx ctx7@latest docs <id> "<tema>"`. No respondas de memoria.
 
@@ -60,7 +60,7 @@
 - Textos de UI en el catálogo de traducciones; nunca literales en componentes.
 - Animaciones solo `transform`/`opacity`, 150–200 ms `ease-out`; respeta `prefers-reduced-motion`; **ninguna animación en el lector**.
 - No copies el HTML de `design/stitch/`; tradúcelo a React Native con tokens.
-- La Xiaomi MiBox 4 (2 GB) es el piso de rendimiento; si algo se nota lento, mídelo y desactívalo en TV anotándolo en `MEMORY.md`.
+- La Xiaomi MiBox 4 (2 GB) es el piso de rendimiento; si algo se nota lento, mídelo y desactívalo en TV anotándolo en `docs/MEMORY.md`.
 
 ## 4. Graphify
 
@@ -69,9 +69,9 @@
 - Tras modificar código: `graphify update .` (AST, sin coste de API). El diff grande de `graph.json` es esperado; no lo descartes.
 - El MCP vive en `.mcp.json` (`graphify-mcp --graph graphify-out/graph.json`); si falta, créalo. Si falta el CLI: `uv tool install "graphifyy[mcp]"` (aporta `graphify` y `graphify-mcp`), luego `graphify install --platform claude --project` y reindexa con `graphify update .`. Si la instalación toca el sistema, pide permiso.
 
-## 5. MEMORY.md
+## 5. docs/MEMORY.md
 
-- Cada sesión actualiza `MEMORY.md` con lo importante (no un registro de comandos): al cerrar un hito, añade o edita su línea en §2; las decisiones nuevas o cambiadas van en §3.
+- Cada sesión actualiza `docs/MEMORY.md` con lo importante (no un registro de comandos): al cerrar un hito, añade o edita su línea en §2; las decisiones nuevas o cambiadas van en §3.
 - No borres una decisión: márcala como reemplazada y enlaza la nueva. Las preguntas sin resolver se listan en §4 y se dicen al humano al cerrar.
 
 ## 6. Git
@@ -86,4 +86,4 @@
 - [ ] Gate en verde y criterios de aceptación cumplidos.
 - [ ] Sin cambios fuera del alcance ni dependencias innecesarias.
 - [ ] Playwright/agent-device según corresponda; componentes nuevos en la galería; sin valores literales.
-- [ ] `MEMORY.md` actualizado y preguntas abiertas comunicadas.
+- [ ] `docs/MEMORY.md` actualizado y preguntas abiertas comunicadas.
