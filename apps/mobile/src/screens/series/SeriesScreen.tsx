@@ -25,6 +25,7 @@ import {
 import { canChooseRelease, releaseLabel } from "./seriesLogic";
 import FocusPressable from "../../components/FocusPressable";
 import { themedStyles } from "../../components/themedStyles";
+import { chapterRowTitle } from "../reader/readerChapterLabel";
 
 const colors = activeColors;
 
@@ -229,7 +230,7 @@ export default function SeriesScreen({
           return (
             <View key={chapter.id} style={styles.chapterCard}>
               <ChapterRow
-                title={`${t("series.chapter", { number: chapter.number ?? "" })}: ${chapter.title}`}
+                title={chapterRowTitle(chapter)}
                 state={state}
                 percent={percent}
                 hint={stateLabel(state)}
@@ -246,7 +247,7 @@ export default function SeriesScreen({
                   <Text style={styles.releaseText}>{releaseLabel(release)}</Text>
                   <ChevronDown size={14} color={colors.accent} />
                 </FocusPressable>
-              ) : release ? (
+              ) : release?.group ? (
                 <View style={styles.release}>
                   <Text style={styles.releaseText}>{releaseLabel(release)}</Text>
                 </View>
