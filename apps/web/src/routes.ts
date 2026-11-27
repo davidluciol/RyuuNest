@@ -33,6 +33,9 @@ export function discoverSearchPath(query: string, stamp: number): string | null 
 
 export const DIAGNOSTICS_PATH = "/diagnostics";
 
+/** Acerca de (AB3): fuera de las pestañas, como Diagnóstico. */
+export const ABOUT_PATH = "/about";
+
 export function seriesPath(moduleId: string, seriesId: string): string {
   return `/series/${encodeURIComponent(moduleId)}/${encodeURIComponent(seriesId)}`;
 }

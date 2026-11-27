@@ -5,7 +5,7 @@ import { NavLink, Outlet } from "react-router";
 
 import DragonMarker from "../components/DragonMarker";
 import HeaderSearch from "../components/HeaderSearch";
-import { Compass, Home, Layers, LibraryBig, Settings as SettingsIcon, type LucideIcon } from "../icons";
+import { Castle, DoorOpen, Gem, MapIcon, Settings as SettingsIcon, type LucideIcon } from "../icons";
 import { TAB_ROUTES, type TabIcon } from "../routes";
 import "./shell.css";
 
@@ -17,10 +17,10 @@ import "./shell.css";
  */
 
 const TAB_ICONS: Record<TabIcon, LucideIcon> = {
-  home: Home,
-  library: LibraryBig,
-  compass: Compass,
-  layers: Layers,
+  home: Castle,
+  library: Gem,
+  compass: MapIcon,
+  layers: DoorOpen,
   settings: SettingsIcon,
 };
 

@@ -786,8 +786,8 @@
     "semantic_hash": ""
   },
   "ASSETS.md": {
-    "mtime": 1795805549.4885633,
-    "seen": 1795805892.1611636,
+    "mtime": 1795806478.5638113,
+    "seen": 1795807140.692925,
     "ast_hash": "4605c21dd74a59ce024e56ea91e50a26",
     "semantic_hash": ""
   },
@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   "MEMORY.md": {
-    "mtime": 1795805865.1750474,
-    "seen": 1795805892.161178,
-    "ast_hash": "e1e83e8ee2063d2da9a68b650c859c40",
+    "mtime": 1795807118.2621346,
+    "seen": 1795807140.6929398,
+    "ast_hash": "3968db45125b8881e0ba100ebb3551e6",
     "semantic_hash": ""
   },
   "apps/mobile/AGENTS.md": {
@@ -966,9 +966,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1795805566.0579436,
-    "seen": 1795805892.161318,
-    "ast_hash": "64d0670324d10c381bc88836088c35b5",
+    "mtime": 1795807058.0304422,
+    "seen": 1795807140.6930828,
+    "ast_hash": "a5087324414bf527f2b2de375ee39451",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-background.png": {
@@ -1074,9 +1074,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/components/BottomNav.tsx": {
-    "mtime": 1795373755.091964,
-    "seen": 1795468223.6261652,
-    "ast_hash": "1c675c6ca204f0e7938adca825e43c80",
+    "mtime": 1795806668.8892531,
+    "seen": 1795807140.6907353,
+    "ast_hash": "47c2552210e2b3855927eb220de7446c",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/Button.tsx": {
@@ -1212,9 +1212,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/gallery/GalleryScreen.tsx": {
-    "mtime": 1795805650.7497468,
-    "seen": 1795805892.1594431,
-    "ast_hash": "b43b2cf91529c74f972ea808dd2b3185",
+    "mtime": 1795806928.9364061,
+    "seen": 1795807140.691106,
+    "ast_hash": "b2d38bc3c6fdde2953e82a81c343d291",
     "semantic_hash": ""
   },
   "apps/mobile/src/gallery/fontSources.ts": {
@@ -1224,9 +1224,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/gallery/registry.ts": {
-    "mtime": 1795805541.9989245,
-    "seen": 1795805892.159452,
-    "ast_hash": "52c4f7128b678ab7d09487a2a46a93bb",
+    "mtime": 1795806627.6479616,
+    "seen": 1795807140.6911156,
+    "ast_hash": "f3cf522a89dfd1049d30e80063d640da",
     "semantic_hash": ""
   },
   "apps/mobile/src/gallery/renderGallery.ts": {
@@ -1278,9 +1278,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/tests/components/galleryComponents2.test.ts": {
-    "mtime": 1795805650.7502499,
-    "seen": 1795805892.1598182,
-    "ast_hash": "e427364c720757af788a357f21f79217",
+    "mtime": 1795806627.6389096,
+    "seen": 1795807140.6914904,
+    "ast_hash": "76e22f8334054e804a6de5dd4e5ed83a",
     "semantic_hash": ""
   },
   "apps/mobile/tests/components/shell.test.ts": {
@@ -1686,9 +1686,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/app/(tabs)/settings.tsx": {
-    "mtime": 1795301816.8963332,
-    "seen": 1795319928.5589468,
-    "ast_hash": "83a208d5da31304fd34b0609de9ac266",
+    "mtime": 1795806661.351175,
+    "seen": 1795807140.6906934,
+    "ast_hash": "52c2a57f9f58cc0f2a5b8e6d67e9c0c4",
     "semantic_hash": ""
   },
   "apps/mobile/src/app/(tabs)/sources.tsx": {
@@ -2592,9 +2592,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/settings/SettingsScreen.tsx": {
-    "mtime": 1795301817.0475204,
-    "seen": 1795319928.5594883,
-    "ast_hash": "e5342a773b5729d67b03cf603bd2d494",
+    "mtime": 1795806661.3496718,
+    "seen": 1795807140.6913254,
+    "ast_hash": "a77be40e7815973f1f43f4c4dad09d8f",
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/settings/sampleSettingsService.ts": {
@@ -3642,9 +3642,9 @@
     "semantic_hash": ""
   },
   "apps/web/src/App.tsx": {
-    "mtime": 1794942833.8752396,
-    "seen": 1795319928.5600462,
-    "ast_hash": "98feb4960c60dcb0ed13b71a06c8e2c4",
+    "mtime": 1795806765.4317973,
+    "seen": 1795807140.6919127,
+    "ast_hash": "d92911a2471ab459b30b33af82d5a38b",
     "semantic_hash": ""
   },
   "apps/web/src/components/Badge.tsx": {
@@ -3786,9 +3786,9 @@
     "semantic_hash": ""
   },
   "apps/web/src/routes.ts": {
-    "mtime": 1795125590.0758636,
-    "seen": 1795319928.5601263,
-    "ast_hash": "0e27b8ccd0735dc4b5baa99fa320c52b",
+    "mtime": 1795806765.4307916,
+    "seen": 1795807140.6919978,
+    "ast_hash": "27a42b2e9987a27da098362b38b5dbfe",
     "semantic_hash": ""
   },
   "apps/web/src/screens/EmptyScreen.tsx": {
@@ -3864,9 +3864,9 @@
     "semantic_hash": ""
   },
   "apps/web/src/screens/settings/SettingsScreen.tsx": {
-    "mtime": 1794942833.9101508,
-    "seen": 1795319928.5601633,
-    "ast_hash": "d2164fcba8a1a68fd8e7d873195880f6",
+    "mtime": 1795806765.4328015,
+    "seen": 1795807140.692038,
+    "ast_hash": "366c9907aafc0a2bd5d5ce8057084d1b",
     "semantic_hash": ""
   },
   "apps/web/src/screens/settings/useSettingsData.ts": {
@@ -3894,9 +3894,9 @@
     "semantic_hash": ""
   },
   "apps/web/src/shell/AppShell.tsx": {
-    "mtime": 1795125590.0828834,
-    "seen": 1795319928.5601768,
-    "ast_hash": "50b80e3c5cfa3a9d0d0460219548118f",
+    "mtime": 1795806765.4338033,
+    "seen": 1795807140.6920528,
+    "ast_hash": "c5845ed55ef4f9ff7ac83b7bdc79cfe4",
     "semantic_hash": ""
   },
   "apps/web/src/tokens/emitTokensCss.ts": {
@@ -3972,15 +3972,15 @@
     "semantic_hash": ""
   },
   "apps/web/tests/mobileSharedImports.test.ts": {
-    "mtime": 1795307960.9492788,
-    "seen": 1795319928.5602443,
-    "ast_hash": "ade58a5e75dcdd9d6f9bb1ec45fb71a5",
+    "mtime": 1795806706.432069,
+    "seen": 1795807140.6921227,
+    "ast_hash": "476b81b6079cc50245058dcddeeebebb",
     "semantic_hash": ""
   },
   "apps/web/tests/routes.test.ts": {
-    "mtime": 1795125590.17602,
-    "seen": 1795319928.5602524,
-    "ast_hash": "1ba2bba19905601f9412d4bce27bfad9",
+    "mtime": 1795806706.4310622,
+    "seen": 1795807140.6921303,
+    "ast_hash": "1d72df3d8ac7c329224b83bbb64a675f",
     "semantic_hash": ""
   },
   "apps/web/tests/screens/discoverSource.test.ts": {
@@ -4020,9 +4020,9 @@
     "semantic_hash": ""
   },
   "apps/web/tsconfig.json": {
-    "mtime": 1794942833.9368374,
-    "seen": 1795319928.560286,
-    "ast_hash": "dd3b4733313281c5abd384626e5d13f7",
+    "mtime": 1795806765.4338033,
+    "seen": 1795807140.692164,
+    "ast_hash": "9692a3671bc4bd5e8e7ef912671b401c",
     "semantic_hash": ""
   },
   "apps/web/vite.config.ts": {
@@ -4098,9 +4098,9 @@
     "semantic_hash": ""
   },
   "packages/i18n/src/es.json": {
-    "mtime": 1795805494.9606345,
-    "seen": 1795805892.1608844,
-    "ast_hash": "0206892a7040df293e430a8f88fa5536",
+    "mtime": 1795806660.9835837,
+    "seen": 1795807140.6926365,
+    "ast_hash": "3313ad7c47e52ed0635c8a134755377c",
     "semantic_hash": ""
   },
   "packages/i18n/src/index.ts": {
@@ -6528,75 +6528,171 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/about/artists.ts": {
-    "mtime": 1795805484.8334994,
-    "seen": 1795805892.1590545,
-    "ast_hash": "85d3622afaa7ef706a00c3dd4dc00201",
+    "mtime": 1795806591.347526,
+    "seen": 1795807140.6906745,
+    "ast_hash": "dfe4babd7471962f89b39aa3fa68a68b",
     "semantic_hash": ""
   },
   "apps/mobile/src/about/socialIcons.ts": {
-    "mtime": 1795805678.576764,
-    "seen": 1795805892.1590579,
-    "ast_hash": "20b457dd6dfc5516a2ac8777a4c8a5ec",
+    "mtime": 1795806478.5689158,
+    "seen": 1795807140.6906781,
+    "ast_hash": "aaf1099e49e3492aa8703d1bf2df0576",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/ArtistCard.tsx": {
-    "mtime": 1795805524.118211,
-    "seen": 1795805892.1590998,
-    "ast_hash": "e5e6e4f2b7245ba8aeb1abcd8600e0a1",
+    "mtime": 1795806478.57002,
+    "seen": 1795807140.6907284,
+    "ast_hash": "13ef6f7164c964b53e26ad2f2ad09192",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/SocialIcon.tsx": {
-    "mtime": 1795805523.6813476,
-    "seen": 1795805892.1592245,
-    "ast_hash": "7fe326441d05f78bff7021f27ff92c8e",
+    "mtime": 1795806478.57002,
+    "seen": 1795807140.6908805,
+    "ast_hash": "f75803d371be8571d4b6101a2aa4355e",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/artistCardStyles.ts": {
-    "mtime": 1795805485.2535741,
-    "seen": 1795805892.1592488,
-    "ast_hash": "81df63a962d5bd40e7d10665794c74a4",
+    "mtime": 1795806478.5712118,
+    "seen": 1795807140.690905,
+    "ast_hash": "65d08bd9e5497f3f23b629fee22c506b",
     "semantic_hash": ""
   },
   "apps/mobile/tests/about/artists.test.ts": {
-    "mtime": 1795805437.6000986,
-    "seen": 1795805892.1597576,
-    "ast_hash": "4efb25afdd5b7f37f27f2f2c2bee1a60",
+    "mtime": 1795806478.574479,
+    "seen": 1795807140.6914322,
+    "ast_hash": "571126f12ac800e5a65f042ac2b8f54b",
     "semantic_hash": ""
   },
   "apps/mobile/tests/components/artistCard.test.ts": {
-    "mtime": 1795805437.997322,
-    "seen": 1795805892.159765,
-    "ast_hash": "970b3a8c7a64296f2ed9ca487359bf9f",
+    "mtime": 1795806478.5755,
+    "seen": 1795807140.6914403,
+    "ast_hash": "37f5da804c4deb3cf008e0275d578ce5",
     "semantic_hash": ""
   },
   "apps/mobile/tests/e2e/artistCard.cjs": {
-    "mtime": 1795805773.6531992,
-    "seen": 1795805892.159903,
-    "ast_hash": "05672a85dcb4991e0eb4db3905ceabcb",
+    "mtime": 1795806905.0181966,
+    "seen": 1795807140.691579,
+    "ast_hash": "17b3be6860a81d434fa338e5ae69e815",
     "semantic_hash": ""
   },
   "docs/capturasAB1/artista-una-1440.png": {
-    "mtime": 1795805834.7007678,
-    "seen": 1795805892.1613996,
+    "mtime": 1795807110.0564606,
+    "seen": 1795807140.6931624,
     "ast_hash": "ac3d91ead2703da29221316bb1928c49",
     "semantic_hash": ""
   },
   "docs/capturasAB1/artista-una-426.png": {
-    "mtime": 1795805828.5645516,
-    "seen": 1795805892.1614022,
-    "ast_hash": "b8437f38292b055525464378d3c00bda",
+    "mtime": 1795807102.4254825,
+    "seen": 1795807140.6931658,
+    "ast_hash": "82a5ba3261d34021bb856ed392269e2d",
     "semantic_hash": ""
   },
   "docs/capturasAB1/artista-varias-1440.png": {
-    "mtime": 1795805834.65249,
-    "seen": 1795805892.1614044,
+    "mtime": 1795807110.010949,
+    "seen": 1795807140.6931684,
     "ast_hash": "3b4166c5d5cf7c645dfdeb4e4ef4337c",
     "semantic_hash": ""
   },
   "docs/capturasAB1/artista-varias-426.png": {
-    "mtime": 1795805828.516897,
-    "seen": 1795805892.161407,
+    "mtime": 1795807102.3822649,
+    "seen": 1795807140.6931705,
     "ast_hash": "25582fc1f9ec8779f7668f0bec9e46dd",
+    "semantic_hash": ""
+  },
+  "apps/mobile/src/about/appInfo.ts": {
+    "mtime": 1795806611.5368059,
+    "seen": 1795807140.6906698,
+    "ast_hash": "ee9cf1915f1c500e97e22cd974a40fe4",
+    "semantic_hash": ""
+  },
+  "apps/mobile/src/app/about.tsx": {
+    "mtime": 1795806661.0291262,
+    "seen": 1795807140.690707,
+    "ast_hash": "b9171e1b1663d6774235129e45b3daaf",
+    "semantic_hash": ""
+  },
+  "apps/mobile/src/screens/settings/about/AboutScreen.tsx": {
+    "mtime": 1795806649.1099253,
+    "seen": 1795807140.6913283,
+    "ast_hash": "2c991151d094d3828acae9e921cc40d3",
+    "semantic_hash": ""
+  },
+  "apps/mobile/tests/about/appInfo.test.ts": {
+    "mtime": 1795806611.535803,
+    "seen": 1795807140.6914294,
+    "ast_hash": "4b31871378fcf7c6cdd9bb2f7d656139",
+    "semantic_hash": ""
+  },
+  "apps/mobile/tests/screens/aboutRoute.test.ts": {
+    "mtime": 1795806578.8276217,
+    "seen": 1795807140.6917455,
+    "ast_hash": "60264a2f12bd9a193478b5b24e29ff07",
+    "semantic_hash": ""
+  },
+  "apps/web/src/components/SocialIcon.tsx": {
+    "mtime": 1795806753.2776933,
+    "seen": 1795807140.6919541,
+    "ast_hash": "2f401b371951c1487e77b388eb4cf9f4",
+    "semantic_hash": ""
+  },
+  "apps/web/src/screens/about/AboutScreen.tsx": {
+    "mtime": 1795806753.3151307,
+    "seen": 1795807140.692003,
+    "ast_hash": "46d99f30d11c838f8a72c54f8d189c3e",
+    "semantic_hash": ""
+  },
+  "apps/web/tests/e2e/about.cjs": {
+    "mtime": 1795806863.7303414,
+    "seen": 1795807140.692087,
+    "ast_hash": "eb26315f77c21d53ebfa2617c5158500",
+    "semantic_hash": ""
+  },
+  "docs/capturasAB2/galeria-acerca-de-1440.png": {
+    "mtime": 1795807110.127226,
+    "seen": 1795807140.6931727,
+    "ast_hash": "b3741cf84cea2327cfbb32ea46c3563f",
+    "semantic_hash": ""
+  },
+  "docs/capturasAB2/galeria-acerca-de-426.png": {
+    "mtime": 1795807102.496065,
+    "seen": 1795807140.6931746,
+    "ast_hash": "7843aecfaed6785af2e2dd5911ae0bdb",
+    "semantic_hash": ""
+  },
+  "docs/capturasAB2/movil-acerca-de.png": {
+    "mtime": 1795807008.3138525,
+    "seen": 1795807140.693176,
+    "ast_hash": "4d28da8c5cbc0aedb4feb9f3d259e343",
+    "semantic_hash": ""
+  },
+  "docs/capturasAB2/movil-ajustes-fila.png": {
+    "mtime": 1795806997.3489387,
+    "seen": 1795807140.6931777,
+    "ast_hash": "d530a61f9f4bc4517827b7d4ee4f7e2d",
+    "semantic_hash": ""
+  },
+  "docs/capturasAB2/web-acerca-de-1440.png": {
+    "mtime": 1795806879.0581794,
+    "seen": 1795807140.693179,
+    "ast_hash": "e403ab0abd48a656a7a593237a910df6",
+    "semantic_hash": ""
+  },
+  "docs/capturasAB2/web-acerca-de-426.png": {
+    "mtime": 1795806878.5569456,
+    "seen": 1795807140.6931803,
+    "ast_hash": "c855f431e74da282f0a044f254cf319c",
+    "semantic_hash": ""
+  },
+  "docs/capturasAB2/web-pestanas-1440.png": {
+    "mtime": 1795806879.1228094,
+    "seen": 1795807140.6931818,
+    "ast_hash": "bb031bf4c7110537a8ea82fd7b77036f",
+    "semantic_hash": ""
+  },
+  "docs/capturasAB2/web-pestanas-426.png": {
+    "mtime": 1795806878.6099179,
+    "seen": 1795807140.693183,
+    "ast_hash": "ed135aa5cdea775948d7b1b8f0b15213",
     "semantic_hash": ""
   },
   "pnpm-lock.yaml": {

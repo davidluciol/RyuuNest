@@ -737,7 +737,7 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 ### FA3 Alta de artista en «Acerca de» `[Datos · Baja · N1]` 🧍
 
 - [ ] 🧍 Pasar nombre artístico, foto, redes y agradecimiento de cada artista
-- [ ] Foto en `apps/mobile/assets/artists/<id>.webp` (local, RNF-5), entrada en `ARTISTS`, texto en `es.json` (`about.artists.<id>.bio`), registro en `ASSETS.md`
+- [ ] Foto en `apps/mobile/assets/artists/<id>.webp` (local, RNF-5) importada con `import foto from "…webp"` (no `require`, que Vite no entiende: la web reutiliza `ARTISTS`), entrada en `ARTISTS`, texto en `es.json` (`about.artists.<id>.bio`), registro en `ASSETS.md`
 - Verif: `tests/about/artists.test.ts` + galería + 🧍 S25 (tocar cada red abre el navegador)
 
 ---
@@ -770,7 +770,7 @@ Dep: F56 · M · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`
 
 Dep: — · S · `apps/mobile/src/icons`, `BottomNav.tsx`
 
-- [ ] Iconos temáticos libres de Lucide ya (decisión 2026-11-27): Guarida `Castle`, Tesoros `Gem`, Aventuras `Map`, Portales `DoorOpen`, Ajustes `Settings`, en móvil/TV y web; sustituir por el arte del artista cuando llegue
+- [x] Iconos temáticos libres de Lucide ya (decisión 2026-11-27; hecho en AB2/AB3, P-195): Guarida `Castle`, Tesoros `Gem`, Aventuras `Map`, Portales `DoorOpen`, Ajustes `Settings`, en móvil/TV y web; sustituir por el arte del artista cuando llegue
 - [ ] Auditar iconos de la barra inferior y la cabecera: un solo juego (`lucide`), tamaños y colores por estado (activo/inactivo/foco) tomados de `ui-tokens`; iconos con nombres temáticos coherentes (Guarida, Tesoros, Aventuras, Portales, Ajustes)
 - Verif: Playwright + galería
 
@@ -788,8 +788,8 @@ Dep: F52, F53 · XS
 Plan aprobado el 2026-11-27. Logos de redes de Tabler (MIT, solo trazos copiados); las redes sin logo usan el genérico de Lucide.
 
 - [x] AB1 Datos y tarjeta: `about/socialIcons.ts`, `about/artists.ts` (`safeLinks` solo `https:`), `SocialIcon`, `ArtistCard` + galería, `ASSETS.md`
-- [ ] AB2 Pantalla móvil/TV: `AboutScreen` (versión, GPL-3.0, sin telemetría, enlaces; «Artistas» oculta si no hay; recursos de terceros), ruta `/about` y fila en Ajustes
-- [ ] AB3 Web: `AboutScreen` web, `SocialIcon` web, ruta y fila en Ajustes web
+- [x] AB2 Pantalla móvil/TV: `AboutScreen` (versión, GPL-3.0, sin telemetría, enlaces; «Artistas» oculta si no hay; recursos de terceros), ruta `/about` y fila en Ajustes
+- [x] AB3 Web: `AboutScreen` web, `SocialIcon` web, ruta y fila en Ajustes web
 - Verif: Playwright 426/1440 (sin desbordes, ≥48×48, cero peticiones al cargar) + agent-device en el teléfono
 
 ---

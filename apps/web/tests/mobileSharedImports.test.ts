@@ -42,6 +42,9 @@ const SHARED_FILES = [
   "screens/settings/diagnostics/diagnosticsFlow.ts",
   "screens/settings/diagnostics/diagnosticsController.ts",
   "screens/settings/diagnostics/diagnosticsView.ts",
+  "about/appInfo.ts",
+  "about/artists.ts",
+  "about/socialIcons.ts",
 ];
 
 describe("imports compartidos desde apps/mobile", () => {

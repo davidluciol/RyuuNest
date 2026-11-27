@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import { BookOpen, Compass, Home, Library, Settings, type LucideIcon } from "../icons";
+import { Castle, DoorOpen, Gem, MapIcon, Settings, type LucideIcon } from "../icons";
 import { activeColors, radii, spacing, typography } from "@ryuunest/ui-tokens";
 
 import { destinationLabel } from "../navigation/routes";
@@ -36,10 +36,10 @@ import { themedStyles } from "./themedStyles";
  */
 
 const DESTINATION_ICONS: Record<BottomNavDestination, LucideIcon> = {
-  home: Home,
-  library: Library,
-  discover: Compass,
-  sources: BookOpen,
+  home: Castle,
+  library: Gem,
+  discover: MapIcon,
+  sources: DoorOpen,
   settings: Settings,
 };
 

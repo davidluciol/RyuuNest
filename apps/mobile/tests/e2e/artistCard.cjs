@@ -1,5 +1,5 @@
 // Contra Metro (`expo start --web --localhost --port 8081`); la galería es solo de desarrollo.
-// Acerca de (AB1): tarjetas de artista en 426 y 1440 px — sin desborde, botones de red
+// Acerca de (AB1/AB2): tarjetas de artista y pantalla con artistas en 426 y 1440 px — sin desborde, botones de red
 // ≥ 48×48, enlace no https descartado, consola limpia y cero peticiones externas (RNF-5).
 const assert = require("node:assert/strict");
 const path = require("node:path");
@@ -50,6 +50,13 @@ const OUT = path.resolve(__dirname, "../../../../docs/capturasAB1");
 
       await many.screenshot({ path: path.join(OUT, `artista-varias-${width}.png`) });
       await one.screenshot({ path: path.join(OUT, `artista-una-${width}.png`) });
+
+      // AB2: la pantalla «Acerca de» de la galería muestra la sección con los 2 artistas.
+      const about = page.getByTestId("about-artists");
+      await about.scrollIntoViewIfNeeded();
+      await about.getByTestId("about-artist-una-red").waitFor();
+      await about.getByTestId("about-artist-varias-redes").waitFor();
+      await page.getByTestId("screen-about").screenshot({ path: path.join(OUT, `../capturasAB2/galeria-acerca-de-${width}.png`) });
       assert.deepEqual(external, [], "peticiones externas");
       assert.deepEqual(errors, [], "errores de consola");
       await page.close();

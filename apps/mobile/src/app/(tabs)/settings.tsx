@@ -50,6 +50,7 @@ export default function SettingsRoute() {
       onDismissNotice={dismissNotice}
       onRetry={retry}
       onOpenDiagnostics={() => router.push("/diagnostics")}
+      onOpenAbout={() => router.push("/about")}
       backupFlow={backupFlow}
       backupController={backupController}
       backupNotice={backupNotice}
