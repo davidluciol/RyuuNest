@@ -108,6 +108,45 @@ describe("createInstalledMounter", () => {
     await expect(mounter.mount("ausente")).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 
+  it("tras actualizar el paquete (mismo id), el siguiente mount ejecuta la versión nueva", async () => {
+    const driver = await openMigratedDriver();
+    const storage = new SqliteStorage(driver);
+    await storage.set(moduleKey("ejemplo"), JSON.stringify(installedPackage()));
+    const v1: ModuleApi = { ...api, details: async () => { throw new Error("v1"); } };
+    let current = v1;
+    const loader = new FakeScriptLoader({ "module.js": () => current });
+    const mounter = createInstalledMounter({ driver, http: new StubHttp(), loader });
+
+    const first = await mounter.mount("ejemplo");
+    expect(await mounter.mount("ejemplo")).toBe(first);
+    current = api;
+    const manifest = { ...MANIFEST, version: "1.0.1" };
+    await storage.set(
+      moduleKey("ejemplo"),
+      JSON.stringify(installedPackage({ version: "1.0.1", manifest })),
+    );
+
+    const second = await mounter.mount("ejemplo");
+    expect(second.manifest.version).toBe("1.0.1");
+    await expect(second.handle.api.details("x")).resolves.toMatchObject({ id: "x" });
+  });
+
+  it("tras desinstalar o desactivar un módulo ya montado, mount da NOT_FOUND", async () => {
+    const driver = await openMigratedDriver();
+    const storage = new SqliteStorage(driver);
+    await storage.set(moduleKey("ejemplo"), JSON.stringify(installedPackage()));
+    const loader = new FakeScriptLoader({ "module.js": () => api });
+    const mounter = createInstalledMounter({ driver, http: new StubHttp(), loader });
+    await mounter.mount("ejemplo");
+
+    await storage.set(moduleKey("ejemplo"), JSON.stringify(installedPackage({ enabled: false })));
+    await expect(mounter.mount("ejemplo")).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await storage.set(moduleKey("ejemplo"), JSON.stringify(installedPackage()));
+    await mounter.mount("ejemplo");
+    await storage.delete(moduleKey("ejemplo"));
+    await expect(mounter.mount("ejemplo")).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
   it("aplica la pausa entre peticiones que declara el manifest (G6)", async () => {
     const driver = await openMigratedDriver();
     const storage = new SqliteStorage(driver);

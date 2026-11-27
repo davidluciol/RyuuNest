@@ -27,6 +27,13 @@ describe("lógica del selector de release (F17)", () => {
   });
 });
 
+describe("chip de release en la ficha", () => {
+  it("con una sola release sin grupo no se pinta (el id crudo no dice nada)", () => {
+    const src = read("src/screens/series/SeriesScreen.tsx");
+    expect(src).toMatch(/\) : release\?\.group \? \(/);
+  });
+});
+
 describe("ReleaseSheet (F17)", () => {
   const src = read("src/components/ReleaseSheet.tsx");
 

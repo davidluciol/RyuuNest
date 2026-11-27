@@ -9,6 +9,7 @@ import { Check } from "../../icons";
 import { t } from "../../i18n";
 import { READER_MODES, modeHint, modeLabel } from "./readerModes";
 import type { ReaderChapterItem } from "./useReader";
+import { chapterRowTitle } from "./readerChapterLabel";
 
 /**
  * F18 — hojas del lector (sin diseño en Stitch, `SPEC` §11.5: «Selector de capítulo y de modo en
@@ -66,7 +67,7 @@ export function ReaderChaptersSheet({
       {chapters.map((chapter) => (
         <ChapterRow
           key={chapter.id}
-          title={`${t("series.chapter", { number: chapter.number ?? "" })}: ${chapter.title}`}
+          title={chapterRowTitle(chapter)}
           state={chapter.state}
           {...(chapter.id === currentId ? { hint: t("reader.chapters.current") } : {})}
           onPress={() => onSelect(chapter)}

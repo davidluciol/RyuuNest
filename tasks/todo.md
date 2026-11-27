@@ -27,6 +27,38 @@ Las tareas pendientes se agrupan **por sección de la app**: **Guarida**, **Teso
 
 ---
 
+## ▶️ RETOMAR AQUÍ — Auditoría de módulos para el APK de release (P-192, pausada 2026-11-26)
+
+> Si el humano dice «continúa donde te quedaste ayer», es esto. Contexto completo: `MEMORY.md` P-192 (§3), el hito del 2026-11-26 (§2) y §4 «Del humano».
+> Proceso pedido por el humano: un módulo a la vez; dificultad → modelo del subagente (alta: Opus 5.5 esfuerzo medio · intermedia: Sonnet 5.5 esfuerzo medio · baja: Haiku); cada subagente trabaja en una rama hija de la rama de integración (en Models, en su propio `git worktree`); el agente principal revisa el código, lo prueba (Node + teléfono) y lo fusiona con `--no-ff`; los PR finales a `master`/`main` los **fusiona el humano**.
+
+**Ramas (ya en GitHub):**
+- App `RyuuNest`: `fix/auditoria-modulos-release` (desde `master`). Ya lleva: claves únicas en Portales (`moduleRowKey`), montador que remonta si cambia el paquete instalado (`installedMounter.ts`) y MEMORY. Gate (lint/typecheck/test/build) en verde el 2026-11-26.
+- Models `RyuuNest-Models`: `audit-release` (desde `main`). Ya lleva: zonatmo 0.3.1, visormanga 0.1.1, e-hentai/fanfox/hitomi/mangation 0.1.2, luscious 0.1.3, `tools/hermes-patterns.test.mjs` y AGENTS.md §1.9. Los 11 tests en verde e `index.json` íntegro (sha256/size).
+
+**Cómo probar en el S25 (Expo Go):** `adb reverse tcp:8081 tcp:8081`; en `apps/mobile`, `CI=1 npx expo start --localhost --port 8081` (añade `--clear` si cambiaste de rama: Metro sirvió un bundle viejo); abrir `exp://127.0.0.1:8081` con agent-device. En el teléfono está añadido el repo de prueba `https://raw.githubusercontent.com/davidluciol/RyuuNest-Models/audit-release/index.json` y los módulos auditados se reinstalaron desde él. Herramienta para ejecutar un módulo como lo hace la app en Node (`createFunctionScriptLoader` + `ModuleHost` + validador de forma): estaba en el scratchpad de la sesión (`apprun.mjs`); si ya no está, se rehace en 30 líneas con `packages/core/dist`.
+
+**Estado por módulo (S25, 2026-11-26):**
+| Módulo | Estado |
+|---|---|
+| ZonaTMO 0.3.1 | ✅ lista → ficha → lector con imágenes |
+| FanFox 0.1.2 | ✅ completo |
+| E-Hentai 0.1.2 | ✅ completo (imágenes H@H en puerto `:9001` cargan) |
+| Hitomi 0.1.2 | ✅ completo |
+| Mangation 0.1.2 | ✅ completo (no hizo falta probar métodos alternativos: el fallo era el de Hermes) |
+| Luscious 0.1.3 | ⚠️ inicio y ficha ✅ (sin verificación de Cloudflare: el cliente nativo pasa); **lector: `TIMEOUT` en `AlbumListOwnPictures`** (2 de 2 intentos) |
+| VisorManga 0.1.1 | ❌ del sitio: su único CDN de imágenes `imgvtmo.com` está aparcado (DNS → Porkbun, TLS falla). Ficha OK |
+
+**Tareas para mañana (en orden):**
+- [x] **A1 Luscious `pages` TIMEOUT** ✅ 2026-11-27: no es del módulo (conexión muerta de Expo Go, G6); de paso luscious 0.1.4 lee álbumes de >1000 imágenes. Era: `[Models · Intermedia]` → subagente Sonnet. Medir la latencia de `AlbumListOwnPictures` (Node recibe 403 de Cloudflare; hay que pasar por `tools/tls-proxy.py`/curl_cffi, y el clasificador de auto mode bloqueó ejecutarlo: **pedir permiso al humano** antes). Hipótesis: la consulta con `display:"date_newest"` + orden por `position` es lenta en el servidor, o la conexión muerta de Expo Go (sin el OkHttp con ping de G6). Probar en el teléfono otra vez y con el APK. Si es el servidor: menos elementos por página o la consulta que use el lector web del sitio.
+- [x] **A2 VisorManga** ✅ 2026-11-27: retirado de `index.json` (decisión del humano). Era: (🧍 decisión del humano): retirarlo del `index.json` hasta que vuelva su CDN, o dejarlo publicado con el error claro. Comprobar antes que `imgvtmo.com` sigue caído.
+- [x] **A3 Hallazgos menores de la app** ✅ 2026-11-27: (a) no se reprodujo tras actualizar (verificar con APK); (b) solo Expo Go: el APK tiene `readTimeout` 30 s y ping (G6); (c) arreglado en la app (`chapterRowTitle`, chip sin id crudo) y mangation 0.1.3. Era: `[FE · Baja]` → Haiku, uno por rama hija: (a) tras instalar/actualizar un módulo, el primer toque en Portales/Aventuras se pierde (algo de la hoja recién cerrada lo intercepta); (b) en Expo Go una instalación se quedó colgada con la hoja bloqueada, hasta «Cancelar» y la X (probablemente una petición colgada sin tiempo límite en el instalador: revisar si `PackageInstaller`/`InstallFlow` pasan por el `TimedHttp`); (c) cosmético en VisorManga/Mangation: el capítulo se titula «Capítulo 103: Capítulo 103.00» y la release muestra el id crudo (`jinx-103.00`).
+- [x] **A4 Volver a probar en el S25** ✅ 2026-11-27 parcial: Luscious, Mangation y ZonaTMO de punta a punta, dos actualizaciones sin reiniciar; FanFox/E-Hentai/Hitomi sin cambios desde el 26 (repasar con APK). Era: los 7 módulos de punta a punta con el bundle final, incluida una **actualización** de módulo sin reiniciar la app (prueba del montador; Luscious 0.1.2→0.1.3 ya pasó).
+- [x] **A5 Cierre:** ✅ 2026-11-27: gate en verde, worktrees y ramas hijas borrados, PR app #170 y Models #29 abiertos (sin fusionar). Era: `pnpm lint && pnpm -r typecheck && pnpm -r test && pnpm -r build`; `graphify update .`; abrir PR `fix/auditoria-modulos-release` → `master` y PR `audit-release` → `main` (Models; el `index.json` va dentro por decisión del humano) con la evidencia; **no fusionar**. Borrar los worktrees `../RyuuNest-Models-{hermes,visor,luscious}` y las ramas hijas ya fusionadas.
+- [ ] **A6 Después de que el humano fusione:** en el teléfono, quitar el repo de prueba `audit-release` y reinstalar los módulos desde `main` (los tesoros no cambian); luego compilar el APK de release con EAS.
+
+---
+
 ## 🏠 Guarida (Inicio)
 
 ### F46 Inicio (Guarida) con datos reales locales `[FE · Intermedia · N3]`

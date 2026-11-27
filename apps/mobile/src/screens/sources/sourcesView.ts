@@ -83,6 +83,11 @@ export function moduleRowAction(module: SourceModule): "install" | "manage" {
   return module.status === "installed" ? "manage" : "install";
 }
 
+/** Clave React de la fila: el mismo id puede venir de dos repos o estar instalado y disponible. */
+export function moduleRowKey(module: SourceModule): string {
+  return `${module.status}/${module.repoId}/${module.id}`;
+}
+
 export type RepoUrlCheck =
   { ok: true; url: string } | { ok: false; reason: "empty" | "invalid" | "not-https" };
 
