@@ -77,8 +77,8 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 
 ### Bug · FanFox: serie +18 con 0 capítulos en la ficha `[BE · Intermedia · N3]` (repo `RyuuNest-Models`, issue #30)
 
-- [ ] En `https://fanfox.net/manga/isekai_meikyuu_de_harem_o/` el sitio muestra un aviso +18 que hay que pulsar para ver los capítulos. La app dice «113 capítulos», pero al abrir la ficha salen 0. Probable: `details` recibe el HTML del aviso. Guardar fixtures (aviso y lista), pasar el aviso (cookie o parámetro) en `details`, subir la versión y `index.json`
-- [ ] 🧍 En el teléfono: la ficha muestra los capítulos y el lector abre uno
+- [x] Causa: el módulo ya manda `isAdult=1` (confirmado contra el sitio: con la cookie, 120 capítulos), pero OkHttp la sustituía por las cookies del tarro. Arreglado en `plugins/withOkHttpPing.js`; fanfox 0.1.3 da `BLOCKED` claro si aun así llega el aviso
+- [ ] 🧍 Compilar el APK (el Kotlin del plugin solo se compila ahí) y en el teléfono: la ficha muestra los capítulos y el lector abre uno
 
 ### Posible bug · ZonaTMO: el lector se traba al bajar rápido `[FE · Alta · N4]` 🧍
 
