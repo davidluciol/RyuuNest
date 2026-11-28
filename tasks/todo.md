@@ -812,6 +812,40 @@ Plan aprobado el 2026-11-27. Logos de redes de Tabler (MIT, solo trazos copiados
 
 ## 🗂️ General (abarca varias secciones o ninguna)
 
+### F103 «Mandar reporte»: reporte de errores revisado por el usuario → issues de GitHub `[FE/Ops · Intermedia · N3]` 🧍
+
+Dep: F30 (Diagnóstico), T36 (`core/diagnostics/sanitize.ts`) · M · Pedido del humano 2026-11-27
+
+> **Bloqueo de SPEC:** RNF-5 dice «sin servicios de terceros; los datos solo salen del dispositivo por exportación manual». Un reporte que el usuario **revisa y envía a mano** con una app suya (navegador, correo, Telegram, hoja de compartir) cabe en RNF-5. Un envío directo desde la app a un servidor o relé (opción C abajo) **exige cambiar el SPEC antes**. 🧍 Elegir canal(es) y, si hace falta, aprobar el cambio de RNF-5.
+
+**Flujo en la app (sin envío automático):**
+- [ ] Botón «Mandar reporte» en los diálogos/avisos de error (`ErrorDialog`, `ErrorBanner`, error por página del lector) y en Ajustes → Diagnóstico
+- [ ] Hoja/tarjeta de revisión con **todo** lo que saldrá, en texto plano y editable solo en el campo «Detalles» del usuario:
+  - **Obligatorio:** código de error (`ModuleErrorCode` o código propio de la app), módulo + versión, versión de la app (`about/appInfo.ts`), plataforma (Android/web/TV) y versión del SO, huella del error (ver abajo), fecha
+  - **Opcional:** detalles del usuario (texto libre, tope de caracteres) y las últimas N entradas del registro de diagnóstico
+- [ ] **Limpieza de privacidad obligatoria:** todo pasa por `sanitize.ts` (sin URLs completas, cookies, cabeceras, HTML, rutas locales ni títulos de obras) y además se quitan dominio del sitio, IDs de series/capítulos y el texto del usuario se avisa como «público». Pruebas con fixtures que contengan cada tipo de dato sensible
+- [ ] El usuario ve el texto final y pulsa «Enviar» → se abre el canal elegido con el reporte ya rellenado; nada sale sin esa pulsación
+- [ ] Textos en i18n, componente en la galería, áreas ≥48, sin animación en el lector
+
+**Huella para duplicados (misma lógica en la app y en el procesado):**
+- [ ] `fingerprint = sha256(código + id del módulo + versión mayor.menor del módulo + mensaje normalizado + 3 primeros marcos de la pila normalizados)` y se usan 12 hex. Normalizar = quitar números, URLs, hashes, rutas y comillas; así «TIMEOUT tras 30123 ms» y «TIMEOUT tras 29870 ms» dan la misma huella. Tests de que errores iguales dan la misma huella y distintos no
+- [ ] La huella va en el título (`[fp:ab12cd34ef56] TIMEOUT en m440 0.2`) y en el cuerpo, para poder buscarla
+
+**Lado de GitHub (repo `RyuuNest`):**
+- [ ] Plantilla `.github/ISSUE_TEMPLATE/reporte-error.yml` con los campos obligatorios; la app abre `issues/new?template=…&title=…&body=…` (cuidar el límite de ~8 KB de la URL; si no cabe, se recorta el registro)
+- [ ] Antes de abrir, la app puede buscar la huella con la API pública de búsqueda (sin token, límite bajo de peticiones por minuto) y, si ya existe, ofrecer «Ya está reportado: ver issue / sumar mi caso» en vez de abrir uno nuevo
+- [ ] GitHub Action al abrir un issue con `fp:`: si ya hay uno abierto con la misma huella → comentar en el original («+1, versión X»), sumar la etiqueta de ocurrencias y cerrar el nuevo como duplicado; si no → etiqueta `reporte-usuario` + código de error y alta en **GitHub Projects** (columna «Pendiente») con un campo numérico «Ocurrencias»
+- [ ] Vista del Project ordenada por «Ocurrencias» para saber qué se repite más
+
+**Usuarios sin cuenta de GitHub (gratis):** el reporte es el mismo texto con huella; solo cambia el canal. 🧍 Elegir uno o varios:
+- [ ] **A. Telegram (propuesta del humano):** la app abre Telegram con el texto listo para un bot o un grupo de reportes, por enlace `t.me/<bot>` + hoja de compartir. El bot del humano lo convierte en issue con la misma lógica de huella. **No** se mete el token del bot en la app (cualquiera podría sacarlo del APK y usarlo para spam). El usuario necesita cuenta de Telegram
+- [ ] **B. Correo (`mailto:`):** abre la app de correo con asunto (`[fp:…]`) y cuerpo rellenados hacia un buzón del proyecto. Cero infraestructura, cualquier usuario tiene correo; el procesado es manual o con un filtro/script que lea el buzón. Expone el correo del usuario al proyecto (avisarlo en la tarjeta)
+- [ ] **C. Relé sin servidor propio (Cloudflare Workers, plan gratis):** la app hace POST del reporte ya limpio; el Worker guarda el token de GitHub, calcula duplicados por huella y crea o comenta el issue. Es la opción más automática y sin cuenta, pero **es un servicio de terceros y cambia RNF-5** (y hay que ponerle límite de peticiones contra spam)
+- [ ] **D. Hoja de compartir del sistema / copiar al portapapeles:** el usuario elige Discord, WhatsApp, Telegram, correo… y lo pega donde quiera (o en un formulario o discusión). Es lo más simple y siempre funciona como respaldo, pero no es automático
+- [ ] **E. Formulario web gratis (por ejemplo Google Forms o Tally) prerrellenado por URL:** sin cuenta y con hoja de cálculo para contar huellas. Es un tercero que recibe los datos; revisar su política antes
+- Recomendación del agente: **GitHub (con cuenta) + D (siempre disponible) + A o B** sin tocar RNF-5; dejar C para cuando haya volumen y aprobar el cambio de SPEC
+- Verif: tests de limpieza y de huella, galería + Playwright (web) + 🧍 POCO (enviar un reporte de prueba a un repo o canal de pruebas, nunca al real)
+
 ### T44 ✅ 58 archivos de test fallaban en `vitest run` desde la raíz `[Ops · Intermedia · N3]`
 
 - [x] Resuelto (2026-11-21): no eran tests rotos. Faltaba la config de la raíz (`vitest.config.ts` con `projects`: cada paquete con su config y sus alias) y 19 tests leían rutas relativas a `process.cwd()` (ahora parten de `import.meta.dirname`). Raíz 231/231 y `pnpm -r test` en verde.
