@@ -60,11 +60,13 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 **Nuevas (2026-11-27)**
 - P-198 «Mandar reporte» (F103): dos botones, **GitHub** («La atención será prioritaria») y **correo** a `potigameplays@gmail.com` («Será más lenta, pero lo atenderemos»); el usuario revisa y envía a mano (cabe en RNF-5). Telegram, más adelante.
 - P-199 **Habrá iOS** solo si se instala fuera de la App Store, como un APK (instalación lateral) o como extensión para iOS; sin App Store. Antes de compilar: investigar las vías y actualizar SPEC P-3.
+- P-200 F42 cerrado con crítica UX/UI (design-critique, humano 2026-11-27): el botón de mantener pulsado es el **primario** (`accent`, tinta `bg`; el relleno ámbar es avance); «Idioma» sin chevrón (no hay pantalla a la que ir); en la web el h1 se queda, los permisos van en línea propia con icono, «Instalar» es secundario y el aviso de éxito es neutro.
 
 ## 4. Pendientes y preguntas abiertas
 
 - 🧍 **Verificar con el APK 1.0.0** todo lo hecho sin prueba en el teléfono (lista en `tasks/todo.md`).
-- ⏰ **Recordar al humano al empezar la sesión:** decidir T45 (¿índice B-tree de Hitomi o aceptar un solo término?) y F42 (botón primario verde V3, chevrón de «Idioma» N21, título y píldoras de la web).
+- ⏰ **Recordar al humano al empezar la sesión:** decidir T45 (¿índice B-tree de Hitomi o aceptar un solo término?).
+- **PR abiertos sin fusionar:** #178 (poda de docs), #179 (F42), #180 (F103 parte 1).
 - 🐞 **FanFox +18:** la ficha sale con 0 capítulos (dice 113) por el aviso de contenido adulto; Models issue #30.
 - 🐞 **ZonaTMO:** el lector se traba al bajar rápido tras cargar el capítulo (posible rendimiento; falta saber qué manga).
 - **F102 iOS:** investigar la instalación lateral y la extensión de iOS (P-199).
