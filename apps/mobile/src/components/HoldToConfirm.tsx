@@ -103,7 +103,7 @@ export default function HoldToConfirm({
         pointerEvents="none"
         style={[holdTrackStyle(), { transform: [{ translateX }] }]}
       />
-      <Text style={[styles.label, { color: holdToConfirmTextColor(holding) }]}>
+      <Text style={[styles.label, { color: holdToConfirmTextColor() }]}>
         {holding ? holdingLabel : label}
       </Text>
     </FocusPressable>

@@ -89,6 +89,24 @@
   flex-wrap: wrap;
 }
 
+/* F42/N9: permisos (RF-3) en su propia línea, con icono de aviso como en el móvil. */
+.sources-row-permissions {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-sm);
+  color: var(--color-text-secondary);
+}
+
+.sources-permission {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xxs);
+}
+
+.sources-permission svg {
+  color: var(--color-progress);
+}
+
 .sources-row-actions {
   display: flex;
   gap: var(--space-xs);

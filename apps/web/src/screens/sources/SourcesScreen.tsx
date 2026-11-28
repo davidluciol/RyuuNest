@@ -7,13 +7,15 @@ import { kindLabel } from "@ryuunest/mobile-src/components/kindLabel";
 import type { SourceModule, SourcesData } from "@ryuunest/mobile-src/screens/sources/sourcesData";
 import {
   BADGE_LABEL_KEYS,
+  PERMISSION_LABEL_KEYS,
   ROW_ACTION_KEYS,
-  moduleBadges,
+  modulePermissions,
   moduleRowAction,
+  moduleStatusBadges,
 } from "@ryuunest/mobile-src/screens/sources/sourcesView";
 import type { SourcesFlow } from "@ryuunest/mobile-src/screens/sources/sourcesFlow";
 import type { SourcesController } from "@ryuunest/mobile-src/screens/sources/sourcesController";
-import { Plus, RefreshCw, Trash2 } from "../../icons";
+import { Plus, RefreshCw, Trash2, TriangleAlert } from "../../icons";
 
 import Badge from "../../components/Badge";
 import Button from "../../components/Button";
@@ -38,7 +40,7 @@ import { useSourcesData } from "./useSourcesData";
  */
 export default function SourcesScreen() {
   const state = useSourcesData();
-  const { view, flow, notice, controller } = state;
+  const { view, flow, notice, noticeKind, controller } = state;
 
   return (
     <div className="screen sources-screen" data-testid="screen-sources">
@@ -73,7 +75,7 @@ export default function SourcesScreen() {
       )}
 
       {notice !== null && controller !== null && (
-        <Toast message={notice} onClose={controller.dismissNotice} testID="sources-notice" />
+        <Toast message={notice} severity={noticeKind === "info" ? "info" : "error"} onClose={controller.dismissNotice} testID="sources-notice" />
       )}
 
       {controller !== null && flow.sheet === "add-repo" && (
@@ -253,14 +255,24 @@ function ModuleRow({ module, onAction }: { module: SourceModule; onAction: () =>
           {t("sources.module.meta", { kind: kindLabel(module.kinds[0] ?? "manga"), lang: module.lang, version: module.version })}
         </span>
         <span className="sources-row-badges">
-          {moduleBadges(module).map((badge) => (
+          {moduleStatusBadges(module).map((badge) => (
             <Badge key={badge} label={t(BADGE_LABEL_KEYS[badge])} tone={badge === "error" ? "error" : badge === "update" ? "warning" : "neutral"} />
           ))}
         </span>
+        {modulePermissions(module).length > 0 && (
+          <span className="t-body-sm sources-row-permissions" data-testid={`module-${module.id}-permissions`}>
+            {modulePermissions(module).map((permission) => (
+              <span key={permission} className="sources-permission">
+                <TriangleAlert size={14} aria-hidden />
+                {t(PERMISSION_LABEL_KEYS[permission])}
+              </span>
+            ))}
+          </span>
+        )}
       </div>
       <div className="sources-row-actions">
         <Button
-          variant={action === "install" ? "primary" : "secondary"}
+          variant="secondary"
           label={t(ROW_ACTION_KEYS[action])}
           onClick={onAction}
           testID={`module-action-${module.id}`}
