@@ -25,6 +25,7 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 - **Lector progresivo (2026-11-23):** cola de páginas con prioridad, reintentos y cancelación; estado visible por página; sin descargas dobles (−40 % de tráfico al abrir).
 - **Auditoría de módulos para el release (2026-11-26/27):** arreglo del `await` de Hermes en flechas con parámetros desestructurados; montador que remonta al actualizar; luscious 0.1.4, mangation 0.1.3; títulos de capítulo sin repetir numeración.
 - **Lector vertical que no se deslizaba (2026-11-27):** un `Pressable` envolvía al `ScrollView` y le robaba el arrastre en Android (P-193).
+- **Capítulos leídos (2026-11-28, #181):** en vertical la última página corta nunca era la «actual» y el capítulo no se marcaba; al llegar al fondo cuenta como leída. Al terminar, hoja «¿Marcar los anteriores como leídos?» (móvil y web) si quedan anteriores sin terminar.
 - **Release (2026-11-27):** Acerca de con artistas (móvil y web), raíz ordenada (`docs/`), licencias GPL-3.0 + CC BY-NC-ND 4.0, logo final, iconos de app/web/extensión y APK 1.0.0.
 
 ## 3. Decisiones vigentes (resumen; detalle en el archivo)
@@ -62,11 +63,15 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 - P-199 **Habrá iOS** solo si se instala fuera de la App Store, como un APK (instalación lateral) o como extensión para iOS; sin App Store. Antes de compilar: investigar las vías y actualizar SPEC P-3.
 - P-200 F42 cerrado con crítica UX/UI (design-critique, humano 2026-11-27): el botón de mantener pulsado es el **primario** (`accent`, tinta `bg`; el relleno ámbar es avance); «Idioma» sin chevrón (no hay pantalla a la que ir); en la web el h1 se queda, los permisos van en línea propia con icono, «Instalar» es secundario y el aviso de éxito es neutro.
 
+**Nuevas (2026-11-28)**
+- P-201 Permiso especial del humano para la tanda del 2026-11-28: fusiono yo cada PR tras el gate en verde (RyuuNest y RyuuNest-Models, con publicación de versión e `index.json`). Fuera de esta tanda vuelve la regla de no fusionar.
+- P-202 T45: se hacen **ambas** cosas: pista de sintaxis en el buscador ya y búsqueda por el índice B-tree de Hitomi (Models issue #31).
+- P-203 Marcar anteriores (#181): se **pregunta** con una hoja al terminar un capítulo, solo si quedan anteriores sin terminar; una vez por capítulo.
+
 ## 4. Pendientes y preguntas abiertas
 
 - 🧍 **Verificar con el APK 1.0.0** todo lo hecho sin prueba en el teléfono (lista en `tasks/todo.md`).
-- ⏰ **Recordar al humano al empezar la sesión:** decidir T45 (¿índice B-tree de Hitomi o aceptar un solo término?).
-- **PR abiertos sin fusionar:** #179 (F42) y #180 (F103 completo, con los commits de docs que quedaron fuera de #178).
+- **Issues abiertos (2026-11-28):** #181 leídos, #182 lag de Aventuras, #183 aviso de Cloudflare; Models #31 Hitomi por título.
 - 🐞 **FanFox +18:** la ficha sale con 0 capítulos (dice 113) por el aviso de contenido adulto; Models issue #30.
 - 🐞 **ZonaTMO:** el lector se traba al bajar rápido tras cargar el capítulo (posible rendimiento; más visible en «Es hora de entrenar a las chicas malas» y «¡Nunca me doblegaré!», capítulos largos).
 - **F102 iOS:** investigar la instalación lateral y la extensión de iOS (P-199).
