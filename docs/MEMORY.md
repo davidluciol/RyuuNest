@@ -68,7 +68,7 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 - ⏰ **Recordar al humano al empezar la sesión:** decidir T45 (¿índice B-tree de Hitomi o aceptar un solo término?).
 - **PR abiertos sin fusionar:** #178 (poda de docs), #179 (F42), #180 (F103 parte 1).
 - 🐞 **FanFox +18:** la ficha sale con 0 capítulos (dice 113) por el aviso de contenido adulto; Models issue #30.
-- 🐞 **ZonaTMO:** el lector se traba al bajar rápido tras cargar el capítulo (posible rendimiento; falta saber qué manga).
+- 🐞 **ZonaTMO:** el lector se traba al bajar rápido tras cargar el capítulo (posible rendimiento; más visible en «Es hora de entrenar a las chicas malas» y «¡Nunca me doblegaré!», capítulos largos).
 - **F102 iOS:** investigar la instalación lateral y la extensión de iOS (P-199).
 - 🧍 **FA3:** quizá entre el primer artista el 2026-11-28.
 - 🧍 **Extensión:** probarla en Chrome y Firefox reales, AC-10, origen de producción de la PWA (P-116) y textos `extension.*` (P-120).

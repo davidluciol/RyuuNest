@@ -79,7 +79,7 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 
 ### Posible bug · ZonaTMO: el lector se traba al bajar rápido `[FE · Alta · N4]` 🧍
 
-- [ ] Al deslizar rápido hacia abajo justo cuando el capítulo termina de cargar, el lector vertical se vuelve lento y se «traba» (manga por confirmar con el humano). Medir antes de tocar: cuadros (`dumpsys gfxinfo`), memoria y descargas con APK; comparar con otro módulo para saber si es del lector o de ZonaTMO (tamaño de las imágenes)
+- [ ] Al deslizar rápido hacia abajo justo cuando el capítulo termina de cargar, el lector vertical se vuelve lento y se «traba» (visto en 3 mangas; más en dos largos: «Es hora de entrenar a las chicas malas» y «¡Nunca me doblegaré!»). Medir antes de tocar: cuadros (`dumpsys gfxinfo`), memoria y descargas con APK; comparar con otro módulo para saber si es del lector o de ZonaTMO (tamaño de las imágenes)
 
 ### VisorManga fuera del índice `[Ops · Baja · N1]` 🧍
 
