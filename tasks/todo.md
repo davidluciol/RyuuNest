@@ -17,7 +17,7 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 | Portales | bug FanFox → hallazgo ZonaTMO → T45 (decidir) → F100 (cuando Cloudflare bloquee) |
 | Ajustes | AB4 → cookies |
 | Lector | plural de carpetas → R2 (APK) → F17 (grupo) |
-| General | F103 (tras elegir canal) → G5 → G3/T05 |
+| General | F103 (restos) → G5 → G3/T05 |
 
 ---
 
@@ -199,25 +199,15 @@ Dep: F22 · `apps/mobile/src/screens/reader/tv/*`
 
 ## 🗂️ General
 
-### F103 «Mandar reporte»: reporte revisado por el usuario → issues de GitHub `[FE/Ops · Intermedia · N3]` 🧍
+### F103 «Mandar reporte»: restos `[FE/Ops · Baja · N2]` 🧍
 
-Dep: F30, T36 (`core/diagnostics/sanitize.ts`) · Pedido del humano 2026-11-27
+> Hecho en el PR #180 (P-198): núcleo (limpieza, huella, enlaces con tope), hoja con dos canales (GitHub prioritario, correo más lento), botón en `ErrorBanner`/`ErrorDialog` (lector y respaldo) y en Diagnóstico, galería, Playwright 426/1440 y Action `reportes.yml` que agrupa duplicados por huella.
 
-- [x] Parte 1 (PR #180): `core/diagnostics/report.ts` con limpieza, huella y enlaces de GitHub y correo con su tope
-- Siguiente: hoja de revisión con los dos botones (dirección y repo en `about/appInfo.ts`), botón en errores y Diagnóstico, i18n, galería, Playwright; después plantilla y Action de GitHub
-
-> **Canales decididos (P-198, humano 2026-11-27):** la hoja de reporte ofrece **dos** botones: **GitHub** («La atención será prioritaria»; requiere cuenta) y **correo** a `potigameplays@gmail.com` («Será más lenta, pero lo atenderemos»). Ambos los envía el usuario a mano (cabe en RNF-5). Un bot de Telegram queda para después.
-
-- [ ] Botón «Mandar reporte» en `ErrorDialog`, `ErrorBanner`, error por página del lector y Ajustes → Diagnóstico
-- [ ] Hoja de revisión con **todo** lo que sale, editable solo en «Detalles». Obligatorio: código de error, módulo + versión, versión de la app, plataforma y SO, huella, fecha. Opcional: detalles (con tope) y las últimas N entradas del registro
-- [ ] Limpieza con `sanitize.ts` + quitar dominio, IDs de series/capítulos y títulos; avisar de que el texto es público. Pruebas con fixtures de cada dato sensible
-- [ ] Nada sale sin pulsar «Enviar»; textos en i18n, galería, áreas ≥48, sin animación en el lector
-- [ ] Huella: `sha256(código + módulo + versión mayor.menor + mensaje normalizado + 3 primeros marcos normalizados)`, 12 hex, en título (`[fp:ab12cd34ef56] …`) y cuerpo. Tests: iguales ⇒ misma huella
-- [ ] GitHub: plantilla `.github/ISSUE_TEMPLATE/reporte-error.yml`; la app abre `issues/new?…` (límite ~8 KB de URL); buscar antes la huella con la API pública y ofrecer «Ya está reportado»; Action que comenta y cierra duplicados o etiqueta y da de alta en GitHub Projects con «Ocurrencias»
-- [ ] Dos botones en la hoja: «Enviar por GitHub» (subtítulo «La atención será prioritaria») y «Enviar por correo» («Será más lenta, pero lo atenderemos»)
-- [ ] Correo: el botón abre la app de correo con `mailto:potigameplays@gmail.com`, asunto `[fp:…] <código> en <módulo> <versión>` y el cuerpo ya limpio (cuidar el largo de la URL `mailto:`; si no cabe, recortar el registro). Avisar en la tarjeta de que el proyecto verá el correo del usuario. Respaldo: copiar al portapapeles
+- [ ] 🧍 En el teléfono: mandar un reporte de prueba por cada canal (GitHub abre `issues/new` relleno; correo abre la app con asunto y cuerpo); comprobar que la Action etiqueta o cierra el duplicado
+- [ ] Botón en el error **por página** del lector (`ReaderPagePlaceholder`) y versión del módulo en el reporte del lector (hoy solo va el id)
+- [ ] Copiar el reporte al portapapeles como tercera vía; buscar la huella antes de abrir el issue («Ya está reportado»)
+- [ ] GitHub Projects con campo «Ocurrencias» (la Action necesita un token con permiso de proyectos; pedirlo al humano)
 - [ ] (después) Bot de Telegram: sin token en el APK; solo si el correo funciona bien
-- Verif: tests de limpieza y huella, galería + Playwright + 🧍 POCO (reporte de prueba a un repo o canal de pruebas)
 
 ### G5 Manejador del enlace `ryuunest://add-repo` `[FE · Intermedia · N3]`
 
