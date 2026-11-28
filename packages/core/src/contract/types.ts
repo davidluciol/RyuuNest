@@ -130,6 +130,8 @@ export interface ModuleManifest {
   minAppVersion?: string;
   author?: string;
   homepage?: string;
+  /** T45: pista del buscador (sintaxis que entiende el sitio); sustituye al texto por defecto. */
+  searchHint?: string;
   license?: string;
 }
 

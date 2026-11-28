@@ -188,6 +188,14 @@ describe("manifest · inválido", () => {
     expect(pathsOf(validateManifest({ ...validManifest, antiBot: "sí" }))).toEqual(["antiBot"]);
   });
 
+  it("searchHint es opcional, una cadena no vacía de hasta 80 caracteres (T45)", () => {
+    expect(validateManifest({ ...validManifest, searchHint: "Título o tag:valor" }).ok).toBe(true);
+    expect(pathsOf(validateManifest({ ...validManifest, searchHint: "" }))).toEqual(["searchHint"]);
+    expect(pathsOf(validateManifest({ ...validManifest, searchHint: "x".repeat(81) }))).toEqual([
+      "searchHint",
+    ]);
+  });
+
   it("valida minAppVersion contra la versión de la app", () => {
     const tooNew = validateManifest(
       { ...validManifest, minAppVersion: "2.0.0" },

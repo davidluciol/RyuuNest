@@ -28,6 +28,7 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 - **Capítulos leídos (2026-11-28, #181):** en vertical la última página corta nunca era la «actual» y el capítulo no se marcaba; al llegar al fondo cuenta como leída. Al terminar, hoja «¿Marcar los anteriores como leídos?» (móvil y web) si quedan anteriores sin terminar.
 - **Aventuras virtualizada (2026-11-28, #182):** el catálogo pasa de `ScrollView` + `.map` (todas las tarjetas montadas) a `FlashList` 2.0.2 (versión de Expo SDK 57) con filas recicladas, `onEndReached` y `recyclingKey` en las portadas. Falta medir en el teléfono.
 - **Aviso de reto anti-bot (2026-11-28, #183):** campo opcional `antiBot` en el manifiesto y en el índice (lo valida el SDK); la hoja de instalación y el aviso +18 de primer uso dicen «Este sitio a veces te pedirá resolver un reto de Cloudflare…». En Models: M440, Luscious y YupManga.
+- **T45 Hitomi (2026-11-28, Models #31):** búsqueda por título y varias palabras con el índice B-tree del sitio (SHA-256 en JS puro, nodos de 464 bytes por `Range`), cruzada con el idioma; probada en vivo («ceniza» → «Nieve Color Ceniza»). La app acepta `searchHint` en el manifiesto como pista del buscador (móvil y web).
 - **Release (2026-11-27):** Acerca de con artistas (móvil y web), raíz ordenada (`docs/`), licencias GPL-3.0 + CC BY-NC-ND 4.0, logo final, iconos de app/web/extensión y APK 1.0.0.
 
 ## 3. Decisiones vigentes (resumen; detalle en el archivo)

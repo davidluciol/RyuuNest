@@ -312,7 +312,7 @@ function DiscoverReady({
             <View style={styles.topRow}>
               <View style={styles.searchWrap}>
                 <TextField
-                  placeholder={t("discover.search.placeholder")}
+                  placeholder={selectedModule?.searchHint ?? t("discover.search.placeholder")}
                   value={draft}
                   onChangeText={setDraft}
                   onSubmitEditing={() => onSearch?.(draft.trim())}

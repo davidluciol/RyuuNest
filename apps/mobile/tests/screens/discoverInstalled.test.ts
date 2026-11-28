@@ -276,3 +276,11 @@ describe("createInstalledDiscoverSource · antiBot (#183)", () => {
     expect((await source.listModules())[0]).toMatchObject({ id: "m-reto", antiBot: true });
   });
 });
+
+describe("createInstalledDiscoverSource · searchHint (T45)", () => {
+  it("pasa la pista del buscador del manifest", async () => {
+    await seed(packageFor(manifest({ id: "m-pista", name: "Con pista", searchHint: "Título o tag:valor" })));
+    const source = createInstalledDiscoverSource({ driver, http: siteHttp() });
+    expect((await source.listModules())[0]).toMatchObject({ searchHint: "Título o tag:valor" });
+  });
+});

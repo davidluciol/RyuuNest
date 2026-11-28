@@ -70,6 +70,7 @@ export function validateManifest(
   validateEnumArray(value["capabilities"], "capabilities", MODULE_CAPABILITIES, issues, false);
   requireString(value["entry"], "entry", issues);
   validateNetwork(value["network"], issues);
+  validateSearchHint(value["searchHint"], issues);
 
   return issues.result<ModuleManifest>(value);
 }
@@ -205,6 +206,21 @@ function validateNetwork(value: unknown, issues: IssueCollector): void {
     (typeof delay !== "number" || !Number.isInteger(delay) || delay < min || delay > max)
   ) {
     issues.add("network.minDelayMs", `Debe ser un entero entre ${min} y ${max} ms`);
+  }
+}
+
+/** T45: pista del buscador; corta para que quepa en la barra de búsqueda. */
+const MAX_SEARCH_HINT_LENGTH = 80;
+
+function validateSearchHint(value: unknown, issues: IssueCollector): void {
+  if (
+    value !== undefined &&
+    (!isNonEmptyString(value) || value.length > MAX_SEARCH_HINT_LENGTH)
+  ) {
+    issues.add(
+      "searchHint",
+      `Si se indica, debe ser una cadena no vacía de hasta ${MAX_SEARCH_HINT_LENGTH} caracteres`,
+    );
   }
 }
 

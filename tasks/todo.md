@@ -51,7 +51,7 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 
 ### T45 Hitomi.la: buscador limitado `[BE/Ops · Intermedia · N3]` 🧍
 
-- [ ] Decidir si se implementa el índice B-tree del sitio (búsqueda por título y varios términos) o se acepta el límite de un término `namespace:valor`
+- [x] Decidido (P-202): ambas. Pista `searchHint` en el buscador y búsqueda por el índice B-tree (título y varias palabras, cruzada con el idioma), Models issue #31
 - [ ] Coste de listas: una petición a `galleries/<id>.js` por tarjeta (24 por página); valorar `galleryblock` o tarjetas perezosas
 - [ ] 🧍 Comprobar en el teléfono que el adaptador HTTP pasa `Range` (206/416)
 
