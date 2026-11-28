@@ -3,7 +3,7 @@ import { RuleTester } from "eslint";
 import plugin from "../index.js";
 
 /**
- * F09 — regla `ryuunest/no-design-literals` (SPEC §11.11, `DESIGN_RULES.md` V2,
+ * F09 — regla `ryuunest/no-design-literals` (SPEC §11.11, `docs/DESIGN_RULES.md` V2,
  * AC-13): la interfaz (código de `src` en `apps/`) no escribe colores
  * hexadecimales/rgb ni medidas literales de fuente, radio o espacio: todo sale
  * de `@ryuunest/ui-tokens`.

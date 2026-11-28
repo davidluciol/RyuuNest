@@ -4,7 +4,7 @@ import { fonts, typography } from "../src/typography";
 
 /**
  * F01 — escala tipográfica de SPEC §11.9. Manrope para títulos, Inter para cuerpo
- * y controles. Diferencia aceptada (DESIGN_RULES.md V12): `label-sm` se implementa
+ * y controles. Diferencia aceptada (docs/DESIGN_RULES.md V12): `label-sm` se implementa
  * a 12 px, no a los 11 px de la tabla.
  */
 describe("tipografía (SPEC §11.9)", () => {
@@ -68,7 +68,7 @@ describe("tipografía (SPEC §11.9)", () => {
     });
   });
 
-  it("ningún token de texto queda por debajo de 12 px (DESIGN_RULES.md V12)", () => {
+  it("ningún token de texto queda por debajo de 12 px (docs/DESIGN_RULES.md V12)", () => {
     for (const style of Object.values(typography)) {
       expect(style.fontSize).toBeGreaterThanOrEqual(12);
     }

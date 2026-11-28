@@ -1,5 +1,5 @@
 /**
- * Contraste WCAG 2.1 (SPEC §2 AC-13, `DESIGN.md` «Critical Accessibility &
+ * Contraste WCAG 2.1 (SPEC §2 AC-13, `docs/DESIGN.md` «Critical Accessibility &
  * Inversion Rule»). Utilidad pública del paquete: F02 la usa para la puerta de
  * Dragon Night y cualquier tema futuro (P2-2) se valida con las mismas funciones.
  */

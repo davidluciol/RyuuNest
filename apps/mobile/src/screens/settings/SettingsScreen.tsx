@@ -31,7 +31,7 @@ import { themedStyles } from "../../components/themedStyles";
  * Biblioteca, Descubrir y el lector desde la capa de datos.
  *
  * Sin diseño en Stitch para esta parte (P-30): se compone con componentes de
- * `DESIGN.md` y se marca «sin diseño».
+ * `docs/DESIGN.md` y se marca «sin diseño».
  */
 
 /** Estado de la pantalla, como lo ve la ruta. */

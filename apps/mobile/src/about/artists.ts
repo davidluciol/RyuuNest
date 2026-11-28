@@ -6,7 +6,7 @@ import type { SocialNetwork } from "./socialIcons";
  *
  * Alta de un artista (FA3): foto local en `assets/artists/<id>.webp`, importada
  * con `import` (nunca una URL remota, RNF-5), entrada aquí, texto en `es.json` (`about.artists.<id>.bio`) y
- * registro de la foto en `ASSETS.md`.
+ * registro de la foto en `docs/ASSETS.md`.
  */
 
 export interface ArtistLink {

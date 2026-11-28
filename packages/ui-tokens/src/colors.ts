@@ -2,7 +2,7 @@
  * Colores semánticos del tema Dragon Night (SPEC §11.9).
  *
  * Única fuente: la tabla de SPEC §11.9. Los tokens genéricos del front-matter de
- * `DESIGN.md` (`surface-dim`, `primary-container`, `background`, `error: #ffb4ab`, …)
+ * `docs/DESIGN.md` (`surface-dim`, `primary-container`, `background`, `error: #ffb4ab`, …)
  * se contradicen entre sí y **no** se implementan (P2-1).
  */
 
@@ -22,7 +22,7 @@ export interface ThemeColors {
   readonly textSecondary: string;
   /** Acción principal, foco y selección. */
   readonly accent: string;
-  /** Avance y capítulo en curso; nada más (`DESIGN_RULES.md` V1). */
+  /** Avance y capítulo en curso; nada más (`docs/DESIGN_RULES.md` V1). */
   readonly progress: string;
   /** Descubrimiento y taxonomía alterna. No se usa en la v1 (P-31). */
   readonly accentAlt: string;

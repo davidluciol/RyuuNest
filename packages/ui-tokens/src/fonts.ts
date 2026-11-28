@@ -79,7 +79,7 @@ export const fontFiles: readonly FontFile[] = [
   },
 ];
 
-/** Licencia por familia (registro en `ASSETS.md`, GPL-3.0 compatible). */
+/** Licencia por familia (registro en `docs/ASSETS.md`, GPL-3.0 compatible). */
 export const fontLicenses = {
   Manrope: { file: "LICENSE-Manrope.txt", spdx: "OFL-1.1" },
   Inter: { file: "LICENSE-Inter.txt", spdx: "OFL-1.1" },

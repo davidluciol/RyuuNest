@@ -7,7 +7,7 @@ import {
 } from "../../src/components/sectionHeaderStyles";
 
 /**
- * F13 — encabezado de sección (SPEC §11.10, `DESIGN_RULES.md` V1/V4):
+ * F13 — encabezado de sección (SPEC §11.10, `docs/DESIGN_RULES.md` V1/V4):
  * icono opcional a la izquierda, título en `title-lg`, acción secundaria
  * a la derecha ("Ver todas" en `text-primary` con chevron). Sin colores
  * de acento en el título ni en la acción secundaria (V1).

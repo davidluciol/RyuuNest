@@ -6,7 +6,7 @@ import { t } from "../../i18n";
 
 /**
  * F14a/F14b — datos de ejemplo coherentes para la pantalla Biblioteca
- * (`DESIGN_RULES.md` D1–D5): series inventadas, sin obras reales, portadas
+ * (`docs/DESIGN_RULES.md` D1–D5): series inventadas, sin obras reales, portadas
  * sin texto, cifras que cuadran con Inicio (48 obras, 3 carpetas).
  *
  * Cifras coherentes (D1): 24 + 14 + 10 = 48 obras en 3 carpetas.

@@ -9,22 +9,22 @@ import { typography } from "../src/typography";
 
 /**
  * F02 (AC-13) — los tokens propios de `ui-tokens` deben coincidir con los de
- * `DESIGN.md` (SPEC §11.9). El front-matter de `DESIGN.md` mezcla tokens propios
+ * `docs/DESIGN.md` (SPEC §11.9). El front-matter de `docs/DESIGN.md` mezcla tokens propios
  * y genéricos que se contradicen (P2-1): aquí solo se comparan los propios y se
  * comprueba que los genéricos contradictorios NO entraron en la paleta.
  */
 
-const designMd = readFileSync(`${import.meta.dirname}/../../../DESIGN.md`, "utf8");
+const designMd = readFileSync(`${import.meta.dirname}/../../../docs/DESIGN.md`, "utf8");
 
 /** Líneas del front-matter (entre los dos primeras `---`). */
 function frontmatterLines(md: string): string[] {
   const lines = md.split(/\r?\n/);
   if (lines[0]?.trim() !== "---") {
-    throw new Error("DESIGN.md no empieza por un bloque front-matter (---)");
+    throw new Error("docs/DESIGN.md no empieza por un bloque front-matter (---)");
   }
   const end = lines.indexOf("---", 1);
   if (end < 0) {
-    throw new Error("El front-matter de DESIGN.md no tiene cierre (---)");
+    throw new Error("El front-matter de docs/DESIGN.md no tiene cierre (---)");
   }
   return lines.slice(1, end);
 }
@@ -92,7 +92,7 @@ const designTypography = parseTypography(FM);
 const designSpacing = parseFlatSection(FM, "spacing");
 const designRadii = parseFlatSection(FM, "rounded");
 
-/** Nuestros tokens semánticos → la clave PROPIA equivalente en `DESIGN.md`. */
+/** Nuestros tokens semánticos → la clave PROPIA equivalente en `docs/DESIGN.md`. */
 const COLOR_ALIASES: Record<string, string> = {
   bg: "bg",
   surface: "surface",
@@ -112,13 +112,13 @@ const COLOR_ALIASES: Record<string, string> = {
   nsfw: "nsfw",
 };
 
-describe("colores de ui-tokens vs DESIGN.md", () => {
+describe("colores de ui-tokens vs docs/DESIGN.md", () => {
   it("los 14 tokens semánticos coinciden con sus contrapartes propias del diseño", () => {
     for (const [token, value] of Object.entries(dragonNightColors)) {
       const designKey = COLOR_ALIASES[token];
       expect(designKey, `falta el alias de ${token}`).toBeDefined();
       const designValue = designKey ? designColors.get(designKey) : undefined;
-      expect(designValue, `DESIGN.md no define ${designKey}`).toBe(value.toUpperCase());
+      expect(designValue, `docs/DESIGN.md no define ${designKey}`).toBe(value.toUpperCase());
     }
   });
 
@@ -154,17 +154,17 @@ const TYPE_ALIASES: Record<string, string> = {
   labelSm: "label-sm",
 };
 
-describe("tipografía de ui-tokens vs DESIGN.md", () => {
+describe("tipografía de ui-tokens vs docs/DESIGN.md", () => {
   it("los 12 tokens de texto coinciden, salvo la diferencia aceptada en label-sm", () => {
     for (const [token, designKey] of Object.entries(TYPE_ALIASES)) {
       const design = designTypography.get(designKey);
-      expect(design, `DESIGN.md no define ${designKey}`).toBeDefined();
+      expect(design, `docs/DESIGN.md no define ${designKey}`).toBeDefined();
       const style = typography[token as keyof typeof typography];
       expect(design?.get("fontFamily")).toBe(style.fontFamily);
       expect(px(design?.get("lineHeight"), "px")).toBe(style.lineHeight);
       expect(Number(design?.get("fontWeight"))).toBe(style.fontWeight);
       expect(px(design?.get("letterSpacing"), "em") ?? 0).toBe(style.letterSpacing);
-      // Diferencia aceptada (DESIGN_RULES.md V12, registrada en DIFFS.md):
+      // Diferencia aceptada (docs/DESIGN_RULES.md V12, registrada en DIFFS.md):
       // el diseño pide 11 px; implementamos 12 px.
       const expectedSize = token === "labelSm" ? 12 : px(design?.get("fontSize"), "px");
       expect(style.fontSize, `${token} en px`).toBe(expectedSize);
@@ -174,7 +174,7 @@ describe("tipografía de ui-tokens vs DESIGN.md", () => {
   });
 });
 
-describe("espaciado y radios de ui-tokens vs DESIGN.md", () => {
+describe("espaciado y radios de ui-tokens vs docs/DESIGN.md", () => {
   it("la rejilla de 4 px coincide con las claves space-* del diseño (1 rem = 16 px)", () => {
     const aliases: Record<string, string> = {
       xxs: "space-xxs",

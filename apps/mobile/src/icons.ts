@@ -1,7 +1,7 @@
 /**
  * Punto de entrada único de iconos (F03, P2-3): **Lucide** en móvil y TV.
  *
- * Reglas que aplica (SPEC §11.11, `DESIGN_RULES.md` V4):
+ * Reglas que aplica (SPEC §11.11, `docs/DESIGN_RULES.md` V4):
  * - un único conjunto SVG: nada de importar `lucide-react-native` a mano desde
  *   una pantalla, ni emojis ni glifos de texto como iconos;
  * - cero CDN: el paquete vive en `node_modules`, empaquetado en la app (RNF-5).

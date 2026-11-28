@@ -424,7 +424,7 @@ async function installDemo(page) {
       // Semilla de Biblioteca/Inicio por la ruta real de importación de respaldo
       // (F21b): el respaldo inserta filas en `series`/`favorite`/`progress`.
       // (Hallazgo F28: pulsar «Favorito» en la ficha NO crea la fila `series`, así
-      // que la biblioteca queda vacía; se anota en MEMORY.md para una tarea propia.)
+      // que la biblioteca queda vacía; se anota en docs/MEMORY.md para una tarea propia.)
       const now = Date.now();
       const seed = {
         format: "ryuunest-backup",

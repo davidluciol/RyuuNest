@@ -6,7 +6,7 @@
  * última página, si se le inyecta este almacén).
  *
  * La consulta devuelve **el conjunto de leídos**, sin contadores ni totales: el contador de
- * no leídos es v2 (`RF-42`, `DESIGN_RULES.md` §4) y necesitaría conocer el total de
+ * no leídos es v2 (`RF-42`, `docs/DESIGN_RULES.md` §4) y necesitaría conocer el total de
  * capítulos y refrescarlo en segundo plano.
  */
 import type { Clock } from "../ports/clock.js";

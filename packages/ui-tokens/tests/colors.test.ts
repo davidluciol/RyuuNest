@@ -4,7 +4,7 @@ import { dragonNightColors } from "../src/colors.js";
 
 /**
  * F01 — los colores semánticos salen de la tabla de SPEC §11.9.
- * Los genéricos del front-matter de `DESIGN.md` (surface-dim, primary-container,
+ * Los genéricos del front-matter de `docs/DESIGN.md` (surface-dim, primary-container,
  * background, error #ffb4ab…) no se usan: la única fuente son estos 14 tokens.
  */
 describe("tokens de color (SPEC §11.9)", () => {

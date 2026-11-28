@@ -47,7 +47,7 @@ export const readerMaxWidth = 720 as const;
 /**
  * Ancho máximo de la columna de contenido de las pantallas de lista (Ajustes,
  * Diagnóstico, Fuentes) en escritorio: mantiene una medida de lectura cómoda
- * (DESIGN.md). Mismo valor que la columna del lector, token aparte.
+ * (docs/DESIGN.md). Mismo valor que la columna del lector, token aparte.
  */
 export const contentMaxWidth = 720 as const;
 

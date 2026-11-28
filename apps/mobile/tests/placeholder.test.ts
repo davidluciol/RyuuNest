@@ -37,8 +37,8 @@ describe("marcador de dragón (assets/placeholder)", () => {
     expect(readme).toMatch(/indicacion/i);
   });
 
-  it("está registrado en ASSETS.md como marcador temporal", () => {
-    const assets = readFileSync(path.join(REPO_ROOT, "ASSETS.md"), "utf8");
+  it("está registrado en docs/ASSETS.md como marcador temporal", () => {
+    const assets = readFileSync(path.join(REPO_ROOT, "docs/ASSETS.md"), "utf8");
     expect(assets).toMatch(/assets\/placeholder\//);
   });
 });

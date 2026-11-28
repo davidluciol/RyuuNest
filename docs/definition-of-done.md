@@ -27,11 +27,11 @@ Es la barra común: cada incremento la respeta, no solo el final de la fase
 
 ## 4. Documentación
 
-- [ ] `MEMORY.md` tiene la entrada de la sesión (qué se hizo, decisiones, siguiente paso).
+- [ ] `docs/MEMORY.md` tiene la entrada de la sesión (qué se hizo, decisiones, siguiente paso).
 - [ ] Las decisiones nuevas o cambiadas quedan registradas por su ID (`D-n` del SPEC o
-      `P-n` de `MEMORY.md`); nunca por el `P-n` local de `tasks/plan.md`.
+      `P-n` de `docs/MEMORY.md`); nunca por el `P-n` local de `tasks/plan.md`.
 - [ ] Si aplica, se añadió o actualizó un ADR en `docs/decisions/`.
-- [ ] La documentación afectada (`SPEC.md`, `CONTRIBUTING.md`, `ASSETS.md`…) está coherente.
+- [ ] La documentación afectada (`SPEC.md`, `CONTRIBUTING.md`, `docs/ASSETS.md`…) está coherente.
 
 ## 5. Interfaz (solo si la tarea toca UI)
 
@@ -56,5 +56,5 @@ Además, al cerrar la sesión (`AGENTS.md` §8):
 - [ ] Pantallas tocadas verificadas (o anotado lo que falta).
 - [ ] Componentes nuevos en la galería; ningún valor literal.
 - [ ] Diferencias aceptadas en `design/stitch/DIFFS.md`.
-- [ ] Entrada nueva en `MEMORY.md`: qué se hizo, decisiones, siguiente paso.
-- [ ] Preguntas sin resolver listadas en `MEMORY.md` y dichas al humano.
+- [ ] Entrada nueva en `docs/MEMORY.md`: qué se hizo, decisiones, siguiente paso.
+- [ ] Preguntas sin resolver listadas en `docs/MEMORY.md` y dichas al humano.

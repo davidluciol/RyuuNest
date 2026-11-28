@@ -3,7 +3,7 @@
 - **Estado:** aceptado
 - **Fecha:** 2026-10-13
 - **Tarea:** T03 (Fase 0)
-- **Autoridad:** `docs/SPEC.md` (§5.4, §13, §15) y `MEMORY.md` §2
+- **Autoridad:** `docs/SPEC.md` (§5.4, §13, §15) y `docs/MEMORY.md` §2
 
 ## Contexto
 
@@ -36,7 +36,7 @@ Se adoptan las decisiones `D-1`…`D-13` de `docs/SPEC.md` §5.4 tal cual:
 
 ## Decisión 2 — Producto y proceso
 
-Se adoptan las decisiones `P-1`…`P-12` de `MEMORY.md` §2:
+Se adoptan las decisiones `P-1`…`P-12` de `docs/MEMORY.md` §2:
 
 | ID | Decisión |
 |---|---|
@@ -53,7 +53,7 @@ Se adoptan las decisiones `P-1`…`P-12` de `MEMORY.md` §2:
 | P-11 | Interfaz en español al inicio, con cadenas externalizadas |
 | P-12 | El diseño es la plantilla de Stitch «RyuuNest Dragon Nest Themed UI» |
 
-El resto de decisiones de producto y proceso (`P-13`…`P-35`) viven en `MEMORY.md` §2, que es
+El resto de decisiones de producto y proceso (`P-13`…`P-35`) viven en `docs/MEMORY.md` §2, que es
 la **fuente canónica** y se actualiza en cada sesión.
 
 ## Decisión 3 — Stack y tooling
@@ -72,23 +72,23 @@ Estas elecciones provienen de `tasks/plan.md` §3 y se adoptan aquí como refere
 | Módulos de sitios reales | Viven **fuera** del repo principal | Requisito legal (SPEC §15) |
 | Sitio falso de pruebas | Paquete reutilizable **`packages/test-site`** | Reutilizable por el SDK y por la galería |
 | Límites de módulo | Los del SPEC §7.1 (paquete ≤ 2 MB, descomprimido ≤ 5 MB, ≤ 50 archivos) | Defensa anti-bomba |
-| TypeScript | Fijado a la **6.x** por ahora | `typescript-eslint` aún no soporta TS 7 (ver `MEMORY.md` P-34) |
-| ESLint / Prettier / Vitest / typescript-eslint | Versiones al día (ver `MEMORY.md` P-34) | — |
+| TypeScript | Fijado a la **6.x** por ahora | `typescript-eslint` aún no soporta TS 7 (ver `docs/MEMORY.md` P-34) |
+| ESLint / Prettier / Vitest / typescript-eslint | Versiones al día (ver `docs/MEMORY.md` P-34) | — |
 
 ## Nota sobre los identificadores de decisión
 
-`tasks/plan.md` §3 numera sus propias decisiones como `P-1`…`P-14`, y `MEMORY.md` §2 usa
+`tasks/plan.md` §3 numera sus propias decisiones como `P-1`…`P-14`, y `docs/MEMORY.md` §2 usa
 `P-1`…`P-35` para decisiones **distintas**: los números chocan. Para evitarlo:
 
-1. La **fuente canónica** de decisiones de producto/proceso es `MEMORY.md` §2.
+1. La **fuente canónica** de decisiones de producto/proceso es `docs/MEMORY.md` §2.
 2. Las decisiones de arquitectura se citan por su ID del SPEC (`D-n`).
 3. `tasks/plan.md` §3 queda como **histórico local del plan**; sus `P-n` **no se citan**.
-   Resuelto en `MEMORY.md` P-35.
+   Resuelto en `docs/MEMORY.md` P-35.
 
 ## Consecuencias
 
-- Cualquier tarea nueva cita decisiones por `D-n` (SPEC) o `P-n` (`MEMORY.md`), nunca por el
+- Cualquier tarea nueva cita decisiones por `D-n` (SPEC) o `P-n` (`docs/MEMORY.md`), nunca por el
   `P-n` local de `tasks/plan.md`.
 - Cambiar una decisión no borra la anterior: se marca como reemplazada y se enlaza la nueva
-  (`MEMORY.md`, «Cómo se mantiene»).
+  (`docs/MEMORY.md`, «Cómo se mantiene»).
 - Fijar TypeScript en 6.x se revisa cuando `typescript-eslint` soporte TS 7.

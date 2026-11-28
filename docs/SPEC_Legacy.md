@@ -658,7 +658,7 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 
 - El arte final del dragón y los iconos los harán artistas. Mientras tanto se usan **imágenes generadas con IA como marcadores**.
 - Los marcadores viven solo en `assets/placeholder/`, con un `README` que registra herramienta, fecha e indicaciones usadas, y una marca clara de **temporal**. No se emplean personajes ni estilos de obras protegidas.
-- `ASSETS.md` registra la licencia de todo recurso de terceros (iconos, fuentes, imágenes). En un repo GPL-3.0 no entran recursos con licencias no libres o no comerciales.
+- `docs/ASSETS.md` registra la licencia de todo recurso de terceros (iconos, fuentes, imágenes). En un repo GPL-3.0 no entran recursos con licencias no libres o no comerciales.
 - Antes de la v1.0 pública se reemplazan los marcadores o se confirma su situación de licencia. Ninguna pantalla depende del arte final: el dragón de marcador es una silueta sencilla.
 
 ---

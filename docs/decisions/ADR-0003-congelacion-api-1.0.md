@@ -3,7 +3,7 @@
 - **Estado:** **aceptado** por el autor el 2026-10-29, con D1 = A, D2 = (a) y D3 = `m440` (más `zonatmo`); ver «Decisiones del autor (resueltas)». R1 a R4 son las tareas T37 a T40 y la puerta del 2.º sitio es T41 (`tasks/todo.md`). La API 1.0 sigue **sin congelarse** hasta que se cierren.
 - **Fecha:** 2026-10-29
 - **Tarea:** T32b (Fase 8)
-- **Autoridad:** `docs/SPEC.md` §6, §13, §15, §17; `MEMORY.md` P-21, P-74 a P-76, P-78, P-82, P-83; `tasks/plan.md` §8
+- **Autoridad:** `docs/SPEC.md` §6, §13, §15, §17; `docs/MEMORY.md` P-21, P-74 a P-76, P-78, P-82, P-83; `tasks/plan.md` §8
 - **Nota de proceso:** `tasks/complexity.md` clasifica T32b como N5 (juicio de diseño). Se redactó con un modelo N4 por petición expresa del humano. Las partes marcadas con ⚠ son las que más piden una segunda lectura.
 
 ## Veredicto
@@ -23,7 +23,7 @@ Son cuatro cambios (R1 a R4) y tres decisiones del autor (D1 a D3). Con R1 a R4 
 
 T32b pide marcar la API 1.0 como estable o enumerar los cambios requeridos, y listar candidatos de 2.º sitio real (sin instalarlos). Desde que se escribió esa tarea cambiaron dos cosas:
 
-- **Ya hay módulos publicados.** `RyuuNest-Models` (P-78) sirve tres módulos con `apiVersion: 1` (`zonatmo` 0.2.0, `m440` 0.1.0, `yupmanga` 0.1.0). Congelar ahora es **retroactivo**: cualquier propuesta tiene que seguir funcionando con ellos. `MEMORY.md` ya sugería hacer este ADR antes de que ese repo creciera.
+- **Ya hay módulos publicados.** `RyuuNest-Models` (P-78) sirve tres módulos con `apiVersion: 1` (`zonatmo` 0.2.0, `m440` 0.1.0, `yupmanga` 0.1.0). Congelar ahora es **retroactivo**: cualquier propuesta tiene que seguir funcionando con ellos. `docs/MEMORY.md` ya sugería hacer este ADR antes de que ese repo creciera.
 - **T32a cerró la prueba de generalidad** del plan (§8): el contrato pasa con un sitio HTML + CSS (declarativo y script) y otro JSON con cursor (script). El plan dejó el sitio real para antes de congelar *públicamente* (SPEC §13, P-21).
 
 ### Cómo se obtuvo la evidencia
@@ -166,13 +166,13 @@ Solo se listan las que ya tienen evidencia (o mención en el SPEC):
 
 > **Actualización (G6, 2026-11-22):** entra `network.minDelayMs?` en el manifest (aditivo, sin subir `apiVersion` ni pedir `minAppVersion`: una app anterior lo ignora y aplica la pausa del host). Entero de 250 a 5000 ms; nunca más rápido que el host. Evidencia: `m440` responde 403 a dos peticiones separadas ~250 ms (POCO, 2026-11-21 y 2026-11-22); declara 600 ms.
 
-> **Actualización (T43, 2026-11-14):** el parámetro de filtros de `search` y los métodos opcionales `home()`, `list()` y `filters()` entraron en el contrato (SPEC §6.3, `MEMORY.md` P-146).
+> **Actualización (T43, 2026-11-14):** el parámetro de filtros de `search` y los métodos opcionales `home()`, `list()` y `filters()` entraron en el contrato (SPEC §6.3, `docs/MEMORY.md` P-146).
 
 ## Decisión 4: revisión de P-74, P-75 y P-76
 
 | P | Qué es | Veredicto |
 | --- | --- | --- |
-| P-74 | `HostResponse.url`; `HttpResponse.url?` opcional, el host rellena la pedida si falta | **Se congela.** Los tres módulos la leen con respaldo (`response.url \|\| url`) y `createFetchHttp` la informa cuando la plataforma la trae. 🧍 Confirmar en el POCO que llega la URL final tras una redirección (la nota de `MEMORY.md` «la app aún no la rellena» está desfasada respecto del adaptador). |
+| P-74 | `HostResponse.url`; `HttpResponse.url?` opcional, el host rellena la pedida si falta | **Se congela.** Los tres módulos la leen con respaldo (`response.url \|\| url`) y `createFetchHttp` la informa cuando la plataforma la trae. 🧍 Confirmar en el POCO que llega la URL final tras una redirección (la nota de `docs/MEMORY.md` «la app aún no la rellena» está desfasada respecto del adaptador). |
 | P-75 | Error tipado por forma en scripts (`name === "ModuleError"`, `code`, `details`) | **Se congela.** Los tres módulos lanzan exactamente esa forma. `details` solo conserva `url`, `status` y `selector`; ampliarlo es aditivo. Un `code` desconocido llega como `INTERNAL`. |
 | P-76 | `estimatedHasNext` en el arnés | **No es contrato de módulos**: es una opción de herramienta de `@ryuunest/test-site`, versionada con el SDK. Pero señala una regla del contrato: `hasNext` es una **estimación válida**; la app no debe asumir que `hasNext: true` garantiza una página siguiente no vacía. |
 
@@ -207,7 +207,7 @@ Las filas de los legados sin portar resumen la tabla «Ports pendientes» de `ta
 | 7 | Temas | **Resuelta**: solo Dragon Night | P-29 |
 | 8 | Tipos de obra en filtros | **Resuelta**: los cuatro | P-27 |
 | 9 | Violeta `accent-alt` | **Resuelta**: no se usa | P-31 |
-| 10 | Pantallas sin diseño | Tarea de diseño (FB2, F34); no afecta a la API | `MEMORY.md` §4 |
+| 10 | Pantallas sin diseño | Tarea de diseño (FB2, F34); no afecta a la API | `docs/MEMORY.md` §4 |
 | 11 | Verificación de la app nativa | Abierta; decisión del humano | `AGENTS.md` §5 |
 
 ## Decisiones del autor (resueltas el 2026-10-29)
@@ -229,7 +229,7 @@ Las opciones que se presentaron quedan abajo como registro.
 | B: `ryuunest-module pack` genera un único archivo autocontenido | El cargador recibe un solo texto. Los tres módulos se republican (versión menor) y se pierde la vía manual sin herramientas que describe el repo de módulos. |
 | C: publicar la 1.0 con `script` experimental y congelar el resto | Permite congelar ya el modelo de datos y el declarativo, pero los tres módulos reales (todos `script`) quedan sin garantía. Es el plan B si el spike falla. |
 
-### D2. Cabeceras de imagen en el formato declarativo (RF-24, pregunta abierta de `MEMORY.md`)
+### D2. Cabeceras de imagen en el formato declarativo (RF-24, pregunta abierta de `docs/MEMORY.md`)
 
 | Opción | Efecto |
 | --- | --- |
@@ -259,7 +259,7 @@ Recomendación: **`m440`** con el criterio de aceptación de la Decisión 5. Alt
 ## Consecuencias
 
 - **Ningún módulo publicado necesita cambios** con lo propuesto. La única opción que obliga a republicar es D1-B.
-- Al aceptarse (hecho): `MEMORY.md` pasa P-108 de «propuesto» a vigente; se actualizan SPEC §6.2 a §6.6 y §17.2; y R1 a R4 se convierten en tareas (T37 a T40; T41 es la puerta del 2.º sitio). Orden: T37 → T38 → T39 → T40 → T41.
+- Al aceptarse (hecho): `docs/MEMORY.md` pasa P-108 de «propuesto» a vigente; se actualizan SPEC §6.2 a §6.6 y §17.2; y R1 a R4 se convierten en tareas (T37 a T40; T41 es la puerta del 2.º sitio). Orden: T37 → T38 → T39 → T40 → T41.
 - El Checkpoint I sigue abierto hasta R1 a R4, D3 y la prueba en el POCO.
 - Si se acepta tal cual, conviene hacer R3 y R4 **antes** de que el repo de módulos crezca más allá de los tres módulos actuales.
 - Fuera de este repo: la guía `AGENTS.md` de `RyuuNest-Models` dice que «un campo de más o de menos lo rechaza» y no coincide con el validador.

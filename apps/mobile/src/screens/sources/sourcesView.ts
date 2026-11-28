@@ -51,7 +51,7 @@ export const NSFW_INSTALL_WARNING_KEY = "sources.install.nsfwWarning";
 /** F61: etiqueta de un módulo que esta versión de la app no puede instalar. */
 export const INCOMPATIBLE_LABEL_KEY = "sources.incompatible.label";
 
-/** Tope de señales por fila (V8/V9 de `DESIGN_RULES.md`: máximo dos). */
+/** Tope de señales por fila (V8/V9 de `docs/DESIGN_RULES.md`: máximo dos). */
 export const MAX_ROW_BADGES = 2;
 
 /**

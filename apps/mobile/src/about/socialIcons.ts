@@ -5,7 +5,7 @@
  *
  * Los logos son trazos copiados de **Tabler Icons** v3.53.0 (MIT © Paweł Kuna,
  * `github.com/tabler/tabler-icons`, `icons/outline/brand-*.svg`), registrados
- * en `ASSETS.md`. Misma rejilla que Lucide: 24×24, trazo 2, extremos redondos.
+ * en `docs/ASSETS.md`. Misma rejilla que Lucide: 24×24, trazo 2, extremos redondos.
  * Las marcas son de sus dueños; solo se usan para enlazar al perfil.
  * Las redes sin logo en Tabler (`paths` ausente) usan el genérico de Lucide.
  */

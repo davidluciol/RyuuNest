@@ -1,6 +1,6 @@
 # Plano de pantalla (FB1)
 
-> Lo que ya hacen F11, F13 y F14 (a/b/c). Sin reglas nuevas: las reglas siguen en `AGENTS.md` y `DESIGN_RULES.md`. F12, F15, F17, F20, F21 y F25 leen esto en vez de explorar el repo.
+> Lo que ya hacen F11, F13 y F14 (a/b/c). Sin reglas nuevas: las reglas siguen en `AGENTS.md` y `docs/DESIGN_RULES.md`. F12, F15, F17, F20, F21 y F25 leen esto en vez de explorar el repo.
 
 ## Estructura de una pantalla
 

@@ -1,9 +1,9 @@
 # todo.md — RyuuNest (solo pendientes) · 2026-11-12
 
 > Historial completo de lo hecho → `tasks/todo.archive.md` (podado el 2026-11-12: aquí solo queda lo pendiente). Contexto → `tasks/plan.md`.
-> **Identificadores sin renumerar** (decisión del humano, 2026-11-12): los códigos T/F/QAw siguen siendo válidos en `MEMORY.md`, `tasks/Analisis.md`, ADR-0003 y el SPEC.
+> **Identificadores sin renumerar** (decisión del humano, 2026-11-12): los códigos T/F/QAw siguen siendo válidos en `docs/MEMORY.md`, `tasks/Analisis.md`, ADR-0003 y el SPEC.
 > **Al iniciar sesión leer `tasks/complexity.md` §1 (reglas).** Si fallas 2 veces el mismo error: **«modelo con poca potencia cambiar.»**
-> Autoridad: SPEC → `DESIGN_RULES.md` → `DESIGN.md` → PNG/HTML de `design/` → `IDEA.md`.
+> Autoridad: SPEC → `docs/DESIGN_RULES.md` → `docs/DESIGN.md` → PNG/HTML de `design/` → `IDEA.md`.
 > Comandos: `pnpm -r typecheck` · `pnpm -r test` · `pnpm -r build` · `pnpm lint` · `pnpm --filter @ryuunest/core test`.
 > Tracker: `bd` local → GitHub Issues cuando exista el repo (P-12). Etiqueta: `[tipo · complejidad · nivel]`. 🧍 = paso humano (no inventar mediciones).
 
@@ -29,7 +29,7 @@ Las tareas pendientes se agrupan **por sección de la app**: **Guarida**, **Teso
 
 ## ▶️ RETOMAR AQUÍ — Auditoría de módulos para el APK de release (P-192, pausada 2026-11-26)
 
-> Si el humano dice «continúa donde te quedaste ayer», es esto. Contexto completo: `MEMORY.md` P-192 (§3), el hito del 2026-11-26 (§2) y §4 «Del humano».
+> Si el humano dice «continúa donde te quedaste ayer», es esto. Contexto completo: `docs/MEMORY.md` P-192 (§3), el hito del 2026-11-26 (§2) y §4 «Del humano».
 > Proceso pedido por el humano: un módulo a la vez; dificultad → modelo del subagente (alta: Opus 5.5 esfuerzo medio · intermedia: Sonnet 5.5 esfuerzo medio · baja: Haiku); cada subagente trabaja en una rama hija de la rama de integración (en Models, en su propio `git worktree`); el agente principal revisa el código, lo prueba (Node + teléfono) y lo fusiona con `--no-ff`; los PR finales a `master`/`main` los **fusiona el humano**.
 
 **Ramas (ya en GitHub):**
@@ -266,7 +266,7 @@ Dep: F55 · S · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`, `pa
 
 Dep: F55 · M · `apps/mobile/src/screens/library/*`
 
-> Origen: `MEMORY.md` §4 «Biblioteca (restos de F14)». **Comprobar al empezar si sigue vigente.**
+> Origen: `docs/MEMORY.md` §4 «Biblioteca (restos de F14)». **Comprobar al empezar si sigue vigente.**
 
 - [x] Hoja de filtros real (`FilterSheet`): **tipo, fuente y NSFW** (decisión del humano 2026-11-17; RF-27 ajustado), cada chip aplica al instante, «Limpiar» vacía tipo y fuente, «Listo» cierra
 - [x] Nombre visible de la fuente desde `ModuleRegistry` (sin módulo instalado, su id)
@@ -276,7 +276,7 @@ Dep: F55 · M · `apps/mobile/src/screens/library/*`
 
 Dep: F52 · S · `apps/mobile/src/screens/library/*`, `packages/core/src/library/queries.ts`
 
-> Origen: `MEMORY.md` §4 (restos de F14). **Comprobar al empezar si sigue vigente.**
+> Origen: `docs/MEMORY.md` §4 (restos de F14). **Comprobar al empezar si sigue vigente.**
 
 - [x] Menú de orden (`SortSheet`: nombre, último leído, fecha de adición; RF-28) en lugar de ciclar al pulsar
 - [x] `reading: true` **no** se pasa al núcleo (decisión del humano 2026-11-17, P-166): la pantalla filtra en memoria y el chip «Leyendo» ya funciona; el núcleo ya lo soporta
@@ -307,7 +307,7 @@ Dep: F52, F53 · M · `apps/mobile/src/screens/library/*`, `packages/core/src/li
 
 Dep: F92 · S · `packages/ui-tokens`, `apps/mobile/src/components/CoverCard.tsx`
 
-> Origen (petición del humano, 2026-11-17, opcional). **Leer `DESIGN_RULES.md` antes: decide cómo se usa el color.**
+> Origen (petición del humano, 2026-11-17, opcional). **Leer `docs/DESIGN_RULES.md` antes: decide cómo se usa el color.**
 
 - [x] Las series `nsfw` de Tesoros llevan el **borde naranja** (token nuevo en `ui-tokens` si no existe; sin hexadecimales); **no solo color**: mantener la etiqueta/icono NSFW existente (accesibilidad)
 - [x] Estado en la galería; Playwright 426/1440 px
@@ -371,7 +371,7 @@ Dep: F50 · S
 - [x] Barra de búsqueda visible por defecto + botón de búsqueda con icono de 48×48 (`touchTarget.min`) + botón de filtros solo con icono junto a la lupa (aparece cuando el módulo declara filtros; **cambiado por P-177:** ya no nace oculto)
 - [x] 3 variantes (A, B, C) en la galería (`SearchBarVariants`) con crítica y recomendación; diferencias en `design/stitch/DIFFS.md`
 - [x] 🧍 El humano eligió la variante **B** (P-177, 2026-11-20)
-- Verif: ✅ capturas de las variantes a 426 px en `docs/capturasF86/` (`variante-a|b|c.png`, Expo web + Playwright) · ✅ decisión en `MEMORY.md` (P-177) · ✅ código revisado en `DiscoverScreen.tsx`
+- Verif: ✅ capturas de las variantes a 426 px en `docs/capturasF86/` (`variante-a|b|c.png`, Expo web + Playwright) · ✅ decisión en `docs/MEMORY.md` (P-177) · ✅ código revisado en `DiscoverScreen.tsx`
 
 ### F87 Filtros desplegables con casillas, declarados por el módulo `[FE · Alta · N4]`
 
@@ -718,14 +718,14 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 ## 🎨 Recursos (arte, iconos e ilustraciones)
 
-> Hallazgos de explorar la app (2026-11-16): **todos** los estados vacío, de error y de carga usan el mismo `DragonMarker` (silueta marcador en `assets/placeholder/`, TEMPORAL); la barra inferior usa iconos de `lucide`; no hay ilustración propia por pantalla ni arte para las carpetas por defecto; los iconos de la app (`icon.png`, `android-icon-*`, `splash-icon.png`) y los de la extensión no tienen arte final. Solo tokens de color de `ui-tokens`, arte original GPL-3.0, sin recursos externos (RNF-5); cada recurso se registra en `ASSETS.md`.
+> Hallazgos de explorar la app (2026-11-16): **todos** los estados vacío, de error y de carga usan el mismo `DragonMarker` (silueta marcador en `assets/placeholder/`, TEMPORAL); la barra inferior usa iconos de `lucide`; no hay ilustración propia por pantalla ni arte para las carpetas por defecto; los iconos de la app (`icon.png`, `android-icon-*`, `splash-icon.png`) y los de la extensión no tienen arte final. Solo tokens de color de `ui-tokens`, arte original GPL-3.0, sin recursos externos (RNF-5); cada recurso se registra en `docs/ASSETS.md`.
 
-> **Regla para todo el arte de artistas (FA1–FA3, F70–F75):** el artista se acredita en Ajustes → Acerca de añadiéndolo a `ARTISTS` (`apps/mobile/src/about/artists.ts`) con su foto y sus redes (FA3), y cada recurso se registra en `ASSETS.md` con licencia compatible GPL-3.0.
+> **Regla para todo el arte de artistas (FA1–FA3, F70–F75):** el artista se acredita en Ajustes → Acerca de añadiéndolo a `ARTISTS` (`apps/mobile/src/about/artists.ts`) con su foto y sus redes (FA3), y cada recurso se registra en `docs/ASSETS.md` con licencia compatible GPL-3.0.
 
 ### FA1 Arte final del dragón `[Ops · Baja · N1]` 🧍 (sin dependencias; antes de v1.0 pública)
 
 - [ ] 🧍 Arte original con licencia compatible GPL-3.0; sustituir `apps/mobile/assets/placeholder/*`
-- [ ] `ASSETS.md` y `README` de placeholder actualizados; retirar marca TEMPORAL
+- [ ] `docs/ASSETS.md` y `README` de placeholder actualizados; retirar marca TEMPORAL
 - Verif: `apps/mobile/tests/placeholder.test.ts` en verde + galería con Playwright (RNF-5)
 
 ### FA2 Logo de cabecera y bienvenida de primer uso `[Arte · Baja · N2]` 🧍
@@ -737,7 +737,7 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 ### FA3 Alta de artista en «Acerca de» `[Datos · Baja · N1]` 🧍
 
 - [ ] 🧍 Pasar nombre artístico, foto, redes y agradecimiento de cada artista
-- [ ] Foto en `apps/mobile/assets/artists/<id>.webp` (local, RNF-5) importada con `import foto from "…webp"` (no `require`, que Vite no entiende: la web reutiliza `ARTISTS`), entrada en `ARTISTS`, texto en `es.json` (`about.artists.<id>.bio`), registro en `ASSETS.md`
+- [ ] Foto en `apps/mobile/assets/artists/<id>.webp` (local, RNF-5) importada con `import foto from "…webp"` (no `require`, que Vite no entiende: la web reutiliza `ARTISTS`), entrada en `ARTISTS`, texto en `es.json` (`about.artists.<id>.bio`), registro en `docs/ASSETS.md`
 - Verif: `tests/about/artists.test.ts` + galería + 🧍 S25 (tocar cada red abre el navegador)
 
 ---
@@ -787,7 +787,7 @@ Dep: F52, F53 · XS
 
 Plan aprobado el 2026-11-27. Logos de redes de Tabler (MIT, solo trazos copiados); las redes sin logo usan el genérico de Lucide.
 
-- [x] AB1 Datos y tarjeta: `about/socialIcons.ts`, `about/artists.ts` (`safeLinks` solo `https:`), `SocialIcon`, `ArtistCard` + galería, `ASSETS.md`
+- [x] AB1 Datos y tarjeta: `about/socialIcons.ts`, `about/artists.ts` (`safeLinks` solo `https:`), `SocialIcon`, `ArtistCard` + galería, `docs/ASSETS.md`
 - [x] AB2 Pantalla móvil/TV: `AboutScreen` (versión, GPL-3.0, sin telemetría, enlaces; «Artistas» oculta si no hay; recursos de terceros), ruta `/about` y fila en Ajustes
 - [x] AB3 Web: `AboutScreen` web, `SocialIcon` web, ruta y fila en Ajustes web
 - Verif: Playwright 426/1440 (sin desbordes, ≥48×48, cero peticiones al cargar) + agent-device en el teléfono

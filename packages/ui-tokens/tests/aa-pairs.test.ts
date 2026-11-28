@@ -26,7 +26,7 @@ describe("contraste AA de los pares usados (Dragon Night)", () => {
   });
 });
 
-describe("regla de inversión (DESIGN.md: «Mandatory Button Text Inversion»)", () => {
+describe("regla de inversión (docs/DESIGN.md: «Mandatory Button Text Inversion»)", () => {
   it("el texto claro sobre accent NO cumple AA: por eso la tinta es bg", () => {
     expect(contrastRatio(c.textPrimary, c.accent)).toBeLessThan(WCAG_AA.text);
   });

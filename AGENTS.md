@@ -8,16 +8,16 @@
 **Orden de autoridad** (si dos documentos se contradicen):
 
 1. `docs/SPEC.md`: **qué** hace la app.
-2. `DESIGN_RULES.md`: **qué se toma del diseño y cómo se usa el color**.
-3. `DESIGN.md`: **cómo se ve** cada componente.
+2. `docs/DESIGN_RULES.md`: **qué se toma del diseño y cómo se usa el color**.
+3. `docs/DESIGN.md`: **cómo se ve** cada componente.
 4. Los `screen.png` de `design/stitch/`: composición.
 5. Los `code.html`: solo referencia de estructura.
 6. `docs/IDEA.md`: contexto.
 
-- Lee `MEMORY.md`, `tasks/todo.md` y las secciones del SPEC que toques. Si tocas UI, lee además `DESIGN_RULES.md`, `DESIGN.md` y el `screen.png`/`code.html` de esa pantalla.
+- Lee `docs/MEMORY.md`, `tasks/todo.md` y las secciones del SPEC que toques. Si tocas UI, lee además `docs/DESIGN_RULES.md`, `docs/DESIGN.md` y el `screen.png`/`code.html` de esa pantalla.
 - **SPEC:** `docs/SPEC.md`. **PLAN:** `tasks/plan.md`. **TODO:** `tasks/todo.md`. `tasks/complexity.md` §1 fija el tamaño de sesión y el escalado.
 - Antes de buscar código, consulta Graphify (§10); después lee solo los archivos y rangos localizados.
-- Para APIs de librerías, frameworks o CLI usa **Context7**: `npx ctx7@latest library <nombre> "<tema>"` y luego `npx ctx7@latest docs <id> "<tema>"`. Si no tiene la documentación, busca en internet y anota la fuente en `MEMORY.md`.
+- Para APIs de librerías, frameworks o CLI usa **Context7**: `npx ctx7@latest library <nombre> "<tema>"` y luego `npx ctx7@latest docs <id> "<tema>"`. Si no tiene la documentación, busca en internet y anota la fuente en `docs/MEMORY.md`.
 - Si el humano escribe `/graphify`, usa la skill o instrucciones de Graphify antes de hacer otra cosa.
 - No uses documentos fuera de este orden para decidir nada.
 
@@ -29,11 +29,11 @@
 - No inventes: datos de ejemplo con obras reales, versiones de librerías (se fijan en la Fase 0), URLs, textos de interfaz que el diseño no tenga, cifras, nombres de módulos o licencias.
 - Una buena pregunta es concreta: di qué necesitas, da 2 o 3 opciones con tu recomendación y el efecto de cada una. Una pregunta por tema.
 - Mientras esperas respuesta, sigue con lo que no dependa de ella y deja claro qué quedó bloqueado.
-- Cuando el humano responda, anota la decisión en `MEMORY.md` (§3) y, si cambia el alcance, actualiza `tasks/todo.md`.
+- Cuando el humano responda, anota la decisión en `docs/MEMORY.md` (§3) y, si cambia el alcance, actualiza `tasks/todo.md`.
 
-## 2. MEMORY.md (Regla 2)
+## 2. docs/MEMORY.md (Regla 2)
 
-- `MEMORY.md` guarda solo lo importante: decisiones, elecciones del humano, recomendaciones aceptadas o descartadas, hitos y preguntas abiertas. **No es un registro de comandos ni de cambios menores.**
+- `docs/MEMORY.md` guarda solo lo importante: decisiones, elecciones del humano, recomendaciones aceptadas o descartadas, hitos y preguntas abiertas. **No es un registro de comandos ni de cambios menores.**
 - Cada sesión lo actualiza si hay algo importante: al cerrar un hito, añade o edita su línea en §2; las decisiones nuevas o cambiadas van en §3; las preguntas respondidas pasan de §4 a §3.
 - No borres una decisión: marca la anterior como reemplazada y enlaza la nueva.
 - Las preguntas sin resolver se listan en §4 y se dicen al humano al cerrar.
@@ -43,7 +43,7 @@
 
 - **Una tarea por sesión** y **~5 archivos como máximo**. Si hace falta más, para y propón dividir la tarea.
 - Antes de editar, ten claro: objetivo, archivos permitidos, pruebas que debes ejecutar y criterios de aceptación. Si no están claros, pregunta.
-- No arregles «de paso» nada fuera del alcance: anótalo en `tasks/todo.md` o `MEMORY.md` y sigue.
+- No arregles «de paso» nada fuera del alcance: anótalo en `tasks/todo.md` o `docs/MEMORY.md` y sigue.
 - No añadas dependencias, cambies versiones, hagas refactors masivos ni migraciones no pedidas. Las versiones se fijan en la Fase 0.
 - **El SPEC manda sobre la funcionalidad.** Si el diseño muestra algo fuera de la v1, se omite (RF-44) y se anota en `design/stitch/DIFFS.md`.
 - `tasks/plan.md` es el PLAN; `tasks/todo.md` es el TODO. Al cerrar, marca `[x]` y deja el siguiente paso.
@@ -97,14 +97,14 @@
 - **Solo `transform` y `opacity`.** Nada que fuerce recalcular el diseño de listas largas.
 - **Nunca en el lector** (ni animaciones ambientales ni decorativas).
 - Se respeta `prefers-reduced-motion` y el ajuste equivalente del sistema.
-- En la Xiaomi MiBox 4 (2 GB) se miden; si algo se nota lento, se desactiva en TV y se anota en `MEMORY.md`.
+- En la Xiaomi MiBox 4 (2 GB) se miden; si algo se nota lento, se desactiva en TV y se anota en `docs/MEMORY.md`.
 - Las animaciones son componentes o hooks compartidos (por ejemplo, un `Pressable` animado), no código repetido en cada pantalla.
 
 **Diseño**
 
 - Ningún hexadecimal ni medida literal fuera de `ui-tokens`. Solo los tokens de SPEC §11.9.
-- Datos de ejemplo: un único conjunto de fixtures coherente, con series inventadas y portadas sin texto (`DESIGN_RULES.md` D1 a D5).
-- Una etiqueta por concepto, sin tarjetas-mascota ni promesas que la v1 no cumple (`DESIGN_RULES.md`).
+- Datos de ejemplo: un único conjunto de fixtures coherente, con series inventadas y portadas sin texto (`docs/DESIGN_RULES.md` D1 a D5).
+- Una etiqueta por concepto, sin tarjetas-mascota ni promesas que la v1 no cumple (`docs/DESIGN_RULES.md`).
 - Sin telemetría, sin cuentas, sin servicios de terceros, sin CDN.
 - Nada se instala de forma automática: toda instalación de módulos pasa por confirmación manual (SPEC §7).
 
@@ -121,7 +121,7 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
 3. Toma la captura y ponla junto a `screen.png`. Revisa composición, jerarquía, espaciado, tipografía y color.
 4. Ejecuta comprobaciones automáticas:
    - sin desbordamiento horizontal de la página;
-   - ningún texto que quepa cortado con «…»; en tarjetas, el título solo se corta pasadas 3 líneas (`DESIGN_RULES.md` T7);
+   - ningún texto que quepa cortado con «…»; en tarjetas, el título solo se corta pasadas 3 líneas (`docs/DESIGN_RULES.md` T7);
    - áreas interactivas de al menos 48 × 48 (con `hitSlop` o equivalente);
    - colores calculados dentro de los tokens; texto oscuro sobre `accent` y `progress`;
    - Manrope e Inter cargadas desde archivos locales;
@@ -129,13 +129,13 @@ Cada pantalla o componente de interfaz se verifica con **Playwright** antes de d
    - sin errores de consola;
    - **sin peticiones a dominios externos** (CDN de fuentes, Tailwind, imágenes remotas): RNF-5.
 5. Un diff de píxeles contra `screen.png` no sirve: los datos de ejemplo son otros. Solo se usa contra capturas base propias para detectar regresiones.
-6. Registra las diferencias aceptadas en `design/stitch/DIFFS.md` y pasa la lista de 20 segundos de `DESIGN_RULES.md` (§6).
+6. Registra las diferencias aceptadas en `design/stitch/DIFFS.md` y pasa la lista de 20 segundos de `docs/DESIGN_RULES.md` (§6).
 
 La verificación web es automática: no pidas al humano que repita a mano lo que Playwright puede comprobar.
 
 ## 8. Verificación nativa con agent-device (Regla 8)
 
-La app nativa (móvil, Android TV) se verifica con **agent-device**: CLI y servidor MCP que abren la app en el dispositivo real o en el emulador, leen el árbol de accesibilidad y actúan por refs. Reparto: **Playwright para el web, agent-device para lo nativo** (P-127). Documentación: `agent-device.dev/docs` (repo `callstack/agent-device`); guarda en `MEMORY.md` la fuente si la consultas de nuevo.
+La app nativa (móvil, Android TV) se verifica con **agent-device**: CLI y servidor MCP que abren la app en el dispositivo real o en el emulador, leen el árbol de accesibilidad y actúan por refs. Reparto: **Playwright para el web, agent-device para lo nativo** (P-127). Documentación: `agent-device.dev/docs` (repo `callstack/agent-device`); guarda en `docs/MEMORY.md` la fuente si la consultas de nuevo.
 
 **Si el MCP o el CLI no existen en el PC** (compruébalo antes de asumir que están):
 
@@ -213,9 +213,9 @@ Una tarea está terminada solo si:
 - [ ] Revisión visual cuando corresponda (Playwright/agent-device).
 - [ ] Componentes nuevos en la galería; sin valores literales; textos traducidos.
 - [ ] Diferencias aceptadas en `design/stitch/DIFFS.md`.
-- [ ] `MEMORY.md` actualizado (hito/decisiones) y preguntas abiertas comunicadas.
+- [ ] `docs/MEMORY.md` actualizado (hito/decisiones) y preguntas abiertas comunicadas.
 - [ ] Intervención manual registrada, si la hubo.
-- [ ] Coste y número de iteraciones documentados en la tarea o en `MEMORY.md`.
+- [ ] Coste y número de iteraciones documentados en la tarea o en `docs/MEMORY.md`.
 
 **Criterio económico:** `coste por éxito = coste total de las ejecuciones / tareas completadas correctamente`.
 
@@ -226,7 +226,7 @@ Una tarea está terminada solo si:
 - [ ] Pantallas tocadas verificadas con Playwright (cliente web y galería).
 - [ ] Componentes nuevos en la galería; ningún valor literal.
 - [ ] Diferencias aceptadas en `design/stitch/DIFFS.md`.
-- [ ] `MEMORY.md` actualizado y preguntas sin resolver listadas y comunicadas.
+- [ ] `docs/MEMORY.md` actualizado y preguntas sin resolver listadas y comunicadas.
 - [ ] Rama y PR listos; sin cambios sin confirmar del trabajo de la tarea.
 
 ## 14. Evitar (Regla 14)
@@ -254,4 +254,4 @@ Una tarea está terminada solo si:
 - Cada sección acaba con un **«Lote sugerido»** de **5 o más tareas** para una sola sesión, y la tabla del inicio del archivo lo resume.
 - **Cada problema abierto es una tarea propia** con etiqueta `[tipo · complejidad · nivel]` (Baja/Intermedia/Alta; N1–N5 de `tasks/complexity.md`). Las preguntas al humano se escriben en la tarea («Pregunta abierta»).
 - `todo.md` solo contiene **pendientes**: una tarea con todos sus `- [x]` pasa a `tasks/todo.archive.md`; si queda un `- [ ]`, se queda en su sección (se puede podar lo ya hecho, nunca el pendiente). Los identificadores no se renumeran; las tareas nuevas siguen la numeración (hoy, hasta F91/G4).
-- Al crear una tarea, ponla en su sección, añade su ID al lote y actualiza `MEMORY.md` si implica una decisión.
+- Al crear una tarea, ponla en su sección, añade su ID al lote y actualiza `docs/MEMORY.md` si implica una decisión.

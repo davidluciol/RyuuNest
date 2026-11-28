@@ -2,12 +2,12 @@
 
 > Lector personal y de código abierto de manga, manhua y cómics, con módulos de scraping que se instalan como paquetes.
 > Estado: borrador para revisión · Octubre 2026
-> Documentos relacionados: `IDEA.md` (visión y hoja de ruta) · `DESIGN.md` (sistema de diseño «Dragon Night») · `DESIGN_RULES.md` (reglas contra el diseño genérico) · `design/stitch/` (7 pantallas exportadas: `screen.png` y `code.html` por pantalla) · `AGENTS.md` (reglas para agentes) · `MEMORY.md` (decisiones e hitos)
+> Documentos relacionados: `IDEA.md` (visión y hoja de ruta) · `docs/DESIGN.md` (sistema de diseño «Dragon Night») · `docs/DESIGN_RULES.md` (reglas contra el diseño genérico) · `design/stitch/` (7 pantallas exportadas: `screen.png` y `code.html` por pantalla) · `AGENTS.md` (reglas para agentes) · `docs/MEMORY.md` (decisiones e hitos)
 > Licencia: GPL-3.0
 
 **Cómo leer este documento.** Los requisitos llevan prioridad **M** (debe), **S** (debería) o **C** (podría). Los números de rendimiento son **objetivos a validar** con mediciones en los dispositivos reales, no promesas. Las versiones exactas de Expo, React Native y librerías se fijan en la Fase 0 y no se inventan aquí.
 
-**Orden de autoridad.** Si dos documentos se contradicen: (1) este SPEC manda sobre **qué** hace la app; (2) `DESIGN_RULES.md` sobre qué se toma del diseño y cómo se usa el color; (3) `DESIGN.md` sobre **cómo se ve** cada componente; (4) los PNG de `design/stitch/` sobre la composición; (5) los HTML solo como referencia; (6) `IDEA.md` es contexto. El PRD y la especificación visual anteriores se eliminaron del repo por contradecir este SPEC. Detalle en la sección 11.1.
+**Orden de autoridad.** Si dos documentos se contradicen: (1) este SPEC manda sobre **qué** hace la app; (2) `docs/DESIGN_RULES.md` sobre qué se toma del diseño y cómo se usa el color; (3) `docs/DESIGN.md` sobre **cómo se ve** cada componente; (4) los PNG de `design/stitch/` sobre la composición; (5) los HTML solo como referencia; (6) `IDEA.md` es contexto. El PRD y la especificación visual anteriores se eliminaron del repo por contradecir este SPEC. Detalle en la sección 11.1.
 
 ---
 
@@ -47,7 +47,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 - Los módulos se distribuyen como **paquetes `.zip`** con manifest y hash.
 - Se añade la tabla `chapter_read` en la v1 para marcar capítulos leídos; el historial de la v2 se apoya en ella.
 - Un capítulo puede tener varias **versiones de publicación** (por ejemplo, distintos grupos), porque el código de referencia (`logicTMO.py`) ya las maneja.
-- El diseño pasa de propuesta a **fuente de verdad**: `DESIGN.md` y `design/` (sección 11). Los wireframes ASCII solo se conservan para las pantallas que no tienen diseño.
+- El diseño pasa de propuesta a **fuente de verdad**: `docs/DESIGN.md` y `design/` (sección 11). Los wireframes ASCII solo se conservan para las pantallas que no tienen diseño.
 - Se añade `progress.page_total`, necesario para la barra de progreso y el porcentaje del capítulo en curso que muestra el diseño.
 - Se añade el tipo `manhwa` al contrato (D-13): el diseño filtra por Manga, Manhwa y Cómic.
 - Nueva **Fase 6a** (sistema de diseño y galería de componentes) antes de las pantallas; el total sube a 49 puntos.
@@ -70,7 +70,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 | AC-10 | Web | Con la extensión instalada, se lee un capítulo desde el navegador |
 | AC-11 | Calidad | CI en verde: lint, tipos estrictos, pruebas del contrato y compilación del APK |
 | AC-12 | Fidelidad al diseño | Cada pantalla de la v1 que tiene diseño se compara en el POCO F5 Pro con su `screen.png` usando la lista del apéndice B; no hay diferencias de color, tipografía, radio ni espaciado, y el resto se registra en `design/stitch/DIFFS.md` |
-| AC-13 | Reglas del sistema de diseño | Una prueba automática verifica que `ui-tokens` coincide con `DESIGN.md`, que los pares de color usados cumplen WCAG AA y que ningún relleno de acento lleva texto claro; el lint rechaza colores y medidas literales en `apps/*` |
+| AC-13 | Reglas del sistema de diseño | Una prueba automática verifica que `ui-tokens` coincide con `docs/DESIGN.md`, que los pares de color usados cumplen WCAG AA y que ningún relleno de acento lleva texto claro; el lint rechaza colores y medidas literales en `apps/*` |
 
 ---
 
@@ -99,7 +99,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 
 - **RF-13 (M)** Mostrar portada, título, tipo, fuente, estado, descripción colapsable, géneros y títulos alternativos.
 - **RF-14 (M)** Botón principal "Continuar cap. N" o "Empezar" según haya progreso.
-- **RF-15 (M)** Lista de capítulos con marca de leído, capítulo en curso, orden ascendente o descendente y salto al último leído. Tres estados visuales (sin leer, en curso con porcentaje, completado) según `DESIGN.md`; el porcentaje sale de `page_index / page_total`.
+- **RF-15 (M)** Lista de capítulos con marca de leído, capítulo en curso, orden ascendente o descendente y salto al último leído. Tres estados visuales (sin leer, en curso con porcentaje, completado) según `docs/DESIGN.md`; el porcentaje sale de `page_index / page_total`.
 - **RF-16 (M)** Si un capítulo tiene varias versiones de publicación, elegir una; recordar la preferida por serie.
 - **RF-17 (M)** Favorito con un toque; elegir carpeta desde el menú o al mantener pulsado.
 
@@ -144,9 +144,9 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 ### 3.9 Requisitos que nacen del diseño
 
 - **RF-41 (S)** Barra de progreso de 3 px en el borde inferior de la portada de una serie con capítulo en curso, rellena con `progress`. Porcentaje = `page_index / page_total` del progreso guardado.
-- **RF-42 (C)** Contador de no leídos y filtro «Completado» (v2): requieren conocer el total de capítulos y refrescarlo en segundo plano. El diseño los muestra y la v1 los omite (`DESIGN_RULES.md` §4).
+- **RF-42 (C)** Contador de no leídos y filtro «Completado» (v2): requieren conocer el total de capítulos y refrescarlo en segundo plano. El diseño los muestra y la v1 los omite (`docs/DESIGN_RULES.md` §4).
 - **RF-43 (M)** Ningún estado (completado, en curso, fallido, bloqueado) depende solo del color: lleva icono SVG y texto.
-- **RF-44 (M)** Las pantallas de la v1 se construyen siguiendo las secciones 11.1 a 11.4. Lo que un diseño muestre fuera del alcance de la v1 (descargas, sincronización, noticias, anime, cuentas, estadísticas, notificaciones) **se omite**; no se deja como botón muerto. Lista de referencia: `DESIGN_RULES.md` §4.
+- **RF-44 (M)** Las pantallas de la v1 se construyen siguiendo las secciones 11.1 a 11.4. Lo que un diseño muestre fuera del alcance de la v1 (descargas, sincronización, noticias, anime, cuentas, estadísticas, notificaciones) **se omite**; no se deja como botón muerto. Lista de referencia: `docs/DESIGN_RULES.md` §4.
 
 ---
 
@@ -165,7 +165,7 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 | RNF-9 | Compatibilidad | Ver sección 14 |
 | RNF-10 | Mantenibilidad | TypeScript en modo estricto, núcleo sin dependencias de plataforma y cobertura del contrato con pruebas |
 | RNF-11 | Internacionalización | Todas las cadenas externalizadas; fechas y números con formato local |
-| RNF-12 | Coherencia visual | Todo valor visual sale de `ui-tokens` (derivado de `DESIGN.md`). Cero sombras difusas y cero `backdrop-filter`: la profundidad se logra con escalones de superficie, lo que además protege el rendimiento en la MiBox 4 |
+| RNF-12 | Coherencia visual | Todo valor visual sale de `ui-tokens` (derivado de `docs/DESIGN.md`). Cero sombras difusas y cero `backdrop-filter`: la profundidad se logra con escalones de superficie, lo que además protege el rendimiento en la MiBox 4 |
 
 ---
 
@@ -177,19 +177,19 @@ Sincronización entre dispositivos (v2), descargas sin conexión (v2), anime, li
 ryuunest/
   packages/core         TS puro: contrato, runtimes, instalador, biblioteca, lector (estado)
   packages/module-sdk   tipos públicos, validador de manifest, CLI y plantilla de módulos
-  packages/ui-tokens    tokens derivados de DESIGN.md (colores, tipografía, espaciado, radios)
+  packages/ui-tokens    tokens derivados de docs/DESIGN.md (colores, tipografía, espaciado, radios)
   packages/extension-protocol  mensajes web ↔ extensión (tipos, validación estricta y base64; SPEC §10)
   apps/mobile           React Native (Expo) para móvil y variante TV
   apps/web              React + Vite + puente a la extensión
   apps/extension        extensión de navegador (realiza las peticiones de la web)
   docs/                 decisiones (ADR), guía de módulos, CONTRIBUTING
   assets/placeholder/   marcadores temporales (ver sección 12)
-  DESIGN.md             sistema de diseño Dragon Night: tokens y componentes
-  DESIGN_RULES.md       reglas contra el diseño genérico (se leen antes de tocar una pantalla)
+  docs/DESIGN.md             sistema de diseño Dragon Night: tokens y componentes
+  docs/DESIGN_RULES.md       reglas contra el diseño genérico (se leen antes de tocar una pantalla)
   design/stitch/        pantallas exportadas (<pantalla>/screen.png y code.html) y DIFFS.md
-  design/themes/        DESIGN.md de otros temas (referencia futura, no se implementan)
+  design/themes/        docs/DESIGN.md de otros temas (referencia futura, no se implementan)
   AGENTS.md             reglas para quien trabaje en el repo (humano o agente)
-  MEMORY.md             decisiones, elecciones e hitos; se actualiza en cada sesión
+  docs/MEMORY.md             decisiones, elecciones e hitos; se actualiza en cada sesión
 ```
 
 ### 5.2 Diagrama lógico
@@ -579,8 +579,8 @@ La web ejecuta los módulos dentro de un **Web Worker sin DOM**, y toda su red p
 | Fuente | Qué define | Cómo se usa |
 |---|---|---|
 | Este SPEC | Qué hace la app: alcance, datos, seguridad, comportamiento | Manda sobre la funcionalidad |
-| `DESIGN_RULES.md` | Qué se toma y qué no de las pantallas: textos, datos de ejemplo, alcance, presupuesto de color, lista de 20 segundos | Manda sobre el contenido y el uso del color; se lee antes de tocar cualquier pantalla |
-| `DESIGN.md` (raíz) | Tokens, tipografía, espaciado, elevación y componentes de Dragon Night | Manda sobre la apariencia de cada componente |
+| `docs/DESIGN_RULES.md` | Qué se toma y qué no de las pantallas: textos, datos de ejemplo, alcance, presupuesto de color, lista de 20 segundos | Manda sobre el contenido y el uso del color; se lee antes de tocar cualquier pantalla |
+| `docs/DESIGN.md` (raíz) | Tokens, tipografía, espaciado, elevación y componentes de Dragon Night | Manda sobre la apariencia de cada componente |
 | `design/stitch/<pantalla>/screen.png` | Composición de cada pantalla | Referencia visual |
 | `design/stitch/<pantalla>/code.html` | Estructura, jerarquía y espaciados | Solo referencia; **no se copia ni se convierte tal cual** (11.3) |
 | `IDEA.md` (sección 14) | Intención creativa: guarida y dragón | Contexto |
@@ -589,10 +589,10 @@ La web ejecuta los módulos dentro de un **Web Worker sin DOM**, y toda su red p
 **Reglas de conflicto**
 
 1. **Funcionalidad: gana el SPEC.** Si una pantalla muestra algo fuera de la v1, se omite (RF-44) y se anota en `design/stitch/DIFFS.md`.
-2. **Contenido y color: gana `DESIGN_RULES.md`** sobre `DESIGN.md`. Ejemplo: `DESIGN.md` pinta las insignias de tipo en esmeralda y la regla V1 las pide neutras; se hacen neutras.
-3. **Apariencia: gana `DESIGN.md`** sobre el HTML. Los HTML llevan colores autogenerados por Stitch (`#59e6a4`, `#ffb77a`, `#cdbdff`, etc.) que no son tokens; se usa el token más cercano y se anota.
+2. **Contenido y color: gana `docs/DESIGN_RULES.md`** sobre `docs/DESIGN.md`. Ejemplo: `docs/DESIGN.md` pinta las insignias de tipo en esmeralda y la regla V1 las pide neutras; se hacen neutras.
+3. **Apariencia: gana `docs/DESIGN.md`** sobre el HTML. Los HTML llevan colores autogenerados por Stitch (`#59e6a4`, `#ffb77a`, `#cdbdff`, etc.) que no son tokens; se usa el token más cercano y se anota.
 4. **Composición: gana el PNG** sobre el HTML si difieren.
-5. **Lo que no tiene diseño no se inventa a ciegas:** se compone solo con componentes de `DESIGN.md` y se marca «sin diseño» (11.5).
+5. **Lo que no tiene diseño no se inventa a ciegas:** se compone solo con componentes de `docs/DESIGN.md` y se marca «sin diseño» (11.5).
 6. **Ante una duda real se pregunta al autor**; no se decide en silencio.
 
 ### 11.2 Mapa de pantallas
@@ -609,21 +609,21 @@ Las 7 pantallas son de Dragon Night y salen del proyecto de Stitch «RyuuNest Dr
 | Lector | `pantalla_lector` | RF-18 a RF-25 | Sí |
 | Ajustes | `ajustes_pantalla` | RF-37 a RF-40 | Sí |
 
-**Organización de `design/`** (Fase 0): las 7 carpetas de pantalla pasan a `design/stitch/`; `DESIGN.md` y `DESIGN_RULES.md` van en la raíz; los `DESIGN.md` de `ember_hearth`, `arcane_vault`, `moonlit_frost` y `dragon_night` van a `design/themes/`; el PRD y `DESING.md_EspecificacionVisual.md` se eliminan.
+**Organización de `design/`** (Fase 0): las 7 carpetas de pantalla pasan a `design/stitch/`; `docs/DESIGN.md` y `docs/DESIGN_RULES.md` van en la raíz; los `docs/DESIGN.md` de `ember_hearth`, `arcane_vault`, `moonlit_frost` y `dragon_night` van a `design/themes/`; el PRD y `DESING.md_EspecificacionVisual.md` se eliminan.
 
 ### 11.3 Cómo se traduce el HTML a React Native
 
 El HTML exportado es **web** (etiquetas HTML, clases de Tailwind, unidades `rem`, fuentes e imágenes por URL). React Native no tiene DOM ni CSS. El agente **lee** el HTML para obtener jerarquía, orden, textos, tamaños y qué token usa cada elemento; **nunca pega HTML ni clases**.
 
-| En el HTML o en `DESIGN.md` | En React Native |
+| En el HTML o en `docs/DESIGN.md` | En React Native |
 |---|---|
 | `rem` y `em` | 1 rem = 16 px; `letterSpacing` en px (em × tamaño de fuente) |
 | Familia y `font-weight` | Un archivo de fuente por peso, cargado de forma explícita (Manrope 600 y 700; Inter 400, 500 y 600); sin pesos sintéticos |
 | `backdrop-filter: blur(16px)` en portadas NSFW | `blurRadius` en la imagen de la portada; no se usa `backdrop-filter` |
 | `box-shadow` | Ninguno; `elevation: 0` en Android |
 | `outline` de foco (TV y teclado) | Borde de 2 px `accent` con separación de 2 px, activado por el estado de foco de la librería de TV |
-| Manrope, Inter y los iconos por Google Fonts; Tailwind por CDN (`cdn.tailwindcss.com`) y su `tailwind.config` | Archivos locales empaquetados (RNF-5); Tailwind no se usa y los tokens salen de `DESIGN.md` |
-| Imágenes remotas del HTML (`googleusercontent.com`: portadas con obras reales o con texto, avatar, dragón) | No se enlazan ni se copian las portadas con obras reales o con texto (`DESIGN_RULES.md` D2 y D3); se usan marcadores sin texto en `assets/placeholder/` (sección 12) |
+| Manrope, Inter y los iconos por Google Fonts; Tailwind por CDN (`cdn.tailwindcss.com`) y su `tailwind.config` | Archivos locales empaquetados (RNF-5); Tailwind no se usa y los tokens salen de `docs/DESIGN.md` |
+| Imágenes remotas del HTML (`googleusercontent.com`: portadas con obras reales o con texto, avatar, dragón) | No se enlazan ni se copian las portadas con obras reales o con texto (`docs/DESIGN_RULES.md` D2 y D3); se usan marcadores sin texto en `assets/placeholder/` (sección 12) |
 | Iconos: el HTML usa Material Symbols y glifos de texto como `●` y `✓` | `lucide-react-native`, siempre SVG; cada icono de Material se sustituye por su equivalente de Lucide (un icono por significado, V4) |
 | Clases de Tailwind y colores hexadecimales | Tokens de `ui-tokens`; ninguna clase ni valor literal en los componentes |
 | `aspect-ratio: 2/3` | `aspectRatio: 2 / 3` |
@@ -631,18 +631,18 @@ El HTML exportado es **web** (etiquetas HTML, clases de Tailwind, unidades `rem`
 
 ### 11.4 Proceso por pantalla (para el agente)
 
-1. Leer `DESIGN_RULES.md` completo (una vez por sesión), abrir `screen.png` y luego `code.html` de esa carpeta.
+1. Leer `docs/DESIGN_RULES.md` completo (una vez por sesión), abrir `screen.png` y luego `code.html` de esa carpeta.
 2. Listar los componentes de la pantalla y reutilizar los de la galería (Fase 6a). Si falta uno, se crea primero en la galería.
 3. Construir solo con tokens y componentes; ninguna medida o color suelto.
 4. Usar datos reales o fixtures, nunca el texto ni las imágenes de ejemplo del HTML.
 5. Cubrir los estados de carga, vacío y error (11.12).
 6. Quitar lo que el diseño muestre fuera del alcance de la v1 (RF-44) y anotarlo.
-7. Comparar en el dispositivo con `screen.png` usando la lista del apéndice B; registrar diferencias en `design/stitch/DIFFS.md`, y pasar la lista de 20 segundos de `DESIGN_RULES.md` (§6).
+7. Comparar en el dispositivo con `screen.png` usando la lista del apéndice B; registrar diferencias en `design/stitch/DIFFS.md`, y pasar la lista de 20 segundos de `docs/DESIGN_RULES.md` (§6).
 8. No pasar a la siguiente pantalla hasta cerrar la actual.
 
 ### 11.5 Pantallas y estados sin diseño
 
-Los 7 PNG no cubren lo siguiente. Hasta que existan en `design/`, se componen solo con componentes de `DESIGN.md` y se marcan «sin diseño» en el código.
+Los 7 PNG no cubren lo siguiente. Hasta que existan en `design/`, se componen solo con componentes de `docs/DESIGN.md` y se marcan «sin diseño» en el código.
 
 | Falta | Cómo se resuelve provisionalmente |
 |---|---|
@@ -650,13 +650,13 @@ Los 7 PNG no cubren lo siguiente. Hasta que existan en `design/`, se componen so
 | Añadir repositorio | Hoja de nivel 2 con campo de texto y botón primario |
 | Confirmación de instalación (normal y reforzada) | Diálogo de nivel 2; en módulos script, aviso y botón de mantener pulsado; permisos como insignias con `warning` |
 | Hoja de filtros y selector de carpeta | Hoja inferior de nivel 2, esquinas superiores de 24 px |
-| Selector de capítulo y de modo en el lector | Barras del lector de `DESIGN.md` |
+| Selector de capítulo y de modo en el lector | Barras del lector de `docs/DESIGN.md` |
 | Estados vacíos y de error | Dragón marcador, título en Manrope y una acción (11.12) |
 | Importar respaldo y lista de módulos sugeridos | Filas de ajustes y diálogo de confirmación |
-| Variante TV de cada pantalla | Reglas de `DESIGN.md` para TV (escala 1,25×, riel, foco) |
-| Variante web de cada pantalla | Riel lateral de 240 px y rejilla de 8 columnas (`DESIGN.md`, Layout) |
+| Variante TV de cada pantalla | Reglas de `docs/DESIGN.md` para TV (escala 1,25×, riel, foco) |
+| Variante web de cada pantalla | Riel lateral de 240 px y rejilla de 8 columnas (`docs/DESIGN.md`, Layout) |
 
-**Diferencias conocidas entre las capturas y la v1.** La lista completa está en `DESIGN_RULES.md` §4 (sincronización, descargas, contador de no leídos, notificaciones, perfiles, marcador, obras similares, etc.). Además, en las capturas finales:
+**Diferencias conocidas entre las capturas y la v1.** La lista completa está en `docs/DESIGN_RULES.md` §4 (sincronización, descargas, contador de no leídos, notificaciones, perfiles, marcador, obras similares, etc.). Además, en las capturas finales:
 
 - **Cabecera:** sin campana de avisos ni avatar de perfil. Lleva logo local, nombre, etiqueta de sección y búsqueda.
 - **Inicio:** sin «Novedades de Portales» ni tarjeta de estado del nido; 4 secciones como máximo.
@@ -697,9 +697,9 @@ Patrón: etiqueta estructural en mayúsculas (`label-sm`, con tracking) y títul
 
 Las pantallas con diseño (Inicio, Biblioteca, Descubrir, Fuentes, Serie, Lector y Ajustes) ya no tienen wireframe en este documento: su referencia es `design/` (11.2).
 
-### 11.9 Tokens de diseño (de `DESIGN.md`)
+### 11.9 Tokens de diseño (de `docs/DESIGN.md`)
 
-El front-matter de `DESIGN.md` mezcla tokens propios con tokens genéricos generados (`surface-dim`, `primary-container`, `background`, `error`, etc.) que **contradicen** a los propios: por ejemplo `background` es `#10131a` mientras `bg` es `#0B0E14`, y `error` es `#ffb4ab` mientras `status-error` es `#F06A6A`. **Solo se implementan los de esta tabla**; los demás no se usan.
+El front-matter de `docs/DESIGN.md` mezcla tokens propios con tokens genéricos generados (`surface-dim`, `primary-container`, `background`, `error`, etc.) que **contradicen** a los propios: por ejemplo `background` es `#10131a` mientras `bg` es `#0B0E14`, y `error` es `#ffb4ab` mientras `status-error` es `#F06A6A`. **Solo se implementan los de esta tabla**; los demás no se usan.
 
 | Token | Valor | Uso |
 |---|---|---|
@@ -710,7 +710,7 @@ El front-matter de `DESIGN.md` mezcla tokens propios con tokens genéricos gener
 | `text-primary` | `#F2F0EA` | Texto principal |
 | `text-secondary` | `#9BA5B5` | Texto secundario; solo sobre `bg`, `surface` o `elevated` |
 | `accent` | `#35C98A` | Acción principal, foco y selección |
-| `progress` | `#FF9F43` | Avance y capítulo en curso; nada más (`DESIGN_RULES.md` V1) |
+| `progress` | `#FF9F43` | Avance y capítulo en curso; nada más (`docs/DESIGN_RULES.md` V1) |
 | `accent-alt` | `#9B7BFF` | Descubrimiento y taxonomía alterna (ver pregunta abierta 9) |
 | `badge-bg` | `#1C2E29` | Fondo del chip seleccionado |
 | `positive` | `#4DD599` | Éxito y capítulo completado |
@@ -742,7 +742,7 @@ El front-matter de `DESIGN.md` mezcla tokens propios con tokens genéricos gener
 | `label-sm` | Inter | 11 / 14 | 600 | +0,04 em |
 
 - En TV todos los tamaños se multiplican por **1,25**.
-- `DESIGN.md` pide cuerpo de al menos 16 px en móvil pero define `body-md` de 14 px y `body-sm` de 13 px. Se resuelve con `DESIGN_RULES.md` V12: cuerpo de 16 px (`body-lg`) en listas y metadatos de 12 px como mínimo. Por eso `label-sm` y la insignia de estado se implementan a 12 px y no a 11 px; se anota como diferencia aceptada.
+- `docs/DESIGN.md` pide cuerpo de al menos 16 px en móvil pero define `body-md` de 14 px y `body-sm` de 13 px. Se resuelve con `docs/DESIGN_RULES.md` V12: cuerpo de 16 px (`body-lg`) en listas y metadatos de 12 px como mínimo. Por eso `label-sm` y la insignia de estado se implementan a 12 px y no a 11 px; se anota como diferencia aceptada.
 
 **Espaciado y rejilla**
 
@@ -760,7 +760,7 @@ El front-matter de `DESIGN.md` mezcla tokens propios con tokens genéricos gener
 
 ### 11.10 Componentes
 
-El detalle está en `DESIGN.md` (sección Components); esta tabla es un resumen y, si difiere, gana `DESIGN.md`.
+El detalle está en `docs/DESIGN.md` (sección Components); esta tabla es un resumen y, si difiere, gana `docs/DESIGN.md`.
 
 | Componente | Resumen |
 |---|---|
@@ -768,7 +768,7 @@ El detalle está en `DESIGN.md` (sección Components); esta tabla es un resumen 
 | Botón secundario | Relleno `elevated`, borde `border`, texto `text-primary`; al pulsar, capa de `accent` al 10 % |
 | Botón destructivo | Borde y texto `error`, sin relleno |
 | Chip de filtro | Pill de 36 px; inactivo: `surface`, borde `border`, texto `text-secondary`; seleccionado: `badge-bg`, borde y texto `accent` |
-| Insignia de tipo y estado | Pill de 24 px, 12 px; **neutra** (fondo `elevated`, texto `text-secondary`) según `DESIGN_RULES.md` V1; `DESIGN.md` la pinta esmeralda y gana la regla |
+| Insignia de tipo y estado | Pill de 24 px, 12 px; **neutra** (fondo `elevated`, texto `text-secondary`) según `docs/DESIGN_RULES.md` V1; `docs/DESIGN.md` la pinta esmeralda y gana la regla |
 | Tarjeta de portada | 2:3, radio 12, borde `border`; barra de progreso de 3 px (RF-41); sin contador de no leídos en la v1 |
 | Fila de capítulo | Alto mínimo 56 px, relleno horizontal 16; sin leer (`text-primary`), en curso (marcador y porcentaje en `progress`), completado (`text-secondary` y marca en `positive`) |
 | Campo de texto | `surface`, borde `border`, 48 px, radio 8, icono de 20 px; en foco, borde `accent` sin brillo |
@@ -779,7 +779,7 @@ La **galería de componentes** (pantalla solo para desarrollo, Fase 6a) muestra 
 
 ### 11.11 Reglas contra el diseño genérico («AI-slop»)
 
-Rige `DESIGN_RULES.md` completo. Las que se comprueban de forma automática o en cada revisión:
+Rige `docs/DESIGN_RULES.md` completo. Las que se comprueban de forma automática o en cada revisión:
 
 - Ningún color, tamaño, radio o espacio literal fuera de `ui-tokens` (lint, AC-13).
 - Sin sombras, degradados, brillos ni vidrio esmerilado; la profundidad sale de los niveles de superficie.
@@ -810,9 +810,9 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 
 - El arte final del dragón y los iconos los harán artistas. Mientras tanto se usan **imágenes generadas con IA como marcadores**.
 - Las imágenes de ejemplo de `design/` (portadas, avatar, dragón) son marcadores: se copian a `assets/placeholder/` con su registro y no se enlazan por URL.
-- Fuentes e iconos del diseño: Manrope e Inter (OFL) y Lucide (ISC), empaquetados y registrados en `ASSETS.md`.
+- Fuentes e iconos del diseño: Manrope e Inter (OFL) y Lucide (ISC), empaquetados y registrados en `docs/ASSETS.md`.
 - Los marcadores viven solo en `assets/placeholder/`, con un `README` que registra herramienta, fecha e indicaciones usadas, y una marca clara de **temporal**. No se emplean personajes ni estilos de obras protegidas.
-- `ASSETS.md` registra la licencia de todo recurso de terceros (iconos, fuentes, imágenes). En un repo GPL-3.0 no entran recursos con licencias no libres o no comerciales.
+- `docs/ASSETS.md` registra la licencia de todo recurso de terceros (iconos, fuentes, imágenes). En un repo GPL-3.0 no entran recursos con licencias no libres o no comerciales, **salvo el arte de los artistas**, que va bajo CC BY-NC-ND 4.0 con su aceptación por escrito (`LICENSE-ART.md`, P-196).
 - Antes de la v1.0 pública se reemplazan los marcadores o se confirma su situación de licencia. Ninguna pantalla depende del arte final: el dragón de marcador es una silueta sencilla.
 
 ---
@@ -826,11 +826,11 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 - **Pruebas de carga:** 3 000 series sintéticas y 5 módulos sintéticos (AC-4 y AC-5).
 - **CI en GitHub Actions:** lint, tipos, pruebas y compilación del APK en cada cambio.
 - **Pruebas manuales por fase** en POCO F5 Pro, Galaxy S25 Ultra y MiBox 4.
-- **Prueba de tokens (AC-13):** el CI compara `ui-tokens` con el front-matter de `DESIGN.md` (solo los tokens de 11.9) y calcula el contraste WCAG de los pares usados.
+- **Prueba de tokens (AC-13):** el CI compara `ui-tokens` con el front-matter de `docs/DESIGN.md` (solo los tokens de 11.9) y calcula el contraste WCAG de los pares usados.
 - **Playwright:** verifica la web y la galería de componentes contra `screen.png` (composición, tokens, áreas táctiles, foco, cero peticiones externas). No controla la app nativa; ver pregunta abierta 11 y `AGENTS.md` §5.
 - **Lint de diseño:** prohibidos colores hexadecimales y medidas literales de fuente, radio o espacio en `apps/*`.
-- **Revisión visual por pantalla (AC-12):** captura en el POCO F5 Pro comparada con `screen.png` (apéndice B y lista de 20 segundos de `DESIGN_RULES.md`).
-- **Datos de ejemplo:** un único conjunto de fixtures coherente en todas las pantallas (cifras que cuadran, series inventadas, portadas sin texto), según `DESIGN_RULES.md` D1 a D5.
+- **Revisión visual por pantalla (AC-12):** captura en el POCO F5 Pro comparada con `screen.png` (apéndice B y lista de 20 segundos de `docs/DESIGN_RULES.md`).
+- **Datos de ejemplo:** un único conjunto de fixtures coherente en todas las pantallas (cifras que cuadran, series inventadas, portadas sin texto), según `docs/DESIGN_RULES.md` D1 a D5.
 
 ---
 
@@ -852,7 +852,7 @@ Todo estado vacío o de error lleva una acción siguiente (añadir repo, reinten
 
 ## 15. Código abierto y comunidad
 
-- **Licencia GPL-3.0.** Los módulos son obras independientes de cada autor, que decide su licencia. Esto no es asesoría legal.
+- **Licencia GPL-3.0-only** para el código (`LICENSE`). El arte de los artistas va bajo **CC BY-NC-ND 4.0** (`LICENSE-ART.md`): un fork lo quita o lo usa sin modificarlo, sin fines comerciales y con créditos; el nombre «RyuuNest» y el logo no se usan en forks. Donaciones voluntarias en Ko-fi (`.github/FUNDING.yml`); no desbloquean nada (P-196). Los módulos son obras independientes de cada autor, que decide su licencia. Esto no es asesoría legal.
 - **El repo principal no incluye módulos de sitios concretos.** Los módulos del autor viven en un repo público aparte, no afiliado a la app. Repo de módulos decidido el 2026-10-25 (**P-78**): **`https://github.com/davidluciol/RyuuNest-Models.git`**. La estructura de contribución (carpeta `<site>` con `manifest.json` + `module.js` y apoyo en `bin/`) está en el `AGENTS.md` de ese repo.
 - **README:** declara que no está afiliado a ningún sitio, que no aloja ni distribuye contenido, y que cada usuario es responsable de los repos que añade y de respetar los derechos de autor y los términos de cada sitio.
 - **Documentos:** `CONTRIBUTING.md`, guía del SDK de módulos, código de conducta, plantillas de issues y política de seguridad.
@@ -867,13 +867,13 @@ Estimaciones en puntos relativos (S = 1, M = 3, L = 5, XL = 8). La estimación d
 
 | Fase | Entregable | Puntos | Criterio de salida |
 |---|---|---|---|
-| 0 | Preparación y calibración: monorepo, TS estricto, CI, app de prueba en los 3 dispositivos (incluida la MiBox 4), versiones fijadas, presupuesto de memoria medido inventario de `design/` (tabla de 11.2), `AGENTS.md` y `MEMORY.md` en la raíz | 3 | La app de prueba arranca en los 3 dispositivos y el CI compila el APK |
+| 0 | Preparación y calibración: monorepo, TS estricto, CI, app de prueba en los 3 dispositivos (incluida la MiBox 4), versiones fijadas, presupuesto de memoria medido inventario de `design/` (tabla de 11.2), `AGENTS.md` y `docs/MEMORY.md` en la raíz | 3 | La app de prueba arranca en los 3 dispositivos y el CI compila el APK |
 | 1 | Núcleo y contrato: tipos, errores, host, sitio falso de pruebas, SDK y CLI mínimos | 5 | Pruebas del contrato en verde contra el sitio falso |
 | 2 | Repos e instalador de paquetes: índice, verificación, descompresión segura, confirmación | 3 | AC-2 y AC-8 |
 | 3 | Runtimes: declarativo (3) y script (5) tras `ModuleRuntime` | 8 | Un módulo de cada tipo pasa las pruebas del contrato |
 | 4 | Primer módulo real (port de `logicTMO.py`, apéndice A) | 3 | Busca, lista capítulos y entrega imágenes de un sitio real |
 | 5 | Datos: SQLite, favoritos, carpetas, filtros, progreso, capítulos leídos | 5 | AC-4 |
-| 6a | Sistema de diseño: `ui-tokens` desde `DESIGN.md` (tokens semánticos, solo Dragon Night), fuentes e iconos empaquetados, componentes base (11.10) y galería | 3 | AC-13 y galería revisada contra `DESIGN.md` |
+| 6a | Sistema de diseño: `ui-tokens` desde `docs/DESIGN.md` (tokens semánticos, solo Dragon Night), fuentes e iconos empaquetados, componentes base (11.10) y galería | 3 | AC-13 y galería revisada contra `docs/DESIGN.md` |
 | 6b | Interfaz móvil según `design/`: navegación, primer uso, Inicio, Biblioteca, Descubrir, Fuentes, Serie (5) y lector (3) | 8 | AC-1, AC-3, AC-6 y AC-12 (AC-6 medido en la MiBox) |
 | 7 | Adaptación a TV: riel, foco y lector con D-pad | 3 | AC-9 |
 | 8 | Web y extensión | 5 | AC-10 |
@@ -899,9 +899,9 @@ La v2 y la v3 están en `IDEA.md`, sección 9.
 | Dos interfaces (móvil y web) | Más mantenimiento | Núcleo y tokens compartidos; la web va al final de la v1 |
 | Arte con IA como marcador | Dudas de licencia | Aislado en `assets/placeholder/` y reemplazado antes de la v1.0 pública |
 | Riesgo legal por los módulos de sitios concretos | Exposición de quien los publique | Repo aparte y no afiliado, README claro; no es asesoría legal |
-| Diseño exportado como HTML web | El agente copia HTML o Tailwind, o inventa estilos, y la interfaz pierde coherencia | Reglas 11.1 a 11.4 y 11.11, tokens solo desde `DESIGN.md`, lint de diseño, AC-12 y AC-13 |
+| Diseño exportado como HTML web | El agente copia HTML o Tailwind, o inventa estilos, y la interfaz pierde coherencia | Reglas 11.1 a 11.4 y 11.11, tokens solo desde `docs/DESIGN.md`, lint de diseño, AC-12 y AC-13 |
 | Diseño que muestra funciones fuera de la v1 | El alcance crece sin control | Regla de conflicto 1 (SPEC manda en funcionalidad) y RF-44 |
-| Pantallas sin diseño (11.5) | Improvisación visual | Componer solo con `DESIGN.md`; generar esas pantallas en Stitch antes de la Fase 6b |
+| Pantallas sin diseño (11.5) | Improvisación visual | Componer solo con `docs/DESIGN.md`; generar esas pantallas en Stitch antes de la Fase 6b |
 | Documentos de diseño contradictorios en `design/` | El agente implementa funciones fuera de la v1 o colores autogenerados | Eliminar los obsoletos (11.2) y respetar el orden de autoridad (11.1) |
 
 ### 17.2 Preguntas abiertas
@@ -914,7 +914,7 @@ La v2 y la v3 están en `IDEA.md`, sección 9.
 6. **Nombre:** verificación de disponibilidad pendiente (sección 15).
 7. **Temas:** el selector de Ajustes y el PRD muestran 4 temas (Dragon Night, Ember Hearth, Arcane Vault, Moonlit Frost), pero solo Dragon Night tiene las 7 pantallas (Lector incluido). Propuesta: la v1 trae solo Dragon Night, con tokens semánticos que permitan añadir temas, y el selector no se muestra hasta que existan dos. Decide el autor.
 8. **Tipos de obra:** el diseño filtra por Manga, Manhwa y Cómic; el SPEC y `IDEA.md` incluyen manhua. El contrato admite los cuatro (D-13); decidir si los filtros muestran los cuatro.
-9. **Violeta `accent-alt`:** `DESIGN.md` lo reserva para descubrimiento, pero `DESIGN_RULES.md` V1 limita el color de acento. Regla provisional: no se usa en la v1.
+9. **Violeta `accent-alt`:** `docs/DESIGN.md` lo reserva para descubrimiento, pero `docs/DESIGN_RULES.md` V1 limita el color de acento. Regla provisional: no se usa en la v1.
 10. **Pantallas sin diseño (11.5):** decidir cuáles se generan en Stitch antes de la Fase 6b.
 11. **Verificación visual de la app nativa:** Playwright solo cubre el navegador. Decidir si la galería también se compila para web o si las pantallas nativas se verifican con capturas del dispositivo (AC-12).
 
@@ -967,7 +967,7 @@ En el módulo nuevo estos puntos se resuelven con errores tipados (`ModuleError`
 
 ## Apéndice B. Lista de verificación visual por pantalla
 
-Se completa para cada pantalla antes de darla por cerrada (AC-12), junto con la lista de 20 segundos de `DESIGN_RULES.md` (§6).
+Se completa para cada pantalla antes de darla por cerrada (AC-12), junto con la lista de 20 segundos de `docs/DESIGN_RULES.md` (§6).
 
 - [ ] Fondo y superficies en el nivel correcto (0, 1 o 2); ninguna sombra.
 - [ ] Todo color, tamaño, radio y espacio sale de tokens; texto sobre acentos en `bg`.

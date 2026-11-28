@@ -1,7 +1,7 @@
 import { activeColors, spacing, touchTarget, withAlpha } from "@ryuunest/ui-tokens";
 
 /**
- * F18 — apariencia del lector (RF-22, `DESIGN.md` «Reader View Overlays»). Puro, para
+ * F18 — apariencia del lector (RF-22, `docs/DESIGN.md` «Reader View Overlays»). Puro, para
  * comprobarlo sin renderizar: nada decorativo sobre el contenido.
  */
 

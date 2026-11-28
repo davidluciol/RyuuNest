@@ -1,7 +1,7 @@
 import { spacing, touchTarget, activeColors } from "@ryuunest/ui-tokens";
 
 /**
- * F13 — reglas del encabezado de sección (SPEC §11.10, `DESIGN_RULES.md` V1/V4):
+ * F13 — reglas del encabezado de sección (SPEC §11.10, `docs/DESIGN_RULES.md` V1/V4):
  * icono opcional a la izquierda, título en `title-lg`, acción secundaria a la
  * derecha ("Ver todas" en `text-primary` con chevron). El título y la acción
  * **no** usan `accent` (V1: esmeralda solo para acción primaria, selección,

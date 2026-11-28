@@ -3,7 +3,7 @@ import appJson from "../../app.json";
 /**
  * Acerca de — datos de la app que comparten móvil y web (sin react-native: la
  * web los importa por `@ryuunest/mobile-src`). La versión sale de `app.json`,
- * la misma que lee Expo; los créditos repiten lo registrado en `ASSETS.md`
+ * la misma que lee Expo; los créditos repiten lo registrado en `docs/ASSETS.md`
  * (la prueba `tests/about/appInfo.test.ts` vigila que coincidan).
  */
 
@@ -18,7 +18,7 @@ export interface AppLink {
 export const APP_LINKS: readonly AppLink[] = [
   { id: "source", labelKey: "about.links.source", url: "https://github.com/davidluciol/RyuuNest" },
   // shortcut: el repo aún no tiene LICENSE; cuando lo tenga, enlazar a `…/blob/master/LICENSE`.
-  { id: "license", labelKey: "about.links.license", url: "https://www.gnu.org/licenses/gpl-3.0.html" },
+  { id: "license", labelKey: "about.links.license", url: "https://github.com/davidluciol/RyuuNest/blob/master/LICENSE" },
 ];
 
 export interface ThirdPartyCredit {

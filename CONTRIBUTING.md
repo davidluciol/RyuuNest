@@ -4,7 +4,7 @@ Gracias por querer aportar. RyuuNest es un lector local y de código abierto de 
 manhua, manhwa y cómics, con licencia **GPL-3.0**. Este documento explica cómo preparar el
 entorno, cómo se nombran las ramas y los commits y cómo se comprueba que un cambio está listo.
 
-> Antes de tocar nada, lee `AGENTS.md` (reglas de trabajo), `MEMORY.md` (decisiones) y la
+> Antes de tocar nada, lee `AGENTS.md` (reglas de trabajo), `docs/MEMORY.md` (decisiones) y la
 > sección del `docs/SPEC.md` que corresponda a tu tarea. El orden de autoridad está en la
 > cabecera del SPEC.
 
@@ -83,7 +83,7 @@ Reglas:
 2. Implementa la tarea siguiendo `tasks/todo.md` y sus criterios de aceptación.
 3. Añade o actualiza las pruebas (Vitest); el enfoque es *test-first*.
 4. Ejecuta la verificación completa (lint, tipos, pruebas, build).
-5. Actualiza la documentación que corresponda (`MEMORY.md`, ADRs, `design/stitch/DIFFS.md`…).
+5. Actualiza la documentación que corresponda (`docs/MEMORY.md`, ADRs, `design/stitch/DIFFS.md`…).
 6. Abre un Pull Request describiendo qué cambia y qué criterio cumple.
 
 Si tocas interfaz, además se aplican las reglas de componentes, animaciones y verificación
@@ -94,13 +94,20 @@ con Playwright de `AGENTS.md` (secciones 3, 4 y 5).
 - TypeScript en modo estricto (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`).
 - Identificadores de código en inglés; documentación y commits en español.
 - Nada de `any` sin justificar.
-- Sin colores ni medidas literales fuera de los tokens (`ui-tokens`); ver `DESIGN_RULES.md`.
+- Sin colores ni medidas literales fuera de los tokens (`ui-tokens`); ver `docs/DESIGN_RULES.md`.
 - Sin dependencias nuevas sin discutirlo antes en un *issue* (Regla 1 de `AGENTS.md`).
 
 ## Recursos de terceros
 
-Todo recurso de terceros (fuentes, iconos, imágenes) registra su licencia en `ASSETS.md`.
-En un repositorio GPL-3.0 **no entran** recursos con licencias no libres o no comerciales.
+Todo recurso de terceros (fuentes, iconos, imágenes) registra su licencia en `docs/ASSETS.md`.
+En un repositorio GPL-3.0 **no entran** recursos con licencias no libres o no comerciales,
+salvo el arte de artistas (ver abajo).
+
+## Licencia de las contribuciones
+
+- **Código:** al contribuir aceptas que tu aporte se publique bajo **GPL-3.0-only** (`LICENSE`).
+- **Arte:** solo entra arte cuyo autor acepte por escrito **CC BY-NC-ND 4.0** y el permiso de
+  adaptación para la app oficial (`LICENSE-ART.md`). Se registra en `docs/ASSETS.md` como «Artista».
 
 ## Módulos de sitios reales
 

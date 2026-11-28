@@ -4,7 +4,7 @@ import type { MediaKind } from "@ryuunest/core";
 
 /**
  * F13 — datos de ejemplo coherentes para la pantalla Inicio
- * (`DESIGN_RULES.md` D1–D5): series inventadas, sin obras reales, portadas
+ * (`docs/DESIGN_RULES.md` D1–D5): series inventadas, sin obras reales, portadas
  * sin texto, cifras que cuadran entre pantallas. Mismo conjunto que usa la
  * galería y `test-site`.
  */
