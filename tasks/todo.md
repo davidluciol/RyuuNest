@@ -208,8 +208,9 @@ Dep: F22 · `apps/mobile/src/screens/reader/tv/*`
 > Hecho en el PR #180 (P-198): núcleo (limpieza, huella, enlaces con tope), hoja con dos canales (GitHub prioritario, correo más lento), botón en `ErrorBanner`/`ErrorDialog` (lector y respaldo) y en Diagnóstico, galería, Playwright 426/1440 y Action `reportes.yml` que agrupa duplicados por huella.
 
 - [ ] 🧍 En el teléfono: mandar un reporte de prueba por cada canal (GitHub abre `issues/new` relleno; correo abre la app con asunto y cuerpo); comprobar que la Action etiqueta o cierra el duplicado
-- [ ] Botón en el error **por página** del lector (`ReaderPagePlaceholder`) y versión del módulo en el reporte del lector (hoy solo va el id)
-- [ ] Copiar el reporte al portapapeles como tercera vía; buscar la huella antes de abrir el issue («Ya está reportado»)
+- [x] Botón en el error por página del lector y versión del módulo en el reporte (2026-11-28)
+- [x] «Copiar el reporte» y «¿Ya está reportado?» (búsqueda de la huella) (2026-11-28)
+- [ ] 🧍 En el teléfono: reporte desde una página rota y «Copiar»
 - [ ] GitHub Projects con campo «Ocurrencias» (la Action necesita un token con permiso de proyectos; pedirlo al humano)
 - [ ] (después) Bot de Telegram: sin token en el APK; solo si el correo funciona bien
 
