@@ -400,6 +400,7 @@ export function createInstalledDiscoverSource(deps: InstalledSourceDeps): Discov
           name: pkg.manifest.name,
           nsfw: pkg.nsfw,
           ...(pkg.manifest.antiBot === true ? { antiBot: true } : {}),
+          ...(pkg.manifest.searchHint ? { searchHint: pkg.manifest.searchHint } : {}),
           // F83: sin `paginated`/`sortLatest` declarados la sección se oculta.
           hasPopular:
             pkg.manifest.capabilities.includes("popular") &&

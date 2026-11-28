@@ -27,6 +27,8 @@ export interface DiscoverModule {
   paginates: boolean;
   /** #183: el sitio a veces pide resolver un reto anti-bot (Cloudflare o similar). */
   antiBot?: boolean;
+  /** T45: pista del buscador que declara el módulo (viene del manifiesto, no es texto de la app). */
+  searchHint?: string;
 }
 
 /** Serie devuelta por un módulo (de `SeriesSummary`, SPEC §6.2). */

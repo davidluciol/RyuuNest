@@ -155,7 +155,10 @@ function DiscoverReady({
             label={t("discover.search.placeholder")}
             value={query}
             onChange={setQuery}
-            placeholder={t("discover.search.placeholder")}
+            placeholder={
+              view.modules.find((module) => module.id === view.selectedModuleId)?.searchHint ??
+              t("discover.search.placeholder")
+            }
             testID="discover-search"
           />
           <Button label={t("discover.search.placeholder")} testID="discover-search-submit" type="submit" />
