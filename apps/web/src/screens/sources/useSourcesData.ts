@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "r
 import { t } from "@ryuunest/i18n";
 import {
   createSourcesController,
+  type NoticeKind,
   type SourcesController,
 } from "@ryuunest/mobile-src/screens/sources/sourcesController";
 import {
@@ -29,14 +30,14 @@ import { useServices } from "../../services/ServicesContext";
  */
 
 export type SourcesViewState =
-  | { status: "loading" }
-  | { status: "ready"; data: SourcesData }
-  | { status: "error" };
+  { status: "loading" } | { status: "ready"; data: SourcesData } | { status: "error" };
 
 export interface SourcesState {
   view: SourcesViewState;
   flow: SourcesFlow;
   notice: string | null;
+  /** F42/V8: un aviso de éxito («instalado») no se pinta como error. */
+  noticeKind: NoticeKind;
   controller: SourcesController | null;
   retry: () => void;
   /** F44: «Recomendados», descargado al abrir Portales y al pedirlo. */
@@ -60,6 +61,7 @@ export function useSourcesData(): SourcesState {
   const [view, setView] = useState<SourcesViewState>({ status: "loading" });
   const [flow, dispatch] = useReducer(sourcesFlowReducer, INITIAL_SOURCES_FLOW);
   const [notice, setNotice] = useState<string | null>(null);
+  const [noticeKind, setNoticeKind] = useState<NoticeKind>("error");
   const [nonce, setNonce] = useState(0);
   const flowRef = useRef(flow);
   flowRef.current = flow;
@@ -96,7 +98,10 @@ export function useSourcesData(): SourcesState {
         getFlow: () => flowRef.current,
         dispatch,
         reload,
-        notify: setNotice,
+        notify: (message, kind = "error") => {
+          setNotice(message);
+          setNoticeKind(kind);
+        },
         reporter,
       }),
     [service, reload, reporter],
@@ -117,5 +122,5 @@ export function useSourcesData(): SourcesState {
   }, [service, reporter]);
   useEffect(refreshRecommended, [refreshRecommended]);
 
-  return { view, flow, notice, controller, retry, recommended, refreshRecommended };
+  return { view, flow, notice, noticeKind, controller, retry, recommended, refreshRecommended };
 }
