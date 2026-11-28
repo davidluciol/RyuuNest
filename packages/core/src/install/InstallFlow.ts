@@ -36,6 +36,8 @@ export interface InstallPreview {
   kinds: MediaKind[];
   lang: string;
   nsfw: boolean;
+  /** El sitio a veces pide resolver un reto anti-bot: la confirmación lo avisa (#183). */
+  antiBot: boolean;
   permissions: { domains: string[] };
   repoId: string;
   sha256: string;
@@ -88,6 +90,7 @@ export class InstallFlow {
       kinds: entry.kinds,
       lang: entry.lang,
       nsfw: entry.nsfw,
+      antiBot: entry.antiBot === true,
       permissions: entry.permissions,
       repoId: entry.repoId,
       sha256: entry.sha256,

@@ -205,6 +205,16 @@ describe("E2E · repo → previsualizar → confirmar → módulo activo (AC-2, 
 
     await captureError(app.flow.preview(repo.id, "nada"), "NOT_FOUND");
   });
+
+  it("la vista previa avisa si el sitio pide un reto anti-bot (#183)", async () => {
+    const plain = makeApp();
+    const plainRepo = await plain.repos.addRepo(REPO_URL);
+    expect((await plain.flow.preview(plainRepo.id, "ejemplo")).antiBot).toBe(false);
+
+    const app = makeApp({ index: { ...INDEX, modules: [{ ...MODULE_ENTRY, antiBot: true }] } });
+    const repo = await app.repos.addRepo(REPO_URL);
+    expect((await app.flow.preview(repo.id, "ejemplo")).antiBot).toBe(true);
+  });
 });
 
 describe("E2E · rechazos con mensaje claro (AC-2)", () => {
