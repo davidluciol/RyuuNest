@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { Chapter } from "@ryuunest/core";
 
-import { readerChapters, readingOrder } from "../../src/reader/readingOrder";
+import { previousUnread, readerChapters, readingOrder } from "../../src/reader/readingOrder";
 
 /**
  * F18 — `ReaderState` pide los capítulos «en orden de lectura» (del primero al último), pero
@@ -62,5 +62,24 @@ describe("readerChapters", () => {
 
   it("sin preferencia usa la primera edición de cada capítulo", () => {
     expect(readerChapters(chapters, null).map((c) => c.releaseId)).toEqual(["r-a", "r-a"]);
+  });
+});
+
+describe("previousUnread (#181)", () => {
+  const items = [
+    { id: "ch-1", state: "completed" as const },
+    { id: "ch-2", state: "unread" as const },
+    { id: "ch-3", state: "in-progress" as const },
+    { id: "ch-4", state: "unread" as const },
+    { id: "ch-5", state: "unread" as const },
+  ];
+
+  it("devuelve los anteriores al actual que no están terminados, en orden de lectura", () => {
+    expect(previousUnread(items, "ch-4")).toEqual(["ch-2", "ch-3"]);
+  });
+
+  it("sin anteriores pendientes o con un capítulo desconocido, no hay nada", () => {
+    expect(previousUnread(items, "ch-2")).toEqual([]);
+    expect(previousUnread(items, "otro")).toEqual([]);
   });
 });

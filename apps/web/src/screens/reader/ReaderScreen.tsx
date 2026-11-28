@@ -1,10 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 
 import { t } from "@ryuunest/i18n";
 import type { ReaderMode } from "@ryuunest/core";
 
+import { previousUnread } from "@ryuunest/mobile-src/reader/readingOrder";
+
 import Button from "../../components/Button";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import Dialog from "../../components/Dialog";
 import LoadingState from "../../components/LoadingState";
 import { ArrowLeft, BookOpen, ChevronDown, GalleryVertical } from "../../icons";
@@ -125,6 +128,14 @@ function ReaderReady({
   const mode: ReaderMode = snapshot.mode ?? "vertical";
   const pageTotal = snapshot.pageTotal ?? images.length;
   const current = Math.min(snapshot.pageIndex + 1, Math.max(pageTotal, 1));
+  const pendingPrevious = useMemo(
+    () => (currentChapterId === undefined ? [] : previousUnread(chapters, currentChapterId)),
+    [chapters, currentChapterId],
+  );
+  // #181: al terminar, se pregunta una vez por capítulo si marcar los anteriores sin leer.
+  const [askedPrevious, setAskedPrevious] = useState<string | null>(null);
+  const askPrevious =
+    snapshot.finished && pendingPrevious.length > 0 && askedPrevious !== currentChapterId;
 
   return (
     <div className="reader-canvas" onClick={() => setShowBars((value) => !value)}>
@@ -251,6 +262,30 @@ function ReaderReady({
           ) : (
             <p className="t-body-md reader-end-last">{t("reader.end.last")}</p>
           )}
+        </div>
+      )}
+
+      {askPrevious && (
+        <div onClick={(event) => event.stopPropagation()}>
+          <ConfirmDialog
+            title={t("reader.markPrevious.title")}
+            message={
+              pendingPrevious.length === 1
+                ? t("reader.markPrevious.message.one")
+                : t("reader.markPrevious.message.other", { count: pendingPrevious.length })
+            }
+            confirmLabel={t("reader.markPrevious.confirm")}
+            confirmIcon={null}
+            cancelLabel={t("reader.markPrevious.cancel")}
+            onConfirm={() => {
+              setAskedPrevious(currentChapterId ?? null);
+              actions.markRead(pendingPrevious);
+            }}
+            onCancel={() => setAskedPrevious(currentChapterId ?? null)}
+            testID="reader-mark-previous"
+            confirmTestID="reader-mark-previous-confirm"
+            cancelTestID="reader-mark-previous-cancel"
+          />
         </div>
       )}
     </div>

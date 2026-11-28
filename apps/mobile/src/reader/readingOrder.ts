@@ -1,6 +1,6 @@
 import type { Chapter, ReaderChapter } from "@ryuunest/core";
 
-import { preferredRelease } from "../screens/series/seriesLogic";
+import { preferredRelease, type ChapterState } from "../screens/series/seriesLogic";
 
 /**
  * F18 — capítulos en orden de lectura (del primero al último), como pide `ReaderState`.
@@ -26,4 +26,16 @@ export function readerChapters(
     releaseId: preferredRelease(chapter.releases, preferredReleaseId)?.id ?? null,
     pageTotal: null,
   }));
+}
+
+/** Capítulos anteriores al actual (en orden de lectura) que no están terminados (#181). */
+export function previousUnread(
+  items: readonly { id: string; state: ChapterState }[],
+  currentId: string,
+): string[] {
+  const index = items.findIndex((item) => item.id === currentId);
+  return items
+    .slice(0, Math.max(index, 0))
+    .filter((item) => item.state !== "completed")
+    .map((item) => item.id);
 }

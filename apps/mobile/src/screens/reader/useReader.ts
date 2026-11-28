@@ -49,6 +49,8 @@ export interface ReaderActions {
   previous: () => void;
   setMode: (mode: ReaderMode) => void;
   retry: () => void;
+  /** Marca como leídos esos capítulos (los anteriores sin leer, #181). */
+  markRead: (chapterIds: readonly string[]) => void;
 }
 
 export interface ReaderTarget {
@@ -203,8 +205,13 @@ export function useReader(target: ReaderTarget): {
     [],
   );
   const retry = useCallback(() => setAttempt((value) => value + 1), []);
+  const markRead = useCallback(
+    (chapterIds: readonly string[]) =>
+      void controllerRef.current?.markRead(chapterIds).catch(report),
+    [],
+  );
 
   const preload = useReaderPrefetch(view.status === "ready" ? view.ready : null, moduleId);
 
-  return { view, actions: { goToPage, next, previous, setMode, retry }, preload };
+  return { view, actions: { goToPage, next, previous, setMode, retry, markRead }, preload };
 }
