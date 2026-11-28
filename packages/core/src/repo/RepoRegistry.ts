@@ -40,6 +40,7 @@ export interface RepoModuleSummary {
   kinds: MediaKind[];
   lang: string;
   nsfw: boolean;
+  antiBot?: boolean;
   permissions: { domains: string[] };
   package: string;
   sha256: string;

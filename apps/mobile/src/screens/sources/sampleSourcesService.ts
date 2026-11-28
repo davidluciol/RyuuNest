@@ -118,6 +118,7 @@ export function createSampleSourcesService(
         kinds: module.kinds,
         lang: module.lang,
         nsfw: module.nsfw,
+        antiBot: false,
         permissions: { domains: module.domains },
         repoId: module.repoId,
         sha256: SAMPLE_SHA256,

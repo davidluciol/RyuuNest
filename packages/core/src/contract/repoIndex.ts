@@ -16,6 +16,8 @@ export interface RepoModuleEntry {
   kinds: MediaKind[];
   lang: string;
   nsfw: boolean;
+  /** El sitio a veces pide resolver un reto anti-bot (#183). */
+  antiBot?: boolean;
   permissions: { domains: string[] };
   /** Ruta del paquete `.zip` dentro del repo. */
   package: string;

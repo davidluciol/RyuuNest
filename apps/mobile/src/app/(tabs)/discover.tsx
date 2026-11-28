@@ -101,6 +101,7 @@ export default function DiscoverRoute() {
       {nsfwNotice === null ? null : (
         <NsfwNoticeSheet
           moduleName={nsfwNotice.name}
+          antiBot={nsfwNotice.antiBot}
           onContinue={acknowledgeNsfwNotice}
           onBack={declineNsfwNotice}
         />

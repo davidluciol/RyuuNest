@@ -99,7 +99,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): {
   more: DiscoverMoreStatus;
   rowMore: Record<DiscoverRow, DiscoverMoreStatus>;
   /** F45: módulo NSFW cuyo aviso de primera vez está pendiente. */
-  nsfwNotice: { id: string; name: string } | null;
+  nsfwNotice: { id: string; name: string; antiBot: boolean } | null;
 } & DiscoverActions {
   const { source, reporter, resolveReporter, nsfwVisible = false } = deps;
   const [boot, setBoot] = useState<Boot | null>(null);
@@ -416,13 +416,18 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): {
   }, []);
 
   // F45: aviso de primera vez al elegir (o abrir por defecto) un módulo NSFW.
-  const [nsfwNotice, setNsfwNotice] = useState<{ id: string; name: string } | null>(null);
+  const [nsfwNotice, setNsfwNotice] = useState<{
+    id: string;
+    name: string;
+    antiBot: boolean;
+  } | null>(null);
   const selectedModule =
     view.status === "ready"
       ? view.ready.modules.find((module) => module.id === view.ready.selectedModuleId)
       : undefined;
   const noticeId = selectedModule?.nsfw === true ? selectedModule.id : null;
   const noticeName = selectedModule?.name ?? "";
+  const noticeAntiBot = selectedModule?.antiBot === true;
   useEffect(() => {
     const current = bootRef.current?.source;
     if (noticeId === null || current === undefined) return;
@@ -430,7 +435,9 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): {
     void current
       .hasSeenNsfwNotice(noticeId)
       .then((seen) => {
-        if (!cancelled && !seen) setNsfwNotice({ id: noticeId, name: noticeName });
+        if (!cancelled && !seen) {
+          setNsfwNotice({ id: noticeId, name: noticeName, antiBot: noticeAntiBot });
+        }
       })
       .catch((error: unknown) => {
         console.warn("No se pudo leer el aviso NSFW:", error);
@@ -438,7 +445,7 @@ export function useDiscoverData(deps: DiscoverDataDeps = {}): {
     return () => {
       cancelled = true;
     };
-  }, [noticeId, noticeName]);
+  }, [noticeId, noticeName, noticeAntiBot]);
 
   const acknowledgeNsfwNotice = useCallback(() => {
     if (nsfwNotice === null) return;

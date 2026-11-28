@@ -33,6 +33,8 @@ describe("getDiscoverModules", () => {
         hasPopular: false,
         hasLatest: true,
         paginates: true,
+        // #183: el ejemplo B muestra la nota de reto anti-bot en el aviso +18.
+        antiBot: true,
       },
     ]);
   });

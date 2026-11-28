@@ -99,6 +99,9 @@ export function validateModuleFields(
   if (typeof value["nsfw"] !== "boolean") {
     issues.add(childPath(prefix, "nsfw"), "Debe ser un booleano");
   }
+  if (value["antiBot"] !== undefined && typeof value["antiBot"] !== "boolean") {
+    issues.add(childPath(prefix, "antiBot"), "Si se indica, debe ser un booleano");
+  }
 
   validatePermissions(value["permissions"], childPath(prefix, "permissions"), issues);
 

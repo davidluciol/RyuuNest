@@ -20,7 +20,8 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
     // Mostrar contenido NSFW desde Ajustes para que el módulo B aparezca en el selector.
     await page.goto(`${baseURL}/settings`);
     await page.getByTestId("settings-nsfw-switch").click();
-    await page.goto(`${baseURL}/discover`);
+    // Sin recargar: con `goto` la página se recargaba antes de guardar el ajuste.
+    await page.getByRole("tab", { name: "Aventuras" }).or(page.getByText("Aventuras", { exact: true })).last().click();
     await page.getByRole("button", { name: "Cambiar de módulo" }).waitFor({ state: "visible" });
 
     const pickB = async () => {
@@ -32,6 +33,10 @@ const baseURL = process.env.SHELL_URL || "http://127.0.0.1:8082";
     const sheet = page.getByTestId("sheet-nsfw-notice");
     await sheet.waitFor({ state: "visible" });
     await sheet.getByText("contenido para adultos, sexual o explícito").waitFor({ state: "visible" });
+    // #183: el ejemplo B declara antiBot, así que el aviso también lo dice.
+    await sheet.getByText("reto de Cloudflare").waitFor({ state: "visible" });
+    await page.waitForTimeout(600);
+    await page.screenshot({ path: `${process.env.SHOTS_DIR || "."}/cloudflare-183-426.png` });
 
     // «Volver» no lo marca como visto: vuelve a un módulo que no es NSFW.
     await sheet.getByRole("button", { name: "Volver" }).click();

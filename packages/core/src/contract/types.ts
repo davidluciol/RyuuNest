@@ -108,6 +108,8 @@ export interface ModuleManifest {
   lang: string;
   /** El módulo completo es NSFW. */
   nsfw: boolean;
+  /** El sitio a veces pide resolver un reto anti-bot (Cloudflare o similar); se avisa antes (#183). */
+  antiBot?: boolean;
   baseUrl: string;
   /**
    * Métodos que declara el módulo. `search`, `details` y `pages` siempre son

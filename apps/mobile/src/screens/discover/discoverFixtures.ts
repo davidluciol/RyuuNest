@@ -25,6 +25,8 @@ export interface DiscoverModule {
   hasLatest: boolean;
   /** F83: `list`/`search` paginan; sin esto no hay pie de páginas ni «siguiente». */
   paginates: boolean;
+  /** #183: el sitio a veces pide resolver un reto anti-bot (Cloudflare o similar). */
+  antiBot?: boolean;
 }
 
 /** Serie devuelta por un módulo (de `SeriesSummary`, SPEC §6.2). */
@@ -375,6 +377,7 @@ export const SAMPLE_DISCOVER_MODULES: readonly DiscoverModule[] = [
     hasPopular: false,
     hasLatest: true,
     paginates: true,
+    antiBot: true,
   },
 ];
 

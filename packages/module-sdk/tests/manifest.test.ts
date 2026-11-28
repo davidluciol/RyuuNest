@@ -182,6 +182,12 @@ describe("manifest · inválido", () => {
     }
   });
 
+  it("antiBot es opcional y, si se indica, booleano (#183)", () => {
+    expect(validateManifest({ ...validManifest, antiBot: true }).ok).toBe(true);
+    expect(validateManifest(validManifest).ok).toBe(true);
+    expect(pathsOf(validateManifest({ ...validManifest, antiBot: "sí" }))).toEqual(["antiBot"]);
+  });
+
   it("valida minAppVersion contra la versión de la app", () => {
     const tooNew = validateManifest(
       { ...validManifest, minAppVersion: "2.0.0" },
