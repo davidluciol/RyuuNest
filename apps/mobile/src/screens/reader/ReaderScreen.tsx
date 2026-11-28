@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { View, type LayoutChangeEvent } from "react-native";
 import { useKeepAwake } from "expo-keep-awake";
 import type { ReaderMode } from "@ryuunest/core";
@@ -15,6 +15,8 @@ import {
 } from "../../reader/readerLayout";
 import { ReaderBottomBar, ReaderTopBar } from "./ReaderBars";
 import ReaderEndCard from "./ReaderEndCard";
+import ConfirmSheet from "../../components/ConfirmSheet";
+import { previousUnread } from "../../reader/readingOrder";
 import ReaderPaged from "./ReaderPaged";
 import { ReaderChaptersSheet, ReaderModeSheet } from "./ReaderSheets";
 import ReaderVertical, { type ReaderVerticalHandle } from "./ReaderVertical";
@@ -46,7 +48,7 @@ export interface ReaderScreenProps {
   onOpenChapter: (chapterId: string, releaseId: string | null) => void;
 }
 
-type Sheet = "mode" | "chapters" | null;
+type Sheet = "mode" | "chapters" | "previous" | null;
 
 export default function ReaderScreen({
   ready,
@@ -67,6 +69,17 @@ export default function ReaderScreen({
   const column = columnWidth(size.width);
   const atEnd = mode === "vertical" ? verticalAtEnd : endCard;
   const autoNext = atEnd && next !== null && sheet === null;
+  const pendingPrevious = useMemo(
+    () => previousUnread(ready.chapters, chapter.id),
+    [ready.chapters, chapter.id],
+  );
+  // #181: al terminar, se pregunta una vez por capítulo si marcar los anteriores sin leer.
+  const askedPrevious = useRef<string | null>(null);
+  useEffect(() => {
+    if (!atEnd || pendingPrevious.length === 0 || askedPrevious.current === chapter.id) return;
+    askedPrevious.current = chapter.id;
+    setSheet("previous");
+  }, [atEnd, pendingPrevious, chapter.id]);
 
   // RF-23: la pantalla no se apaga mientras se lee.
   useKeepAwake("reader");
@@ -259,6 +272,27 @@ export default function ReaderScreen({
           onOpenChapter(selected.id, selected.releaseId);
         }}
         onClose={() => setSheet(null)}
+      />
+      <ConfirmSheet
+        visible={sheet === "previous"}
+        animated={false}
+        title={t("reader.markPrevious.title")}
+        message={
+          pendingPrevious.length === 1
+            ? t("reader.markPrevious.message.one")
+            : t("reader.markPrevious.message.other", { count: pendingPrevious.length })
+        }
+        confirmLabel={t("reader.markPrevious.confirm")}
+        confirmIcon={null}
+        cancelLabel={t("reader.markPrevious.cancel")}
+        onConfirm={() => {
+          setSheet(null);
+          actions.markRead(pendingPrevious);
+        }}
+        onCancel={() => setSheet(null)}
+        testID="reader-mark-previous"
+        confirmTestID="reader-mark-previous-confirm"
+        cancelTestID="reader-mark-previous-cancel"
       />
     </View>
   );

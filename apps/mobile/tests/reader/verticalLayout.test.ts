@@ -8,6 +8,7 @@ import {
   pageHeights,
   pageOffset,
   shouldMountImage,
+  visiblePage,
 } from "../../src/reader/verticalLayout";
 
 /**
@@ -110,5 +111,19 @@ describe("createScrollAnchor (compensaciones que no se pierden)", () => {
     anchor.add(-12);
 
     expect(anchor.take()).toBe(18);
+  });
+});
+
+describe("visiblePage", () => {
+  // #181: con la última página más corta que la pantalla, el borde superior nunca la alcanza.
+  const heights = [2000, 2000, 300];
+
+  it("al llegar al fondo cuenta como leída la última página aunque el borde superior no llegue", () => {
+    expect(visiblePage(heights, 3500, true)).toBe(2);
+  });
+
+  it("sin llegar al fondo, es la página bajo el borde superior", () => {
+    expect(visiblePage(heights, 3500, false)).toBe(1);
+    expect(visiblePage([], 0, true)).toBeNull();
   });
 });

@@ -53,6 +53,7 @@ export class ReaderController {
   readonly #options: ReaderControllerOptions;
   readonly #progress: ProgressStore;
   readonly #prefs: SeriesPrefs;
+  readonly #chapterRead: ChapterReadStore;
   readonly #listeners = new Set<Listener>();
 
   #state: ReaderState;
@@ -61,11 +62,8 @@ export class ReaderController {
   constructor(options: ReaderControllerOptions) {
     this.#options = options;
     const { driver, clock } = options;
-    this.#progress = new ProgressStore({
-      driver,
-      clock,
-      chapterRead: new ChapterReadStore({ driver, clock }),
-    });
+    this.#chapterRead = new ChapterReadStore({ driver, clock });
+    this.#progress = new ProgressStore({ driver, clock, chapterRead: this.#chapterRead });
     this.#prefs = new SeriesPrefs({ driver, clock });
     this.#state = this.#buildState(options.chapters);
   }
@@ -110,6 +108,14 @@ export class ReaderController {
       await this.#state.openChapter(target.chapterId);
     }
     this.#afterChange();
+  }
+
+  /** Marca como leídos los capítulos dados de esta serie (los anteriores, #181). */
+  async markRead(chapterIds: readonly string[]): Promise<void> {
+    const { moduleId, seriesId } = this.#options;
+    for (const chapterId of chapterIds) {
+      await this.#chapterRead.markRead({ moduleId, seriesId, chapterId });
+    }
   }
 
   async next(): Promise<void> {

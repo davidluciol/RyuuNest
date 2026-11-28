@@ -15,7 +15,7 @@ import type { PageQueue } from "../../reader/pageQueue";
 import {
   anchorDelta,
   createScrollAnchor,
-  pageAtOffset,
+  visiblePage,
   pageHeightFor,
   pageHeights,
   pageOffset,
@@ -128,7 +128,7 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
         atEnd.current = end;
         onEndChange(end);
       }
-      const page = pageAtOffset(heightsRef.current, y);
+      const page = visiblePage(heightsRef.current, y, end);
       if (page !== null && page !== currentPage.current) {
         currentPage.current = page;
         onPageChange(page);

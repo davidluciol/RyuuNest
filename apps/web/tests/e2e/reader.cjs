@@ -25,6 +25,7 @@ export default function create(host) {
     details: async (id) => ({
       id, title: "Dragón de prueba", genres: [], status: "ongoing", altTitles: [], extra: {},
       chapters: [
+        { id: "ch-3", title: "Cap. 3", number: 3, releases: [{ id: "r-1", group: "Oficial" }] },
         { id: "ch-2", title: "Cap. 2", number: 2, releases: [{ id: "r-1", group: "Oficial" }] },
         { id: "ch-1", title: "Cap. 1", number: 1, releases: [{ id: "r-1", group: "Oficial" }] },
       ],
@@ -202,6 +203,23 @@ async function installDemo(page, index, zip) {
       await page.getByTestId("reader-next-chapter").click();
       await page.waitForFunction(() => location.pathname.endsWith("/reader/demo/s-1/ch-2"), undefined, { timeout: 15000 });
       await page.getByTestId("screen-reader").waitFor({ state: "visible" });
+
+      // #181: terminar el cap. 3 con el 2 sin leer pregunta si marcar los anteriores.
+      await page.goto(`${baseURL}/reader/demo/s-1/ch-3`);
+      await page.getByTestId("reader-paged").waitFor({ state: "visible" });
+      for (const n of ["2 / 3", "3 / 3"]) {
+        await page.locator(".reader-zone-right").click();
+        await page.waitForFunction(
+          (text) => document.querySelector('[data-testid="reader-indicator"]')?.textContent?.includes(text),
+          n,
+          { timeout: 15000 },
+        );
+      }
+      const ask = page.getByTestId("reader-mark-previous");
+      await ask.getByText("Hay 1 capítulo anterior sin leer.").waitFor({ state: "visible" });
+      await page.screenshot({ path: `${process.env.SHOTS_DIR || "."}/leido-181-${width}.png` });
+      await page.getByTestId("reader-mark-previous-confirm").click();
+      await ask.waitFor({ state: "detached" });
 
       // F43 W14: capítulo que no existe → banner con margen, código y «Ver detalle».
       await page.goto(`${baseURL}/reader/demo/s-1/no-existe`);

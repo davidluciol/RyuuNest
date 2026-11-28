@@ -236,3 +236,12 @@ describe("ReaderController · suscripción", () => {
     expect(pages).toEqual([0, 3]);
   });
 });
+
+describe("markRead (#181)", () => {
+  it("marca varios capítulos como leídos de una vez", async () => {
+    const reader = controller();
+    await reader.markRead(["ch-1", "ch-2"]);
+    const read = await new ChapterReadStore({ driver, clock }).readIn("m-a", "serie-1");
+    expect([...read].sort()).toEqual(["ch-1", "ch-2"]);
+  });
+});

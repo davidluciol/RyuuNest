@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 
 import { confirmPresentation } from "@ryuunest/mobile-src/components/confirmSheetStyles";
 
@@ -32,6 +32,8 @@ export interface ConfirmDialogProps {
   /** Nombre del elemento afectado (módulo, repositorio, archivo). */
   subject?: string | undefined;
   confirmLabel: string;
+  /** Icono de la acción; por defecto la papelera (borrar). `null` lo quita. */
+  confirmIcon?: ReactElement | null | undefined;
   cancelLabel?: string | undefined;
   onConfirm: () => void;
   onCancel: () => void;
@@ -47,6 +49,7 @@ export default function ConfirmDialog({
   message,
   subject,
   confirmLabel,
+  confirmIcon = <Trash2 size={16} aria-hidden />,
   cancelLabel = t("confirm.cancel"),
   onConfirm,
   onCancel,
@@ -93,7 +96,7 @@ export default function ConfirmDialog({
           <Button
             variant="caution"
             label={confirmLabel}
-            icon={<Trash2 size={16} aria-hidden />}
+            icon={confirmIcon ?? undefined}
             onClick={onConfirm}
             disabled={busy}
             testID={confirmTestID}
