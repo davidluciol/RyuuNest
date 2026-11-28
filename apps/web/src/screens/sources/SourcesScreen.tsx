@@ -40,7 +40,7 @@ import { useSourcesData } from "./useSourcesData";
  */
 export default function SourcesScreen() {
   const state = useSourcesData();
-  const { view, flow, notice, controller } = state;
+  const { view, flow, notice, noticeKind, controller } = state;
 
   return (
     <div className="screen sources-screen" data-testid="screen-sources">
@@ -75,7 +75,7 @@ export default function SourcesScreen() {
       )}
 
       {notice !== null && controller !== null && (
-        <Toast message={notice} onClose={controller.dismissNotice} testID="sources-notice" />
+        <Toast message={notice} severity={noticeKind === "info" ? "info" : "error"} onClose={controller.dismissNotice} testID="sources-notice" />
       )}
 
       {controller !== null && flow.sheet === "add-repo" && (
@@ -272,7 +272,7 @@ function ModuleRow({ module, onAction }: { module: SourceModule; onAction: () =>
       </div>
       <div className="sources-row-actions">
         <Button
-          variant={action === "install" ? "primary" : "secondary"}
+          variant="secondary"
           label={t(ROW_ACTION_KEYS[action])}
           onClick={onAction}
           testID={`module-action-${module.id}`}

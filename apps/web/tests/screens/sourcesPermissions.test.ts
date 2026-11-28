@@ -26,3 +26,19 @@ describe("Portales web: permisos de módulo (F42/N9)", () => {
     expect(tsx).toContain("<TriangleAlert");
   });
 });
+
+const hook = readFileSync(
+  path.resolve(import.meta.dirname, "../..", "src/screens/sources/useSourcesData.ts"),
+  "utf8",
+);
+
+describe("Portales web: un solo primario y avisos de éxito neutros (F42 W13/V8)", () => {
+  it("«Instalar» de la fila es secundario, como en el móvil (V3 de DESIGN_RULES)", () => {
+    expect(tsx).not.toContain('variant={action === "install" ? "primary" : "secondary"}');
+  });
+
+  it("el aviso guarda su tipo y un éxito no sale como error", () => {
+    expect(hook).toContain("noticeKind");
+    expect(tsx).toContain('severity={noticeKind === "info" ? "info" : "error"}');
+  });
+});
