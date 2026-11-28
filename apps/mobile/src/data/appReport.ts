@@ -1,8 +1,10 @@
 import { Linking, Platform } from "react-native";
-import { formatLogEntries } from "@ryuunest/core";
+import { ModuleRegistry, SqliteStorage, formatLogEntries } from "@ryuunest/core";
 
 import { APP_VERSION } from "../about/appInfo";
 import { createReportController } from "../report/reportController";
+import { openAppDatabase } from "./appDatabase";
+import { copyText } from "./clipboard";
 import { resolveErrorLog } from "./errorLog";
 
 /** Entradas del registro que se pueden adjuntar (las más recientes). */
@@ -25,4 +27,12 @@ export const appReport = createReportController({
     return formatLogEntries(entries, "text").split("\n").filter(Boolean);
   },
   openUrl: (url) => Linking.openURL(url).then(() => undefined),
+  copyText,
+  // La versión del módulo instalado, para los errores que no la conocen (lector, página).
+  async moduleVersion(moduleId) {
+    const driver = await openAppDatabase();
+    if (driver === null) return undefined;
+    return (await new ModuleRegistry({ storage: new SqliteStorage(driver) }).get(moduleId))
+      ?.version;
+  },
 });

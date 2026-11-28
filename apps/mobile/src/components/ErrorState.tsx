@@ -1,3 +1,4 @@
+import { t } from "../i18n";
 import FocusPressable from "./FocusPressable";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -38,6 +39,8 @@ export interface ErrorStateProps {
   onRetry?: () => void;
   /** Etiqueta del desplegable de detalle (p. ej. «Ver detalle»). */
   detailLabel?: string;
+  /** F103: muestra «Mandar reporte» (P-198). */
+  onReport?: () => void;
 }
 
 export default function ErrorState({
@@ -47,6 +50,7 @@ export default function ErrorState({
   retryLabel,
   onRetry,
   detailLabel,
+  onReport,
 }: ErrorStateProps) {
   const [expanded, setExpanded] = useState(false);
   const shape = stateStyle("md");
@@ -64,6 +68,18 @@ export default function ErrorState({
         </Text>
       ) : null}
       <Button label={retryLabel} onPress={onRetry} />
+      {onReport === undefined ? null : (
+        <FocusPressable
+          accessibilityRole="button"
+          accessibilityLabel={t("report.action")}
+          hitSlop={touchTarget.min / 4}
+          onPress={onReport}
+          style={styles.toggle}
+          testID="error-state-report"
+        >
+          <Text style={[styles.toggleText, { color: colors.action }]}>{t("report.action")}</Text>
+        </FocusPressable>
+      )}
       {hasDetail ? (
         <View style={styles.detailArea}>
           <FocusPressable

@@ -32,6 +32,11 @@ export interface ReportSheetProps {
   sending?: boolean;
   sendFailed?: boolean;
   onSend: (channel: ReportSheetChannel) => void;
+  /** Tercera vía: copia el reporte; `copied` confirma que ya está en el portapapeles. */
+  onCopy?: () => void;
+  copied?: boolean;
+  /** Abre la búsqueda de la huella en los issues antes de enviar un duplicado. */
+  onSearchExisting?: () => void;
   onClose: () => void;
 }
 
@@ -45,6 +50,9 @@ export default function ReportSheet({
   sending = false,
   sendFailed = false,
   onSend,
+  onCopy,
+  copied = false,
+  onSearchExisting,
   onClose,
 }: ReportSheetProps) {
   return (
@@ -94,6 +102,33 @@ export default function ReportSheet({
         <Checkbox checked={includeLog} onChange={onIncludeLogChange} />
         <Text style={styles.logLabel}>{t("report.log.label")}</Text>
       </View>
+      {onCopy !== undefined || onSearchExisting !== undefined ? (
+        <View style={styles.extras}>
+          {onSearchExisting === undefined ? null : (
+            <Button
+              variant="secondary"
+              label={t("report.searchExisting")}
+              onPress={onSearchExisting}
+              disabled={sending}
+              testID="report-search-existing"
+            />
+          )}
+          {onCopy === undefined ? null : (
+            <Button
+              variant="secondary"
+              label={t("report.copy")}
+              onPress={onCopy}
+              disabled={sending}
+              testID="report-copy"
+            />
+          )}
+        </View>
+      ) : null}
+      {copied ? (
+        <Text style={styles.hint} accessibilityLiveRegion="polite" testID="report-copied">
+          {t("report.copied")}
+        </Text>
+      ) : null}
       {sendFailed ? (
         <Text style={styles.error} accessibilityRole="alert" testID="report-send-failed">
           {t("report.sendFailed")}
@@ -129,6 +164,7 @@ const styles = themedStyles(() => ({
   previewTitle: { ...textStyle(typography.labelLg), color: colors.textPrimary },
   previewBody: { ...textStyle(typography.mono), color: colors.textSecondary },
   channels: { gap: spacing.sm },
+  extras: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
   channel: { gap: spacing.xxs },
   hint: { ...textStyle(typography.bodySm), color: colors.textSecondary },
 }));

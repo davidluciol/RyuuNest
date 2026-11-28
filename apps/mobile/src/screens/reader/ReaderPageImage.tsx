@@ -44,6 +44,14 @@ export interface ReaderPageImageProps {
   fit: "fill" | "contain";
   testID?: string;
   onAspect?: (index: number, aspect: number) => void;
+  /** F103: «Mandar reporte» desde el error de esta página. */
+  onReport?: (failure: PageReport) => void;
+}
+
+/** Lo que el error de una página aporta al reporte (F103). */
+export interface PageReport {
+  code: string;
+  message: string;
 }
 
 /** Sin cola todavía (el primer cuadro del capítulo), la página espera. */
@@ -60,6 +68,7 @@ function ReaderPageImage({
   fit,
   testID,
   onAspect,
+  onReport,
 }: ReaderPageImageProps) {
   const pageNumber = index + 1;
   const subscribe = useCallback(
@@ -77,7 +86,8 @@ function ReaderPageImage({
     if (failure === null) return;
     let cancelled = false;
     void resolveErrorReporter().then((reporter) => {
-      if (!cancelled) reportReaderError(reporter, "image", new Error(failure), { page: pageNumber });
+      if (!cancelled)
+        reportReaderError(reporter, "image", new Error(failure), { page: pageNumber });
     });
     return () => {
       cancelled = true;
@@ -104,6 +114,11 @@ function ReaderPageImage({
             queue?.retry(index);
           }}
           detailLabel={t("actions.showDetail")}
+          onReport={
+            onReport === undefined
+              ? undefined
+              : () => onReport({ code: kind.toUpperCase(), message: failure ?? kind })
+          }
         />
       </View>
     );

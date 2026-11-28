@@ -15,15 +15,17 @@ const request = { code: "TIMEOUT", message: "Sin respuesta tras 30123 ms", modul
 
 function setup(overrides: Partial<ReportControllerDeps> = {}) {
   const openUrl = vi.fn(async (_url: string) => {});
+  const copyText = vi.fn(async (_text: string) => {});
   const deps: ReportControllerDeps = {
     appVersion: "1.0.0",
     platform: "android 34",
     now: () => "2026-11-27T22:00:00.000Z",
     loadLog: async () => ["entrada vieja", "entrada nueva"],
     openUrl,
+    copyText,
     ...overrides,
   };
-  return { controller: createReportController(deps), openUrl };
+  return { controller: createReportController(deps), openUrl, copyText };
 }
 
 describe("reportController", () => {
@@ -108,5 +110,38 @@ describe("canales del proyecto (P-198)", () => {
   it("GitHub del repo oficial y el correo elegido por el humano", () => {
     expect(REPORT_GITHUB_REPO).toBe("https://github.com/davidluciol/RyuuNest");
     expect(REPORT_EMAIL).toBe("potigameplays@gmail.com");
+  });
+});
+
+describe("reportController · restos de F103", () => {
+  it("completa la versión del módulo instalado si la pantalla no la trae", async () => {
+    const { controller } = setup({
+      moduleVersion: async (id) => (id === "m440" ? "0.2.3" : undefined),
+    });
+    await controller.open(request);
+    expect(controller.preview()?.title).toMatch(/TIMEOUT en m440 0\.2/);
+  });
+
+  it("«Copiar» deja el título y el cuerpo en el portapapeles y no cierra la hoja", async () => {
+    const { controller, copyText, openUrl } = setup();
+    await controller.open(request);
+    await controller.copy();
+    const preview = controller.preview();
+    expect(copyText).toHaveBeenCalledWith(`${preview?.title}
+
+${preview?.body}`);
+    expect(openUrl).not.toHaveBeenCalled();
+    const state = controller.getState();
+    expect(state.phase === "open" && state.copied).toBe(true);
+  });
+
+  it("«¿Ya está reportado?» abre la búsqueda de la huella en los issues, sin mandar nada", async () => {
+    const { controller, openUrl } = setup();
+    await controller.open(request);
+    await controller.searchExisting();
+    const url = String(openUrl.mock.calls[0]?.[0]);
+    expect(url.startsWith(`https://github.com/${REPORT_GITHUB_REPO}/issues?q=`)).toBe(true);
+    expect(decodeURIComponent(url)).toContain(`"fp:${controller.preview()?.fingerprint}"`);
+    expect(controller.getState().phase).toBe("open");
   });
 });

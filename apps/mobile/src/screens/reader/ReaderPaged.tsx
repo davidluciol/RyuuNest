@@ -2,7 +2,7 @@
 import { View } from "react-native";
 
 import type { PageQueue } from "../../reader/pageQueue";
-import ReaderPageImage from "./ReaderPageImage";
+import ReaderPageImage, { type PageReport } from "./ReaderPageImage";
 import type { ReaderImage } from "./readingSource";
 
 /**
@@ -17,9 +17,18 @@ export interface ReaderPagedProps {
   pageIndex: number;
   width: number;
   height: number;
+  /** F103: «Mandar reporte» desde el error de la página. */
+  onReportPage?: (failure: PageReport) => void;
 }
 
-export default function ReaderPaged({ image, queue, pageIndex, width, height }: ReaderPagedProps) {
+export default function ReaderPaged({
+  image,
+  queue,
+  pageIndex,
+  width,
+  height,
+  onReportPage,
+}: ReaderPagedProps) {
   return (
     <View testID="reader-paged" style={{ width, height }}>
       {/* La clave por página e imagen evita que el error de una pase a otra (o a otro capítulo). */}
@@ -33,6 +42,7 @@ export default function ReaderPaged({ image, queue, pageIndex, width, height }: 
         height={height}
         fit="contain"
         testID={`reader-page-${pageIndex}`}
+        {...(onReportPage === undefined ? {} : { onReport: onReportPage })}
       />
     </View>
   );

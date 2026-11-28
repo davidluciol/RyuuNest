@@ -30,6 +30,8 @@ export type ReportState =
       log: readonly string[];
       sending: boolean;
       sendFailed: boolean;
+      /** El reporte ya está en el portapapeles (tercera vía). */
+      copied: boolean;
     };
 
 export interface ReportControllerDeps {
@@ -42,6 +44,10 @@ export interface ReportControllerDeps {
   loadLog: () => Promise<readonly string[]>;
   /** Abre la app de GitHub/navegador o la de correo. */
   openUrl: (url: string) => Promise<void>;
+  /** Copia texto al portapapeles. */
+  copyText: (text: string) => Promise<void>;
+  /** Versión del módulo instalado, para cuando la pantalla que falló no la conoce. */
+  moduleVersion?: (moduleId: string) => Promise<string | undefined>;
 }
 
 export interface ReportController {
@@ -53,6 +59,10 @@ export interface ReportController {
   /** El reporte tal como saldría, o `null` si la hoja está cerrada. */
   preview(): ErrorReport | null;
   send(channel: ReportChannel): Promise<void>;
+  /** Copia título y cuerpo al portapapeles; la hoja sigue abierta. */
+  copy(): Promise<void>;
+  /** Abre en el navegador la búsqueda de la huella en los issues («¿Ya está reportado?»). */
+  searchExisting(): Promise<void>;
   close(): void;
 }
 
@@ -91,8 +101,15 @@ export function createReportController(deps: ReportControllerDeps): ReportContro
         listeners.delete(listener);
       };
     },
-    async open(request) {
+    async open(asked) {
       date = deps.now();
+      const request =
+        asked.moduleId !== undefined && asked.moduleVersion === undefined
+          ? {
+              ...asked,
+              moduleVersion: await deps.moduleVersion?.(asked.moduleId).catch(() => undefined),
+            }
+          : asked;
       set({
         phase: "open",
         request,
@@ -101,6 +118,7 @@ export function createReportController(deps: ReportControllerDeps): ReportContro
         log: [],
         sending: false,
         sendFailed: false,
+        copied: false,
       });
       const log = await deps.loadLog().catch(() => []);
       if (state.phase === "open" && state.request === request) patch({ log });
@@ -122,6 +140,26 @@ export function createReportController(deps: ReportControllerDeps): ReportContro
       } catch {
         patch({ sending: false, sendFailed: true });
       }
+    },
+    async copy() {
+      const report = preview();
+      if (report === null) return;
+      try {
+        await deps.copyText(`${report.title}
+
+${report.body}`);
+        patch({ copied: true, sendFailed: false });
+      } catch {
+        patch({ sendFailed: true });
+      }
+    },
+    async searchExisting() {
+      const report = preview();
+      if (report === null) return;
+      const query = encodeURIComponent(`is:issue "fp:${report.fingerprint}"`);
+      await deps.openUrl(`https://github.com/${REPORT_GITHUB_REPO}/issues?q=${query}`).catch(() => {
+        patch({ sendFailed: true });
+      });
     },
     close: () => set(IDLE),
   };
