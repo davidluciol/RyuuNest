@@ -26,6 +26,7 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 - **Auditoría de módulos para el release (2026-11-26/27):** arreglo del `await` de Hermes en flechas con parámetros desestructurados; montador que remonta al actualizar; luscious 0.1.4, mangation 0.1.3; títulos de capítulo sin repetir numeración.
 - **Lector vertical que no se deslizaba (2026-11-27):** un `Pressable` envolvía al `ScrollView` y le robaba el arrastre en Android (P-193).
 - **Capítulos leídos (2026-11-28, #181):** en vertical la última página corta nunca era la «actual» y el capítulo no se marcaba; al llegar al fondo cuenta como leída. Al terminar, hoja «¿Marcar los anteriores como leídos?» (móvil y web) si quedan anteriores sin terminar.
+- **Aventuras virtualizada (2026-11-28, #182):** el catálogo pasa de `ScrollView` + `.map` (todas las tarjetas montadas) a `FlashList` 2.0.2 (versión de Expo SDK 57) con filas recicladas, `onEndReached` y `recyclingKey` en las portadas. Falta medir en el teléfono.
 - **Release (2026-11-27):** Acerca de con artistas (móvil y web), raíz ordenada (`docs/`), licencias GPL-3.0 + CC BY-NC-ND 4.0, logo final, iconos de app/web/extensión y APK 1.0.0.
 
 ## 3. Decisiones vigentes (resumen; detalle en el archivo)
@@ -66,6 +67,7 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 **Nuevas (2026-11-28)**
 - P-201 Permiso especial del humano para la tanda del 2026-11-28: fusiono yo cada PR tras el gate en verde (RyuuNest y RyuuNest-Models, con publicación de versión e `index.json`). Fuera de esta tanda vuelve la regla de no fusionar.
 - P-202 T45: se hacen **ambas** cosas: pista de sintaxis en el buscador ya y búsqueda por el índice B-tree de Hitomi (Models issue #31).
+- P-204 Dependencia nueva `@shopify/flash-list` 2.0.2 (permiso del humano, 2026-11-28) para el lag de Aventuras (#182).
 - P-203 Marcar anteriores (#181): se **pregunta** con una hoja al terminar un capítulo, solo si quedan anteriores sin terminar; una vez por capítulo.
 
 ## 4. Pendientes y preguntas abiertas

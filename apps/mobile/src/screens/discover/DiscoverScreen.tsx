@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FlashList } from "@shopify/flash-list";
 import { ActivityIndicator, ScrollView, Text, View, useWindowDimensions } from "react-native";
 import {
   activeColors,
@@ -281,152 +282,155 @@ function DiscoverReady({
 
   return (
     <View style={styles.screen} testID="screen-discover">
-      <ScrollView
+      {/* #182: lista virtualizada; las filas del catálogo fuera de pantalla se reciclan. */}
+      <FlashList
+        data={chunk(catalog.entries, CATALOG_COLUMNS)}
+        keyExtractor={(row) => row[0]?.seriesId ?? ""}
+        renderItem={({ item }) => <CatalogRow row={item} onSeriesPress={onSeriesPress} />}
+        ItemSeparatorComponent={() => <View style={{ height: gap }} />}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{
-          paddingHorizontal: sidePadding,
-          paddingBottom: spacing.xl,
-          gap: spacing.lg,
-        }}
-        scrollEventThrottle={100}
+        contentContainerStyle={{ paddingHorizontal: sidePadding, paddingBottom: spacing.xl }}
         onContentSizeChange={(_width, contentHeight) => {
           // Si la lista no llena la pantalla no habrá scroll: se sigue pidiendo hasta llenarla o agotarla.
           if (contentHeight < windowHeight && catalog.hasNext && more === "idle") onLoadMore?.();
         }}
-        onScroll={(event) => {
-          // F84: al acercarse al final se pide la página siguiente (con el fallo, solo con «Reintentar»).
-          const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-          const remaining = contentSize.height - (contentOffset.y + layoutMeasurement.height);
-          if (remaining < layoutMeasurement.height && more === "idle") onLoadMore?.();
+        // F84: al acercarse al final (una pantalla) se pide la página siguiente; con el fallo, solo con «Reintentar».
+        onEndReachedThreshold={1}
+        onEndReached={() => {
+          if (more === "idle") onLoadMore?.();
         }}
-      >
-        {/* F86 (variante B) + F88: barra y lupa de 48×48; el selector de módulo está en la cabecera. */}
-        <View style={styles.topRow}>
-          <View style={styles.searchWrap}>
-            <TextField
-              placeholder={t("discover.search.placeholder")}
-              value={draft}
-              onChangeText={setDraft}
-              onSubmitEditing={() => onSearch?.(draft.trim())}
-              returnKeyType="search"
-              accessibilityLabel={t("discover.search.placeholder")}
-            />
-          </View>
-          {filterGroups.length > 0 ? (
-            <FocusPressable
-              accessibilityRole="button"
-              accessibilityLabel={
-                activeCount > 0
-                  ? t("discover.filter.buttonCount", { count: activeCount })
-                  : t("discover.filter.button")
-              }
-              onPress={() => setFiltersOpen(true)}
-              style={[styles.searchButton, activeCount > 0 && styles.searchButtonActive]}
-              testID="discover-filters-button"
-            >
-              <SlidersHorizontal
-                size={20}
-                color={activeCount > 0 ? colors.accent : colors.textSecondary}
-              />
-              {/* F87: contador de activos visible junto al icono. */}
-              {activeCount > 0 ? (
-                <Text style={styles.filterCount} testID="discover-filters-count">
-                  {activeCount}
-                </Text>
-              ) : null}
-            </FocusPressable>
-          ) : null}
-          <FocusPressable
-            accessibilityRole="button"
-            accessibilityLabel={t("discover.search.submit")}
-            onPress={() => onSearch?.(draft.trim())}
-            style={styles.searchButton}
-          >
-            <Search size={20} color={colors.textPrimary} />
-          </FocusPressable>
-        </View>
-        <TagFilterSheet
-          visible={filtersOpen}
-          groups={filterGroups}
-          selected={ready.activeFilters}
-          onChange={(next) => onApplyFilters?.(next)}
-          onClose={() => setFiltersOpen(false)}
-        />
-
-        {sections.map((section) => (
-          <View key={section.id} style={styles.section}>
-            <SectionHeader
-              title={section.title}
-              {...(section.hasMore
-                ? {
-                    actionLabel: t("discover.section.seeMore"),
-                    onAction: () => onOpenSection?.(section.id, section.title),
+        ListFooterComponent={
+          catalog.entries.length > 0 ? (
+            <View style={styles.listFooter}>
+              <CatalogFooter hasNext={catalog.hasNext} more={more} onRetry={onLoadMore} />
+            </View>
+          ) : null
+        }
+        ListHeaderComponent={
+          <View style={styles.listHeader}>
+            {/* F86 (variante B) + F88: barra y lupa de 48×48; el selector de módulo está en la cabecera. */}
+            <View style={styles.topRow}>
+              <View style={styles.searchWrap}>
+                <TextField
+                  placeholder={t("discover.search.placeholder")}
+                  value={draft}
+                  onChangeText={setDraft}
+                  onSubmitEditing={() => onSearch?.(draft.trim())}
+                  returnKeyType="search"
+                  accessibilityLabel={t("discover.search.placeholder")}
+                />
+              </View>
+              {filterGroups.length > 0 ? (
+                <FocusPressable
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    activeCount > 0
+                      ? t("discover.filter.buttonCount", { count: activeCount })
+                      : t("discover.filter.button")
                   }
-                : {})}
+                  onPress={() => setFiltersOpen(true)}
+                  style={[styles.searchButton, activeCount > 0 && styles.searchButtonActive]}
+                  testID="discover-filters-button"
+                >
+                  <SlidersHorizontal
+                    size={20}
+                    color={activeCount > 0 ? colors.accent : colors.textSecondary}
+                  />
+                  {/* F87: contador de activos visible junto al icono. */}
+                  {activeCount > 0 ? (
+                    <Text style={styles.filterCount} testID="discover-filters-count">
+                      {activeCount}
+                    </Text>
+                  ) : null}
+                </FocusPressable>
+              ) : null}
+              <FocusPressable
+                accessibilityRole="button"
+                accessibilityLabel={t("discover.search.submit")}
+                onPress={() => onSearch?.(draft.trim())}
+                style={styles.searchButton}
+              >
+                <Search size={20} color={colors.textPrimary} />
+              </FocusPressable>
+            </View>
+            <TagFilterSheet
+              visible={filtersOpen}
+              groups={filterGroups}
+              selected={ready.activeFilters}
+              onChange={(next) => onApplyFilters?.(next)}
+              onClose={() => setFiltersOpen(false)}
             />
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.rowScroller}
-            >
-              {section.entries.map((entry) => (
-                <View key={entry.seriesId} style={{ width: ROW_CARD_WIDTH }}>
-                  <DiscoverCard entry={entry} onPress={onSeriesPress} />
-                </View>
-              ))}
-            </ScrollView>
+
+            {sections.map((section) => (
+              <View key={section.id} style={styles.section}>
+                <SectionHeader
+                  title={section.title}
+                  {...(section.hasMore
+                    ? {
+                        actionLabel: t("discover.section.seeMore"),
+                        onAction: () => onOpenSection?.(section.id, section.title),
+                      }
+                    : {})}
+                />
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.rowScroller}
+                >
+                  {section.entries.map((entry) => (
+                    <View key={entry.seriesId} style={{ width: ROW_CARD_WIDTH }}>
+                      <DiscoverCard entry={entry} onPress={onSeriesPress} />
+                    </View>
+                  ))}
+                </ScrollView>
+              </View>
+            ))}
+
+            {showLatest ? (
+              <View style={styles.section}>
+                <SectionHeader title={t("discover.section.latest")} />
+                <CoverGrid entries={latest} gap={gap} onSeriesPress={onSeriesPress} />
+                <MoreRowFooter
+                  hasNext={ready.latestMore?.hasNext ?? false}
+                  status={rowMore.latest}
+                  onLoadMore={() => onLoadMoreRow?.("latest")}
+                />
+              </View>
+            ) : null}
+
+            {showPopular ? (
+              <View style={styles.section}>
+                <SectionHeader title={t("discover.section.popular")} />
+                <CoverGrid entries={popular} gap={gap} onSeriesPress={onSeriesPress} />
+                <MoreRowFooter
+                  hasNext={ready.popularMore?.hasNext ?? false}
+                  status={rowMore.popular}
+                  onLoadMore={() => onLoadMoreRow?.("popular")}
+                />
+              </View>
+            ) : null}
+
+            {/* Catálogo paginado (RF-10): con consulta o exploración libre. */}
+            <View style={styles.section}>
+              <SectionHeader
+                title={ready.section?.title ?? t("discover.section.catalog")}
+                {...(ready.section === undefined
+                  ? {}
+                  : { actionLabel: t("actions.back"), onAction: onCloseSection })}
+              />
+              {catalog.entries.length === 0 ? (
+                <EmptyState
+                  title={t("state.empty.search.title")}
+                  message={t("state.empty.search.message", { query: ready.query || "…" })}
+                  actionLabel={t("actions.exploreAgain")}
+                  onAction={() => onSearch?.("")}
+                  scale="sm"
+                />
+              ) : null}
+            </View>
           </View>
-        ))}
-
-        {showLatest ? (
-          <View style={styles.section}>
-            <SectionHeader title={t("discover.section.latest")} />
-            <CoverGrid entries={latest} gap={gap} onSeriesPress={onSeriesPress} />
-            <MoreRowFooter
-              hasNext={ready.latestMore?.hasNext ?? false}
-              status={rowMore.latest}
-              onLoadMore={() => onLoadMoreRow?.("latest")}
-            />
-          </View>
-        ) : null}
-
-        {showPopular ? (
-          <View style={styles.section}>
-            <SectionHeader title={t("discover.section.popular")} />
-            <CoverGrid entries={popular} gap={gap} onSeriesPress={onSeriesPress} />
-            <MoreRowFooter
-              hasNext={ready.popularMore?.hasNext ?? false}
-              status={rowMore.popular}
-              onLoadMore={() => onLoadMoreRow?.("popular")}
-            />
-          </View>
-        ) : null}
-
-        {/* Catálogo paginado (RF-10): con consulta o exploración libre. */}
-        <View style={styles.section}>
-          <SectionHeader
-            title={ready.section?.title ?? t("discover.section.catalog")}
-            {...(ready.section === undefined
-              ? {}
-              : { actionLabel: t("actions.back"), onAction: onCloseSection })}
-          />
-          {catalog.entries.length === 0 ? (
-            <EmptyState
-              title={t("state.empty.search.title")}
-              message={t("state.empty.search.message", { query: ready.query || "…" })}
-              actionLabel={t("actions.exploreAgain")}
-              onAction={() => onSearch?.("")}
-              scale="sm"
-            />
-          ) : (
-            <CoverGrid entries={catalog.entries} gap={gap} onSeriesPress={onSeriesPress} />
-          )}
-
-          {catalog.entries.length > 0 ? (
-            <CatalogFooter hasNext={catalog.hasNext} more={more} onRetry={onLoadMore} />
-          ) : null}
-        </View>
-      </ScrollView>
+        }
+      />
     </View>
   );
 }
@@ -444,17 +448,29 @@ function CoverGrid({
   return (
     <View style={{ gap }}>
       {chunk(entries, CATALOG_COLUMNS).map((row, rowIndex) => (
-        <View key={rowIndex} style={styles.catalogRow}>
-          {row.map((entry) => (
-            <View key={entry.seriesId} style={styles.catalogItem}>
-              <DiscoverCard entry={entry} onPress={onSeriesPress} />
-            </View>
-          ))}
-          {/* Relleno para que la última fila no deforme las tarjetas. */}
-          {Array.from({ length: CATALOG_COLUMNS - row.length }).map((_, i) => (
-            <View key={`spacer-${i}`} style={styles.catalogItem} />
-          ))}
+        <CatalogRow key={rowIndex} row={row} onSeriesPress={onSeriesPress} />
+      ))}
+    </View>
+  );
+}
+
+/** Una fila de la rejilla; la última se rellena para no deformar las tarjetas. */
+function CatalogRow({
+  row,
+  onSeriesPress,
+}: {
+  row: readonly DiscoverEntry[];
+  onSeriesPress?: ((entry: DiscoverEntry) => void) | undefined;
+}) {
+  return (
+    <View style={styles.catalogRow}>
+      {row.map((entry) => (
+        <View key={entry.seriesId} style={styles.catalogItem}>
+          <DiscoverCard entry={entry} onPress={onSeriesPress} />
         </View>
+      ))}
+      {Array.from({ length: CATALOG_COLUMNS - row.length }).map((_, i) => (
+        <View key={`spacer-${i}`} style={styles.catalogItem} />
       ))}
     </View>
   );
@@ -588,6 +604,13 @@ const styles = themedStyles(() => ({
   },
   section: {
     gap: spacing.xs,
+  },
+  listHeader: {
+    gap: spacing.lg,
+    paddingBottom: spacing.xs,
+  },
+  listFooter: {
+    paddingTop: spacing.xs,
   },
   rowScroller: {
     gap: spacing.sm,

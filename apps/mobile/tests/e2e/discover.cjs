@@ -53,7 +53,10 @@ const output = path.resolve(__dirname, "../../../../docs/capturasF15");
       // F48: las portadas del sitio falso se ven (no solo «sin errores»).
       await page.waitForFunction(
         () => {
-          const covers = [...document.images].filter((img) => img.src.includes("sitio-html.test"));
+          // #182: solo las visibles; las de fuera de pantalla se cargan al llegar (lista virtualizada).
+          const covers = [...document.images].filter(
+            (img) => img.src.includes("sitio-html.test") && img.getBoundingClientRect().top < innerHeight,
+          );
           return covers.length > 0 && covers.every((img) => img.complete && img.naturalWidth > 0);
         },
         undefined,
