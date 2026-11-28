@@ -45,6 +45,19 @@ export function pageAtOffset(heights: readonly number[], offset: number): number
   return heights.length - 1;
 }
 
+/**
+ * Página que se está leyendo. Al llegar al fondo es la última aunque el borde superior no la
+ * alcance (última página más corta que la pantalla): si no, el capítulo nunca se marca leído (#181).
+ */
+export function visiblePage(
+  heights: readonly number[],
+  offset: number,
+  atEnd: boolean,
+): number | null {
+  if (heights.length === 0) return null;
+  return atEnd ? heights.length - 1 : pageAtOffset(heights, offset);
+}
+
 /** ¿Se mantiene decodificada esta imagen? Solo dentro de la ventana del núcleo (SPEC §9). */
 export function shouldMountImage(index: number, window: PageWindow | null): boolean {
   return window !== null && index >= window.from && index <= window.to;
