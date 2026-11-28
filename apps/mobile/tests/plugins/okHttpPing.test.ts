@@ -34,6 +34,20 @@ describe("withOkHttpPing (G6)", () => {
     expect(out).toMatch(/\.readTimeout\(\d+,/);
   });
 
+  it("conserva la cookie del módulo junto a las del tarro (FanFox +18, Models #30)", () => {
+    // OkHttp (BridgeInterceptor) sustituye la cabecera Cookie por la del tarro si este tiene
+    // cookies del dominio: el `isAdult=1` del módulo se perdía. Se aparta y se vuelve a unir.
+    const out = addOkHttpFactory(MAIN_APPLICATION);
+    const app = out.indexOf(".addInterceptor(");
+    const network = out.indexOf(".addNetworkInterceptor(");
+
+    expect(app).toBeGreaterThan(-1);
+    expect(network).toBeGreaterThan(app);
+    expect(out).toContain('"X-RyuuNest-Cookie"');
+    expect(out).toContain('removeHeader("Cookie")');
+    expect(out).toContain('"$own; $jar"');
+  });
+
   it("es idempotente", () => {
     const once = addOkHttpFactory(MAIN_APPLICATION);
 
