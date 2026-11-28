@@ -48,8 +48,9 @@ texto (`docs/DESIGN_RULES.md` V4). La puerta `apps/mobile/tests/icons.test.ts` p
 
 | Recurso | Licencia / situación | Ubicación | Estado |
 |---|---|---|---|
-| Dragón y arte de pantallas del diseño | Marcadores generados con IA | `assets/placeholder/` | Temporal |
-| `dragon.svg` (dragón marcador de estados, F08) | Silueta vectorial **original** del proyecto (GPL-3.0), dibujada a mano; registro en `apps/mobile/assets/placeholder/README.md` | `apps/mobile/assets/placeholder/` | Temporal — artista pendiente |
+| Arte de pantallas del diseño | Marcadores generados con IA | `assets/placeholder/` | Temporal |
+| **Logo de RyuuNest** (dragón con pupila que protege su libro; FA1) · autor **David Lucio** ([github.com/davidluciol](https://github.com/davidluciol)) | **Artista** · CC BY-NC-ND 4.0 (`LICENSE-ART.md`); fuente vectorial en `design/RyuuNest-Logo-Pack-Con-Pupila/` (2026-11-27) | Trazo en `apps/mobile/src/components/dragonPath.ts` (`DragonMarker` móvil y web, `DragonTreasure`); copia como portada de ejemplo en `apps/mobile/assets/placeholder/dragon.svg` | **Artista** |
+| Logo sin pupila (variante para favicon) · autor **David Lucio** | **Artista** · CC BY-NC-ND 4.0 (`LICENSE-ART.md`); fuente en `design/RyuuNest-Logo-Pack/` (2026-11-27) | Favicon y tamaños ≤32 px | **Artista** |
 | `page-1.svg`, `page-2.svg`, `page-3.svg` (páginas de ejemplo del lector, F18) | Formas vectoriales **originales** del proyecto (GPL-3.0), sin texto ni obras; registro en `apps/mobile/assets/placeholder/README.md` | `apps/mobile/assets/placeholder/` | Temporal — solo web y pruebas |
 | Portadas, avatar y dragón de `design/` | Marcadores de ejemplo (nunca se enlazan por URL) | `assets/placeholder/` | Temporal |
 | `apps/web/public/favicon.png` | Derivado de la silueta vectorial **original** del dragón (GPL-3.0, F08) | `apps/web/public/` | **Incluido** (F24): favicon local del cliente web, sin recurso remoto |

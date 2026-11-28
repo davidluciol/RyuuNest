@@ -32,6 +32,7 @@ const SHARED_FILES = [
   "i18n/index.ts",
   "components/kindLabel.ts",
   "components/errorNoticeStyles.ts",
+  "components/dragonPath.ts",
   "screens/settings/settingsData.ts",
   "screens/settings/settingsView.ts",
   "screens/settings/backup/backupData.ts",
