@@ -747,7 +747,7 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 Dep: F56 · M · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`
 
-- [ ] Una ilustración SVG distinta por vacío: Guarida (sin lecturas), Tesoros (sin series), Aventuras (sin módulos / sin resultados), Portales (sin repos), Diagnóstico (sin eventos); F56 aporta la de «sin resultados»
+- [ ] (Riesgo de F73/P-197: hoy todos los estados muestran el mismo logo) Una ilustración SVG distinta por vacío: Guarida (sin lecturas), Tesoros (sin series), Aventuras (sin módulos / sin resultados), Portales (sin repos), Diagnóstico (sin eventos); F56 aporta la de «sin resultados»
 - [ ] `EmptyState` acepta la ilustración por prop; todas en la galería (dos escalas)
 - Verif: Playwright 426/1440 px + 🧍 S25
 
@@ -781,7 +781,23 @@ Dep: F52, F53 · XS
 - [ ] Iconos para «Favoritos» (estrella) y «Gemas» (gema) en `FolderCard`, y el «+» verde del botón flotante, con tokens
 - Verif: galería + Playwright
 
-**Lote sugerido:** F70 → F71 → F74 → F75 → F73 (F72 y FA1 esperan el arte final del dragón).
+### F101 Pantalla de bienvenida (splash) con el logo `[FE/Arte · Baja · N2]` 🧍
+
+Dep: F73 · S · `apps/mobile/app.json` (riesgo hallado en F73, P-197)
+
+- [ ] La app no configura `expo-splash-screen`: Android 12+ muestra el icono adaptativo sobre el fondo por defecto (posible destello blanco antes del tema oscuro). Configurar el splash con el logo con pupila sobre `#0B0E14` (`dragonNightColors.bg`), Android e iPhone; consultar Context7 para el plugin de SDK 57 y **pedir permiso** si hace falta instalar el paquete
+- [ ] Sin animación ni texto en el splash; respeta la regla de tokens (el color sale del tema)
+- Verif: test de `app.json` + 🧍 APK en el POCO/S25 (arranque en frío sin destello blanco)
+
+### F102 Configuración para iPhone (iOS) `[Ops · Baja · N2]` 🧍
+
+Dep: F73 · S · `apps/mobile/app.json`, `eas.json` (riesgo hallado en F73, P-197)
+
+- [ ] `ios.bundleIdentifier` (propuesta: `io.github.davidluciol.ryuunest`, como Android), `supportsTablet`, icono (ya cubierto por `icon.png` 1024 opaco) y perfil de EAS para iOS
+- [ ] 🧍 Decidir la distribución: SPEC P-3 solo contempla APK y PWA; iOS exige cuenta de Apple Developer (TestFlight/App Store) o instalación lateral. Si cambia el alcance, actualizar `docs/SPEC.md` antes de compilar
+- Verif: `eas build -p ios --profile preview` (o `expo prebuild -p ios` sin compilar) sin errores de configuración
+
+**Lote sugerido:** F70 → F71 → F74 → F75 → F101 → F102 (FA1, FA2, F72 y F73 hechas con el logo del humano, P-197).
 
 ### AB1–AB3 Ajustes → «Acerca de» con sección de Artistas `[FE · Intermedia · N3]`
 
