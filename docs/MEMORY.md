@@ -29,6 +29,7 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 - **Aventuras virtualizada (2026-11-28, #182):** el catálogo pasa de `ScrollView` + `.map` (todas las tarjetas montadas) a `FlashList` 2.0.2 (versión de Expo SDK 57) con filas recicladas, `onEndReached` y `recyclingKey` en las portadas. Falta medir en el teléfono.
 - **Aviso de reto anti-bot (2026-11-28, #183):** campo opcional `antiBot` en el manifiesto y en el índice (lo valida el SDK); la hoja de instalación y el aviso +18 de primer uso dicen «Este sitio a veces te pedirá resolver un reto de Cloudflare…». En Models: M440, Luscious y YupManga.
 - **T45 Hitomi (2026-11-28, Models #31):** búsqueda por título y varias palabras con el índice B-tree del sitio (SHA-256 en JS puro, nodos de 464 bytes por `Range`), cruzada con el idioma; probada en vivo («ceniza» → «Nieve Color Ceniza»). La app acepta `searchHint` en el manifiesto como pista del buscador (móvil y web).
+- **Cookie del módulo en Android (2026-11-28, Models #30):** OkHttp sustituía la cabecera `Cookie` del módulo por la del tarro del WebView en cuanto este tenía cookies del dominio; por eso FanFox +18 salía con 0 capítulos aunque el módulo manda `isAdult=1`. El plugin `withOkHttpPing` aparta la cookie del módulo y la vuelve a unir (primero la del módulo). Falta compilar el APK y probarlo en el teléfono.
 - **Release (2026-11-27):** Acerca de con artistas (móvil y web), raíz ordenada (`docs/`), licencias GPL-3.0 + CC BY-NC-ND 4.0, logo final, iconos de app/web/extensión y APK 1.0.0.
 
 ## 3. Decisiones vigentes (resumen; detalle en el archivo)
@@ -76,7 +77,7 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 
 - 🧍 **Verificar con el APK 1.0.0** todo lo hecho sin prueba en el teléfono (lista en `tasks/todo.md`).
 - **Issues abiertos (2026-11-28):** #181 leídos, #182 lag de Aventuras, #183 aviso de Cloudflare; Models #31 Hitomi por título.
-- 🐞 **FanFox +18:** la ficha sale con 0 capítulos (dice 113) por el aviso de contenido adulto; Models issue #30.
+- 🐞 **FanFox +18:** causa en la app (cookie del módulo pisada por el tarro de OkHttp); arreglado en código, falta el APK (Models #30).
 - 🐞 **ZonaTMO:** el lector se traba al bajar rápido tras cargar el capítulo (posible rendimiento; más visible en «Es hora de entrenar a las chicas malas» y «¡Nunca me doblegaré!», capítulos largos).
 - **F102 iOS:** investigar la instalación lateral y la extensión de iOS (P-199).
 - 🧍 **FA3:** quizá entre el primer artista el 2026-11-28.

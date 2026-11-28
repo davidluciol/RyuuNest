@@ -186,8 +186,8 @@
     "semantic_hash": ""
   },
   "packages/core/src/contract/types.ts": {
-    "mtime": 1795896683.8912978,
-    "seen": 1795896820.4010952,
+    "mtime": 1795896977.8622205,
+    "seen": 1795897119.4105105,
     "ast_hash": "5e2f134ce76f42117e7fd376168677d0",
     "semantic_hash": ""
   },
@@ -468,8 +468,8 @@
     "semantic_hash": ""
   },
   "packages/module-sdk/src/manifest.ts": {
-    "mtime": 1795896683.8902948,
-    "seen": 1795896820.4015262,
+    "mtime": 1795896977.8632243,
+    "seen": 1795897119.410785,
     "ast_hash": "3185288e295169bcfffb999346f48ffd",
     "semantic_hash": ""
   },
@@ -522,8 +522,8 @@
     "semantic_hash": ""
   },
   "packages/module-sdk/tests/manifest.test.ts": {
-    "mtime": 1795896674.9329255,
-    "seen": 1795896820.4015615,
+    "mtime": 1795896977.8647344,
+    "seen": 1795897119.4108036,
     "ast_hash": "6706b6d2783d3a9e65dc812ca2997623",
     "semantic_hash": ""
   },
@@ -942,9 +942,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1795896801.864533,
-    "seen": 1795896820.4020164,
-    "ast_hash": "8dd7b2f852ba44e4b6d48594df6af615",
+    "mtime": 1795897102.7654862,
+    "seen": 1795897119.411118,
+    "ast_hash": "3044191930e4f01cb4098bb0fe05c2cb",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-foreground.png": {
@@ -2130,20 +2130,20 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/discover/DiscoverScreen.tsx": {
-    "mtime": 1795896707.7063243,
-    "seen": 1795896820.3999467,
+    "mtime": 1795896977.5300903,
+    "seen": 1795897119.4093301,
     "ast_hash": "2a1ab89004ef2187814f7e255802a979",
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/discover/discoverData.ts": {
-    "mtime": 1795896707.7053237,
-    "seen": 1795896820.3999565,
+    "mtime": 1795896977.5310905,
+    "seen": 1795897119.4093404,
     "ast_hash": "81c3d7674101724e1bd71c9f44ade3f0",
     "semantic_hash": ""
   },
   "apps/mobile/src/screens/discover/discoverFixtures.ts": {
-    "mtime": 1795896707.7043154,
-    "seen": 1795896820.3999627,
+    "mtime": 1795896977.5321188,
+    "seen": 1795897119.4093463,
     "ast_hash": "8a6191e1d1c9cdfe00d2eb752b693ac0",
     "semantic_hash": ""
   },
@@ -2196,9 +2196,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/tests/screens/discoverInstalled.test.ts": {
-    "mtime": 1795896697.3891873,
-    "seen": 1795896820.4006178,
-    "ast_hash": "ef3f947a715ab810a1e98d0adec12167",
+    "mtime": 1795896977.5336225,
+    "seen": 1795897119.4100258,
+    "ast_hash": "38a4bd1dee3f4a91bf232f7df07a237e",
     "semantic_hash": ""
   },
   "apps/mobile/tests/e2e/markers.cjs": {
@@ -3774,8 +3774,8 @@
     "semantic_hash": ""
   },
   "apps/web/src/screens/discover/DiscoverScreen.tsx": {
-    "mtime": 1795896707.7073393,
-    "seen": 1795896820.4008534,
+    "mtime": 1795896977.5356839,
+    "seen": 1795897119.410272,
     "ast_hash": "430447cd0dcb2bc41bb22007328f96be",
     "semantic_hash": ""
   },
@@ -6456,15 +6456,15 @@
     "semantic_hash": ""
   },
   "apps/mobile/plugins/withOkHttpPing.js": {
-    "mtime": 1795373755.0899632,
-    "seen": 1795468223.6261358,
-    "ast_hash": "f6c94b85ce26b62aad2be83470803516",
+    "mtime": 1795897021.2443051,
+    "seen": 1795897119.4087431,
+    "ast_hash": "fb8899531a07e0dc867952990c20cec7",
     "semantic_hash": ""
   },
   "apps/mobile/tests/plugins/okHttpPing.test.ts": {
-    "mtime": 1795373755.108601,
-    "seen": 1795468223.6266887,
-    "ast_hash": "6a923edcca265b07e6b215c6e0b39bcf",
+    "mtime": 1795897010.2147434,
+    "seen": 1795897119.4099474,
+    "ast_hash": "07c0e1a6b6855b8c4682917defa13928",
     "semantic_hash": ""
   },
   "apps/mobile/src/reader/pageQueue.ts": {
@@ -6696,9 +6696,9 @@
     "semantic_hash": ""
   },
   "docs/MEMORY.md": {
-    "mtime": 1795896801.863495,
-    "seen": 1795896820.4019668,
-    "ast_hash": "73f0f31463a933ba153063c3a4923f2b",
+    "mtime": 1795897102.7644813,
+    "seen": 1795897119.4110668,
+    "ast_hash": "8da6fa8f112301286b7b1b8db2a209a1",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/dragonPath.ts": {
