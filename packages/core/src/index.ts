@@ -19,6 +19,7 @@ export * from "./contract/repoIndex.js";
 export * from "./contract/types.js";
 export * from "./diagnostics/LogStore.js";
 export * from "./diagnostics/errorReporter.js";
+export * from "./diagnostics/report.js";
 export * from "./diagnostics/sanitize.js";
 export * from "./host/ModuleHost.js";
 export * from "./host/challenge.js";

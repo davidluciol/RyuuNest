@@ -6,6 +6,7 @@ import Button from "../../../../components/Button";
 import ErrorBanner from "../../../../components/ErrorBanner";
 import LoadingState from "../../../../components/LoadingState";
 import { retryWithChallenge } from "../../../../data/appChallenge";
+import { appReport } from "../../../../data/appReport";
 import { t } from "../../../../i18n";
 import ReaderScreen from "../../../../screens/reader/ReaderScreen";
 import { useReader } from "../../../../screens/reader/useReader";
@@ -26,7 +27,12 @@ export default function ReaderRoute() {
     chapterId: string;
     release?: string;
   }>();
-  const { view, actions, preload } = useReader({ moduleId, seriesId, chapterId, releaseId: release });
+  const { view, actions, preload } = useReader({
+    moduleId,
+    seriesId,
+    chapterId,
+    releaseId: release,
+  });
 
   // Cerrar vuelve a la ficha; si el lector se abrió directo, no hay atrás y se abre la ficha.
   const close = () => {
@@ -60,6 +66,9 @@ export default function ReaderRoute() {
             actionLabel={t("actions.retry")}
             onAction={retryWithChallenge(moduleId, view.error, actions.retry)}
             detailLabel={t("actions.showDetail")}
+            onReport={() =>
+              void appReport.open({ code: view.error.code, message: view.error.cause, moduleId })
+            }
             testID="reader-error-banner"
           />
         </View>

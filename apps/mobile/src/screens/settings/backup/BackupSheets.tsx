@@ -4,6 +4,7 @@ import { activeColors, spacing, typography } from "@ryuunest/ui-tokens";
 import Button from "../../../components/Button";
 import ConfirmSheet from "../../../components/ConfirmSheet";
 import ErrorDialog from "../../../components/ErrorDialog";
+import { appReport } from "../../../data/appReport";
 import { kindLabel } from "../../../components/kindLabel";
 import ModuleRow from "../../../components/ModuleRow";
 import SheetModal from "../../../components/SheetModal";
@@ -230,6 +231,10 @@ export default function BackupSheets({ flow, controller }: BackupSheetsProps) {
         retryLabel={t("actions.retry")}
         onRetry={controller.close}
         onClose={controller.close}
+        onReport={() => {
+          controller.close();
+          void appReport.open({ code: flow.reason, message: flow.error });
+        }}
         testID="dialog-backup-import-error"
       />
     );

@@ -18,7 +18,11 @@ export interface AppLink {
 export const APP_LINKS: readonly AppLink[] = [
   { id: "source", labelKey: "about.links.source", url: "https://github.com/davidluciol/RyuuNest" },
   // shortcut: el repo aún no tiene LICENSE; cuando lo tenga, enlazar a `…/blob/master/LICENSE`.
-  { id: "license", labelKey: "about.links.license", url: "https://github.com/davidluciol/RyuuNest/blob/master/LICENSE" },
+  {
+    id: "license",
+    labelKey: "about.links.license",
+    url: "https://github.com/davidluciol/RyuuNest/blob/master/LICENSE",
+  },
 ];
 
 export interface ThirdPartyCredit {
@@ -33,3 +37,10 @@ export const THIRD_PARTY_CREDITS: readonly ThirdPartyCredit[] = [
   { name: "Lucide", license: "ISC" },
   { name: "Tabler Icons", license: "MIT" },
 ];
+
+/**
+ * F103 — canales de «Mandar reporte» (P-198): GitHub (atención prioritaria,
+ * requiere cuenta) y correo (más lento). Los envía el usuario a mano (RNF-5).
+ */
+export const REPORT_GITHUB_REPO = "https://github.com/davidluciol/RyuuNest";
+export const REPORT_EMAIL = "potigameplays@gmail.com";

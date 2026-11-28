@@ -14,10 +14,10 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 | Sección | Lote sugerido (una sesión) |
 |---|---|
 | Recursos | F101 → F75 → F74 → F70 → F71 (FA3 y F102 son 🧍) |
-| Portales | F42 (decidir) → T45 → hallazgo ZonaTMO → F100 (cuando Cloudflare bloquee) |
+| Portales | bug FanFox → hallazgo ZonaTMO → T45 (decidir) → F100 (cuando Cloudflare bloquee) |
 | Ajustes | AB4 → cookies |
 | Lector | plural de carpetas → R2 (APK) → F17 (grupo) |
-| General | F103 (tras elegir canal) → G5 → G3/T05 |
+| General | F103 (restos) → G5 → G3/T05 |
 
 ---
 
@@ -52,9 +52,11 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 - [ ] Coste de listas: una petición a `galleries/<id>.js` por tarjeta (24 por página); valorar `galleryblock` o tarjetas perezosas
 - [ ] 🧍 Comprobar en el teléfono que el adaptador HTTP pasa `Range` (206/416)
 
-### F42 Restos de permisos y «disponibles» `[FE · Baja · N2]` 🧍
+### F42 Cierre en el teléfono `[FE · Baja · N1]` 🧍
 
-- [ ] Decidir: V3 botón primario verde (choca con el naranja de `progress`), N21 sin chevrón (no hay pantalla de idiomas) y si la web conserva título y píldoras
+> Hecho en código (PR #179, P-200): botón de instalar primario, permisos en línea propia en la web, un solo primario y aviso de éxito neutro en Portales web; «Idioma» sin chevrón.
+
+- [ ] 🧍 Ver la hoja «Instalar módulo» con el botón verde en el teléfono
 
 ### F100 Anti-bot con navegador nativo: medición `[BE/FE · Alta · N4]` 🧍
 
@@ -69,6 +71,15 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 ### Hallazgo · ZonaTMO falla en algunas fichas `[BE · Baja · N2]` (repo `RyuuNest-Models`)
 
 - [ ] «El Mejor Ingeniero del Mundo» (`/library/manhwa/30664/…`) da `PARSE`: falta `h1.element-title`. Revisar el selector con un fixture guardado
+
+### Bug · FanFox: serie +18 con 0 capítulos en la ficha `[BE · Intermedia · N3]` (repo `RyuuNest-Models`, issue #30)
+
+- [ ] En `https://fanfox.net/manga/isekai_meikyuu_de_harem_o/` el sitio muestra un aviso +18 que hay que pulsar para ver los capítulos. La app dice «113 capítulos», pero al abrir la ficha salen 0. Probable: `details` recibe el HTML del aviso. Guardar fixtures (aviso y lista), pasar el aviso (cookie o parámetro) en `details`, subir la versión y `index.json`
+- [ ] 🧍 En el teléfono: la ficha muestra los capítulos y el lector abre uno
+
+### Posible bug · ZonaTMO: el lector se traba al bajar rápido `[FE · Alta · N4]` 🧍
+
+- [ ] Al deslizar rápido hacia abajo justo cuando el capítulo termina de cargar, el lector vertical se vuelve lento y se «traba» (visto en 3 mangas; más en dos largos: «Es hora de entrenar a las chicas malas» y «¡Nunca me doblegaré!»). Medir antes de tocar: cuadros (`dumpsys gfxinfo`), memoria y descargas con APK; comparar con otro módulo para saber si es del lector o de ZonaTMO (tamaño de las imágenes)
 
 ### VisorManga fuera del índice `[Ops · Baja · N1]` 🧍
 
@@ -178,28 +189,25 @@ Dep: F22 · `apps/mobile/src/screens/reader/tv/*`
 
 ### F102 Configuración para iPhone (iOS) `[Ops · Baja · N2]` 🧍
 
-- [ ] `ios.bundleIdentifier` (propuesta: `io.github.davidluciol.ryuunest`), `supportsTablet` y perfil de EAS para iOS
-- [ ] 🧍 Decidir la distribución: SPEC P-3 solo contempla APK y PWA; iOS exige Apple Developer o instalación lateral. Si cambia el alcance, actualizar el SPEC antes
+> **Decidido (P-199, humano 2026-11-27):** sí habrá iOS, **solo** si se puede instalar fuera de la App Store como un APK (instalación lateral) o como extensión para iOS. Sin App Store.
+
+- [ ] Investigar (con fuentes, sin suponer) las vías de instalación lateral de un `.ipa` y de una extensión de Safari en iOS fuera de la App Store: requisitos, coste (cuenta de Apple Developer), caducidad de la firma y países donde aplica. Presentar 2–3 opciones al humano
+- [ ] Si alguna es viable: actualizar SPEC P-3, luego `ios.bundleIdentifier` (propuesta: `io.github.davidluciol.ryuunest`), `supportsTablet` y perfil de EAS para iOS
 - Verif: `eas build -p ios --profile preview` (o `expo prebuild -p ios`) sin errores de configuración
 
 ---
 
 ## 🗂️ General
 
-### F103 «Mandar reporte»: reporte revisado por el usuario → issues de GitHub `[FE/Ops · Intermedia · N3]` 🧍
+### F103 «Mandar reporte»: restos `[FE/Ops · Baja · N2]` 🧍
 
-Dep: F30, T36 (`core/diagnostics/sanitize.ts`) · Pedido del humano 2026-11-27
+> Hecho en el PR #180 (P-198): núcleo (limpieza, huella, enlaces con tope), hoja con dos canales (GitHub prioritario, correo más lento), botón en `ErrorBanner`/`ErrorDialog` (lector y respaldo) y en Diagnóstico, galería, Playwright 426/1440 y Action `reportes.yml` que agrupa duplicados por huella.
 
-> **Bloqueo:** RNF-5 permite que el usuario **revise y envíe a mano** con una app suya; un envío directo a un servidor o relé (C) exige cambiar el SPEC. 🧍 Elegir canal(es).
-
-- [ ] Botón «Mandar reporte» en `ErrorDialog`, `ErrorBanner`, error por página del lector y Ajustes → Diagnóstico
-- [ ] Hoja de revisión con **todo** lo que sale, editable solo en «Detalles». Obligatorio: código de error, módulo + versión, versión de la app, plataforma y SO, huella, fecha. Opcional: detalles (con tope) y las últimas N entradas del registro
-- [ ] Limpieza con `sanitize.ts` + quitar dominio, IDs de series/capítulos y títulos; avisar de que el texto es público. Pruebas con fixtures de cada dato sensible
-- [ ] Nada sale sin pulsar «Enviar»; textos en i18n, galería, áreas ≥48, sin animación en el lector
-- [ ] Huella: `sha256(código + módulo + versión mayor.menor + mensaje normalizado + 3 primeros marcos normalizados)`, 12 hex, en título (`[fp:ab12cd34ef56] …`) y cuerpo. Tests: iguales ⇒ misma huella
-- [ ] GitHub: plantilla `.github/ISSUE_TEMPLATE/reporte-error.yml`; la app abre `issues/new?…` (límite ~8 KB de URL); buscar antes la huella con la API pública y ofrecer «Ya está reportado»; Action que comenta y cierra duplicados o etiqueta y da de alta en GitHub Projects con «Ocurrencias»
-- [ ] 🧍 Canal para quien no tiene GitHub: **A** Telegram (sin token del bot en el APK), **B** `mailto:`, **C** relé Cloudflare Workers (cambia RNF-5), **D** hoja de compartir/portapapeles, **E** formulario web. Recomendación: GitHub + D + (A o B)
-- Verif: tests de limpieza y huella, galería + Playwright + 🧍 POCO (reporte de prueba a un repo o canal de pruebas)
+- [ ] 🧍 En el teléfono: mandar un reporte de prueba por cada canal (GitHub abre `issues/new` relleno; correo abre la app con asunto y cuerpo); comprobar que la Action etiqueta o cierra el duplicado
+- [ ] Botón en el error **por página** del lector (`ReaderPagePlaceholder`) y versión del módulo en el reporte del lector (hoy solo va el id)
+- [ ] Copiar el reporte al portapapeles como tercera vía; buscar la huella antes de abrir el issue («Ya está reportado»)
+- [ ] GitHub Projects con campo «Ocurrencias» (la Action necesita un token con permiso de proyectos; pedirlo al humano)
+- [ ] (después) Bot de Telegram: sin token en el APK; solo si el correo funciona bien
 
 ### G5 Manejador del enlace `ryuunest://add-repo` `[FE · Intermedia · N3]`
 

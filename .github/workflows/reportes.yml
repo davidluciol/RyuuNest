@@ -1,0 +1,42 @@
+# F103 — «Mandar reporte» (P-198): la app abre un issue con la huella del error
+# en el título (`[fp:<12 hex>] …`). Si ya hay uno abierto con la misma huella,
+# se suma el caso al original y el nuevo se cierra como duplicado; si no, se
+# etiqueta `reporte-usuario`. Solo usa `gh` del runner (sin acciones de terceros).
+name: Reportes de la app
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  agrupar:
+    if: startsWith(github.event.issue.title, '[fp:')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Agrupar por huella
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          # El título es texto del usuario: va por variable, nunca interpolado en el script.
+          TITLE: ${{ github.event.issue.title }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          fp=$(printf '%s' "$TITLE" | grep -oE '^\[fp:[0-9a-f]{12}\]' | grep -oE '[0-9a-f]{12}' || true)
+          if [ -z "$fp" ]; then
+            echo "Título sin huella válida; nada que hacer."
+            exit 0
+          fi
+          gh label create reporte-usuario --color FF9F43 --description "Reporte enviado desde la app" 2>/dev/null || true
+          original=$(gh issue list --state open --search "\"fp:$fp\" in:title" --json number \
+            --jq "map(.number | select(. != $NUMBER)) | min // empty")
+          if [ -n "$original" ]; then
+            gh issue comment "$original" --body "Otro caso del mismo error: #$NUMBER (huella \`fp:$fp\`)."
+            gh issue close "$NUMBER" --reason "not planned" \
+              --comment "Gracias. Ya estaba reportado en #$original; sumamos tu caso allí."
+            gh issue edit "$NUMBER" --add-label duplicate
+          else
+            gh issue edit "$NUMBER" --add-label reporte-usuario
+          fi
