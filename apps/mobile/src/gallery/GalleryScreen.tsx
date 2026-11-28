@@ -169,6 +169,7 @@ export default function GalleryScreen() {
   const [reportDetails, setReportDetails] = useState("");
   const [reportLog, setReportLog] = useState(false);
   const [reportFailed, setReportFailed] = useState(false);
+  const [reportCopied, setReportCopied] = useState(false);
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   // F93: «Gestionar carpetas» con carpetas propias, sin ellas y la hoja de edición.
   const [manageOpen, setManageOpen] = useState<"list" | "empty" | "edit" | null>(null);
@@ -883,9 +884,13 @@ export default function GalleryScreen() {
           onIncludeLogChange={setReportLog}
           sendFailed={reportFailed}
           onSend={() => setReportFailed(true)}
+          onCopy={() => setReportCopied(true)}
+          copied={reportCopied}
+          onSearchExisting={() => undefined}
           onClose={() => {
             setReportOpen(false);
             setReportFailed(false);
+            setReportCopied(false);
           }}
         />
 

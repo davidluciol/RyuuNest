@@ -31,6 +31,7 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 - **T45 Hitomi (2026-11-28, Models #31):** búsqueda por título y varias palabras con el índice B-tree del sitio (SHA-256 en JS puro, nodos de 464 bytes por `Range`), cruzada con el idioma; probada en vivo («ceniza» → «Nieve Color Ceniza»). La app acepta `searchHint` en el manifiesto como pista del buscador (móvil y web).
 - **Cookie del módulo en Android (2026-11-28, Models #30):** OkHttp sustituía la cabecera `Cookie` del módulo por la del tarro del WebView en cuanto este tenía cookies del dominio; por eso FanFox +18 salía con 0 capítulos aunque el módulo manda `isAdult=1`. El plugin `withOkHttpPing` aparta la cookie del módulo y la vuelve a unir (primero la del módulo). Falta compilar el APK y probarlo en el teléfono.
 - **Enlace `ryuunest://add-repo` (2026-11-28, G5):** la ruta `app/add-repo.tsx` solo redirige a Portales con la URL y Portales abre la hoja «Añadir repositorio» rellena (sin oyentes de `Linking`; la guarda de `deepLink.test.ts` lo vigila). ZonaTMO 30664 ya estaba resuelta en 0.3.1 (Models #35).
+- **F103 restos (2026-11-28):** «Mandar reporte» en el error por página del lector; versión del módulo instalado añadida sola al reporte (`appReport` la busca en `ModuleRegistry`); «Copiar el reporte» (portapapeles) y «¿Ya está reportado?» (búsqueda de la huella en issues, en el navegador).
 - **Release (2026-11-27):** Acerca de con artistas (móvil y web), raíz ordenada (`docs/`), licencias GPL-3.0 + CC BY-NC-ND 4.0, logo final, iconos de app/web/extensión y APK 1.0.0.
 
 ## 3. Decisiones vigentes (resumen; detalle en el archivo)
@@ -77,7 +78,11 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 ## 4. Pendientes y preguntas abiertas
 
 - 🧍 **Verificar con el APK 1.0.0** todo lo hecho sin prueba en el teléfono (lista en `tasks/todo.md`).
-- **Issues abiertos (2026-11-28):** #181 leídos, #182 lag de Aventuras, #183 aviso de Cloudflare; Models #31 Hitomi por título.
+- **Tanda del 2026-11-28 (P-201), estado para retomar:**
+  - Hecho y fusionado: #180 (F103 núcleo y hoja), #184 leídos + «marcar anteriores» (issue #181), #185 Aventuras con FlashList (#182), #186 `antiBot` + nota de Cloudflare (#183), #187 `searchHint` (T45), #188 cookie del módulo en Android (FanFox +18), #189 enlace `ryuunest://add-repo` (G5), y el PR de F103 restos (rama `feature/F103-restos`). Models: #32 antiBot (m440 0.2.3, luscious 0.1.5, yupmanga 0.2.1), #33 hitomi 0.2.0 búsqueda por título (cierra #31), #34 fanfox 0.1.3 (cierra #30), #35 ZonaTMO 30664 ya resuelta.
+  - **Falta de la tanda:** tarea 9, preparar la medición de cookies (registro de diagnóstico de si el `fetch` de RN manda `cf_clearance` del CookieManager; sin quitar la librería); tarea 10, plural de carpetas («1 obras», `FolderCard.tsx:50`, claves `.one/.other`) + AB4 (enlace «Documentación» en `about/appInfo.ts`, móvil y web).
+  - **Prueba en el teléfono (al final, con APK nuevo):** ver la sección «Verificar con el APK» de `tasks/todo.md` (#181, #182, #183, T45/Hitomi `Range`, FanFox +18, G5 con `adb shell am start -d`, ZonaTMO 30664, reporte por página y «Copiar»). El Kotlin del plugin OkHttp (#188) solo se compila en el APK: si el build falla, empezar por ahí.
+  - Issues cerrados por los PR: #181, #182, #183 (RyuuNest); #30, #31 (Models).
 - 🐞 **FanFox +18:** causa en la app (cookie del módulo pisada por el tarro de OkHttp); arreglado en código, falta el APK (Models #30).
 - 🐞 **ZonaTMO:** el lector se traba al bajar rápido tras cargar el capítulo (posible rendimiento; más visible en «Es hora de entrenar a las chicas malas» y «¡Nunca me doblegaré!», capítulos largos).
 - **F102 iOS:** investigar la instalación lateral y la extensión de iOS (P-199).

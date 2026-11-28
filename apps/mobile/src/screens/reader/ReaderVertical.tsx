@@ -23,7 +23,7 @@ import {
 } from "../../reader/verticalLayout";
 import { isAtScrollEnd } from "../../reader/readerLayout";
 import FocusPressable from "../../components/FocusPressable";
-import ReaderPageImage from "./ReaderPageImage";
+import ReaderPageImage, { type PageReport } from "./ReaderPageImage";
 import type { ReaderImage } from "./readingSource";
 
 /**
@@ -60,6 +60,8 @@ export interface ReaderVerticalProps {
    */
   onPress: (pageX: number) => void;
   onLongPress: () => void;
+  /** F103: «Mandar reporte» desde el error de una página. */
+  onReportPage?: (failure: PageReport) => void;
 }
 
 const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
@@ -76,6 +78,7 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
       onEndChange,
       onPress,
       onLongPress,
+      onReportPage,
     },
     ref,
   ) {
@@ -188,6 +191,7 @@ const ReaderVertical = forwardRef<ReaderVerticalHandle, ReaderVerticalProps>(
                 fit="fill"
                 testID={`reader-page-${index}`}
                 onAspect={onAspect}
+                {...(onReportPage === undefined ? {} : { onReport: onReportPage })}
               />
             </View>
           ))}

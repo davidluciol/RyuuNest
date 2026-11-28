@@ -18,6 +18,7 @@ import ReaderEndCard from "./ReaderEndCard";
 import ConfirmSheet from "../../components/ConfirmSheet";
 import { previousUnread } from "../../reader/readingOrder";
 import ReaderPaged from "./ReaderPaged";
+import type { PageReport } from "./ReaderPageImage";
 import { ReaderChaptersSheet, ReaderModeSheet } from "./ReaderSheets";
 import ReaderVertical, { type ReaderVerticalHandle } from "./ReaderVertical";
 import { FALLBACK_READER_MODE, modeLabel } from "./readerModes";
@@ -46,6 +47,8 @@ export interface ReaderScreenProps {
   actions: ReaderActions;
   onClose: () => void;
   onOpenChapter: (chapterId: string, releaseId: string | null) => void;
+  /** F103: «Mandar reporte» desde el error de una página. */
+  onReportPage?: (failure: PageReport) => void;
 }
 
 type Sheet = "mode" | "chapters" | "previous" | null;
@@ -56,6 +59,7 @@ export default function ReaderScreen({
   actions,
   onClose,
   onOpenChapter,
+  onReportPage,
 }: ReaderScreenProps) {
   const { snapshot, images, chapter, next } = ready;
   const mode: ReaderMode = snapshot.mode ?? FALLBACK_READER_MODE;
@@ -194,6 +198,7 @@ export default function ReaderScreen({
                 onEndChange={setVerticalAtEnd}
                 onPress={onCanvasPress}
                 onLongPress={showControls}
+                {...(onReportPage === undefined ? {} : { onReportPage })}
               />
             ) : endCard ? (
               <View style={{ flex: 1, justifyContent: "center" }}>{endCardView}</View>
@@ -204,6 +209,7 @@ export default function ReaderScreen({
                 pageIndex={snapshot.pageIndex}
                 width={column}
                 height={size.height}
+                {...(onReportPage === undefined ? {} : { onReportPage })}
               />
             )}
           </View>

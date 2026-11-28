@@ -18,6 +18,9 @@ export default function ReportHost() {
       sending={state.sending}
       sendFailed={state.sendFailed}
       onSend={(channel) => void appReport.send(channel)}
+      onCopy={() => void appReport.copy()}
+      copied={state.copied}
+      onSearchExisting={() => void appReport.searchExisting()}
       onClose={appReport.close}
     />
   );

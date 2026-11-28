@@ -85,6 +85,7 @@ export default function ReaderRoute() {
       preload={preload}
       actions={actions}
       onClose={close}
+      onReportPage={(failure) => void appReport.open({ ...failure, moduleId })}
       onOpenChapter={(nextChapterId, releaseId) =>
         router.replace({
           pathname: "/reader/[moduleId]/[seriesId]/[chapterId]",
