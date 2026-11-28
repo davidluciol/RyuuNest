@@ -75,6 +75,10 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 - [ ] En `https://fanfox.net/manga/isekai_meikyuu_de_harem_o/` el sitio muestra un aviso +18 que hay que pulsar para ver los capítulos. La app dice «113 capítulos», pero al abrir la ficha salen 0. Probable: `details` recibe el HTML del aviso. Guardar fixtures (aviso y lista), pasar el aviso (cookie o parámetro) en `details`, subir la versión y `index.json`
 - [ ] 🧍 En el teléfono: la ficha muestra los capítulos y el lector abre uno
 
+### Posible bug · ZonaTMO: el lector se traba al bajar rápido `[FE · Alta · N4]` 🧍
+
+- [ ] Al deslizar rápido hacia abajo justo cuando el capítulo termina de cargar, el lector vertical se vuelve lento y se «traba» (manga por confirmar con el humano). Medir antes de tocar: cuadros (`dumpsys gfxinfo`), memoria y descargas con APK; comparar con otro módulo para saber si es del lector o de ZonaTMO (tamaño de las imágenes)
+
 ### VisorManga fuera del índice `[Ops · Baja · N1]` 🧍
 
 - [ ] Republicarlo (entrada con el `.zip` 0.1.1) cuando vuelva su CDN `imgvtmo.com`
@@ -197,7 +201,7 @@ Dep: F22 · `apps/mobile/src/screens/reader/tv/*`
 
 Dep: F30, T36 (`core/diagnostics/sanitize.ts`) · Pedido del humano 2026-11-27
 
-> **Canal decidido (P-198, humano 2026-11-27):** v1 = **correo** (`mailto:` a `potigameplays@gmail.com`), dentro de RNF-5 porque el usuario revisa y envía a mano. Un bot de Telegram queda para después, si el correo va bien. Las partes de GitHub de abajo siguen como plan para quien tenga cuenta.
+> **Canales decididos (P-198, humano 2026-11-27):** la hoja de reporte ofrece **dos** botones: **GitHub** («La atención será prioritaria»; requiere cuenta) y **correo** a `potigameplays@gmail.com` («Será más lenta, pero lo atenderemos»). Ambos los envía el usuario a mano (cabe en RNF-5). Un bot de Telegram queda para después.
 
 - [ ] Botón «Mandar reporte» en `ErrorDialog`, `ErrorBanner`, error por página del lector y Ajustes → Diagnóstico
 - [ ] Hoja de revisión con **todo** lo que sale, editable solo en «Detalles». Obligatorio: código de error, módulo + versión, versión de la app, plataforma y SO, huella, fecha. Opcional: detalles (con tope) y las últimas N entradas del registro
@@ -205,7 +209,8 @@ Dep: F30, T36 (`core/diagnostics/sanitize.ts`) · Pedido del humano 2026-11-27
 - [ ] Nada sale sin pulsar «Enviar»; textos en i18n, galería, áreas ≥48, sin animación en el lector
 - [ ] Huella: `sha256(código + módulo + versión mayor.menor + mensaje normalizado + 3 primeros marcos normalizados)`, 12 hex, en título (`[fp:ab12cd34ef56] …`) y cuerpo. Tests: iguales ⇒ misma huella
 - [ ] GitHub: plantilla `.github/ISSUE_TEMPLATE/reporte-error.yml`; la app abre `issues/new?…` (límite ~8 KB de URL); buscar antes la huella con la API pública y ofrecer «Ya está reportado»; Action que comenta y cierra duplicados o etiqueta y da de alta en GitHub Projects con «Ocurrencias»
-- [ ] Correo: «Enviar» abre la app de correo con `mailto:potigameplays@gmail.com`, asunto `[fp:…] <código> en <módulo> <versión>` y el cuerpo ya limpio (cuidar el largo de la URL `mailto:`; si no cabe, recortar el registro). Avisar en la tarjeta de que el proyecto verá el correo del usuario. Respaldo: copiar al portapapeles
+- [ ] Dos botones en la hoja: «Enviar por GitHub» (subtítulo «La atención será prioritaria») y «Enviar por correo» («Será más lenta, pero lo atenderemos»)
+- [ ] Correo: el botón abre la app de correo con `mailto:potigameplays@gmail.com`, asunto `[fp:…] <código> en <módulo> <versión>` y el cuerpo ya limpio (cuidar el largo de la URL `mailto:`; si no cabe, recortar el registro). Avisar en la tarjeta de que el proyecto verá el correo del usuario. Respaldo: copiar al portapapeles
 - [ ] (después) Bot de Telegram: sin token en el APK; solo si el correo funciona bien
 - Verif: tests de limpieza y huella, galería + Playwright + 🧍 POCO (reporte de prueba a un repo o canal de pruebas)
 
