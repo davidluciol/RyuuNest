@@ -335,6 +335,7 @@
   "sources.badge.disabled": "Desactivado",
   "sources.badge.script": "Ejecuta código",
   "sources.badge.nsfw": "NSFW",
+  "sources.antiBotNote": "Este sitio a veces te pedirá resolver un reto de Cloudflare antes de dejarte pasar.",
   "sources.install.nsfwWarning": "Estás instalando un módulo NSFW: puede mostrar contenido para adultos, sexual o explícito.",
   "nsfw.first.title": "Contenido para adultos",
   "nsfw.first.message": "«{name}» es un módulo NSFW: puede mostrar contenido para adultos, sexual o explícito.",

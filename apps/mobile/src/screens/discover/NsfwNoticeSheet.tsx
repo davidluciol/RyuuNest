@@ -16,14 +16,22 @@ const colors = activeColors;
 
 export interface NsfwNoticeSheetProps {
   moduleName: string;
+  /** #183: el sitio a veces pide resolver un reto anti-bot; se avisa aquí también. */
+  antiBot?: boolean;
   onContinue: () => void;
   onBack: () => void;
 }
 
-export default function NsfwNoticeSheet({ moduleName, onContinue, onBack }: NsfwNoticeSheetProps) {
+export default function NsfwNoticeSheet({
+  moduleName,
+  antiBot = false,
+  onContinue,
+  onBack,
+}: NsfwNoticeSheetProps) {
   return (
     <SheetModal visible title={t("nsfw.first.title")} onClose={onBack} testID="sheet-nsfw-notice">
       <Text style={styles.message}>{t("nsfw.first.message", { name: moduleName })}</Text>
+      {antiBot ? <Text style={styles.message}>{t("sources.antiBotNote")}</Text> : null}
       <View style={styles.actions}>
         <Button variant="secondary" label={t("nsfw.first.back")} onPress={onBack} />
         <Button label={t("nsfw.first.continue")} onPress={onContinue} />

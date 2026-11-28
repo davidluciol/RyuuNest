@@ -69,6 +69,7 @@ export default function InstallSheet({
       </FocusPressable>
       {hashOpen ? <Text style={styles.hash}>{preview.sha256}</Text> : null}
       {preview.nsfw ? <Text style={styles.warning}>{t(NSFW_INSTALL_WARNING_KEY)}</Text> : null}
+      {preview.antiBot ? <Text style={styles.warning}>{t("sources.antiBotNote")}</Text> : null}
       {preview.reinforced ? (
         <Text style={styles.warning}>{t("sources.install.scriptWarning")}</Text>
       ) : null}

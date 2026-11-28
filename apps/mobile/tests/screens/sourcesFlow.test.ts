@@ -20,6 +20,7 @@ const preview = (overrides: Partial<InstallPreview> = {}): InstallPreview => ({
   name: "M",
   version: "1.0.0",
   runtime: "declarative",
+  antiBot: false,
   kinds: ["manga"],
   lang: "es",
   nsfw: false,

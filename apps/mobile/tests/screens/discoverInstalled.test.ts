@@ -268,3 +268,11 @@ describe("createInstalledDiscoverSource · aviso NSFW de primera vez (F45)", () 
     expect(fila?.value).toBe("1");
   });
 });
+
+describe("createInstalledDiscoverSource · antiBot (#183)", () => {
+  it("marca el módulo cuyo sitio a veces pide un reto anti-bot", async () => {
+    await seed(packageFor(manifest({ id: "m-reto", name: "Módulo con reto", antiBot: true })));
+    const source = createInstalledDiscoverSource({ driver, http: siteHttp() });
+    expect((await source.listModules())[0]).toMatchObject({ id: "m-reto", antiBot: true });
+  });
+});
