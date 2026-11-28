@@ -23,8 +23,11 @@ interface Manifest {
   externally_connectable?: unknown;
   web_accessible_resources?: unknown;
   browser_specific_settings?: { gecko?: { id?: string } };
-  action?: unknown;
+  action?: { default_title?: string; default_icon?: Record<string, string> };
+  icons?: Record<string, string>;
 }
+
+const ICON_SIZES = ["16", "32", "48", "128"];
 
 const manifest: Manifest = manifestJson;
 
@@ -78,6 +81,12 @@ describe("manifest.json", () => {
   it("trae página de opciones (ahí se autorizan los dominios) y botón de la barra", () => {
     expect(manifest.options_ui).toEqual({ page: "options.html", open_in_tab: true });
     expect(manifest.action).toBeDefined();
+  });
+
+  it("declara los iconos del logo (F72) en 16/32/48/128 px, también para el botón", () => {
+    const expected = Object.fromEntries(ICON_SIZES.map((size) => [size, `icons/icon-${size}.png`]));
+    expect(manifest.icons).toEqual(expected);
+    expect(manifest.action?.default_icon).toEqual(expected);
   });
 
   it("fija el ID de Firefox decidido por el humano", () => {

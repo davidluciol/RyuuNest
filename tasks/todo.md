@@ -758,12 +758,12 @@ Dep: F56 · M · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`
 
 ### F72 Iconos de la extensión `[Arte · Baja · N1]` 🧍
 
-- [ ] El manifiesto va sin `icons`: crear 16/32/48/128 px a partir del arte final del dragón (tras FA1)
+- [x] `icons` y `action.default_icon` 16/32/48/128 px (`apps/extension/icons/`; ≤32 px con el logo sin pupila, P-197); el build los copia a `dist/`
 - Verif: construir la extensión y cargarla
 
 ### F73 Icono de la app, adaptativo y pantalla de inicio `[Arte · Baja · N1]` 🧍
 
-- [ ] Sustituir `icon.png`, `android-icon-{background,foreground,monochrome}.png`, `favicon.png` y `splash-icon.png` por arte final; comprobar el icono monocromo
+- [x] `icon.png` (1024 opaco, iPhone), adaptativo (fondo `#0B0E14` + `foreground`/`monochrome` al 50 %, zona segura) y favicons con el logo (P-197); `android-icon-background.png` y `splash-icon.png` borrados (nada los usaba). Web: `favicon.svg`, `favicon.png` y `apple-touch-icon.png`. Versión 1.0.0. Falta 🧍 ver cajón y arranque en el teléfono
 - Verif: 🧍 S25 (cajón de apps y arranque)
 
 ### F74 Iconos y colores de iconos `[FE · Baja · N2]`

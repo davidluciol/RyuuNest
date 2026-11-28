@@ -8,7 +8,7 @@ import { build } from "vite";
  *  - `background.js` y `content.js`: scripts clásicos (IIFE) con todo dentro; un
  *    content script no puede ser un módulo ES y así sirve igual al fondo de Firefox.
  *  - `options.html` y sus recursos (página de opciones, donde se autorizan dominios).
- *  - `manifest.json` tal cual.
+ *  - `manifest.json` tal cual y sus iconos (`icons/`, F72).
  * Sin minificar: la revisión de las tiendas lee el código. Al final se comprueba
  * que todo archivo que el manifiesto nombra existe.
  */
@@ -47,6 +47,7 @@ await build({ configFile: at("vite.options.config.ts"), root, logLevel: "warn" }
 // Fuentes locales de la web (RNF-5: cero recursos remotos); el CSS de tokens las pide en /fonts/.
 cpSync(at("../web/public/fonts"), at("dist/fonts"), { recursive: true });
 
+cpSync(at("icons"), at("dist/icons"), { recursive: true });
 copyFileSync(at("manifest.json"), at("dist/manifest.json"));
 
 const manifest = JSON.parse(readFileSync(at("dist/manifest.json"), "utf8"));
@@ -55,6 +56,8 @@ const referenced = [
   ...(manifest.background?.scripts ?? []),
   ...(manifest.content_scripts ?? []).flatMap((entry) => entry.js ?? []),
   manifest.options_ui?.page,
+  ...Object.values(manifest.icons ?? {}),
+  ...Object.values(manifest.action?.default_icon ?? {}),
 ].filter((file) => typeof file === "string");
 const missing = referenced.filter((file) => !existsSync(at(`dist/${file}`)));
 if (missing.length > 0) {
