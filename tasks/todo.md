@@ -73,7 +73,8 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 
 ### Hallazgo · ZonaTMO falla en algunas fichas `[BE · Baja · N2]` (repo `RyuuNest-Models`)
 
-- [ ] «El Mejor Ingeniero del Mundo» (`/library/manhwa/30664/…`) da `PARSE`: falta `h1.element-title`. Revisar el selector con un fixture guardado
+- [x] Era el rediseño ya resuelto en zonatmo 0.3.1 (`h1.zt-hd__title`); comprobado en vivo el 2026-11-28 (Models #35)
+- [ ] 🧍 En el teléfono, con zonatmo 0.3.1: la ficha abre
 
 ### Bug · FanFox: serie +18 con 0 capítulos en la ficha `[BE · Intermedia · N3]` (repo `RyuuNest-Models`, issue #30)
 
@@ -214,7 +215,8 @@ Dep: F22 · `apps/mobile/src/screens/reader/tv/*`
 
 ### G5 Manejador del enlace `ryuunest://add-repo` `[FE · Intermedia · N3]`
 
-- [ ] Hoy Expo Router lo manda a una ruta inexistente. Abrir Portales con «Añadir repositorio» y la URL puesta (SPEC §7.2), sin instalar; ampliar `deepLink.test.ts`
+- [x] Ruta `app/add-repo.tsx` → Portales con la hoja rellena, sin instalar; `deepLink.test.ts` ampliado (2026-11-28)
+- [ ] 🧍 En el teléfono: `adb shell am start -d "ryuunest://add-repo?url=https://…"` abre la hoja con la URL
 
 ### G3 / T05 Tope de imágenes y cierre de T05 `[Ops · Baja · N2]` 🧍
 

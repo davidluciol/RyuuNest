@@ -12,15 +12,16 @@ import {
   type SourcesFlow,
 } from "../../src/screens/sources/sourcesFlow";
 import type { SourcesService } from "../../src/screens/sources/sourcesData";
+import { addRepoLinkUrl } from "../../src/screens/sources/addRepoLink";
 
 /**
  * T33 — enlace profundo `ryuunest://add-repo?url=…` (SPEC §7.2, AC-8): solo puede abrir
  * la confirmación, nunca instalar ni registrar nada.
  *
- * Hoy la app declara el esquema (`app.json`) pero **no maneja ningún enlace entrante**:
- * Expo Router manda `ryuunest://add-repo` a su pantalla de ruta inexistente y no pasa
- * nada. La guarda de abajo falla si alguien añade un manejador, para que lo conecte a
- * `openAddRepo(url)` (la hoja con la URL puesta) y amplíe esta prueba.
+ * G5: Expo Router lleva `ryuunest://add-repo?url=…` a la ruta `app/add-repo.tsx`, que solo
+ * redirige a Portales con la URL como parámetro; Portales la pasa a `openAddRepo(url)` (la
+ * hoja con la URL puesta). No hay oyentes de `Linking`: la guarda de abajo falla si aparece
+ * otra ruta u oyente, o si la ruta del enlace toca algo más que la redirección.
  */
 
 const MUTATIONS = [
@@ -99,17 +100,33 @@ describe("seguridad · enlace profundo add-repo (AC-8)", () => {
     expect(await service.load()).toEqual(before);
   });
 
-  it("ninguna ruta ni oyente atiende enlaces entrantes (si aparece uno, debe pasar por openAddRepo)", () => {
+  it("solo la ruta add-repo atiende el enlace, sin oyentes, y únicamente redirige a Portales", () => {
     const files = sourceFiles();
     const routes = Object.keys(files).filter((file) => /^app\/.*add-repo/.test(file));
     const listeners = Object.entries(files)
       .filter(([, code]) =>
-        /Linking\.(addEventListener|getInitialURL)|\buse(Linking)?URL\(/.test(code),
+        /Linking\.(addEventListener|getInitialURL)|use(Linking)?URL\(/.test(code),
       )
       .map(([file]) => file);
 
-    expect(Object.keys(files).length).toBeGreaterThan(0);
-    expect(routes).toEqual([]);
+    expect(routes).toEqual(["app/add-repo.tsx"]);
     expect(listeners).toEqual([]);
+    const route = files["app/add-repo.tsx"] ?? "";
+    expect(route).toMatch(/<Redirect\s/);
+    expect(route).not.toMatch(/Service|install|addRepo\(|submitAddRepo/);
+    // Portales recibe la URL y solo abre la hoja (openAddRepo), nunca la registra.
+    const sources = files["app/(tabs)/sources.tsx"] ?? "";
+    expect(sources).toMatch(/openAddRepo\(/);
+    expect(sources).not.toMatch(/submitAddRepo|\.install\(/);
+  });
+
+  it("la URL del enlace se toma tal cual (la valida la hoja al confirmar); lo raro se descarta", () => {
+    expect(addRepoLinkUrl(" https://repo.example/index.json ")).toBe("https://repo.example/index.json");
+    expect(addRepoLinkUrl(["https://a.example/index.json", "https://b.example"])).toBe(
+      "https://a.example/index.json",
+    );
+    expect(addRepoLinkUrl(undefined)).toBeNull();
+    expect(addRepoLinkUrl("")).toBeNull();
+    expect(addRepoLinkUrl(`https://x.example/${"a".repeat(3000)}`)).toBeNull();
   });
 });

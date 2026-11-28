@@ -942,9 +942,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1795897102.7654862,
-    "seen": 1795897119.411118,
-    "ast_hash": "3044191930e4f01cb4098bb0fe05c2cb",
+    "mtime": 1795897476.747852,
+    "seen": 1795897494.4013436,
+    "ast_hash": "537ab9c7ee28c73fb02707d6c68f594d",
     "semantic_hash": ""
   },
   "apps/mobile/assets/android-icon-foreground.png": {
@@ -1656,9 +1656,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/src/app/(tabs)/sources.tsx": {
-    "mtime": 1795287155.270697,
-    "seen": 1795319928.5589492,
-    "ast_hash": "6097dd99d63687da1539ae8f42afe18a",
+    "mtime": 1795897322.712285,
+    "seen": 1795897494.399328,
+    "ast_hash": "79da9d4fa78a477e8859b3e8f2403896",
     "semantic_hash": ""
   },
   "apps/mobile/src/app/_dev/gallery.tsx": {
@@ -6396,9 +6396,9 @@
     "semantic_hash": ""
   },
   "apps/mobile/tests/security/deepLink.test.ts": {
-    "mtime": 1795373755.1111674,
-    "seen": 1795468223.626778,
-    "ast_hash": "a20c0f048bdafc223837e9ac1608d1aa",
+    "mtime": 1795897368.7090318,
+    "seen": 1795897494.400506,
+    "ast_hash": "a902a0844eb5412984b53abbe2523642",
     "semantic_hash": ""
   },
   "apps/mobile/tests/tv/tvShell.test.ts": {
@@ -6456,14 +6456,14 @@
     "semantic_hash": ""
   },
   "apps/mobile/plugins/withOkHttpPing.js": {
-    "mtime": 1795897021.2443051,
-    "seen": 1795897119.4087431,
+    "mtime": 1795897277.0912478,
+    "seen": 1795897494.3992896,
     "ast_hash": "fb8899531a07e0dc867952990c20cec7",
     "semantic_hash": ""
   },
   "apps/mobile/tests/plugins/okHttpPing.test.ts": {
-    "mtime": 1795897010.2147434,
-    "seen": 1795897119.4099474,
+    "mtime": 1795897277.092269,
+    "seen": 1795897494.4004009,
     "ast_hash": "07c0e1a6b6855b8c4682917defa13928",
     "semantic_hash": ""
   },
@@ -6696,9 +6696,9 @@
     "semantic_hash": ""
   },
   "docs/MEMORY.md": {
-    "mtime": 1795897102.7644813,
-    "seen": 1795897119.4110668,
-    "ast_hash": "8da6fa8f112301286b7b1b8db2a209a1",
+    "mtime": 1795897476.7468488,
+    "seen": 1795897494.4013128,
+    "ast_hash": "d547c41b2852baf3b411a1d73b837ad3",
     "semantic_hash": ""
   },
   "apps/mobile/src/components/dragonPath.ts": {
@@ -7035,6 +7035,24 @@
     "mtime": 1795896433.819666,
     "seen": 1795896820.4022152,
     "ast_hash": "0c76a0250ac878881355ace293a16286",
+    "semantic_hash": ""
+  },
+  "apps/mobile/src/app/add-repo.tsx": {
+    "mtime": 1795897322.6338656,
+    "seen": 1795897494.399342,
+    "ast_hash": "5fc5f40a54597dc5c4ea152d5e9c9d1e",
+    "semantic_hash": ""
+  },
+  "apps/mobile/src/screens/sources/addRepoLink.ts": {
+    "mtime": 1795897322.5981953,
+    "seen": 1795897494.4001126,
+    "ast_hash": "74c6a67c3edd2bda9689c0a0a8185efc",
+    "semantic_hash": ""
+  },
+  "docs/capturasG5/g5-426.png": {
+    "mtime": 1795897476.6635416,
+    "seen": 1795897494.4022167,
+    "ast_hash": "bde437a03b0df08a8a0a4d38031b6459",
     "semantic_hash": ""
   },
   "pnpm-lock.yaml": {
