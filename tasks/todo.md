@@ -724,14 +724,14 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 ### FA1 Arte final del dragón `[Ops · Baja · N1]` 🧍 (sin dependencias; antes de v1.0 pública)
 
-- [ ] 🧍 Arte original con licencia compatible GPL-3.0; sustituir `apps/mobile/assets/placeholder/*`
-- [ ] `docs/ASSETS.md` y `README` de placeholder actualizados; retirar marca TEMPORAL
+- [x] 🧍 Logo del humano (P-197, CC BY-NC-ND 4.0) sustituye al dragón marcador: `components/dragonPath.ts`; `placeholder/dragon.svg` es ya copia del logo (las páginas del lector siguen como marcador)
+- [x] `docs/ASSETS.md` y `README` de placeholder actualizados; el dragón deja de ser TEMPORAL
 - Verif: `apps/mobile/tests/placeholder.test.ts` en verde + galería con Playwright (RNF-5)
 
 ### FA2 Logo de cabecera y bienvenida de primer uso `[Arte · Baja · N2]` 🧍
 
-- [ ] Logo pequeño del dragón para la cabecera y la ilustración grande de bienvenida (SPEC §11, tabla del dragón: «Encabezado» y «Primer uso»), con arte del artista
-- [ ] Sustituir el `DragonMarker` en `Header`/`AppShell` y en `OnboardingScreen`; ambos en la galería
+- [x] Logo pequeño del dragón para la cabecera y la ilustración grande de bienvenida (SPEC §11, tabla del dragón: «Encabezado» y «Primer uso»), con arte del artista
+- [x] `DragonMarker` dibuja el logo, así que `AppShell` y `OnboardingScreen` lo muestran sin cambios (P-197)
 - Verif: Playwright + galería + 🧍 S25
 
 ### FA3 Alta de artista en «Acerca de» `[Datos · Baja · N1]` 🧍

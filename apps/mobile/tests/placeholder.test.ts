@@ -4,15 +4,15 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 /**
- * F08 — puerta del dragón marcador (SPEC §11.12 y §12): una silueta sencilla
- * y **original** en `assets/placeholder/`, registrada como temporal, sin
+ * F08 — puerta de `assets/placeholder/` (SPEC §12): el dragón (hoy copia del logo final, FA1)
+ * y los marcadores van registrados en su README, sin
  * texto (D3), sin obras reales (D2) y sin referencias remotas (RNF-5).
  */
 
 const PLACEHOLDER_DIR = path.resolve(import.meta.dirname, "..", "assets", "placeholder");
 const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..", "..");
 
-describe("marcador de dragón (assets/placeholder)", () => {
+describe("dragón y marcadores de assets/placeholder", () => {
   const svgPath = path.join(PLACEHOLDER_DIR, "dragon.svg");
   const readmePath = path.join(PLACEHOLDER_DIR, "README.md");
 

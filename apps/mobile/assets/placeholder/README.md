@@ -5,20 +5,18 @@
 > la v1.0 pública. Ninguna pantalla depende del arte final. Los marcadores no se
 > enlazan por URL: van empaquetados aquí y se registran en `docs/ASSETS.md`.
 
-## `dragon.svg` — dragón marcador (estados vacíos, error y carga)
+## `dragon.svg` — portada de ejemplo (fixtures de ficha y lector)
 
 | Campo | Valor |
 |---|---|
-| Estado | **TEMPORAL — marcador** |
-| Herramienta | Dibujado a mano como SVG (silueta vectorial original, sin IA ni obras de terceros) |
-| Fecha | 2026-10-20 |
-| Indicaciones | «Silueta sencilla de dragón serpenteante de perfil, con asta, hocico, ala y aleta de cola; monocroma con `currentColor`, sin texto, en una retícula de 96×96» (SPEC §11.12: marcador simple) |
-| Licencia | Original del proyecto RyuuNest (GPL-3.0), sin personajes ni estilos de obras protegidas |
-| Reemplazo | Subtarea independiente en `tasks/todo.md` («Arte final del dragón»): un artista hará el arte definitivo |
+| Estado | **Arte final** (ya no es marcador): copia de `design/RyuuNest-Logo-Pack-Con-Pupila/ryuunest-dragon-night.svg` |
+| Fecha | 2026-11-27 (sustituye al marcador dibujado a mano del 2026-10-20) |
+| Licencia | Logo de RyuuNest, arte de **Artista** (David Lucio), CC BY-NC-ND 4.0 (`LICENSE-ART.md`) |
+| Uso | Solo como portada de ejemplo en `seriesFixtures.ts` y `readingSource.ts` |
 
-La versión renderizable en la app es `src/components/DragonMarker.tsx`
-(`react-native-svg`), que reproduce esta misma silueta con colores del tema
-(`ui-tokens`). Este fichero es el registro del marcador (SPEC §12).
+El dragón de la interfaz (cabecera, bienvenida y estados) lo dibuja
+`src/components/DragonMarker.tsx` con el trazo de `src/components/dragonPath.ts` y
+los colores del tema (`ui-tokens`).
 
 ## `page-1.svg`, `page-2.svg`, `page-3.svg` — páginas de ejemplo del lector (F18)
 
