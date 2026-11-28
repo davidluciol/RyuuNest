@@ -53,7 +53,7 @@ texto (`docs/DESIGN_RULES.md` V4). La puerta `apps/mobile/tests/icons.test.ts` p
 | Logo sin pupila (variante para favicon) · autor **David Lucio** | **Artista** · CC BY-NC-ND 4.0 (`LICENSE-ART.md`); fuente en `design/RyuuNest-Logo-Pack/` (2026-11-27) | Favicon y tamaños ≤32 px | **Artista** |
 | `page-1.svg`, `page-2.svg`, `page-3.svg` (páginas de ejemplo del lector, F18) | Formas vectoriales **originales** del proyecto (GPL-3.0), sin texto ni obras; registro en `apps/mobile/assets/placeholder/README.md` | `apps/mobile/assets/placeholder/` | Temporal — solo web y pruebas |
 | Portadas, avatar y dragón de `design/` | Marcadores de ejemplo (nunca se enlazan por URL) | `assets/placeholder/` | Temporal |
-| `apps/web/public/favicon.png` | Derivado de la silueta vectorial **original** del dragón (GPL-3.0, F08) | `apps/web/public/` | **Incluido** (F24): favicon local del cliente web, sin recurso remoto |
+| Iconos de la app, web y extensión (F72, F73) · derivados del logo de **David Lucio** | **Artista** · CC BY-NC-ND 4.0 (`LICENSE-ART.md`); renderizados el 2026-11-27 desde `design/RyuuNest-Logo-Pack*/` (verde `#35C98A`, fondo `#0B0E14`, monocromo blanco) | `apps/mobile/assets/{icon,android-icon-foreground,android-icon-monochrome,favicon}.png`; `apps/web/public/{favicon.svg,favicon.png,apple-touch-icon.png}`; `apps/extension/icons/icon-{16,32,48,128}.png` | **Artista** (favicon y ≤32 px con el logo sin pupila) |
 
 Reglas de los marcadores (`docs/SPEC.md` §12):
 

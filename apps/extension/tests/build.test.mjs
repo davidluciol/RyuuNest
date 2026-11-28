@@ -20,6 +20,8 @@ function referencedFiles(manifest) {
     ...(manifest.background?.scripts ?? []),
     ...(manifest.content_scripts ?? []).flatMap((script) => script.js ?? []),
     manifest.options_ui?.page,
+    ...Object.values(manifest.icons ?? {}),
+    ...Object.values(manifest.action?.default_icon ?? {}),
   ].filter((file) => typeof file === "string");
 }
 
