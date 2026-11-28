@@ -71,7 +71,7 @@ const RECOMMENDED = JSON.stringify([
       // Instalar zonatmo (script → confirmación reforzada: mantener 1,5 s).
       await page.getByTestId("module-action-zonatmo").click();
       await page.getByTestId("install-dialog").waitFor({ state: "visible" });
-      await page.getByText("Huella SHA-256").waitFor({ state: "visible" });
+      await page.getByText("Huella de verificación").waitFor({ state: "visible" });
       const confirm = page.getByTestId("install-confirm");
       const box = await confirm.boundingBox();
       assert.ok(box, "botón de confirmar visible");

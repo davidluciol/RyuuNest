@@ -26,14 +26,18 @@ export interface HoldToConfirmStyleShape {
   overflow: "hidden";
 }
 
-/** Contenedor: área táctil 48 dp (RNF-7); `overflow` evita que el relleno se salga. */
+/**
+ * Contenedor: área táctil 48 dp (RNF-7); `overflow` evita que el relleno se salga.
+ * F42/V3: es la acción primaria de la hoja, así que va en `accent` (V1, un solo
+ * primario por pantalla), igual que en la web.
+ */
 export function holdToConfirmStyle(): HoldToConfirmStyleShape {
   return {
     minHeight: touchTarget.min,
     borderRadius: radii.control,
     paddingHorizontal: spacing.md,
-    backgroundColor: colors.elevated,
-    borderColor: colors.border,
+    backgroundColor: colors.accent,
+    borderColor: colors.accent,
     borderWidth: 1,
     overflow: "hidden",
   };
@@ -61,9 +65,9 @@ export function holdTrackStyle(): HoldTrackStyleShape {
 }
 
 /**
- * Color del texto: oscuro (`bg`) mientras el relleno de `progress` lo cubre
- * (contraste, SPEC §11.9) y principal en reposo sobre `elevated`.
+ * Color del texto: oscuro (`bg`) siempre, tinta de `accent` en reposo y de
+ * `progress` mientras el relleno lo cubre (contraste, SPEC §11.9).
  */
-export function holdToConfirmTextColor(holding: boolean): string {
-  return holding ? colors.bg : colors.textPrimary;
+export function holdToConfirmTextColor(): string {
+  return colors.bg;
 }

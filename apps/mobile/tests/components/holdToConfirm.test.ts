@@ -47,10 +47,17 @@ describe("estilos del botón de mantener pulsado", () => {
   });
 
   it("el texto sobre el relleno es oscuro (`bg`), como pide el contraste de progress", () => {
-    expect(holdToConfirmTextColor(true)).toBe("#0B0E14");
+    expect(holdToConfirmTextColor()).toBe("#0B0E14");
   });
 
-  it("en reposo el texto es principal, legible sobre `elevated`", () => {
-    expect(holdToConfirmTextColor(false)).toBe("#F2F0EA");
+  it("F42/V3: es el botón primario de la hoja (`accent`), como en la web", () => {
+    expect(holdToConfirmStyle()).toMatchObject({
+      backgroundColor: "#35C98A",
+      borderColor: "#35C98A",
+    });
+  });
+
+  it("en reposo el texto es oscuro (`bg`), la tinta del botón primario", () => {
+    expect(holdToConfirmTextColor()).toBe("#0B0E14");
   });
 });
