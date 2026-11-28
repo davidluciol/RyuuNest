@@ -14,7 +14,7 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 | Sección | Lote sugerido (una sesión) |
 |---|---|
 | Recursos | F101 → F75 → F74 → F70 → F71 (FA3 y F102 son 🧍) |
-| Portales | bug FanFox → hallazgo ZonaTMO → F42 y T45 (decidir) → F100 (cuando Cloudflare bloquee) |
+| Portales | bug FanFox → hallazgo ZonaTMO → T45 (decidir) → F100 (cuando Cloudflare bloquee) |
 | Ajustes | AB4 → cookies |
 | Lector | plural de carpetas → R2 (APK) → F17 (grupo) |
 | General | F103 (tras elegir canal) → G5 → G3/T05 |
@@ -52,9 +52,11 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 - [ ] Coste de listas: una petición a `galleries/<id>.js` por tarjeta (24 por página); valorar `galleryblock` o tarjetas perezosas
 - [ ] 🧍 Comprobar en el teléfono que el adaptador HTTP pasa `Range` (206/416)
 
-### F42 Restos de permisos y «disponibles» `[FE · Baja · N2]` 🧍
+### F42 Cierre en el teléfono `[FE · Baja · N1]` 🧍
 
-- [ ] Decidir: V3 botón primario verde (choca con el naranja de `progress`), N21 sin chevrón (no hay pantalla de idiomas) y si la web conserva título y píldoras
+> Hecho en código (PR #179, P-200): botón de instalar primario, permisos en línea propia en la web, un solo primario y aviso de éxito neutro en Portales web; «Idioma» sin chevrón.
+
+- [ ] 🧍 Ver la hoja «Instalar módulo» con el botón verde en el teléfono
 
 ### F100 Anti-bot con navegador nativo: medición `[BE/FE · Alta · N4]` 🧍
 
@@ -200,6 +202,9 @@ Dep: F22 · `apps/mobile/src/screens/reader/tv/*`
 ### F103 «Mandar reporte»: reporte revisado por el usuario → issues de GitHub `[FE/Ops · Intermedia · N3]` 🧍
 
 Dep: F30, T36 (`core/diagnostics/sanitize.ts`) · Pedido del humano 2026-11-27
+
+- [x] Parte 1 (PR #180): `core/diagnostics/report.ts` con limpieza, huella y enlaces de GitHub y correo con su tope
+- Siguiente: hoja de revisión con los dos botones (dirección y repo en `about/appInfo.ts`), botón en errores y Diagnóstico, i18n, galería, Playwright; después plantilla y Action de GitHub
 
 > **Canales decididos (P-198, humano 2026-11-27):** la hoja de reporte ofrece **dos** botones: **GitHub** («La atención será prioritaria»; requiere cuenta) y **correo** a `potigameplays@gmail.com` («Será más lenta, pero lo atenderemos»). Ambos los envía el usuario a mano (cabe en RNF-5). Un bot de Telegram queda para después.
 
