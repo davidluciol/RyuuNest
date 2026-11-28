@@ -32,6 +32,7 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 - [ ] Banner y punto de actualizaciones de módulo (F99), aviso neutro de éxito (F42), primer uso sin datos: barra oculta e «Ir a leer» deshabilitado (F45)
 - [ ] Módulos: repasar FanFox, E-Hentai e Hitomi de punta a punta; Luscious pasa Cloudflare; el primer toque tras instalar un módulo no se pierde; una instalación no se cuelga (hallazgos de P-192)
 - [ ] El error «cannot start a transaction within a transaction» no vuelve (P-186)
+- [ ] #183: al instalar M440 sale la nota de Cloudflare; al abrir Luscious por primera vez, también en el aviso +18
 - [ ] #182: Aventuras con ZonaTMO tras muchas páginas sin lag (`dumpsys gfxinfo` y `meminfo` antes/después de FlashList)
 - [ ] #181: en vertical (ZonaTMO/M440) terminar un capítulo lo marca leído y la hoja «¿Marcar los anteriores…?» aparece solo con anteriores sin leer
 - [ ] Quitar del S25 el repo de prueba `…/audit-release/index.json` si sigue y reinstalar desde `main`
