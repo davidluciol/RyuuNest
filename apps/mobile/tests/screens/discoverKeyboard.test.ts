@@ -8,5 +8,6 @@ it("la lista de Descubrir deja pasar el toque a «Buscar» con el teclado abiert
     path.resolve(import.meta.dirname, "../..", "src/screens/discover/DiscoverScreen.tsx"),
     "utf8",
   );
-  expect(src).toMatch(/<ScrollView\s+keyboardShouldPersistTaps="handled"\s+contentContainerStyle=\{\{\s*paddingHorizontal: sidePadding/);
+  // #182: la lista pasó de ScrollView a FlashList; el criterio (toque que pasa con el teclado) sigue.
+  expect(src).toMatch(/<FlashList[\s\S]*?keyboardShouldPersistTaps="handled"[\s\S]*?paddingHorizontal: sidePadding/);
 });

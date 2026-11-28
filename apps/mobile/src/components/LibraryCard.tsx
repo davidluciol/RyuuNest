@@ -112,6 +112,8 @@ export default function LibraryCard({
         {cover ? (
           <Image
             source={cover}
+            // #182: en listas recicladas, la celda no muestra la portada anterior mientras carga.
+            recyclingKey={coverKey(cover)}
             style={styles.cover}
             onError={onCoverError ? (event) => onCoverError(event.error) : undefined}
           />
@@ -236,3 +238,8 @@ const styles = StyleSheet.create({
     marginTop: spacing.xxs,
   },
 });
+
+/** Clave estable de la portada para reciclar la celda (la URL, si la hay). */
+function coverKey(cover: ImageSourcePropType): string | null {
+  return typeof cover === "object" && cover !== null && "uri" in cover ? (cover.uri ?? null) : null;
+}
