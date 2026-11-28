@@ -14,7 +14,7 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 | Sección | Lote sugerido (una sesión) |
 |---|---|
 | Recursos | F101 → F75 → F74 → F70 → F71 (FA3 y F102 son 🧍) |
-| Portales | F42 (decidir) → T45 → hallazgo ZonaTMO → F100 (cuando Cloudflare bloquee) |
+| Portales | bug FanFox → hallazgo ZonaTMO → F42 y T45 (decidir) → F100 (cuando Cloudflare bloquee) |
 | Ajustes | AB4 → cookies |
 | Lector | plural de carpetas → R2 (APK) → F17 (grupo) |
 | General | F103 (tras elegir canal) → G5 → G3/T05 |
@@ -69,6 +69,11 @@ Por sección de la app: **Guarida**, **Tesoros**, **Aventuras**, **Portales**, *
 ### Hallazgo · ZonaTMO falla en algunas fichas `[BE · Baja · N2]` (repo `RyuuNest-Models`)
 
 - [ ] «El Mejor Ingeniero del Mundo» (`/library/manhwa/30664/…`) da `PARSE`: falta `h1.element-title`. Revisar el selector con un fixture guardado
+
+### Bug · FanFox: serie +18 con 0 capítulos en la ficha `[BE · Intermedia · N3]` (repo `RyuuNest-Models`, issue #30)
+
+- [ ] En `https://fanfox.net/manga/isekai_meikyuu_de_harem_o/` el sitio muestra un aviso +18 que hay que pulsar para ver los capítulos. La app dice «113 capítulos», pero al abrir la ficha salen 0. Probable: `details` recibe el HTML del aviso. Guardar fixtures (aviso y lista), pasar el aviso (cookie o parámetro) en `details`, subir la versión y `index.json`
+- [ ] 🧍 En el teléfono: la ficha muestra los capítulos y el lector abre uno
 
 ### VisorManga fuera del índice `[Ops · Baja · N1]` 🧍
 
@@ -178,8 +183,10 @@ Dep: F22 · `apps/mobile/src/screens/reader/tv/*`
 
 ### F102 Configuración para iPhone (iOS) `[Ops · Baja · N2]` 🧍
 
-- [ ] `ios.bundleIdentifier` (propuesta: `io.github.davidluciol.ryuunest`), `supportsTablet` y perfil de EAS para iOS
-- [ ] 🧍 Decidir la distribución: SPEC P-3 solo contempla APK y PWA; iOS exige Apple Developer o instalación lateral. Si cambia el alcance, actualizar el SPEC antes
+> **Decidido (P-199, humano 2026-11-27):** sí habrá iOS, **solo** si se puede instalar fuera de la App Store como un APK (instalación lateral) o como extensión para iOS. Sin App Store.
+
+- [ ] Investigar (con fuentes, sin suponer) las vías de instalación lateral de un `.ipa` y de una extensión de Safari en iOS fuera de la App Store: requisitos, coste (cuenta de Apple Developer), caducidad de la firma y países donde aplica. Presentar 2–3 opciones al humano
+- [ ] Si alguna es viable: actualizar SPEC P-3, luego `ios.bundleIdentifier` (propuesta: `io.github.davidluciol.ryuunest`), `supportsTablet` y perfil de EAS para iOS
 - Verif: `eas build -p ios --profile preview` (o `expo prebuild -p ios`) sin errores de configuración
 
 ---
@@ -190,7 +197,7 @@ Dep: F22 · `apps/mobile/src/screens/reader/tv/*`
 
 Dep: F30, T36 (`core/diagnostics/sanitize.ts`) · Pedido del humano 2026-11-27
 
-> **Bloqueo:** RNF-5 permite que el usuario **revise y envíe a mano** con una app suya; un envío directo a un servidor o relé (C) exige cambiar el SPEC. 🧍 Elegir canal(es).
+> **Canal decidido (P-198, humano 2026-11-27):** v1 = **correo** (`mailto:` a `potigameplays@gmail.com`), dentro de RNF-5 porque el usuario revisa y envía a mano. Un bot de Telegram queda para después, si el correo va bien. Las partes de GitHub de abajo siguen como plan para quien tenga cuenta.
 
 - [ ] Botón «Mandar reporte» en `ErrorDialog`, `ErrorBanner`, error por página del lector y Ajustes → Diagnóstico
 - [ ] Hoja de revisión con **todo** lo que sale, editable solo en «Detalles». Obligatorio: código de error, módulo + versión, versión de la app, plataforma y SO, huella, fecha. Opcional: detalles (con tope) y las últimas N entradas del registro
@@ -198,7 +205,8 @@ Dep: F30, T36 (`core/diagnostics/sanitize.ts`) · Pedido del humano 2026-11-27
 - [ ] Nada sale sin pulsar «Enviar»; textos en i18n, galería, áreas ≥48, sin animación en el lector
 - [ ] Huella: `sha256(código + módulo + versión mayor.menor + mensaje normalizado + 3 primeros marcos normalizados)`, 12 hex, en título (`[fp:ab12cd34ef56] …`) y cuerpo. Tests: iguales ⇒ misma huella
 - [ ] GitHub: plantilla `.github/ISSUE_TEMPLATE/reporte-error.yml`; la app abre `issues/new?…` (límite ~8 KB de URL); buscar antes la huella con la API pública y ofrecer «Ya está reportado»; Action que comenta y cierra duplicados o etiqueta y da de alta en GitHub Projects con «Ocurrencias»
-- [ ] 🧍 Canal para quien no tiene GitHub: **A** Telegram (sin token del bot en el APK), **B** `mailto:`, **C** relé Cloudflare Workers (cambia RNF-5), **D** hoja de compartir/portapapeles, **E** formulario web. Recomendación: GitHub + D + (A o B)
+- [ ] Correo: «Enviar» abre la app de correo con `mailto:potigameplays@gmail.com`, asunto `[fp:…] <código> en <módulo> <versión>` y el cuerpo ya limpio (cuidar el largo de la URL `mailto:`; si no cabe, recortar el registro). Avisar en la tarjeta de que el proyecto verá el correo del usuario. Respaldo: copiar al portapapeles
+- [ ] (después) Bot de Telegram: sin token en el APK; solo si el correo funciona bien
 - Verif: tests de limpieza y huella, galería + Playwright + 🧍 POCO (reporte de prueba a un repo o canal de pruebas)
 
 ### G5 Manejador del enlace `ryuunest://add-repo` `[FE · Intermedia · N3]`

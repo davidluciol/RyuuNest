@@ -57,17 +57,21 @@ Memoria del proyecto para cualquier agente: estado, hitos importantes, decisione
 - P-192 Trabajo grande: rama de integración + ramas hijas por subagente; los PR finales los fusiona el humano.
 - P-44 Pruebas en POCO F5 Pro y S25 Ultra; la MiBox 4 (2 GB) es el piso de rendimiento.
 
+**Nuevas (2026-11-27)**
+- P-198 «Mandar reporte» (F103) en v1 por **correo**: `mailto:potigameplays@gmail.com`, revisado y enviado a mano por el usuario (cabe en RNF-5). Un bot de Telegram, más adelante, solo si el correo va bien.
+- P-199 **Habrá iOS** solo si se instala fuera de la App Store, como un APK (instalación lateral) o como extensión para iOS; sin App Store. Antes de compilar: investigar las vías y actualizar SPEC P-3.
+
 ## 4. Pendientes y preguntas abiertas
 
 - 🧍 **Verificar con el APK 1.0.0** todo lo hecho sin prueba en el teléfono (lista en `tasks/todo.md`).
-- 🧍 **F103:** elegir canal de reportes para quien no tiene GitHub; si es un relé (C), cambiar antes RNF-5.
-- 🧍 **F102:** decidir si hay iOS (SPEC P-3 solo contempla APK y PWA).
-- 🧍 **FA3:** datos y fotos de los artistas.
+- ⏰ **Recordar al humano al empezar la sesión:** decidir T45 (¿índice B-tree de Hitomi o aceptar un solo término?) y F42 (botón primario verde V3, chevrón de «Idioma» N21, título y píldoras de la web).
+- 🐞 **FanFox +18:** la ficha sale con 0 capítulos (dice 113) por el aviso de contenido adulto; Models issue #30.
+- **F102 iOS:** investigar la instalación lateral y la extensión de iOS (P-199).
+- 🧍 **FA3:** quizá entre el primer artista el 2026-11-28.
 - 🧍 **Extensión:** probarla en Chrome y Firefox reales, AC-10, origen de producción de la PWA (P-116) y textos `extension.*` (P-120).
 - 🧍 **MiBox 4:** F23, F22 (preguntas del PR #165), F37, AC-6, AC-12.
 - 🧍 **Checkpoints** G, H, P-A, I, P-C, P-D y J sin revisar.
 - 🧍 Tope de imágenes (P-45) y cierre de T05; proceso Scrum; org npm `@ryuunest`; ramas fusionadas; bitácora de P-15.
-- ❓ T45 (índice B-tree de Hitomi) y F42 (V3/N21/web): decisiones del humano.
 - VisorManga: republicarlo cuando vuelva `imgvtmo.com`.
 
 ## 5. Avisos operativos
