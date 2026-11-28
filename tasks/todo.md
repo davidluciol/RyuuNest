@@ -55,7 +55,7 @@ Las tareas pendientes se agrupan **por sección de la app**: **Guarida**, **Teso
 - [x] **A3 Hallazgos menores de la app** ✅ 2026-11-27: (a) no se reprodujo tras actualizar (verificar con APK); (b) solo Expo Go: el APK tiene `readTimeout` 30 s y ping (G6); (c) arreglado en la app (`chapterRowTitle`, chip sin id crudo) y mangation 0.1.3. Era: `[FE · Baja]` → Haiku, uno por rama hija: (a) tras instalar/actualizar un módulo, el primer toque en Portales/Aventuras se pierde (algo de la hoja recién cerrada lo intercepta); (b) en Expo Go una instalación se quedó colgada con la hoja bloqueada, hasta «Cancelar» y la X (probablemente una petición colgada sin tiempo límite en el instalador: revisar si `PackageInstaller`/`InstallFlow` pasan por el `TimedHttp`); (c) cosmético en VisorManga/Mangation: el capítulo se titula «Capítulo 103: Capítulo 103.00» y la release muestra el id crudo (`jinx-103.00`).
 - [x] **A4 Volver a probar en el S25** ✅ 2026-11-27 parcial: Luscious, Mangation y ZonaTMO de punta a punta, dos actualizaciones sin reiniciar; FanFox/E-Hentai/Hitomi sin cambios desde el 26 (repasar con APK). Era: los 7 módulos de punta a punta con el bundle final, incluida una **actualización** de módulo sin reiniciar la app (prueba del montador; Luscious 0.1.2→0.1.3 ya pasó).
 - [x] **A5 Cierre:** ✅ 2026-11-27: gate en verde, worktrees y ramas hijas borrados, PR app #170 y Models #29 abiertos (sin fusionar). Era: `pnpm lint && pnpm -r typecheck && pnpm -r test && pnpm -r build`; `graphify update .`; abrir PR `fix/auditoria-modulos-release` → `master` y PR `audit-release` → `main` (Models; el `index.json` va dentro por decisión del humano) con la evidencia; **no fusionar**. Borrar los worktrees `../RyuuNest-Models-{hermes,visor,luscious}` y las ramas hijas ya fusionadas.
-- [ ] **A6 Después de que el humano fusione:** en el teléfono, quitar el repo de prueba `audit-release` y reinstalar los módulos desde `main` (los tesoros no cambian); luego compilar el APK de release con EAS.
+- [x] **A6** ✅ 2026-11-27 (POCO, Expo Go con `master`): el POCO solo tenía el repo `main` (el `audit-release` estaba en el S25); sincronizado y actualizados Hitomi 0.1.2, M440 0.2.2 y ZonaTMO 0.3.1 (YupManga 0.2.0 ya al día); instalados E-Hentai, FanFox, Luscious y Mangation (8/8, 0 pendientes) y cada uno carga Aventuras. Logo verificado en cabecera, Acerca de (versión 1.0.0) y pantalla de carga. APK 1.0.0 lanzado con EAS `preview`. Falta 🧍: quitar `audit-release` del S25 si sigue ahí.
 
 ---
 
@@ -747,7 +747,7 @@ Dep: F22, F18, F19 · M · `apps/mobile/src/screens/reader/tv/*`
 
 Dep: F56 · M · `apps/mobile/src/components/{EmptyState,DragonMarker}.tsx`
 
-- [ ] Una ilustración SVG distinta por vacío: Guarida (sin lecturas), Tesoros (sin series), Aventuras (sin módulos / sin resultados), Portales (sin repos), Diagnóstico (sin eventos); F56 aporta la de «sin resultados»
+- [ ] (Riesgo de F73/P-197: hoy todos los estados muestran el mismo logo) Una ilustración SVG distinta por vacío: Guarida (sin lecturas), Tesoros (sin series), Aventuras (sin módulos / sin resultados), Portales (sin repos), Diagnóstico (sin eventos); F56 aporta la de «sin resultados»
 - [ ] `EmptyState` acepta la ilustración por prop; todas en la galería (dos escalas)
 - Verif: Playwright 426/1440 px + 🧍 S25
 
@@ -781,7 +781,23 @@ Dep: F52, F53 · XS
 - [ ] Iconos para «Favoritos» (estrella) y «Gemas» (gema) en `FolderCard`, y el «+» verde del botón flotante, con tokens
 - Verif: galería + Playwright
 
-**Lote sugerido:** F70 → F71 → F74 → F75 → F73 (F72 y FA1 esperan el arte final del dragón).
+### F101 Pantalla de bienvenida (splash) con el logo `[FE/Arte · Baja · N2]` 🧍
+
+Dep: F73 · S · `apps/mobile/app.json` (riesgo hallado en F73, P-197)
+
+- [ ] La app no configura `expo-splash-screen`: Android 12+ muestra el icono adaptativo sobre el fondo por defecto (posible destello blanco antes del tema oscuro). Configurar el splash con el logo con pupila sobre `#0B0E14` (`dragonNightColors.bg`), Android e iPhone; consultar Context7 para el plugin de SDK 57 y **pedir permiso** si hace falta instalar el paquete
+- [ ] Sin animación ni texto en el splash; respeta la regla de tokens (el color sale del tema)
+- Verif: test de `app.json` + 🧍 APK en el POCO/S25 (arranque en frío sin destello blanco)
+
+### F102 Configuración para iPhone (iOS) `[Ops · Baja · N2]` 🧍
+
+Dep: F73 · S · `apps/mobile/app.json`, `eas.json` (riesgo hallado en F73, P-197)
+
+- [ ] `ios.bundleIdentifier` (propuesta: `io.github.davidluciol.ryuunest`, como Android), `supportsTablet`, icono (ya cubierto por `icon.png` 1024 opaco) y perfil de EAS para iOS
+- [ ] 🧍 Decidir la distribución: SPEC P-3 solo contempla APK y PWA; iOS exige cuenta de Apple Developer (TestFlight/App Store) o instalación lateral. Si cambia el alcance, actualizar `docs/SPEC.md` antes de compilar
+- Verif: `eas build -p ios --profile preview` (o `expo prebuild -p ios` sin compilar) sin errores de configuración
+
+**Lote sugerido:** F70 → F71 → F74 → F75 → F101 → F102 (FA1, FA2, F72 y F73 hechas con el logo del humano, P-197).
 
 ### AB1–AB3 Ajustes → «Acerca de» con sección de Artistas `[FE · Intermedia · N3]`
 
@@ -795,6 +811,40 @@ Plan aprobado el 2026-11-27. Logos de redes de Tabler (MIT, solo trazos copiados
 ---
 
 ## 🗂️ General (abarca varias secciones o ninguna)
+
+### F103 «Mandar reporte»: reporte de errores revisado por el usuario → issues de GitHub `[FE/Ops · Intermedia · N3]` 🧍
+
+Dep: F30 (Diagnóstico), T36 (`core/diagnostics/sanitize.ts`) · M · Pedido del humano 2026-11-27
+
+> **Bloqueo de SPEC:** RNF-5 dice «sin servicios de terceros; los datos solo salen del dispositivo por exportación manual». Un reporte que el usuario **revisa y envía a mano** con una app suya (navegador, correo, Telegram, hoja de compartir) cabe en RNF-5. Un envío directo desde la app a un servidor o relé (opción C abajo) **exige cambiar el SPEC antes**. 🧍 Elegir canal(es) y, si hace falta, aprobar el cambio de RNF-5.
+
+**Flujo en la app (sin envío automático):**
+- [ ] Botón «Mandar reporte» en los diálogos/avisos de error (`ErrorDialog`, `ErrorBanner`, error por página del lector) y en Ajustes → Diagnóstico
+- [ ] Hoja/tarjeta de revisión con **todo** lo que saldrá, en texto plano y editable solo en el campo «Detalles» del usuario:
+  - **Obligatorio:** código de error (`ModuleErrorCode` o código propio de la app), módulo + versión, versión de la app (`about/appInfo.ts`), plataforma (Android/web/TV) y versión del SO, huella del error (ver abajo), fecha
+  - **Opcional:** detalles del usuario (texto libre, tope de caracteres) y las últimas N entradas del registro de diagnóstico
+- [ ] **Limpieza de privacidad obligatoria:** todo pasa por `sanitize.ts` (sin URLs completas, cookies, cabeceras, HTML, rutas locales ni títulos de obras) y además se quitan dominio del sitio, IDs de series/capítulos y el texto del usuario se avisa como «público». Pruebas con fixtures que contengan cada tipo de dato sensible
+- [ ] El usuario ve el texto final y pulsa «Enviar» → se abre el canal elegido con el reporte ya rellenado; nada sale sin esa pulsación
+- [ ] Textos en i18n, componente en la galería, áreas ≥48, sin animación en el lector
+
+**Huella para duplicados (misma lógica en la app y en el procesado):**
+- [ ] `fingerprint = sha256(código + id del módulo + versión mayor.menor del módulo + mensaje normalizado + 3 primeros marcos de la pila normalizados)` y se usan 12 hex. Normalizar = quitar números, URLs, hashes, rutas y comillas; así «TIMEOUT tras 30123 ms» y «TIMEOUT tras 29870 ms» dan la misma huella. Tests de que errores iguales dan la misma huella y distintos no
+- [ ] La huella va en el título (`[fp:ab12cd34ef56] TIMEOUT en m440 0.2`) y en el cuerpo, para poder buscarla
+
+**Lado de GitHub (repo `RyuuNest`):**
+- [ ] Plantilla `.github/ISSUE_TEMPLATE/reporte-error.yml` con los campos obligatorios; la app abre `issues/new?template=…&title=…&body=…` (cuidar el límite de ~8 KB de la URL; si no cabe, se recorta el registro)
+- [ ] Antes de abrir, la app puede buscar la huella con la API pública de búsqueda (sin token, límite bajo de peticiones por minuto) y, si ya existe, ofrecer «Ya está reportado: ver issue / sumar mi caso» en vez de abrir uno nuevo
+- [ ] GitHub Action al abrir un issue con `fp:`: si ya hay uno abierto con la misma huella → comentar en el original («+1, versión X»), sumar la etiqueta de ocurrencias y cerrar el nuevo como duplicado; si no → etiqueta `reporte-usuario` + código de error y alta en **GitHub Projects** (columna «Pendiente») con un campo numérico «Ocurrencias»
+- [ ] Vista del Project ordenada por «Ocurrencias» para saber qué se repite más
+
+**Usuarios sin cuenta de GitHub (gratis):** el reporte es el mismo texto con huella; solo cambia el canal. 🧍 Elegir uno o varios:
+- [ ] **A. Telegram (propuesta del humano):** la app abre Telegram con el texto listo para un bot o un grupo de reportes, por enlace `t.me/<bot>` + hoja de compartir. El bot del humano lo convierte en issue con la misma lógica de huella. **No** se mete el token del bot en la app (cualquiera podría sacarlo del APK y usarlo para spam). El usuario necesita cuenta de Telegram
+- [ ] **B. Correo (`mailto:`):** abre la app de correo con asunto (`[fp:…]`) y cuerpo rellenados hacia un buzón del proyecto. Cero infraestructura, cualquier usuario tiene correo; el procesado es manual o con un filtro/script que lea el buzón. Expone el correo del usuario al proyecto (avisarlo en la tarjeta)
+- [ ] **C. Relé sin servidor propio (Cloudflare Workers, plan gratis):** la app hace POST del reporte ya limpio; el Worker guarda el token de GitHub, calcula duplicados por huella y crea o comenta el issue. Es la opción más automática y sin cuenta, pero **es un servicio de terceros y cambia RNF-5** (y hay que ponerle límite de peticiones contra spam)
+- [ ] **D. Hoja de compartir del sistema / copiar al portapapeles:** el usuario elige Discord, WhatsApp, Telegram, correo… y lo pega donde quiera (o en un formulario o discusión). Es lo más simple y siempre funciona como respaldo, pero no es automático
+- [ ] **E. Formulario web gratis (por ejemplo Google Forms o Tally) prerrellenado por URL:** sin cuenta y con hoja de cálculo para contar huellas. Es un tercero que recibe los datos; revisar su política antes
+- Recomendación del agente: **GitHub (con cuenta) + D (siempre disponible) + A o B** sin tocar RNF-5; dejar C para cuando haya volumen y aprobar el cambio de SPEC
+- Verif: tests de limpieza y de huella, galería + Playwright (web) + 🧍 POCO (enviar un reporte de prueba a un repo o canal de pruebas, nunca al real)
 
 ### T44 ✅ 58 archivos de test fallaban en `vitest run` desde la raíz `[Ops · Intermedia · N3]`
 
