@@ -19,7 +19,7 @@ import LoadingState from "../../../components/LoadingState";
 import LogEventRow from "../../../components/LogEventRow";
 import ConfirmSheet from "../../../components/ConfirmSheet";
 import { textStyle } from "../../../components/textStyle";
-import { ChevronLeft, Copy, Trash2, Upload } from "../../../icons";
+import { ChevronLeft, Copy, Send, Trash2, Upload } from "../../../icons";
 import { t } from "../../../i18n";
 import type { DiagnosticsController } from "./diagnosticsController";
 import type { DiagnosticsFlow, DiagnosticsNotice } from "./diagnosticsFlow";
@@ -59,6 +59,8 @@ export interface DiagnosticsScreenProps {
   now?: number;
   onBack?: () => void;
   onRetry?: () => void;
+  /** F103: abre «Mandar reporte» con el registro adjunto (P-198). */
+  onReport?: () => void;
 }
 
 export default function DiagnosticsScreen({
@@ -66,6 +68,7 @@ export default function DiagnosticsScreen({
   flow,
   controller,
   notice = null,
+  onReport,
   now = Date.now(),
   onBack,
   onRetry,
@@ -198,6 +201,15 @@ export default function DiagnosticsScreen({
               testID="diagnostics-clear"
             />
           </View>
+          {onReport !== undefined ? (
+            <Button
+              variant="secondary"
+              label={t("diagnostics.report")}
+              icon={<Send size={spacing.md} color={colors.textPrimary} />}
+              onPress={onReport}
+              testID="diagnostics-report"
+            />
+          ) : null}
         </View>
 
         <View style={styles.group}>

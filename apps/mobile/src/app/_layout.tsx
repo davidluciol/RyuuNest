@@ -5,6 +5,7 @@ import { activeColors, relativeLuminance } from "@ryuunest/ui-tokens";
 
 import { galleryFontSources } from "../gallery/fontSources";
 import ChallengeHost from "../screens/challenge/ChallengeHost";
+import ReportHost from "../screens/report/ReportHost";
 import { useAppTheme } from "../theme/useAppTheme";
 
 export default function RootLayout() {
@@ -24,6 +25,7 @@ export default function RootLayout() {
         }}
       />
       <ChallengeHost />
+      <ReportHost />
       <StatusBar style={relativeLuminance(activeColors.bg) > 0.5 ? "dark" : "light"} />
     </>
   );

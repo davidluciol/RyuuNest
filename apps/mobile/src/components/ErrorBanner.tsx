@@ -4,7 +4,8 @@ import { Text, View } from "react-native";
 import { activeColors, spacing, touchTarget } from "@ryuunest/ui-tokens";
 
 import CodeChip from "./CodeChip";
-import { ChevronDown, ChevronUp, CircleAlert, RefreshCw } from "../icons";
+import { t } from "../i18n";
+import { ChevronDown, ChevronUp, CircleAlert, RefreshCw, Send } from "../icons";
 
 import { type ErrorDetail, detailLines } from "./stateStyles";
 import { textStyle } from "./textStyle";
@@ -45,6 +46,8 @@ export interface ErrorBannerProps {
   onAction?: () => void;
   /** Etiqueta del desplegable de detalle. */
   detailLabel?: string;
+  /** F103: muestra «Mandar reporte» (P-198). */
+  onReport?: () => void;
   testID?: string;
 }
 
@@ -57,6 +60,7 @@ export default function ErrorBanner({
   actionLabel,
   onAction,
   detailLabel,
+  onReport,
   testID,
 }: ErrorBannerProps) {
   const [expanded, setExpanded] = useState(false);
@@ -106,6 +110,19 @@ export default function ErrorBanner({
             )}
           </FocusPressable>
         ) : null}
+        {onReport !== undefined ? (
+          <FocusPressable
+            accessibilityRole="button"
+            accessibilityLabel={t("report.action")}
+            hitSlop={touchTarget.min / 4}
+            onPress={onReport}
+            style={styles.action}
+            testID="error-report"
+          >
+            <Send size={spacing.md} color={accent} />
+            <Text style={[styles.actionText, { color: accent }]}>{t("report.action")}</Text>
+          </FocusPressable>
+        ) : null}
       </View>
       {expanded ? (
         <View style={styles.detailBox}>
@@ -138,8 +155,10 @@ const styles = themedStyles(() => ({
   },
   actions: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
-    gap: touchTarget.min / 2,
+    columnGap: touchTarget.min / 2,
+    rowGap: spacing.sm,
   },
   action: {
     flexDirection: "row",

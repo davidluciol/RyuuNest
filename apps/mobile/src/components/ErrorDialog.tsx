@@ -53,6 +53,8 @@ export interface ErrorDialogProps {
   detailLabel?: string;
   /** Cierra el diálogo. */
   onClose: () => void;
+  /** F103: muestra «Mandar reporte» (P-198). */
+  onReport?: () => void;
   /** Trabajo en curso: bloquea el cierre. */
   busy?: boolean;
   /** Sin animación de entrada (la pide el lector). */
@@ -71,6 +73,7 @@ export default function ErrorDialog({
   onRetry,
   detailLabel,
   onClose,
+  onReport,
   busy = false,
   animated = true,
   testID,
@@ -134,6 +137,15 @@ export default function ErrorDialog({
                   </View>
                 ) : null}
               </View>
+            ) : null}
+            {onReport !== undefined ? (
+              <Button
+                variant="secondary"
+                label={t("report.action")}
+                onPress={onReport}
+                disabled={busy}
+                testID="error-report"
+              />
             ) : null}
             <View style={styles.actions}>
               <Button

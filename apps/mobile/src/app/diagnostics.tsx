@@ -1,6 +1,8 @@
 import { router } from "expo-router";
 
 import SafeScreen from "../components/SafeScreen";
+import { appReport } from "../data/appReport";
+import { t } from "../i18n";
 import DiagnosticsScreen from "../screens/settings/diagnostics/DiagnosticsScreen";
 import { useDiagnosticsData } from "../screens/settings/diagnostics/useDiagnosticsData";
 
@@ -22,6 +24,10 @@ export default function DiagnosticsRoute() {
         notice={notice}
         onBack={() => router.dismissTo("/settings")}
         onRetry={retry}
+        onReport={() => {
+          void appReport.open({ code: "MANUAL", message: t("diagnostics.report.message") });
+          appReport.setIncludeLog(true);
+        }}
       />
     </SafeScreen>
   );

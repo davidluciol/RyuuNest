@@ -73,12 +73,13 @@ import {
 import OnboardingSample from "../screens/onboarding/OnboardingSample";
 import Toast from "../components/Toast";
 import ErrorBanner from "../components/ErrorBanner";
+import ReportSheet from "../components/ReportSheet";
 import UpdatesBanner from "../components/UpdatesBanner";
 import CodeChip from "../components/CodeChip";
 import ConfirmSheet from "../components/ConfirmSheet";
 import DragonTreasure from "../components/DragonTreasure";
 import FloatingActionButton from "../components/FloatingActionButton";
-import type { MediaKind } from "@ryuunest/core";
+import { buildErrorReport, type MediaKind } from "@ryuunest/core";
 import SortSheet from "../components/SortSheet";
 import ReleaseSheet from "../components/ReleaseSheet";
 import { sampleSeriesView } from "../screens/series/seriesFixtures";
@@ -164,6 +165,10 @@ export default function GalleryScreen() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [challengeOpen, setChallengeOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportDetails, setReportDetails] = useState("");
+  const [reportLog, setReportLog] = useState(false);
+  const [reportFailed, setReportFailed] = useState(false);
   const [newFolderOpen, setNewFolderOpen] = useState(false);
   // F93: «Gestionar carpetas» con carpetas propias, sin ellas y la hoja de edición.
   const [manageOpen, setManageOpen] = useState<"list" | "empty" | "edit" | null>(null);
@@ -776,6 +781,7 @@ export default function GalleryScreen() {
           }}
           actionLabel={t("actions.retry")}
           detailLabel={t("actions.showDetail")}
+          onReport={() => setReportOpen(true)}
           onAction={() => {}}
         />
 
@@ -849,6 +855,39 @@ export default function GalleryScreen() {
             testID="gallery-challenge"
           />
         </View>
+
+        {/* F103: hoja «Mandar reporte»; «Enviar» aquí solo muestra el estado de fallo. */}
+        <Text style={styles.groupLabel}>{t("gallery.component.report")}</Text>
+        <Button
+          variant="secondary"
+          label={t("gallery.report.show")}
+          testID="gallery-show-report"
+          onPress={() => setReportOpen(true)}
+        />
+        <ReportSheet
+          visible={reportOpen}
+          preview={buildErrorReport({
+            code: "TIMEOUT",
+            message: "Sin respuesta tras 30123 ms en https://sitio-falso.test/capitulo/3",
+            moduleId: "m-ejemplo",
+            moduleVersion: "0.2.1",
+            appVersion: "1.0.0",
+            platform: "android 34",
+            date: "2026-11-27T22:00:00.000Z",
+            details: reportDetails,
+            log: reportLog ? ["2026-11-27 21:59 [error] TIMEOUT: Sin respuesta"] : [],
+          })}
+          details={reportDetails}
+          onDetailsChange={setReportDetails}
+          includeLog={reportLog}
+          onIncludeLogChange={setReportLog}
+          sendFailed={reportFailed}
+          onSend={() => setReportFailed(true)}
+          onClose={() => {
+            setReportOpen(false);
+            setReportFailed(false);
+          }}
+        />
 
         <Text style={styles.groupLabel}>{t("gallery.component.floatingButton")}</Text>
         <View style={styles.row}>
